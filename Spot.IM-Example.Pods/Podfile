@@ -1,0 +1,17 @@
+platform :ios, '9.0'
+source 'git@github.com:FedinAndriy/tempSpotSpecRepo.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'Spot.IM-Example.Pods' do
+  use_frameworks!
+
+  # Pods for Spot.IM-Example.Pods
+  pod 'FBSDKCoreKit', '4.44.1'
+  pod 'Spot.IM-Core'
+
+  target 'Spot.IM-Example.PodsTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
