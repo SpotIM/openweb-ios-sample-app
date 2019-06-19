@@ -1,31 +1,25 @@
 PODS:
-  - Bolts (1.9.0):
-    - Bolts/AppLinks (= 1.9.0)
-    - Bolts/Tasks (= 1.9.0)
-  - Bolts/AppLinks (1.9.0):
-    - Bolts/Tasks
-  - Bolts/Tasks (1.9.0)
-  - FBSDKCoreKit (4.44.1):
-    - Bolts (~> 1.9)
+  - Alamofire (4.8.2)
+  - SnapKit (4.2.0)
   - Spot.IM-Core (0.0.1):
-    - FBSDKCoreKit
+    - Alamofire (~> 4.8.2)
+    - SnapKit (~> 4.2.0)
 
 DEPENDENCIES:
-  - FBSDKCoreKit (= 4.44.1)
   - Spot.IM-Core
 
 SPEC REPOS:
-  "git@github.com:FedinAndriy/tempSpotSpecRepo.git":
+  "git@github.com:SpotIM/spotim-ios-sdk-pod.git":
     - Spot.IM-Core
   https://github.com/cocoapods/specs.git:
-    - Bolts
-    - FBSDKCoreKit
+    - Alamofire
+    - SnapKit
 
 SPEC CHECKSUMS:
-  Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
-  FBSDKCoreKit: a823ae35bdb60ebb8d7a7e51abe7c5d87d2bfced
-  Spot.IM-Core: 6791e7b0e6865a06333d9e9554e44d48fc8398bc
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  Spot.IM-Core: e7ca5f55f14ca64a25d5ffa6e632b10fbfe0ec39
 
-PODFILE CHECKSUM: 07489d86f885f1ec8d514984ba065176f341d508
+PODFILE CHECKSUM: 11b1d5a8976a599a78b70f76bb7cef741929944d
 
 COCOAPODS: 1.7.1
