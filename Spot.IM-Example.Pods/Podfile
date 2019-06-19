@@ -1,12 +1,11 @@
 platform :ios, '9.0'
-source 'git@github.com:FedinAndriy/tempSpotSpecRepo.git'
+source 'git@github.com:SpotIM/spotim-ios-sdk-pod.git'
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Spot.IM-Example.Pods' do
   use_frameworks!
 
   # Pods for Spot.IM-Example.Pods
-  pod 'FBSDKCoreKit', '4.44.1'
   pod 'Spot.IM-Core'
 
   target 'Spot.IM-Example.PodsTests' do
@@ -14,4 +13,12 @@ target 'Spot.IM-Example.Pods' do
     # Pods for testing
   end
 
+end
+
+post_install do |lib|
+    lib.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+        end
+    end
 end
