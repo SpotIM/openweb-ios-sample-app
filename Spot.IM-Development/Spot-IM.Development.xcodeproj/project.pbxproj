@@ -74,7 +74,7 @@
 		5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot_IM_DevelopmentTests.swift; sourceTree = "<group>"; };
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D697A7822B65CBE001AD556 /* Spot_IM_Core.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Spot_IM_Core.framework; path = "../spotim-ios-sdk/RELEASE/Spot_IM_Core.framework"; sourceTree = "<group>"; };
-		5D831DD622B836EC0049FBB1 /* Spot.IM-Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Spot.IM-Core.xcodeproj"; path = "../../spotim-ios-sdk/Spot.IM-Core.xcodeproj"; sourceTree = "<group>"; };
+		5D831DD622B836EC0049FBB1 /* Spot.IM-Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Spot.IM-Core.xcodeproj"; path = "spotim-ios-sdk/Spot.IM-Core.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
