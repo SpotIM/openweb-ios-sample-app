@@ -11,7 +11,8 @@ import Spot_IM_Core
 
 class ViewController: UIViewController {
 
-    let conversationId = "p0st1"
+//    let conversationId = "p0st1"
+    let conversationId = "fedin001"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,10 @@ class ViewController: UIViewController {
 
     @IBAction func showMainConversation(_ sender: UIButton) {
         showMainConversation(with: conversationId)
+    }
+
+    @IBAction func resetTestUser(_ sender: Any) {
+        SPPublicSessionInterface.resetUser()
     }
 
     private func showMainConversation(with id: String) {
