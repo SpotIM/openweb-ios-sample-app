@@ -26,10 +26,19 @@
                                     <action selector="showMainConversation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ryL-VK-L0l"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2wZ-ea-mne">
+                                <rect key="frame" x="238" y="714" width="99" height="30"/>
+                                <state key="normal" title="reset test user"/>
+                                <connections>
+                                    <action selector="resetTestUser:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OVP-mL-TLG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="2wZ-ea-mne" firstAttribute="trailing" secondItem="Ur9-7z-0j6" secondAttribute="trailing" id="BkT-z8-hIH"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Ur9-7z-0j6" secondAttribute="bottom" constant="25" id="EC8-1d-SOJ"/>
+                            <constraint firstItem="Ur9-7z-0j6" firstAttribute="top" secondItem="2wZ-ea-mne" secondAttribute="bottom" constant="51" id="wOJ-y6-0jv"/>
                             <constraint firstItem="Ur9-7z-0j6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wtw-zX-Npa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
