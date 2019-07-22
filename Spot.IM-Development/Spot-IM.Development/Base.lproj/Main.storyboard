@@ -33,11 +33,20 @@
                                     <action selector="resetTestUser:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OVP-mL-TLG"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dug-Ju-sAO">
+                                <rect key="frame" x="296" y="653" width="41" height="30"/>
+                                <state key="normal" title="Crash"/>
+                                <connections>
+                                    <action selector="crashButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LC5-dj-XbG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="2wZ-ea-mne" firstAttribute="trailing" secondItem="Ur9-7z-0j6" secondAttribute="trailing" id="BkT-z8-hIH"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Ur9-7z-0j6" secondAttribute="bottom" constant="25" id="EC8-1d-SOJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dug-Ju-sAO" secondAttribute="trailing" constant="77" id="g7T-z1-LzN"/>
+                            <constraint firstItem="2wZ-ea-mne" firstAttribute="top" secondItem="dug-Ju-sAO" secondAttribute="bottom" constant="31" id="n2c-gT-Yau"/>
                             <constraint firstItem="Ur9-7z-0j6" firstAttribute="top" secondItem="2wZ-ea-mne" secondAttribute="bottom" constant="51" id="wOJ-y6-0jv"/>
                             <constraint firstItem="Ur9-7z-0j6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wtw-zX-Npa"/>
                         </constraints>
