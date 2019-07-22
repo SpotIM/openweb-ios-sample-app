@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
+		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		5D697A4122B65106001AD556 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		5D697A4422B65106001AD556 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4222B65106001AD556 /* Main.storyboard */; };
@@ -66,6 +68,8 @@
 
 /* Begin PBXFileReference section */
 		011BAE2D4CB6E276D553BCF3 /* Pods-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Spot-IM.Development/Pods-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
+		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
+		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		273DC57B58DEC9BE1E600656 /* Pods-Spot-IM.DevelopmentTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot-IM.DevelopmentTests.release.xcconfig"; path = "Target Support Files/Pods-Spot-IM.DevelopmentTests/Pods-Spot-IM.DevelopmentTests.release.xcconfig"; sourceTree = "<group>"; };
 		3CC8721E0B5CBC7461B37EF1 /* Pods-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Spot-IM.Development/Pods-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		597A50E6EE0CF506B2483809 /* Pods_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +113,7 @@
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
+				0EAFED7922E505A900B57E29 /* fastlane */,
 				5D831DD622B836EC0049FBB1 /* Spot.IM-Core.xcodeproj */,
 				5D697A3D22B65106001AD556 /* Spot-IM.Development */,
 				5D697A5222B65108001AD556 /* Spot-IM.DevelopmentTests */,
@@ -130,6 +135,7 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
+				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
 				5D697A3E22B65106001AD556 /* AppDelegate.swift */,
 				5D697A4022B65106001AD556 /* ViewController.swift */,
 				5D697A4222B65106001AD556 /* Main.storyboard */,
@@ -192,6 +198,7 @@
 				5D697A3922B65106001AD556 /* Resources */,
 				5DA0D26F22B83A6B0029511E /* Embed Frameworks */,
 				3811922C4C3F70751EE6D2FD /* [CP] Embed Pods Frameworks */,
+				0EAFED8522E51FE100B57E29 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -290,6 +297,8 @@
 			files = (
 				5D697A4922B65108001AD556 /* LaunchScreen.storyboard in Resources */,
 				5D697A4622B65108001AD556 /* Assets.xcassets in Resources */,
+				0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */,
+				0EAFED7A22E505A900B57E29 /* fastlane in Resources */,
 				5D697A4422B65106001AD556 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,6 +313,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0EAFED8522E51FE100B57E29 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
+		};
 		3811922C4C3F70751EE6D2FD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -550,8 +577,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 75299F74F7;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../spotim-ios-sdk/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
@@ -559,8 +587,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Development";
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.sdk-beta";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -572,8 +601,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 75299F74F7;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../spotim-ios-sdk/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
@@ -581,8 +611,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Development";
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.sdk-beta";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

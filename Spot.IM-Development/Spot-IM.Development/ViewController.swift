@@ -8,6 +8,7 @@
 
 import UIKit
 import Spot_IM_Core
+import Crashlytics
 
 class ViewController: UIViewController {
 
@@ -37,6 +38,10 @@ class ViewController: UIViewController {
 
     private func setupUI() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
+    }
+    
+    @IBAction func crashButtonTapped(_ sender: AnyObject) {
+        Crashlytics.sharedInstance().crash()
     }
 }
 
