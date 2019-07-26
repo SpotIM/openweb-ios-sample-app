@@ -548,13 +548,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CC8721E0B5CBC7461B37EF1 /* Pods-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 75299F74F7;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../spotim-ios-sdk/**";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -570,13 +570,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 011BAE2D4CB6E276D553BCF3 /* Pods-Spot-IM.Development.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 75299F74F7;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../spotim-ios-sdk/**";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
