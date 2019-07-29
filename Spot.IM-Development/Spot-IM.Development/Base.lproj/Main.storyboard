@@ -10,31 +10,23 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Authenticstion View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="AuthenticstionViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ur9-7z-0j6">
-                                <rect key="frame" x="30" y="501" width="260" height="42"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="show main conversation"/>
-                                <connections>
-                                    <action selector="showMainConversation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ryL-VK-L0l"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2wZ-ea-mne">
-                                <rect key="frame" x="78" y="420" width="164" height="30"/>
+                                <rect key="frame" x="78" y="518" width="164" height="30"/>
                                 <state key="normal" title="reset all authentications"/>
                                 <connections>
                                     <action selector="resetAllAuthentication:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TCS-FO-aw6"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P2c-ld-ZVG">
-                                <rect key="frame" x="0.0" y="128.5" width="320" height="148"/>
+                                <rect key="frame" x="0.0" y="226.5" width="320" height="148"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Generic token" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N1m-o4-5uz">
                                         <rect key="frame" x="43" y="118.5" width="113" height="22"/>
@@ -105,7 +97,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EAA-be-nKv">
-                                <rect key="frame" x="0.0" y="306.5" width="320" height="83.5"/>
+                                <rect key="frame" x="0.0" y="404.5" width="320" height="83.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SDr-Zq-72M">
                                         <rect key="frame" x="211" y="50" width="42" height="30"/>
@@ -149,15 +141,13 @@
                         <constraints>
                             <constraint firstItem="ok3-Rp-aos" firstAttribute="leading" secondItem="mdc-eL-AB2" secondAttribute="leading" id="4Qs-Nr-b9d"/>
                             <constraint firstItem="2wZ-ea-mne" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Cgf-6z-zRf"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Ur9-7z-0j6" secondAttribute="bottom" constant="25" id="EC8-1d-SOJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="EAA-be-nKv" secondAttribute="trailing" id="FOc-QO-qNA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="P2c-ld-ZVG" secondAttribute="trailing" id="PsV-Sj-Khw"/>
                             <constraint firstItem="P2c-ld-ZVG" firstAttribute="top" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="Uyr-Uj-k2F"/>
                             <constraint firstItem="P2c-ld-ZVG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="gyO-J1-WC2"/>
                             <constraint firstItem="EAA-be-nKv" firstAttribute="top" secondItem="P2c-ld-ZVG" secondAttribute="bottom" constant="30" id="i9m-qp-pq7"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="2wZ-ea-mne" secondAttribute="bottom" constant="20" id="lV6-k5-MF9"/>
                             <constraint firstItem="2wZ-ea-mne" firstAttribute="top" secondItem="EAA-be-nKv" secondAttribute="bottom" constant="30" id="sIn-re-yAP"/>
-                            <constraint firstItem="Ur9-7z-0j6" firstAttribute="top" secondItem="2wZ-ea-mne" secondAttribute="bottom" constant="51" id="wOJ-y6-0jv"/>
-                            <constraint firstItem="Ur9-7z-0j6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wtw-zX-Npa"/>
                             <constraint firstItem="ArV-wu-eT4" firstAttribute="centerX" secondItem="Lkc-3M-egv" secondAttribute="centerX" id="x1M-8Y-d4i"/>
                             <constraint firstItem="EAA-be-nKv" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="zEi-2x-UOW"/>
                         </constraints>
@@ -174,7 +164,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="560.86956521739137" y="362.94642857142856"/>
+            <point key="canvasLocation" x="1596" y="376"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LwD-dU-fQI">
@@ -185,12 +175,65 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="LsA-Tx-31L"/>
+                        <segue destination="COS-Sr-MbI" kind="relationship" relationship="rootViewController" id="RFd-ex-MN4"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EOL-mE-B38" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-285" y="363"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="a3e-oC-G0f">
+            <objects>
+                <viewController id="COS-Sr-MbI" customClass="ViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BKE-Ut-tNt">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="htH-kI-1Pw">
+                                <rect key="frame" x="69.5" y="485" width="181" height="30"/>
+                                <state key="normal" title="Authentication Playground"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" id="K30-vi-Uta"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qNv-s9-0hd">
+                                <rect key="frame" x="94" y="428" width="132" height="30"/>
+                                <state key="normal" title="Show Conversation"/>
+                                <connections>
+                                    <action selector="showMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="umK-bc-ChK"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="spot_logo" translatesAutoresizingMaskIntoConstraints="NO" id="pTy-M9-4cH">
+                                <rect key="frame" x="100" y="147" width="120" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="pTy-M9-4cH" secondAttribute="height" multiplier="1:1" id="RqM-MZ-R8X"/>
+                                    <constraint firstAttribute="width" constant="120" id="t6l-g6-ZQD"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="qNv-s9-0hd" secondAttribute="bottom" constant="27" id="LIt-8J-gv6"/>
+                            <constraint firstItem="qNv-s9-0hd" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="eZF-RF-FMJ"/>
+                            <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="ejj-AI-zUk"/>
+                            <constraint firstItem="htH-kI-1Pw" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="gcn-lI-X2U"/>
+                            <constraint firstItem="pTy-M9-4cH" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="83" id="k1b-5a-uP0"/>
+                            <constraint firstItem="HBy-no-NuF" firstAttribute="bottom" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="53" id="pce-Zc-Y3e"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="HBy-no-NuF"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="JkC-5p-26C"/>
+                    <connections>
+                        <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kyj-p0-bpK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="585" y="362"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="spot_logo" width="90" height="90"/>
+    </resources>
 </document>
