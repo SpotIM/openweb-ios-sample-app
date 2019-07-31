@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     }
 
     private func showMainConversation(with id: String) {
-        let mainConversationVC = SPMainConversationVC(with: id)
+        let mainConversationVC = SPMainConversationViewController(with: id)
         navigationController?.pushViewController(mainConversationVC, animated: true)
     }
 
