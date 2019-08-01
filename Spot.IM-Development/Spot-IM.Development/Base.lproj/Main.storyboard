@@ -211,14 +211,23 @@
                                     <constraint firstAttribute="width" constant="120" id="t6l-g6-ZQD"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hsr-To-3uz">
+                                <rect key="frame" x="61" y="378" width="198" height="30"/>
+                                <state key="normal" title="Convresation with Fox article"/>
+                                <connections>
+                                    <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kdg-Eo-W3h"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="qNv-s9-0hd" secondAttribute="bottom" constant="27" id="LIt-8J-gv6"/>
+                            <constraint firstItem="qNv-s9-0hd" firstAttribute="firstBaseline" secondItem="Hsr-To-3uz" secondAttribute="baseline" constant="50" id="Sg3-FP-6ml"/>
                             <constraint firstItem="qNv-s9-0hd" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="eZF-RF-FMJ"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="ejj-AI-zUk"/>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="gcn-lI-X2U"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="83" id="k1b-5a-uP0"/>
+                            <constraint firstItem="Hsr-To-3uz" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="oVv-iZ-6yH"/>
                             <constraint firstItem="HBy-no-NuF" firstAttribute="bottom" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="53" id="pce-Zc-Y3e"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="HBy-no-NuF"/>
