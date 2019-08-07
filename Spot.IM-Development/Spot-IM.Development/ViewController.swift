@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     @IBAction func showMainConversation(_ sender: UIButton) {
         // TODO: (Fedin) remove SPClientSettings.setup from here
         // when everything working with single key in AppDelegate
-        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: .demoMainSpotKey,
+        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: .demoGenericSpotKeyForSSO,
                                                      postId: conversationId,
                                                      container: navigationController)
         spotIMCoordinator?.startFlow()
