@@ -16,27 +16,28 @@ class ViewController: UIViewController {
     let conversationId = "fedin001"
     let foxArticleId = "urn:uri:base64:11ed1e55-b77b-505b-9ef5-5e42fbd9daed"
 
+    var spotIMCoordinator: SpotImSDKFlowCoordinator?
+    
     @IBOutlet weak var logo: UIImageView!
     @IBAction func showMainConversation(_ sender: UIButton) {
         // TODO: (Fedin) remove SPClientSettings.setup from here
         // when everything working with single key in AppDelegate
-        SPClientSettings.setup(spotKey: .demoMainSpotKey)
-        showMainConversation(with: conversationId)
+        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: .demoMainSpotKey,
+                                                     postId: conversationId,
+                                                     container: navigationController)
+        spotIMCoordinator?.startFlow()
     }
     
     @IBAction func showFoxMainConversation(_ sender: UIButton) {
-        SPClientSettings.setup(spotKey: .demoFoxSpotKeyForSSO)
-        showMainConversation(with: foxArticleId)
+        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: .demoFoxSpotKeyForSSO,
+                                                     postId: foxArticleId,
+                                                     container: navigationController)
+        spotIMCoordinator?.startFlow()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-    }
-
-    private func showMainConversation(with id: String) {
-        let mainConversationVC = SPMainConversationViewController(with: id)
-        navigationController?.pushViewController(mainConversationVC, animated: true)
     }
 
     private func setupUI() {
