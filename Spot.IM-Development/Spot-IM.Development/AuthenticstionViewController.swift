@@ -42,6 +42,11 @@ class AuthenticstionViewController: UIViewController {
         self.title = "Authentication"
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
     
     private func updateUI() {
         if genericToken == nil {
