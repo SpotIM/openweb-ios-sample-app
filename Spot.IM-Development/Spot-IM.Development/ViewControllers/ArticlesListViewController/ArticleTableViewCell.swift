@@ -20,7 +20,7 @@ class ArticleTableViewCell : UITableViewCell {
     
     var post : Post? {
         didSet {
-            guard let extract = post?.extractData, let publishedAt = post?.publishedAt  else {
+            guard let extract = post?.extractData, let publishedAt = post?.publishedAt, let id = post?.conversationId else {
                 return
             }
      
@@ -28,25 +28,24 @@ class ArticleTableViewCell : UITableViewCell {
             card.title = extract.title.truncated(limit: 60)
             card.subtitle = extract.description.truncated(limit: 100)
             
-            let url = URL(string: extract.thumbnailUrl)
-            let processor = OverlayImageProcessor(overlay: .black)
-            
-            self.card.backgroundIV.kf.indicatorType = .activity
-            self.card.backgroundIV.kf.setImage(with: url, placeholder: nil, options: [
-                .processor(processor),
-                .scaleFactor(UIScreen.main.scale),
-                .transition(.fade(1)),
-                .forceRefresh
-            ])
-            
+            if let url = URL(string: extract.thumbnailUrl) {
+                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(OverlayImageProcessor(overlay: .black))], progressBlock: nil) {[weak self] (image, err, cache, url) in
+                    guard id == self?.post?.conversationId, let image = image else { return }
+                    self?.card.backgroundImage = image
+                }
+            }
+           
             card.delegate = self
         }
     }
     
+    public func shouldPresent( _ contentViewController: UIViewController?, from superVC: UIViewController?, fullscreen: Bool = false) {
+        self.card.shouldPresent(contentViewController, from: superVC, fullscreen: fullscreen)
+    }
+    
     override func prepareForReuse() {
         card.title = ""
-        card.backgroundIV.kf.cancelDownloadTask()
-        card.backgroundIV.kf.setImage(with: nil)
+        card.backgroundImage = nil
     }
     
     

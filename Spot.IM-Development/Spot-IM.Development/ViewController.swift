@@ -12,27 +12,15 @@ import Crashlytics
 
 class ViewController: UIViewController {
 
-//    let conversationId = "p0st1"
-    let conversationId = "fedin001"
-    let foxArticleId = "urn:uri:base64:11ed1e55-b77b-505b-9ef5-5e42fbd9daed"
-
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
     @IBOutlet weak var logo: UIImageView!
     @IBAction func showMainConversation(_ sender: UIButton) {
-        // TODO: (Fedin) remove SPClientSettings.setup from here
-        // when everything working with single key in AppDelegate
-        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: .demoGenericSpotKeyForSSO,
-                                                     postId: conversationId,
-                                                     container: navigationController)
-        spotIMCoordinator?.startFlow()
+        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoGenericSpotKeyForSSO), animated: true)
     }
     
     @IBAction func showFoxMainConversation(_ sender: UIButton) {
-        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: .demoFoxSpotKeyForSSO,
-                                                     postId: foxArticleId,
-                                                     container: navigationController)
-        spotIMCoordinator?.startFlow()
+        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoFoxSpotKeyForSSO), animated: true)
     }
 
     override func viewDidLoad() {
