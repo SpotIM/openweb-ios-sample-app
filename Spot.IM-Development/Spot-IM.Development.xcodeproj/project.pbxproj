@@ -11,6 +11,7 @@
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticstionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticstionViewController.swift */; };
 		5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
+		5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
 		5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		5D697A4122B65106001AD556 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		5D697A4422B65106001AD556 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4222B65106001AD556 /* Main.storyboard */; };
@@ -78,6 +79,7 @@
 		597A50E6EE0CF506B2483809 /* Pods_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C5448B76BD82AA510670ABD /* Pods_Spot_IM_DevelopmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spot_IM_DevelopmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAuthenticationProvider.swift; sourceTree = "<group>"; };
+		5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
 		5D697A3B22B65106001AD556 /* Spot-IM.Development.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spot-IM.Development.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D697A3E22B65106001AD556 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D697A4022B65106001AD556 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -130,6 +132,14 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		5D4943B72302CA8C00AA7541 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +165,7 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
+				5D4943B72302CA8C00AA7541 /* ViewControllers */,
 				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
 				5D00B73E22E9B78100EFC1B0 /* Core */,
 				5D697A3E22B65106001AD556 /* AppDelegate.swift */,
@@ -423,6 +434,7 @@
 			files = (
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
 				5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */,
+				5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */,
 				0EEF283B22EE52A400667A86 /* AuthenticstionViewController.swift in Sources */,
 				5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */,
 			);
