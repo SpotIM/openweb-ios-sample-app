@@ -65,8 +65,8 @@ class ArticlesListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let item = data?.posts?[indexPath.item] {
-            let postId = postId(post: post)
+        if let item = data?.posts?[indexPath.item], let postId = self.postId(post: item) {
+            
             spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId,
                                                                  postId: postId,
                                                                  container: navigationController)
@@ -97,7 +97,7 @@ extension ArticlesListViewController {
             .validate()
             .responseData {[weak self] response in
                 guard let data = response.data else {
-                    print("Damn")
+                    self?.showFailure()
                     return
                 }
                 do {
@@ -111,13 +111,20 @@ extension ArticlesListViewController {
                     }
                 }
                 catch {
-                    print("no")
+                    self?.showFailure()
                 }
-                
         }
     }
     
-    private func postId(post:Post?): String? {
+    private func showFailure() {
+        let alert = UIAlertController(title: "Damn, failed loading these articles", message: "I'll try to make it work next time", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {[weak self] action in
+            self?.navigationController?.popViewController(animated: true)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func postId(post:Post?) -> String? {
         guard let post = post else { return nil }
         return post.conversationId.replacingOccurrences(of: "\(post.spotId)_", with: "")
     }
