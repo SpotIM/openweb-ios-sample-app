@@ -7,6 +7,9 @@ target 'Spot-IM.Development' do
   pod 'SnapKit', '~> 4.2.0'
   # Pods for Spot-IM.Development
   
+  pod 'Cards'
+  pod 'Kingfisher'
+  
   pod 'Firebase/Analytics'
   pod 'Fabric'
   pod 'Crashlytics'

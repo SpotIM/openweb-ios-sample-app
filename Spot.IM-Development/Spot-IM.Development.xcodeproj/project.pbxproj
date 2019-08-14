@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
+		0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */; };
+		0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D42304A043006B1489 /* ArticleModel.swift */; };
+		0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
+		0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticstionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticstionViewController.swift */; };
@@ -70,6 +75,11 @@
 
 /* Begin PBXFileReference section */
 		011BAE2D4CB6E276D553BCF3 /* Pods-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Spot-IM.Development/Pods-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
+		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
+		0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
+		0E1125D42304A043006B1489 /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
+		0E1125D72304BC29006B1489 /* Date+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+extensions.swift"; sourceTree = "<group>"; };
+		0E1125DD2304C127006B1489 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0EEF283A22EE52A400667A86 /* AuthenticstionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticstionViewController.swift; sourceTree = "<group>"; };
@@ -114,6 +124,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E1125CE23049F7A006B1489 /* ArticlesListViewController */ = {
+			isa = PBXGroup;
+			children = (
+				0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */,
+				0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */,
+				0E1125D42304A043006B1489 /* ArticleModel.swift */,
+			);
+			path = ArticlesListViewController;
+			sourceTree = "<group>";
+		};
+		0E1125DC2304BC48006B1489 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				0E1125D72304BC29006B1489 /* Date+extensions.swift */,
+				0E1125DD2304C127006B1489 /* String+Extensions.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		5D00B73E22E9B78100EFC1B0 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +184,8 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
+				0E1125DC2304BC48006B1489 /* Extension */,
+				0E1125CE23049F7A006B1489 /* ArticlesListViewController */,
 				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
 				5D00B73E22E9B78100EFC1B0 /* Core */,
 				5D697A3E22B65106001AD556 /* AppDelegate.swift */,
@@ -422,8 +453,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
+				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
 				5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */,
+				0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */,
+				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
 				0EEF283B22EE52A400667A86 /* AuthenticstionViewController.swift in Sources */,
+				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
+				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
 				5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
