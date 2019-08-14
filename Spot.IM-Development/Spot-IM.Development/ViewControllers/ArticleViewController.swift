@@ -14,6 +14,9 @@ internal final class ArticleViewController: UIViewController {
 
     @IBOutlet weak var stubImageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
+    
+    var spotId : String?
+    var postId: String?
 
     let conversationId = "fedin001"
     let foxArticleId = "urn:uri:base64:11ed1e55-b77b-505b-9ef5-5e42fbd9daed"
@@ -23,8 +26,8 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: .demoFoxSpotKeyForSSO,
-                                                         postId: foxArticleId,
+        let spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: self.spotId ?? .demoFoxSpotKeyForSSO,
+                                                         postId: self.postId ?? foxArticleId,
                                                          container: navigationController)
         let preConversationVC = spotIMCoordinator.preConversationController()
 

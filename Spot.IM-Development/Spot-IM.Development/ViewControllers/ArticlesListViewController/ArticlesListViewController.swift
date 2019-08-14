@@ -54,9 +54,13 @@ class ArticlesListViewController: UITableViewController {
         
         if let item = data?.posts?[indexPath.item] {
             cell.post = item
+            
+           
+            
+            cell.delegate = self
         }
         
-        
+
         return cell
     }
     
@@ -72,6 +76,17 @@ class ArticlesListViewController: UITableViewController {
     }
 }
 
+extension ArticlesListViewController : ArticleTableViewCellDelegate {
+    func articleCellTapped(cell: ArticleTableViewCell, withPost post: Post?) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let articleViewController = storyboard.instantiateViewController(withIdentifier: "articleViewController") as! ArticleViewController
+        articleViewController.spotId = spotId
+        articleViewController.postId = post?.conversationId
+        cell.shouldPresent(articleViewController, from: self, fullscreen: true)
+    }
+    
+    
+}
 
 extension ArticlesListViewController {
     private func loadData() {

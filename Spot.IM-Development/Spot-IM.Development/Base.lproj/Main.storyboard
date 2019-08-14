@@ -169,7 +169,7 @@
         <!--Article View Controller-->
         <scene sceneID="gZq-Jd-NbV">
             <objects>
-                <viewController id="oc6-g4-D2s" customClass="ArticleViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="articleViewController" id="oc6-g4-D2s" customClass="ArticleViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ftL-P1-6zt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
