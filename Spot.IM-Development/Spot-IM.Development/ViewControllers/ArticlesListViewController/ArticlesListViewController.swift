@@ -78,15 +78,9 @@ class ArticlesListViewController: UITableViewController {
 extension ArticlesListViewController : ArticleTableViewCellDelegate {
     func articleCellTapped(cell: ArticleTableViewCell, withPost post: Post?) {
         guard let post = post, let postId = postId(post: post) else { return }
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let articleViewController = storyboard.instantiateViewController(withIdentifier: "articleViewController") as! ArticleViewController
-//        articleViewController.spotId = spotId
-//        articleViewController.postId = postId(post: post)
-//        articleViewController.url = post.extractData.url
-//        cell.shouldPresent(articleViewController, from: self, fullscreen: true)
-
         let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url)
-        cell.shouldPresent(articleViewController, from: self, fullscreen: true)
+        self.navigationController?.pushViewController(articleViewController, animated: true)
+        //cell.shouldPresent(articleViewController, from: self, fullscreen: true)
     }
 }
 
