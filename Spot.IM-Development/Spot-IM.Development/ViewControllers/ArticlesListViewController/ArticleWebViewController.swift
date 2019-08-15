@@ -46,7 +46,7 @@ internal final class ArticleWebViewController: UIViewController {
         
         spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId,
                                                      postId: postId,
-                                                     container: self)
+                                                     container: navigationController)
         guard let preConversationVC = spotIMCoordinator?.preConversationController() else { return }
         
         addChild(preConversationVC)
