@@ -77,18 +77,22 @@ class ArticlesListViewController: UITableViewController {
 
 extension ArticlesListViewController : ArticleTableViewCellDelegate {
     func articleCellTapped(cell: ArticleTableViewCell, withPost post: Post?) {
-        guard let post = post else { return }
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let articleViewController = storyboard.instantiateViewController(withIdentifier: "articleViewController") as! ArticleViewController
-        articleViewController.spotId = spotId
-        articleViewController.postId = postId(post: post)
+        guard let post = post, let postId = postId(post: post) else { return }
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let articleViewController = storyboard.instantiateViewController(withIdentifier: "articleViewController") as! ArticleViewController
+//        articleViewController.spotId = spotId
+//        articleViewController.postId = postId(post: post)
+//        articleViewController.url = post.extractData.url
+//        cell.shouldPresent(articleViewController, from: self, fullscreen: true)
+
+        let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url)
         cell.shouldPresent(articleViewController, from: self, fullscreen: true)
     }
 }
 
 extension ArticlesListViewController {
     private func loadData() {
-        let url = "https://api-gw.spot.im/v1.0.0/feed/spot/sp_ANQXRpqH/post/default/pitc?count=30&offset=0"
+        let url = "https://api-gw.spot.im/v1.0.0/feed/spot/\(spotId)/post/default/pitc?count=30&offset=0"
         Alamofire.request(url,
                           method: .get,
                           parameters: nil,
@@ -117,7 +121,7 @@ extension ArticlesListViewController {
     }
     
     private func showFailure() {
-        let alert = UIAlertController(title: "Damn, failed loading these articles", message: "I'll try to make it work next time", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Damn, failed loading these articles", message: "I'll try to make it work next time  🥴", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {[weak self] action in
             self?.navigationController?.popViewController(animated: true)
         }))

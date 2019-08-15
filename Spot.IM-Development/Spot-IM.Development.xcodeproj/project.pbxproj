@@ -12,6 +12,7 @@
 		0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D42304A043006B1489 /* ArticleModel.swift */; };
 		0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
 		0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
+		0E1125E423054335006B1489 /* ArticleWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125E323054335006B1489 /* ArticleWebViewController.swift */; };
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
@@ -81,6 +82,7 @@
 		0E1125D42304A043006B1489 /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
 		0E1125D72304BC29006B1489 /* Date+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+extensions.swift"; sourceTree = "<group>"; };
 		0E1125DD2304C127006B1489 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		0E1125E323054335006B1489 /* ArticleWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleWebViewController.swift; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */,
 				0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */,
 				0E1125D42304A043006B1489 /* ArticleModel.swift */,
+				0E1125E323054335006B1489 /* ArticleWebViewController.swift */,
 			);
 			path = ArticlesListViewController;
 			sourceTree = "<group>";
@@ -472,6 +475,7 @@
 				0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */,
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
+				0E1125E423054335006B1489 /* ArticleWebViewController.swift in Sources */,
 				5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -654,7 +658,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -678,7 +682,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
