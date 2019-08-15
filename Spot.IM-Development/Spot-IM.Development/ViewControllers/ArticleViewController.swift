@@ -26,10 +26,10 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: self.spotId ?? .demoFoxSpotKeyForSSO,
-                                                         postId: self.postId ?? foxArticleId,
-                                                         container: navigationController)
-        let preConversationVC = spotIMCoordinator.preConversationController()
+        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: self.spotId ?? .demoFoxSpotKeyForSSO,
+                                                     postId: self.postId ?? foxArticleId,
+                                                     container: navigationController)
+        guard let preConversationVC = spotIMCoordinator?.preConversationController() else { return }
 
         addChild(preConversationVC)
         containerView.addSubview(preConversationVC.view)
@@ -41,6 +41,11 @@ internal final class ArticleViewController: UIViewController {
         }
 
         preConversationVC.didMove(toParent: self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 }
 

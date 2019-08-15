@@ -44,10 +44,10 @@ internal final class ArticleWebViewController: UIViewController {
     
     private func setupSpotView() {
         
-        let spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId,
-                                                         postId: postId,
-                                                         container: navigationController)
-        let preConversationVC = spotIMCoordinator.preConversationController()
+        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId,
+                                                     postId: postId,
+                                                     container: self)
+        guard let preConversationVC = spotIMCoordinator?.preConversationController() else { return }
         
         addChild(preConversationVC)
         containerView.addSubview(preConversationVC.view)
