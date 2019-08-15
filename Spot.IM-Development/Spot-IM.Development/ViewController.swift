@@ -12,17 +12,21 @@ import Crashlytics
 
 class ViewController: UIViewController {
 
-    var spotIMCoordinator: SpotImSDKFlowCoordinator?
-    
+ 
+
     @IBOutlet weak var logo: UIImageView!
     @IBAction func showMainConversation(_ sender: UIButton) {
-        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoGenericSpotKeyForSSO), animated: true)
+        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoMainSpotKey), animated: true)
     }
     
     @IBAction func showFoxMainConversation(_ sender: UIButton) {
         navigationController?.pushViewController(ArticlesListViewController(spotId: .demoFoxSpotKeyForSSO), animated: true)
     }
 
+    @IBAction func showDemoSpotConversation(_ sender: Any) {
+        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoMainSpotKey), animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

@@ -256,8 +256,8 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qNv-s9-0hd">
-                                <rect key="frame" x="121.5" y="519" width="132" height="30"/>
-                                <state key="normal" title="Show Conversation"/>
+                                <rect key="frame" x="83" y="499" width="209" height="30"/>
+                                <state key="normal" title="Show SSO Demo Spot Articles"/>
                                 <connections>
                                     <action selector="showMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="umK-bc-ChK"/>
                                 </connections>
@@ -270,17 +270,26 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hsr-To-3uz">
-                                <rect key="frame" x="88.5" y="469" width="198" height="30"/>
-                                <state key="normal" title="Convresation with Fox article"/>
+                                <rect key="frame" x="105" y="449" width="165" height="30"/>
+                                <state key="normal" title="Show Fox News Articles"/>
                                 <connections>
                                     <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kdg-Eo-W3h"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZp-Pq-loo">
+                                <rect key="frame" x="100" y="409" width="175" height="30"/>
+                                <state key="normal" title="Show Demo Spot Articles"/>
+                                <connections>
+                                    <action selector="showDemoSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kt7-rq-mfA"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="0p1-DY-kYy" firstAttribute="firstBaseline" secondItem="qNv-s9-0hd" secondAttribute="baseline" constant="20" symbolType="layoutAnchor" id="Jku-yd-AqR"/>
+                            <constraint firstItem="0p1-DY-kYy" firstAttribute="firstBaseline" secondItem="qNv-s9-0hd" secondAttribute="baseline" constant="40" id="Jku-yd-AqR"/>
+                            <constraint firstItem="AZp-Pq-loo" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="PWl-A0-3h7"/>
                             <constraint firstItem="0p1-DY-kYy" firstAttribute="centerX" secondItem="BKE-Ut-tNt" secondAttribute="centerX" id="QHL-lL-9LQ"/>
+                            <constraint firstItem="Hsr-To-3uz" firstAttribute="firstBaseline" secondItem="AZp-Pq-loo" secondAttribute="baseline" constant="40" id="WR3-3B-ucG"/>
                             <constraint firstItem="qNv-s9-0hd" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="eZF-RF-FMJ"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="ejj-AI-zUk"/>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="0p1-DY-kYy" secondAttribute="bottom" constant="15" id="fDp-gw-dg5"/>
