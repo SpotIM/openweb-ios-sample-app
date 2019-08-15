@@ -69,6 +69,7 @@ class ArticleTableViewCell : UITableViewCell {
     }
     
     private func formattedDate(publishedAt: String) -> String {
+        guard publishedAt != "" else { return "" }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         let date = dateFormatter.date(from:publishedAt)!
