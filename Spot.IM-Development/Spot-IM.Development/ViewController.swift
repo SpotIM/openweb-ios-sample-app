@@ -47,6 +47,13 @@ class ViewController: UIViewController {
         
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let articleVC = segue.destination as? ArticleViewController {
+            articleVC.spotId = .demoMainSpotKey
+            articleVC.postId = "fedin001"
+        }
+    }
     
     private func setupUI() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
