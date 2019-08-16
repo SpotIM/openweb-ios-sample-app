@@ -66,10 +66,10 @@ class ArticlesListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = data?.posts?[indexPath.item], let postId = self.postId(post: item) {
-            
-            spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId,
-                                                                 postId: postId,
-                                                                 container: navigationController)
+
+            SPClientSettings.setup(spotKey: spotId)
+            spotIMCoordinator = SpotImSDKFlowCoordinator(postId: postId,
+                                                         container: navigationController)
             spotIMCoordinator?.startFlow()
         }
     }
