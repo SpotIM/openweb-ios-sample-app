@@ -33,6 +33,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func showDemoSpotConversation(_ sender: Any) {
+        SPPublicSessionInterface.resetUser()
         navigationController?.pushViewController(ArticlesListViewController(spotId: .demoMainSpotKey), animated: true)
     }
     
