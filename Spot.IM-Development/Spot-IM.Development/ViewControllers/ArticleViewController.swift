@@ -25,7 +25,6 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SPClientSettings.setup(spotKey: spotId ?? .demoFoxSpotKeyForSSO)
         spotIMCoordinator = SpotImSDKFlowCoordinator(postId: self.postId ?? foxArticleId,
                                                      container: navigationController)
         guard let preConversationVC = spotIMCoordinator?.preConversationController() else { return }

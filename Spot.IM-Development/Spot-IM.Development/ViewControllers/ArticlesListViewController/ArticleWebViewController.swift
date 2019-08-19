@@ -38,6 +38,7 @@ internal final class ArticleWebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .groupTableViewBackground
         setup()
         setupSpotView()
     }

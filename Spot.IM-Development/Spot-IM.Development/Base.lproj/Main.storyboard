@@ -266,7 +266,7 @@
                                 <rect key="frame" x="107.5" y="539" width="160" height="30"/>
                                 <state key="normal" title="Show Pre-conversation"/>
                                 <connections>
-                                    <segue destination="oc6-g4-D2s" kind="show" id="vyj-SJ-PsH"/>
+                                    <action selector="showPreConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="dJN-oM-5sz"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hsr-To-3uz">
@@ -304,6 +304,7 @@
                     <navigationItem key="navigationItem" id="JkC-5p-26C"/>
                     <connections>
                         <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
+                        <segue destination="oc6-g4-D2s" kind="show" identifier="showPreConversationSegue" id="03O-tL-zah"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kyj-p0-bpK" userLabel="First Responder" sceneMemberID="firstResponder"/>
