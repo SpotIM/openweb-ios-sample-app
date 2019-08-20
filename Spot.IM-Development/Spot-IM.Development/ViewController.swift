@@ -33,6 +33,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func showDemoSpotConversation(_ sender: Any) {
+        SPPublicSessionInterface.resetUser()
         navigationController?.pushViewController(ArticlesListViewController(spotId: .demoMainSpotKey), animated: true)
     }
     
@@ -46,6 +47,13 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let articleVC = segue.destination as? ArticleViewController {
+            articleVC.spotId = .demoMainSpotKey
+            articleVC.postId = "fedin001"
+        }
     }
     
     private func setupUI() {

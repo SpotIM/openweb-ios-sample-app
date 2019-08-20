@@ -18,7 +18,6 @@ internal final class ArticleViewController: UIViewController {
     var spotId : String?
     var postId: String?
 
-    let conversationId = "fedin001"
     let foxArticleId = "urn:uri:base64:11ed1e55-b77b-505b-9ef5-5e42fbd9daed"
 
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
@@ -26,10 +25,10 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: self.spotId ?? .demoFoxSpotKeyForSSO,
-                                                         postId: self.postId ?? foxArticleId,
-                                                         container: navigationController)
-        let preConversationVC = spotIMCoordinator.preConversationController()
+        SPClientSettings.setup(spotKey: spotId ?? .demoFoxSpotKeyForSSO)
+        spotIMCoordinator = SpotImSDKFlowCoordinator(postId: self.postId ?? foxArticleId,
+                                                     container: navigationController)
+        guard let preConversationVC = spotIMCoordinator?.preConversationController() else { return }
 
         addChild(preConversationVC)
         containerView.addSubview(preConversationVC.view)
@@ -41,6 +40,11 @@ internal final class ArticleViewController: UIViewController {
         }
 
         preConversationVC.didMove(toParent: self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
 }
 
