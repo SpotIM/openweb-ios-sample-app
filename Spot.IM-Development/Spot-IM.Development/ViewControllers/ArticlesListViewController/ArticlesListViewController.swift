@@ -31,9 +31,9 @@ class ArticlesListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Articles List"
+        setup()
         loadData()
-        tableView.register(ArticleTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
-        tableView.separatorStyle = .none
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,9 +54,6 @@ class ArticlesListViewController: UITableViewController {
         
         if let item = data?.posts?[indexPath.item] {
             cell.post = item
-            
-           
-            
             cell.delegate = self
         }
         
@@ -66,10 +63,10 @@ class ArticlesListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let item = data?.posts?[indexPath.item], let postId = self.postId(post: item) {
-            
-            spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId,
-                                                                 postId: postId,
-                                                                 container: navigationController)
+
+            SPClientSettings.setup(spotKey: spotId)
+            spotIMCoordinator = SpotImSDKFlowCoordinator(postId: postId,
+                                                         container: navigationController)
             spotIMCoordinator?.startFlow()
         }
     }
@@ -85,7 +82,31 @@ extension ArticlesListViewController : ArticleTableViewCellDelegate {
 }
 
 extension ArticlesListViewController {
+    
+    @objc func reloadData() {
+        self.data = nil
+        self.tableView.reloadData()
+        self.loadData()
+    }
+    
     private func loadData() {
+        refreshControl?.beginRefreshing()
+        self.fetchData {[weak self] (response, error) in
+            self?.refreshControl?.endRefreshing()
+            guard let response = response, error == false else {
+                self?.showFailure()
+                return
+            }
+            
+            self?.data = response
+            if let posts = self?.data?.posts {
+                let indexPaths = posts.enumerated().map({ IndexPath(row: $0.offset, section: 0) })
+                self?.tableView.insertRows(at: indexPaths, with: .fade)
+            }
+        }
+    }
+    
+    private func fetchData(completion: @escaping (_ data:Response?, _ error:Bool) -> Void) {
         let url = "https://api-gw.spot.im/v1.0.0/feed/spot/\(spotId)/post/default/pitc?count=30&offset=0"
         Alamofire.request(url,
                           method: .get,
@@ -93,23 +114,20 @@ extension ArticlesListViewController {
                           encoding: JSONEncoding.default,
                           headers: nil)
             .validate()
-            .responseData {[weak self] response in
+            .responseData {response in
                 guard let data = response.data else {
-                    self?.showFailure()
+                    completion(nil, true)
                     return
                 }
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let result = try decoder.decode(Response.self, from: data)
-                    self?.data = result
-                    if let posts = self?.data?.posts {
-                        let indexPaths = posts.enumerated().map({ IndexPath(row: $0.offset, section: 0) })
-                        self?.tableView.insertRows(at: indexPaths, with: .fade)
-                    }
+                    
+                    completion(result, false)
                 }
                 catch {
-                    self?.showFailure()
+                    completion(nil, true)
                 }
         }
     }
@@ -125,6 +143,27 @@ extension ArticlesListViewController {
     private func postId(post:Post?) -> String? {
         guard let post = post else { return nil }
         return post.conversationId.replacingOccurrences(of: "\(post.spotId)_", with: "")
+    }
+}
+
+
+// MARK: Layout
+
+extension ArticlesListViewController {
+    func setup() {
+        self.setupTableView()
+    }
+    
+    func setupTableView() {
+        tableView.register(ArticleTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.separatorStyle = .none
+        setupRefresh()
+    }
+    
+    func setupRefresh() {
+        let refresh = UIRefreshControl()
+        refresh.addTarget(self, action: #selector(reloadData), for: UIControl.Event.valueChanged)
+        tableView.refreshControl = refresh
     }
 }
 
