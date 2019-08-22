@@ -13,39 +13,31 @@ import Crashlytics
 class ViewController: UIViewController {
 
     let authProvider = SPDefaultAuthProvider()
+    var onConfigLoadedAction: (() -> Void)?
 
     @IBOutlet weak var logo: UIImageView!
-    @IBAction func showMainConversation(_ sender: UIButton) {
-        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoGenericSpotKeyForSSO), animated: true)
-    }
-    
-    @IBAction func showFoxMainConversation(_ sender: UIButton) {
-        
-        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoFoxSpotKeyForSSO), animated: true)
-        
-        // Authenticate on the background.
-        let params = SSOStartParameters(token: nil, secret: .demoFoxSecretForSSO)
-        authProvider.startSSO(with: params, completion: { (response, error) in
-            if let error = error {
-                print(error)
-            }
-        })
+    var loadingButtonTitleBackup: String?
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
-    @IBAction func showDemoSpotConversation(_ sender: Any) {
-        SPPublicSessionInterface.resetUser()
-        navigationController?.pushViewController(ArticlesListViewController(spotId: .demoMainSpotKey), animated: true)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupUI()
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(utilizeConfig),
+            name: .spotIMConfigLoaded,
+            object: nil
+        )
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
@@ -55,15 +47,81 @@ class ViewController: UIViewController {
             articleVC.postId = "fedin001"
         }
     }
-    
+
     private func setupUI() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
         logo.clipsToBounds = true
         logo.layer.cornerRadius = 8
     }
+
+    @IBAction private func showMainConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
+        setup(with: .demoGenericSpotKeyForSSO, from: sender) { [weak self] in
+            guard let self = self else { return }
+            self.showArticles(with: .demoGenericSpotKeyForSSO)
+        }
+    }
     
-    @IBAction func crashButtonTapped(_ sender: AnyObject) {
+    @IBAction private func showFoxMainConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
+        setup(with: .demoFoxSpotKeyForSSO, from: sender) { [weak self] in
+            guard let self = self else { return }
+
+            sender.setTitle("Authenticating to Fox ⌛️", for: .normal)
+            
+            let params = SSOStartParameters(token: nil, secret: .demoFoxSecretForSSO)
+            self.authProvider.startSSO(with: params, completion: { (response, error) in
+                sender.setTitle(self.loadingButtonTitleBackup, for: .normal)
+                if let error = error {
+                    print(error)
+                } else {
+                    self.showArticles(with: .demoFoxSpotKeyForSSO)
+                }
+            })
+        }
+    }
+
+    @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
+        setup(with: .demoMainSpotKey, from: sender) { [weak self] in
+            guard let self = self else { return }
+            self.showArticles(with: .demoMainSpotKey)
+        }
+    }
+
+    @IBAction private func showPreConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
+        setup(with: .demoMainSpotKey, from: sender) { [weak self] in
+            guard let self = self else { return }
+            self.performSegue(withIdentifier: "showPreConversationSegue", sender: self)
+        }
+    }
+
+    @IBAction private func crashButtonTapped(_ sender: AnyObject) {
         Crashlytics.sharedInstance().crash()
+    }
+
+    @objc
+    private func utilizeConfig() {
+        onConfigLoadedAction?()
+        onConfigLoadedAction = nil
+    }
+
+    private func showArticles(with spotId: String) {
+        let controller = ArticlesListViewController(spotId: spotId)
+        navigationController?.pushViewController(controller, animated: true)
+    }
+
+    private func setup(with spotId: String, from sender: UIButton, completion: @escaping ()->()) {
+        loadingButtonTitleBackup = sender.titleLabel?.text
+        sender.setTitle("Loading configuration ⏳", for: .normal)
+
+        SPClientSettings.setup(spotKey: spotId)
+
+        onConfigLoadedAction = {
+            sender.setTitle(self.loadingButtonTitleBackup, for: .normal)
+            completion()
+        }
     }
 }
 

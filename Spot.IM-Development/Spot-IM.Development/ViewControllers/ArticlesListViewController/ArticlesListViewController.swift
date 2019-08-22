@@ -108,11 +108,13 @@ extension ArticlesListViewController {
     
     private func fetchData(completion: @escaping (_ data:Response?, _ error:Bool) -> Void) {
         let url = "https://api-gw.spot.im/v1.0.0/feed/spot/\(spotId)/post/default/pitc?count=30&offset=0"
+        let headers = ["x-spot-id": spotId,
+                       "x-post-id": "default"]
         Alamofire.request(url,
                           method: .get,
                           parameters: nil,
                           encoding: JSONEncoding.default,
-                          headers: nil)
+                          headers: headers)
             .validate()
             .responseData {response in
                 guard let data = response.data else {
