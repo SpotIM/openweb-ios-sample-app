@@ -19,6 +19,8 @@ internal final class ArticleWebViewController: UIViewController {
     private lazy var scrollView = UIScrollView()
     private lazy var webView = WKWebView()
     private lazy var containerView = UIView()
+
+    private lazy var loadingIndicator = UIActivityIndicatorView(style: .gray)
     
     let spotId : String
     let postId: String
@@ -39,6 +41,7 @@ internal final class ArticleWebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .groupTableViewBackground
         setup()
         setupSpotView()
     }
@@ -68,6 +71,16 @@ extension ArticleWebViewController {
         setupScrollView()
         setupWebView()
         setupContainerView()
+        setupLoadingIndicator()
+    }
+
+    private func setupLoadingIndicator() {
+        webView.addSubview(loadingIndicator)
+        loadingIndicator.layout {
+            $0.centerX.equal(to: view.centerXAnchor)
+            $0.centerY.equal(to: view.centerYAnchor)
+        }
+        loadingIndicator.startAnimating()
     }
     
     private func setupScrollView() {
@@ -84,6 +97,8 @@ extension ArticleWebViewController {
     private func setupWebView() {
         
         scrollView.addSubview(webView)
+
+        webView.navigationDelegate = self
         
         webView.layout {
             $0.top.equal(to: scrollView.topAnchor)
@@ -116,3 +131,12 @@ extension ArticleWebViewController {
     }
 }
 
+extension ArticleWebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        loadingIndicator.stopAnimating()
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        loadingIndicator.stopAnimating()
+    }
+}
