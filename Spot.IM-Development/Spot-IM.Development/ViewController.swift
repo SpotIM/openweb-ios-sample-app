@@ -55,6 +55,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction private func showMainConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
         setup(with: .demoGenericSpotKeyForSSO, from: sender) { [weak self] in
             guard let self = self else { return }
             self.showArticles(with: .demoGenericSpotKeyForSSO)
@@ -62,6 +63,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
         setup(with: .demoFoxSpotKeyForSSO, from: sender) { [weak self] in
             guard let self = self else { return }
 
@@ -80,6 +82,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
         setup(with: .demoMainSpotKey, from: sender) { [weak self] in
             guard let self = self else { return }
             self.showArticles(with: .demoMainSpotKey)
@@ -87,6 +90,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction private func showPreConversation(_ sender: UIButton) {
+        SPPublicSessionInterface.resetUser()
         setup(with: .demoMainSpotKey, from: sender) { [weak self] in
             guard let self = self else { return }
             self.performSegue(withIdentifier: "showPreConversationSegue", sender: self)

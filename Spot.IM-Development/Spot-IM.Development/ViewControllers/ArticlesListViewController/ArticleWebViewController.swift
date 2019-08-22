@@ -12,12 +12,15 @@ import Spot_IM_Core
 import WebKit
 
 let kSpotImDemo = "spotim.name"
+let kDemoArticleToUse = "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-secretly-living-in-brazil-reddit-selfie-sparks-conspiracy-theories/"
 
 internal final class ArticleWebViewController: UIViewController {
     
     private lazy var scrollView = UIScrollView()
     private lazy var webView = WKWebView()
     private lazy var containerView = UIView()
+
+    private lazy var loadingIndicator = UIActivityIndicatorView(style: .gray)
     
     let spotId : String
     let postId: String
@@ -68,6 +71,16 @@ extension ArticleWebViewController {
         setupScrollView()
         setupWebView()
         setupContainerView()
+        setupLoadingIndicator()
+    }
+
+    private func setupLoadingIndicator() {
+        webView.addSubview(loadingIndicator)
+        loadingIndicator.layout {
+            $0.centerX.equal(to: view.centerXAnchor)
+            $0.centerY.equal(to: view.centerYAnchor)
+        }
+        loadingIndicator.startAnimating()
     }
     
     private func setupScrollView() {
@@ -84,18 +97,20 @@ extension ArticleWebViewController {
     private func setupWebView() {
         
         scrollView.addSubview(webView)
+
+        webView.navigationDelegate = self
         
-        let height : CGFloat = url.contains(kSpotImDemo) ? 0.0 : 1200.0
-      
         webView.layout {
             $0.top.equal(to: scrollView.topAnchor)
             $0.leading.equal(to: scrollView.leadingAnchor)
             $0.trailing.equal(to: scrollView.trailingAnchor)
-            $0.height.equal(to: height)
+            $0.height.equal(to: 1500)
             $0.width.equal(to: scrollView.widthAnchor)
         }
         
-        if let Url =  URL(string: url) {
+        let isBadUrl = url.contains(kSpotImDemo)
+        let urlToUse = isBadUrl ? kDemoArticleToUse : url
+        if let Url =  URL(string: urlToUse) {
             self.webView.load(URLRequest(url:Url))
         }
         
@@ -116,3 +131,12 @@ extension ArticleWebViewController {
     }
 }
 
+extension ArticleWebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        loadingIndicator.stopAnimating()
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        loadingIndicator.stopAnimating()
+    }
+}
