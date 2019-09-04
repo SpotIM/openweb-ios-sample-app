@@ -47,11 +47,16 @@ internal final class ArticleWebViewController: UIViewController {
     }
     
     private func setupSpotView() {
-
+        
         SPClientSettings.setup(spotKey: spotId)
-        spotIMCoordinator = SpotImSDKFlowCoordinator(postId: postId,
-                                                     container: navigationController)
-        guard let preConversationVC = spotIMCoordinator?.preConversationController() else { return }
+        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId,
+                                                     delegate: self)
+        guard
+            let preConversationVC = spotIMCoordinator?.preConversationController(
+                with: postId,
+                container: navigationController
+            )
+            else { return }
         
         addChild(preConversationVC)
         containerView.addSubview(preConversationVC.view)
@@ -139,4 +144,14 @@ extension ArticleWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         loadingIndicator.stopAnimating()
     }
+}
+
+extension ArticleWebViewController: SpotImSDKNavigationDelegate {
+    
+    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
+        let controller: AuthenticstionViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AuthenticstionViewController") as! AuthenticstionViewController
+        
+        return controller
+    }
+    
 }
