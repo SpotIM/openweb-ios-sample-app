@@ -61,15 +61,6 @@ class ArticlesListViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let item = data?.posts?[indexPath.item], let postId = self.postId(post: item) {
-
-            SPClientSettings.setup(spotKey: spotId)
-            spotIMCoordinator = SpotImSDKFlowCoordinator(postId: postId,
-                                                         container: navigationController)
-            spotIMCoordinator?.startFlow()
-        }
-    }
 }
 
 extension ArticlesListViewController : ArticleTableViewCellDelegate {
@@ -142,8 +133,9 @@ extension ArticlesListViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    private func postId(post:Post?) -> String? {
+    private func postId(post: Post?) -> String? {
         guard let post = post else { return nil }
+        
         return post.conversationId.replacingOccurrences(of: "\(post.spotId)_", with: "")
     }
 }

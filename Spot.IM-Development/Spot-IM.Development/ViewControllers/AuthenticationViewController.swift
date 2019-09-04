@@ -9,16 +9,15 @@
 import UIKit
 import Spot_IM_Core
 
-class AuthenticstionViewController: UIViewController {
+class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     
-    
+    var ssoAuthProvider: SPAuthenticationProvider = SPDefaultAuthProvider()
+
     @IBOutlet weak var genericTokenIndicator: UILabel!
     @IBOutlet weak var genericAuthenticationIndicator: UILabel!
     @IBOutlet weak var getGenericTokenButton: UIButton!
     @IBOutlet weak var getCodeAButton: UIButton!
     @IBOutlet weak var foxTokenIndicator: UILabel!
-    
-    let authProvider = SPDefaultAuthProvider()
     
     let accessTokenNetwork = "03190715DchJcY"
     let username = "test"
@@ -76,13 +75,13 @@ class AuthenticstionViewController: UIViewController {
         foxAuthDone = false
         genericAuthenticationIndicator.text = "⏳"
         
-        authProvider.startSSO(with: nil, completion: { (response, error) in
+        ssoAuthProvider.startSSO(with: nil, completion: { (response, error) in
             if let error = error {
                 print(error)
                 self.genericAuthDone = false
             } else {
                 self.codeA = response?.codeA
-                self.getCodeB()
+                self.getCodeB(genericToken: response?.jwtToken)
             }
         })
     }
@@ -96,7 +95,7 @@ class AuthenticstionViewController: UIViewController {
         foxTokenIndicator.text = "⏳"
         
         let params = SSOStartParameters(token: nil, secret: .demoFoxSecretForSSO)
-        authProvider.startSSO(with: params, completion: { (response, error) in
+        ssoAuthProvider.startSSO(with: params, completion: { (response, error) in
             if let error = error {
                 print(error)
                 self.foxAuthDone = false
@@ -111,7 +110,7 @@ class AuthenticstionViewController: UIViewController {
         })
     }
     
-    private func getCodeB() {
+    private func getCodeB(genericToken: String? = nil) {
         DemoAuthenticationProvider.getCodeB(
             with: codeA,
             accessToken: genericToken,
@@ -122,13 +121,13 @@ class AuthenticstionViewController: UIViewController {
                     self.genericAuthDone = false
                 } else {
                     self.codeB = codeB
-                    self.completeSSO()
+                    self.completeSSO(genericToken: genericToken)
                 }
         }
     }
     
-    private func completeSSO() {
-        authProvider.completeSSO(with: codeB) { (jwtToken, error) in
+    private func completeSSO(genericToken: String?) {
+        ssoAuthProvider.completeSSO(with: codeB, genericToken: genericToken) { (jwtToken, error) in
             if let error = error {
                 print(error)
                 self.genericAuthDone = false
@@ -149,6 +148,7 @@ class AuthenticstionViewController: UIViewController {
         SPPublicSessionInterface.resetUser()
     }
 }
+
 /// demo constants
 private extension String {
     static var demoGenericSpotKeyForSSO:    String { return "sp_eCIlROSD" }
