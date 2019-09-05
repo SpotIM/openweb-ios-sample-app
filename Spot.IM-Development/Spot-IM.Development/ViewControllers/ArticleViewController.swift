@@ -25,9 +25,13 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        spotIMCoordinator = SpotImSDKFlowCoordinator(postId: self.postId ?? foxArticleId,
-                                                     container: navigationController)
-        guard let preConversationVC = spotIMCoordinator?.preConversationController() else { return }
+        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId ?? .demoFoxSpotKeyForSSO,
+                                                     delegate: self)
+        guard
+            let preConversationVC = spotIMCoordinator?.preConversationController(
+                with: self.postId ?? foxArticleId,
+                container: navigationController)
+            else { return }
 
         addChild(preConversationVC)
         containerView.addSubview(preConversationVC.view)
@@ -45,6 +49,16 @@ internal final class ArticleViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
+}
+
+extension ArticleViewController: SpotImSDKNavigationDelegate {
+    
+    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
+        let controller: AuthenticstionViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AuthenticstionViewController") as! AuthenticstionViewController
+        
+        return controller
+    }
+    
 }
 
 private extension String {
