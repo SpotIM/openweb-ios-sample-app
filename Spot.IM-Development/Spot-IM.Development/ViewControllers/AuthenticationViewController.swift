@@ -74,16 +74,15 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
         
         foxAuthDone = false
         genericAuthenticationIndicator.text = "⏳"
-        
-        ssoAuthProvider.startSSO(with: nil, completion: { (response, error) in
+        ssoAuthProvider.startSSO { [weak self] response, error in
             if let error = error {
                 print(error)
-                self.genericAuthDone = false
+                self?.genericAuthDone = false
             } else {
-                self.codeA = response?.codeA
-                self.getCodeB(genericToken: response?.jwtToken)
+                self?.codeA = response?.codeA
+                self?.getCodeB(genericToken: response?.jwtToken)
             }
-        })
+        }
     }
     
     @IBAction func startFoxSSO(_ sender: Any) {
@@ -94,8 +93,7 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
         genericAuthDone = false
         foxTokenIndicator.text = "⏳"
         
-        let params = SSOStartParameters(token: nil, secret: .demoFoxSecretForSSO)
-        ssoAuthProvider.startSSO(with: params, completion: { (response, error) in
+        ssoAuthProvider.startSSO(with: .demoFoxSecretForSSO, completion: { (response, error) in
             if let error = error {
                 print(error)
                 self.foxAuthDone = false
@@ -127,11 +125,11 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     }
     
     private func completeSSO(genericToken: String?) {
-        ssoAuthProvider.completeSSO(with: codeB, genericToken: genericToken) { (jwtToken, error) in
+        ssoAuthProvider.completeSSO(with: codeB, genericToken: genericToken) { (success, error) in
             if let error = error {
                 print(error)
                 self.genericAuthDone = false
-            } else if jwtToken != nil {
+            } else if success {
                 self.genericAuthDone = true
             } else {
                 self.genericAuthDone = false
