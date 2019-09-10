@@ -24,6 +24,7 @@
 		5D697A4622B65108001AD556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		5D697A4922B65108001AD556 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4722B65108001AD556 /* LaunchScreen.storyboard */; };
 		5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */; };
+		5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		5DA0D26B22B83A6B0029511E /* Spot_IM_Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D831DDE22B836EC0049FBB1 /* Spot_IM_Core.framework */; };
 		5DA0D26C22B83A6B0029511E /* Spot_IM_Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5D831DDE22B836EC0049FBB1 /* Spot_IM_Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5DC3318603EF7FDD16F3E973 /* Pods_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C5448B76BD82AA510670ABD /* Pods_Spot_IM_DevelopmentTests.framework */; };
@@ -104,6 +105,7 @@
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D697A7822B65CBE001AD556 /* Spot_IM_Core.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Spot_IM_Core.framework; path = "../spotim-ios-sdk/RELEASE/Spot_IM_Core.framework"; sourceTree = "<group>"; };
 		5D831DD622B836EC0049FBB1 /* Spot.IM-Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Spot.IM-Core.xcodeproj"; path = "spotim-ios-sdk/Spot.IM-Core.xcodeproj"; sourceTree = "<group>"; };
+		5DA8B5A02327E20A0045FCFA /* Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
 		B20F95CEC97ADE9E990B44EB /* Pods-Spot-IM.DevelopmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot-IM.DevelopmentTests.debug.xcconfig"; path = "Target Support Files/Pods-Spot-IM.DevelopmentTests/Pods-Spot-IM.DevelopmentTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -199,6 +201,7 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
+				5DA8B59C2327E2010045FCFA /* Common */,
 				0E1125DC2304BC48006B1489 /* Extension */,
 				5D4943B72302CA8C00AA7541 /* ViewControllers */,
 				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
@@ -239,6 +242,14 @@
 				5D831DE022B836EC0049FBB1 /* Spot.IM-CoreTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5DA8B59C2327E2010045FCFA /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				5DA8B5A02327E20A0045FCFA /* Autolayout.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
@@ -468,6 +479,7 @@
 			files = (
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
+				5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */,
 				5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */,
 				0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
