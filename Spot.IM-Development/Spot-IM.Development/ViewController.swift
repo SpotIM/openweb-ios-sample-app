@@ -69,8 +69,7 @@ class ViewController: UIViewController {
 
             sender.setTitle("Authenticating to Fox ⌛️", for: .normal)
             
-            let params = SSOStartParameters(token: nil, secret: .demoFoxSecretForSSO)
-            self.authProvider.startSSO(with: params, completion: { (response, error) in
+            self.authProvider.startSSO(with: .demoFoxSecretForSSO, completion: { (response, error) in
                 sender.setTitle(self.loadingButtonTitleBackup, for: .normal)
                 if let error = error {
                     print(error)
