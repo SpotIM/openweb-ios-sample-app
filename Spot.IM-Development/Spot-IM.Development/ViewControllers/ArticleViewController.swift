@@ -25,11 +25,10 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        spotIMCoordinator = SpotImSDKFlowCoordinator(spotId: spotId ?? .demoFoxSpotKeyForSSO,
-                                                     delegate: self)
+        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
         guard
             let preConversationVC = spotIMCoordinator?.preConversationController(
-                with: self.postId ?? foxArticleId,
+                withPostId: self.postId ?? foxArticleId,
                 container: navigationController)
             else { return }
 
