@@ -9,6 +9,7 @@
 import UIKit
 import Cards
 import Kingfisher
+import SnapKit
 
 protocol ArticleTableViewCellDelegate: class {
     func articleCellTapped(cell:ArticleTableViewCell, withPost: Post?)
@@ -82,7 +83,7 @@ class ArticleTableViewCell : UITableViewCell {
     
     private func setupCard() {
         addSubview(card)
-        card.snp_makeConstraints {
+        card.snp.makeConstraints {
             $0.centerX.equalTo(self)
             $0.top.equalTo(self).offset(20)
             $0.bottom.equalTo(self).offset(-20)
