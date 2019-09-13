@@ -50,23 +50,23 @@ internal final class ArticleWebViewController: UIViewController {
         
         SPClientSettings.setup(spotKey: spotId)
         spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
-        guard
-            let preConversationVC = spotIMCoordinator?.preConversationController(
-                withPostId: postId,
-                container: navigationController
-            )
-            else { return }
-        
-        addChild(preConversationVC)
-        containerView.addSubview(preConversationVC.view)
-        preConversationVC.view.layout {
-            $0.top.equal(to: containerView.topAnchor)
-            $0.leading.equal(to: containerView.leadingAnchor)
-            $0.bottom.equal(to: containerView.bottomAnchor)
-            $0.trailing.equal(to: containerView.trailingAnchor)
-        }
-        
-        preConversationVC.didMove(toParent: self)
+
+        spotIMCoordinator?.preConversationController(
+            withPostId: postId,
+            container: navigationController,
+            completion: { [weak self] preConversationVC in
+                guard let self = self else { return }
+                self.addChild(preConversationVC)
+                self.containerView.addSubview(preConversationVC.view)
+                preConversationVC.view.layout {
+                    $0.top.equal(to: self.containerView.topAnchor)
+                    $0.leading.equal(to: self.containerView.leadingAnchor)
+                    $0.bottom.equal(to: self.containerView.bottomAnchor)
+                    $0.trailing.equal(to: self.containerView.trailingAnchor)
+                }
+
+                preConversationVC.didMove(toParent: self)
+        })        
     }
 }
 
