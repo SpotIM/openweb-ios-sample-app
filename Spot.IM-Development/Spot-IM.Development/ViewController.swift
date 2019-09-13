@@ -13,26 +13,14 @@ import Crashlytics
 class ViewController: UIViewController {
 
     let authProvider = SPDefaultAuthProvider()
-    var onConfigLoadedAction: (() -> Void)?
 
     @IBOutlet weak var logo: UIImageView!
     var loadingButtonTitleBackup: String?
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupUI()
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(utilizeConfig),
-            name: .spotIMConfigLoaded,
-            object: nil
-        )
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -56,54 +44,40 @@ class ViewController: UIViewController {
 
     @IBAction private func showMainConversation(_ sender: UIButton) {
         SPPublicSessionInterface.resetUser()
-        setup(with: .demoGenericSpotKeyForSSO, from: sender) { [weak self] in
-            guard let self = self else { return }
-            self.showArticles(with: .demoGenericSpotKeyForSSO)
-        }
+        setup(with: .demoGenericSpotKeyForSSO, from: sender)
+        showArticles(with: .demoGenericSpotKeyForSSO)
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         SPPublicSessionInterface.resetUser()
-        setup(with: .demoFoxSpotKeyForSSO, from: sender) { [weak self] in
-            guard let self = self else { return }
+        setup(with: .demoFoxSpotKeyForSSO, from: sender)
 
-            sender.setTitle("Authenticating to Fox ⌛️", for: .normal)
-            
-            self.authProvider.startSSO(with: .demoFoxSecretForSSO, completion: { (response, error) in
-                sender.setTitle(self.loadingButtonTitleBackup, for: .normal)
-                if let error = error {
-                    print(error)
-                } else {
-                    self.showArticles(with: .demoFoxSpotKeyForSSO)
-                }
-            })
-        }
+        sender.setTitle("Authenticating to Fox ⌛️", for: .normal)
+
+        authProvider.startSSO(with: .demoFoxSecretForSSO, completion: { (response, error) in
+            sender.setTitle(self.loadingButtonTitleBackup, for: .normal)
+            if let error = error {
+                print(error)
+            } else {
+                self.showArticles(with: .demoFoxSpotKeyForSSO)
+            }
+        })
     }
 
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
         SPPublicSessionInterface.resetUser()
-        setup(with: .demoMainSpotKey, from: sender) { [weak self] in
-            guard let self = self else { return }
-            self.showArticles(with: .demoMainSpotKey)
-        }
+        setup(with: .demoMainSpotKey, from: sender)
+        showArticles(with: .demoMainSpotKey)
     }
 
     @IBAction private func showPreConversation(_ sender: UIButton) {
         SPPublicSessionInterface.resetUser()
-        setup(with: .demoMainSpotKey, from: sender) { [weak self] in
-            guard let self = self else { return }
-            self.performSegue(withIdentifier: "showPreConversationSegue", sender: self)
-        }
+        setup(with: .demoMainSpotKey, from: sender)
+        performSegue(withIdentifier: "showPreConversationSegue", sender: self)
     }
 
     @IBAction private func crashButtonTapped(_ sender: AnyObject) {
         Crashlytics.sharedInstance().crash()
-    }
-
-    @objc
-    private func utilizeConfig() {
-        onConfigLoadedAction?()
-        onConfigLoadedAction = nil
     }
 
     private func showArticles(with spotId: String) {
@@ -111,16 +85,13 @@ class ViewController: UIViewController {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    private func setup(with spotId: String, from sender: UIButton, completion: @escaping ()->()) {
+    private func setup(with spotId: String, from sender: UIButton) {
         loadingButtonTitleBackup = sender.titleLabel?.text
         sender.setTitle("Loading configuration ⏳", for: .normal)
 
         SPClientSettings.setup(spotKey: spotId)
 
-        onConfigLoadedAction = {
-            sender.setTitle(self.loadingButtonTitleBackup, for: .normal)
-            completion()
-        }
+        sender.setTitle(self.loadingButtonTitleBackup, for: .normal)
     }
 }
 
