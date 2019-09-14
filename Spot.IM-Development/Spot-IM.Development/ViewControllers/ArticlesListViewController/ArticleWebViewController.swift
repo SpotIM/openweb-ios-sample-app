@@ -25,13 +25,15 @@ internal final class ArticleWebViewController: UIViewController {
     let spotId : String
     let postId: String
     let url: String
+    let authenticationControllerId : String
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
-    init(spotId:String, postId: String, url:String) {
+    init(spotId:String, postId: String, url:String, authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
         self.url = url
+        self.authenticationControllerId = authenticationControllerId
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -148,7 +150,7 @@ extension ArticleWebViewController: WKNavigationDelegate {
 extension ArticleWebViewController: SpotImSDKNavigationDelegate {
     
     func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
-        let controller: AuthenticstionViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AuthenticstionViewController") as! AuthenticstionViewController
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId) as! UIViewController & SSOAuthenticatable
         
         return controller
     }
