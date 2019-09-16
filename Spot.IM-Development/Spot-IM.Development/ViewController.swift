@@ -59,7 +59,6 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: "showPreConversationSegue", sender: self)
 
         setSpotId(spotId: .demoGenericSpotKeyForSSO)
-        self.showArticles(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
