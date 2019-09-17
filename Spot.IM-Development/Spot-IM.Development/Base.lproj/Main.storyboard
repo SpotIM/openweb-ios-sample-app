@@ -283,13 +283,23 @@
                                     <action selector="showDemoSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kt7-rq-mfA"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMI-UE-CFh">
+                                <rect key="frame" x="16" y="80" width="93" height="24"/>
+                                <string key="text">Version: [unknown]
+Build: [unknown]</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="textColor" red="0.29411764709999999" green="0.30196078430000001" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="TMI-UE-CFh" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="16" id="Gdj-AK-5u4"/>
                             <constraint firstItem="0p1-DY-kYy" firstAttribute="firstBaseline" secondItem="qNv-s9-0hd" secondAttribute="baseline" constant="40" id="Jku-yd-AqR"/>
                             <constraint firstItem="AZp-Pq-loo" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="PWl-A0-3h7"/>
                             <constraint firstItem="0p1-DY-kYy" firstAttribute="centerX" secondItem="BKE-Ut-tNt" secondAttribute="centerX" id="QHL-lL-9LQ"/>
                             <constraint firstItem="Hsr-To-3uz" firstAttribute="firstBaseline" secondItem="AZp-Pq-loo" secondAttribute="baseline" constant="40" id="WR3-3B-ucG"/>
+                            <constraint firstItem="TMI-UE-CFh" firstAttribute="leading" secondItem="HBy-no-NuF" secondAttribute="leading" constant="16" id="Y7q-eb-1UH"/>
                             <constraint firstItem="qNv-s9-0hd" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="eZF-RF-FMJ"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="ejj-AI-zUk"/>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="0p1-DY-kYy" secondAttribute="bottom" constant="15" id="fDp-gw-dg5"/>
@@ -303,6 +313,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="JkC-5p-26C"/>
                     <connections>
+                        <outlet property="appInfoLabel" destination="TMI-UE-CFh" id="nzs-aY-YgY"/>
                         <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
                         <segue destination="oc6-g4-D2s" kind="show" identifier="showPreConversationSegue" id="03O-tL-zah"/>
                     </connections>
