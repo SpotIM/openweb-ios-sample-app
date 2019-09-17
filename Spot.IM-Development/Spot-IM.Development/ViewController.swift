@@ -14,6 +14,7 @@ class ViewController: UIViewController {
 
     let authProvider = SPDefaultAuthProvider()
 
+    @IBOutlet weak var appInfoLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
     var loadingButtonTitleBackup: String?
 
@@ -21,6 +22,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         setupUI()
+        fillVersionAndBuildNumber()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -40,6 +42,17 @@ class ViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
         logo.clipsToBounds = true
         logo.layer.cornerRadius = 8
+    }
+
+    private func fillVersionAndBuildNumber() {
+        var resultString = ""
+        if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+            resultString = "Version: \(version)\n"
+        }
+        if let buildNumber = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
+            resultString.append("Build: \(buildNumber)")
+        }
+        appInfoLabel.text = resultString
     }
     
     @IBAction private func showMainConversation(_ sender: UIButton) {
