@@ -29,6 +29,7 @@ internal final class ArticleViewController: UIViewController {
 
         spotIMCoordinator?.preConversationController(withPostId: postId ?? foxArticleId, container: navigationController, completion: { [weak self] preConversationVC in
             guard let self = self else { return }
+            
             self.addChild(preConversationVC)
             self.containerView.addSubview(preConversationVC.view)
             preConversationVC.view.layout {
@@ -37,7 +38,6 @@ internal final class ArticleViewController: UIViewController {
                 $0.bottom.equal(to: self.containerView.bottomAnchor)
                 $0.trailing.equal(to: self.containerView.trailingAnchor)
             }
-
             preConversationVC.didMove(toParent: self)
         })
     }

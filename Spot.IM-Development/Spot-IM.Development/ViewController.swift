@@ -8,7 +8,6 @@
 
 import UIKit
 import Spot_IM_Core
-import Crashlytics
 
 class ViewController: UIViewController {
 
@@ -80,7 +79,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction private func crashButtonTapped(_ sender: AnyObject) {
-        Crashlytics.sharedInstance().crash()
+        //Crashlytics.sharedInstance().crash()
     }
 
     private func showArticles(with spotId: String, authenticationControllerId: String) {
