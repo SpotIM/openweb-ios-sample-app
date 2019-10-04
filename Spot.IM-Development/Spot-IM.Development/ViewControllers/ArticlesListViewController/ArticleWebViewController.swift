@@ -22,14 +22,14 @@ internal final class ArticleWebViewController: UIViewController {
 
     private lazy var loadingIndicator = UIActivityIndicatorView(style: .gray)
     
-    let spotId : String
+    let spotId: String
     let postId: String
     let url: String
-    let authenticationControllerId : String
+    let authenticationControllerId: String
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
-    init(spotId:String, postId: String, url:String, authenticationControllerId: String) {
+    init(spotId: String, postId: String, url: String, authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
         self.url = url
@@ -52,7 +52,7 @@ internal final class ArticleWebViewController: UIViewController {
         
         SPClientSettings.setup(spotKey: spotId)
         spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
-
+        
         spotIMCoordinator?.preConversationController(
             withPostId: postId,
             container: navigationController,
@@ -66,9 +66,10 @@ internal final class ArticleWebViewController: UIViewController {
                     $0.bottom.equal(to: self.containerView.bottomAnchor)
                     $0.trailing.equal(to: self.containerView.trailingAnchor)
                 }
-
+                
                 preConversationVC.didMove(toParent: self)
-        })        
+            }
+        )
     }
 }
 
@@ -116,8 +117,8 @@ extension ArticleWebViewController {
         
         let isBadUrl = url.contains(kSpotImDemo)
         let urlToUse = isBadUrl ? kDemoArticleToUse : url
-        if let Url =  URL(string: urlToUse) {
-            self.webView.load(URLRequest(url:Url))
+        if let url = URL(string: urlToUse) {
+            self.webView.load(URLRequest(url: url))
         }
         
         self.webView.scrollView.isScrollEnabled = false

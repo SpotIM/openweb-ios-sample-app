@@ -67,10 +67,8 @@ class ViewController: UIViewController {
     
     @IBAction private func showPreConversation(_ sender: UIButton) {
         SPPublicSessionInterface.resetUser()
-        setup(with: .demoMainSpotKey, from: sender)
+        setup(with: .demoGenericSpotKeyForSSO, from: sender)
         performSegue(withIdentifier: "showPreConversationSegue", sender: self)
-
-        setSpotId(spotId: .demoGenericSpotKeyForSSO)
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {

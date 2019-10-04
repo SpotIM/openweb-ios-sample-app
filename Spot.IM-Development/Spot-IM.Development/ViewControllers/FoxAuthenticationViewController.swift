@@ -65,7 +65,7 @@ class FoxAuthenticationViewController: UIViewController, SSOAuthenticatable {
             UIApplication.shared.open(url)
         }
     }
-    private func authenticate(email:String, password:String,  completion: @escaping (_ token: String?, _ error: String?) -> ()) {
+    private func authenticate(email:String, password:String,  completion: @escaping (_ token: String?, _ error: String?) -> Void) {
         
         let parameters = ["email": email, "password": password]
         

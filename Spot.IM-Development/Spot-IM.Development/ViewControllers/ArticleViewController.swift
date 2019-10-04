@@ -51,7 +51,11 @@ internal final class ArticleViewController: UIViewController {
 extension ArticleViewController: SpotImSDKNavigationDelegate {
     
     func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
-        let controller: AuthenticstionViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AuthenticstionViewController") as! AuthenticstionViewController
+        let controller: AuthenticstionViewController = UIStoryboard(
+            name: "Main",
+            bundle: nil
+        ).instantiateViewController(withIdentifier: "AuthenticstionViewController")
+            as! AuthenticstionViewController
         
         return controller
     }
@@ -59,7 +63,7 @@ extension ArticleViewController: SpotImSDKNavigationDelegate {
 }
 
 private extension String {
-    static var demoGenericSpotKeyForSSO:    String { return "sp_eCIlROSD" }
-    static var demoFoxSpotKeyForSSO:        String { return "sp_ANQXRpqH" }
-    static var demoMainSpotKey:             String { return "sp_ly3RvXf6" }
+    static var demoGenericSpotKeyForSSO: String { return "sp_eCIlROSD" }
+    static var demoFoxSpotKeyForSSO: String { return "sp_ANQXRpqH" }
+    static var demoMainSpotKey: String { return "sp_ly3RvXf6" }
 }
