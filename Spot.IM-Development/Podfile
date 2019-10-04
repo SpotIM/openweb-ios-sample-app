@@ -16,7 +16,7 @@ target 'Spot-IM.Development' do
   pod 'Crashlytics'
   
   pod 'Reveal-SDK', :configurations => ['Debug']
-
+  
   target 'Spot-IM.DevelopmentTests' do
     inherit! :search_paths
     # Pods for testing

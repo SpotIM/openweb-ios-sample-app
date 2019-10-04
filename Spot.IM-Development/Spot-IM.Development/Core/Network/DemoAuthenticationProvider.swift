@@ -16,7 +16,7 @@ internal class DemoAuthenticationProvider {
 
     internal static func logIn(with username: String,
                                password: String,
-                               completion: @escaping (_ token: String?, _ error: Error?) -> ()) {
+                               completion: @escaping (_ token: String?, _ error: Error?) -> Void) {
         guard let url = URL(string: loginURLString) else { return }
 
         let params = ["username": username,
@@ -44,7 +44,7 @@ internal class DemoAuthenticationProvider {
                                   accessToken: String?,
                                   username: String?,
                                   accessTokenNetwork: String?,
-                                  completion: @escaping (_ authCode: String?, _ error: Error?) -> ()) {
+                                  completion: @escaping (_ authCode: String?, _ error: Error?) -> Void) {
         guard let url = URL(string: codeBURLString) else { return }
 
         let params: Parameters = ["code_a": codeA ?? "",
