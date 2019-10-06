@@ -8,7 +8,6 @@
 
 import UIKit
 import Spot_IM_Core
-import Crashlytics
 
 class ViewController: UIViewController {
 
@@ -68,10 +67,8 @@ class ViewController: UIViewController {
     
     @IBAction private func showPreConversation(_ sender: UIButton) {
         SPPublicSessionInterface.resetUser()
-        setup(with: .demoMainSpotKey, from: sender)
+        setup(with: .demoGenericSpotKeyForSSO, from: sender)
         performSegue(withIdentifier: "showPreConversationSegue", sender: self)
-
-        setSpotId(spotId: .demoGenericSpotKeyForSSO)
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
@@ -80,7 +77,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction private func crashButtonTapped(_ sender: AnyObject) {
-        Crashlytics.sharedInstance().crash()
+        //Crashlytics.sharedInstance().crash()
     }
 
     private func showArticles(with spotId: String, authenticationControllerId: String) {
