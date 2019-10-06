@@ -76,7 +76,8 @@ extension ArticlesListViewController : ArticleTableViewCellDelegate {
 
 extension ArticlesListViewController {
     
-    @objc func reloadData() {
+    @objc
+    func reloadData() {
         self.data = nil
         self.tableView.reloadData()
         self.loadData()

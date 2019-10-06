@@ -1,4 +1,5 @@
 platform :ios, '9.0'
+inhibit_all_warnings!
 
 target 'Spot-IM.Development' do
   use_frameworks!
@@ -15,7 +16,7 @@ target 'Spot-IM.Development' do
   pod 'Crashlytics'
   
   pod 'Reveal-SDK', :configurations => ['Debug']
-
+  
   target 'Spot-IM.DevelopmentTests' do
     inherit! :search_paths
     # Pods for testing
