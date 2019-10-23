@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Spot_IM_Core
+import SpotImCore
 import WebKit
 
 let kSpotImDemo = "spotim.name"
