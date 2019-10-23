@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Spot_IM_Core
+import SpotImCore
 
 enum FoxError: Error {
     case runtimeError(String)
