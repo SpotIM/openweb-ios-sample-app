@@ -27,18 +27,23 @@ internal final class ArticleViewController: UIViewController {
 
         spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
 
-        spotIMCoordinator?.preConversationController(withPostId: postId ?? foxArticleId, container: navigationController, completion: { [weak self] preConversationVC in
-            guard let self = self else { return }
-            
-            self.addChild(preConversationVC)
-            self.containerView.addSubview(preConversationVC.view)
-            preConversationVC.view.layout {
-                $0.top.equal(to: self.containerView.topAnchor)
-                $0.leading.equal(to: self.containerView.leadingAnchor)
-                $0.bottom.equal(to: self.containerView.bottomAnchor)
-                $0.trailing.equal(to: self.containerView.trailingAnchor)
-            }
-            preConversationVC.didMove(toParent: self)
+        spotIMCoordinator?.preConversationController(
+            withPostId: postId ?? foxArticleId,
+            container: navigationController,
+            completion: { [weak self] preConversationVC in
+
+                guard let self = self else { return }
+
+                self.addChild(preConversationVC)
+                self.containerView.addSubview(preConversationVC.view)
+
+                preConversationVC.view.layout {
+                    $0.top.equal(to: self.containerView.topAnchor)
+                    $0.leading.equal(to: self.containerView.leadingAnchor)
+                    $0.bottom.equal(to: self.containerView.bottomAnchor)
+                    $0.trailing.equal(to: self.containerView.trailingAnchor)
+                }
+                preConversationVC.didMove(toParent: self)
         })
     }
 

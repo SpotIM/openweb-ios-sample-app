@@ -148,8 +148,9 @@
 		5D697A4922B65108001AD556 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4722B65108001AD556 /* LaunchScreen.storyboard */; };
 		5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */; };
 		5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
-		CCC01F4EE151F19908CA14E6 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1959FB2F71F0B509D2EFCE5 /* Pods_Shared_Spot_IM_Development.framework */; };
-		D817E8E194A9832319544967 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D64605A66EA27F9AB125A4F4 /* Pods_Shared_SpotImCore.framework */; };
+		5DA9B7F62358C7E9006DF43D /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		BF27CB0174A0481BF8EDB88A /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */; };
+		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,8 +185,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		011BAE2D4CB6E276D553BCF3 /* Pods-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Spot-IM.Development/Pods-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
-		012091C303BD6C7D182C5586 /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
 		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
 		0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 		0E1125D42304A043006B1489 /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
@@ -196,7 +195,8 @@
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
-		3CC8721E0B5CBC7461B37EF1 /* Pods-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Spot-IM.Development/Pods-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
+		1CAA0C7553356875A9AA4225 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
+		27A3A695D2E76A4DC47A8D05 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		44C8788D23608BC100E0E662 /* SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44C8793B23608E3500E0E662 /* SpotImCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotImCore.h; sourceTree = "<group>"; };
 		44C8793F23608E3500E0E662 /* Autolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
@@ -319,7 +319,6 @@
 		44C879DC23608E3600E0E662 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		44C879DE23608E3600E0E662 /* OpenSans-RegularItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-RegularItalic.ttf"; sourceTree = "<group>"; };
 		44C879DF23608E3600E0E662 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		49652A8A514B822854C40F70 /* Pods-Shared-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
 		5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAuthenticationProvider.swift; sourceTree = "<group>"; };
 		5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
 		5D697A3B22B65106001AD556 /* Spot-IM.Development.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spot-IM.Development.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -333,13 +332,11 @@
 		5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot_IM_DevelopmentTests.swift; sourceTree = "<group>"; };
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5DA8B5A02327E20A0045FCFA /* Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
-		5FC18F20502C317F953E9271 /* Pods-Shared-Spot-IM_Core.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM_Core.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM_Core/Pods-Shared-Spot-IM_Core.debug.xcconfig"; sourceTree = "<group>"; };
-		6D27288D057CBB1414F127BC /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
-		6E3C53698AE25A4150C6889D /* Pods_Shared_Spot_IM_Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C2480D9D7DBCAC0F2F791771 /* Pods-Shared-Spot-IM_Core.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM_Core.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM_Core/Pods-Shared-Spot-IM_Core.release.xcconfig"; sourceTree = "<group>"; };
-		C5B3C53FD225848740D233A1 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
-		D64605A66EA27F9AB125A4F4 /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1959FB2F71F0B509D2EFCE5 /* Pods_Shared_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettingsViewController.swift; sourceTree = "<group>"; };
+		847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F920BF2661A5707C43AF42A /* Pods-Shared-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
+		AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -347,7 +344,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D817E8E194A9832319544967 /* Pods_Shared_SpotImCore.framework in Frameworks */,
+				CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,8 +352,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CCC01F4EE151F19908CA14E6 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */,
 				44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */,
+				BF27CB0174A0481BF8EDB88A /* Pods_Shared_Spot_IM_Development.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -893,6 +890,7 @@
 				0E1125CE23049F7A006B1489 /* ArticlesListViewController */,
 				5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */,
 				0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */,
+				5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -950,9 +948,8 @@
 		5D697A6A22B6586C001AD556 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F1959FB2F71F0B509D2EFCE5 /* Pods_Shared_Spot_IM_Development.framework */,
-				6E3C53698AE25A4150C6889D /* Pods_Shared_Spot_IM_Core.framework */,
-				D64605A66EA27F9AB125A4F4 /* Pods_Shared_SpotImCore.framework */,
+				AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */,
+				847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -968,14 +965,10 @@
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3CC8721E0B5CBC7461B37EF1 /* Pods-Spot-IM.Development.debug.xcconfig */,
-				011BAE2D4CB6E276D553BCF3 /* Pods-Spot-IM.Development.release.xcconfig */,
-				6D27288D057CBB1414F127BC /* Pods-Shared-Spot-IM.Development.debug.xcconfig */,
-				49652A8A514B822854C40F70 /* Pods-Shared-Spot-IM.Development.release.xcconfig */,
-				5FC18F20502C317F953E9271 /* Pods-Shared-Spot-IM_Core.debug.xcconfig */,
-				C2480D9D7DBCAC0F2F791771 /* Pods-Shared-Spot-IM_Core.release.xcconfig */,
-				C5B3C53FD225848740D233A1 /* Pods-Shared-SpotImCore.debug.xcconfig */,
-				012091C303BD6C7D182C5586 /* Pods-Shared-SpotImCore.release.xcconfig */,
+				27A3A695D2E76A4DC47A8D05 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */,
+				9F920BF2661A5707C43AF42A /* Pods-Shared-Spot-IM.Development.release.xcconfig */,
+				1CAA0C7553356875A9AA4225 /* Pods-Shared-SpotImCore.debug.xcconfig */,
+				C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1336,6 +1329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DA9B7F62358C7E9006DF43D /* DarkModeSettingsViewController.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
@@ -1397,7 +1391,7 @@
 /* Begin XCBuildConfiguration section */
 		44C8789723608BC100E0E662 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C5B3C53FD225848740D233A1 /* Pods-Shared-SpotImCore.debug.xcconfig */;
+			baseConfigurationReference = 1CAA0C7553356875A9AA4225 /* Pods-Shared-SpotImCore.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1426,7 +1420,7 @@
 		};
 		44C8789823608BC100E0E662 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 012091C303BD6C7D182C5586 /* Pods-Shared-SpotImCore.release.xcconfig */;
+			baseConfigurationReference = C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1511,6 +1505,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1564,16 +1559,16 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		5D697A5922B65108001AD556 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6D27288D057CBB1414F127BC /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
+			baseConfigurationReference = 27A3A695D2E76A4DC47A8D05 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -1591,16 +1586,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = SpotIM_Development;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		5D697A5A22B65108001AD556 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49652A8A514B822854C40F70 /* Pods-Shared-Spot-IM.Development.release.xcconfig */;
+			baseConfigurationReference = 9F920BF2661A5707C43AF42A /* Pods-Shared-Spot-IM.Development.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -1617,8 +1611,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = SpotIM_Development;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
