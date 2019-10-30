@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal final class SPPreConversationHeaderView: BaseView {
@@ -35,6 +34,7 @@ internal final class SPPreConversationHeaderView: BaseView {
 
     private func setupTitleLabel() {
         titleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
+        titleLabel.textColor = .spForeground0
         titleLabel.layout {
             $0.centerY.equal(to: centerYAnchor)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.margins.left)
@@ -43,7 +43,7 @@ internal final class SPPreConversationHeaderView: BaseView {
 
     private func setupCounterLabel() {
         counterLabel.font = UIFont.preferred(style: .regular, of: Theme.counterFontSize)
-        counterLabel.textColor = .charcoalGrey
+        counterLabel.textColor = .spForeground1
         counterLabel.layout {
             $0.firstBaseline.equal(to: titleLabel.firstBaselineAnchor)
             $0.leading.equal(to: titleLabel.trailingAnchor, offsetBy: Theme.counterLeading)

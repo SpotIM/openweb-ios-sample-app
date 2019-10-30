@@ -16,14 +16,24 @@ internal protocol SPMainConversationFooterViewDelegate: class {
 
 final class SPMainConversationFooterView: BaseView {
     
+
     private let cache = NSCache<NSString, UIImage>()
     private let callToActionLabel: UILabel = .init()
     private let userAvatarView: SPAvatarView = .init()
     private let labelContainer: UIView = .init()
     private let button: UIButton = .init(type: .system)
+    
+    private lazy var separatorView: UIView = .init()
+    private lazy var bannerContainerView: UIView = .init()
+    
+    private var bannerView: UIView?
+    private var bannerContainerHeight: NSLayoutConstraint?
 
     internal weak var delegate: SPMainConversationFooterViewDelegate?
-    internal var dropsShadow: Bool = false
+    
+    internal var dropsShadow: Bool = false {
+        didSet { showSeparatorIfNeeded() }
+    }
 
     override var bounds: CGRect {
         didSet {
@@ -35,14 +45,7 @@ final class SPMainConversationFooterView: BaseView {
         super.init(frame: frame)
         
         clipsToBounds = false
-        backgroundColor = .white
         setup()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        dropContainerShadowIfNeeded()
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
@@ -60,46 +63,84 @@ final class SPMainConversationFooterView: BaseView {
     }
     
     private func setup() {
-        addSubviews(labelContainer, userAvatarView, button)
+        addSubviews(bannerContainerView, labelContainer, userAvatarView, button, separatorView)
         button.addTarget(self, action: #selector(tap), for: .touchUpInside)
-        button.pinEdges(to: self)
+        button.layout {
+            $0.leading.equal(to: leadingAnchor)
+            $0.trailing.equal(to: trailingAnchor)
+            $0.bottom.equal(to: bottomAnchor)
+            $0.top.equal(to: labelContainer.topAnchor)
+        }
+        setupBannerView()
         setupUserAvatarImageView()
         setupCallToActionLabel()
+        configureSeparatorView()
+    }
+    
+    func updateBannerView(_ bannerView: UIView, height: CGFloat) {
+        self.bannerView?.removeFromSuperview()
+        self.bannerView = bannerView
+        bannerContainerView.addSubview(bannerView)
+        bannerView.layout {
+            $0.height.equal(to: height)
+            $0.leading.equal(to: bannerContainerView.leadingAnchor)
+            $0.trailing.equal(to: bannerContainerView.trailingAnchor)
+            $0.bottom.equal(to: bannerContainerView.bottomAnchor)
+        }
+        bannerContainerHeight?.constant = height + 16.0
+    }
+    
+    private func setupBannerView() {
+        bannerContainerView.layout {
+            $0.top.equal(to: topAnchor)
+            $0.leading.equal(to: leadingAnchor)
+            $0.trailing.equal(to: trailingAnchor)
+            bannerContainerHeight = $0.height.equal(to: 0.0)
+        }
     }
     
     private func setupCallToActionLabel() {
-        labelContainer.backgroundColor = .white
+        labelContainer.backgroundColor = .spBackground1
         labelContainer.layout {
-            $0.top.equal(to: topAnchor, offsetBy: 16.0)
+            $0.top.equal(to: bannerContainerView.bottomAnchor, offsetBy: 16.0)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -15.0)
             $0.leading.equal(to: userAvatarView.trailingAnchor, offsetBy: 12.0)
             $0.height.equal(to: 48.0)
         }
-        labelContainer.layer.borderColor = UIColor.lightBlueGrey.cgColor
+        labelContainer.layer.borderColor = UIColor.spBorder.cgColor
         labelContainer.layer.borderWidth = 1.0
-        labelContainer.addCornerRadius(4.0)
+        labelContainer.addCornerRadius(6.0)
         labelContainer.addSubview(callToActionLabel)
 
-        callToActionLabel.textColor = .coolGrey
-        callToActionLabel.backgroundColor = .white
-        callToActionLabel.font = UIFont.roboto(style: .regular, of: 16.0)
+        callToActionLabel.textColor = .spForeground2
+        callToActionLabel.font = UIFont.roboto(style: .regular, of: Theme.fontSize)
         callToActionLabel.text = NSLocalizedString("What do you think?",
                                                    comment: "Conversation footer call to action placeholder")
         
         callToActionLabel.layout {
             $0.centerY.equal(to: labelContainer.centerYAnchor)
-            $0.leading.equal(to: labelContainer.leadingAnchor, offsetBy: 12.0)
-            $0.height.equal(to: 48.0)
+            $0.leading.equal(to: labelContainer.leadingAnchor, offsetBy: Theme.callToActionLeading)
+            $0.height.equal(to: Theme.callToActionHeight)
         }
     }
     
     private func setupUserAvatarImageView() {
-        userAvatarView.backgroundColor = .white
+        userAvatarView.backgroundColor = .spBackground0
         userAvatarView.layout {
             $0.centerY.equal(to: labelContainer.centerYAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: 15.0)
-            $0.height.equal(to: 40.0)
-            $0.width.equal(to: 40.0)
+            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.userAvatarLeading)
+            $0.height.equal(to: Theme.userAvatarSize)
+            $0.width.equal(to: Theme.userAvatarSize)
+        }
+    }
+
+    private func configureSeparatorView() {
+        separatorView.backgroundColor = .spSeparator2
+        separatorView.layout {
+            $0.top.equal(to: topAnchor)
+            $0.leading.equal(to: leadingAnchor)
+            $0.trailing.equal(to: trailingAnchor)
+            $0.height.equal(to: Theme.separatorHeight)
         }
     }
     
@@ -118,7 +159,7 @@ final class SPMainConversationFooterView: BaseView {
     }
     
     private func dropContainerShadowIfNeeded() {
-        guard !dropsShadow else {
+        guard dropsShadow, !SPUserInterfaceStyle.isDarkMode else {
             labelContainer.layer.shadowPath = nil
             return
         }
@@ -136,9 +177,25 @@ final class SPMainConversationFooterView: BaseView {
         labelContainer.layer.shadowOpacity = 0.2
         labelContainer.layer.shadowPath = containerShadowPath.cgPath
     }
+
+    private func showSeparatorIfNeeded() {
+        separatorView.isHidden = dropsShadow
+    }
     
     @objc
     private func tap() {
         delegate?.footerViewDidTap(self)
     }
+}
+
+// MARK: - Theme
+
+private enum Theme {
+
+    static let separatorHeight: CGFloat = 1
+    static let userAvatarSize: CGFloat = 40
+    static let userAvatarLeading: CGFloat = 15
+    static let callToActionLeading: CGFloat = 12
+    static let callToActionHeight: CGFloat = 48
+    static let fontSize: CGFloat = 16
 }

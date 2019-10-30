@@ -30,6 +30,7 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
                 else { return }
             
             self.updateUserIcon(image: image)
+            self.textInputViewContainer.updateAvatar(image)
         }
     }
     

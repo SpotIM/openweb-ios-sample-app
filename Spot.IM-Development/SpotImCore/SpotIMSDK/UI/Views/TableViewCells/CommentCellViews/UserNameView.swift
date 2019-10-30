@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal final class UserNameView: BaseView {
@@ -49,11 +48,10 @@ internal final class UserNameView: BaseView {
         _ name: String?,
         badgeTitle: String?,
         isLeader: Bool = false,
-        brandColor: UIColor,
         contentType: ContentType,
         isDeleted: Bool) {
 
-        leaderBadge.tintColor = brandColor
+        leaderBadge.tintColor = .brandColor
         switch contentType {
         case .comment:
             userNameLabel.font = .preferred(style: .bold, of: Theme.fontSize)
@@ -64,16 +62,8 @@ internal final class UserNameView: BaseView {
 
         userNameLabel.text = name
         badgeTagLabel.text = badgeTitle
-        if badgeTitle == nil {
-            subtitleToNameConstraint?.isActive = true
-        } else {
-            subtitleToNameConstraint?.isActive = false
-        }
-        if isLeader {
-            badgeTagLabel.textColor = .steelGrey
-        } else {
-            badgeTagLabel.textColor = brandColor
-        }
+        subtitleToNameConstraint?.isActive = badgeTitle == nil ? true : false
+        badgeTagLabel.textColor = isLeader ? .spForeground3 : .brandColor
         leaderBadge.isHidden = !isLeader || isDeleted
     }
 
@@ -110,7 +100,7 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureDeletedLabel() {
-        deletedMessageLabel.backgroundColor = .white
+        deletedMessageLabel.backgroundColor = .spBackground0
 
         deletedMessageLabel.pinEdges(to: self)
 
@@ -119,7 +109,7 @@ internal final class UserNameView: BaseView {
         paragraphStyle.lineSpacing = 3.5
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
-            .foregroundColor: UIColor.steelGrey,
+            .foregroundColor: UIColor.spForeground3,
             .font: UIFont.openSans(style: .regularItalic, of: 17.0),
             .paragraphStyle: paragraphStyle
         ]
@@ -134,16 +124,15 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureUserNameLabel() {
-        userNameLabel.textColor = .charcoalGrey
+        userNameLabel.textColor = .spForeground1
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        userNameLabel.backgroundColor = .white
+        userNameLabel.backgroundColor = .spBackground0
         userNameLabel.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -69.0)
         }
 
-        userNameLabel.backgroundColor = .white
         userNameLabel.isUserInteractionEnabled = false
 
         userNameButton.addTarget(self, action: #selector(userNameTapped), for: .touchUpInside)
@@ -156,7 +145,7 @@ internal final class UserNameView: BaseView {
     }
 
     private func setupMoreButton() {
-        moreButton.backgroundColor = .white
+        moreButton.backgroundColor = .spBackground0
         let image = UIImage(spNamed: "menu_icon")
         moreButton.setImage(image, for: .normal)
         moreButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
@@ -170,7 +159,7 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureLeaderBadge() {
-        leaderBadge.image = UIImage(spNamed: "leader_badge_icon")?.withRenderingMode(.alwaysTemplate)
+        leaderBadge.image = UIImage(spNamed: "leader_badge_icon", for: .light)?.withRenderingMode(.alwaysTemplate)
         leaderBadge.contentMode = .center
         leaderBadge.isHidden = true
         leaderBadge.layout {
@@ -181,7 +170,7 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureBadgeTagLabel() {
-        badgeTagLabel.backgroundColor = .white
+        badgeTagLabel.backgroundColor = .spBackground0
         badgeTagLabel.font = .preferred(style: .medium, of: Theme.fontSize)
         badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         badgeTagLabel.layout {
@@ -191,11 +180,11 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureSubtitleAndDateLabels() {
-        subtitleLabel.textColor = .steelGrey
+        subtitleLabel.textColor = .spForeground3
+        subtitleLabel.backgroundColor = .spBackground0
         subtitleLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        subtitleLabel.backgroundColor = .white
         subtitleLabel.isUserInteractionEnabled = false
         subtitleLabel.layout {
             $0.top.equal(to: badgeTagLabel.bottomAnchor, offsetBy: 6.0).priority = .defaultHigh
@@ -204,10 +193,10 @@ internal final class UserNameView: BaseView {
             $0.trailing.equal(to: dateLabel.leadingAnchor)
         }
 
-        dateLabel.textColor = .steelGrey
+        dateLabel.textColor = .spForeground3
+        dateLabel.backgroundColor = .spBackground0
         dateLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         dateLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        dateLabel.backgroundColor = .white
         dateLabel.isUserInteractionEnabled = false
         dateLabel.layout {
             $0.top.equal(to: subtitleLabel.topAnchor)

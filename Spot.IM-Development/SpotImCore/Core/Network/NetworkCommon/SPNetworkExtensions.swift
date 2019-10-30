@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import UIKit
 
 internal extension HTTPHeaders {
     static func basic(with spotId: String,

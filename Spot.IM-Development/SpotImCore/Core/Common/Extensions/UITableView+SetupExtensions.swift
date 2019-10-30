@@ -6,14 +6,13 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 typealias SPConversationCompatible = UIViewController & UITableViewDelegate & UITableViewDataSource
 
 internal extension UITableView {
     func setupForConversation(with controller: SPConversationCompatible) {
-        backgroundColor = .groupTableViewBackground
+        backgroundColor = .spBackground0
         separatorStyle = .none
 
         register(SPReplyCell.self, forCellReuseIdentifier: String(describing: SPReplyCell.self))

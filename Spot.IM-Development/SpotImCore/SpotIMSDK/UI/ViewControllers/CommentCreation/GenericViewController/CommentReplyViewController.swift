@@ -184,7 +184,7 @@ extension CommentReplyViewController {
     }
     
     private func configureMainContainer() {
-        mainContainerView.backgroundColor = .white
+        mainContainerView.backgroundColor = .spBackground0
         mainContainerView.layout {
             $0.top.equal(to: scrollView.topAnchor)
             $0.bottom.equal(to: scrollView.bottomAnchor)
@@ -196,7 +196,7 @@ extension CommentReplyViewController {
     }
     
     private func configureInputContainerView() {
-        textInputViewContainer.backgroundColor = .white
+        textInputViewContainer.backgroundColor = .spBackground0
         textInputViewContainer.delegate = self
         textInputViewContainer.layout {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.inputViewEdgeInset)
@@ -208,7 +208,7 @@ extension CommentReplyViewController {
     }
     
     private func configureTopContainer() {
-        topContainerView.backgroundColor = .white
+        topContainerView.backgroundColor = .spBackground0
         topContainerView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         topContainerView.layout {
             $0.top.lessThanOrEqual(to: mainContainerView.topAnchor)
@@ -230,14 +230,10 @@ extension CommentReplyViewController {
     }
     
     private func configurePostButton() {
-        let inactiveIcon = UIImage(spNamed: "postInactiveIcon")
-        let activeIcon = UIImage()
-        
         postButton.setTitleColor(.white, for: .normal)
-        postButton.setBackgroundImage(inactiveIcon, for: .disabled)
-        let color = UIColor.color(with: SPConfigDataSource.config?.initialization?.brandColor)
-        postButton.backgroundColor = color
-        postButton.setBackgroundImage(activeIcon, for: .normal)
+        postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
+        postButton.backgroundColor = .brandColor
+
         postButton.isEnabled = false
         postButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.postButtonFontSize)
         postButton.contentEdgeInsets = UIEdgeInsets(

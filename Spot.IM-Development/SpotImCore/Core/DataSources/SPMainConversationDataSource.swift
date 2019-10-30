@@ -8,7 +8,6 @@
 // swiftlint:disable file_length
 
 import Foundation
-import UIKit
 
 internal protocol SPMainConversationDataSourceDelegate: NSObjectProtocol {
     
@@ -57,7 +56,6 @@ internal final class SPMainConversationDataSource {
     internal var messageCount: Int?
     internal var thumbnailUrl: URL?
     internal var conversationPublisherName: String?
-    internal var configColor: UIColor?
     internal var conversationTitle: String?
     internal weak var delegate: SPMainConversationDataSourceDelegate?
     
@@ -65,8 +63,6 @@ internal final class SPMainConversationDataSource {
         self.conversationId = conversationId
         self.dataProvider = dataProvider
         self.conversationPublisherName = SPConfigDataSource.config?.initialization?.name
-        let colorString = SPConfigDataSource.config?.initialization?.brandColor
-        self.configColor = UIColor.color(with: colorString)
     }
     
     // MARK: - Internal methods and computed properties
@@ -432,7 +428,7 @@ internal final class SPMainConversationDataSource {
             with: comment,
             replyingToCommentId: replyingToCommentId,
             replyingToDisplayName: replyingToDisplayName,
-            color: configColor,
+            color: .brandColor,
             user: user,
             userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil)
         )

@@ -6,8 +6,16 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
+
+enum ABGroup: CaseIterable {
+    /// Banner on preconversation screen
+    case first
+    /// Banner on preconversation screen + interstitial on "show more comments" transition
+    case second
+    /// Banner on preconversation screen + sticky banner on main conversation screen
+    case third
+}
 
 internal class SPUser: Codable {
     
@@ -38,6 +46,8 @@ internal class SPUser: Codable {
         return isAdmin || isModerator || isJournalist
     }
 
+    var abTestGroup: ABGroup?
+    
     var hasGamification: Bool {
         if let badgeType = badgeType, badgeType != "newbie" {
             return true
@@ -61,6 +71,9 @@ internal class SPUser: Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
+        abTestGroup = (SPConfigDataSource.config?.initialization?.monetized ?? false)
+            ? ABGroup.allCases.randomElement()
+            : nil
         id = try? container.decode(String.self, forKey: .id)
         badgeType = try? container.decode(String.self, forKey: .badgeType)
         displayName = try? container.decode(String.self, forKey: .displayName)

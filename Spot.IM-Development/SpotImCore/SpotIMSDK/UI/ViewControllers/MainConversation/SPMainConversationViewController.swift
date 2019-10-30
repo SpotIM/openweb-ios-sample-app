@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal protocol SPCommentsCreationDelegate: class {
@@ -26,6 +25,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     var commentIdToShowOnOpen: String?
     
+    var adsProvider: AdsProvider? {
+        didSet {
+            adsProvider?.delegate = self
+            adsProvider?.setupAdsBanner(with: "/6499/example/banner", in: self)
+        }
+    }
+        
     private let sortView = SPConversationSummaryView()
 
     private lazy var refreshControl = UIRefreshControl()
@@ -42,6 +48,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private let articleHeaderMaxHeight: CGFloat = 85.0
     private let articleHeaderMinHeight: CGFloat = 0.0
     
+    private var footerHeightConstraint: NSLayoutConstraint?
     private var headerHeightConstraint: NSLayoutConstraint?
     private var currentHeightConstant: CGFloat = 0.0
     private var initialOffsetY: CGFloat = 0.0
@@ -59,7 +66,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             }
         }
     }
-    
+
     // MARK: - Overrides
     
     override func viewDidLoad() {
@@ -241,6 +248,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
 
     private func setupSortView() {
         view.bringSubviewToFront(sortView)
+        sortView.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         sortView.delegate = self
         sortView.updateSortOption(model.sortOption.title)
         sortView.layout {
@@ -277,9 +285,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         view.bringSubviewToFront(footer)
         footer.updateOnlineStatus(.online)
         footer.delegate = self
-        footer.dropsShadow = true
+        footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         footer.layout {
-            $0.height.equal(to: 80.0)
+            footerHeightConstraint = $0.height.equal(to: 80.0)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
@@ -493,5 +501,22 @@ extension SPMainConversationViewController { // Article header scrolling logic
         }
         scrollingDirection = .static
     }
+}
+
+extension SPMainConversationViewController: AdsProviderDelegate {
+    
+    func bannerAdDidLoad(adBannerSize: CGSize) {
+        guard
+            let bannerView = adsProvider?.bannerView,
+            SPUserSessionHolder.session.user?.abTestGroup == .third
+            else { return }
+        
+        footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
+        footer.updateBannerView(bannerView, height: adBannerSize.height)
+    }
+    
+    func interstitialWillBeShown() {}
+    
+    func interstitialDidDismiss() {}
     
 }

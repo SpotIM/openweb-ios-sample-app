@@ -13,7 +13,7 @@ internal class BaseView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .white
+        backgroundColor = .spBackground0
         translatesAutoresizingMaskIntoConstraints = false
     }
     

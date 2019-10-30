@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 final class CommentActionsView: BaseView {
@@ -102,9 +101,9 @@ final class CommentActionsView: BaseView {
     }
 
     private func configureReplyButton() {
-        replyButton.backgroundColor = .white
+        replyButton.backgroundColor = .spBackground0
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
-        replyButton.setTitleColor(.steelGrey, for: .normal)
+        replyButton.setTitleColor(.buttonTitle, for: .normal)
         replyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.fontSize)
         replyButton.setTitle(replyDefaultTitle, for: .normal)
         replyButton.layout {
@@ -118,9 +117,9 @@ final class CommentActionsView: BaseView {
     }
 
     private func configureRankUpButton() {
-        rankUpButton.backgroundColor = .white
+        rankUpButton.backgroundColor = .spBackground0
         rankUpButton.addTarget(self, action: #selector(rankUp), for: .touchUpInside)
-        rankUpButton.imageColorOff = .steelGrey
+        rankUpButton.imageColorOff = .buttonTitle
         rankUpButton.setContentHuggingPriority(.required, for: .horizontal)
         let width = Theme.engagementStackHeight - Theme.rankButtonHorizontalInset * 2
         rankUpButton.layout {
@@ -130,10 +129,10 @@ final class CommentActionsView: BaseView {
             $0.trailing.equal(to: rankUpLabel.leadingAnchor)
         }
 
-        rankUpLabel.backgroundColor = .white
+        rankUpLabel.backgroundColor = .spBackground0
         rankUpLabel.textAlignment = .center
         rankUpLabel.font = .preferred(style: .regular, of: Theme.fontSize)
-        rankUpLabel.textColor = .steelGrey
+        rankUpLabel.textColor = .buttonTitle
         rankUpLabel.setContentHuggingPriority(.required, for: .horizontal)
         rankUpLabel.layout {
             $0.centerY.equal(to: replyButton.centerYAnchor)
@@ -142,9 +141,9 @@ final class CommentActionsView: BaseView {
     }
 
     private func configureRankDownButton() {
-        rankDownButton.backgroundColor = .white
+        rankDownButton.backgroundColor = .spBackground0
         rankDownButton.addTarget(self, action: #selector(rankDown), for: .touchUpInside)
-        rankDownButton.imageColorOff = .steelGrey
+        rankDownButton.imageColorOff = .buttonTitle
         rankDownButton.setContentHuggingPriority(.required, for: .horizontal)
         let width = Theme.engagementStackHeight - Theme.rankButtonHorizontalInset * 2
         rankDownButton.layout {
@@ -154,10 +153,10 @@ final class CommentActionsView: BaseView {
             $0.trailing.equal(to: rankDownLabel.leadingAnchor)
         }
 
-        rankDownLabel.backgroundColor = .white
+        rankDownLabel.backgroundColor = .spBackground0
         rankDownLabel.textAlignment = .center
         rankDownLabel.font = .preferred(style: .regular, of: Theme.fontSize)
-        rankDownLabel.textColor = .steelGrey
+        rankDownLabel.textColor = .buttonTitle
         rankDownLabel.setContentHuggingPriority(.required, for: .horizontal)
         rankDownLabel.layout {
             $0.centerY.equal(to: replyButton.centerYAnchor)
@@ -165,8 +164,8 @@ final class CommentActionsView: BaseView {
     }
 
     private func initializeRankUpButton() -> SPAnimatedButton {
-        let rankUpNormalImage = UIImage(spNamed: "rank_up_normal")
-        let rankUpSelectedImage = UIImage(spNamed: "rank_up_selected")
+        let rankUpNormalImage = UIImage(spNamed: "rank_up_normal", for: .light)
+        let rankUpSelectedImage = UIImage(spNamed: "rank_up_selected", for: .light)
         let insets = UIEdgeInsets(
             top: Theme.rankButtonVerticalInset - Theme.rankUpButtonOffset,
             left: Theme.rankButtonHorizontalInset,
@@ -183,8 +182,8 @@ final class CommentActionsView: BaseView {
     }
 
     private func initializeRankDownButton() -> SPAnimatedButton {
-        let rankDownIconNormal = UIImage(spNamed: "rank_down_normal")
-        let rankDownIconSelected = UIImage(spNamed: "rank_down_selected")
+        let rankDownIconNormal = UIImage(spNamed: "rank_down_normal", for: .light)
+        let rankDownIconSelected = UIImage(spNamed: "rank_down_selected", for: .light)
         let insets = UIEdgeInsets(top: Theme.rankButtonVerticalInset - Theme.rankDownButtonOffset,
                                   left: Theme.rankButtonHorizontalInset,
                                   bottom: Theme.rankButtonVerticalInset + Theme.rankDownButtonOffset,

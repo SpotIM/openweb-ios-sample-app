@@ -21,7 +21,8 @@ class FoxAuthenticationViewController: UIViewController, SSOAuthenticatable {
     @IBOutlet weak var passwordTextField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Authentication"
+        
+        title = "Authentication"
     }
     
     @IBAction func signIn(_ sender: Any) {

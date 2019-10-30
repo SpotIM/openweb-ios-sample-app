@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal extension UIColor {
@@ -17,7 +16,7 @@ internal extension UIColor {
     static let lightPink = #colorLiteral(red: 1, green: 0.7809498291, blue: 0.9853027483, alpha: 1)
 
     // from design
-    static let charcoalGrey = #colorLiteral(red: 0.2156862745, green: 0.2431372549, blue: 0.2666666667, alpha: 1)    // #373E44
+    static let charcoalGrey = #colorLiteral(red: 0.2156862745, green: 0.2431372549, blue: 0.2666666667, alpha: 1)    // #373E44 aka Dark Grey
     static let mineShaft = #colorLiteral(red: 0.137254902, green: 0.137254902, blue: 0.137254902, alpha: 1)       // #232323 aka "black"
     static let clearBlue = #colorLiteral(red: 0.1882352941, green: 0.4980392157, blue: 0.8862745098, alpha: 1)       // #307FE2
     static let iceBlue = #colorLiteral(red: 0.9411764706, green: 0.9450980392, blue: 0.9450980392, alpha: 1)         // #F0F1F1
@@ -29,5 +28,43 @@ internal extension UIColor {
     static let marineBlue = #colorLiteral(red: 0.003921568627, green: 0.2, blue: 0.4, alpha: 1)      // #013366
     static let marineBlue2 = #colorLiteral(red: 0.003921568627, green: 0.2, blue: 0.4, alpha: 1)     // #00245a
     static let cloudyBlue = #colorLiteral(red: 0.7647058824, green: 0.7725490196, blue: 0.7803921569, alpha: 1)      // #C3C5C7
-    static let navigationWhite = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1) // #F7F7F7
+    static let almostWhite = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)     // #F7F7F7
+    static let lightGreyBlue = #colorLiteral(red: 0.7137254902, green: 0.7254901961, blue: 0.7333333333, alpha: 1)   // #B6B9BB
+    static let almostBlack = #colorLiteral(red: 0.137254902, green: 0.137254902, blue: 0.137254902, alpha: 1)     // #353535
+    static let grayishBrown = #colorLiteral(red: 0.4549019608, green: 0.4549019608, blue: 0.4549019608, alpha: 1)    // #747474
+
+    static var brandColor: UIColor {
+        UIColor.color(with: SPConfigDataSource.config?.initialization?.brandColor) ?? clearBlue
+    }
+
+    static var spBackground0: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? SPClientSettings.darkModeBackgroundColor : white
+    }
+    static var spBackground1: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? white.withAlphaComponent(0.15) : white
+    }
+
+    static var spInactiveButtonBG: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? charcoalGrey : cloudyBlue
+    }
+
+    static var spForeground0: UIColor { SPUserInterfaceStyle.isDarkMode ? almostWhite : almostBlack }
+    static var spForeground1: UIColor { SPUserInterfaceStyle.isDarkMode ? almostWhite : charcoalGrey }
+    static var spForeground2: UIColor { SPUserInterfaceStyle.isDarkMode ? lightGreyBlue : coolGrey }
+    static var spForeground3: UIColor { SPUserInterfaceStyle.isDarkMode ? lightGreyBlue : steelGrey }
+    static var spForeground4: UIColor { SPUserInterfaceStyle.isDarkMode ? almostWhite : steelGrey }
+
+    static var buttonTitle: UIColor { SPUserInterfaceStyle.isDarkMode ? lightBlueGrey : steelGrey }
+
+    static var spBorder: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? clear : lightBlueGrey
+    }
+
+    static var spSeparator: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? black.withAlphaComponent(0.9) : black.withAlphaComponent(0.1)
+    }
+
+    static var spSeparator2: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? grayishBrown : iceBlue
+    }
 }

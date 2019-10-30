@@ -52,9 +52,11 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private var postId: String?
     private var shouldAddMain: Bool = false
     private var conversationModel: SPMainConversationModel!
+    private let adsManager: AdsManager
 
     public init(delegate: SpotImSDKNavigationDelegate) {
         sdkNavigationDelegate = delegate
+        adsManager = AdsManager()
     }
 
     /// Please, provide container (UINavigationViewController) for sdk flows
@@ -90,8 +92,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
 
     private func startFlow(with controller: SPMainConversationViewController) {
-        let color = UIColor.color(with: SPConfigDataSource.config?.initialization?.brandColor)
-        navigationController?.navigationBar.applyDarkAppearance(with: color)
+        navigationController?.navigationBar.applyDarkAppearance(with: .brandColor)
         navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -111,6 +112,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         )
         self.conversationModel = conversationModel
         let controller = SPPreConversationViewController(model: conversationModel)
+        controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.preConversationDelegate = self
         return controller
@@ -118,6 +120,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
         let controller = SPMainConversationViewController(model: model)
+        controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
 
@@ -139,14 +142,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
 
-        let color = UIColor.color(with: SPConfigDataSource.config?.initialization?.brandColor)
         let transition = CATransition()
         transition.duration = 0.5
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         transition.type = .moveIn
         transition.subtype = .fromTop
         
-        navigationController?.navigationBar.applyDarkAppearance(with: color)
+        navigationController?.navigationBar.applyDarkAppearance(with: .brandColor)
         navigationController?.view.layer.add(transition, forKey: kCATransition)
         navigationController?.pushViewController(controller, animated: false)
         authHandlers.append(WeakRef(value: controller.userDidSignInHandler()))
@@ -236,9 +238,8 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
     internal func presentAuth() {
         if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
             controller.ssoAuthProvider.ssoAuthDelegate = self
-            let color = UIColor.color(with: SPConfigDataSource.config?.initialization?.brandColor)
             let container = UINavigationController(rootViewController: controller)
-            container.navigationBar.applyDarkAppearance(with: color)
+            container.navigationBar.applyDarkAppearance(with: .brandColor)
             let barItem = UIBarButtonItem(title: "Back",
                                           style: .plain,
                                           target: self,

@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable {
@@ -58,7 +57,6 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
 
     internal func setupUI() {
         view.addSubview(tableView)
-        view.backgroundColor = .white
         setupTableView()
     }
 
@@ -484,7 +482,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
 extension SPBaseConversationViewController: CommentsActionDelegate {
     
     func localCommentWillBeCreated() {
-        if tableView.numberOfRows(inSection: 0) > 0 {
+        if tableView.numberOfRows(inSection: 0) > 0, tableView.indexPathsForVisibleRows?.count ?? 0 > 0 {
             tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: false)
         }
     }

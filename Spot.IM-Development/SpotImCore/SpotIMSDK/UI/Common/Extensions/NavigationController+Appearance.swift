@@ -18,8 +18,8 @@ extension UINavigationBar {
             NSAttributedString.Key.font: UIFont.roboto(style: .medium, of: 20.0),
             NSAttributedString.Key.foregroundColor: UIColor.charcoalGrey
         ]
-        barTintColor = barColor ?? .navigationWhite
-        backgroundColor = barColor ?? .navigationWhite
+        barTintColor = barColor ?? .almostWhite
+        backgroundColor = barColor ?? .almostWhite
         let image = UIImage(spNamed: "defaultBackButtonIcon")
         backIndicatorImage = image
         backIndicatorTransitionMaskImage = image

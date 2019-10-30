@@ -14,7 +14,7 @@ class SPBaseTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .spBackground0
     }
     
     @available(*,

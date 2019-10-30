@@ -87,7 +87,6 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userNameView.setUserName(dataModel.displayName,
                                  badgeTitle: dataModel.badgeTitle,
                                  isLeader: dataModel.showsStar,
-                                 brandColor: dataModel.brandColor,
                                  contentType: .reply,
                                  isDeleted: dataModel.isDeleted)
         userNameView.setMoreButton(hidden: dataModel.isDeleted)
@@ -106,7 +105,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateActionView(with dataModel: CommentViewModel) {
-        replyActionsView.setBrandColor(dataModel.brandColor)
+        replyActionsView.setBrandColor(.brandColor)
         replyActionsView.setRepliesCount(dataModel.repliesCount)
         replyActionsView.setRankUp(dataModel.rankUp)
         replyActionsView.setRankDown(dataModel.rankDown)
@@ -194,16 +193,16 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         paragraphStyle.lineSpacing = 3.5
         
         var attributes: [NSAttributedString.Key: Any]
-        if !isDeleted {
+        if isDeleted {
             attributes = [
-                .foregroundColor: UIColor.charcoalGrey,
-                .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
+                .foregroundColor: UIColor.spForeground3,
+                .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
                 .paragraphStyle: paragraphStyle
             ]
         } else {
             attributes = [
-                .foregroundColor: UIColor.steelGrey,
-                .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
+                .foregroundColor: UIColor.spForeground1,
+                .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
                 .paragraphStyle: paragraphStyle
             ]
         }

@@ -48,8 +48,8 @@ final class SPCommentHeaderView: BaseView {
     
     private func setupReplyingLabel() {
         replyingLabel.text = NSLocalizedString("Replying to ", comment: "replying title")
-        replyingLabel.backgroundColor = .white
-        replyingLabel.textColor = .steelGrey
+        replyingLabel.backgroundColor = .spBackground0
+        replyingLabel.textColor = .spForeground4
         replyingLabel.font = UIFont.roboto(style: .regular, of: Theme.titleFontSize)
         replyingLabel.layout {
             $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
@@ -58,8 +58,8 @@ final class SPCommentHeaderView: BaseView {
     }
     
     private func setupCommentAuthorLabel() {
-        commentAuthorLabel.backgroundColor = .white
-        commentAuthorLabel.textColor = .charcoalGrey
+        commentAuthorLabel.backgroundColor = .spBackground0
+        commentAuthorLabel.textColor = .spForeground1
         commentAuthorLabel.font = UIFont.roboto(style: .bold, of: Theme.titleFontSize)
         
         commentAuthorLabel.layout {
@@ -71,7 +71,7 @@ final class SPCommentHeaderView: BaseView {
     
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
-        closeButton.backgroundColor = .white
+        closeButton.backgroundColor = .spBackground0
         closeButton.layout {
             $0.centerY.equal(to: commentAuthorLabel.centerYAnchor)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -5.0)
@@ -81,7 +81,7 @@ final class SPCommentHeaderView: BaseView {
     }
     
     private func setupCommentLabel() {
-        commentLabel.backgroundColor = .white
+        commentLabel.backgroundColor = .spBackground0
         commentLabel.numberOfLines = 3
         commentLabel.textColor = .charcoalGrey
         commentLabel.font = UIFont.roboto(style: .regular, of: Theme.commentFontSize)

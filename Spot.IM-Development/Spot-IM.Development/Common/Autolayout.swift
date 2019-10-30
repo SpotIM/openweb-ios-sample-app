@@ -1,5 +1,4 @@
 import UIKit
-import GoogleMobileAds
 
 internal protocol LayoutAnchor {
     

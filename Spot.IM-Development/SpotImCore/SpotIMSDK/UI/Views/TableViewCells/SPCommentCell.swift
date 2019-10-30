@@ -6,9 +6,8 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
-import Alamofire
 import UIKit
+import Alamofire
 
 protocol MessageItemContainable: class {
     var messageView: MessageContainerView { get }
@@ -98,7 +97,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func configureHeaderView() {
         let separatorView: UIView = .init()
         
-        separatorView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        separatorView.backgroundColor = .spSeparator
         headerView.addSubview(separatorView)
         separatorView.layout {
             $0.centerX.equal(to: headerView.centerXAnchor)
@@ -108,7 +107,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             separatorHeightConstraint = $0.height.equal(to: 1.0)
         }
         
-        headerView.backgroundColor = .white
+        headerView.backgroundColor = .spBackground0
         headerView.layout {
             $0.leading.equal(to: contentView.leadingAnchor)
             $0.trailing.equal(to: contentView.trailingAnchor)
@@ -186,7 +185,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             dataModel.displayName,
             badgeTitle: dataModel.badgeTitle,
             isLeader: dataModel.showsStar,
-            brandColor: dataModel.brandColor,
             contentType: .reply,
             isDeleted: dataModel.isDeleted)
         userNameView.setMoreButton(hidden: dataModel.isDeleted)
@@ -202,7 +200,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateActionView(with dataModel: CommentViewModel) {
-        replyActionsView.setBrandColor(dataModel.brandColor)
+        replyActionsView.setBrandColor(.brandColor)
         replyActionsView.setRepliesCount(dataModel.repliesCount)
         replyActionsView.setRankUp(dataModel.rankUp)
         replyActionsView.setRankDown(dataModel.rankDown)
@@ -265,16 +263,16 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         paragraphStyle.lineSpacing = 3.5
         
         var attributes: [NSAttributedString.Key: Any]
-        if !isDeleted {
+        if isDeleted {
             attributes = [
-                .foregroundColor: UIColor.charcoalGrey,
-                .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
+                .foregroundColor: UIColor.spForeground3,
+                .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
                 .paragraphStyle: paragraphStyle
             ]
         } else {
             attributes = [
-                .foregroundColor: UIColor.steelGrey,
-                .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
+                .foregroundColor: UIColor.spForeground1,
+                .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
                 .paragraphStyle: paragraphStyle
             ]
         }

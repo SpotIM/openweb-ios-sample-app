@@ -29,6 +29,8 @@ final class SPAvatarView: BaseView {
     private let onlineIndicatorView: UIView = .init()
     private let avatarButton: UIButton = .init()
 
+    private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", for: .light) }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -55,8 +57,6 @@ final class SPAvatarView: BaseView {
     }
     
     private func setupAvatarImageView() {
-        avatarImageView.layer.shouldRasterize = true
-        avatarImageView.layer.rasterizationScale = UIScreen.main.scale
         avatarImageView.backgroundColor = .paleBlue
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.pinEdges(to: self)
@@ -65,7 +65,7 @@ final class SPAvatarView: BaseView {
     private func setupOnlineIndicatorView() {
         onlineIndicatorView.backgroundColor = .mediumGreen
         onlineIndicatorView.layer.borderWidth = 2.0
-        onlineIndicatorView.layer.borderColor = UIColor.white.cgColor
+        onlineIndicatorView.layer.borderColor = UIColor.spBackground0.cgColor
         onlineIndicatorView.layer.shouldRasterize = true
         onlineIndicatorView.layer.rasterizationScale = UIScreen.main.scale
         onlineIndicatorView.layout {
@@ -79,19 +79,17 @@ final class SPAvatarView: BaseView {
     /// Updates user's avatar, `nil` will set default placeholder
     func updateAvatar(avatarUrl: URL?) {
         if avatarUrl == nil {
-            avatarImageView.image = UIImage(spNamed: "defaultAvatar")
+            setAvatarOrDefault(image: nil)
         } else {
-            avatarImageView.setImage(with: avatarUrl)
+            avatarImageView.setImage(with: avatarUrl) { [weak self] (image, _) in
+                self?.setAvatarOrDefault(image: image)
+            }
         }
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
     func updateAvatar(image: UIImage?) {
-        if image == nil {
-            avatarImageView.image = UIImage(spNamed: "defaultAvatar")
-        } else {
-            avatarImageView.image = image
-        }
+        setAvatarOrDefault(image: image)
     }
     
     /// Updates user's online status, `nil` will hide status view
@@ -104,6 +102,15 @@ final class SPAvatarView: BaseView {
         case .offline:
             onlineIndicatorView.isHidden = true
         }
+    }
+
+    /// Sets the image to the avatar image view, adds rasterization thereafter.
+    /// If the image is nil, tries to set default image.
+    /// - Parameter image: Suggested avatar image.
+    private func setAvatarOrDefault(image: UIImage?) {
+        avatarImageView.image = image ?? defaultAvatar
+        avatarImageView.layer.shouldRasterize = true
+        avatarImageView.layer.rasterizationScale = UIScreen.main.scale
     }
     
     @objc

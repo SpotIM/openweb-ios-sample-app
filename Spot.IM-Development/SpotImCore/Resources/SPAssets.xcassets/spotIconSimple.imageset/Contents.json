@@ -2,7 +2,16 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "spotIconSmall.pdf"
+      "filename" : "spotIconSmall.pdf",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {
@@ -11,7 +20,6 @@
   },
   "properties" : {
     "template-rendering-intent" : "original",
-    "preserves-vector-representation" : true,
     "auto-scaling" : "auto"
   }
 }

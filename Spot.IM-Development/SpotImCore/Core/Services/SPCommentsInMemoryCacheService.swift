@@ -16,6 +16,7 @@ final class SPCommentsInMemoryCacheService {
     
     func update(comment: String, with id: String) {
         cachedComments[id] = comment.count >= commentCacheMinCount ? comment : ""
+        
     }
     
     func remove(for id: String) {

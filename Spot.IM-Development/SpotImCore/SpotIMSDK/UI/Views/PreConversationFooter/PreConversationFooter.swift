@@ -25,10 +25,13 @@ internal final class SPPreConversationFooter: BaseView {
     private lazy var privacyButton: UIButton = .init(type: .system)
     private lazy var spotIMIcon: UIImageView = .init()
     private lazy var addSpotIMButton: UIButton = .init(type: .system)
-
+    private lazy var bannerContainerView: UIView = .init()
+    private var bannerView: UIView?
+    
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
     private var moreCommentsTopConstraint: NSLayoutConstraint?
-
+    private var bannerContainerHeight: NSLayoutConstraint?
+    
     internal weak var delegate: SPPreConversationFooterDelegate?
 
     override init(frame: CGRect) {
@@ -43,9 +46,23 @@ internal final class SPPreConversationFooter: BaseView {
         separatorView.isHidden = !withSeparator
     }
 
+    func updateBannerView(_ bannerView: UIView, height: CGFloat) {
+        self.bannerView?.removeFromSuperview()
+        self.bannerView = bannerView
+        bannerContainerView.addSubview(bannerView)
+        bannerView.layout {
+            $0.height.equal(to: height)
+            $0.leading.equal(to: bannerContainerView.leadingAnchor)
+            $0.trailing.equal(to: bannerContainerView.trailingAnchor)
+            $0.bottom.equal(to: bannerContainerView.bottomAnchor)
+        }
+        bannerContainerHeight?.constant = height + 30.0
+    }
+    
     private func setup() {
         addSubviews(separatorView,
                     showMoreCommentsButton,
+                    bannerContainerView,
                     termsButton,
                     dotLabel,
                     privacyButton,
@@ -53,6 +70,7 @@ internal final class SPPreConversationFooter: BaseView {
                     addSpotIMButton)
 
         setupShowMoreCommentsButton()
+        setupBannerView()
         setupTermsButton()
         setupDotLabel()
         setupPrivacyButton()
@@ -80,7 +98,7 @@ internal final class SPPreConversationFooter: BaseView {
         }
         
         let title = NSLocalizedString("SHOW MORE COMMENTS", comment: "Pre-conversation footer button")
-        showMoreCommentsButton.backgroundColor = .marineBlue2
+        showMoreCommentsButton.backgroundColor = .brandColor
         showMoreCommentsButton.setTitle(title, for: .normal)
         showMoreCommentsButton.setTitleColor(.white, for: .normal)
         showMoreCommentsButton.titleLabel?.font = .preferred(style: .medium, of: Theme.showMoreCommentsButtonFontSize)
@@ -95,6 +113,15 @@ internal final class SPPreConversationFooter: BaseView {
         }
     }
 
+    private func setupBannerView() {
+        bannerContainerView.layout {
+            $0.top.equal(to: showMoreCommentsButton.bottomAnchor)
+            $0.leading.equal(to: leadingAnchor)
+            $0.trailing.equal(to: trailingAnchor)
+            bannerContainerHeight = $0.height.equal(to: 0.0)
+        }
+    }
+    
     private func setupTermsButton() {
         let title = NSLocalizedString("Terms", comment: "Pre-conversation footer button")
         termsButton.setTitle(title, for: .normal)
@@ -103,7 +130,7 @@ internal final class SPPreConversationFooter: BaseView {
         termsButton.addTarget(self, action: #selector(showTerms), for: .touchUpInside)
 
         termsButton.layout {
-            $0.top.equal(to: showMoreCommentsButton.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
+            $0.top.equal(to: bannerContainerView.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.horisontalMargin)
             $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
         }
