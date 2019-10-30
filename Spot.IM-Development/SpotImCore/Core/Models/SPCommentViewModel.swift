@@ -127,7 +127,7 @@ internal struct CommentViewModel {
                 0.0 : clippedMessage.height(withConstrainedWidth: textWidth)
 
             let moreRepliesHeight = repliesButtonState == .hidden ?
-                0.0 : Theme.moreRepliesViewHeight
+                0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
             let userViewHeight: CGFloat = badgeTitle == nil ?
                 Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
@@ -168,6 +168,7 @@ internal struct CommentViewModel {
             static let userViewExpandedHeight: CGFloat = 69.0
             static let replyActionsViewHeight: CGFloat = 49.0
             static let moreRepliesViewHeight: CGFloat = 31.0
+            static let moreRepliesTopOffset: CGFloat = 12.0
         }
         
         private func message() -> String {
@@ -206,6 +207,7 @@ internal struct CommentViewModel {
 // MARK: - Theme
 
 private enum Theme {
+    
     static let fontSize: CGFloat = 16.0
     static let deletedFontSize: CGFloat = 17.0
     static let topOffset: CGFloat = 14.0
@@ -217,4 +219,5 @@ private enum Theme {
     static let userViewExpandedHeight: CGFloat = 69.0
     static let replyActionsViewHeight: CGFloat = 49.0
     static let moreRepliesViewHeight: CGFloat = 31.0
+    static let moreRepliesTopOffset: CGFloat = 12.0
 }

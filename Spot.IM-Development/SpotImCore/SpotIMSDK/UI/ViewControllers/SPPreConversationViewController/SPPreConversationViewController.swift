@@ -99,6 +99,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         view.bringSubviewToFront(whatYouThinkView)
         whatYouThinkView.updateOnlineStatus(.online)
         whatYouThinkView.dropsShadow = false
+        whatYouThinkView.showsSeparator = false
         whatYouThinkView.delegate = self
         whatYouThinkView.layout {
             $0.top.equal(to: header.bottomAnchor)

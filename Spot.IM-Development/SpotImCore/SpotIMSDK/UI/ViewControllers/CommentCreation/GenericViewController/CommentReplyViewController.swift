@@ -21,7 +21,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: AuthenticationHandler?
-
+    
     var model: T? {
         didSet {
             updateModelData()
@@ -32,14 +32,14 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     let textInputViewContainer: SPTextInputView = .init()
     
     let activityIndicator: SPLoaderView = SPLoaderView()
-
+    
     private let mainContainerView: UIView = .init()
     private let postButton: UIButton = .init(type: .system)
     private let scrollView: UIScrollView = .init()
-
+    
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
-
+    
     private var shouldBeAutoPosted: Bool = true
     
     deinit {
@@ -70,7 +70,10 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        textInputViewContainer.makeFirstResponder()
+        // delay added for keyboard not to appear earlier than the screen
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) {
+            self.textInputViewContainer.makeFirstResponder()
+        }
     }
     
     @objc
@@ -160,7 +163,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         view.endEditing(true)
         shouldBeAutoPosted = false
         userAuthFlowDelegate?.presentAuth()
-
+        
         SPAnalyticsHolder.default.log(event: .loginClicked(.commentSignUp), source: .conversation)
     }
 }
@@ -173,7 +176,7 @@ extension CommentReplyViewController {
             $0.top.equal(to: view.layoutMarginsGuide.topAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
+            $0.bottom.equal(to: view.bottomAnchor)
         }
         scrollView.addSubview(mainContainerView)
         mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton)
@@ -233,7 +236,7 @@ extension CommentReplyViewController {
         postButton.setTitleColor(.white, for: .normal)
         postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
         postButton.backgroundColor = .brandColor
-
+        
         postButton.isEnabled = false
         postButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.postButtonFontSize)
         postButton.contentEdgeInsets = UIEdgeInsets(
@@ -246,8 +249,8 @@ extension CommentReplyViewController {
         postButton.addCornerRadius(Theme.postButtonRadius)
         postButton.layout {
             mainContainerBottomConstraint = $0.bottom.equal(to: mainContainerView.layoutMarginsGuide.bottomAnchor,
-                                                            offsetBy: -Theme.mainOffset)
-            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.mainOffset)
+                                                            offsetBy: -Theme.postButtonBottom)
+            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.postButtonTrailing)
             $0.height.equal(to: Theme.postButtonHeight)
         }
     }
@@ -260,7 +263,8 @@ extension CommentReplyViewController: KeyboardHandable {
             let expandedKeyboardHeight = notification.keyboardSize?.height,
             let animationDuration = notification.keyboardAnimationDuration
             else { return }
-        updateBottomConstraint(constant: expandedKeyboardHeight, animationDuration: animationDuration)
+        updateBottomConstraint(constant: expandedKeyboardHeight + Theme.postButtonBottom,
+                               animationDuration: animationDuration)
     }
     
     func keyboardWillHide(_ notification: Notification) {
@@ -299,11 +303,13 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
 
 private enum Theme {
     
+    static let postButtonBottom: CGFloat = 8.0
     static let mainOffset: CGFloat = 16.0
     static let postButtonHeight: CGFloat = 32.0
     static let postButtonRadius: CGFloat = 5.0
     static let postButtonHorizontalInset: CGFloat = 32.0
     static let postButtonFontSize: CGFloat = 15.0
+    static let postButtonTrailing: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
     
 }
