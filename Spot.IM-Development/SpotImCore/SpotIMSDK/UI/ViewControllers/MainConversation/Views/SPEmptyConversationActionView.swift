@@ -101,10 +101,9 @@ final class SPEmptyConversationActionView: BaseView {
     }
     
     private func configureActionButton() {
-        let activeIcon = UIImage(spNamed: "postActiveIcon")
         actionButton.addTarget(self, action: #selector(handleAction), for: .touchUpInside)
         actionButton.setTitleColor(.white, for: .normal)
-        actionButton.setBackgroundImage(activeIcon, for: .normal)
+        actionButton.backgroundColor = .brandColor
         actionButton.titleLabel?.font = UIFont.roboto(style: .medium, of: Theme.actionButtonTitleFontSize)
         
         actionButton.layout {

@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 final class MessageContainerView: BaseView {
@@ -69,7 +68,7 @@ final class MessageContainerView: BaseView {
     }
 
     private func configureTextLabel() {
-        mainTextLabel.backgroundColor = .white
+        mainTextLabel.backgroundColor = .spBackground0
         mainTextLabel.numberOfLines = 0
         mainTextLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         mainTextLabel.pinEdges(to: self)

@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal final class SPArticleHeader: BaseView {
@@ -42,8 +41,6 @@ internal final class SPArticleHeader: BaseView {
     // MARK: - Private Methods
 
     private func setup() {
-        backgroundColor = .white
-
         addSubviews(conversationImageView, titlesContainer, separatorView)
         setupConversationImageView()
         setupConversationTitleContainer()
@@ -51,8 +48,8 @@ internal final class SPArticleHeader: BaseView {
     }
 
     private func setupConversationImageView() {
-        conversationImageView.image = UIImage(spNamed: "imagePlaceholder")
-        conversationImageView.backgroundColor = .white
+        conversationImageView.image = UIImage(spNamed: "imagePlaceholder", for: .light)
+        conversationImageView.backgroundColor = .spBackground0
         conversationImageView.contentMode = .scaleAspectFill
         conversationImageView.clipsToBounds = true
         conversationImageView.addCornerRadius(Theme.imageCornerRadius)
@@ -66,7 +63,7 @@ internal final class SPArticleHeader: BaseView {
     }
 
     private func configureSeparatorView() {
-        separatorView.backgroundColor = .iceBlue
+        separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
             $0.leading.equal(to: leadingAnchor)
             $0.bottom.equal(to: bottomAnchor)
@@ -77,7 +74,7 @@ internal final class SPArticleHeader: BaseView {
     
     private func setupConversationTitleContainer() {
         titlesContainer.addSubviews(conversationTitleLabel, conversationAuthorLabel)
-        titlesContainer.backgroundColor = .white
+        titlesContainer.backgroundColor = .spBackground0
         titlesContainer.layout {
             $0.leading.equal(to: conversationImageView.trailingAnchor, offsetBy: Theme.insetShort)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.titlesTrailingOffset)
@@ -91,8 +88,8 @@ internal final class SPArticleHeader: BaseView {
         conversationTitleLabel.text = NSLocalizedString("Loading",
                                                         comment: "Main Conversation header title placeholder")
         conversationTitleLabel.numberOfLines = 2
-        conversationTitleLabel.backgroundColor = .white
-        conversationTitleLabel.textColor = .steelGrey
+        conversationTitleLabel.backgroundColor = .spBackground0
+        conversationTitleLabel.textColor = .spForeground4
         conversationTitleLabel.font = UIFont.roboto(style: .regular, of: Theme.titleFontSize)
 
         conversationTitleLabel.layout {
@@ -106,8 +103,8 @@ internal final class SPArticleHeader: BaseView {
         conversationAuthorLabel.text = NSLocalizedString("*Author name*",
                                                         comment: "Main Conversation author placeholder")
         conversationAuthorLabel.numberOfLines = 1
-        conversationAuthorLabel.backgroundColor = .white
-        conversationAuthorLabel.textColor = .coolGrey
+        conversationAuthorLabel.backgroundColor = .spBackground0
+        conversationAuthorLabel.textColor = .spForeground2
         conversationAuthorLabel.font = UIFont.roboto(style: .regular, of: Theme.subTitleFontSize)
         
         conversationAuthorLabel.layout {

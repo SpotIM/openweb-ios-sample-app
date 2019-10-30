@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal struct CommentViewModel {
@@ -41,7 +40,7 @@ internal struct CommentViewModel {
         var badgeIsGamification: Bool = false
         var commentTextCollapsed: Bool = true
         
-        var brandColor: UIColor = .steelGrey
+        var brandColor: UIColor = .brandColor
 
         var isRoot: Bool {
             guard let id = commentId, !id.isEmpty else { return false }

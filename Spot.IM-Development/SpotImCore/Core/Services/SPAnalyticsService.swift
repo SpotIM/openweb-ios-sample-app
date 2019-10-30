@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import GoogleMobileAds
 
 internal protocol SPAnalyticsService {
 

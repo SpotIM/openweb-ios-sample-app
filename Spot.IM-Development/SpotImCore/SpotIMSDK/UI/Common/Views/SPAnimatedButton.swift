@@ -109,7 +109,7 @@ internal class SPAnimatedButton: UIButton {
         addTargets()
     }
     
-    fileprivate func createLayers(image: UIImage!, selectedImage: UIImage!, buttonInset insets: UIEdgeInsets ) {
+    fileprivate func createLayers(image: UIImage, selectedImage: UIImage!, buttonInset insets: UIEdgeInsets ) {
         self.layer.sublayers = nil
         let imageFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height).inset(by: insets)
         
@@ -178,9 +178,9 @@ internal class SPAnimatedButton: UIButton {
         self.layer.addSublayer(imageShape)
         
         imageShape.mask = CALayer()
-        imageShape.mask!.contents = image.cgImage
-        imageShape.mask!.bounds = imageFrame
-        imageShape.mask!.position = imgCenterPoint
+        imageShape.mask?.contents = image.cgImage
+        imageShape.mask?.bounds = imageFrame
+        imageShape.mask?.position = imgCenterPoint
         
         
         //===============

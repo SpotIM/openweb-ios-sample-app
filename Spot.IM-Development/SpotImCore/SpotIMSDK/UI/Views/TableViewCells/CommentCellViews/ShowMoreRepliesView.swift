@@ -6,7 +6,6 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal final class ShowMoreRepliesView: BaseView {
@@ -63,10 +62,10 @@ internal final class ShowMoreRepliesView: BaseView {
     }
 
     private func configureShowHideRepliesButton() {
-        showHideRepliesButton.backgroundColor = .white
+        showHideRepliesButton.backgroundColor = .spBackground0
         showHideRepliesButton.addTarget(self, action: #selector(showHideReplies), for: .touchUpInside)
         showHideRepliesButton.titleLabel?.font = .preferred(style: .bold, of: Theme.fontSize)
-        showHideRepliesButton.setTitleColor(.charcoalGrey, for: .normal)
+        showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
         showHideRepliesButton.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)

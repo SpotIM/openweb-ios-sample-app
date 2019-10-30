@@ -93,10 +93,10 @@ final class SPTextInputView: BaseView {
                                                         isActive: false)
         }
         textInputView.delegate = self
-        textInputView.tintColor = .clearBlue
-        textInputView.backgroundColor = .white
+        textInputView.tintColor = .brandColor
+        textInputView.backgroundColor = .spBackground0
         textInputView.font = UIFont.roboto(style: .regular, of: Theme.commentTextFontSize)
-        textInputView.textColor = .charcoalGrey
+        textInputView.textColor = .spForeground1
     }
 }
 

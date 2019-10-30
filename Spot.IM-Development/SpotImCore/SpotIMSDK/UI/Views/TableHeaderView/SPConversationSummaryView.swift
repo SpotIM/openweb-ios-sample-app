@@ -21,12 +21,14 @@ final class SPConversationSummaryView: BaseView {
     private let separatorView: UIView = .init()
     private let sortButton: UIButton = .init(type: .system)
     private let newCommentsButton: UIButton = .init(type: .system)
+
+    internal var dropsShadow: Bool = false
     
     weak var delegate: SPConversationSummaryViewDelegate?
     
     override var bounds: CGRect {
         didSet {
-            dropShadow()
+            dropShadowIfNeeded()
         }
     }
     
@@ -90,8 +92,8 @@ extension SPConversationSummaryView {
     }
     
     private func configureCommentCountLabel() {
-        commentsCountLabel.textColor = .steelGrey
-        commentsCountLabel.backgroundColor = .white
+        commentsCountLabel.textColor = .spForeground4
+        commentsCountLabel.backgroundColor = .spBackground0
         commentsCountLabel.font = UIFont.roboto(style: .regular, of: Theme.commentsFontSize)
         commentsCountLabel.layout {
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.sideOffset)
@@ -101,7 +103,7 @@ extension SPConversationSummaryView {
     
     private func configureSortButton() {
         let sortIcon = UIImage(spNamed: "sortingIcon")?.withRenderingMode(.alwaysOriginal)
-        sortButton.setTitleColor(.steelGrey, for: .normal)
+        sortButton.setTitleColor(.spForeground4, for: .normal)
         sortButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.sortButtonFontSize)
         sortButton.setImage(sortIcon, for: .normal)
         let spacing: CGFloat = Theme.insetTiny
@@ -134,7 +136,7 @@ extension SPConversationSummaryView {
             bottom: Theme.newCommentsButtonVerticalInset,
             right: Theme.newCommentsButtonHorizontalInset
         )
-        newCommentsButton.backgroundColor = .clearBlue
+        newCommentsButton.backgroundColor = .brandColor
         newCommentsButton.addCornerRadius(Theme.newCommentsButtonRadius)
         
         newCommentsButton.layout {
@@ -144,7 +146,7 @@ extension SPConversationSummaryView {
     }
     
     private func configureSeparatorView() {
-        separatorView.backgroundColor = .iceBlue
+        separatorView.backgroundColor = .spSeparator2
         
         separatorView.layout {
             $0.leading.equal(to: leadingAnchor)
@@ -154,7 +156,11 @@ extension SPConversationSummaryView {
         }
     }
     
-    private func dropShadow() {
+    private func dropShadowIfNeeded() {
+        guard dropsShadow else {
+            layer.shadowPath = nil
+            return
+        }
         let shadowRect = CGRect(x: 0.0, y: bounds.height / 2, width: bounds.width, height: bounds.height / 2)
         let shadowPath = UIBezierPath(rect: shadowRect)
         layer.masksToBounds = false

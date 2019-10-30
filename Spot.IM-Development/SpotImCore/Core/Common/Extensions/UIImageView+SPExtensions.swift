@@ -6,7 +6,7 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Alamofire
 
 typealias ImageLoadingCompletion = (_ image: UIImage?, _ error: Error?) -> Void

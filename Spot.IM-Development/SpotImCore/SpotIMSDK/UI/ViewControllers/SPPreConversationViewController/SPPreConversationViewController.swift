@@ -6,22 +6,28 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 internal final class SPPreConversationViewController: SPBaseConversationViewController {
 
+    var adsProvider: AdsProvider? {
+        didSet {
+            adsProvider?.delegate = self
+            adsProvider?.setupAdsBanner(with: "/6499/example/banner", in: self)
+            adsProvider?.setupInterstitial(with: "/6499/example/interstitial")
+        }
+    }
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
     private lazy var header: SPPreConversationHeaderView = .init()
     // TODO: (Fedin) rename SPMainConversationFooterView after refactoring
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
-
+    
     private var tableViewHeightConstraint: NSLayoutConstraint?
     private let maxSectionCount: Int = 2
     private let readingTracker = SPReadingTracker()
-
+    
     internal override var screenTargetType: SPAnScreenTargetType {
         return .preMain
     }
@@ -75,11 +81,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         setupWhatYouThinkView()
         setupFooterView()
 
-        if let config = SPConfigDataSource.config,
-            let color = UIColor.color(with: config.initialization?.brandColor) {
-
-            footerView.setShowMoreCommentsButtonColor(color: color, withSeparator: true)
-        }
+        footerView.setShowMoreCommentsButtonColor(color: .brandColor, withSeparator: true)
     }
     
     private func setupHeader() {
@@ -278,8 +280,15 @@ extension SPPreConversationViewController { // UITableViewDataSource
 }
 
 extension SPPreConversationViewController: SPPreConversationFooterDelegate {
+    
     func showMoreComments() {
-        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
+        if let adsProvider = adsProvider,
+            SPUserSessionHolder.session.user?.abTestGroup == .second,
+            AdsManager.shouldShowInterstitial,
+            adsProvider.showInterstitial(in: self){
+        } else {
+            preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
+        }
     }
 
     func showTerms() {
@@ -301,6 +310,24 @@ extension SPPreConversationViewController { // SPCommentCellDelegate
         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
     }
 
+}
+
+extension SPPreConversationViewController: AdsProviderDelegate {
+    
+    func bannerAdDidLoad(adBannerSize: CGSize) {
+        guard let bannerView = adsProvider?.bannerView else { return }
+        
+        footerView.updateBannerView(bannerView, height: adBannerSize.height)
+    }
+    
+    func interstitialWillBeShown() {
+        AdsManager.shouldShowInterstitial = false
+    }
+    
+    func interstitialDidDismiss() {
+        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
+    }
+    
 }
 
 private extension SPPreConversationViewController {

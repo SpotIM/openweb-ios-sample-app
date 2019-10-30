@@ -17,13 +17,8 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     private var emptyArticleBottomConstarint: NSLayoutConstraint?
     private var filledArticleBottomConstarint: NSLayoutConstraint?
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupHeaderComponents()
-    }
-    
     internal override func updateModelData() {
+        setupHeaderComponentsIfNeeded()
         configureModelHandlers()
         if model?.dataModel.articleTitle != nil || model?.dataModel.articleImageUrl != nil {
             topContainerView.addSubview(articleView)
@@ -56,13 +51,16 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         }
     }
     
-    private func setupHeaderComponents() {
+    private func setupHeaderComponentsIfNeeded() {
+        guard commentingOnLabel.superview == nil, closeButton.superview == nil else {
+            return
+        }
         topContainerView.addSubviews(commentingOnLabel, closeButton)
         
         commentingOnLabel.font = UIFont.roboto(style: .regular, of: 16.0)
-        commentingOnLabel.textColor = .steelGrey
+        commentingOnLabel.textColor = .spForeground4
         commentingOnLabel.text = NSLocalizedString("Commenting on", comment: "commenting on title")
-        commentingOnLabel.backgroundColor = .white
+        commentingOnLabel.backgroundColor = .spBackground0
         commentingOnLabel.layout {
             $0.top.equal(to: topContainerView.topAnchor, offsetBy: 25.0)
             $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 12.0)
@@ -72,7 +70,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         }
         
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
-        closeButton.backgroundColor = .white
+        closeButton.backgroundColor = .spBackground0
         closeButton.layout {
             $0.centerY.equal(to: commentingOnLabel.centerYAnchor)
             $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -5.0)
