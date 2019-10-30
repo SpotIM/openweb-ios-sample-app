@@ -18,6 +18,7 @@ internal extension UIColor {
     // from design
     static let charcoalGrey = #colorLiteral(red: 0.2156862745, green: 0.2431372549, blue: 0.2666666667, alpha: 1)    // #373E44 aka Dark Grey
     static let mineShaft = #colorLiteral(red: 0.137254902, green: 0.137254902, blue: 0.137254902, alpha: 1)       // #232323 aka "black"
+    static let mineShaft2 = #colorLiteral(red: 0.2274509804, green: 0.2274509804, blue: 0.2274509804, alpha: 1)      // #232323 aka "black"
     static let clearBlue = #colorLiteral(red: 0.1882352941, green: 0.4980392157, blue: 0.8862745098, alpha: 1)       // #307FE2
     static let iceBlue = #colorLiteral(red: 0.9411764706, green: 0.9450980392, blue: 0.9450980392, alpha: 1)         // #F0F1F1
     static let mediumGreen = #colorLiteral(red: 0.2078431373, green: 0.7215686275, blue: 0.2509803922, alpha: 1)     // #35B840
@@ -44,8 +45,12 @@ internal extension UIColor {
         SPUserInterfaceStyle.isDarkMode ? white.withAlphaComponent(0.15) : white
     }
 
+    static var spAvatarBG: UIColor {
+         paleBlue
+     }
+    
     static var spInactiveButtonBG: UIColor {
-        SPUserInterfaceStyle.isDarkMode ? charcoalGrey : cloudyBlue
+        SPUserInterfaceStyle.isDarkMode ? mineShaft2 : cloudyBlue
     }
 
     static var spForeground0: UIColor { SPUserInterfaceStyle.isDarkMode ? almostWhite : almostBlack }
@@ -53,18 +58,22 @@ internal extension UIColor {
     static var spForeground2: UIColor { SPUserInterfaceStyle.isDarkMode ? lightGreyBlue : coolGrey }
     static var spForeground3: UIColor { SPUserInterfaceStyle.isDarkMode ? lightGreyBlue : steelGrey }
     static var spForeground4: UIColor { SPUserInterfaceStyle.isDarkMode ? almostWhite : steelGrey }
-
+    
     static var buttonTitle: UIColor { SPUserInterfaceStyle.isDarkMode ? lightBlueGrey : steelGrey }
-
+    
     static var spBorder: UIColor {
         SPUserInterfaceStyle.isDarkMode ? clear : lightBlueGrey
     }
-
+    
     static var spSeparator: UIColor {
-        SPUserInterfaceStyle.isDarkMode ? black.withAlphaComponent(0.9) : black.withAlphaComponent(0.1)
+        SPUserInterfaceStyle.isDarkMode ? mineShaft2 : iceBlue
     }
-
+    
     static var spSeparator2: UIColor {
         SPUserInterfaceStyle.isDarkMode ? grayishBrown : iceBlue
+    }
+    
+    static var spSeparator3: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? spBackground0 : spBackground0
     }
 }

@@ -489,7 +489,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
         }
     }
     
-    ///* Updates article header height after scroll view did end actions using `scrollingDirection` property
+    /// Updates article header height after scroll view did end actions using `scrollingDirection` property
     private func handleFinalHeaderHeightUpdate() {
         guard scrollingDirection != .static, isHeaderVisible else { return }
         let finaleHeight: CGFloat = scrollingDirection == .up

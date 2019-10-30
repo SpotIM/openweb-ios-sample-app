@@ -43,7 +43,7 @@ final class SPCommentHeaderView: BaseView {
         setupCommentAuthorLabel()
         setupCloseButton()
         setupCommentLabel()
-        setupSeparatotView()
+        setupSeparatorView()
     }
     
     private func setupReplyingLabel() {
@@ -83,7 +83,7 @@ final class SPCommentHeaderView: BaseView {
     private func setupCommentLabel() {
         commentLabel.backgroundColor = .spBackground0
         commentLabel.numberOfLines = 3
-        commentLabel.textColor = .charcoalGrey
+        commentLabel.textColor = .spForeground1
         commentLabel.font = UIFont.roboto(style: .regular, of: Theme.commentFontSize)
         
         commentLabel.layout {
@@ -94,8 +94,8 @@ final class SPCommentHeaderView: BaseView {
         }
     }
     
-    private func setupSeparatotView() {
-        separatorView.backgroundColor = .iceBlue
+    private func setupSeparatorView() {
+        separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
             $0.leading.equal(to: leadingAnchor)
             $0.bottom.equal(to: bottomAnchor)

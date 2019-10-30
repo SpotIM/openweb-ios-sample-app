@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// aka Engagement view
 final class CommentActionsView: BaseView {
 
     weak var delegate: CommentActionsDelegate?
@@ -147,7 +148,7 @@ final class CommentActionsView: BaseView {
         rankDownButton.setContentHuggingPriority(.required, for: .horizontal)
         let width = Theme.engagementStackHeight - Theme.rankButtonHorizontalInset * 2
         rankDownButton.layout {
-            $0.centerY.equal(to: replyButton.centerYAnchor)
+            $0.centerY.equal(to: replyButton.centerYAnchor, offsetBy: -4)
             $0.height.equal(to: Theme.engagementStackHeight)
             $0.width.equal(to: width)
             $0.trailing.equal(to: rankDownLabel.leadingAnchor)

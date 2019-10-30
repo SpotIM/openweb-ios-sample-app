@@ -34,7 +34,11 @@ final class SPMainConversationFooterView: BaseView {
     internal var dropsShadow: Bool = false {
         didSet { showSeparatorIfNeeded() }
     }
-
+    
+    internal var showsSeparator: Bool = true {
+        didSet { separatorView.isHidden = !showsSeparator }
+    }
+    
     override var bounds: CGRect {
         didSet {
             dropShadowIfNeeded()

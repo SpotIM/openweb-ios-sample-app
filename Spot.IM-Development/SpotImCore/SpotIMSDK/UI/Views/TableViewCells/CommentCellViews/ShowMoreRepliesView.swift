@@ -55,7 +55,8 @@ internal final class ShowMoreRepliesView: BaseView {
     }
 
     private func setupUI() {
-        addSubviews(showHideRepliesButton, activityIndicator, disclosureIndicator)
+        addSubview(showHideRepliesButton)
+        showHideRepliesButton.addSubviews(disclosureIndicator, activityIndicator)
         configureShowHideRepliesButton()
         configureActivityIndicator()
         configureDisclosureIndicator()
@@ -70,14 +71,16 @@ internal final class ShowMoreRepliesView: BaseView {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
             $0.bottom.equal(to: bottomAnchor)
-        }
-    }
-
-    private func configureActivityIndicator() {
-        activityIndicator.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: showHideRepliesButton.trailingAnchor, offsetBy: Theme.activityOffset)
             $0.trailing.equal(to: trailingAnchor)
+        }
+        showHideRepliesButton.contentEdgeInsets.right += activityIndicator.frame.width + Theme.activityOffset
+    }
+    
+    private func configureActivityIndicator() {
+        activityIndicator.style = SPUserInterfaceStyle.isDarkMode ? .white : .gray
+        activityIndicator.layout {
+            $0.centerY.equal(to: showHideRepliesButton.centerYAnchor)
+            $0.trailing.equal(to: showHideRepliesButton.trailingAnchor)
         }
     }
 

@@ -55,8 +55,8 @@ internal final class SPArticleHeader: BaseView {
         conversationImageView.addCornerRadius(Theme.imageCornerRadius)
         
         conversationImageView.layout {
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.imageEdgesOffset)
-            $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.imageEdgesOffset)
+            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.imageLeadingOffset)
+            $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.imageBottomOffset)
             $0.height.equal(to: Theme.imageSize)
             $0.width.equal(to: Theme.imageSize)
         }
@@ -125,7 +125,8 @@ private enum Theme {
     static let insetShort: CGFloat = 11.0
     static let imageSize: CGFloat = 67.0
     static let imageCornerRadius: CGFloat = 4.0
-    static let imageEdgesOffset: CGFloat = 9.0
+    static let imageLeadingOffset: CGFloat = 16.0
+    static let imageBottomOffset: CGFloat = 9.0
     static let titleFontSize: CGFloat = 15.0
     static let subTitleFontSize: CGFloat = 13.0
 }

@@ -57,7 +57,7 @@ final class SPAvatarView: BaseView {
     }
     
     private func setupAvatarImageView() {
-        avatarImageView.backgroundColor = .paleBlue
+        avatarImageView.backgroundColor = .spAvatarBG
         avatarImageView.contentMode = .scaleAspectFill
         avatarImageView.pinEdges(to: self)
     }
@@ -108,6 +108,7 @@ final class SPAvatarView: BaseView {
     /// If the image is nil, tries to set default image.
     /// - Parameter image: Suggested avatar image.
     private func setAvatarOrDefault(image: UIImage?) {
+        avatarImageView.backgroundColor = image == nil ? .spAvatarBG : .spBackground0
         avatarImageView.image = image ?? defaultAvatar
         avatarImageView.layer.shouldRasterize = true
         avatarImageView.layer.rasterizationScale = UIScreen.main.scale
