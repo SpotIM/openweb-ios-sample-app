@@ -90,7 +90,7 @@ internal final class SPCloudinaryImageProvider: SPImageURLProvider {
 
 private enum Constants {
     static let cloudinaryBaseURL = "https://images.spot.im/image/upload/"
-    static let cloudinaryParamString = "dpr_3,c_thumb,g_face,r_max"
+    static let cloudinaryParamString = "dpr_3,c_thumb,g_face"
     static let cloudinaryWidthPrefix = ",w_"
     static let cloudinaryHeightPrefix = ",h_"
     static let placeholderImagePrefix = "#"
