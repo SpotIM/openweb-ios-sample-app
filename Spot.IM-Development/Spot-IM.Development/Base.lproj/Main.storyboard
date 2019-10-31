@@ -401,7 +401,7 @@ Build: [unknown]</string>
         <!--Dark Mode Settings View Controller-->
         <scene sceneID="MLR-79-iDN">
             <objects>
-                <viewController id="afI-iB-Nmt" customClass="DarkModeSettingsViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="DarkModeSettingsViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kR-Yk-fnP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -443,8 +443,8 @@ Build: [unknown]</string>
                     </view>
                     <navigationItem key="navigationItem" id="zdw-3c-jGR"/>
                     <connections>
-                        <outlet property="darkModeSwitch" destination="RrX-Ol-vho" id="8cp-ud-YJt"/>
-                        <outlet property="modeControl" destination="aKr-SD-OJK" id="JJt-fX-7lp"/>
+                        <outlet property="darkModeSwitch" destination="RrX-Ol-vho" id="dF2-iX-Gco"/>
+                        <outlet property="modeControl" destination="aKr-SD-OJK" id="DcC-wq-pGd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D4v-oL-etS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

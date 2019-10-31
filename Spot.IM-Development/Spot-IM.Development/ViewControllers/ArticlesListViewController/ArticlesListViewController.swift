@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 import Alamofire
-import Spot_IM_Core
+import SpotImCore
 
 let cellIdentifier = "cards"
 

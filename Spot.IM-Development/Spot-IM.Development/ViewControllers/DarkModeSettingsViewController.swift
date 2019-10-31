@@ -8,9 +8,10 @@
 
 import Foundation
 import UIKit
-import Spot_IM_Core
+import SpotImCore
 
 class DarkModeSettingsViewController: UIViewController {
+    
     @IBOutlet weak var darkModeSwitch: UISwitch!
     @IBOutlet weak var modeControl: UISegmentedControl!
     
