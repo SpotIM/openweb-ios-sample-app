@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Spot_IM_Core
+import SpotImCore
 
 enum FoxError: Error {
     case runtimeError(String)
@@ -21,7 +21,8 @@ class FoxAuthenticationViewController: UIViewController, SSOAuthenticatable {
     @IBOutlet weak var passwordTextField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Authentication"
+        
+        title = "Authentication"
     }
     
     @IBAction func signIn(_ sender: Any) {

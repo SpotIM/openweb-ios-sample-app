@@ -1,0 +1,93 @@
+//
+//  SPAnalyticsFacade.swift
+//  Spot.IM-Core
+//
+//  Created by Andriy Fedin on 02/09/19.
+//  Copyright © 2019 Spot.IM. All rights reserved.
+//
+
+import Foundation
+import Alamofire
+
+internal protocol SPAnalyticsSender {
+    func sendEvent(with info: SPAnalyticsDTO)
+}
+
+internal final class SPDefaultAnalyticsSender: SPAnalyticsSender {
+
+    func sendEvent(with info: SPAnalyticsDTO) {
+
+        guard let spotKey = SPClientSettings.spotKey else {
+            print("[ERROR]: No spot key for analytics")
+            return
+        }
+
+        let spRequest = SPAnalyticsRequest.analytics
+
+        var parameters: Parameters = [
+            AnalyticsAPIKeys.type: info.eventType,
+            AnalyticsAPIKeys.source: info.source
+        ]
+
+        parameters[AnalyticsAPIKeys.itemType] = info.itemType
+        parameters[AnalyticsAPIKeys.targetType] = info.targetType
+        parameters[AnalyticsAPIKeys.segment] = info.segment
+        parameters[AnalyticsAPIKeys.lang] = info.lang
+        parameters[AnalyticsAPIKeys.domain] = info.domain
+        parameters[AnalyticsAPIKeys.userId] = info.userId
+        parameters[AnalyticsAPIKeys.messageId] = info.messageId
+        parameters[AnalyticsAPIKeys.relatedMessageId] = info.relatedMessageId
+        parameters[AnalyticsAPIKeys.itemId] = info.itemId
+        parameters[AnalyticsAPIKeys.count] = info.readingSeconds
+        parameters[AnalyticsAPIKeys.isRegistered] = info.isRegistered
+        parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
+
+        let headers = HTTPHeaders.basic(with: spotKey,
+                                        "default",
+                                        userSession: SPUserSessionHolder.session)
+
+        Alamofire.request(spRequest.url,
+                          method: spRequest.method,
+                          parameters: parameters,
+                          encoding: APIConstants.encoding,
+                          headers: headers)
+            .validate()
+            .responseString { _ in }
+    }
+
+    private enum AnalyticsAPIKeys {
+        static let type = "type"
+        static let source = "source"
+        static let itemType = "item_type"
+        static let targetType = "target_type"
+        static let segment = "segment"
+        static let lang = "lang"
+        static let domain = "domain"
+        static let userId = "user_id"
+        static let messageId = "message_id"
+        static let relatedMessageId = "related_message_id"
+
+        static let itemId = "item_id"
+        static let count = "count" // number of seconds reading comments
+        static let isRegistered = "is_registered"
+        static let totalComments = "total_comments"
+    }
+}
+
+internal struct SPAnalyticsDTO {
+    let eventType: String
+    let source: String
+    let isRegistered: Bool
+
+    let itemType: String?
+    let targetType: String?
+    let segment: String?
+    let lang: String?
+    let domain: String?
+    let userId: String?
+    let messageId: String?
+    let relatedMessageId: String?
+    let readingSeconds: Int?
+    let itemId: String?
+    let totalComments: Int?
+}
