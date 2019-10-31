@@ -28,7 +28,7 @@ internal enum SPCommentSortMode: String, CaseIterable, SPKebabable {
         case .oldest:
             title = "Oldest"
         }
-        return NSLocalizedString(title, comment: "Comment sorting mode")
+        return NSLocalizedString(title, bundle: Bundle.spot, comment: "Comment sorting mode")
     }
 
     var kebabValue: String {

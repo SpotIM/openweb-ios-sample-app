@@ -36,8 +36,8 @@ final class MessageContainerView: BaseView {
 
     @objc
     private func handleTap(gesture: UITapGestureRecognizer) {
-        let readMoreString = NSLocalizedString("Read More", comment: "Collapsed long comments temporary terminator")
-        let readLessString = NSLocalizedString("Read Less", comment: "Expanded long comments terminator")
+        let readMoreString = NSLocalizedString("Read More", bundle: Bundle.spot, comment: "Collapsed long comments temporary terminator")
+        let readLessString = NSLocalizedString("Read Less", bundle: Bundle.spot, comment: "Expanded long comments terminator")
         if isTarget(substring: readMoreString, destinationOf: gesture) {
             handleReadMoreTap()
         } else if isTarget(substring: readLessString, destinationOf: gesture) {

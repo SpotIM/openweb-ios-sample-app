@@ -141,9 +141,12 @@
 		445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187723685154001D0ED0 /* SPAnalyticsService.swift */; };
 		445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187823685154001D0ED0 /* SPReadingTracker.swift */; };
 		445418BF23685154001D0ED0 /* SPCommentsInMemoryCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */; };
+		448E1113236B82710005C9F9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E110D236B3EA50005C9F9 /* Localizable.strings */; };
 		44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
 		44C8789523608BC100E0E662 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44C879E023608E3600E0E662 /* SpotImCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 44C8793B23608E3500E0E662 /* SpotImCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F0FD222369EE04003525E0 /* SPAdsConfigRequest.swift */; };
+		44F0FD262369EEBC003525E0 /* SPAdsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F0FD252369EEBC003525E0 /* SPAdsConfiguration.swift */; };
 		5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
 		5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
 		5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
@@ -326,9 +329,13 @@
 		4454187723685154001D0ED0 /* SPAnalyticsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAnalyticsService.swift; sourceTree = "<group>"; };
 		4454187823685154001D0ED0 /* SPReadingTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReadingTracker.swift; sourceTree = "<group>"; };
 		4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentsInMemoryCacheService.swift; sourceTree = "<group>"; };
+		448E110C236B3EA50005C9F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		448E1111236B3EF70005C9F9 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		44C8788D23608BC100E0E662 /* SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44C8793B23608E3500E0E662 /* SpotImCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotImCore.h; sourceTree = "<group>"; };
 		44C879DF23608E3600E0E662 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		44F0FD222369EE04003525E0 /* SPAdsConfigRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdsConfigRequest.swift; sourceTree = "<group>"; };
+		44F0FD252369EEBC003525E0 /* SPAdsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdsConfiguration.swift; sourceTree = "<group>"; };
 		5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAuthenticationProvider.swift; sourceTree = "<group>"; };
 		5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
 		5D697A3B22B65106001AD556 /* Spot-IM.Development.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spot-IM.Development.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -404,6 +411,7 @@
 			children = (
 				4454179E236850C0001D0ED0 /* SPAssets.xcassets */,
 				4454179F236850C0001D0ED0 /* Fonts */,
+				448E110D236B3EA50005C9F9 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -757,6 +765,7 @@
 				4454183B23685153001D0ED0 /* SPConversationRequests.swift */,
 				4454183C23685153001D0ED0 /* SPInternalAuthenticationRequests.swift */,
 				4454183D23685153001D0ED0 /* SPConfigRequests.swift */,
+				44F0FD222369EE04003525E0 /* SPAdsConfigRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -776,6 +785,7 @@
 		4454184423685153001D0ED0 /* RequestModels */ = {
 			isa = PBXGroup;
 			children = (
+				44F0FD242369EE9A003525E0 /* AdsConfiguration */,
 				4454184523685153001D0ED0 /* Configuration */,
 				4454184F23685154001D0ED0 /* SPCommentRankUpdateRM.swift */,
 				4454185023685154001D0ED0 /* Conversation */,
@@ -889,6 +899,14 @@
 				44C8793B23608E3500E0E662 /* SpotImCore.h */,
 			);
 			path = SpotImCore;
+			sourceTree = "<group>";
+		};
+		44F0FD242369EE9A003525E0 /* AdsConfiguration */ = {
+			isa = PBXGroup;
+			children = (
+				44F0FD252369EEBC003525E0 /* SPAdsConfiguration.swift */,
+			);
+			path = AdsConfiguration;
 			sourceTree = "<group>";
 		};
 		5D00B73E22E9B78100EFC1B0 /* Core */ = {
@@ -1103,6 +1121,7 @@
 			knownRegions = (
 				en,
 				Base,
+				he,
 			);
 			mainGroup = 5D697A3222B65106001AD556;
 			productRefGroup = 5D697A3C22B65106001AD556 /* Products */;
@@ -1121,6 +1140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				448E1113236B82710005C9F9 /* Localizable.strings in Resources */,
 				445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */,
 				445417AA236850C0001D0ED0 /* OpenSans-RegularItalic.ttf in Resources */,
 				445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */,
@@ -1307,6 +1327,7 @@
 				4454189D23685154001D0ED0 /* SPCommentDelete.swift in Sources */,
 				445417FD23685144001D0ED0 /* NavigationController+Appearance.swift in Sources */,
 				4454187B23685154001D0ED0 /* SPMainConversationDataSource.swift in Sources */,
+				44F0FD262369EEBC003525E0 /* SPAdsConfiguration.swift in Sources */,
 				4454181E23685144001D0ED0 /* ShowMoreRepliesView.swift in Sources */,
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
@@ -1322,6 +1343,7 @@
 				445418A423685154001D0ED0 /* SPCommentSortMode.swift in Sources */,
 				445417FC23685144001D0ED0 /* UIBarButton+UIImage.swift in Sources */,
 				445418A223685154001D0ED0 /* SPCommentCreationDTO.swift in Sources */,
+				44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */,
 				445418B923685154001D0ED0 /* ImageCache.swift in Sources */,
 				4454182223685144001D0ED0 /* SPCommentHeaderView.swift in Sources */,
 				445417F923685144001D0ED0 /* UIView+Roundings.swift in Sources */,
@@ -1403,6 +1425,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		448E110D236B3EA50005C9F9 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				448E110C236B3EA50005C9F9 /* en */,
+				448E1111236B3EF70005C9F9 /* he */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		5D697A4222B65106001AD556 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1426,6 +1457,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1565,6 +1597,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1759,6 +1792,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1821,6 +1855,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

@@ -123,7 +123,7 @@ final class SPMainConversationModel {
         }
 
         let cancelAction = UIAlertAction(
-            title: NSLocalizedString("Cancel", comment: "cancel title"),
+            title: NSLocalizedString("Cancel", bundle: Bundle.spot, comment: "cancel title"),
             style: .cancel
         )
         actions.append(cancelAction)
@@ -138,14 +138,14 @@ final class SPMainConversationModel {
         var actions: [UIAlertAction] = []
 
         let shareAction = UIAlertAction(
-            title: NSLocalizedString("Share", comment: "share title"),
+            title: NSLocalizedString("Share", bundle: Bundle.spot, comment: "share title"),
             style: .default) { [weak self] _ in
                 self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId))
         }
         actions.append(shareAction)
         if availability.isReportable {
             let reportAction = UIAlertAction(
-                title: NSLocalizedString("Report", comment: "report title"),
+                title: NSLocalizedString("Report", bundle: Bundle.spot, comment: "report title"),
                 style: .default) { [weak self] _ in
                     self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId))
             }
@@ -154,7 +154,7 @@ final class SPMainConversationModel {
 
         if availability.isDeletable {
             let deleteAction = UIAlertAction(
-                title: NSLocalizedString("Delete", comment: "delete title"),
+                title: NSLocalizedString("Delete", bundle: Bundle.spot, comment: "delete title"),
                 style: .default) { [weak self] _ in
                     self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId))
             }
@@ -162,7 +162,7 @@ final class SPMainConversationModel {
         }
         
         let cancelAction = UIAlertAction(
-            title: NSLocalizedString("Cancel", comment: "cancel title"),
+            title: NSLocalizedString("Cancel", bundle: Bundle.spot, comment: "cancel title"),
             style: .cancel
         )
         if !actions.isEmpty {

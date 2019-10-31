@@ -45,7 +45,7 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
         
         if let user = SPUserSessionHolder.session.user, user.registered {
             let logOutAction = UIAlertAction(
-                title: NSLocalizedString("Log Out", comment: "log out"),
+                title: NSLocalizedString("Log Out", bundle: Bundle.spot, comment: "log out"),
                 style: .default
             ) { _ in
                 self.presentLogOutConfirmation()
@@ -53,7 +53,7 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
             profileActions.append(logOutAction)
         } else {
             let logInAction = UIAlertAction(
-                title: NSLocalizedString("Log In", comment: "log in"),
+                title: NSLocalizedString("Log In", bundle: Bundle.spot, comment: "log in"),
                 style: .default
             ) { _ in
                 SPAnalyticsHolder.default.log(event: .loginClicked(.mainLogin), source: .conversation)
@@ -61,7 +61,7 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
             }
             profileActions.append(logInAction)
         }
-        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "cancel title"),
+        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", bundle: Bundle.spot, comment: "cancel title"),
                                      style: .cancel)
         
         profileActions.append(noAction)
@@ -71,18 +71,18 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
     
     private func presentLogOutConfirmation() {
         let yesAction = UIAlertAction(
-            title: NSLocalizedString("Log Out", comment: "log out title"),
+            title: NSLocalizedString("Log Out", bundle: Bundle.spot, comment: "log out"),
             style: .destructive) { _ in
                 self.userAuthFlowDelegate?.signOut()
         }
         
-        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "cancel title"),
+        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", bundle: Bundle.spot, comment: "cancel title"),
                                      style: .default)
         showAlert(
-            title: NSLocalizedString("Log Out", comment: "log out"),
+            title: NSLocalizedString("Log Out", bundle: Bundle.spot, comment: "log out"),
             message: NSLocalizedString(
                 "Are you sure you want to log out?",
-                comment: "log out confirmation"),
+                bundle: Bundle.spot, comment: "log out confirmation"),
             actions: [yesAction, noAction]
         )
     }

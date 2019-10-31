@@ -59,7 +59,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         
         commentingOnLabel.font = UIFont.roboto(style: .regular, of: 16.0)
         commentingOnLabel.textColor = .spForeground4
-        commentingOnLabel.text = NSLocalizedString("Commenting on", comment: "commenting on title")
+        commentingOnLabel.text = NSLocalizedString("Commenting on", bundle: Bundle.spot, comment: "commenting on title")
         commentingOnLabel.backgroundColor = .spBackground0
         commentingOnLabel.layout {
             $0.top.equal(to: topContainerView.topAnchor, offsetBy: 25.0)
@@ -97,7 +97,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
 
             self.hideLoader()
             self.showAlert(
-                title: NSLocalizedString("Oops...", comment: "oops"),
+                title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
                 message: error.localizedDescription
             )
         }

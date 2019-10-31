@@ -71,14 +71,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
         if let repliesCount = repliesCount, repliesCount == 1 {
             moreRepliesView.collapsedTitle = NSLocalizedString("View Reply",
-                                                               comment: "Reply button title")
+                                                               bundle: Bundle.spot, comment: "Reply button title")
             moreRepliesView.expandedTitle = NSLocalizedString("Hide Reply",
-                                                              comment: "Previous replies button title")
+                                                              bundle: Bundle.spot, comment: "Previous replies button title")
         } else {
             moreRepliesView.collapsedTitle = NSLocalizedString("View Replies",
-                                                               comment: "Replies button title")
+                                                               bundle: Bundle.spot, comment: "Replies button title")
             moreRepliesView.expandedTitle = NSLocalizedString("Hide Replies",
-                                                              comment: "Previous replies button title")
+                                                              bundle: Bundle.spot, comment: "Previous replies button title")
         }
     }
     
@@ -191,6 +191,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.updateAlignment()
+
         
         var attributes: [NSAttributedString.Key: Any]
         if isDeleted {

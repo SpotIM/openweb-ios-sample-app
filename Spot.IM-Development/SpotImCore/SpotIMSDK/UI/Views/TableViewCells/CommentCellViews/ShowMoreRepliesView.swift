@@ -73,7 +73,11 @@ internal final class ShowMoreRepliesView: BaseView {
             $0.bottom.equal(to: bottomAnchor)
             $0.trailing.equal(to: trailingAnchor)
         }
-        showHideRepliesButton.contentEdgeInsets.right += activityIndicator.frame.width + Theme.activityOffset
+        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
+            showHideRepliesButton.contentEdgeInsets.left += activityIndicator.frame.width + Theme.activityOffset
+        } else {
+            showHideRepliesButton.contentEdgeInsets.right += activityIndicator.frame.width + Theme.activityOffset
+        }
     }
     
     private func configureActivityIndicator() {

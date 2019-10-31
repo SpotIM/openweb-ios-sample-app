@@ -86,7 +86,7 @@ internal final class SPArticleHeader: BaseView {
     
     private func setupConversationTitleLabel() {
         conversationTitleLabel.text = NSLocalizedString("Loading",
-                                                        comment: "Main Conversation header title placeholder")
+                                                        bundle: Bundle.spot, comment: "Main Conversation header title placeholder")
         conversationTitleLabel.numberOfLines = 2
         conversationTitleLabel.backgroundColor = .spBackground0
         conversationTitleLabel.textColor = .spForeground4
@@ -100,8 +100,6 @@ internal final class SPArticleHeader: BaseView {
     }
     
     private func setupConversationAuthorLabel() {
-        conversationAuthorLabel.text = NSLocalizedString("*Author name*",
-                                                        comment: "Main Conversation author placeholder")
         conversationAuthorLabel.numberOfLines = 1
         conversationAuthorLabel.backgroundColor = .spBackground0
         conversationAuthorLabel.textColor = .spForeground2

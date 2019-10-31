@@ -85,7 +85,10 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     private func setupHeader() {
-        header.set(title: "Conversation")
+        header.set(title: NSLocalizedString("Conversation",
+                                            bundle: Bundle.spot,
+                                            comment: "Main Conversation screen title")
+        )
 
         header.layout {
             $0.top.equal(to: view.topAnchor)
@@ -146,7 +149,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.presentErrorView(error: error)
                     } else {
                         self.showAlert(
-                            title: NSLocalizedString("Oops...", comment: "oops"),
+                            title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
                             message: error.localizedDescription
                         )
                     }
@@ -206,7 +209,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
         let callToAction = NSLocalizedString("Be the first to comment",
-                                             comment: "Conversation footer call to action placeholder")
+                                             bundle: Bundle.spot, comment: "Conversation footer call to action placeholder")
         footerView.hideShowMoreCommentsButton()
         whatYouThinkView.setCallToAction(text: callToAction)
     }

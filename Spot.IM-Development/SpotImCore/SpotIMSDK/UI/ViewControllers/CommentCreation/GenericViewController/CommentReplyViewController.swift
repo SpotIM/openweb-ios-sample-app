@@ -81,17 +81,17 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         if (model?.commentText.count ?? 0) >= commentCacheMinCount {
             let actions: [UIAlertAction] = [
                 UIAlertAction(title: NSLocalizedString("Leave Page",
-                                                       comment: "Leave page action title"),
+                                                       bundle: Bundle.spot, comment: "Leave page action title"),
                               style: .destructive) { _ in
                                 self.dismissController()
                 },
                 UIAlertAction(title: NSLocalizedString("Continue Writing",
-                                                       comment: "Continue writing action title"),
+                                                       bundle: Bundle.spot, comment: "Continue writing action title"),
                               style: .default)
             ]
-            showAlert(title: NSLocalizedString("Leave this page?", comment: "Leave this page alert title"),
+            showAlert(title: NSLocalizedString("Leave this page?", bundle: Bundle.spot, comment: "Leave this page alert title"),
                       message: NSLocalizedString("The text you entered might be deleted if not published.",
-                                                 comment: "Leave this page alert message"),
+                                                 bundle: Bundle.spot, comment: "Leave this page alert message"),
                       actions: actions)
         } else {
             dismissController()
@@ -220,11 +220,11 @@ extension CommentReplyViewController {
         }
     }
     private func updatePostButton() {
-        var postButtonTitle: String = NSLocalizedString("Post", comment: "post button title")
+        var postButtonTitle: String = NSLocalizedString("Post", bundle: Bundle.spot, comment: "post button title")
         if let config = SPConfigDataSource.config,
             config.initialization?.policyForceRegister == true,
             SPUserSessionHolder.session.user?.registered == false {
-            postButtonTitle = NSLocalizedString("Sign Up to Post", comment: "post title unregistered")
+            postButtonTitle = NSLocalizedString("Sign Up to Post", bundle: Bundle.spot, comment: "post title unregistered")
             postButton.addTarget(self, action: #selector(presentAuth), for: .touchUpInside)
         } else {
             postButton.addTarget(self, action: #selector(post), for: .touchUpInside)

@@ -51,7 +51,7 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
 
             self.hideLoader()
             self.showAlert(
-                title: NSLocalizedString("Oops...", comment: "oops"),
+                title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
                 message: error.localizedDescription
             )
         }

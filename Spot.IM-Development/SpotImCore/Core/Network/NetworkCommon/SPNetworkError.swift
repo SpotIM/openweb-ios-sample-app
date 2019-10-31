@@ -32,18 +32,18 @@ extension SPNetworkError: LocalizedError {
         switch self {
         case .default:
             return NSLocalizedString("It seems we are experiencing technical issues. Please try again",
-                                     comment: "default error")
+                                     bundle: Bundle.spot, comment: "default error")
             
         case .emptyResponse:
             return NSLocalizedString("Empty response",
-                                     comment: "Unknown networking error")
+                                     bundle: Bundle.spot, comment: "Unknown networking error")
             
         case .custom(let description):
             return description
             
         case .noInternet:
             return NSLocalizedString("The Internet connection appears to be offline.",
-                                     comment: "No internet")
+                                     bundle: Bundle.spot, comment: "No internet")
         }
     }
 }
