@@ -69,6 +69,7 @@ internal final class SPConversationsFacade: SPConversationsDataProvider {
         let spRequest = SPConversationRequest.conversationRead
         guard let spotKey = SPClientSettings.spotKey else {
             let message = NSLocalizedString("Please provide Spot Key",
+                                            bundle: Bundle.spot,
                                             comment: "Spot Key not set by client")
             completion(nil, SPNetworkError.custom(message))
             return

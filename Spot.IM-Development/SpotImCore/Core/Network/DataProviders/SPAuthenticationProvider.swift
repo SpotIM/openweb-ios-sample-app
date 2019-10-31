@@ -50,7 +50,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
                           completion: @escaping (_ response: SSOStartResponse?, _ error: Error?) -> Void) {
         guard let spotKey = SPClientSettings.spotKey else {
             let message = NSLocalizedString("Please provide Spot Key",
-                                            comment: "Spot Key not set by client")
+                                            bundle: Bundle.spot, comment: "Spot Key not set by client")
             completion(nil, SPNetworkError.custom(message))
             return
         }
@@ -112,13 +112,13 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
                             completion: @escaping AuthCompletionHandler) {
         guard let spotKey = SPClientSettings.spotKey else {
             let message = NSLocalizedString("Please provide Spot Key",
-                                            comment: "Spot Key not set by client")
+                                            bundle: Bundle.spot, comment: "Spot Key not set by client")
             completion(false, SPNetworkError.custom(message))
             return
         }
         guard let codeB = codeB else {
             let message = NSLocalizedString("Please provide Code B",
-                                            comment: "Authentication error")
+                                            bundle: Bundle.spot, comment: "Authentication error")
             completion(false, SPNetworkError.custom(message))
             return
         }
@@ -144,7 +144,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
                         self?.updateSession(headers: response.response?.allHeaderFields, completion: completion)
                     } else {
                         let errorMessage = NSLocalizedString("Authentication error",
-                                                             comment: "Authentication error")
+                                                             bundle: Bundle.spot, comment: "Authentication error")
                         let error = SPNetworkError.custom(errorMessage)
                         let rawReport = RawReportModel(
                             url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,

@@ -168,14 +168,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func updateRepliesButtonTitle(with repliesCount: Int?, minimumVisibleRepliesCount: Int) {
         if let repliesCount = repliesCount, repliesCount == minimumVisibleRepliesCount + 1 {
             moreRepliesView.collapsedTitle = NSLocalizedString("View Previous Reply",
-                                                               comment: "Previous Reply button title")
+                                                               bundle: Bundle.spot, comment: "Previous Reply button title")
             moreRepliesView.expandedTitle = NSLocalizedString("Hide Reply",
-                                                              comment: "Previous replies button title")
+                                                              bundle: Bundle.spot, comment: "Previous replies button title")
         } else {
             moreRepliesView.collapsedTitle = NSLocalizedString("View Previous Replies",
-                                                               comment: "Previous Replies button title")
+                                                               bundle: Bundle.spot, comment: "Previous Replies button title")
             moreRepliesView.expandedTitle = NSLocalizedString("Hide Replies",
-                                                              comment: "Previous replies button title")
+                                                              bundle: Bundle.spot, comment: "Previous replies button title")
         }
     }
     
@@ -261,6 +261,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.updateAlignment()
         
         var attributes: [NSAttributedString.Key: Any]
         if isDeleted {

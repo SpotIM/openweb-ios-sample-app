@@ -97,7 +97,9 @@ internal final class SPPreConversationFooter: BaseView {
             $0.height.equal(to: 1.0)
         }
         
-        let title = NSLocalizedString("SHOW MORE COMMENTS", comment: "Pre-conversation footer button")
+        
+        let title = NSLocalizedString("SHOW MORE COMMENTS", bundle: Bundle.spot, comment: "")
+
         showMoreCommentsButton.backgroundColor = .brandColor
         showMoreCommentsButton.setTitle(title, for: .normal)
         showMoreCommentsButton.setTitleColor(.white, for: .normal)
@@ -123,7 +125,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
     
     private func setupTermsButton() {
-        let title = NSLocalizedString("Terms", comment: "Pre-conversation footer button")
+        let title = NSLocalizedString("Terms", bundle: Bundle.spot, comment: "Pre-conversation footer button")
         termsButton.setTitle(title, for: .normal)
         termsButton.setTitleColor(.coolGrey, for: .normal)
         termsButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
@@ -147,7 +149,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
 
     private func setupPrivacyButton() {
-        let title = NSLocalizedString("Privacy", comment: "Pre-conversation footer button")
+        let title = NSLocalizedString("Privacy", bundle: Bundle.spot, comment: "Pre-conversation footer button")
         privacyButton.setTitle(title, for: .normal)
         privacyButton.setTitleColor(.coolGrey, for: .normal)
         privacyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
@@ -170,7 +172,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
 
     private func setupAddSpotIMButton() {
-        let title = NSLocalizedString("Add Spot.IM to your app", comment: "Pre-conversation footer button")
+        let title = NSLocalizedString("Add Spot.IM to your app", bundle: Bundle.spot, comment: "Pre-conversation footer button")
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
         addSpotIMButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)

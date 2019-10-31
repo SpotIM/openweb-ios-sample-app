@@ -107,6 +107,8 @@ internal final class UserNameView: BaseView {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.updateAlignment()
+        
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
             .foregroundColor: UIColor.spForeground3,
@@ -117,7 +119,7 @@ internal final class UserNameView: BaseView {
         deletedMessageLabel.attributedText = NSAttributedString(
             string: NSLocalizedString(
                 "This message was deleted.",
-                comment: "deleted message"
+                bundle: Bundle.spot, comment: "deleted message"
             ),
             attributes: attributes
         )

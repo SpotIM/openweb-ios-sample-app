@@ -85,10 +85,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
                 actionMessage: NSLocalizedString("We are unable to load comments\nright now.",
-                                                 comment: "conversation error title"),
+                                                 bundle: Bundle.spot, comment: "conversation error title"),
                 actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
                 actionButtonTitle: NSLocalizedString("Retry",
-                                                     comment: "Retry title"),
+                                                     bundle: Bundle.spot, comment: "Retry title"),
                 action: errorAction)
         )
     }
@@ -122,10 +122,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
                 actionMessage: NSLocalizedString("Whoops! Looks like we’re\nexperiencing some\nconnectivity issues.",
-                                                 comment: "no internet title"),
+                                                 bundle: Bundle.spot, comment: "no internet title"),
                 actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
                 actionButtonTitle: NSLocalizedString("Retry",
-                                                     comment: "Retry title"),
+                                                     bundle: Bundle.spot, comment: "Retry title"),
                 action: noInternetAction
             )
         )
@@ -143,10 +143,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
                 actionMessage: NSLocalizedString("Be the first to comment on this article.",
-                                                 comment: "Empty conversation title"),
+                                                 bundle: Bundle.spot, comment: "Empty conversation title"),
                 actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
                 actionButtonTitle: NSLocalizedString("Write a Comment",
-                                                     comment: "Write a Comment title"),
+                                                     bundle: Bundle.spot, comment: "Write a Comment title"),
                 action: emptyStateAction)
         )
     }
@@ -209,7 +209,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         
         model.copyCommentText(at: indexPath)
         showToast(message: NSLocalizedString("Text copied to clipboard",
-                                             comment: "text copied toast title"),
+                                             bundle: Bundle.spot, comment: "text copied toast title"),
                   delay: 0.7)
     }
 
@@ -406,16 +406,16 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
 
             if let error = error {
                 self.showAlert(
-                    title: NSLocalizedString("Oops...", comment: "oops"),
+                    title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
                     message: error.localizedDescription
                 )
                 self.model.dataSource.updateRank(with: change.reversed, inCellWith: commentId)
             } else if success == false {
                 self.showAlert(
-                    title: NSLocalizedString("Oops...", comment: "oops"),
+                    title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
                     message: NSLocalizedString(
                         "It seems we are experiencing technical issues. Please try again",
-                        comment: "default error"
+                        bundle: Bundle.spot, comment: "default error"
                     )
                 )
                 self.model.dataSource.updateRank(with: change.reversed, inCellWith: commentId)
@@ -517,57 +517,57 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     
     private func showCommentDeletionFlow(_ commentId: String) {
         let yesAction = UIAlertAction(
-            title: NSLocalizedString("Delete", comment: "yes title"),
+            title: NSLocalizedString("Delete", bundle: Bundle.spot, comment: "yes title"),
             style: .destructive) { [weak self] _ in
                 self?.showLoader()
                 self?.model.deleteComment(with: commentId) { error in
                     self?.hideLoader()
                     if let error = error {
                         self?.showAlert(
-                            title: NSLocalizedString("Oops...", comment: "oops"),
+                            title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
                             message: error.localizedDescription
                         )
                     }
                 }
         }
         
-        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "no title"),
+        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", bundle: Bundle.spot, comment: "no title"),
                                      style: .default)
         showAlert(
-            title: NSLocalizedString("Delete Comment", comment: "delete comment"),
-            message: NSLocalizedString("Do you realy want to delete this comment?", comment: "delete comment message"),
+            title: NSLocalizedString("Delete Comment", bundle: Bundle.spot, comment: "delete comment"),
+            message: NSLocalizedString("Do you realy want to delete this comment?", bundle: Bundle.spot, comment: "delete comment message"),
             actions: [noAction, yesAction])
     }
     
     private func showCommentReportFlow(_ commentId: String) {
         let yesAction = UIAlertAction(
-            title: NSLocalizedString("Report", comment: "report title"),
+            title: NSLocalizedString("Report", bundle: Bundle.spot, comment: "report title"),
             style: .destructive) { [weak self] _ in
                 self?.showLoader()
                 self?.model.reportComment(with: commentId) { error in
                     self?.hideLoader()
                     if let error = error {
                         self?.showAlert(
-                            title: NSLocalizedString("Oops...", comment: "oops"),
+                            title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
                             message: error.localizedDescription
                         )
                     } else {
                         self?.showAlert(
-                            title: NSLocalizedString("Report Comment", comment: "Report comment success title"),
+                            title: NSLocalizedString("Report Comment", bundle: Bundle.spot, comment: "Report comment success title"),
                             message: NSLocalizedString("Comment reported successfully",
-                                                       comment: "Report comment success body")
+                                                       bundle: Bundle.spot, comment: "Report comment success body")
                         )
                     }
                 }
         }
         
-        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "cancel title"),
+        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", bundle: Bundle.spot, comment: "cancel title"),
                                      style: .default)
         showAlert(
-            title: NSLocalizedString("Report Comment", comment: "report comment"),
+            title: NSLocalizedString("Report Comment", bundle: Bundle.spot, comment: "report comment"),
             message: NSLocalizedString(
                 "Reporting this comment will send it for review and hide it from your view",
-                comment: "report comment message"
+                bundle: Bundle.spot, comment: "report comment message"
             ),
             actions: [noAction, yesAction])
     }
@@ -575,33 +575,38 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     private func showCommentShareFlow(_ commentId: String) {
         showLoader()
         model.shareComment(with: commentId) { [weak self] url, error in
-            self?.hideLoader()
+            guard let self = self else { return }
+            
+            self.hideLoader()
             if let error = error {
-                self?.showAlert(
-                    title: NSLocalizedString("Oops...", comment: "oops"),
+                self.showAlert(
+                    title: NSLocalizedString(
+                        "Oops...",
+                        bundle: Bundle.spot, comment: "oops"
+                    ),
                     message: error.localizedDescription
                 )
             } else if let url = url {
                 let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                self?.present(activityViewController, animated: true, completion: nil)
+                self.present(activityViewController, animated: true, completion: nil)
             }
         }
     }
 
     private func presentMessageBlockedAlert(with messageText: String?) {
         let copyAction = UIAlertAction(
-            title: NSLocalizedString("Copy Comment to Clipboard", comment: "Rejected comment action"),
+            title: NSLocalizedString("Copy Comment to Clipboard", bundle: Bundle.spot, comment: "Rejected comment action"),
             style: .default) { _ in
                 UIPasteboard.general.string = messageText
         }
-        let gotItAction = UIAlertAction(title: NSLocalizedString("Got it", comment: "Rejected comment consent"),
+        let gotItAction = UIAlertAction(title: NSLocalizedString("Got it", bundle: Bundle.spot, comment: "Rejected comment consent"),
                                         style: .default)
         showAlert(
-            title: NSLocalizedString("Your comment has been rejected", comment: "Rejected comment alert title"),
+            title: NSLocalizedString("Your comment has been rejected", bundle: Bundle.spot, comment: "Rejected comment alert title"),
             message: NSLocalizedString(
                 "It seems like your comment has violated our policy."
                     + "We recommend you try again with different phrasing.",
-                comment: "Rejected comment alert message"),
+                bundle: Bundle.spot, comment: "Rejected comment alert message"),
             actions: [copyAction, gotItAction]
         )
     }

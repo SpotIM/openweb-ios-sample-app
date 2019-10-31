@@ -58,11 +58,11 @@ internal class SPUser: Codable {
 
     var authorityTitle: String? {
         if isAdmin {
-            return NSLocalizedString("Admin", comment: "Authority title")
+            return NSLocalizedString("Admin", bundle: Bundle.spot, comment: "Authority title")
         } else if isSuperAdmin {
-            return NSLocalizedString("Moderator", comment: "Authority title")
+            return NSLocalizedString("Moderator", bundle: Bundle.spot, comment: "Authority title")
         } else if isJournalist {
-            return NSLocalizedString("Journalist", comment: "Authority title")
+            return NSLocalizedString("Journalist", bundle: Bundle.spot, comment: "Authority title")
         } else {
             return nil
         }

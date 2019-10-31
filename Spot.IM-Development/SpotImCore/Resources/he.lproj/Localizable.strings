@@ -1,0 +1,82 @@
+/* 
+  Localizable.strings
+  Spot-IM.Development
+
+  Created by Eugene on 31.10.2019.
+  Copyright © 2019 Spot.IM. All rights reserved.
+*/
+"Add a Comment" = "Add a Comment";
+"Add a Reply" = "Add a Reply";
+"Please provide Spot Key" = "Please provide Spot Key";
+"Please provide Code B" = "Please provide Code B";
+"Authentication error" = "Authentication error";
+"Empty response" = "Empty response";
+"Comment reported successfully" = "Comment reported successfully";
+"Copy Comment to Clipboard" = "Copy Comment to Clipboard";
+"Sort By" = "Sort By";
+"The text you entered might be deleted if not published." = "The text you entered might be deleted if not published.";
+
+
+"It seems we are experiencing technical issues. Please try again" = "נסה שוב עוד כמה דקות.";
+"The Internet connection appears to be offline." = "אופססס! נראה שאנו חווים בעיה בתקשורת";
+"Conversation" = "שיחה";
+"Best" = "הטוב ביותר";
+"Newest" = "החדש ביותר";
+"Oldest" = "הישן ביותר";
+"Admin" = "אדמין";
+"Moderator" = "מנהל";
+"Journalist" = "עיתונאי";
+" Read More " = " קראו עוד ";
+"Read Less" = "קראו פחות";
+"OK" = "OK";
+"Log Out" = "התנתקות";
+"Log In" = "התחברות";
+"Cancel" = "ביטול";
+"Are you sure you want to log out?" = "Are you sure you want to log out?";
+"Commenting on" = "כתיבת תגובה על";
+"Oops..." = "...אופססס";
+"Leave Page" = "צא מהעמוד";
+"Continue Writing" = "המשך בכתיבה";
+"Leave this page?" = "יציאה מהעמוד";
+"Post" = "הגב";
+"Sign Up to Post" = "הירשם כדי להגיב";
+"We are unable to load comments\nright now." = "נראה שאין ביכולתנו לטעון תגובות נוספות.";
+"Retry" = "נסה שוב";
+"Whoops! Looks like we’re\nexperiencing some\nconnectivity issues." = "אופססס! נראה שאנו חווים בעיה בתקשורת";
+"Be the first to comment on this article." = "היו הראשונים להגיב.";
+"Write a Comment" = "כתיבת תגובה";
+"Text copied to clipboard" = "טקסט הועתק ללוח";
+"Delete" = "מחיקת תגובה";
+"Delete Comment" = "מחיקת תגובה";
+"Do you realy want to delete this comment?" = "אישור המחיקה ימחק לאלתר את התגובה מהשיחה. האם ברצונך למחוק את ההודעה?";
+"Report" = "דיווח תגובה";
+"Report Comment" = "דיווח תגובה";
+"Reporting this comment will send it for review and hide it from your view" = "דיווח על תגובה זו ישלח לאדמין, כמו כן, התגובה תוסתר מהתצוגה שלך.";
+"Your comment has been rejected" = "פרסום התגובה לא אושר";
+"It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "התגובה שכתבת ככל הנראה הפרה את המדיניות שלנו. אנו ממליצים לנסות לנסח שוב את תוכן התגובה.";
+"Reporting this comment will send it for review and hide it from your view" = "דיווח על תגובה זו ישלח לאדמין, כמו כן, התגובה תוסתר מהתצוגה שלך.";
+"Got it" = "תודה, קיבלתי";
+"Be the first to comment" = "היו הראשונים להגיב";
+"Share" = "שיתוף";
+"What do you think?" = "הוספת תגובה";
+"Loading" = "Loading";
+"View Previous Reply" = "הצג תגובות קודמות";
+"Hide Reply" = "הסתר תגובות";
+"View Previous Replies" = "הצג תגובות קודמות";
+"Hide Replies" = "הסתר תגובות";
+"View Reply" = "הגב/י תגובות";
+"View Replies" = "הצג תגובות";
+"Reply" = "הגב/י";
+"This message was deleted." = "הודעה זו נמחקה.";
+"This message was reported." = "התקבל דיווח על הודעה זו.";
+"This message was rejected." = "תגובה זו לא אושרה.";
+"SHOW MORE COMMENTS" = "טעינת תגובות נוספות";
+"Terms" = "תנאים";
+"Privacy" = "פרטיות";
+"Add Spot.IM to your app" = "הוספת spot.im לאפליקציה שלך";
+"Type your reply…" = "כתוב/י את תגובתך";
+"Replying to " = " תגובה ל";
+"NEW" = "החדש ביותר";
+"Comments" = "תגובות";
+"Comment" = "תגובות";
+

@@ -39,7 +39,7 @@ internal extension UIFont {
     static func registerFontWith(filenameString: String) {
         let frameworkBundle = Bundle.spot
         guard
-            let pathForResourceString = frameworkBundle?.path(forResource: filenameString, ofType: nil)
+            let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil)
             else { return }
         
         guard

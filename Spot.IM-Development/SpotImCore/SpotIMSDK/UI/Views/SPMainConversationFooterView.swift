@@ -119,7 +119,7 @@ final class SPMainConversationFooterView: BaseView {
         callToActionLabel.textColor = .spForeground2
         callToActionLabel.font = UIFont.roboto(style: .regular, of: Theme.fontSize)
         callToActionLabel.text = NSLocalizedString("What do you think?",
-                                                   comment: "Conversation footer call to action placeholder")
+                                                   bundle: Bundle.spot, comment: "Conversation footer call to action placeholder")
         
         callToActionLabel.layout {
             $0.centerY.equal(to: labelContainer.centerYAnchor)
