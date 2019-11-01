@@ -208,9 +208,11 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         guard cellWithMessage.containsChatItem(at: touchInCell) else { return }
         
         model.copyCommentText(at: indexPath)
+        
         showToast(message: NSLocalizedString("Text copied to clipboard",
                                              bundle: Bundle.spot, comment: "text copied toast title"),
-                  delay: 0.7)
+                  hideAfter: 0.7)
+        
     }
 
     private func heightForRow(at indexPath: IndexPath) -> CGFloat {

@@ -65,7 +65,8 @@ final class SPTextInputView: BaseView {
         case .reply:
             textInputView.placeholder = NSLocalizedString(
                 "Type your reply…",
-                bundle: Bundle.spot, comment: "text view reply placeholder"
+                bundle: Bundle.spot,
+                comment: "text view reply placeholder"
             )
         }
     }
@@ -102,11 +103,6 @@ final class SPTextInputView: BaseView {
         textInputView.font = UIFont.roboto(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textColor = .spForeground1
         textInputView.textAlignment = .natural
-        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
-            textInputView.textAlignment = .right
-        } else {
-            textInputView.textAlignment = .left
-        }
     }
 }
 

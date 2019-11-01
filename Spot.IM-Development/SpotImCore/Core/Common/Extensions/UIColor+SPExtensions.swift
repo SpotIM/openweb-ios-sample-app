@@ -16,6 +16,7 @@ internal extension UIColor {
     static let lightPink = #colorLiteral(red: 1, green: 0.7809498291, blue: 0.9853027483, alpha: 1)
 
     // from design
+    static let darkSkyBlue = #colorLiteral(red: 0.5490196078, green: 0.7450980392, blue: 0.8392156863, alpha: 1)     // #8CBED6
     static let charcoalGrey = #colorLiteral(red: 0.2156862745, green: 0.2431372549, blue: 0.2666666667, alpha: 1)    // #373E44 aka Dark Grey
     static let mineShaft = #colorLiteral(red: 0.137254902, green: 0.137254902, blue: 0.137254902, alpha: 1)       // #232323 aka "black"
     static let mineShaft2 = #colorLiteral(red: 0.2274509804, green: 0.2274509804, blue: 0.2274509804, alpha: 1)      // #232323 aka "black"

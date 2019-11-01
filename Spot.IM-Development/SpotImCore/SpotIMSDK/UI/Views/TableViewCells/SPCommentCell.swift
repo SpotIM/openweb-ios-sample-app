@@ -330,7 +330,11 @@ extension SPCommentCell: ShowMoreRepliesViewDelegate {
 }
 
 extension SPCommentCell: MessageContainerViewDelegate {
-
+    
+    func urlTappedInMessageContainer(view: MessageContainerView, url: URL) {
+        UIApplication.shared.open(url)
+    }
+    
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
     }

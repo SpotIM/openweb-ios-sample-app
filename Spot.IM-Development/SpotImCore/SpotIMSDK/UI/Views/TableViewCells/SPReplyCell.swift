@@ -260,7 +260,11 @@ extension SPReplyCell: ShowMoreRepliesViewDelegate {
 }
 
 extension SPReplyCell: MessageContainerViewDelegate {
-
+    
+    func urlTappedInMessageContainer(view: MessageContainerView, url: URL) {
+        UIApplication.shared.open(url)
+    }
+    
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
     }
