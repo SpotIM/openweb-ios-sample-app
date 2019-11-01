@@ -47,7 +47,7 @@ extension NSAttributedString {
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readMore = NSMutableAttributedString(
-            string: NSLocalizedString(" Read More ", bundle: Bundle.spot, comment: "Collapsed long comments temporary terminator"),
+            string: NSLocalizedString("Read More", bundle: Bundle.spot, comment: "Collapsed long comments temporary terminator"),
             attributes: attribs)
 
         readMore.insert(ellipsis, at: 0)
@@ -75,7 +75,7 @@ extension NSAttributedString {
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readLess = NSAttributedString(
-            string: NSLocalizedString(" Read Less", bundle: Bundle.spot, comment: "Expanded long comments terminator"),
+            string: NSLocalizedString("Read Less", bundle: Bundle.spot, comment: "Expanded long comments terminator"),
             attributes: attribs)
 
         let mutableSelf = mutableCopy() as? NSMutableAttributedString
