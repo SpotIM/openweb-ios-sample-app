@@ -70,15 +70,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
         if let repliesCount = repliesCount, repliesCount == 1 {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Reply",
-                                                               bundle: Bundle.spot, comment: "Reply button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Reply",
-                                                              bundle: Bundle.spot, comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Reply")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Reply")
         } else {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Replies",
-                                                               bundle: Bundle.spot, comment: "Replies button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Replies",
-                                                              bundle: Bundle.spot, comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Replies")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Replies")
         }
     }
     
@@ -93,7 +89,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? ""
-                : "to \(dataModel.replyingToDisplayName!)"
+                : LocalizationManager.localizedString(key: "to") + " \(dataModel.replyingToDisplayName!)"
         )
         userNameView.setDate(
             dataModel.replyingToDisplayName?.isEmpty ?? true

@@ -30,8 +30,7 @@ final class CommentActionsView: BaseView {
     }
 
     override init(frame: CGRect) {
-        replyDefaultTitle = NSLocalizedString("Reply",
-                                              bundle: Bundle.spot, comment: "Comment reply button title")
+        replyDefaultTitle = LocalizationManager.localizedString(key: "Reply")
         
         super.init(frame: frame)
 

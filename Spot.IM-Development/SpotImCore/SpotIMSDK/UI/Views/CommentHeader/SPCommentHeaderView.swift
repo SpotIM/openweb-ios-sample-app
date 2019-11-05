@@ -47,7 +47,7 @@ final class SPCommentHeaderView: BaseView {
     }
     
     private func setupReplyingLabel() {
-        replyingLabel.text = NSLocalizedString("Replying to ", bundle: Bundle.spot, comment: "replying title")
+        replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.backgroundColor = .spBackground0
         replyingLabel.textColor = .spForeground4
         replyingLabel.font = UIFont.roboto(style: .regular, of: Theme.titleFontSize)

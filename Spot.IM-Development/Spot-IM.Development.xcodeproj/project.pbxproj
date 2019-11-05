@@ -141,7 +141,10 @@
 		445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187723685154001D0ED0 /* SPAnalyticsService.swift */; };
 		445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187823685154001D0ED0 /* SPReadingTracker.swift */; };
 		445418BF23685154001D0ED0 /* SPCommentsInMemoryCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */; };
-		448E1113236B82710005C9F9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E110D236B3EA50005C9F9 /* Localizable.strings */; };
+		44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B6F237070F30024EFC1 /* InputConfiguration.swift */; };
+		44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B71237185090024EFC1 /* LocalizationManager.swift */; };
+		44689B7423718CF90024EFC1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7323718CF80024EFC1 /* Logger.swift */; };
+		44689B772371DA6A0024EFC1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E110D236B3EA50005C9F9 /* Localizable.strings */; };
 		448E1116236C53BE0005C9F9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */; };
 		44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
 		44C8789523608BC100E0E662 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -330,6 +333,9 @@
 		4454187723685154001D0ED0 /* SPAnalyticsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAnalyticsService.swift; sourceTree = "<group>"; };
 		4454187823685154001D0ED0 /* SPReadingTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReadingTracker.swift; sourceTree = "<group>"; };
 		4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentsInMemoryCacheService.swift; sourceTree = "<group>"; };
+		44689B6F237070F30024EFC1 /* InputConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputConfiguration.swift; sourceTree = "<group>"; };
+		44689B71237185090024EFC1 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
+		44689B7323718CF80024EFC1 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		448E110C236B3EA50005C9F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		448E1111236B3EF70005C9F9 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
@@ -833,6 +839,7 @@
 				4454185A23685154001D0ED0 /* SPCommentSortMode.swift */,
 				4454185B23685154001D0ED0 /* SPUser.swift */,
 				4454185C23685154001D0ED0 /* SPShareLink.swift */,
+				44689B6F237070F30024EFC1 /* InputConfiguration.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -840,6 +847,7 @@
 		4454185D23685154001D0ED0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				44689B7323718CF80024EFC1 /* Logger.swift */,
 				4454185E23685154001D0ED0 /* Extensions */,
 				4454186D23685154001D0ED0 /* SPConstants.swift */,
 				4454186E23685154001D0ED0 /* SPClientSettings.swift */,
@@ -879,6 +887,7 @@
 				4454187823685154001D0ED0 /* SPReadingTracker.swift */,
 				4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */,
 				448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */,
+				44689B71237185090024EFC1 /* LocalizationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1151,7 +1160,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				448E1113236B82710005C9F9 /* Localizable.strings in Resources */,
+				44689B772371DA6A0024EFC1 /* Localizable.strings in Resources */,
 				445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */,
 				445417AA236850C0001D0ED0 /* OpenSans-RegularItalic.ttf in Resources */,
 				445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */,
@@ -1271,6 +1280,7 @@
 				4454180523685144001D0ED0 /* BaseView.swift in Sources */,
 				4454181023685144001D0ED0 /* SPPreConversationViewController.swift in Sources */,
 				4454180923685144001D0ED0 /* SPCommentCreationModel.swift in Sources */,
+				44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */,
 				445418A723685154001D0ED0 /* UILabel+SPExtensions.swift in Sources */,
 				4454180123685144001D0ED0 /* BaseTextView.swift in Sources */,
 				4454181623685144001D0ED0 /* SPCommentCell.swift in Sources */,
@@ -1298,6 +1308,7 @@
 				4454182323685144001D0ED0 /* SPConversationSummaryView.swift in Sources */,
 				4454180823685144001D0ED0 /* KeyboardHandable.swift in Sources */,
 				4454189B23685154001D0ED0 /* SPCommentRankUpdateRM.swift in Sources */,
+				44689B7423718CF90024EFC1 /* Logger.swift in Sources */,
 				4454180323685144001D0ED0 /* SPAnimatedButton.swift in Sources */,
 				4454180E23685144001D0ED0 /* LoaderPresentable.swift in Sources */,
 				4454189823685154001D0ED0 /* SPSpotConfiguration.swift in Sources */,
@@ -1385,6 +1396,7 @@
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
 				4454188823685154001D0ED0 /* SPAnalyticsRequest.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
+				44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */,
 				445418AA23685154001D0ED0 /* UITableView+SetupExtensions.swift in Sources */,
 				4454180B23685144001D0ED0 /* SPReplyCreationModel.swift in Sources */,
 				4454180C23685144001D0ED0 /* SPReplyViewController.swift in Sources */,

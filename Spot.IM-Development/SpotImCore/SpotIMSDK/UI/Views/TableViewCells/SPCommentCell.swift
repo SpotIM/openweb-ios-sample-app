@@ -167,20 +167,17 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     private func updateRepliesButtonTitle(with repliesCount: Int?, minimumVisibleRepliesCount: Int) {
         if let repliesCount = repliesCount, repliesCount == minimumVisibleRepliesCount + 1 {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Previous Reply",
-                                                               bundle: Bundle.spot, comment: "Previous Reply button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Reply",
-                                                              bundle: Bundle.spot, comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Previous Reply")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Reply")
         } else {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Previous Replies",
-                                                               bundle: Bundle.spot, comment: "Previous Replies button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Replies",
-                                                              bundle: Bundle.spot, comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Previous Replies")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Replies")
         }
     }
     
     private func updateUserView(with dataModel: CommentViewModel) {
         userNameView.setDeleted(dataModel.isDeleted)
+        
         userNameView.setUserName(
             dataModel.displayName,
             badgeTitle: dataModel.badgeTitle,

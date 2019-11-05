@@ -73,6 +73,7 @@ internal final class ShowMoreRepliesView: BaseView {
             $0.bottom.equal(to: bottomAnchor)
             $0.trailing.equal(to: trailingAnchor)
         }
+        
         if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
             showHideRepliesButton.contentEdgeInsets.left += activityIndicator.frame.width + Theme.activityOffset
         } else {

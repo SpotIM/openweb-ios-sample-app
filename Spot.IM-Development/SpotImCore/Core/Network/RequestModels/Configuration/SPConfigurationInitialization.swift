@@ -41,7 +41,7 @@ struct SPConfigurationInitialization: Decodable {
         case policyAllowGuestsToLike = "policy.allowGuestsToLike"
         case policyForceRegister = "policy.forceRegister"
         case policyRogerMode = "policy.rogerMode"
-//https://prnt.sc/pq7q0l  https://prnt.sc/pq7r9w
+
     }
 
     let name: String?
