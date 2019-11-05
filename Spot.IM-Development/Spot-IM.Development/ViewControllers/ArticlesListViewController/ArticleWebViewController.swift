@@ -51,7 +51,8 @@ internal final class ArticleWebViewController: UIViewController {
     private func setupSpotView() {
         
         SPClientSettings.setup(spotKey: spotId)
-        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
+        let configuration = InputConfiguration(appLanguage: "he_IL")
+        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self, inputConfiguration: configuration)
         
         spotIMCoordinator?.preConversationController(
             withPostId: postId,

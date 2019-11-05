@@ -56,18 +56,10 @@ final class SPTextInputView: BaseView {
         commentLeadingConstraint?.isActive = true
         switch commentType {
         case .comment:
-            textInputView.placeholder = NSLocalizedString(
-                "What do you think?",
-                bundle: Bundle.spot,
-                comment: "text view comment placeholder"
-            )
+            textInputView.placeholder = LocalizationManager.localizedString(key: "What do you think?")
             
         case .reply:
-            textInputView.placeholder = NSLocalizedString(
-                "Type your reply…",
-                bundle: Bundle.spot,
-                comment: "text view reply placeholder"
-            )
+            textInputView.placeholder = LocalizationManager.localizedString(key: "Type your reply…")
         }
     }
     

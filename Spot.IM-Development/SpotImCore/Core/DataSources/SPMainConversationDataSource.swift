@@ -103,6 +103,7 @@ internal final class SPMainConversationDataSource {
                                loadingStarted: (() -> Void)? = nil,
                                completion: @escaping (Bool, SPNetworkError?) -> Void) {
         sortMode = mode
+        sortIsUpdated?()
         dataProvider.conversation(
             conversationId,
             mode,
@@ -140,6 +141,7 @@ internal final class SPMainConversationDataSource {
         loadingStarted: (() -> Void)? = nil,
         completion: @escaping (Bool, IndexSet?, Error?) -> Void) {
         sortMode = mode
+        sortIsUpdated?()
         dataProvider.conversation(
             conversationId,
             mode,
@@ -183,6 +185,8 @@ internal final class SPMainConversationDataSource {
         loadingStarted: (() -> Void)? = nil) {
         
         self.sortMode = sortMode
+        sortIsUpdated?()
+        
         guard let commentId = commentId, let indexPath = indexPathOfComment(with: commentId) else { return }
         
         let provider = repliesProviders[commentId]

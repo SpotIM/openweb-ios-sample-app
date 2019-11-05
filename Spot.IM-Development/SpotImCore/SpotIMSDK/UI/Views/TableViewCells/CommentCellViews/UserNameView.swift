@@ -117,10 +117,7 @@ internal final class UserNameView: BaseView {
         ]
 
         deletedMessageLabel.attributedText = NSAttributedString(
-            string: NSLocalizedString(
-                "This message was deleted.",
-                bundle: Bundle.spot, comment: "deleted message"
-            ),
+            string: LocalizationManager.localizedString(key: "This message was deleted."),
             attributes: attributes
         )
     }

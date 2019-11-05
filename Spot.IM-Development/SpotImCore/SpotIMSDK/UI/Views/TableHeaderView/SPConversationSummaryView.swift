@@ -45,14 +45,14 @@ final class SPConversationSummaryView: BaseView {
 
     func updateNewComments(_ newCommentsCount: Int) {
         newCommentsButton.isHidden = newCommentsCount <= 0
-        let newString: String = NSLocalizedString("NEW", bundle: Bundle.spot, comment: "NEW title")
+        let newString: String = LocalizationManager.localizedString(key: "NEW")
         newCommentsButton.setTitle("\(newCommentsCount) " + newString, for: .normal)
     }
     
     func updateCommentsLabel(_ newCommentsCount: Int) {
         let commentsText: String = newCommentsCount > 1 ?
-            NSLocalizedString("Comments", bundle: Bundle.spot, comment: "Comments title") :
-            NSLocalizedString("Comment", bundle: Bundle.spot, comment: "Comment title")
+            LocalizationManager.localizedString(key: "Comments") :
+            LocalizationManager.localizedString(key: "Comment")
         commentsCountLabel.text = "\(newCommentsCount.formatedCount()) " + commentsText
     }
     

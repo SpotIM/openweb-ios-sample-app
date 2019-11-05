@@ -12,7 +12,7 @@ internal extension UILabel {
 
     /// Index of character in contained attributed string at requested coordinates
     /// - Parameter point: coordinates in the frame of the label
-    func indexOfAttributedTextCharacterAtPoint(point: CGPoint) -> Int {
+    func indexOfAttributedTextCharacterAtPoint(point: CGPoint, text: NSAttributedString = NSAttributedString(string: "")) -> Int {
         guard let attributedText = self.attributedText else { return NSNotFound }
         let textStorage = NSTextStorage(attributedString: attributedText)
         let layoutManager = NSLayoutManager()

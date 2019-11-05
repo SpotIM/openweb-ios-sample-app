@@ -11,12 +11,11 @@
 "Please provide Code B" = "Please provide Code B";
 "Authentication error" = "Authentication error";
 "Empty response" = "Empty response";
-"Comment reported successfully" = "Comment reported successfully";
-"Copy Comment to Clipboard" = "Copy Comment to Clipboard";
-"Sort By" = "Sort By";
-"The text you entered might be deleted if not published." = "The text you entered might be deleted if not published.";
 
-
+"Comment reported successfully" = ".ההודעה דווחה בהצלחה";
+"Copy Comment to Clipboard" = "העתק את התגובה ללוח ";
+"Sort By" = "סנן לפי";
+"The text you entered might be deleted if not published." = ".במידה ולא יפורסם, הטקסט שכתבת עלול להימחק";
 "It seems we are experiencing technical issues. Please try again" = "נסה שוב עוד כמה דקות.";
 "The Internet connection appears to be offline." = "אופססס! נראה שאנו חווים בעיה בתקשורת";
 "Conversation" = "שיחה";
@@ -32,7 +31,7 @@
 "Log Out" = "התנתקות";
 "Log In" = "התחברות";
 "Cancel" = "ביטול";
-"Are you sure you want to log out?" = "Are you sure you want to log out?";
+"Are you sure you want to log out?" = "?האם ברצונך להתנתק מהשיחה";
 "Commenting on" = "כתיבת תגובה על";
 "Oops..." = "...אופססס";
 "Leave Page" = "צא מהעמוד";
@@ -79,4 +78,8 @@
 "NEW" = "החדש ביותר";
 "Comments" = "תגובות";
 "Comment" = "תגובות";
-
+;"כרגע" = "Just Now"
+"Days ago" = "ימים";
+"Hours ago" = "שעות";
+"Minutes ago" = "דק׳";
+"to" = "ל";

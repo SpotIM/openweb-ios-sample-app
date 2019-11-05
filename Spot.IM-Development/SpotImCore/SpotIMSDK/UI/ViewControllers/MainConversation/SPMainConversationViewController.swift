@@ -176,7 +176,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                         self.presentErrorView(error: error)
                     } else {
                         self.showAlert(
-                            title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
+                            title: LocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )
                     }
@@ -220,7 +220,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             completion: { (success, _, error) in
                 if let error = error {
                     self.showAlert(
-                        title: NSLocalizedString("Oops...", bundle: Bundle.spot, comment: "oops"),
+                        title: LocalizationManager.localizedString(key: "Oops..."),
                         message: error.localizedDescription
                     )
                 } else if success == false {
@@ -452,7 +452,7 @@ extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView) {
         SPAnalyticsHolder.default.log(event: .sortByOpened, source: .conversation)
         showActionSheet(
-            title: NSLocalizedString("Sort By", bundle: Bundle.spot, comment: "sort sheet title"),
+            title: LocalizationManager.localizedString(key: "Sort By"),
             message: nil,
             actions: model.sortActions(),
             sender: sender)

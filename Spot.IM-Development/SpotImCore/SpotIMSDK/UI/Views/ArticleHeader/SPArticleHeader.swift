@@ -85,8 +85,7 @@ internal final class SPArticleHeader: BaseView {
     }
     
     private func setupConversationTitleLabel() {
-        conversationTitleLabel.text = NSLocalizedString("Loading",
-                                                        bundle: Bundle.spot, comment: "Main Conversation header title placeholder")
+        conversationTitleLabel.text = LocalizationManager.localizedString(key: "Loading")
         conversationTitleLabel.numberOfLines = 2
         conversationTitleLabel.backgroundColor = .spBackground0
         conversationTitleLabel.textColor = .spForeground4

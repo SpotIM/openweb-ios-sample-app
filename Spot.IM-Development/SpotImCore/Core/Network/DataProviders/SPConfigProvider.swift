@@ -17,8 +17,7 @@ internal final class SPDefaultConfigProvider: SPConfigProvider {
     
     static func getConfig(completion: @escaping (SPSpotConfiguration?, Error?) -> Void) {
         guard let spotKey = SPClientSettings.spotKey else {
-            let message = NSLocalizedString("Please provide Spot Key",
-                                            bundle: Bundle.spot, comment: "Spot Key not set by client")
+            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(nil, SPNetworkError.custom(message))
             return
         }
@@ -52,8 +51,7 @@ internal final class SPDefaultConfigProvider: SPConfigProvider {
     
     static func getAdsConfig(completion: @escaping (SPAdsConfiguration?, Error?) -> Void) {
         guard let spotKey = SPClientSettings.spotKey else {
-            let message = NSLocalizedString("Please provide Spot Key",
-                                            bundle: Bundle.spot, comment: "Spot Key not set by client")
+            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(nil, SPNetworkError.custom(message))
             return
         }

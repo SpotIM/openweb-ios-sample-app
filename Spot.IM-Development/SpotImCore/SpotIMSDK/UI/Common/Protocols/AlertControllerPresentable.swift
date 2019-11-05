@@ -50,7 +50,7 @@ extension AlertPresentable where Self: UIViewController {
             }
         } else {
             let defaultAction = UIAlertAction(
-                title: NSLocalizedString("OK", bundle: Bundle.spot, comment: "default ok"),
+                title: LocalizationManager.localizedString(key: "OK"),
                 style: .default)
             alert.addAction(defaultAction)
         }

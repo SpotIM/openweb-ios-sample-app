@@ -50,10 +50,11 @@ internal extension UIFont {
         let fontRef = CGFont(dataProvider)
         var errorRef: Unmanaged<CFError>?
         if CTFontManagerRegisterGraphicsFont(fontRef!, &errorRef) == false {
-            print("Failed to register font")
-            print("Register graphics font failed")
-            print("This font may have already been registered in the main bundle.")
-
+            Logger.error(
+                "Failed to register font"
+                + "/nRegister graphics font failed"
+                + "/nThis font may have already been registered in the main bundle."
+            )
         }
     }
 }
