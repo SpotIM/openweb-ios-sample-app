@@ -14,6 +14,7 @@ internal final class SPReadingTracker {
     private weak var view: UIView?
     private var visibilityTimer: Timer?
     private var readingStartTime: Date?
+    private var accumulatedSeconds: Int = 0
 
     private var spotShowed = false
 
@@ -98,8 +99,9 @@ internal final class SPReadingTracker {
     private func logReadingTracking() {
         guard let readingStart = readingStartTime else { return }
         let seconds = Date().seconds(fromDate: readingStart)
-        if seconds > 0 {
-            SPAnalyticsHolder.default.log(event: .reading(seconds), source: .conversation)
+        accumulatedSeconds += seconds
+        if accumulatedSeconds > 0 {
+            SPAnalyticsHolder.default.log(event: .reading(accumulatedSeconds), source: .conversation)
         }
     }
 
