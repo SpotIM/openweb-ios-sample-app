@@ -77,4 +77,8 @@ public final class SPPublicSessionInterface {
     public static func resetUser() {
         SPUserSessionHolder.resetUserSession()
     }
+    
+    public static func isMe(userId: String) -> Bool {
+        return userId == SPUserSessionHolder.session.userId
+    }
 }
