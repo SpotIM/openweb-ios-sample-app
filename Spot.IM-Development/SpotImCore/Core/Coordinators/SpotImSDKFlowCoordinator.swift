@@ -54,16 +54,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private var conversationModel: SPMainConversationModel!
     private let adsManager: AdsManager
     
-    public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration) {
+    public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration?) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager()
-        LocalizationManager.currentLanguage = inputConfiguration.language
-        LocalizationManager.locale = inputConfiguration.locale
-        if inputConfiguration.language.isRightToLeft() {
-            UIView.appearance().semanticContentAttribute = .forceRightToLeft
-        } else {
-            UIView.appearance().semanticContentAttribute = .forceLeftToRight
-        }
+        LocalizationManager.updateLocalizationConfiguration(inputConfiguration)
     }
 
     /// Please, provide container (UINavigationViewController) for sdk flows
@@ -74,6 +68,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         
         if let config = SPConfigDataSource.config {
             if config.mobileSdk?.enabled ?? false {
+                LocalizationManager.setLocale(config.mobileSdk?.locale)
                 completion(buildPreConversationController(with: postId))
             }
         } else {
@@ -92,6 +87,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private func respondToConfigUpdate() {
         if let config = SPConfigDataSource.config, (config.mobileSdk?.enabled ?? false), let postId = postId {
             configCompletion?(buildPreConversationController(with: postId))
+            LocalizationManager.setLocale(config.mobileSdk?.locale)
         }
 
         self.postId = nil
@@ -186,7 +182,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         let controller = SPCommentCreationViewController()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
-        controller.title = LocalizationManager.localizedString(key: "Add a Comment")
+        
         let model = SPCommentCreationModel(commentCreationDTO: dataModel.dataSource.commentCreationModel(),
                                            cacheService: commentsCacheService,
                                            imageProvider: imageProvider)
@@ -199,7 +195,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         let controller = SPReplyCreationViewController()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
-        controller.title = LocalizationManager.localizedString(key: "Add a Reply")
+        
         let model = SPReplyCreationModel(replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
                                          cacheService: commentsCacheService,
                                          imageProvider: imageProvider)
