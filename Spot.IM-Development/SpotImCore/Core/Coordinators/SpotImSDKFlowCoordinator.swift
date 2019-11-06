@@ -54,7 +54,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private var conversationModel: SPMainConversationModel!
     private let adsManager: AdsManager
     
-    public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration?) {
+    ///If inputConfiguration parameter is nil Localization settings will be taken from server config
+    public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration? = nil) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager()
         LocalizationManager.updateLocalizationConfiguration(inputConfiguration)
