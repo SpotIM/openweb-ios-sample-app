@@ -1877,11 +1877,11 @@
 			baseConfigurationReference = 27A3A695D2E76A4DC47A8D05 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development: Alexander Kholodov (2GRWS2WKKA)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 8H4BKTJCC4;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
@@ -1892,7 +1892,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = SpotIM_Dev;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
