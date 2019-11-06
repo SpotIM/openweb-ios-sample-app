@@ -188,8 +188,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     SPAnalyticsHolder.default.totalComments = messageCount
                     self.sortView.updateCommentsLabel(messageCount ?? 0)
                     
-                    SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
-                    
                     if self.model.areCommentsEmpty() {
                         self.showEmptyStateView()
                     } else {
