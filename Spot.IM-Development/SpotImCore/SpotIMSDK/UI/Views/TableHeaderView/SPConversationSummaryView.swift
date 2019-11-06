@@ -110,7 +110,7 @@ extension SPConversationSummaryView {
         var inset: CGFloat = spacing / 2
         
         // Update insets in order to make additional space begween title and image
-        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
+        if LocalizationManager.currentLanguage?.isRightToLeft() ?? false {
             inset = -inset
         }
         

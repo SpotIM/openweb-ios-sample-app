@@ -43,7 +43,8 @@ final class MessageContainerView: BaseView {
     @objc
     private func handleTap(gesture: UITapGestureRecognizer) {
         let readMoreString = LocalizationManager.localizedString(key: "Read More")
-        let readLessString = LocalizationManager.localizedString(key:"Read Less")
+        let readLessString = LocalizationManager.localizedString(key: "Read Less")
+        
         if isTarget(substring: readMoreString, destinationOf: gesture) {
             handleReadMoreTap()
         } else if isTarget(substring: readLessString, destinationOf: gesture) {
@@ -55,11 +56,12 @@ final class MessageContainerView: BaseView {
     
     private func isTarget(substring: String, destinationOf gesture: UITapGestureRecognizer) -> Bool {
         guard let string = mainTextLabel.attributedText?.string else { return false }
+        
         guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
         let tapLocation = gesture.location(in: mainTextLabel)
         let index = mainTextLabel.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
         
-        return range.contains(string.index(string.startIndex, offsetBy: index))
+        return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
     }
     
     private func checkURLTap(in point: CGPoint) {
@@ -129,4 +131,32 @@ internal protocol MessageContainerViewDelegate: class {
     func urlTappedInMessageContainer(view: MessageContainerView, url: URL)
     func readMoreTappedInMessageContainer(view: MessageContainerView)
     func readLessTappedInMessageContainer(view: MessageContainerView)
+}
+
+extension String {
+
+  var length: Int {
+    return count
+  }
+
+  subscript (i: Int) -> String {
+    return self[i ..< i + 1]
+  }
+
+  func substring(fromIndex: Int) -> String {
+    return self[min(fromIndex, length) ..< length]
+  }
+
+  func substring(toIndex: Int) -> String {
+    return self[0 ..< max(0, toIndex)]
+  }
+
+  subscript (r: Range<Int>) -> String {
+    let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
+                                        upper: min(length, max(0, r.upperBound))))
+    let start = index(startIndex, offsetBy: range.lowerBound)
+    let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+    return String(self[start ..< end])
+  }
+
 }

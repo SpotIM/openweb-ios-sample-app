@@ -38,7 +38,6 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Authentication"
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -143,7 +143,7 @@ internal extension NSMutableAttributedString {
 extension NSMutableParagraphStyle {
     
     func updateAlignment() {
-        if UIView.appearance().semanticContentAttribute == .forceRightToLeft {
+        if LocalizationManager.currentLanguage?.isRightToLeft() ?? false {
             alignment = .right
         } else {
             alignment = .left

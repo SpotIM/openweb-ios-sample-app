@@ -32,7 +32,6 @@ class ArticlesListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Articles List"
         setup()
         loadData()
         
