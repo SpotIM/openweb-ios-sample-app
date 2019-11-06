@@ -186,6 +186,8 @@ final class SPMainConversationModel {
 extension SPMainConversationModel {
     
     func deleteComment(with id: String, completion: @escaping (Error?) -> Void) {
+        SPAnalyticsHolder.default.log(event: .deleteMessage, source: .conversation)
+        
         let commentViewModel = dataSource.commentViewModel(id)
         
         var parameters: [String: Any] = [APIKeys.messageId: id]
