@@ -135,7 +135,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func loadConversation() {
         guard !model.dataSource.isLoading else { return }
 
-        let sortModeRaw = SPConfigDataSource.config?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
+        let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
         let sortMode = SPCommentSortMode(rawValue: sortModeRaw) ?? .initial
         model.dataSource.conversation(
             sortMode,

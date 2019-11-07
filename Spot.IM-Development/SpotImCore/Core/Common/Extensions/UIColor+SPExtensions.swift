@@ -36,7 +36,7 @@ internal extension UIColor {
     static let grayishBrown = #colorLiteral(red: 0.4549019608, green: 0.4549019608, blue: 0.4549019608, alpha: 1)    // #747474
 
     static var brandColor: UIColor {
-        UIColor.color(with: SPConfigDataSource.config?.initialization?.brandColor) ?? clearBlue
+        UIColor.color(with: SPConfigsDataSource.appConfig?.initialization?.brandColor) ?? clearBlue
     }
 
     static var spBackground0: UIColor {

@@ -71,7 +71,7 @@
 		4454182223685144001D0ED0 /* SPCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F023685144001D0ED0 /* SPCommentHeaderView.swift */; };
 		4454182323685144001D0ED0 /* SPConversationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F223685144001D0ED0 /* SPConversationSummaryView.swift */; };
 		4454182423685144001D0ED0 /* SPLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F423685144001D0ED0 /* SPLoaderView.swift */; };
-		4454187A23685154001D0ED0 /* SPConfigDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182723685153001D0ED0 /* SPConfigDataSource.swift */; };
+		4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182723685153001D0ED0 /* SPConfigsDataSource.swift */; };
 		4454187B23685154001D0ED0 /* SPMainConversationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182823685153001D0ED0 /* SPMainConversationDataSource.swift */; };
 		4454187C23685154001D0ED0 /* SpotImSDKFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182A23685153001D0ED0 /* SpotImSDKFlowCoordinator.swift */; };
 		4454187D23685154001D0ED0 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182B23685153001D0ED0 /* Coordinator.swift */; };
@@ -145,6 +145,7 @@
 		44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B71237185090024EFC1 /* LocalizationManager.swift */; };
 		44689B7423718CF90024EFC1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7323718CF80024EFC1 /* Logger.swift */; };
 		44689B772371DA6A0024EFC1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E110D236B3EA50005C9F9 /* Localizable.strings */; };
+		44689B7D237414850024EFC1 /* SPABData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7C237414850024EFC1 /* SPABData.swift */; };
 		448E1116236C53BE0005C9F9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */; };
 		44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
 		44C8789523608BC100E0E662 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -263,7 +264,7 @@
 		445417F023685144001D0ED0 /* SPCommentHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentHeaderView.swift; sourceTree = "<group>"; };
 		445417F223685144001D0ED0 /* SPConversationSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConversationSummaryView.swift; sourceTree = "<group>"; };
 		445417F423685144001D0ED0 /* SPLoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLoaderView.swift; sourceTree = "<group>"; };
-		4454182723685153001D0ED0 /* SPConfigDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConfigDataSource.swift; sourceTree = "<group>"; };
+		4454182723685153001D0ED0 /* SPConfigsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConfigsDataSource.swift; sourceTree = "<group>"; };
 		4454182823685153001D0ED0 /* SPMainConversationDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPMainConversationDataSource.swift; sourceTree = "<group>"; };
 		4454182A23685153001D0ED0 /* SpotImSDKFlowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotImSDKFlowCoordinator.swift; sourceTree = "<group>"; };
 		4454182B23685153001D0ED0 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
@@ -336,6 +337,7 @@
 		44689B6F237070F30024EFC1 /* InputConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputConfiguration.swift; sourceTree = "<group>"; };
 		44689B71237185090024EFC1 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		44689B7323718CF80024EFC1 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		44689B7C237414850024EFC1 /* SPABData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPABData.swift; sourceTree = "<group>"; };
 		448E110C236B3EA50005C9F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		448E1111236B3EF70005C9F9 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
@@ -723,7 +725,7 @@
 		4454182623685153001D0ED0 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
-				4454182723685153001D0ED0 /* SPConfigDataSource.swift */,
+				4454182723685153001D0ED0 /* SPConfigsDataSource.swift */,
 				4454182823685153001D0ED0 /* SPMainConversationDataSource.swift */,
 			);
 			path = DataSources;
@@ -794,8 +796,6 @@
 		4454184423685153001D0ED0 /* RequestModels */ = {
 			isa = PBXGroup;
 			children = (
-				44F0FD242369EE9A003525E0 /* AdsConfiguration */,
-				4454184523685153001D0ED0 /* Configuration */,
 				4454184F23685154001D0ED0 /* SPCommentRankUpdateRM.swift */,
 				4454185023685154001D0ED0 /* Conversation */,
 			);
@@ -821,9 +821,7 @@
 		4454185023685154001D0ED0 /* Conversation */ = {
 			isa = PBXGroup;
 			children = (
-				4454185123685154001D0ED0 /* SPConversationExtraDataRM.swift */,
 				4454185223685154001D0ED0 /* SPCommentDelete.swift */,
-				4454185323685154001D0ED0 /* SPConversationReadRM.swift */,
 			);
 			path = Conversation;
 			sourceTree = "<group>";
@@ -831,9 +829,10 @@
 		4454185423685154001D0ED0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				44689B7B2374145B0024EFC1 /* Conversation */,
+				44689B7A237414340024EFC1 /* Configs */,
 				4454185523685154001D0ED0 /* SPComment.swift */,
 				4454185623685154001D0ED0 /* SPCommentViewModel.swift */,
-				4454185723685154001D0ED0 /* SPConversation.swift */,
 				4454185823685154001D0ED0 /* SPCommentCreationDTO.swift */,
 				4454185923685154001D0ED0 /* SPAnalyticsEvent.swift */,
 				4454185A23685154001D0ED0 /* SPCommentSortMode.swift */,
@@ -900,6 +899,26 @@
 				4454187623685154001D0ED0 /* GoogleAdsProvider.swift */,
 			);
 			path = Ads;
+			sourceTree = "<group>";
+		};
+		44689B7A237414340024EFC1 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				44F0FD242369EE9A003525E0 /* AdsConfiguration */,
+				4454184523685153001D0ED0 /* Configuration */,
+			);
+			path = Configs;
+			sourceTree = "<group>";
+		};
+		44689B7B2374145B0024EFC1 /* Conversation */ = {
+			isa = PBXGroup;
+			children = (
+				4454185123685154001D0ED0 /* SPConversationExtraDataRM.swift */,
+				4454185723685154001D0ED0 /* SPConversation.swift */,
+				4454185323685154001D0ED0 /* SPConversationReadRM.swift */,
+				44689B7C237414850024EFC1 /* SPABData.swift */,
+			);
+			path = Conversation;
 			sourceTree = "<group>";
 		};
 		448E1117236C5D130005C9F9 /* Libraries */ = {
@@ -1321,13 +1340,14 @@
 				445418AB23685154001D0ED0 /* Int+SPExtensions.swift in Sources */,
 				445418A923685154001D0ED0 /* UIFont+Extensions.swift in Sources */,
 				445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */,
+				44689B7D237414850024EFC1 /* SPABData.swift in Sources */,
 				4454188223685154001D0ED0 /* SPFailureReporter.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
 				445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */,
 				4454181B23685144001D0ED0 /* CommentActionsView.swift in Sources */,
 				445417FE23685144001D0ED0 /* NSAttributedString+Extensions.swift in Sources */,
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
-				4454187A23685154001D0ED0 /* SPConfigDataSource.swift in Sources */,
+				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
 				445418B023685154001D0ED0 /* WeakRef+Generic.swift in Sources */,
 				4454188123685154001D0ED0 /* SPAnalyticsFacade.swift in Sources */,
 				4454188623685154001D0ED0 /* SPCommentFacade.swift in Sources */,

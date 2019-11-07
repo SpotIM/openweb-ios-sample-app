@@ -19,12 +19,13 @@ public struct SPClientSettings {
             
             SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
             
-            SPDefaultConfigProvider.getConfig { (conf, _) in
-                SPConfigDataSource.config = conf
-                
+            SPDefaultConfigProvider.getConfigs { result in
+                SPConfigsDataSource.appConfig = result.appConfig
+                SPConfigsDataSource.adsConfig = result.adsConfig
             }
         }
     }
+    
 
     public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = {
         if UserDefaults.standard.bool(forKey: "demo.isCustomDarkModeEnabled") {

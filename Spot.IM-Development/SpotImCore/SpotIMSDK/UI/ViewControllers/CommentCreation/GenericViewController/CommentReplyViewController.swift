@@ -218,7 +218,7 @@ extension CommentReplyViewController {
     }
     private func updatePostButton() {
         var postButtonTitle: String = LocalizationManager.localizedString(key: "Post")
-        if let config = SPConfigDataSource.config,
+        if let config = SPConfigsDataSource.appConfig,
             config.initialization?.policyForceRegister == true,
             SPUserSessionHolder.session.user?.registered == false {
             postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
