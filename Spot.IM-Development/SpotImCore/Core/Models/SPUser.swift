@@ -8,15 +8,6 @@
 
 import UIKit
 
-enum ABGroup: String, CaseIterable {
-    /// Banner on preconversation screen
-    case first = "A"
-    /// Banner on preconversation screen + interstitial on "show more comments" transition
-    case second = "B"
-    /// Banner on preconversation screen + sticky banner on main conversation screen
-    case third = "C"
-}
-
 internal class SPUser: Codable {
     
     enum CodingKeys: String, CodingKey {
@@ -45,8 +36,6 @@ internal class SPUser: Codable {
     var isAuthority: Bool {
         return isAdmin || isModerator || isJournalist
     }
-
-    var abTestGroup: ABGroup?
     
     var hasGamification: Bool {
         if let badgeType = badgeType, badgeType != "newbie" {
@@ -70,10 +59,7 @@ internal class SPUser: Codable {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        abTestGroup = (SPConfigsDataSource.appConfig?.initialization?.monetized ?? false)
-            ? ABGroup.allCases.randomElement()
-            : nil
+    
         id = try? container.decode(String.self, forKey: .id)
         badgeType = try? container.decode(String.self, forKey: .badgeType)
         displayName = try? container.decode(String.self, forKey: .displayName)

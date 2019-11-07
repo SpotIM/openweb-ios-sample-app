@@ -26,7 +26,25 @@ typealias DeletedIndexPathsInfo = (indexPathes: [IndexPath], shouldRemoveSection
 
 internal final class SPMainConversationDataSource {
     
+    weak var delegate: SPMainConversationDataSourceDelegate?
+
+    var sortIsUpdated: (() -> Void)?
+    var messageCount: Int?
+    var thumbnailUrl: URL?
+    var conversationPublisherName: String?
+    var conversationTitle: String?
+    var minVisibleReplies: Int = 2
+
+    private(set) var sortMode: SPCommentSortMode?
+    private(set) var abData: [SPABData]?
     private(set) var conversationId: String
+    private(set) var currentUser: SPUser? = SPUserSessionHolder.session.user {
+        didSet {
+            SPAnalyticsHolder.default.userId = currentUser?.id
+            SPAnalyticsHolder.default.isUserRegistered = currentUser?.registered ?? false
+        }
+    }
+    
     private let dataProvider: SPConversationsDataProvider
     
     private var repliesProviders = [String: SPConversationsDataProvider]()
@@ -35,16 +53,6 @@ internal final class SPMainConversationDataSource {
     private var users = [String: SPUser]()
     private var extractData: SPConversationExtraDataRM?
     private var cachedCommentReply: CommentViewModel?
-    private(set) var sortMode: SPCommentSortMode?
-    
-    internal var minVisibleReplies: Int = 2
-    
-    private(set) var currentUser: SPUser? = SPUserSessionHolder.session.user {
-        didSet {
-            SPAnalyticsHolder.default.userId = currentUser?.id
-            SPAnalyticsHolder.default.isUserRegistered = currentUser?.registered ?? false
-        }
-    }
     
     internal var showReplies: Bool = false {
         didSet {
@@ -52,13 +60,7 @@ internal final class SPMainConversationDataSource {
         }
     }
     
-    internal var sortIsUpdated: (() -> Void)?
-    internal var messageCount: Int?
-    internal var thumbnailUrl: URL?
-    internal var conversationPublisherName: String?
-    internal var conversationTitle: String?
-    internal weak var delegate: SPMainConversationDataSourceDelegate?
-    
+
     init(with conversationId: String, dataProvider: SPConversationsDataProvider) {
         self.conversationId = conversationId
         self.dataProvider = dataProvider
@@ -119,12 +121,16 @@ internal final class SPMainConversationDataSource {
             if let error = error {
                 completion(false, error)
             } else {
+                
                 if let newUsers = response?.conversation?.users {
                     let mergedUsers = self.users.merging(newUsers) { $1 }
                     self.users = mergedUsers
                 }
                 if let extractData = response?.extractData {
                     self.extractData = extractData
+                }
+                if self.abData == nil {
+                    self.abData = response?.abData
                 }
                 self.messageCount = response?.conversation?.messagesCount
                 self.thumbnailUrl = response?.extractData?.thumbnailUrl
@@ -147,7 +153,14 @@ internal final class SPMainConversationDataSource {
             mode,
             page: page,
             loadingStarted: loadingStarted
-        ) { (response, error) in
+        ) { [weak self] (response, error) in
+            guard
+                let self = self
+                else {
+                    completion(false, nil, SPNetworkError.default)
+                    return
+            }
+            
             if let error = error {
                 completion(false, nil, error)
             } else {
