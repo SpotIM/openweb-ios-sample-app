@@ -169,6 +169,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         }
     }
 
+    func checkAdsAvailability() {
+        //Override this method in your VC if you need to configure advertisement
+    }
+    
     internal func handleCommentSizeChange() {
         // implement in subclasses if needed
     }

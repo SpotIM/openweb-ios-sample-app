@@ -16,6 +16,15 @@ protocol AdsProviderDelegate: class {
     func interstitialDidDismiss()
 }
 
+enum ABGroup: String, CaseIterable {
+    /// Banner on preconversation screen
+    case first = "A"
+    /// Banner on preconversation screen + interstitial on "show more comments" transition
+    case second = "B"
+    /// Banner on preconversation screen + sticky banner on main conversation screen
+    case third = "C"
+}
+
 protocol AdsProvider: class {
     
     func setupAdsBanner(with adId: String, in controller: UIViewController)
