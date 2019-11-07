@@ -10,15 +10,18 @@ import Foundation
 import Alamofire
 
 internal protocol SPConfigProvider {
-    static func getConfig(completion: @escaping (_ response: SPSpotConfiguration?, _ error: Error?) -> Void)
+    static func getConfigs(completion: @escaping (ConfigsCompletion) -> Void)
 }
+
+typealias ConfigsCompletion = (appConfig: SPSpotConfiguration?, adsConfig: SPAdsConfiguration?, error: Error?)
 
 internal final class SPDefaultConfigProvider: SPConfigProvider {
     
-    static func getConfig(completion: @escaping (SPSpotConfiguration?, Error?) -> Void) {
+    /// app and ads configurations
+    static func getConfigs(completion: @escaping (ConfigsCompletion) -> Void) {
         guard let spotKey = SPClientSettings.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-            completion(nil, SPNetworkError.custom(message))
+            completion((nil, nil, SPNetworkError.custom(message)))
             return
         }
         let spRequest = SPConfigRequests.config(spotId: spotKey)
@@ -33,9 +36,14 @@ internal final class SPDefaultConfigProvider: SPConfigProvider {
             .responseData { (response) in
                 let result: Result<SPSpotConfiguration> = defaultDecoder.decodeResponse(from: response)
                 switch result {
-                case .success(let configuration):
-                    completion(configuration, nil)
-                    
+                case .success(let appConfig):
+                    if appConfig.initialization?.monetized ?? false {
+                        getAdsConfig { (adsConfig, error) in
+                            completion((appConfig, adsConfig, nil))
+                        }
+                    } else {
+                        completion((appConfig, nil, nil))
+                    }
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -44,7 +52,7 @@ internal final class SPDefaultConfigProvider: SPConfigProvider {
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter().sendFailureReport(rawReport)
-                    completion(nil, SPNetworkError.default)
+                    completion((nil, nil, SPNetworkError.default))
                 }
             }
     }
@@ -56,28 +64,25 @@ internal final class SPDefaultConfigProvider: SPConfigProvider {
             return
         }
         let spRequest = SPAdsConfigRequest.adsConfig
-
+        let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
+        let hour = Int(Date.hourFormatter.string(from: Date()))!
+        let params: [String: Any] = ["day": dayName, "hour": hour]
         let headers = HTTPHeaders.unauthorized(with: spotKey, postId: "")
         Alamofire.request(spRequest.url,
                           method: spRequest.method,
-                          parameters: nil,
+                          parameters: params,
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
             .responseData { (response) in
+                
                 let result: Result<SPAdsConfiguration> = defaultDecoder.decodeResponse(from: response)
                 switch result {
                 case .success(let configuration):
                     completion(configuration, nil)
                     
                 case .failure(let error):
-                    let rawReport = RawReportModel(
-                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: nil,
-                        errorData: response.data,
-                        errorMessage: error.localizedDescription
-                    )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    Logger.error(error)
                     completion(nil, SPNetworkError.default)
                 }
             }

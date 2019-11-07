@@ -8,13 +8,13 @@
 
 import UIKit
 
-enum ABGroup: CaseIterable {
+enum ABGroup: String, CaseIterable {
     /// Banner on preconversation screen
-    case first
+    case first = "A"
     /// Banner on preconversation screen + interstitial on "show more comments" transition
-    case second
+    case second = "B"
     /// Banner on preconversation screen + sticky banner on main conversation screen
-    case third
+    case third = "C"
 }
 
 internal class SPUser: Codable {
@@ -71,7 +71,7 @@ internal class SPUser: Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        abTestGroup = (SPConfigDataSource.config?.initialization?.monetized ?? false)
+        abTestGroup = (SPConfigsDataSource.appConfig?.initialization?.monetized ?? false)
             ? ABGroup.allCases.randomElement()
             : nil
         id = try? container.decode(String.self, forKey: .id)

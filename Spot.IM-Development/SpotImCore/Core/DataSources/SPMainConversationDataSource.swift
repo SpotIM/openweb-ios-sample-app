@@ -62,7 +62,7 @@ internal final class SPMainConversationDataSource {
     init(with conversationId: String, dataProvider: SPConversationsDataProvider) {
         self.conversationId = conversationId
         self.dataProvider = dataProvider
-        self.conversationPublisherName = SPConfigDataSource.config?.initialization?.name
+        self.conversationPublisherName = SPConfigsDataSource.appConfig?.initialization?.name
     }
     
     // MARK: - Internal methods and computed properties
