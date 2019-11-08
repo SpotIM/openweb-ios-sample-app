@@ -89,7 +89,7 @@ internal final class SPArticleHeader: BaseView {
         conversationTitleLabel.numberOfLines = 2
         conversationTitleLabel.backgroundColor = .spBackground0
         conversationTitleLabel.textColor = .spForeground4
-        conversationTitleLabel.font = UIFont.roboto(style: .regular, of: Theme.titleFontSize)
+        conversationTitleLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
 
         conversationTitleLabel.layout {
             $0.top.equal(to: titlesContainer.topAnchor)
@@ -102,7 +102,7 @@ internal final class SPArticleHeader: BaseView {
         conversationAuthorLabel.numberOfLines = 1
         conversationAuthorLabel.backgroundColor = .spBackground0
         conversationAuthorLabel.textColor = .spForeground2
-        conversationAuthorLabel.font = UIFont.roboto(style: .regular, of: Theme.subTitleFontSize)
+        conversationAuthorLabel.font = UIFont.preferred(style: .regular, of: Theme.subTitleFontSize)
         
         conversationAuthorLabel.layout {
             $0.bottom.equal(to: titlesContainer.bottomAnchor)

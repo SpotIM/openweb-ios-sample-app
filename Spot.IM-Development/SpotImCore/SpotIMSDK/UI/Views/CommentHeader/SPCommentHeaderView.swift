@@ -50,7 +50,7 @@ final class SPCommentHeaderView: BaseView {
         replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.backgroundColor = .spBackground0
         replyingLabel.textColor = .spForeground4
-        replyingLabel.font = UIFont.roboto(style: .regular, of: Theme.titleFontSize)
+        replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
         replyingLabel.layout {
             $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
@@ -60,7 +60,7 @@ final class SPCommentHeaderView: BaseView {
     private func setupCommentAuthorLabel() {
         commentAuthorLabel.backgroundColor = .spBackground0
         commentAuthorLabel.textColor = .spForeground1
-        commentAuthorLabel.font = UIFont.roboto(style: .bold, of: Theme.titleFontSize)
+        commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         
         commentAuthorLabel.layout {
             $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
@@ -84,7 +84,7 @@ final class SPCommentHeaderView: BaseView {
         commentLabel.backgroundColor = .spBackground0
         commentLabel.numberOfLines = 3
         commentLabel.textColor = .spForeground1
-        commentLabel.font = UIFont.roboto(style: .regular, of: Theme.commentFontSize)
+        commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
         
         commentLabel.layout {
             $0.top.equal(to: replyingLabel.bottomAnchor, offsetBy: Theme.commentTopOffset)
