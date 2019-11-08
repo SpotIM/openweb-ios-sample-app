@@ -13,7 +13,7 @@ extension NSAttributedString {
     func clippedToLine(index: Int, width: CGFloat, isCollapsed: Bool) -> NSAttributedString {
         guard width > 1 else { return self } // not to spoil everything before UI is layed out
 
-        let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: width, height: CGFloat(MAXFLOAT)))
+        let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
         let frameSetterRef: CTFramesetter = CTFramesetterCreateWithAttributedString(self as CFAttributedString)
         let frameRef: CTFrame = CTFramesetterCreateFrame(frameSetterRef, CFRangeMake(0, 0), path.cgPath, nil)
         let linesNS: NSArray = CTFrameGetLines(frameRef)
