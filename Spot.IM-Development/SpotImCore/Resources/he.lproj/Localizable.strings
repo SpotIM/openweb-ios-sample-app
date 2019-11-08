@@ -1,10 +1,16 @@
-/* 
+/*
   Localizable.strings
   Spot-IM.Development
 
   Created by Eugene on 31.10.2019.
   Copyright © 2019 Spot.IM. All rights reserved.
 */
+
+"Days" = "ימים";
+"Hours" = "שעות";
+"Minutes" = "דק׳";
+"To" = "ל";
+
 "Add a Comment" = "Add a Comment";
 "Add a Reply" = "Add a Reply";
 "Please provide Spot Key" = "Please provide Spot Key";
@@ -79,7 +85,3 @@
 "Comments" = "תגובות";
 "Comment" = "תגובות";
 ;"כרגע" = "Just Now"
-"Days" = "ימים";
-"Hours" = "שעות";
-"Minutes" = "דק׳";
-"To" = "ל";

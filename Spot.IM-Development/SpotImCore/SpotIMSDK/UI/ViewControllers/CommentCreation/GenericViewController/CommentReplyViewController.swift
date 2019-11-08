@@ -235,7 +235,7 @@ extension CommentReplyViewController {
         postButton.backgroundColor = .brandColor
         
         postButton.isEnabled = false
-        postButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.postButtonFontSize)
+        postButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.postButtonFontSize)
         postButton.contentEdgeInsets = UIEdgeInsets(
             top: 0.0,
             left: Theme.postButtonHorizontalInset,

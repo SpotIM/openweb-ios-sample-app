@@ -17,6 +17,10 @@
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		4411659C2375822900B781F3 /* Arial Bold Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B8A237473E70024EFC1 /* Arial Bold Italic.ttf */; };
+		4411659D2375822900B781F3 /* Arial Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B87237473E60024EFC1 /* Arial Bold.ttf */; };
+		4411659E2375822900B781F3 /* Arial Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B89237473E60024EFC1 /* Arial Italic.ttf */; };
+		4411659F2375822900B781F3 /* Arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B88237473E60024EFC1 /* Arial.ttf */; };
 		443B328D236997F00000BB60 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
 		445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4454179E236850C0001D0ED0 /* SPAssets.xcassets */; };
 		445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445417A1236850C0001D0ED0 /* Roboto-Medium.ttf */; };
@@ -144,8 +148,8 @@
 		44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B6F237070F30024EFC1 /* InputConfiguration.swift */; };
 		44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B71237185090024EFC1 /* LocalizationManager.swift */; };
 		44689B7423718CF90024EFC1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7323718CF80024EFC1 /* Logger.swift */; };
-		44689B772371DA6A0024EFC1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E110D236B3EA50005C9F9 /* Localizable.strings */; };
 		44689B7D237414850024EFC1 /* SPABData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7C237414850024EFC1 /* SPABData.swift */; };
+		44689B81237456850024EFC1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 448E110D236B3EA50005C9F9 /* Localizable.strings */; };
 		448E1116236C53BE0005C9F9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */; };
 		44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
 		44C8789523608BC100E0E662 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -338,8 +342,12 @@
 		44689B71237185090024EFC1 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		44689B7323718CF80024EFC1 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		44689B7C237414850024EFC1 /* SPABData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPABData.swift; sourceTree = "<group>"; };
+		44689B852374592F0024EFC1 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
+		44689B87237473E60024EFC1 /* Arial Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arial Bold.ttf"; sourceTree = "<group>"; };
+		44689B88237473E60024EFC1 /* Arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Arial.ttf; sourceTree = "<group>"; };
+		44689B89237473E60024EFC1 /* Arial Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arial Italic.ttf"; sourceTree = "<group>"; };
+		44689B8A237473E70024EFC1 /* Arial Bold Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arial Bold Italic.ttf"; sourceTree = "<group>"; };
 		448E110C236B3EA50005C9F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		448E1111236B3EF70005C9F9 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
 		44C8788D23608BC100E0E662 /* SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44C8793B23608E3500E0E662 /* SpotImCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotImCore.h; sourceTree = "<group>"; };
@@ -429,6 +437,7 @@
 		4454179F236850C0001D0ED0 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				44689B86237473D20024EFC1 /* Ariel */,
 				445417A0236850C0001D0ED0 /* Roboto */,
 				445417A4236850C0001D0ED0 /* OpenSans */,
 			);
@@ -921,6 +930,17 @@
 			path = Conversation;
 			sourceTree = "<group>";
 		};
+		44689B86237473D20024EFC1 /* Ariel */ = {
+			isa = PBXGroup;
+			children = (
+				44689B8A237473E70024EFC1 /* Arial Bold Italic.ttf */,
+				44689B87237473E60024EFC1 /* Arial Bold.ttf */,
+				44689B89237473E60024EFC1 /* Arial Italic.ttf */,
+				44689B88237473E60024EFC1 /* Arial.ttf */,
+			);
+			path = Ariel;
+			sourceTree = "<group>";
+		};
 		448E1117236C5D130005C9F9 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -1179,11 +1199,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44689B772371DA6A0024EFC1 /* Localizable.strings in Resources */,
+				4411659C2375822900B781F3 /* Arial Bold Italic.ttf in Resources */,
+				44689B81237456850024EFC1 /* Localizable.strings in Resources */,
 				445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */,
 				445417AA236850C0001D0ED0 /* OpenSans-RegularItalic.ttf in Resources */,
+				4411659D2375822900B781F3 /* Arial Bold.ttf in Resources */,
+				4411659E2375822900B781F3 /* Arial Italic.ttf in Resources */,
 				445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */,
 				445417A9236850C0001D0ED0 /* Roboto-Bold.ttf in Resources */,
+				4411659F2375822900B781F3 /* Arial.ttf in Resources */,
 				445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1473,7 +1497,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				448E110C236B3EA50005C9F9 /* en */,
-				448E1111236B3EF70005C9F9 /* he */,
+				44689B852374592F0024EFC1 /* he */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1567,7 +1591,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development: Alexander Kholodov (2GRWS2WKKA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1701,7 +1725,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Alexander Kholodov (8H4BKTJCC4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -1960,7 +1984,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development: Alexander Kholodov (2GRWS2WKKA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1986,7 +2010,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Alexander Kholodov (8H4BKTJCC4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";

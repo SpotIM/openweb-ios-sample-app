@@ -15,7 +15,7 @@ extension UINavigationBar {
         isTranslucent = false
         tintColor = .charcoalGrey
         titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.roboto(style: .medium, of: 20.0),
+            NSAttributedString.Key.font: UIFont.preferred(style: .medium, of: 20.0),
             NSAttributedString.Key.foregroundColor: UIColor.charcoalGrey
         ]
         barTintColor = barColor ?? .almostWhite
@@ -30,7 +30,7 @@ extension UINavigationBar {
         isTranslucent = false
         tintColor = .white
         titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.roboto(style: .medium, of: 20.0),
+            NSAttributedString.Key.font: UIFont.preferred(style: .medium, of: 20.0),
             NSAttributedString.Key.foregroundColor: UIColor.white
         ]
         barTintColor = barColor ?? .marineBlue

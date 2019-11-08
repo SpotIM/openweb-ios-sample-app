@@ -117,7 +117,7 @@ final class SPMainConversationFooterView: BaseView {
         labelContainer.addSubview(callToActionLabel)
 
         callToActionLabel.textColor = .spForeground2
-        callToActionLabel.font = UIFont.roboto(style: .regular, of: Theme.fontSize)
+        callToActionLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
         callToActionLabel.text = LocalizationManager.localizedString(key: "What do you think?")
         
         callToActionLabel.layout {
