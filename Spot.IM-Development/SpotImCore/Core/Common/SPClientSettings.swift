@@ -21,7 +21,6 @@ public struct SPClientSettings {
             
             SPDefaultConfigProvider.getConfig { (conf, _) in
                 SPConfigDataSource.config = conf
-                
             }
         }
     }

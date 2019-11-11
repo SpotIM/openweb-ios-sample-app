@@ -10,7 +10,7 @@
 import UIKit
 
 @IBDesignable
-internal class SPAnimatedButton: UIButton {
+internal class SPAnimatedButton: BaseButton {
     
     fileprivate var imageShape: CAShapeLayer!
     fileprivate var selectedImageShape: CAShapeLayer!
@@ -82,30 +82,19 @@ internal class SPAnimatedButton: UIButton {
         }
     }
     
-    public convenience init() {
-        self.init(frame: CGRect.zero)
-    }
-    
-    public override convenience init(frame: CGRect) {
+    override convenience init(frame: CGRect) {
         self.init(frame: frame, image: UIImage())
     }
     
-    public convenience init(frame: CGRect, image: UIImage!) {
+    convenience init(frame: CGRect, image: UIImage!) {
         self.init(frame: frame, image:image, selectedImage: UIImage())
     }
     
-    public init(frame: CGRect, image: UIImage!, selectedImage:UIImage!, buttonInset insets: UIEdgeInsets = .zero) {
+    init(frame: CGRect, image: UIImage!, selectedImage:UIImage!, buttonInset insets: UIEdgeInsets = .zero) {
         super.init(frame: frame)
         self.image = image
         self.selectedImage = selectedImage
         createLayers(image: image, selectedImage:selectedImage, buttonInset: insets)
-        addTargets()
-    }
-    
-    
-    public required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)!
-        createLayers(image: UIImage(), selectedImage: UIImage(), buttonInset: .zero)
         addTargets()
     }
     

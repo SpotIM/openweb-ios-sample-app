@@ -25,9 +25,9 @@ final class SPAvatarView: BaseView {
 
     weak var delegate: AvatarViewDelegate?
     
-    private let avatarImageView: UIImageView = .init()
-    private let onlineIndicatorView: UIView = .init()
-    private let avatarButton: UIButton = .init()
+    private let avatarImageView: BaseUIImageView = .init()
+    private let onlineIndicatorView: BaseView = .init()
+    private let avatarButton: BaseButton = .init()
 
     private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", for: .light) }
 
