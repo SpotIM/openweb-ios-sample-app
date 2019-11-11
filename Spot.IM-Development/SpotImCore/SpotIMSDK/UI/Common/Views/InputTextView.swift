@@ -48,7 +48,7 @@ final class InputTextView: BaseTextView {
         }
     }
     
-    private var placeholderLabel: UILabel?
+    private var placeholderLabel: BaseLabel?
 
     private func resizePlaceholder() {
         if let placeholderLabel = placeholderLabel {
@@ -62,7 +62,7 @@ final class InputTextView: BaseTextView {
     }
     
     private func addPlaceholder(_ placeholderText: String) {
-        placeholderLabel = UILabel()
+        placeholderLabel = BaseLabel()
         guard let placeholderLabel = placeholderLabel else { return }
         placeholderLabel.text = placeholderText
         placeholderLabel.sizeToFit()

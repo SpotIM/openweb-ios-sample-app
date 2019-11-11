@@ -17,10 +17,10 @@ internal protocol SPConversationSummaryViewDelegate: class {
 
 final class SPConversationSummaryView: BaseView {
 
-    private let commentsCountLabel: UILabel = .init()
-    private let separatorView: UIView = .init()
-    private let sortButton: UIButton = .init(type: .system)
-    private let newCommentsButton: UIButton = .init(type: .system)
+    private let commentsCountLabel: BaseLabel = .init()
+    private let separatorView: BaseView = .init()
+    private let sortButton: BaseButton = .init(type: .system)
+    private let newCommentsButton: BaseButton = .init(type: .system)
 
     internal var dropsShadow: Bool = false
     
@@ -110,7 +110,7 @@ extension SPConversationSummaryView {
         var inset: CGFloat = spacing / 2
         
         // Update insets in order to make additional space begween title and image
-        if LocalizationManager.currentLanguage?.isRightToLeft() ?? false {
+        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
             inset = -inset
         }
         

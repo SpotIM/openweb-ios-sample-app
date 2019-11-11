@@ -11,7 +11,7 @@ import UIKit
 class SPLoaderView: BaseView {
 
     private let loader: UIActivityIndicatorView = .init(style: .whiteLarge)
-    private let backgroundView: UIView = .init()
+    private let backgroundView: BaseView = .init()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

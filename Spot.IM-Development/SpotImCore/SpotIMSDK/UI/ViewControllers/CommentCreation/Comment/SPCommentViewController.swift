@@ -11,8 +11,8 @@ import UIKit
 final class SPCommentCreationViewController: CommentReplyViewController<SPCommentCreationModel> {
     
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
-    private let commentingOnLabel: UILabel = .init()
-    private let closeButton: UIButton = .init()
+    private let commentingOnLabel: BaseLabel = .init()
+    private let closeButton: BaseButton = .init()
 
     private var emptyArticleBottomConstarint: NSLayoutConstraint?
     private var filledArticleBottomConstarint: NSLayoutConstraint?
