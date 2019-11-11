@@ -17,7 +17,7 @@ protocol ArticleTableViewCellDelegate: class {
 
 class ArticleTableViewCell : UITableViewCell {
     
-    weak var delegate :ArticleTableViewCellDelegate?
+    weak var delegate: ArticleTableViewCellDelegate?
     
     var post : Post? {
         didSet {
@@ -30,7 +30,7 @@ class ArticleTableViewCell : UITableViewCell {
             card.subtitle = extract.description.truncated(limit: 100)
             
             if let url = URL(string: extract.thumbnailUrl) {
-                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(OverlayImageProcessor(overlay: .black))], progressBlock: nil) {[weak self] (image, err, cache, url) in
+                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(OverlayImageProcessor(overlay: .black))], progressBlock: nil) { [weak self] (image, err, cache, url) in
                     guard id == self?.post?.conversationId, let image = image else { return }
                     self?.card.backgroundImage = image
                 }

@@ -9,12 +9,12 @@
 import UIKit
 
 internal final class SPPreConversationHeaderView: BaseView {
-    private lazy var titleLabel: UILabel = .init()
-    private lazy var counterLabel: UILabel = .init()
+    private lazy var titleLabel: BaseLabel = .init()
+    private lazy var counterLabel: BaseLabel = .init()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        
         setup()
     }
 
