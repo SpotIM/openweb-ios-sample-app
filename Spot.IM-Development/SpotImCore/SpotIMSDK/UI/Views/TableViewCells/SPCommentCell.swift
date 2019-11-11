@@ -30,7 +30,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let userNameView: UserNameView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let headerView: UIView = .init()
+    private let headerView: BaseView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -50,7 +50,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     // MARK: - Init
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupUI()
@@ -95,7 +94,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
 
     private func configureHeaderView() {
-        let separatorView: UIView = .init()
+        let separatorView: BaseView = .init()
         
         separatorView.backgroundColor = .spSeparator
         headerView.addSubview(separatorView)

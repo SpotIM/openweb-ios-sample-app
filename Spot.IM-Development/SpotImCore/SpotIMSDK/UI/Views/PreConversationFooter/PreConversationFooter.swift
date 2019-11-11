@@ -18,14 +18,14 @@ protocol SPPreConversationFooterDelegate: class {
 
 internal final class SPPreConversationFooter: BaseView {
     
-    private lazy var separatorView: UIView = .init()
-    private lazy var showMoreCommentsButton: UIButton = .init(type: .system)
-    private lazy var termsButton: UIButton = .init(type: .system)
-    private lazy var dotLabel: UILabel = .init()
-    private lazy var privacyButton: UIButton = .init(type: .system)
-    private lazy var spotIMIcon: UIImageView = .init()
-    private lazy var addSpotIMButton: UIButton = .init(type: .system)
-    private lazy var bannerContainerView: UIView = .init()
+    private lazy var separatorView: BaseView = .init()
+    private lazy var showMoreCommentsButton: BaseButton = .init(type: .system)
+    private lazy var termsButton: BaseButton = .init(type: .system)
+    private lazy var dotLabel: BaseLabel = .init()
+    private lazy var privacyButton: BaseButton = .init(type: .system)
+    private lazy var spotIMIcon: BaseUIImageView = .init()
+    private lazy var addSpotIMButton: BaseButton = .init(type: .system)
+    private lazy var bannerContainerView: BaseView = .init()
     private var bannerView: UIView?
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
@@ -68,7 +68,6 @@ internal final class SPPreConversationFooter: BaseView {
                     privacyButton,
                     spotIMIcon,
                     addSpotIMButton)
-
         setupShowMoreCommentsButton()
         setupBannerView()
         setupTermsButton()

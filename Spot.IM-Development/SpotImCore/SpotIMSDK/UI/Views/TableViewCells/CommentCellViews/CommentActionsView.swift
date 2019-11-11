@@ -14,9 +14,9 @@ final class CommentActionsView: BaseView {
     weak var delegate: CommentActionsDelegate?
 
     private let replyDefaultTitle: String
-    private let replyButton: UIButton = .init()
-    private let rankUpLabel: UILabel = .init()
-    private let rankDownLabel: UILabel = .init()
+    private let replyButton: BaseButton = .init()
+    private let rankUpLabel: BaseLabel = .init()
+    private let rankDownLabel: BaseLabel = .init()
 
     private lazy var rankUpButton: SPAnimatedButton = initializeRankUpButton()
     private lazy var rankDownButton: SPAnimatedButton = initializeRankDownButton()
