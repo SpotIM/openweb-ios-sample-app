@@ -15,8 +15,8 @@ internal final class ShowMoreRepliesView: BaseView {
     var expandedTitle: String?
 
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
-    private let showHideRepliesButton: UIButton = .init()
-    private let disclosureIndicator: UIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon"))
+    private let showHideRepliesButton: BaseButton = .init()
+    private let disclosureIndicator: BaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon"))
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -74,7 +74,7 @@ internal final class ShowMoreRepliesView: BaseView {
             $0.trailing.equal(to: trailingAnchor)
         }
         
-        if LocalizationManager.currentLanguage?.isRightToLeft() ?? false {
+        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
             showHideRepliesButton.contentEdgeInsets.left += activityIndicator.frame.width + Theme.activityOffset
         } else {
             showHideRepliesButton.contentEdgeInsets.right += activityIndicator.frame.width + Theme.activityOffset
