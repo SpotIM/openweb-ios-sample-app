@@ -6,15 +6,20 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 enum SupportedLanguage: String {
     case hebrew = "he"
     case english = "en"
     
-    func isRightToLeft() -> Bool {
+    var isRightToLeft: Bool {
         return self == .hebrew
     }
+    
+    var customSemanticAttribute: UISemanticContentAttribute {
+        return isRightToLeft ? .forceRightToLeft : .forceLeftToRight
+    }
+    
 }
 
 public struct InputConfiguration {

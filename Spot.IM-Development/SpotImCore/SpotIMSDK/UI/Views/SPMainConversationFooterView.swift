@@ -16,15 +16,14 @@ internal protocol SPMainConversationFooterViewDelegate: class {
 
 final class SPMainConversationFooterView: BaseView {
     
-
     private let cache = NSCache<NSString, UIImage>()
-    private let callToActionLabel: UILabel = .init()
+    private let callToActionLabel: BaseLabel = .init()
     private let userAvatarView: SPAvatarView = .init()
-    private let labelContainer: UIView = .init()
-    private let button: UIButton = .init(type: .system)
+    private let labelContainer: BaseView = .init()
+    private let button: BaseButton = .init()
     
-    private lazy var separatorView: UIView = .init()
-    private lazy var bannerContainerView: UIView = .init()
+    private lazy var separatorView: BaseView = .init()
+    private lazy var bannerContainerView: BaseView = .init()
     
     private var bannerView: UIView?
     private var bannerContainerHeight: NSLayoutConstraint?
@@ -115,7 +114,6 @@ final class SPMainConversationFooterView: BaseView {
         labelContainer.layer.borderWidth = 1.0
         labelContainer.addCornerRadius(6.0)
         labelContainer.addSubview(callToActionLabel)
-
         callToActionLabel.textColor = .spForeground2
         callToActionLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
         callToActionLabel.text = LocalizationManager.localizedString(key: "What do you think?")

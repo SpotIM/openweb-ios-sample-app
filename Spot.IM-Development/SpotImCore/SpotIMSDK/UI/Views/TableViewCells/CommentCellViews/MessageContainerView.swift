@@ -11,7 +11,7 @@ import UIKit
 final class MessageContainerView: BaseView {
     
     weak var delegate: MessageContainerViewDelegate?
-    private let mainTextLabel: UILabel = .init()
+    private let mainTextLabel: BaseLabel = .init()
     private var activeURLs: [NSRange: URL] = [:]
     
     override init(frame: CGRect) {

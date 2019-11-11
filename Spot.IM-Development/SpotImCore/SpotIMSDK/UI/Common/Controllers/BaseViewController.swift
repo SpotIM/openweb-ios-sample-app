@@ -8,8 +8,8 @@ import UIKit
 internal class BaseViewController: UIViewController {
     
     var userRightBarItem: UIBarButtonItem?
-    var userIcon: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+    var userIcon: BaseButton = {
+        let button = BaseButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
         button.backgroundColor = .white
         button.makeViewRound()
         button.contentMode = .scaleAspectFill
@@ -21,6 +21,8 @@ internal class BaseViewController: UIViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
 
+        view.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
+        ?? view.semanticContentAttribute
         edgesForExtendedLayout = []
         overrideInterfaceStyleIfNeeded()
     }

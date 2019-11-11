@@ -28,14 +28,14 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
-    let topContainerView: UIView = .init()
+    let topContainerView: BaseView = .init()
     let textInputViewContainer: SPTextInputView = .init()
     
     let activityIndicator: SPLoaderView = SPLoaderView()
     
-    private let mainContainerView: UIView = .init()
-    private let postButton: UIButton = .init(type: .system)
-    private let scrollView: UIScrollView = .init()
+    private let mainContainerView: BaseView = .init()
+    private let postButton: BaseButton = .init()
+    private let scrollView: BaseScrollView = .init()
     
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?

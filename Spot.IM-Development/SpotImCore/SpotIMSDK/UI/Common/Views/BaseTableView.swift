@@ -1,22 +1,20 @@
 //
-//  BaseView.swift
-//  Spot.IM-Core
+//  BaseTableView.swift
+//  SpotImCore
 //
-//  Created by Eugene on 8/1/19.
+//  Created by Eugene on 11.11.2019.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
 import UIKit
 
-internal class BaseView: UIView {
+class BaseTableView: UITableView {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
         
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
-            ?? semanticContentAttribute
-        backgroundColor = .spBackground0
-        translatesAutoresizingMaskIntoConstraints = false
+        ?? semanticContentAttribute
     }
     
     @available(*,

@@ -35,10 +35,6 @@ final class LocalizationManager {
         isConfigured = true
         currentLanguage = config.language
         locale = config.locale
-        
-        UIView.appearance().semanticContentAttribute = config.language.isRightToLeft() ?
-            .forceRightToLeft :
-            .forceLeftToRight
     }
     
     /// Update with locale from server config

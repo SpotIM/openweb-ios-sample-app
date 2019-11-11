@@ -10,7 +10,7 @@ import UIKit
 
 internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable {
 
-    internal lazy var tableView = UITableView(frame: .zero, style: .grouped)
+    internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
     internal weak var delegate: SPCommentsCreationDelegate?
     internal var stateActionView: SPEmptyConversationActionView?
     
@@ -29,7 +29,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
 
     internal init(model: SPMainConversationModel) {
         self.model = model
-        
+
         super.init()
     }
 
