@@ -1,30 +1,21 @@
-/*
-  Localizable.strings
-  Spot-IM.Development
-
-  Created by Eugene on 31.10.2019.
-  Copyright © 2019 Spot.IM. All rights reserved.
-*/
-
 "Days" = "ימים";
 "Hours" = "שעות";
 "Minutes" = "דק׳";
 "To" = "ל";
-
+"Just now" = "כרגע";
+"Conversation" = "שיחה";
 "Add a Comment" = "Add a Comment";
 "Add a Reply" = "Add a Reply";
 "Please provide Spot Key" = "Please provide Spot Key";
 "Please provide Code B" = "Please provide Code B";
 "Authentication error" = "Authentication error";
 "Empty response" = "Empty response";
-
 "Comment reported successfully" = ".ההודעה דווחה בהצלחה";
 "Copy Comment to Clipboard" = "העתק את התגובה ללוח ";
 "Sort By" = "סנן לפי";
 "The text you entered might be deleted if not published." = ".במידה ולא יפורסם, הטקסט שכתבת עלול להימחק";
 "It seems we are experiencing technical issues. Please try again" = "נסה שוב עוד כמה דקות.";
 "The Internet connection appears to be offline." = "אופססס! נראה שאנו חווים בעיה בתקשורת";
-"Conversation" = "שיחה";
 "Best" = "הטוב ביותר";
 "Newest" = "החדש ביותר";
 "Oldest" = "הישן ביותר";
@@ -84,4 +75,3 @@
 "NEW" = "החדש ביותר";
 "Comments" = "תגובות";
 "Comment" = "תגובות";
-;"כרגע" = "Just Now"
