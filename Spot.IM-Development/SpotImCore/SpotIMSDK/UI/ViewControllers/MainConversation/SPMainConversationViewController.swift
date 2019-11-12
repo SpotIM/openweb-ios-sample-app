@@ -72,7 +72,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
+        if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
+            SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
+            SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
+        }
 
         updateHeaderUI()
         configureModelHandlers()
