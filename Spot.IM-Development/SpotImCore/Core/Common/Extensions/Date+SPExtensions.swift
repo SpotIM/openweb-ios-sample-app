@@ -53,7 +53,7 @@ extension Date {
         case (_, let day, _, _, _)      where day > 0:      return "\(day)" + LocalizationManager.localizedString(key: "Days")
         case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)" + LocalizationManager.localizedString(key: "Hours")
         case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)" + LocalizationManager.localizedString(key: "Minutes")
-        case (_, _, _, _, let second)   where second >= 0:  return LocalizationManager.localizedString(key: "Just Now")
+        case (_, _, _, _, let second)   where second >= 0:  return LocalizationManager.localizedString(key: "Just now")
         default:                                            return Date.formatter.string(from: self)
         }
     }

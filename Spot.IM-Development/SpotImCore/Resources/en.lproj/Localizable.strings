@@ -1,10 +1,8 @@
-/* 
-  Localizable.strings
-  Spot-IM.Development
-
-  Created by Eugene on 31.10.2019.
-  Copyright © 2019 Spot.IM. All rights reserved.
-*/
+"Days" = "d";
+"Hours" = "h";
+"Minutes" = "m";
+"To" = "to";
+"Just now" = "Just now";
 "Conversation" = "Conversation";
 "Add a Comment" = "Add a Comment";
 "Add a Reply" = "Add a Reply";
@@ -52,7 +50,6 @@
 "Your comment has been rejected" = "Your comment has been rejected";
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "It seems like your comment has violated our policy. We recommend you try again with different phrasing.";
 "Comment reported successfully" = "Comment reported successfully";
-"Reporting this comment will send it for review and hide it from your view" = "Reporting this comment will send it for review and hide it from your view";
 "Got it" = "Got it";
 "Be the first to comment" = "Be the first to comment";
 "Sort By" = "Sort By";
@@ -78,8 +75,3 @@
 "NEW" = "NEW";
 "Comments" = "Comments";
 "Comment" = "Comment";
-"Just Now" = "Just now";
-"Days" = "d";
-"Hours" = "h";
-"Minutes" = "m";
-"To" = "to";
