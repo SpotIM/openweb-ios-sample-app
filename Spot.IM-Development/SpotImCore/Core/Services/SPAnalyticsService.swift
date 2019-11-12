@@ -17,6 +17,7 @@ internal protocol SPAnalyticsService {
     var totalComments: Int? { get set }
     var domain: String? { get set }
     var pageViewId: String { get }
+    var lastRecordedMainViewedPageViewId: String { get set }
 
     func prepareForNewPage()
     func log(event: SPAnalyticsEvent, source: SPAnSource)
@@ -46,7 +47,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     internal var totalComments: Int?
     internal var domain: String?
     private (set) var pageViewId: String = UUID().uuidString
-
+    public var lastRecordedMainViewedPageViewId: String = ""
+    
     private var didLogLoadedConversation = false
 
     func log(event: SPAnalyticsEvent, source: SPAnSource) {
