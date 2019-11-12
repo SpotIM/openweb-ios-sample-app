@@ -1,10 +1,8 @@
-/* 
-  Localizable.strings
-  Spot-IM.Development
-
-  Created by Eugene on 31.10.2019.
-  Copyright © 2019 Spot.IM. All rights reserved.
-*/
+"Just now" = "Just now";
+"Days" = "d";
+"Hours" = "h";
+"Minutes" = "m";
+"To" = "to";
 "Conversation" = "Conversation";
 "Add a Comment" = "Add a Comment";
 "Add a Reply" = "Add a Reply";
@@ -78,8 +76,3 @@
 "NEW" = "NEW";
 "Comments" = "Comments";
 "Comment" = "Comment";
-"Just Now" = "Just now";
-"Days" = "d";
-"Hours" = "h";
-"Minutes" = "m";
-"to" = "to";

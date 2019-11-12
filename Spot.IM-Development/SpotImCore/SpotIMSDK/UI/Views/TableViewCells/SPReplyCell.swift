@@ -89,7 +89,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? ""
-                : LocalizationManager.localizedString(key: "to") + " \(dataModel.replyingToDisplayName!)"
+                : LocalizationManager.localizedString(key: "To") + " \(dataModel.replyingToDisplayName!)"
         )
         userNameView.setDate(
             dataModel.replyingToDisplayName?.isEmpty ?? true
