@@ -24,4 +24,20 @@ internal extension UIDevice {
         }
     }
 
+    func deviceTypeXPlatformHeader() -> String {
+        switch self.userInterfaceIdiom {
+        case .unspecified:
+            return "ios_unspecified"
+        case .phone:
+            return "ios_phone"
+        case .pad:
+            return "ios_tablet"
+        case .tv:
+            return "ios_tv"
+        case .carPlay:
+            return "ios_car"
+        @unknown default:
+            return "unsuppoted new value " + String(self.userInterfaceIdiom.rawValue)
+        }
+    }
 }

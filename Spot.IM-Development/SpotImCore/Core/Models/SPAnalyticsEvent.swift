@@ -17,6 +17,7 @@ internal enum SPAnalyticsEvent: Equatable {
         messageId: String,
         userId: String
     )
+    case myProfileClicked(messageId: String, userId: String)
     case loginClicked(SPAnLoginTargetType)          
     case reading(Int)                               
     case loadMoreRepliesClicked(                    
@@ -37,6 +38,8 @@ internal enum SPAnalyticsEvent: Equatable {
         relatedMessage: String?
     )
     case backClicked(SPAnScreenTargetType)          // ⏳
+    case deleteMessage
+    case shareMessage
 
     var kebabValue: String {
         switch self {
@@ -50,6 +53,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "message-context-menu-clicked"
         case .userProfileClicked:
             return "user-profile-clicked"
+        case .myProfileClicked:
+            return "my-profile-clicked"
         case .loginClicked:
             return "login-clicked"
         case .reading:
@@ -70,6 +75,10 @@ internal enum SPAnalyticsEvent: Equatable {
             return "create-message-clicked"
         case .backClicked:
             return "back-clicked"
+        case .deleteMessage:
+            return "delete-message-clicked"
+        case .shareMessage:
+            return "share-message-clicked"
         }
     }
 }
