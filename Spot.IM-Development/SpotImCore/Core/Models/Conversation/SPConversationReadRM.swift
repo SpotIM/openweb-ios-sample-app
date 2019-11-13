@@ -12,4 +12,5 @@ internal struct SPConversationReadRM: Decodable {
     let user: SPUser?
     let extractData: SPConversationExtraDataRM?
     let conversation: SPConversation?
+    let abData: [SPABData]?
 }

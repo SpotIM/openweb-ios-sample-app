@@ -218,7 +218,7 @@ extension CommentReplyViewController {
     }
     private func updatePostButton() {
         var postButtonTitle: String = LocalizationManager.localizedString(key: "Post")
-        if let config = SPConfigDataSource.config,
+        if let config = SPConfigsDataSource.appConfig,
             config.initialization?.policyForceRegister == true,
             SPUserSessionHolder.session.user?.registered == false {
             postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
@@ -235,7 +235,7 @@ extension CommentReplyViewController {
         postButton.backgroundColor = .brandColor
         
         postButton.isEnabled = false
-        postButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.postButtonFontSize)
+        postButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.postButtonFontSize)
         postButton.contentEdgeInsets = UIEdgeInsets(
             top: 0.0,
             left: Theme.postButtonHorizontalInset,

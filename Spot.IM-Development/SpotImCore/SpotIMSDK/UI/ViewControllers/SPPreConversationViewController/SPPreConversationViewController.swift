@@ -13,8 +13,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     var adsProvider: AdsProvider? {
         didSet {
             adsProvider?.delegate = self
-            adsProvider?.setupAdsBanner(with: "/6499/example/banner", in: self)
-            adsProvider?.setupInterstitial(with: "/6499/example/interstitial")
         }
     }
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
@@ -135,7 +133,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func loadConversation() {
         guard !model.dataSource.isLoading else { return }
 
-        let sortModeRaw = SPConfigDataSource.config?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
+        let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
         let sortMode = SPCommentSortMode(rawValue: sortModeRaw) ?? .initial
         model.dataSource.conversation(
             sortMode,
@@ -155,6 +153,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     // TODO: (Fedin) show alert with unknown error
                     // print("show error here")
                 } else {
+                    self.checkAdsAvailability()
                     SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
                     if self.model.areCommentsEmpty() {
                         self.showEmptyStateView()
@@ -249,17 +248,38 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func removeSectionAt(index: Int) {
         tableView.reloadData()
     }
-
-    private func didTapComment(with indexPath: IndexPath) {
-        let commentId = model.dataSource.clippedCellData(for: indexPath)?.commentId
-        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
+    
+    override func checkAdsAvailability() {
+        guard
+            let adsConfig = SPConfigsDataSource.adsConfig,
+            let tags = adsConfig.tags,
+            model.adsGroup() != nil
+            else { return }
+        
+        for tag in tags {
+            guard let adsId = tag.code else { break }
+            switch tag.adType {
+            case .banner:
+                adsProvider?.setupAdsBanner(with: adsId, in: self)
+            case .interstitial:
+                adsProvider?.setupInterstitial(with: adsId)
+            default:
+                break
+            }
+        }
     }
-
+    
     override func handleCommentSizeChange() {
         super.handleCommentSizeChange()
         
         updateTableViewHeightIfNeeded(animated: true)
     }
+    
+    private func didTapComment(with indexPath: IndexPath) {
+        let commentId = model.dataSource.clippedCellData(for: indexPath)?.commentId
+        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
+    }
+    
 }
 
 // MARK: - Extensions
@@ -284,9 +304,9 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     
     func showMoreComments() {
         if let adsProvider = adsProvider,
-            SPUserSessionHolder.session.user?.abTestGroup == .second,
+            model.adsGroup() == .second,
             AdsManager.shouldShowInterstitial,
-            adsProvider.showInterstitial(in: self){
+            adsProvider.showInterstitial(in: self) {
         } else {
             preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
         }

@@ -28,7 +28,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     var adsProvider: AdsProvider? {
         didSet {
             adsProvider?.delegate = self
-            adsProvider?.setupAdsBanner(with: "/6499/example/banner", in: self)
         }
     }
         
@@ -77,10 +76,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
         }
 
+        checkAdsAvailability()
         updateHeaderUI()
         configureModelHandlers()
         setupUserIconHandler()
-
+    
         tableHeader.setAuthor(model.dataSource.conversationPublisherName)
 
         // for case when there are no data passed from the pre-conversation screen
@@ -282,6 +282,24 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         }
     }
 
+    override func checkAdsAvailability() {
+        guard
+            let adsConfig = SPConfigsDataSource.adsConfig,
+            let tags = adsConfig.tags,
+            model.adsGroup() != nil
+            else { return }
+        
+        for tag in tags {
+            guard let adsId = tag.code else { break }
+            switch tag.adType {
+            case .banner:
+                adsProvider?.setupAdsBanner(with: adsId, in: self)
+            default:
+                break
+            }
+        }
+    }
+    
     private func setupFooterView() {
         view.bringSubviewToFront(footer)
         footer.updateOnlineStatus(.online)
@@ -509,7 +527,7 @@ extension SPMainConversationViewController: AdsProviderDelegate {
     func bannerAdDidLoad(adBannerSize: CGSize) {
         guard
             let bannerView = adsProvider?.bannerView,
-            SPUserSessionHolder.session.user?.abTestGroup == .third
+            model.adsGroup() == .third
             else { return }
         
         footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0

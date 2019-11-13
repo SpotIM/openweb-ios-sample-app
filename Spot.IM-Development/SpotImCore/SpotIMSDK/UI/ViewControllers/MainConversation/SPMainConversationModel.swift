@@ -24,6 +24,7 @@ let navigationAvatarSize: CGSize = CGSize(width: 25.0, height: 25.0)
 
 final class SPMainConversationModel {
     
+    private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"
     private let commentUpdater: SPCommentUpdater
     private let imageProvider: SPImageURLProvider
     
@@ -181,6 +182,13 @@ final class SPMainConversationModel {
 
         return (isDeletable, isEditable, isReportable)
     }
+    
+    func adsGroup() -> ABGroup? {
+        return dataSource.abData?
+            .first(where: { $0.testName == CURRENT_ADS_GROUP_TEST_NAME })?
+            .abTestGroup
+    }
+    
 }
 
 extension SPMainConversationModel {

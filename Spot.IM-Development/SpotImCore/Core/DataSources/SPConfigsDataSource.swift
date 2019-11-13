@@ -1,5 +1,5 @@
 //
-//  SPConfigDataSource.swift
+//  SPConfigsDataSource.swift
 //  Spot.IM-Core
 //
 //  Created by Andriy Fedin on 16/08/19.
@@ -8,14 +8,16 @@
 
 import Foundation
 
-internal final class SPConfigDataSource {
+internal final class SPConfigsDataSource {
 
-    static var config: SPSpotConfiguration? {
+    static var appConfig: SPSpotConfiguration? {
         didSet {
             NotificationCenter.default.post(name: .spotIMConfigLoaded, object: nil)
-            SPAnalyticsHolder.default.domain = config?.initialization?.websiteUrl
+            SPAnalyticsHolder.default.domain = appConfig?.initialization?.websiteUrl
         }
     }
+    
+    static var adsConfig: SPAdsConfiguration?
 }
 
 public extension NSNotification.Name {
