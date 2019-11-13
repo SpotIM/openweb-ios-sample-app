@@ -7,19 +7,15 @@ In this repository:
 This project is for Spot.IM iOS SDK development.
 
 #### To run Spot.IM-Development:
-1. Add spotim-ios-sdk ([from here](https://github.com/SpotIM/spotim-ios-sdk)) as a subfolder to Spot.IM-Development folder
-2. Install pods (`pod install` in terminal) in the framework folder (spotim-ios-sdk) 
-3. Install pods in the Spot.IM-Development folder
-4. Open the workspace, not the project
-5. Check Pods framework
-    1. Go to Spot.IM-Core target of the Spot.IM-Core.xcodeproj
-    2. Build Phases tab
-    3. Link Binary With Libraries section
-    4. Make sure there’s Pods_Spot_IM_Development.framework added (not Pods_Spot_IM_Core.framework)
-    5. If it's not the case, replace it (it's in the folder)
-6. Run Spot-IM.Development target
+1. SpotImSDK is embeded framework in Spot.IM-Developmen project
+2. Install pods in the Spot.IM-Development folder
+3. Open the workspace, not the project
+4. Run Spot-IM.Development target for app without monetization or  Spot-IM.DevelopmentWithAds one for app with 
+monetization
 
 ## Spot.IM-Example.DND
+**This approach is unavailable right now because of `Alamofire` cocoapod dependency**
+
 This is an example of a project that uses Spot.IM iOS SDK binary (.framework) via **drag'n'drop**.
 
 #### To run Spot.IM-Example.DND:

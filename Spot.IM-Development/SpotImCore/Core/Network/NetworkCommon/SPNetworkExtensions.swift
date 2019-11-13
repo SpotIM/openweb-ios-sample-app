@@ -36,7 +36,7 @@ internal extension HTTPHeaders {
         return ["Content-Type": "application/json",
                 "x-spot-id": spotId,
                 "x-post-id": postId,
-                "x-platform": "ios",
+                "x-platform": UIDevice.current.deviceTypeXPlatformHeader(),
                 "x-moblie-gw-version": "v1.0.0",
                 "x-platform-version": iosVersion,
                 "x-sdk-version": frameworkVersion,
