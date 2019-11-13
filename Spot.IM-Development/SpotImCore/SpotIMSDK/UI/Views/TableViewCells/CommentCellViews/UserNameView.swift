@@ -16,14 +16,14 @@ internal final class UserNameView: BaseView {
 
     weak var delegate: UserNameViewDelegate?
 
-    private let userNameLabel: UILabel = .init()
-    private let subtitleLabel: UILabel = .init()
-    private let dateLabel: UILabel = .init()
-    private let leaderBadge: UIImageView = .init()
-    private let badgeTagLabel: UILabel = .init()
-    private let moreButton: UIButton = .init()
-    private let userNameButton: UIButton = .init()
-    private let deletedMessageLabel: UILabel = .init()
+    private let userNameLabel: BaseLabel = .init()
+    private let subtitleLabel: BaseLabel = .init()
+    private let dateLabel: BaseLabel = .init()
+    private let leaderBadge: BaseUIImageView = .init()
+    private let badgeTagLabel: BaseLabel = .init()
+    private let moreButton: BaseButton = .init()
+    private let userNameButton: BaseButton = .init()
+    private let deletedMessageLabel: BaseLabel = .init()
 
     private var subtitleToNameConstraint: NSLayoutConstraint?
 
@@ -107,6 +107,8 @@ internal final class UserNameView: BaseView {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.updateAlignment()
+        
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
             .foregroundColor: UIColor.spForeground3,
@@ -115,10 +117,7 @@ internal final class UserNameView: BaseView {
         ]
 
         deletedMessageLabel.attributedText = NSAttributedString(
-            string: NSLocalizedString(
-                "This message was deleted.",
-                comment: "deleted message"
-            ),
+            string: LocalizationManager.localizedString(key: "This message was deleted."),
             attributes: attributes
         )
     }

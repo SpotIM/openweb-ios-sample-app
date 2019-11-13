@@ -36,10 +36,10 @@ internal final class SPDefaultFailureReporter {
             .responseJSON { response in
                 switch response.result {
                 case .success(let result):
-                    print(result)
-                    
+                    Logger.verbose("\(result)")
+
                 case .failure(let error):
-                    print(error)
+                    Logger.error(error)
                 }
             }
     }

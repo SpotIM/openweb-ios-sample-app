@@ -53,10 +53,12 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private var shouldAddMain: Bool = false
     private var conversationModel: SPMainConversationModel!
     private let adsManager: AdsManager
-
-    public init(delegate: SpotImSDKNavigationDelegate) {
+    
+    ///If inputConfiguration parameter is nil Localization settings will be taken from server config
+    public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration? = nil) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager()
+        LocalizationManager.updateLocalizationConfiguration(inputConfiguration)
     }
 
     /// Please, provide container (UINavigationViewController) for sdk flows
@@ -67,6 +69,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         
         if let config = SPConfigDataSource.config {
             if config.mobileSdk?.enabled ?? false {
+                LocalizationManager.setLocale(config.mobileSdk?.locale)
                 completion(buildPreConversationController(with: postId))
             }
         } else {
@@ -85,6 +88,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private func respondToConfigUpdate() {
         if let config = SPConfigDataSource.config, (config.mobileSdk?.enabled ?? false), let postId = postId {
             configCompletion?(buildPreConversationController(with: postId))
+            LocalizationManager.setLocale(config.mobileSdk?.locale)
         }
 
         self.postId = nil
@@ -123,9 +127,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
-
-        controller.title = NSLocalizedString("Conversation",
-                                             comment: "Main Conversation screen title")
+        
+        controller.title = LocalizationManager.localizedString(key: "Conversation")
         localCommentReplyDidCreate = { comment in
             model.pendingComment = comment
         }
@@ -180,7 +183,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         let controller = SPCommentCreationViewController()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
-        controller.title = NSLocalizedString("Add a Comment", comment: "comment title")
+        
         let model = SPCommentCreationModel(commentCreationDTO: dataModel.dataSource.commentCreationModel(),
                                            cacheService: commentsCacheService,
                                            imageProvider: imageProvider)
@@ -193,7 +196,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         let controller = SPReplyCreationViewController()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
-        controller.title = NSLocalizedString("Add a Reply", comment: "reply title")
+        
         let model = SPReplyCreationModel(replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
                                          cacheService: commentsCacheService,
                                          imageProvider: imageProvider)

@@ -70,15 +70,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
         if let repliesCount = repliesCount, repliesCount == 1 {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Reply",
-                                                               comment: "Reply button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Reply",
-                                                              comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Reply")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Reply")
         } else {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Replies",
-                                                               comment: "Replies button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Replies",
-                                                              comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Replies")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Replies")
         }
     }
     
@@ -93,7 +89,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? ""
-                : "to \(dataModel.replyingToDisplayName!)"
+                : LocalizationManager.localizedString(key: "To") + " \(dataModel.replyingToDisplayName!)"
         )
         userNameView.setDate(
             dataModel.replyingToDisplayName?.isEmpty ?? true
@@ -191,6 +187,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.updateAlignment()
+
         
         var attributes: [NSAttributedString.Key: Any]
         if isDeleted {
@@ -258,7 +256,11 @@ extension SPReplyCell: ShowMoreRepliesViewDelegate {
 }
 
 extension SPReplyCell: MessageContainerViewDelegate {
-
+    
+    func urlTappedInMessageContainer(view: MessageContainerView, url: URL) {
+        UIApplication.shared.open(url)
+    }
+    
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
     }

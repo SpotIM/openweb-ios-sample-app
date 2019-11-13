@@ -13,10 +13,10 @@ final class CommentActionsView: BaseView {
 
     weak var delegate: CommentActionsDelegate?
 
-    private let replyDefaultTitle = NSLocalizedString("Reply", comment: "Comment reply button title")
-    private let replyButton: UIButton = .init()
-    private let rankUpLabel: UILabel = .init()
-    private let rankDownLabel: UILabel = .init()
+    private let replyDefaultTitle: String
+    private let replyButton: BaseButton = .init()
+    private let rankUpLabel: BaseLabel = .init()
+    private let rankDownLabel: BaseLabel = .init()
 
     private lazy var rankUpButton: SPAnimatedButton = initializeRankUpButton()
     private lazy var rankDownButton: SPAnimatedButton = initializeRankDownButton()
@@ -30,6 +30,8 @@ final class CommentActionsView: BaseView {
     }
 
     override init(frame: CGRect) {
+        replyDefaultTitle = LocalizationManager.localizedString(key: "Reply")
+        
         super.init(frame: frame)
 
         clipsToBounds = true

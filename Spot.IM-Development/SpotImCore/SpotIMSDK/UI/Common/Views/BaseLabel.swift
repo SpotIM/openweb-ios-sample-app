@@ -1,22 +1,20 @@
 //
-//  BaseView.swift
-//  Spot.IM-Core
+//  BaseLabel.swift
+//  SpotImCore
 //
-//  Created by Eugene on 8/1/19.
+//  Created by Eugene on 11.11.2019.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
 import UIKit
 
-internal class BaseView: UIView {
+class BaseLabel: UILabel {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
-            ?? semanticContentAttribute
-        backgroundColor = .spBackground0
-        translatesAutoresizingMaskIntoConstraints = false
+        ?? semanticContentAttribute
     }
     
     @available(*,
@@ -27,4 +25,5 @@ internal class BaseView: UIView {
     public init?(coder aDecoder: NSCoder) {
         fatalError("Loading this view from a nib is unsupported in this project")
     }
+    
 }

@@ -9,9 +9,12 @@
 import UIKit
 
 extension Bundle {
-    static let spot = Bundle(identifier: "im.spot.Spot-IM-Core.SpotImCore")
+    static let spot = Bundle(for: BundleToken.self)
     
     func shortVersion() -> String? {
         return self.infoDictionary?["CFBundleShortVersionString"] as? String
     }
 }
+
+
+private final class BundleToken {}

@@ -31,19 +31,16 @@ extension SPNetworkError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .default:
-            return NSLocalizedString("It seems we are experiencing technical issues. Please try again",
-                                     comment: "default error")
+            return LocalizationManager.localizedString(key: "It seems we are experiencing technical issues. Please try again")
             
         case .emptyResponse:
-            return NSLocalizedString("Empty response",
-                                     comment: "Unknown networking error")
+            return LocalizationManager.localizedString(key: "Empty response")
             
         case .custom(let description):
             return description
             
         case .noInternet:
-            return NSLocalizedString("The Internet connection appears to be offline.",
-                                     comment: "No internet")
+            return LocalizationManager.localizedString(key: "The Internet connection appears to be offline.")
         }
     }
 }

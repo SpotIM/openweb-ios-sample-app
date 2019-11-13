@@ -18,14 +18,14 @@ protocol SPPreConversationFooterDelegate: class {
 
 internal final class SPPreConversationFooter: BaseView {
     
-    private lazy var separatorView: UIView = .init()
-    private lazy var showMoreCommentsButton: UIButton = .init(type: .system)
-    private lazy var termsButton: UIButton = .init(type: .system)
-    private lazy var dotLabel: UILabel = .init()
-    private lazy var privacyButton: UIButton = .init(type: .system)
-    private lazy var spotIMIcon: UIImageView = .init()
-    private lazy var addSpotIMButton: UIButton = .init(type: .system)
-    private lazy var bannerContainerView: UIView = .init()
+    private lazy var separatorView: BaseView = .init()
+    private lazy var showMoreCommentsButton: BaseButton = .init(type: .system)
+    private lazy var termsButton: BaseButton = .init(type: .system)
+    private lazy var dotLabel: BaseLabel = .init()
+    private lazy var privacyButton: BaseButton = .init(type: .system)
+    private lazy var spotIMIcon: BaseUIImageView = .init()
+    private lazy var addSpotIMButton: BaseButton = .init(type: .system)
+    private lazy var bannerContainerView: BaseView = .init()
     private var bannerView: UIView?
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
@@ -68,7 +68,6 @@ internal final class SPPreConversationFooter: BaseView {
                     privacyButton,
                     spotIMIcon,
                     addSpotIMButton)
-
         setupShowMoreCommentsButton()
         setupBannerView()
         setupTermsButton()
@@ -97,7 +96,9 @@ internal final class SPPreConversationFooter: BaseView {
             $0.height.equal(to: 1.0)
         }
         
-        let title = NSLocalizedString("SHOW MORE COMMENTS", comment: "Pre-conversation footer button")
+        
+        let title = LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
+
         showMoreCommentsButton.backgroundColor = .brandColor
         showMoreCommentsButton.setTitle(title, for: .normal)
         showMoreCommentsButton.setTitleColor(.white, for: .normal)
@@ -123,7 +124,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
     
     private func setupTermsButton() {
-        let title = NSLocalizedString("Terms", comment: "Pre-conversation footer button")
+        let title = LocalizationManager.localizedString(key: "Terms")
         termsButton.setTitle(title, for: .normal)
         termsButton.setTitleColor(.coolGrey, for: .normal)
         termsButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
@@ -147,7 +148,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
 
     private func setupPrivacyButton() {
-        let title = NSLocalizedString("Privacy", comment: "Pre-conversation footer button")
+        let title = LocalizationManager.localizedString(key: "Privacy")
         privacyButton.setTitle(title, for: .normal)
         privacyButton.setTitleColor(.coolGrey, for: .normal)
         privacyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
@@ -170,7 +171,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
 
     private func setupAddSpotIMButton() {
-        let title = NSLocalizedString("Add Spot.IM to your app", comment: "Pre-conversation footer button")
+        let title = LocalizationManager.localizedString(key: "Add Spot.IM to your app")
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
         addSpotIMButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)

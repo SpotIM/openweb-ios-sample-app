@@ -50,7 +50,7 @@ extension AlertPresentable where Self: UIViewController {
             }
         } else {
             let defaultAction = UIAlertAction(
-                title: NSLocalizedString("OK", comment: "default ok"),
+                title: LocalizationManager.localizedString(key: "OK"),
                 style: .default)
             alert.addAction(defaultAction)
         }
@@ -58,12 +58,12 @@ extension AlertPresentable where Self: UIViewController {
         present(alert, animated: true, completion: completion)
     }
     
-    func showToast(message: String, delay: Double) {
+    func showToast(message: String, hideAfter delay: Double) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.view.alpha = 0.6
         present(alert, animated: true)
-
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
+        FeedbackGenerator.generateFeedback(for: .success)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             alert.dismiss(animated: true)
         }
     }

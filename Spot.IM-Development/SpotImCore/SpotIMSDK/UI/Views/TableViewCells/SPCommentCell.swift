@@ -30,7 +30,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let userNameView: UserNameView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let headerView: UIView = .init()
+    private let headerView: BaseView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -50,7 +50,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     // MARK: - Init
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupUI()
@@ -95,7 +94,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
 
     private func configureHeaderView() {
-        let separatorView: UIView = .init()
+        let separatorView: BaseView = .init()
         
         separatorView.backgroundColor = .spSeparator
         headerView.addSubview(separatorView)
@@ -167,20 +166,17 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     private func updateRepliesButtonTitle(with repliesCount: Int?, minimumVisibleRepliesCount: Int) {
         if let repliesCount = repliesCount, repliesCount == minimumVisibleRepliesCount + 1 {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Previous Reply",
-                                                               comment: "Previous Reply button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Reply",
-                                                              comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Previous Reply")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Reply")
         } else {
-            moreRepliesView.collapsedTitle = NSLocalizedString("View Previous Replies",
-                                                               comment: "Previous Replies button title")
-            moreRepliesView.expandedTitle = NSLocalizedString("Hide Replies",
-                                                              comment: "Previous replies button title")
+            moreRepliesView.collapsedTitle = LocalizationManager.localizedString(key: "View Previous Replies")
+            moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Replies")
         }
     }
     
     private func updateUserView(with dataModel: CommentViewModel) {
         userNameView.setDeleted(dataModel.isDeleted)
+        
         userNameView.setUserName(
             dataModel.displayName,
             badgeTitle: dataModel.badgeTitle,
@@ -261,6 +257,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.updateAlignment()
         
         var attributes: [NSAttributedString.Key: Any]
         if isDeleted {
@@ -329,7 +326,11 @@ extension SPCommentCell: ShowMoreRepliesViewDelegate {
 }
 
 extension SPCommentCell: MessageContainerViewDelegate {
-
+    
+    func urlTappedInMessageContainer(view: MessageContainerView, url: URL) {
+        UIApplication.shared.open(url)
+    }
+    
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
     }

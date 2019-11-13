@@ -11,5 +11,6 @@ import Foundation
 struct SPConfigurationSDKStatus: Decodable {
     
     let enabled: Bool?
-    
+    let locale: String?
+
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 extension NSAttributedString {
-
+    
     func clippedToLine(index: Int, width: CGFloat, isCollapsed: Bool) -> NSAttributedString {
         guard width > 1 else { return self } // not to spoil everything before UI is layed out
 
@@ -41,13 +41,13 @@ extension NSAttributedString {
         var attribs = self.attributes(at: totalLength - 1, effectiveRange: nil)
 
         let ellipsis = NSAttributedString(
-            string: "... ",
+            string: " ... ",
             attributes: attribs)
 
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readMore = NSMutableAttributedString(
-            string: NSLocalizedString("Read More", comment: "Collapsed long comments temporary terminator"),
+            string: LocalizationManager.localizedString(key: "Read More"),
             attributes: attribs)
 
         readMore.insert(ellipsis, at: 0)
@@ -67,6 +67,7 @@ extension NSAttributedString {
         let trimmedSelf = clippedSelf.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
         let mutableSelf = trimmedSelf.mutableCopy() as? NSMutableAttributedString
         mutableSelf?.append(readMore)
+        
         return mutableSelf ?? self
     }
 
@@ -75,7 +76,7 @@ extension NSAttributedString {
         attribs[.foregroundColor] = UIColor.clearBlue
 
         let readLess = NSAttributedString(
-            string: NSLocalizedString(" Read Less", comment: "Expanded long comments terminator"),
+            string: LocalizationManager.localizedString(key: "Read Less"),
             attributes: attribs)
 
         let mutableSelf = mutableCopy() as? NSMutableAttributedString
@@ -137,4 +138,15 @@ internal extension NSMutableAttributedString {
             range = (string as NSString).rangeOfCharacter(from: charSet, options: .backwards)
          }
      }
+}
+
+extension NSMutableParagraphStyle {
+    
+    func updateAlignment() {
+        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+            alignment = .right
+        } else {
+            alignment = .left
+        }
+    }
 }

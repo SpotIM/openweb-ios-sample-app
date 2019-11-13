@@ -13,6 +13,7 @@ extension Date {
     static let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMM"
+        formatter.locale = LocalizationManager.locale
         return formatter
     }()
 
@@ -33,10 +34,10 @@ extension Date {
 
         switch (weekOfYear, day, hour, minute, second) {
         case (let week, _, _, _, _)     where week > 0:     return Date.formatter.string(from: self)
-        case (_, let day, _, _, _)      where day > 0:      return "\(day)d"
-        case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)h"
-        case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)m"
-        case (_, _, _, _, let second)   where second >= 0:   return "Just now"
+        case (_, let day, _, _, _)      where day > 0:      return "\(day)" + LocalizationManager.localizedString(key: "Days")
+        case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)" + LocalizationManager.localizedString(key: "Hours")
+        case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)" + LocalizationManager.localizedString(key: "Minutes")
+        case (_, _, _, _, let second)   where second >= 0:  return LocalizationManager.localizedString(key: "Just now")
         default:                                            return Date.formatter.string(from: self)
         }
     }
