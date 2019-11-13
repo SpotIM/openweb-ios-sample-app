@@ -56,6 +56,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 data.commentText ?? "",
                 attributes: attributes(isDeleted: false),
                 clipToLine: lineLimit,
+                width: data.textWidth(),
                 isCollapsed: data.commentTextCollapsed
             )
             replyActionsViewHeightConstraint?.constant = Theme.replyActionsViewHeight

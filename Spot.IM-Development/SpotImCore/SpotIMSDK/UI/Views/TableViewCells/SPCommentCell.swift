@@ -249,6 +249,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             messageView.setMessage(dataModel.commentText ?? "",
                                    attributes: attributes(isDeleted: false),
                                    clipToLine: clipToLine,
+                                   width: dataModel.textWidth(),
                                    isCollapsed: dataModel.commentTextCollapsed)
         }
     }
