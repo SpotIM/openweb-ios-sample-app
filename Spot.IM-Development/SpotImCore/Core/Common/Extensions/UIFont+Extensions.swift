@@ -9,18 +9,37 @@
 import UIKit
 
 internal extension UIFont {
+    
     static func preferred(style: SPFontStyle, of size: CGFloat) -> UIFont {
-        return roboto(style: style, of: size)
+        if LocalizationManager.currentLanguage == .hebrew {
+            return arialHebrew(style: style, of: size)
+        } else {
+            return roboto(style: style, of: size)
+        }
     }
 
     static func roboto(style: SPFontStyle, of size: CGFloat) -> UIFont {
         let robotoName = name(of: .roboto, with: style)
+        
         return UIFont(name: robotoName, size: size) ?? systemFont(ofSize: size)
     }
 
     static func openSans(style: SPFontStyle, of size: CGFloat) -> UIFont {
         let openSansName = name(of: .openSans, with: style)
+        
         return UIFont(name: openSansName, size: size) ?? systemFont(ofSize: size)
+    }
+    
+    static func arialHebrew(style: SPFontStyle, of size: CGFloat) -> UIFont {
+        var style = style
+        if style == .regular || style == .medium {
+            style = .empty
+        }
+        
+        let arialHebrew = name(of: .arialHebrew, with: style)
+        let font = UIFont(name: arialHebrew, size: size)
+        
+        return font ?? systemFont(ofSize: size)
     }
     
     private static func name(of family: SPFontFamily, with style: SPFontStyle) -> String {
@@ -33,6 +52,9 @@ internal extension UIFont {
         registerFontWith(filenameString: "Roboto-Medium.ttf")
         registerFontWith(filenameString: "Roboto-Regular.ttf")
         registerFontWith(filenameString: "OpenSans-RegularItalic.ttf")
+        registerFontWith(filenameString: "ArialHebrew-Bold.ttf")
+        registerFontWith(filenameString: "ArialHebrew.ttf")
+        registerFontWith(filenameString: "ArialHebrew-Light.ttf")
     }()
 
     // MARK: - Make custom font bundle register to framework
@@ -52,8 +74,8 @@ internal extension UIFont {
         if CTFontManagerRegisterGraphicsFont(fontRef!, &errorRef) == false {
             Logger.error(
                 "Failed to register font"
-                + "/nRegister graphics font failed"
-                + "/nThis font may have already been registered in the main bundle."
+                + "\nRegister graphics font failed"
+                + "\nThis font may have already been registered in the main bundle."
             )
         }
     }
@@ -64,9 +86,12 @@ internal enum SPFontStyle: String {
     case medium = "Medium"
     case bold = "Bold"
     case regularItalic = "Italic"
+    case empty = ""
 }
 
 internal enum SPFontFamily: String {
     case roboto = "Roboto"
     case openSans = "OpenSans"
+    case arialHebrew = "ArialHebrew"
 }
+

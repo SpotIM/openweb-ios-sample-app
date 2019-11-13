@@ -10,6 +10,22 @@ import Foundation
 
 extension Date {
 
+    static let dayNameFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat  = "EEEE"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        return dateFormatter
+    }()
+    
+    static let hourFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat  = "HH"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        return dateFormatter
+    }()
+
     static let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMM"

@@ -57,7 +57,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         }
         topContainerView.addSubviews(commentingOnLabel, closeButton)
         
-        commentingOnLabel.font = UIFont.roboto(style: .regular, of: 16.0)
+        commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
         commentingOnLabel.textColor = .spForeground4
         commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.backgroundColor = .spBackground0

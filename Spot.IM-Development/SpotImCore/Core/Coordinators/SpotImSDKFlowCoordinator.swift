@@ -67,7 +67,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                                           completion: @escaping (UIViewController) -> Void) {
         containerViewController = container
         
-        if let config = SPConfigDataSource.config {
+        if let config = SPConfigsDataSource.appConfig {
             if config.mobileSdk?.enabled ?? false {
                 LocalizationManager.setLocale(config.mobileSdk?.locale)
                 completion(buildPreConversationController(with: postId))
@@ -86,9 +86,9 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     @objc
     private func respondToConfigUpdate() {
-        if let config = SPConfigDataSource.config, (config.mobileSdk?.enabled ?? false), let postId = postId {
-            configCompletion?(buildPreConversationController(with: postId))
+        if let config = SPConfigsDataSource.appConfig, (config.mobileSdk?.enabled ?? false), let postId = postId {
             LocalizationManager.setLocale(config.mobileSdk?.locale)
+            configCompletion?(buildPreConversationController(with: postId))
         }
 
         self.postId = nil

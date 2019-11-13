@@ -84,7 +84,7 @@ final class SPEmptyConversationActionView: BaseView {
     private func configureMessageLabel(relativeToIcon: Bool) {
         messageLabel.numberOfLines = 0
         messageLabel.backgroundColor = .white
-        messageLabel.font = UIFont.roboto(style: .regular, of: Theme.titleFontSize)
+        messageLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
         messageLabel.textColor = .steelGrey
         messageLabel.textAlignment = .center
         messageLabel.layout {
@@ -104,7 +104,7 @@ final class SPEmptyConversationActionView: BaseView {
         actionButton.addTarget(self, action: #selector(handleAction), for: .touchUpInside)
         actionButton.setTitleColor(.white, for: .normal)
         actionButton.backgroundColor = .brandColor
-        actionButton.titleLabel?.font = UIFont.roboto(style: .medium, of: Theme.actionButtonTitleFontSize)
+        actionButton.titleLabel?.font = UIFont.preferred(style: .medium, of: Theme.actionButtonTitleFontSize)
         
         actionButton.layout {
             $0.height.equal(to: Theme.actionButtonHeight)

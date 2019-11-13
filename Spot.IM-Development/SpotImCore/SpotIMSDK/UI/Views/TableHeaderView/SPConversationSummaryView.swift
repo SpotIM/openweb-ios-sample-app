@@ -94,7 +94,7 @@ extension SPConversationSummaryView {
     private func configureCommentCountLabel() {
         commentsCountLabel.textColor = .spForeground4
         commentsCountLabel.backgroundColor = .spBackground0
-        commentsCountLabel.font = UIFont.roboto(style: .regular, of: Theme.commentsFontSize)
+        commentsCountLabel.font = UIFont.preferred(style: .regular, of: Theme.commentsFontSize)
         commentsCountLabel.layout {
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.sideOffset)
             $0.centerY.equal(to: centerYAnchor)
@@ -104,7 +104,7 @@ extension SPConversationSummaryView {
     private func configureSortButton() {
         let sortIcon = UIImage(spNamed: "sortingIcon")?.withRenderingMode(.alwaysOriginal)
         sortButton.setTitleColor(.spForeground4, for: .normal)
-        sortButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.sortButtonFontSize)
+        sortButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.sortButtonFontSize)
         sortButton.setImage(sortIcon, for: .normal)
         let spacing: CGFloat = Theme.insetTiny
         var inset: CGFloat = spacing / 2
@@ -133,7 +133,7 @@ extension SPConversationSummaryView {
     private func configureNewCommentsButton() {
         newCommentsButton.isHidden = true
         newCommentsButton.setTitleColor(.white, for: .normal)
-        newCommentsButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.newCommentsFontSize)
+        newCommentsButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.newCommentsFontSize)
         newCommentsButton.contentEdgeInsets = UIEdgeInsets(
             top: Theme.newCommentsButtonVerticalInset,
             left: Theme.newCommentsButtonHorizontalInset,

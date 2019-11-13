@@ -17,6 +17,9 @@
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		4411659D2375822900B781F3 /* Arial Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B87237473E60024EFC1 /* Arial Bold.ttf */; };
+		4411659E2375822900B781F3 /* Arial Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B89237473E60024EFC1 /* Arial Italic.ttf */; };
+		4411659F2375822900B781F3 /* Arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B88237473E60024EFC1 /* Arial.ttf */; };
 		4416C654237ABDE700D3F7B9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		4416C655237ABDE700D3F7B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
 		4416C658237ABE3D00D3F7B9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4416C65A237ABE3D00D3F7B9 /* Localizable.strings */; };
@@ -74,7 +77,7 @@
 		4454182223685144001D0ED0 /* SPCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F023685144001D0ED0 /* SPCommentHeaderView.swift */; };
 		4454182323685144001D0ED0 /* SPConversationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F223685144001D0ED0 /* SPConversationSummaryView.swift */; };
 		4454182423685144001D0ED0 /* SPLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F423685144001D0ED0 /* SPLoaderView.swift */; };
-		4454187A23685154001D0ED0 /* SPConfigDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182723685153001D0ED0 /* SPConfigDataSource.swift */; };
+		4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182723685153001D0ED0 /* SPConfigsDataSource.swift */; };
 		4454187B23685154001D0ED0 /* SPMainConversationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182823685153001D0ED0 /* SPMainConversationDataSource.swift */; };
 		4454187C23685154001D0ED0 /* SpotImSDKFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182A23685153001D0ED0 /* SpotImSDKFlowCoordinator.swift */; };
 		4454187D23685154001D0ED0 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454182B23685153001D0ED0 /* Coordinator.swift */; };
@@ -147,6 +150,7 @@
 		44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B6F237070F30024EFC1 /* InputConfiguration.swift */; };
 		44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B71237185090024EFC1 /* LocalizationManager.swift */; };
 		44689B7423718CF90024EFC1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7323718CF80024EFC1 /* Logger.swift */; };
+		44689B7D237414850024EFC1 /* SPABData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7C237414850024EFC1 /* SPABData.swift */; };
 		448E1116236C53BE0005C9F9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */; };
 		44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
 		44C8789523608BC100E0E662 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -272,7 +276,7 @@
 		445417F023685144001D0ED0 /* SPCommentHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentHeaderView.swift; sourceTree = "<group>"; };
 		445417F223685144001D0ED0 /* SPConversationSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConversationSummaryView.swift; sourceTree = "<group>"; };
 		445417F423685144001D0ED0 /* SPLoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLoaderView.swift; sourceTree = "<group>"; };
-		4454182723685153001D0ED0 /* SPConfigDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConfigDataSource.swift; sourceTree = "<group>"; };
+		4454182723685153001D0ED0 /* SPConfigsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConfigsDataSource.swift; sourceTree = "<group>"; };
 		4454182823685153001D0ED0 /* SPMainConversationDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPMainConversationDataSource.swift; sourceTree = "<group>"; };
 		4454182A23685153001D0ED0 /* SpotImSDKFlowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotImSDKFlowCoordinator.swift; sourceTree = "<group>"; };
 		4454182B23685153001D0ED0 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
@@ -345,6 +349,11 @@
 		44689B6F237070F30024EFC1 /* InputConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputConfiguration.swift; sourceTree = "<group>"; };
 		44689B71237185090024EFC1 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		44689B7323718CF80024EFC1 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		44689B7C237414850024EFC1 /* SPABData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPABData.swift; sourceTree = "<group>"; };
+		44689B87237473E60024EFC1 /* Arial Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arial Bold.ttf"; sourceTree = "<group>"; };
+		44689B88237473E60024EFC1 /* Arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Arial.ttf; sourceTree = "<group>"; };
+		44689B89237473E60024EFC1 /* Arial Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arial Italic.ttf"; sourceTree = "<group>"; };
+		44689B8A237473E70024EFC1 /* Arial Bold Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arial Bold Italic.ttf"; sourceTree = "<group>"; };
 		448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackGenerator.swift; sourceTree = "<group>"; };
 		44C8788D23608BC100E0E662 /* SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44C8793B23608E3500E0E662 /* SpotImCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotImCore.h; sourceTree = "<group>"; };
@@ -437,6 +446,7 @@
 		4454179F236850C0001D0ED0 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				44689B86237473D20024EFC1 /* Ariel */,
 				445417A0236850C0001D0ED0 /* Roboto */,
 				445417A4236850C0001D0ED0 /* OpenSans */,
 			);
@@ -738,7 +748,7 @@
 		4454182623685153001D0ED0 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
-				4454182723685153001D0ED0 /* SPConfigDataSource.swift */,
+				4454182723685153001D0ED0 /* SPConfigsDataSource.swift */,
 				4454182823685153001D0ED0 /* SPMainConversationDataSource.swift */,
 			);
 			path = DataSources;
@@ -809,8 +819,6 @@
 		4454184423685153001D0ED0 /* RequestModels */ = {
 			isa = PBXGroup;
 			children = (
-				44F0FD242369EE9A003525E0 /* AdsConfiguration */,
-				4454184523685153001D0ED0 /* Configuration */,
 				4454184F23685154001D0ED0 /* SPCommentRankUpdateRM.swift */,
 				4454185023685154001D0ED0 /* Conversation */,
 			);
@@ -836,9 +844,7 @@
 		4454185023685154001D0ED0 /* Conversation */ = {
 			isa = PBXGroup;
 			children = (
-				4454185123685154001D0ED0 /* SPConversationExtraDataRM.swift */,
 				4454185223685154001D0ED0 /* SPCommentDelete.swift */,
-				4454185323685154001D0ED0 /* SPConversationReadRM.swift */,
 			);
 			path = Conversation;
 			sourceTree = "<group>";
@@ -846,9 +852,10 @@
 		4454185423685154001D0ED0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				44689B7B2374145B0024EFC1 /* Conversation */,
+				44689B7A237414340024EFC1 /* Configs */,
 				4454185523685154001D0ED0 /* SPComment.swift */,
 				4454185623685154001D0ED0 /* SPCommentViewModel.swift */,
-				4454185723685154001D0ED0 /* SPConversation.swift */,
 				4454185823685154001D0ED0 /* SPCommentCreationDTO.swift */,
 				4454185923685154001D0ED0 /* SPAnalyticsEvent.swift */,
 				4454185A23685154001D0ED0 /* SPCommentSortMode.swift */,
@@ -915,6 +922,37 @@
 				4454187623685154001D0ED0 /* GoogleAdsProvider.swift */,
 			);
 			path = Ads;
+			sourceTree = "<group>";
+		};
+		44689B7A237414340024EFC1 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				44F0FD242369EE9A003525E0 /* AdsConfiguration */,
+				4454184523685153001D0ED0 /* Configuration */,
+			);
+			path = Configs;
+			sourceTree = "<group>";
+		};
+		44689B7B2374145B0024EFC1 /* Conversation */ = {
+			isa = PBXGroup;
+			children = (
+				4454185123685154001D0ED0 /* SPConversationExtraDataRM.swift */,
+				4454185723685154001D0ED0 /* SPConversation.swift */,
+				4454185323685154001D0ED0 /* SPConversationReadRM.swift */,
+				44689B7C237414850024EFC1 /* SPABData.swift */,
+			);
+			path = Conversation;
+			sourceTree = "<group>";
+		};
+		44689B86237473D20024EFC1 /* Ariel */ = {
+			isa = PBXGroup;
+			children = (
+				44689B8A237473E70024EFC1 /* Arial Bold Italic.ttf */,
+				44689B87237473E60024EFC1 /* Arial Bold.ttf */,
+				44689B89237473E60024EFC1 /* Arial Italic.ttf */,
+				44689B88237473E60024EFC1 /* Arial.ttf */,
+			);
+			path = Ariel;
 			sourceTree = "<group>";
 		};
 		448E1117236C5D130005C9F9 /* Libraries */ = {
@@ -998,8 +1036,6 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
-				4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */,
-				4416C652237ABDE700D3F7B9 /* Main.storyboard */,
 				5DA8B59C2327E2010045FCFA /* Common */,
 				0E1125DC2304BC48006B1489 /* Extension */,
 				5D4943B72302CA8C00AA7541 /* ViewControllers */,
@@ -1009,6 +1045,8 @@
 				5D697A4022B65106001AD556 /* ViewController.swift */,
 				5D697A4522B65108001AD556 /* Assets.xcassets */,
 				5D697A4A22B65108001AD556 /* Info.plist */,
+				4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */,
+				4416C652237ABDE700D3F7B9 /* Main.storyboard */,
 			);
 			path = "Spot-IM.Development";
 			sourceTree = "<group>";
@@ -1178,8 +1216,11 @@
 				445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */,
 				4416C658237ABE3D00D3F7B9 /* Localizable.strings in Resources */,
 				445417AA236850C0001D0ED0 /* OpenSans-RegularItalic.ttf in Resources */,
+				4411659D2375822900B781F3 /* Arial Bold.ttf in Resources */,
+				4411659E2375822900B781F3 /* Arial Italic.ttf in Resources */,
 				445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */,
 				445417A9236850C0001D0ED0 /* Roboto-Bold.ttf in Resources */,
+				4411659F2375822900B781F3 /* Arial.ttf in Resources */,
 				445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1337,13 +1378,14 @@
 				445418AB23685154001D0ED0 /* Int+SPExtensions.swift in Sources */,
 				445418A923685154001D0ED0 /* UIFont+Extensions.swift in Sources */,
 				445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */,
+				44689B7D237414850024EFC1 /* SPABData.swift in Sources */,
 				4454188223685154001D0ED0 /* SPFailureReporter.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
 				445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */,
 				4454181B23685144001D0ED0 /* CommentActionsView.swift in Sources */,
 				445417FE23685144001D0ED0 /* NSAttributedString+Extensions.swift in Sources */,
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
-				4454187A23685154001D0ED0 /* SPConfigDataSource.swift in Sources */,
+				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
 				445418B023685154001D0ED0 /* WeakRef+Generic.swift in Sources */,
 				4454188123685154001D0ED0 /* SPAnalyticsFacade.swift in Sources */,
 				4454188623685154001D0ED0 /* SPCommentFacade.swift in Sources */,
@@ -1551,7 +1593,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development: Alexander Kholodov (2GRWS2WKKA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1687,7 +1729,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Alexander Kholodov (8H4BKTJCC4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -1950,9 +1992,9 @@
 			baseConfigurationReference = 27A3A695D2E76A4DC47A8D05 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CODE_SIGN_IDENTITY = "Apple Development: Alexander Kholodov (2GRWS2WKKA)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1978,7 +2020,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Alexander Kholodov (8H4BKTJCC4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";

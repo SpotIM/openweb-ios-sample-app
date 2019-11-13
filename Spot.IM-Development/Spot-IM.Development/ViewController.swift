@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let articleVC = segue.destination as? ArticleViewController {
             articleVC.spotId = .demoMainSpotKey
-            articleVC.postId = "fedin001"
+            articleVC.postId = "social-reviews"
         }
     }
 
@@ -67,7 +67,7 @@ class ViewController: UIViewController {
     
     @IBAction private func showPreConversation(_ sender: UIButton) {
         SPPublicSessionInterface.resetUser()
-        setup(with: .demoGenericSpotKeyForSSO, from: sender)
+        setup(with: .demoMainSpotKey, from: sender)
         performSegue(withIdentifier: "showPreConversationSegue", sender: self)
     }
     
