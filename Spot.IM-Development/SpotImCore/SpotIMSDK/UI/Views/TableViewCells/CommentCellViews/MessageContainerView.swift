@@ -25,14 +25,16 @@ final class MessageContainerView: BaseView {
         _ message: String,
         attributes: [NSAttributedString.Key: Any],
         clipToLine: Int = 0,
+        width: CGFloat = 0.0,
         isCollapsed: Bool) {
         
+        mainTextLabel.attributedText = NSAttributedString(string: "")
         activeURLs.removeAll()
         let attributedMessage = NSAttributedString(string: message, attributes: attributes)
         var clippedText = NSMutableAttributedString(
             attributedString: attributedMessage.clippedToLine(
                 index: clipToLine,
-                width: frame.width,
+                width: width,
                 isCollapsed: isCollapsed
             )
         )

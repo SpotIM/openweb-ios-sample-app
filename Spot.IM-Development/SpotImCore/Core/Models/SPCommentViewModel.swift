@@ -113,18 +113,24 @@ internal struct CommentViewModel {
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
     }
+
+    func textWidth() -> CGFloat {
+        let leadingOffset: CGFloat = depthOffset()
+        let textWidth = UIScreen.main.bounds.width - leadingOffset - Theme.trailingOffset
         
+        return textWidth
+    }
+    
     func height(with lineLimit: Int) -> CGFloat {
-            let leadingOffset: CGFloat = depthOffset()
-            let textWidth = UIScreen.main.bounds.width - leadingOffset - Theme.trailingOffset
+            let width = textWidth()
             let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isDeleted))
             let clippedMessage = attributedMessage.clippedToLine(
                 index: lineLimit,
-                width: textWidth,
+                width: width,
                 isCollapsed: commentTextCollapsed
             )
             let textHeight: CGFloat = clippedMessage.string.isEmpty ?
-                0.0 : clippedMessage.height(withConstrainedWidth: textWidth)
+                0.0 : clippedMessage.height(withConstrainedWidth: width)
 
             let moreRepliesHeight = repliesButtonState == .hidden ?
                 0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
