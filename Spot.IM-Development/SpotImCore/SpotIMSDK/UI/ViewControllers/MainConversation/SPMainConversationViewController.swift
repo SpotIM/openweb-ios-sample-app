@@ -72,7 +72,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
+        if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
+            SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
+            SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
+        }
 
         updateHeaderUI()
         configureModelHandlers()
@@ -187,8 +190,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     let messageCount = self.model.dataSource.messageCount
                     SPAnalyticsHolder.default.totalComments = messageCount
                     self.sortView.updateCommentsLabel(messageCount ?? 0)
-                    
-                    SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
                     
                     if self.model.areCommentsEmpty() {
                         self.showEmptyStateView()
