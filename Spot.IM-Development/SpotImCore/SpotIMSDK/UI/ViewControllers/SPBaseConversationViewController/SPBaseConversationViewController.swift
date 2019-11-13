@@ -379,10 +379,14 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         guard let commentId = commentId else { return }
         let comment = model.dataSource.commentViewModel(commentId)
         guard let authorId = comment?.authorId else { return }
-        SPAnalyticsHolder.default.log(
-            event: .userProfileClicked(messageId: commentId, userId: authorId),
-            source: .conversation
-        )
+        if SPPublicSessionInterface.isMe(userId: authorId) {
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
+        } else {
+            SPAnalyticsHolder.default.log(
+                event: .userProfileClicked(messageId: commentId, userId: authorId),
+                source: .conversation
+            )
+        }
     }
 
     @objc
