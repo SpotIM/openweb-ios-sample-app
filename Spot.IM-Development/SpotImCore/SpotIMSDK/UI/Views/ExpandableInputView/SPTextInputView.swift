@@ -49,20 +49,17 @@ final class SPTextInputView: BaseView {
         delegate?.textDidChange(text)
     }
     
-    func configureCommentType(_ type: CommentType, avatar: URL? = nil) {
+    func configureCommentType(_ commentType: CommentType, avatar: URL? = nil) {
         avatarImageView.updateAvatar(avatarUrl: avatar)
         avatarImageView.updateOnlineStatus(.online)
         avatarImageView.isHidden = false
         commentLeadingConstraint?.isActive = true
-        
-        switch type {
+        switch commentType {
         case .comment:
-            textInputView.placeholder = NSLocalizedString("What do you think?",
-                                                          comment: "text view comment placeholder")
+            textInputView.placeholder = LocalizationManager.localizedString(key: "What do you think?")
             
         case .reply:
-            textInputView.placeholder = NSLocalizedString("Type your reply…",
-                                                          comment: "text view reply placeholder")
+            textInputView.placeholder = LocalizationManager.localizedString(key: "Type your reply…")
         }
     }
     
@@ -97,6 +94,7 @@ final class SPTextInputView: BaseView {
         textInputView.backgroundColor = .spBackground0
         textInputView.font = UIFont.roboto(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textColor = .spForeground1
+        textInputView.textAlignment = .natural
     }
 }
 

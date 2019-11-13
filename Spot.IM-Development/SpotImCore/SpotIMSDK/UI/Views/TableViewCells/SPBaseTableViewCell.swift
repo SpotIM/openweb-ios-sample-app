@@ -13,6 +13,9 @@ class SPBaseTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
+        ?? semanticContentAttribute
+        
         selectionStyle = .none
         contentView.backgroundColor = .spBackground0
     }

@@ -23,7 +23,7 @@ protocol UserAuthFlowDelegate: class {
 
 protocol UserPresentable: class {
     
-    var userIcon: UIButton { get }
+    var userIcon: BaseButton { get }
     /// Setup selector and target for `userIcon` here! Call it on the start of the flow.
     func setupUserIconHandler()
 }
@@ -45,7 +45,7 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
         
         if let user = SPUserSessionHolder.session.user, user.registered {
             let logOutAction = UIAlertAction(
-                title: NSLocalizedString("Log Out", comment: "log out"),
+                title: LocalizationManager.localizedString(key: "Log Out"),
                 style: .default
             ) { _ in
                 self.presentLogOutConfirmation()
@@ -53,7 +53,7 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
             profileActions.append(logOutAction)
         } else {
             let logInAction = UIAlertAction(
-                title: NSLocalizedString("Log In", comment: "log in"),
+                title: LocalizationManager.localizedString(key: "Log In"),
                 style: .default
             ) { _ in
                 SPAnalyticsHolder.default.log(event: .loginClicked(.mainLogin), source: .conversation)
@@ -61,7 +61,7 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
             }
             profileActions.append(logInAction)
         }
-        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "cancel title"),
+        let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .cancel)
         
         profileActions.append(noAction)
@@ -71,18 +71,16 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
     
     private func presentLogOutConfirmation() {
         let yesAction = UIAlertAction(
-            title: NSLocalizedString("Log Out", comment: "log out title"),
+            title: LocalizationManager.localizedString(key: "Log Out"),
             style: .destructive) { _ in
                 self.userAuthFlowDelegate?.signOut()
         }
         
-        let noAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: "cancel title"),
+        let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
-            title: NSLocalizedString("Log Out", comment: "log out"),
-            message: NSLocalizedString(
-                "Are you sure you want to log out?",
-                comment: "log out confirmation"),
+            title: LocalizationManager.localizedString(key: "Log Out"),
+            message: LocalizationManager.localizedString(key: "Are you sure you want to log out?"),
             actions: [yesAction, noAction]
         )
     }

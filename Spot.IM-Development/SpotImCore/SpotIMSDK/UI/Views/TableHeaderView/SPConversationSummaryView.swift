@@ -17,10 +17,10 @@ internal protocol SPConversationSummaryViewDelegate: class {
 
 final class SPConversationSummaryView: BaseView {
 
-    private let commentsCountLabel: UILabel = .init()
-    private let separatorView: UIView = .init()
-    private let sortButton: UIButton = .init(type: .system)
-    private let newCommentsButton: UIButton = .init(type: .system)
+    private let commentsCountLabel: BaseLabel = .init()
+    private let separatorView: BaseView = .init()
+    private let sortButton: BaseButton = .init(type: .system)
+    private let newCommentsButton: BaseButton = .init(type: .system)
 
     internal var dropsShadow: Bool = false
     
@@ -45,14 +45,14 @@ final class SPConversationSummaryView: BaseView {
 
     func updateNewComments(_ newCommentsCount: Int) {
         newCommentsButton.isHidden = newCommentsCount <= 0
-        let newString: String = NSLocalizedString("NEW", comment: "NEW title")
+        let newString: String = LocalizationManager.localizedString(key: "NEW")
         newCommentsButton.setTitle("\(newCommentsCount) " + newString, for: .normal)
     }
     
     func updateCommentsLabel(_ newCommentsCount: Int) {
         let commentsText: String = newCommentsCount > 1 ?
-            NSLocalizedString("Comments", comment: "Comments title") :
-            NSLocalizedString("Comment", comment: "Comment title")
+            LocalizationManager.localizedString(key: "Comments") :
+            LocalizationManager.localizedString(key: "Comment")
         commentsCountLabel.text = "\(newCommentsCount.formatedCount()) " + commentsText
     }
     
@@ -107,9 +107,13 @@ extension SPConversationSummaryView {
         sortButton.titleLabel?.font = UIFont.roboto(style: .regular, of: Theme.sortButtonFontSize)
         sortButton.setImage(sortIcon, for: .normal)
         let spacing: CGFloat = Theme.insetTiny
-        let inset: CGFloat = spacing / 2
+        var inset: CGFloat = spacing / 2
         
         // Update insets in order to make additional space begween title and image
+        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+            inset = -inset
+        }
+        
         sortButton.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -inset, bottom: 0.0, right: inset)
         sortButton.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: -inset)
         sortButton.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: inset)

@@ -18,7 +18,7 @@ internal final class SPDefaultAnalyticsSender: SPAnalyticsSender {
     func sendEvent(with info: SPAnalyticsDTO) {
 
         guard let spotKey = SPClientSettings.spotKey else {
-            print("[ERROR]: No spot key for analytics")
+            Logger.error("[ERROR]: No spot key for analytics")
             return
         }
 

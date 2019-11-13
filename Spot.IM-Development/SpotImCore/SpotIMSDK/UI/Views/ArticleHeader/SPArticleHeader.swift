@@ -10,11 +10,11 @@ import UIKit
 
 internal final class SPArticleHeader: BaseView {
     
-    private lazy var conversationImageView: UIImageView = .init()
-    private lazy var conversationTitleLabel: UILabel = .init()
-    private lazy var conversationAuthorLabel: UILabel = .init()
-    private lazy var separatorView: UIView = .init()
-    private lazy var titlesContainer: UIView = .init()
+    private lazy var conversationImageView: BaseUIImageView = .init()
+    private lazy var conversationTitleLabel: BaseLabel = .init()
+    private lazy var conversationAuthorLabel: BaseLabel = .init()
+    private lazy var separatorView: BaseView = .init()
+    private lazy var titlesContainer: BaseView = .init()
 
     // MARK: - Overrides
     
@@ -85,8 +85,7 @@ internal final class SPArticleHeader: BaseView {
     }
     
     private func setupConversationTitleLabel() {
-        conversationTitleLabel.text = NSLocalizedString("Loading",
-                                                        comment: "Main Conversation header title placeholder")
+        conversationTitleLabel.text = LocalizationManager.localizedString(key: "Loading")
         conversationTitleLabel.numberOfLines = 2
         conversationTitleLabel.backgroundColor = .spBackground0
         conversationTitleLabel.textColor = .spForeground4
@@ -100,8 +99,6 @@ internal final class SPArticleHeader: BaseView {
     }
     
     private func setupConversationAuthorLabel() {
-        conversationAuthorLabel.text = NSLocalizedString("*Author name*",
-                                                        comment: "Main Conversation author placeholder")
         conversationAuthorLabel.numberOfLines = 1
         conversationAuthorLabel.backgroundColor = .spBackground0
         conversationAuthorLabel.textColor = .spForeground2

@@ -15,12 +15,12 @@ struct CommentDataModel {
 
 final class SPCommentHeaderView: BaseView {
     
-    let closeButton: UIButton = .init()
+    let closeButton: BaseButton = .init()
 
-    private let replyingLabel: UILabel = .init()
-    private let commentAuthorLabel: UILabel = .init()
-    private let commentLabel: UILabel = .init()
-    private let separatorView: UIView = .init()
+    private let replyingLabel: BaseLabel = .init()
+    private let commentAuthorLabel: BaseLabel = .init()
+    private let commentLabel: BaseLabel = .init()
+    private let separatorView: BaseView = .init()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,7 +47,7 @@ final class SPCommentHeaderView: BaseView {
     }
     
     private func setupReplyingLabel() {
-        replyingLabel.text = NSLocalizedString("Replying to ", comment: "replying title")
+        replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.backgroundColor = .spBackground0
         replyingLabel.textColor = .spForeground4
         replyingLabel.font = UIFont.roboto(style: .regular, of: Theme.titleFontSize)

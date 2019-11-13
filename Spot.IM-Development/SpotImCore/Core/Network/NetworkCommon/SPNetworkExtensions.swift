@@ -27,7 +27,7 @@ internal extension HTTPHeaders {
 
     static func unauthorized(with spotId: String, postId: String) -> HTTPHeaders {
         let iosVersion = UIDevice.current.systemVersion
-        let frameworkVersion = Bundle.spot?.shortVersion() ?? "na"
+        let frameworkVersion = Bundle.spot.shortVersion() ?? "na"
         let hostVerion = Bundle.main.shortVersion() ?? "na"
         let scheme = Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String ?? "na"
         let agent = extendedAgent()

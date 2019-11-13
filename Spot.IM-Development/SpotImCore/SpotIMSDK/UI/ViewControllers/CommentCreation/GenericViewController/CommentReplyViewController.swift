@@ -28,14 +28,14 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
-    let topContainerView: UIView = .init()
+    let topContainerView: BaseView = .init()
     let textInputViewContainer: SPTextInputView = .init()
     
     let activityIndicator: SPLoaderView = SPLoaderView()
     
-    private let mainContainerView: UIView = .init()
-    private let postButton: UIButton = .init(type: .system)
-    private let scrollView: UIScrollView = .init()
+    private let mainContainerView: BaseView = .init()
+    private let postButton: BaseButton = .init()
+    private let scrollView: BaseScrollView = .init()
     
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
@@ -80,18 +80,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     func close() {
         if (model?.commentText.count ?? 0) >= commentCacheMinCount {
             let actions: [UIAlertAction] = [
-                UIAlertAction(title: NSLocalizedString("Leave Page",
-                                                       comment: "Leave page action title"),
+                UIAlertAction(title: LocalizationManager.localizedString(key: "Leave Page"),
                               style: .destructive) { _ in
                                 self.dismissController()
                 },
-                UIAlertAction(title: NSLocalizedString("Continue Writing",
-                                                       comment: "Continue writing action title"),
+                UIAlertAction(title: LocalizationManager.localizedString(key: "Continue Writing"),
                               style: .default)
             ]
-            showAlert(title: NSLocalizedString("Leave this page?", comment: "Leave this page alert title"),
-                      message: NSLocalizedString("The text you entered might be deleted if not published.",
-                                                 comment: "Leave this page alert message"),
+            showAlert(title: LocalizationManager.localizedString(key: "Leave this page?"),
+                      message: LocalizationManager.localizedString(key: "The text you entered might be deleted if not published."),
                       actions: actions)
         } else {
             dismissController()
@@ -220,11 +217,11 @@ extension CommentReplyViewController {
         }
     }
     private func updatePostButton() {
-        var postButtonTitle: String = NSLocalizedString("Post", comment: "post button title")
+        var postButtonTitle: String = LocalizationManager.localizedString(key: "Post")
         if let config = SPConfigDataSource.config,
             config.initialization?.policyForceRegister == true,
             SPUserSessionHolder.session.user?.registered == false {
-            postButtonTitle = NSLocalizedString("Sign Up to Post", comment: "post title unregistered")
+            postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
             postButton.addTarget(self, action: #selector(presentAuth), for: .touchUpInside)
         } else {
             postButton.addTarget(self, action: #selector(post), for: .touchUpInside)

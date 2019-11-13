@@ -48,8 +48,12 @@ internal final class ArticleWebViewController: UIViewController {
         setupSpotView()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+
     private func setupSpotView() {
-        
         SPClientSettings.setup(spotKey: spotId)
         spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
         

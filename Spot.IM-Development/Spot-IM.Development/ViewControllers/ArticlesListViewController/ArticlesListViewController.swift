@@ -23,6 +23,7 @@ class ArticlesListViewController: UITableViewController {
     init(spotId:String, authenticationControllerId: String) {
         self.spotId = spotId
         self.authenticationControllerId = authenticationControllerId
+        
         super.init(style: .plain)
     }
     
@@ -32,7 +33,7 @@ class ArticlesListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Articles List"
+        
         setup()
         loadData()
         
@@ -68,9 +69,9 @@ class ArticlesListViewController: UITableViewController {
 extension ArticlesListViewController : ArticleTableViewCellDelegate {
     func articleCellTapped(cell: ArticleTableViewCell, withPost post: Post?) {
         guard let post = post, let postId = postId(post: post) else { return }
+        
         let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
         self.navigationController?.pushViewController(articleViewController, animated: true)
-        //cell.shouldPresent(articleViewController, from: self, fullscreen: true)
     }
 }
 

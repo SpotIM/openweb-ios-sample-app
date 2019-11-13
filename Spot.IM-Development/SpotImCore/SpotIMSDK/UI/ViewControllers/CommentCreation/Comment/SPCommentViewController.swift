@@ -11,8 +11,8 @@ import UIKit
 final class SPCommentCreationViewController: CommentReplyViewController<SPCommentCreationModel> {
     
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
-    private let commentingOnLabel: UILabel = .init()
-    private let closeButton: UIButton = .init()
+    private let commentingOnLabel: BaseLabel = .init()
+    private let closeButton: BaseButton = .init()
 
     private var emptyArticleBottomConstarint: NSLayoutConstraint?
     private var filledArticleBottomConstarint: NSLayoutConstraint?
@@ -59,7 +59,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         
         commentingOnLabel.font = UIFont.roboto(style: .regular, of: 16.0)
         commentingOnLabel.textColor = .spForeground4
-        commentingOnLabel.text = NSLocalizedString("Commenting on", comment: "commenting on title")
+        commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.backgroundColor = .spBackground0
         commentingOnLabel.layout {
             $0.top.equal(to: topContainerView.topAnchor, offsetBy: 25.0)
@@ -97,7 +97,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
 
             self.hideLoader()
             self.showAlert(
-                title: NSLocalizedString("Oops...", comment: "oops"),
+                title: LocalizationManager.localizedString(key: "Oops..."),
                 message: error.localizedDescription
             )
         }
