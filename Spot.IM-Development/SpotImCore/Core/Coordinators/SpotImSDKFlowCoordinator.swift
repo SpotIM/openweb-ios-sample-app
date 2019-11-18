@@ -96,7 +96,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
 
     private func startFlow(with controller: SPMainConversationViewController) {
-        navigationController?.navigationBar.applyDarkAppearance(with: .brandColor)
         navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -150,8 +149,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         transition.type = .moveIn
         transition.subtype = .fromTop
-        
-        navigationController?.navigationBar.applyDarkAppearance(with: .brandColor)
+
         navigationController?.view.layer.add(transition, forKey: kCATransition)
         navigationController?.pushViewController(controller, animated: false)
         authHandlers.append(WeakRef(value: controller.userDidSignInHandler()))
@@ -242,7 +240,6 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
         if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
             controller.ssoAuthProvider.ssoAuthDelegate = self
             let container = UINavigationController(rootViewController: controller)
-            container.navigationBar.applyDarkAppearance(with: .brandColor)
             let barItem = UIBarButtonItem(title: "Back",
                                           style: .plain,
                                           target: self,
