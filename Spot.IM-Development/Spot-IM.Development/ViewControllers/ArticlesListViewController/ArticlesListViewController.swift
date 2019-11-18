@@ -36,7 +36,8 @@ class ArticlesListViewController: UITableViewController {
         
         setup()
         loadData()
-        
+
+        title = "Articles"
     }
     
     override func viewWillAppear(_ animated: Bool) {
