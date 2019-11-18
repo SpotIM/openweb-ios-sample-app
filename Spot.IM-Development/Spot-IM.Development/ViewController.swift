@@ -38,9 +38,22 @@ class ViewController: UIViewController {
     }
 
     private func setupUI() {
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
+        setupNavigationBar()
         logo.clipsToBounds = true
         logo.layer.cornerRadius = 8
+    }
+
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
+
+        navigationController?.navigationBar.backgroundColor = #colorLiteral(red: 0.1882352941, green: 0.4980392157, blue: 0.8862745098, alpha: 1)
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.1882352941, green: 0.4980392157, blue: 0.8862745098, alpha: 1)
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ]
     }
 
     private func fillVersionAndBuildNumber() {
