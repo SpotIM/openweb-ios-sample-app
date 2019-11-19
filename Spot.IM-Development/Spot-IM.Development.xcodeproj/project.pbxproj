@@ -1992,8 +1992,8 @@
 			baseConfigurationReference = 27A3A695D2E76A4DC47A8D05 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development: Alexander Kholodov (2GRWS2WKKA)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;

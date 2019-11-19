@@ -55,7 +55,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private var isDragging: Bool = false
     private var isHeaderVisible: Bool = false
     private var wasScrolled: Bool = false
-    private var isScrollingProgrammatically: Bool = false
 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
@@ -107,7 +106,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
         } else if tableView.cellForRow(at: IndexPath(row: 0, section: 0)) != nil && !wasScrolled {
             wasScrolled = true
-            isScrollingProgrammatically = true
             tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         }
         commentIdToShowOnOpen = nil
@@ -158,17 +156,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private func loadFullConversation(removingOldMessages: Bool) {
         guard !model.dataSource.isLoading else { return }
 
-        if removingOldMessages {
-            model.dataSource.resetAllComments()
-        }
-
         let mode = model.sortOption
+        model.dataSource.resetRepliesProviders()
         model.dataSource.conversation(
             mode,
             page: .first,
-            loadingStarted: {
-                if removingOldMessages { self.tableView.reloadData() }
-            },
+            loadingStarted: nil,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
                 
@@ -188,7 +181,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     // print("show error here")
                 } else {
                     let messageCount = self.model.dataSource.messageCount
-                    SPAnalyticsHolder.default.totalComments = messageCount
+                        SPAnalyticsHolder.default.totalComments = messageCount
                     self.sortView.updateCommentsLabel(messageCount ?? 0)
                     
                     if self.model.areCommentsEmpty() {
@@ -275,7 +268,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         super.setupTableView()
 
         tableView.layout {
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: tableHeader.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.bottom.equal(to: footer.topAnchor)
@@ -353,7 +346,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private func updateHeaderUI() {
         if model.dataSource.thumbnailUrl != nil ||
             model.dataSource.conversationTitle != nil {
-            tableView.contentInset = UIEdgeInsets(top: 85, left: 0, bottom: 0, right: 0)
+//            tableView.contentInset = UIEdgeInsets(top: 85, left: 0, bottom: 0, right: 0)
             isHeaderVisible = true
             headerHeightConstraint?.constant = articleHeaderMaxHeight
             tableHeader.setAuthor(model.dataSource.conversationPublisherName)
@@ -400,13 +393,10 @@ extension SPMainConversationViewController { // UITableViewDelegate
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if !isScrollingProgrammatically {
-            handleArticleHeight(with: scrollView.contentOffset)
-        }
+        handleArticleHeight(with: scrollView.contentOffset)
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        isScrollingProgrammatically = false
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -458,7 +448,7 @@ extension SPMainConversationViewController { // SPCommentCellDelegate
                     relatedMessageId: relatedCommentId),
                 source: .conversation)
         }
-        model.dataSource.showMoreReplies(for: commentId, sortMode: .newest)
+        model.dataSource.showMoreReplies(for: commentId, sortMode: model.sortOption)
     }
 }
 
@@ -483,7 +473,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
     
     /// Takes care of article header height updates using scrollView contentOffset vaule
     private func handleArticleHeight(with scrollViewContentOffset: CGPoint) {
-        let currentOffsetY = scrollViewContentOffset.y + tableView.contentInset.top
+        let currentOffsetY = scrollViewContentOffset.y + articleHeaderMaxHeight
         if isDragging {
             scrollingDirection = currentOffsetY > lastOffsetY ? .up : .down
         }
