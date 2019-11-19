@@ -70,7 +70,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         if let config = SPConfigsDataSource.appConfig {
             if config.mobileSdk?.enabled ?? false {
                 LocalizationManager.setLocale(config.mobileSdk?.locale)
-                completion(buildPreConversationController(with: postId))
+                buildPreConversationController(with: postId, completion: completion)
             }
         } else {
             self.postId = postId
@@ -86,9 +86,9 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     @objc
     private func respondToConfigUpdate() {
-        if let config = SPConfigsDataSource.appConfig, (config.mobileSdk?.enabled ?? false), let postId = postId {
+        if let config = SPConfigsDataSource.appConfig, (config.mobileSdk?.enabled ?? false), let postId = postId, let completion = configCompletion {
             LocalizationManager.setLocale(config.mobileSdk?.locale)
-            configCompletion?(buildPreConversationController(with: postId))
+            buildPreConversationController(with: postId, completion: completion)
         }
 
         self.postId = nil
@@ -99,7 +99,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    private func buildPreConversationController(with postId: String) -> UIViewController {
+    private func buildPreConversationController(with postId: String, completion: @escaping (UIViewController) -> Void) {
         SPAnalyticsHolder.default.prepareForNewPage()
 
         let conversationDataProvider = SPConversationsFacade()
@@ -118,7 +118,9 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.preConversationDelegate = self
-        return controller
+        controller.dataLoaded = {
+            completion(controller)
+        }
     }
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
