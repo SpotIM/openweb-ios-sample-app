@@ -136,6 +136,7 @@ internal final class SPMainConversationDataSource {
                 self.thumbnailUrl = response?.extractData?.thumbnailUrl
                 self.conversationTitle = response?.extractData?.title
                 self.cellData = self.processed(response?.conversation?.comments)
+            
                 completion(true, nil)
             }
         }
@@ -197,9 +198,6 @@ internal final class SPMainConversationDataSource {
         sortMode: SPCommentSortMode,
         loadingStarted: (() -> Void)? = nil) {
         
-        self.sortMode = sortMode
-        sortIsUpdated?()
-        
         guard let commentId = commentId, let indexPath = indexPathOfComment(with: commentId) else { return }
         
         let provider = repliesProviders[commentId]
@@ -228,7 +226,7 @@ internal final class SPMainConversationDataSource {
             page: .next,
             parentId: commentId,
             loadingStarted: loadingStarted) { (response, _) in
-                if let newUsers = response?.conversation?.users {
+                    if let newUsers = response?.conversation?.users {
                     let mergedUsers = self.users.merging(newUsers) { $1 }
                     self.users = mergedUsers
                 }
@@ -256,9 +254,14 @@ internal final class SPMainConversationDataSource {
     internal func resetAllComments() {
         cellData.removeAll()
         hiddenData.removeAll()
-        repliesProviders.removeAll()
+        resetRepliesProviders()
+        
     }
 
+    internal func resetRepliesProviders() {
+        repliesProviders.removeAll()
+    }
+    
     internal func isTimeToLoadNextPage(forRowAt indexPath: IndexPath) -> Bool {
         return absoluteIndex(ofRowAt: indexPath) >= totalCellCount - 5
     }
