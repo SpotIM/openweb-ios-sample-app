@@ -25,6 +25,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private var tableViewHeightConstraint: NSLayoutConstraint?
     private let maxSectionCount: Int = 2
     private let readingTracker = SPReadingTracker()
+    internal var dataLoaded: (() -> Void)?
     
     internal override var screenTargetType: SPAnScreenTargetType {
         return .preMain
@@ -154,12 +155,15 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     // print("show error here")
                 } else {
                     self.checkAdsAvailability()
+                    
+                    let messageCount = self.model.dataSource.messageCount
+                    SPAnalyticsHolder.default.totalComments = messageCount
                     SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
+                    
                     if self.model.areCommentsEmpty() {
                         self.showEmptyStateView()
                     } else {
-                        let messageCount = self.model.dataSource.messageCount
-                        SPAnalyticsHolder.default.totalComments = messageCount
+                        
                         self.header.set(commentCount: (messageCount ?? 0).decimalFormatted)
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
@@ -171,6 +175,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                 self.tableView.reloadData()
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
+                
+                self.dataLoaded?()
             }
         )
     }
