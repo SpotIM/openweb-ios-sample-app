@@ -106,8 +106,8 @@ internal struct CommentViewModel {
             } else if user.hasGamification {
                 badgeIsGamification = true
                 showsStar = true
-                badgeTitle = user.badgeType?.capitalized
-            }
+                badgeTitle = nil
+            } 
         }
 
         self.replyingToCommentId = replyingToCommentId
