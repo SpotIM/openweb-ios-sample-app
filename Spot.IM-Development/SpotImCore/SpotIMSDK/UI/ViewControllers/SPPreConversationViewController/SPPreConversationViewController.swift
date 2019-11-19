@@ -25,6 +25,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private var tableViewHeightConstraint: NSLayoutConstraint?
     private let maxSectionCount: Int = 2
     private let readingTracker = SPReadingTracker()
+    internal var dataLoaded: (() -> Void)?
     
     internal override var screenTargetType: SPAnScreenTargetType {
         return .preMain
@@ -174,6 +175,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                 self.tableView.reloadData()
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
+                
+                self.dataLoaded?()
             }
         )
     }
