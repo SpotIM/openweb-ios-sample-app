@@ -73,7 +73,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         closeButton.backgroundColor = .spBackground0
         closeButton.layout {
             $0.centerY.equal(to: commentingOnLabel.centerYAnchor)
-            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -5.0)
+            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -6.0)
             $0.width.equal(to: 40.0)
             $0.height.equal(to: 40.0)
         }

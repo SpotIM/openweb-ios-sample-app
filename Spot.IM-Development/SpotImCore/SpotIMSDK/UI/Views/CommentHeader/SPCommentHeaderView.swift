@@ -74,7 +74,7 @@ final class SPCommentHeaderView: BaseView {
         closeButton.backgroundColor = .spBackground0
         closeButton.layout {
             $0.centerY.equal(to: commentAuthorLabel.centerYAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -5.0)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -6.0)
             $0.width.equal(to: 40.0)
             $0.height.equal(to: 40.0)
         }
@@ -111,7 +111,7 @@ private enum Theme {
     static let commentTopOffset: CGFloat = 22.0
     static let commentBottomOffset: CGFloat = 24.0
     static let trailingOffset: CGFloat = 24.0
-    static let leadingOffset: CGFloat = 25.0
+    static let leadingOffset: CGFloat = 16
     static let separatorHeight: CGFloat = 1.0
     static let titleFontSize: CGFloat = 16.0
     static let commentFontSize: CGFloat = 16.0

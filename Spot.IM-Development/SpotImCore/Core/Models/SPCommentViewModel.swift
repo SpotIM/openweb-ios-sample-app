@@ -10,43 +10,43 @@ import UIKit
 
 internal struct CommentViewModel {
 
-        var authorId: String?
-        var commentId: String?
-        var parentCommentId: String?
-        var rootCommentId: String?
-        var displayName: String?
-        var userAvatar: URL?
-        var timestamp: String?
-        var commentText: String?
-        var rankedByUser: Int = 0
-        var rankUp: String?
-        var rankDown: String?
-        var repliesRawCount: Int?
-        var repliesCount: String?
-        var depth: Int = 0
-        
-        var replyingToDisplayName: String?
-        var replyingToCommentId: String?
-        
-        var showsOnline: Bool = false
-        var hasOffset: Bool = false
-        var isDeleted: Bool = false
-        // helper property for array cleaning
-        var shouldBeRemoved: Bool = false
-        var repliesButtonState: RepliesButtonState = .collapsed
-        var isCollapsed: Bool = false
-        var showsStar: Bool = false
-        var badgeTitle: String?
-        var badgeIsGamification: Bool = false
-        var commentTextCollapsed: Bool = true
-        
-        var brandColor: UIColor = .brandColor
+    var authorId: String?
+    var commentId: String?
+    var parentCommentId: String?
+    var rootCommentId: String?
+    var displayName: String?
+    var userAvatar: URL?
+    var timestamp: String?
+    var commentText: String?
+    var rankedByUser: Int = 0
+    var rankUp: String?
+    var rankDown: String?
+    var repliesRawCount: Int?
+    var repliesCount: String?
+    var depth: Int = 0
 
-        var isRoot: Bool {
-            guard let id = commentId, !id.isEmpty else { return false }
-            
-            return id == rootCommentId
-        }
+    var replyingToDisplayName: String?
+    var replyingToCommentId: String?
+
+    var showsOnline: Bool = false
+    var hasOffset: Bool = false
+    var isDeleted: Bool = false
+    // helper property for array cleaning
+    var shouldBeRemoved: Bool = false
+    var repliesButtonState: RepliesButtonState = .collapsed
+    var isCollapsed: Bool = false
+    var showsStar: Bool = false
+    var badgeTitle: String?
+    var badgeIsGamification: Bool = false
+    var commentTextCollapsed: Bool = true
+
+    var brandColor: UIColor = .brandColor
+
+    var isRoot: Bool {
+        guard let id = commentId, !id.isEmpty else { return false }
+
+        return id == rootCommentId
+    }
 
     init(
         with comment: SPComment,
@@ -121,94 +121,96 @@ internal struct CommentViewModel {
         return textWidth
     }
     
-    func height(with lineLimit: Int) -> CGFloat {
-            let width = textWidth()
-            let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isDeleted))
-            let clippedMessage = attributedMessage.clippedToLine(
-                index: lineLimit,
-                width: width,
-                isCollapsed: commentTextCollapsed
-            )
-            let textHeight: CGFloat = clippedMessage.string.isEmpty ?
-                0.0 : clippedMessage.height(withConstrainedWidth: width)
+    func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
+        let width = textWidth()
+        let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isDeleted))
+        let clippedMessage = attributedMessage.clippedToLine(
+            index: lineLimit,
+            width: width,
+            isCollapsed: commentTextCollapsed
+        )
+        let textHeight: CGFloat = clippedMessage.string.isEmpty ?
+            0.0 : clippedMessage.height(withConstrainedWidth: width)
 
-            let moreRepliesHeight = repliesButtonState == .hidden ?
-                0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
+        let moreRepliesHeight = repliesButtonState == .hidden ?
+            0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
-            let userViewHeight: CGFloat = badgeTitle == nil ?
-                Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
-            let deletedOffset = isDeleted ? Theme.bottomOffset : 0.0
-            let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
+        let userViewHeight: CGFloat = badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
 
-            let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
-                + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
-                + userViewHeight
-                + (isDeleted ? 0.0 : Theme.messageContainerTopOffset)
-                + (isDeleted ? 0.0 : Theme.replyActionsViewHeight)
-                + textHeight
-                + (isCollapsed ? 0.0 : moreRepliesHeight)
-            
-            return height
-        }
-        
-        func depthOffset() -> CGFloat {
-            switch depth {
-            case 0: return Theme.leadingCommentOffset
-            case 1: return Theme.leadingCommentOffset + 25.0
-            case 2: return Theme.leadingCommentOffset + 40.0
-            default: return Theme.leadingCommentOffset + 55.0
-            }
-        }
-        
-        private enum Theme {
-            static let fontSize: CGFloat = 16.0
-            static let deletedFontSize: CGFloat = 17.0
-            static let topOffset: CGFloat = 14.0
-            static let topCollapsedOffset: CGFloat = 22.0
-            static let bottomOffset: CGFloat = 15.0
-            static let leadingReplyOffset: CGFloat = 42.0
-            static let leadingCommentOffset: CGFloat = 16.0
-            static let trailingOffset: CGFloat = 16.0
-            static let messageContainerTopOffset: CGFloat = 14.0
-            static let userViewCollapsedHeight: CGFloat = 44.0
-            static let userViewExpandedHeight: CGFloat = 69.0
-            static let replyActionsViewHeight: CGFloat = 49.0
-            static let moreRepliesViewHeight: CGFloat = 31.0
-            static let moreRepliesTopOffset: CGFloat = 12.0
-        }
-        
-        private func message() -> String {
-            if isDeleted {
-                return ""
-            } else {
-                return commentText ?? ""
-            }
-        }
-        
-        private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.firstLineHeadIndent = 0
-            paragraphStyle.lineSpacing = 3.5
-            
-            var attributes: [NSAttributedString.Key: Any]
-            if !isDeleted {
-                attributes = [
-                    .foregroundColor: UIColor.charcoalGrey,
-                    .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
-                    .paragraphStyle: paragraphStyle
-                ]
-            } else {
-                attributes = [
-                    .foregroundColor: UIColor.steelGrey,
-                    .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
-                    .paragraphStyle: paragraphStyle
-                ]
-            }
-            
-            return attributes
-        }
-        
+        let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
+        let deletedOffset = isDeleted ? Theme.bottomOffset : lastInSectionOffset
+        let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
+
+        let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
+            + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
+            + userViewHeight
+            + (isDeleted ? 0.0 : Theme.messageContainerTopOffset)
+            + (isDeleted ? 0.0 : Theme.replyActionsViewHeight)
+            + textHeight
+            + (isCollapsed ? 0.0 : moreRepliesHeight)
+
+        return height
     }
+
+    func depthOffset() -> CGFloat {
+        switch depth {
+        case 0: return Theme.leadingCommentOffset
+        case 1: return Theme.leadingCommentOffset + 25.0
+        case 2: return Theme.leadingCommentOffset + 40.0
+        default: return Theme.leadingCommentOffset + 55.0
+        }
+    }
+
+    private enum Theme {
+        static let fontSize: CGFloat = 16.0
+        static let deletedFontSize: CGFloat = 17.0
+        static let topOffset: CGFloat = 14.0
+        static let topCollapsedOffset: CGFloat = 22.0
+        static let bottomOffset: CGFloat = 15.0
+        static let leadingReplyOffset: CGFloat = 42.0
+        static let leadingCommentOffset: CGFloat = 16.0
+        static let trailingOffset: CGFloat = 16.0
+        static let messageContainerTopOffset: CGFloat = 14.0
+        static let userViewCollapsedHeight: CGFloat = 44.0
+        static let userViewExpandedHeight: CGFloat = 69.0
+        static let replyActionsViewHeight: CGFloat = 49.0
+        static let moreRepliesViewHeight: CGFloat = 31.0
+        static let moreRepliesTopOffset: CGFloat = 12.0
+        static let lastInSectionOffset: CGFloat = 19.0
+    }
+
+    private func message() -> String {
+        if isDeleted {
+            return ""
+        } else {
+            return commentText ?? ""
+        }
+    }
+
+    private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.firstLineHeadIndent = 0
+        paragraphStyle.lineSpacing = 3.5
+
+        var attributes: [NSAttributedString.Key: Any]
+        if !isDeleted {
+            attributes = [
+                .foregroundColor: UIColor.charcoalGrey,
+                .font: UIFont.preferred(style: .regular, of: Theme.fontSize),
+                .paragraphStyle: paragraphStyle
+            ]
+        } else {
+            attributes = [
+                .foregroundColor: UIColor.steelGrey,
+                .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
+                .paragraphStyle: paragraphStyle
+            ]
+        }
+
+        return attributes
+    }
+
+}
 
 // MARK: - Theme
 

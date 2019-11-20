@@ -29,7 +29,7 @@ final class SPAvatarView: BaseView {
     private let onlineIndicatorView: BaseView = .init()
     private let avatarButton: BaseButton = .init()
 
-    private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", for: .light) }
+    private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar") }
 
     override init(frame: CGRect) {
         super.init(frame: frame)

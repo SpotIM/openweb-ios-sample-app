@@ -169,6 +169,8 @@
 		5D697A4622B65108001AD556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */; };
 		5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
+		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		BF27CB0174A0481BF8EDB88A /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */; };
 		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
 /* End PBXBuildFile section */
@@ -377,6 +379,7 @@
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5DA8B5A02327E20A0045FCFA /* Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
 		5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettingsViewController.swift; sourceTree = "<group>"; };
+		5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		647CC35DB363F341B5DA9BE4 /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DAA504E36DB9813A499855C /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
@@ -456,6 +459,7 @@
 		445417A0236850C0001D0ED0 /* Roboto */ = {
 			isa = PBXGroup;
 			children = (
+				5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */,
 				445417A1236850C0001D0ED0 /* Roboto-Medium.ttf */,
 				445417A2236850C0001D0ED0 /* Roboto-Regular.ttf */,
 				445417A3236850C0001D0ED0 /* Roboto-Bold.ttf */,
@@ -1220,6 +1224,7 @@
 				4411659E2375822900B781F3 /* Arial Italic.ttf in Resources */,
 				445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */,
 				445417A9236850C0001D0ED0 /* Roboto-Bold.ttf in Resources */,
+				5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */,
 				4411659F2375822900B781F3 /* Arial.ttf in Resources */,
 				445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */,
 			);
@@ -1230,6 +1235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D697A4622B65108001AD556 /* Assets.xcassets in Resources */,
+				5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */,
 				0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */,
 				0EAFED7A22E505A900B57E29 /* fastlane in Resources */,
 				4416C655237ABDE700D3F7B9 /* LaunchScreen.storyboard in Resources */,
@@ -1593,7 +1599,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development: Alexander Kholodov (2GRWS2WKKA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = "1.9(ADS)";
+				CURRENT_PROJECT_VERSION = 1.12.2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1729,7 +1735,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Alexander Kholodov (8H4BKTJCC4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = "1.9(ADS)";
+				CURRENT_PROJECT_VERSION = 1.12.2;
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -1996,7 +2002,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "1.9(ADS)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = B88KG2QXHX;
+				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Info.plist";
@@ -2007,7 +2013,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = SpotIM_Dev;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2020,7 +2026,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Alexander Kholodov (8H4BKTJCC4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = "1.9(ADS)";
+				CURRENT_PROJECT_VERSION = 1.12.2;
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";

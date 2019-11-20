@@ -51,6 +51,7 @@ internal extension UIFont {
         registerFontWith(filenameString: "Roboto-Bold.ttf")
         registerFontWith(filenameString: "Roboto-Medium.ttf")
         registerFontWith(filenameString: "Roboto-Regular.ttf")
+        registerFontWith(filenameString: "Roboto-Italic.ttf")
         registerFontWith(filenameString: "OpenSans-RegularItalic.ttf")
         registerFontWith(filenameString: "ArialHebrew-Bold.ttf")
         registerFontWith(filenameString: "ArialHebrew.ttf")

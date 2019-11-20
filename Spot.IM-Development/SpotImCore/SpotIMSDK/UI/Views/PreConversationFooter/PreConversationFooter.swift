@@ -88,7 +88,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
 
     private func setupShowMoreCommentsButton() {
-        separatorView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        separatorView.backgroundColor = .spSeparator5
         separatorView.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor, offsetBy: 15.0)

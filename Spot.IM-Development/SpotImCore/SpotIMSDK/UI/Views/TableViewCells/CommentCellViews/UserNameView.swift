@@ -163,7 +163,7 @@ internal final class UserNameView: BaseView {
         leaderBadge.isHidden = true
         leaderBadge.layout {
             $0.centerY.equal(to: userNameLabel.centerYAnchor)
-            $0.leading.equal(to: userNameLabel.trailingAnchor, offsetBy: 12.0)
+            $0.leading.equal(to: userNameLabel.trailingAnchor, offsetBy: 9.0)
             $0.width.equal(to: 13.0)
         }
     }

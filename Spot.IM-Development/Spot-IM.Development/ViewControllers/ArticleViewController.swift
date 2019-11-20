@@ -25,7 +25,8 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
+        let config = InputConfiguration(appLanguage: "en_US")
+        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self, inputConfiguration: config)
 
         spotIMCoordinator?.preConversationController(
             withPostId: postId ?? foxArticleId,

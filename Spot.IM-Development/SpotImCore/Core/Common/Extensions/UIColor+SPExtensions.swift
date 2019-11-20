@@ -47,7 +47,7 @@ internal extension UIColor {
     }
 
     static var spAvatarBG: UIColor {
-         paleBlue
+        SPUserInterfaceStyle.isDarkMode ? black : paleBlue
      }
     
     static var spInactiveButtonBG: UIColor {
@@ -71,10 +71,35 @@ internal extension UIColor {
     }
     
     static var spSeparator2: UIColor {
-        SPUserInterfaceStyle.isDarkMode ? grayishBrown : iceBlue
+        SPUserInterfaceStyle.isDarkMode ? white.withAlphaComponent(0.15) : iceBlue
     }
     
     static var spSeparator3: UIColor {
-        SPUserInterfaceStyle.isDarkMode ? spBackground0 : spBackground0
+        SPUserInterfaceStyle.isDarkMode ? steelGrey : white.withAlphaComponent(0.1)
+    }
+
+    static var spSeparator4: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? spBackground0.darkerBy60Percent : iceBlue
+    }
+
+    static var spSeparator5: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? mineShaft2 : white.withAlphaComponent(0.1)
+    }
+
+    private var darkerBy60Percent: UIColor {
+        return darkerColor(by: 0.4, resultAlpha: 1)
+    }
+
+    private func darkerColor(by percent: CGFloat, resultAlpha alpha: CGFloat) -> UIColor {
+        var h: CGFloat = 0, s: CGFloat = 0
+        var b: CGFloat = 0, a: CGFloat = 0
+
+        guard getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+            else {return self}
+
+        return UIColor(hue: h,
+                       saturation: s,
+                       brightness: b * percent,
+                       alpha: alpha == -1 ? a : alpha)
     }
 }
