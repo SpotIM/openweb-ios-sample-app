@@ -200,7 +200,7 @@ extension CommentReplyViewController {
         textInputViewContainer.delegate = self
         textInputViewContainer.layout {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.inputViewEdgeInset)
-            $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewEdgeInset)
+            $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.bottom.equal(to: postButton.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.height.greaterThanOrEqual(to: 80.0)
@@ -308,5 +308,5 @@ private enum Theme {
     static let postButtonFontSize: CGFloat = 15.0
     static let postButtonTrailing: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
-    
+    static let inputViewLeadingInset: CGFloat = 16.0
 }

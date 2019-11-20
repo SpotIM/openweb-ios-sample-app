@@ -177,7 +177,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func configureMoreRepliesView() {
         moreRepliesView.delegate = self
         moreRepliesView.layout {
-            $0.top.equal(to: replyActionsView.bottomAnchor)
+            $0.top.equal(to: replyActionsView.bottomAnchor, offsetBy: Theme.moreRepliesTopOffset)
             $0.leading.equal(to: messageView.leadingAnchor)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
             moreRepliesViewHeightConstraint = $0.height.equal(to: Theme.moreRepliesViewHeight)
@@ -288,4 +288,5 @@ private enum Theme {
     static let userViewExpandedHeight: CGFloat = 69.0
     static let avatarSideSize: CGFloat = 39.0
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
+    static let moreRepliesTopOffset: CGFloat = 12.0
 }

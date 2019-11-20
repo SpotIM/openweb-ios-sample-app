@@ -31,6 +31,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: BaseView = .init()
+    private let separatorView: BaseView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -94,8 +95,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
 
     private func configureHeaderView() {
-        let separatorView: BaseView = .init()
-        
         separatorView.backgroundColor = .spSeparator
         headerView.addSubview(separatorView)
         separatorView.layout {
@@ -206,9 +205,11 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateHeaderView(with dataModel: CommentViewModel, shouldShowHeader: Bool) {
         headerViewHeightConstraint?.constant = shouldShowHeader ? 7.0 : 0.0
-        separatorHeightConstraint?.constant = !shouldShowHeader ? 0.0 : (dataModel.isCollapsed ? 1.0 : 7.0)
+        separatorHeightConstraint?.constant = shouldShowHeader ? (dataModel.isCollapsed ? 1.0 : 7.0) : 0.0
         separatorLeadingConstraint?.constant = dataModel.isCollapsed ? Theme.leadingOffset : 0.0
         separatorTrailingConstraint?.constant = dataModel.isCollapsed ? -Theme.leadingOffset : 0.0
+
+        separatorView.backgroundColor = dataModel.isCollapsed ? .spSeparator : .spSeparator4
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {

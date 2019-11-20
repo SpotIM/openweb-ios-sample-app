@@ -76,7 +76,9 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     }
 
     internal func cellDataHeight(for indexPath: IndexPath) -> CGFloat {
-        return model.dataSource.cellData(for: indexPath).height(with: messageLineLimit)
+        let isLast = model.dataSource.numberOfRows(in: indexPath.section) == indexPath.row + 1
+        let cellData = model.dataSource.cellData(for: indexPath)
+        return cellData.height(with: messageLineLimit, isLastInSection: isLast)
     }
 
     internal func showErrorStateView() {
