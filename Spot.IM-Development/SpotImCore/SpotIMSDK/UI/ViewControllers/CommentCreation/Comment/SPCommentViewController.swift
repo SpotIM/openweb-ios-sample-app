@@ -62,11 +62,10 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.backgroundColor = .spBackground0
         commentingOnLabel.layout {
-            $0.top.equal(to: topContainerView.topAnchor, offsetBy: 25.0)
+            $0.top.equal(to: topContainerView.topAnchor)
             $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 12.0)
             $0.trailing.lessThanOrEqual(to: closeButton.leadingAnchor)
-            emptyArticleBottomConstarint = $0.bottom.equal(to: topContainerView.bottomAnchor,
-                                                           offsetBy: 16.0, isActive: false)
+            emptyArticleBottomConstarint = $0.bottom.equal(to: topContainerView.bottomAnchor, isActive: false)
         }
         
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
