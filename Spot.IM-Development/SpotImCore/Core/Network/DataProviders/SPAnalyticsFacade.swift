@@ -52,7 +52,10 @@ internal final class SPDefaultAnalyticsSender: SPAnalyticsSender {
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
-            .responseString { _ in }
+            .responseString { response in
+                 SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields)
+                
+        }
     }
 
     private enum AnalyticsAPIKeys {
