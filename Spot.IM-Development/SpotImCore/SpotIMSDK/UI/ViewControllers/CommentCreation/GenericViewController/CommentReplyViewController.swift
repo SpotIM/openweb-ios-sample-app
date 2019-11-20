@@ -211,9 +211,10 @@ extension CommentReplyViewController {
         topContainerView.backgroundColor = .spBackground0
         topContainerView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         topContainerView.layout {
-            $0.top.lessThanOrEqual(to: mainContainerView.topAnchor)
+            $0.top.lessThanOrEqual(to: mainContainerView.topAnchor, offsetBy: 20)
             $0.leading.equal(to: mainContainerView.leadingAnchor)
             $0.trailing.equal(to: mainContainerView.trailingAnchor)
+            $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
     private func updatePostButton() {
