@@ -63,9 +63,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             else { return }
         
         tableViewHeightConstraint?.constant = tableView.contentSize.height
-        UIView.animate(withDuration: animated ? SPAnimationDuration.short : 0.0 ) {
+        self.preConversationDelegate?.viewWillResize(with: animated ? SPAnimationDuration.short : 0.0)
+        UIView.animate(withDuration: animated ? SPAnimationDuration.short : 0.0) {
             self.tableView.layoutIfNeeded()
             self.view.layoutIfNeeded()
+            
+            self.preConversationDelegate?.viewDidResize()
         }
     }
     
@@ -177,6 +180,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                 self.view.layoutIfNeeded()
                 
                 self.dataLoaded?()
+                self.preConversationDelegate?.viewDidResize()
             }
         )
     }
@@ -369,9 +373,10 @@ private extension SPPreConversationViewController {
 // MARK: - Delegate
 
 internal protocol SPPreConversationViewControllerDelegate: class {
-
     func showMoreComments(with dataModel: SPMainConversationModel, selectedCommentId: String?)
     func showTerms()
     func showPrivacy()
     func showAddSpotIM()
+    func viewWillResize(with duration: TimeInterval)
+    func viewDidResize()
 }

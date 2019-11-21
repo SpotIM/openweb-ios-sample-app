@@ -28,6 +28,12 @@ public protocol SpotImSDKNavigationDelegate: class {
     
 }
 
+public protocol SpotImLayoutDelegate: class {
+    func viewWillResize(with duration: TimeInterval)
+    func viewDidResize()
+}
+
+
 extension SpotImSDKNavigationDelegate {
     
     func userDidBecomeUnauthorized() { /* empty default realization, in order to make this function optional */ }
@@ -45,6 +51,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private lazy var conversationUpdater: SPCommentUpdater = SPCommentFacade()
     
     private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
+    private weak var spotLayoutDelegate: SpotImLayoutDelegate?
+    
     private var localCommentReplyDidCreate: ((SPComment) -> Void)?
     private var commentReplyCreationBlocked: ((String?) -> Void)?
     private var authHandlers: [WeakRef<AuthenticationHandler>] = []
@@ -61,6 +69,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         LocalizationManager.updateLocalizationConfiguration(inputConfiguration)
     }
 
+    public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
+        self.spotLayoutDelegate = delegate
+    }
+    
     /// Please, provide container (UINavigationViewController) for sdk flows
     public func preConversationController(withPostId postId: String,
                                           container: UIViewController?,
@@ -226,6 +238,14 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 
     internal func showAddSpotIM() {
         showWebPage(with: APIConstants.joinURLString)
+    }
+    
+    internal func viewWillResize(with duration: TimeInterval) {
+        self.spotLayoutDelegate?.viewWillResize(with: duration)
+    }
+    
+    internal func viewDidResize() {
+        self.spotLayoutDelegate?.viewDidResize()
     }
 
 }
