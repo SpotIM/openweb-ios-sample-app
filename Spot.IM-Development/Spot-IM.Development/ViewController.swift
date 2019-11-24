@@ -86,15 +86,15 @@ class ViewController: UIViewController {
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
-        self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId)
+        self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
     }
 
     @IBAction private func crashButtonTapped(_ sender: AnyObject) {
         //Crashlytics.sharedInstance().crash()
     }
 
-    private func showArticles(with spotId: String, authenticationControllerId: String) {
-        let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId)
+    private func showArticles(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
+        let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView)
         navigationController?.pushViewController(controller, animated: true)
     }
     
