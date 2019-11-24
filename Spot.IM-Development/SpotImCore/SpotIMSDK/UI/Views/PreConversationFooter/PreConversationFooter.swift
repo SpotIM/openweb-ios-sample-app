@@ -80,11 +80,13 @@ internal final class SPPreConversationFooter: BaseView {
     func hideShowMoreCommentsButton() {
         moreCommentsHeightConstraint?.constant = 0
         showMoreCommentsButton.isHidden = true
+        separatorView.isHidden = true
     }
 
     func showShowMoreCommentsButton() {
         moreCommentsHeightConstraint?.constant = Theme.showMoreCommentsButtonHeight
         showMoreCommentsButton.isHidden = false
+        separatorView.isHidden = false
     }
 
     private func setupShowMoreCommentsButton() {
