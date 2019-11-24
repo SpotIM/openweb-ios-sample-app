@@ -538,7 +538,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                                      style: .default)
         showAlert(
             title: LocalizationManager.localizedString(key: "Delete Comment"),
-            message: LocalizationManager.localizedString(key: "Do you realy want to delete this comment?"),
+            message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
     }
     
