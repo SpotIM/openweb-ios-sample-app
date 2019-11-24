@@ -19,10 +19,12 @@ class ArticlesListViewController: UITableViewController {
     let authenticationControllerId: String
     var data : Response?
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
+    let addToTableView: Bool
     
-    init(spotId:String, authenticationControllerId: String) {
+    init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false) {
         self.spotId = spotId
         self.authenticationControllerId = authenticationControllerId
+        self.addToTableView = addToTableView
         
         super.init(style: .plain)
     }
@@ -71,8 +73,13 @@ extension ArticlesListViewController : ArticleTableViewCellDelegate {
     func articleCellTapped(cell: ArticleTableViewCell, withPost post: Post?) {
         guard let post = post, let postId = postId(post: post) else { return }
         
-        let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
-        self.navigationController?.pushViewController(articleViewController, animated: true)
+        if addToTableView {
+            let tableViewController = TableViewFooterTesterViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
+            self.navigationController?.pushViewController(tableViewController, animated: true)
+        } else {
+            let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
+            self.navigationController?.pushViewController(articleViewController, animated: true)
+        }
     }
 }
 

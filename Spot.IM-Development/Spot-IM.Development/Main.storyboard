@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -297,6 +297,18 @@ Build: [unknown]</string>
                                     <segue destination="afI-iB-Nmt" kind="show" id="HUT-J0-M8W"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ont-uO-1R5">
+                                <rect key="frame" x="107.5" y="371" width="160" height="30"/>
+                                <accessibility key="accessibilityConfiguration" identifier="table"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="KpZ-11-9rs"/>
+                                    <constraint firstAttribute="width" constant="160" id="SgE-xV-MHf"/>
+                                </constraints>
+                                <state key="normal" title="Show Demo Table View"/>
+                                <connections>
+                                    <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="yiT-6s-KbC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -304,6 +316,7 @@ Build: [unknown]</string>
                             <constraint firstItem="ELI-s3-pbx" firstAttribute="centerY" secondItem="TMI-UE-CFh" secondAttribute="centerY" id="4rs-eh-Ssg"/>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="16" id="Gdj-AK-5u4"/>
                             <constraint firstItem="0p1-DY-kYy" firstAttribute="firstBaseline" secondItem="qNv-s9-0hd" secondAttribute="baseline" constant="40" id="Jku-yd-AqR"/>
+                            <constraint firstItem="Ont-uO-1R5" firstAttribute="centerX" secondItem="AZp-Pq-loo" secondAttribute="centerX" id="LPa-fb-ueX"/>
                             <constraint firstItem="AZp-Pq-loo" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="PWl-A0-3h7"/>
                             <constraint firstItem="0p1-DY-kYy" firstAttribute="centerX" secondItem="BKE-Ut-tNt" secondAttribute="centerX" id="QHL-lL-9LQ"/>
                             <constraint firstItem="Hsr-To-3uz" firstAttribute="firstBaseline" secondItem="AZp-Pq-loo" secondAttribute="baseline" constant="40" id="WR3-3B-ucG"/>
@@ -312,6 +325,7 @@ Build: [unknown]</string>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="ejj-AI-zUk"/>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="0p1-DY-kYy" secondAttribute="bottom" constant="15" id="fDp-gw-dg5"/>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="gcn-lI-X2U"/>
+                            <constraint firstItem="AZp-Pq-loo" firstAttribute="top" secondItem="Ont-uO-1R5" secondAttribute="bottom" constant="8" id="iXV-eF-4OM"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="83" id="k1b-5a-uP0"/>
                             <constraint firstItem="Hsr-To-3uz" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="oVv-iZ-6yH"/>
                             <constraint firstItem="HBy-no-NuF" firstAttribute="bottom" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="53" id="pce-Zc-Y3e"/>
@@ -450,6 +464,22 @@ Build: [unknown]</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D4v-oL-etS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1365.5999999999999" y="-345.87706146926541"/>
+        </scene>
+        <!--Table View Footer Tester View Controller-->
+        <scene sceneID="xWR-7d-P3Q">
+            <objects>
+                <viewController id="YhO-Vq-JEV" customClass="TableViewFooterTesterViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="II3-dL-fVX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="HCW-n1-UjU"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="sTP-NU-0UR"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6Mp-K5-Iz5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1484" y="1100.5997001499252"/>
         </scene>
     </scenes>
     <resources>

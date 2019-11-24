@@ -171,6 +171,7 @@
 		5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
 		BF27CB0174A0481BF8EDB88A /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */; };
 		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
 /* End PBXBuildFile section */
@@ -381,6 +382,7 @@
 		5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettingsViewController.swift; sourceTree = "<group>"; };
 		5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		647CC35DB363F341B5DA9BE4 /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewFooterTesterViewController.swift; sourceTree = "<group>"; };
 		847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DAA504E36DB9813A499855C /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		9F920BF2661A5707C43AF42A /* Pods-Shared-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
@@ -1005,6 +1007,7 @@
 		5D4943B72302CA8C00AA7541 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				6DF3A6F62386CCCE00419B30 /* TableViewFooterTesterViewController */,
 				0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */,
 				0E1125CE23049F7A006B1489 /* ArticlesListViewController */,
 				5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */,
@@ -1079,6 +1082,14 @@
 				5DA8B5A02327E20A0045FCFA /* Autolayout.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		6DF3A6F62386CCCE00419B30 /* TableViewFooterTesterViewController */ = {
+			isa = PBXGroup;
+			children = (
+				6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */,
+			);
+			path = TableViewFooterTesterViewController;
 			sourceTree = "<group>";
 		};
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
@@ -1486,6 +1497,7 @@
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
 				5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */,
 				0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */,
+				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
 				0E1125E423054335006B1489 /* ArticleWebViewController.swift in Sources */,
