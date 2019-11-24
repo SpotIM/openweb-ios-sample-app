@@ -461,14 +461,14 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     func showMoreText(for commentId: String?) {
         guard let indexPath = model.dataSource.indexPathOfComment(with: commentId) else { return }
         model.dataSource.expandCommentText(for: indexPath)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        tableView.reloadData()
         handleCommentSizeChange()
     }
 
     func showLessText(for commentId: String?) {
         guard let indexPath = model.dataSource.indexPathOfComment(with: commentId) else { return }
         model.dataSource.collapseCommentText(for: indexPath)
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        tableView.reloadData()
         handleCommentSizeChange()
     }
 }
