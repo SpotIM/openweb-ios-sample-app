@@ -62,8 +62,9 @@ final class SPMainConversationModel {
     
     func handlePendingComment() {
         guard let comment = pendingComment else { return }
-        
-        commentsActionDelegate?.localCommentWillBeCreated()
+        if !comment.isReply {
+            commentsActionDelegate?.localCommentWillBeCreated()
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             self?.dataSource.update(with: comment)
             self?.pendingComment = nil
