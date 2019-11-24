@@ -44,7 +44,7 @@
 "Text copied to clipboard" = "טקסט הועתק ללוח";
 "Delete" = "מחיקת תגובה";
 "Delete Comment" = "מחיקת תגובה";
-"Do you realy want to delete this comment?" = "אישור המחיקה ימחק לאלתר את התגובה מהשיחה. האם ברצונך למחוק את ההודעה?";
+"Do you really want to delete this comment?" = "אישור המחיקה ימחק לאלתר את התגובה מהשיחה. האם ברצונך למחוק את ההודעה?";
 "Report" = "דיווח תגובה";
 "Report Comment" = "דיווח תגובה";
 "Reporting this comment will send it for review and hide it from your view" = "דיווח על תגובה זו ישלח לאדמין, כמו כן, התגובה תוסתר מהתצוגה שלך.";
