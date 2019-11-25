@@ -43,33 +43,21 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         loadConversation()
         readingTracker.setupTracking(for: view)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        updateTableViewHeightIfNeeded()
-    }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        updateTableViewHeightIfNeeded()
+        self.preConversationDelegate?.viewDidResize()
     }
     
-    private func updateTableViewHeightIfNeeded(animated: Bool = false) {
-        guard
-            let heightConstraint = tableViewHeightConstraint,
+    private func updateTableViewHeightIfNeeded() {
+        guard let heightConstraint = tableViewHeightConstraint,
             heightConstraint.constant != tableView.contentSize.height
             else { return }
         
         tableViewHeightConstraint?.constant = tableView.contentSize.height
-        self.preConversationDelegate?.viewWillResize(with: animated ? SPAnimationDuration.short : 0.0)
-        UIView.animate(withDuration: animated ? SPAnimationDuration.short : 0.0) {
-            self.tableView.layoutIfNeeded()
-            self.view.layoutIfNeeded()
-            
-            self.preConversationDelegate?.viewDidResize()
-        }
+        self.tableView.layoutIfNeeded()
+        self.view.layoutIfNeeded()
     }
     
     // MARK: - Private methods
@@ -179,8 +167,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
                 
+                self.updateTableViewHeightIfNeeded()
                 self.dataLoaded?()
-                self.preConversationDelegate?.viewDidResize()
             }
         )
     }
@@ -282,7 +270,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func handleCommentSizeChange() {
         super.handleCommentSizeChange()
         
-        updateTableViewHeightIfNeeded(animated: true)
+        updateTableViewHeightIfNeeded()
     }
     
     private func didTapComment(with indexPath: IndexPath) {
@@ -377,6 +365,5 @@ internal protocol SPPreConversationViewControllerDelegate: class {
     func showTerms()
     func showPrivacy()
     func showAddSpotIM()
-    func viewWillResize(with duration: TimeInterval)
     func viewDidResize()
 }

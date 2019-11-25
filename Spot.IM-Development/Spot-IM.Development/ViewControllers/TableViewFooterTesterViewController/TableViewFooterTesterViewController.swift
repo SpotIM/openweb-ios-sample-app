@@ -30,7 +30,6 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     let url: String
     let authVCId: String
     
-    
     init(spotId: String, postId: String, url: String, authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
@@ -55,6 +54,8 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         setupContainerView()
         tableView.estimatedSectionFooterHeight = UITableView.automaticDimension
         tableView.sectionFooterHeight = UITableView.automaticDimension
+        
+        setupSpotView()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -78,7 +79,6 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 1 {
-            setupSpotView()
             return self.spotIMContainerView
         }
         
@@ -102,6 +102,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
             return
         }
         
+        self.setupSpotIM = true
         spotIMCoordinator?.preConversationController(withPostId: self.postId,
                                                      container: navigationController, completion: { preConversationVC in
                                                         preConversationVC.view.translatesAutoresizingMaskIntoConstraints = false
@@ -112,11 +113,9 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
                                                         preConversationVC.view.leadingAnchor.constraint(equalTo: self.spotIMContainerView.leadingAnchor).isActive = true
                                                         preConversationVC.view.bottomAnchor.constraint(equalTo: self.spotIMContainerView.bottomAnchor).isActive = true
                                                         preConversationVC.view.trailingAnchor.constraint(equalTo: self.spotIMContainerView.trailingAnchor).isActive = true
-                                                        preConversationVC.view.heightAnchor.constraint(greaterThanOrEqualToConstant: 400.0).isActive = true
                                                         
                                                         preConversationVC.didMove(toParent: self)
                                                         //it used to reload the section here but we removed that as that caused non-responsive issues
-                                                        self.setupSpotIM = true
         })
     }
 
@@ -145,15 +144,7 @@ extension TableViewFooterTesterViewController: SpotImSDKNavigationDelegate {
 }
 
 extension TableViewFooterTesterViewController: SpotImLayoutDelegate {
-    func viewWillResize(with duration: TimeInterval) {
-        self.tableView.reloadSections(IndexSet(integer: 1), with: .none)
-//        UIView.transition(with: tableView,
-//        duration: duration,
-//        options: .curveEaseInOut,
-//        animations: { self.tableView.reloadData() })
-    }
-    
     func viewDidResize() {
-//        self.tableView.reloadSections(IndexSet(integer: 1), with: .top)
+        self.tableView.reloadSections(IndexSet(integer: 1), with: .fade)
     }
 }
