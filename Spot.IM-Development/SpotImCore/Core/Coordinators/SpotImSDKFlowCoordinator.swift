@@ -29,7 +29,6 @@ public protocol SpotImSDKNavigationDelegate: class {
 }
 
 public protocol SpotImLayoutDelegate: class {
-    func viewWillResize(with duration: TimeInterval)
     func viewDidResize()
 }
 
@@ -220,7 +219,6 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
-
     internal func showMoreComments(with dataModel: SPMainConversationModel, selectedCommentId: String?) {
         let controller = conversationController(with: dataModel)
         controller.commentIdToShowOnOpen = selectedCommentId
@@ -238,10 +236,6 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 
     internal func showAddSpotIM() {
         showWebPage(with: APIConstants.joinURLString)
-    }
-    
-    internal func viewWillResize(with duration: TimeInterval) {
-        self.spotLayoutDelegate?.viewWillResize(with: duration)
     }
     
     internal func viewDidResize() {
