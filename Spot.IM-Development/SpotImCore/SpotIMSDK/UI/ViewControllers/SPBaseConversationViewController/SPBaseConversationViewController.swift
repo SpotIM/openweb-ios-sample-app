@@ -485,9 +485,11 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
 extension SPBaseConversationViewController: CommentsActionDelegate {
     
     func localCommentWillBeCreated() {
-        if tableView.numberOfRows(inSection: 0) > 0, tableView.indexPathsForVisibleRows?.count ?? 0 > 0 {
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: false)
-        }
+        guard tableView.numberOfSections > 0,
+            tableView.numberOfRows(inSection: 0) > 0,
+            tableView.indexPathsForVisibleRows?.count ?? 0 > 0 else { return }
+
+        tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: false)
     }
     
     func localCommentWasCreated() {
