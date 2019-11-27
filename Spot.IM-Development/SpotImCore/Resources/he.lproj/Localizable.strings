@@ -1,7 +1,7 @@
-"Days" = "ימים";
-"Hours" = "שעות";
-"Minutes" = "דק׳";
-"To" = "ל";
+"Days" = "ימים ";
+"Hours" = "שעות ";
+"Minutes" = "דק׳ ";
+"To" = "-ל";
 "Just now" = "כרגע";
 "Conversation" = "שיחה";
 "Add a Comment" = "Add a Comment";
@@ -10,7 +10,7 @@
 "Please provide Code B" = "Please provide Code B";
 "Authentication error" = "Authentication error";
 "Empty response" = "Empty response";
-"Comment reported successfully" = ".ההודעה דווחה בהצלחה";
+"Comment reported successfully" = "ההודעה דווחה בהצלחה";
 "Copy Comment to Clipboard" = "העתק את התגובה ללוח ";
 "Sort By" = "סנן לפי";
 "The text you entered might be deleted if not published." = ".במידה ולא יפורסם, הטקסט שכתבת עלול להימחק";
@@ -55,12 +55,12 @@
 "Be the first to comment" = "היו הראשונים להגיב";
 "Share" = "שיתוף";
 "What do you think?" = "הוספת תגובה";
-"Loading" = "Loading";
-"View Previous Reply" = "הצג תגובות קודמות";
+"Loading" = "טוען";
+"View Previous Reply" = "הצג תגובה קודמת";
 "Hide Reply" = "הסתר תגובות";
 "View Previous Replies" = "הצג תגובות קודמות";
 "Hide Replies" = "הסתר תגובות";
-"View Reply" = "הגב/י תגובות";
+"View Reply" = "הצג תגובה";
 "View Replies" = "הצג תגובות";
 "Reply" = "הגב/י";
 "This message was deleted." = "הודעה זו נמחקה.";
@@ -74,4 +74,4 @@
 "Replying to " = " תגובה ל";
 "NEW" = "החדש ביותר";
 "Comments" = "תגובות";
-"Comment" = "תגובות";
+"Comment" = "תגובה";

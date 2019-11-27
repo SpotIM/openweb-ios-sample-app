@@ -50,9 +50,7 @@
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
-	<string>$(MAIN_STORY_BOARD)</string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string>Ynet</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
