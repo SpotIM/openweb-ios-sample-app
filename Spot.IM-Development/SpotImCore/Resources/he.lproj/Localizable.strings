@@ -1,7 +1,7 @@
-"Days" = "ימים ";
-"Hours" = "שעות ";
-"Minutes" = "דק׳ ";
-"To" = "-ל";
+"Days" = " ימים";
+"Hours" = " שעות";
+"Minutes" = " דק׳";
+"To" = "ל -";
 "Just now" = "כרגע";
 "Conversation" = "שיחה";
 "Add a Comment" = "Add a Comment";
@@ -66,12 +66,12 @@
 "This message was deleted." = "הודעה זו נמחקה.";
 "This message was reported." = "התקבל דיווח על הודעה זו.";
 "This message was rejected." = "תגובה זו לא אושרה.";
-"SHOW MORE COMMENTS" = "טעינת תגובות נוספות";
+"SHOW MORE COMMENTS" = "תגובות נוספות";
 "Terms" = "תנאים";
 "Privacy" = "פרטיות";
-"Add Spot.IM to your app" = "הוספת spot.im לאפליקציה שלך";
+"Add Spot.IM to your app" = "הוספת Spot.IM לאפליקציה שלך";
 "Type your reply…" = "כתוב/י את תגובתך";
-"Replying to " = " תגובה ל";
+"Replying to " = "תגובה ל";
 "NEW" = "החדש ביותר";
 "Comments" = "תגובות";
 "Comment" = "תגובה";
