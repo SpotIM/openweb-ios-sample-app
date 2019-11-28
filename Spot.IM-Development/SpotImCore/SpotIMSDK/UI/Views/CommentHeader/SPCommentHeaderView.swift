@@ -63,7 +63,8 @@ final class SPCommentHeaderView: BaseView {
         commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         
         commentAuthorLabel.layout {
-            $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
+            $0.firstBaseline.equal(to: replyingLabel.firstBaselineAnchor)
+            $0.lastBaseline.equal(to: replyingLabel.lastBaselineAnchor)
             $0.leading.equal(to: replyingLabel.trailingAnchor)
             $0.trailing.lessThanOrEqual(to: closeButton.leadingAnchor, offsetBy: -Theme.trailingOffset)
         }
