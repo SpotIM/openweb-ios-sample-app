@@ -140,11 +140,12 @@ internal final class SPPreConversationFooter: BaseView {
     }
 
     private func setupDotLabel() {
-        dotLabel.text = " · "
+        dotLabel.text = "·"
         dotLabel.textColor = .coolGrey
         dotLabel.font = .preferred(style: .regular, of: Theme.bottomRowSize)
         dotLabel.layout {
-            $0.leading.equal(to: termsButton.trailingAnchor)
+            $0.leading.equal(to: termsButton.trailingAnchor, offsetBy: 5.0)
+            $0.trailing.equal(to: privacyButton.leadingAnchor, offsetBy: -5.0)
             $0.centerY.equal(to: termsButton.centerYAnchor)
         }
     }
