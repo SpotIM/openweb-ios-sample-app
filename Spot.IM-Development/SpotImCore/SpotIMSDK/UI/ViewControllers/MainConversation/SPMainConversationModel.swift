@@ -239,7 +239,7 @@ extension SPMainConversationModel {
             parameters: parameters,
             postId: dataSource.conversationId,
             success: { [weak self] deletionData in
-                self?.dataSource.deleteComment(with: id, isSoft: deletionData.softDeleted ?? false)
+                self?.dataSource.deleteComment(with: id, isSoft: true)
                 completion(nil)
             },
             failure: { error in
