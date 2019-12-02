@@ -25,8 +25,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     internal override func updateModelData() {
         setupHeaderComponentsIfNeeded()
         configureModelHandlers()
-        let showsArticleView = shouldShowArticleView(for: model?.dataModel)
-        if showsArticleView {
+        if shouldShowArticleView(for: model?.dataModel) {
             topContainerStack.insertArrangedSubview(articleView, at: 1)
             if #available(iOS 11.0, *) {
                 topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
@@ -40,8 +39,16 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
                 $0.height.equal(to: 85.0)
                 $0.width.equal(to: topContainerStack.widthAnchor)
             }
+            commentingOnLabel.text = NSLocalizedString(
+                "Commenting on",
+                comment: "commenting on title"
+            )
         } else {
             emptyArticleBottomConstarint?.isActive = true
+            commentingOnLabel.text = NSLocalizedString(
+                "Add a Comment",
+                comment: "commenting on title"
+            )
         }
 
         updateTextInputContainer(with: .comment)
