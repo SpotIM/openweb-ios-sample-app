@@ -60,9 +60,9 @@
 		4454180723685144001D0ED0 /* UserFlowPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417C423685144001D0ED0 /* UserFlowPresentable.swift */; };
 		4454180823685144001D0ED0 /* KeyboardHandable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417C523685144001D0ED0 /* KeyboardHandable.swift */; };
 		4454180923685144001D0ED0 /* SPCommentCreationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417C923685144001D0ED0 /* SPCommentCreationModel.swift */; };
-		4454180A23685144001D0ED0 /* SPCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CA23685144001D0ED0 /* SPCommentViewController.swift */; };
+		4454180A23685144001D0ED0 /* SPCommentCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CA23685144001D0ED0 /* SPCommentCreationViewController.swift */; };
 		4454180B23685144001D0ED0 /* SPReplyCreationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CC23685144001D0ED0 /* SPReplyCreationModel.swift */; };
-		4454180C23685144001D0ED0 /* SPReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CD23685144001D0ED0 /* SPReplyViewController.swift */; };
+		4454180C23685144001D0ED0 /* SPReplyCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CD23685144001D0ED0 /* SPReplyCreationViewController.swift */; };
 		4454180D23685144001D0ED0 /* CommentReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CF23685144001D0ED0 /* CommentReplyViewController.swift */; };
 		4454180E23685144001D0ED0 /* LoaderPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D123685144001D0ED0 /* LoaderPresentable.swift */; };
 		4454180F23685144001D0ED0 /* SPBaseConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D223685144001D0ED0 /* SPBaseConversationViewController.swift */; };
@@ -83,7 +83,7 @@
 		4454181E23685144001D0ED0 /* ShowMoreRepliesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417E823685144001D0ED0 /* ShowMoreRepliesView.swift */; };
 		4454181F23685144001D0ED0 /* SPPreConversationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417EA23685144001D0ED0 /* SPPreConversationHeaderView.swift */; };
 		4454182023685144001D0ED0 /* PreConversationFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417EC23685144001D0ED0 /* PreConversationFooter.swift */; };
-		4454182123685144001D0ED0 /* SPTextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417EE23685144001D0ED0 /* SPTextInputView.swift */; };
+		4454182123685144001D0ED0 /* SPCommentTextInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417EE23685144001D0ED0 /* SPCommentTextInputView.swift */; };
 		4454182223685144001D0ED0 /* SPCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F023685144001D0ED0 /* SPCommentHeaderView.swift */; };
 		4454182323685144001D0ED0 /* SPConversationSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F223685144001D0ED0 /* SPConversationSummaryView.swift */; };
 		4454182423685144001D0ED0 /* SPLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417F423685144001D0ED0 /* SPLoaderView.swift */; };
@@ -181,6 +181,7 @@
 		5D697A4622B65108001AD556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */; };
 		5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
+		5DB97792236B25A400E9D547 /* SPNameInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB97791236B25A400E9D547 /* SPNameInputView.swift */; };
 		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
@@ -319,9 +320,9 @@
 		445417C423685144001D0ED0 /* UserFlowPresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFlowPresentable.swift; sourceTree = "<group>"; };
 		445417C523685144001D0ED0 /* KeyboardHandable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardHandable.swift; sourceTree = "<group>"; };
 		445417C923685144001D0ED0 /* SPCommentCreationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentCreationModel.swift; sourceTree = "<group>"; };
-		445417CA23685144001D0ED0 /* SPCommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentViewController.swift; sourceTree = "<group>"; };
+		445417CA23685144001D0ED0 /* SPCommentCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentCreationViewController.swift; sourceTree = "<group>"; };
 		445417CC23685144001D0ED0 /* SPReplyCreationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReplyCreationModel.swift; sourceTree = "<group>"; };
-		445417CD23685144001D0ED0 /* SPReplyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReplyViewController.swift; sourceTree = "<group>"; };
+		445417CD23685144001D0ED0 /* SPReplyCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReplyCreationViewController.swift; sourceTree = "<group>"; };
 		445417CF23685144001D0ED0 /* CommentReplyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentReplyViewController.swift; sourceTree = "<group>"; };
 		445417D123685144001D0ED0 /* LoaderPresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoaderPresentable.swift; sourceTree = "<group>"; };
 		445417D223685144001D0ED0 /* SPBaseConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPBaseConversationViewController.swift; sourceTree = "<group>"; };
@@ -342,7 +343,7 @@
 		445417E823685144001D0ED0 /* ShowMoreRepliesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowMoreRepliesView.swift; sourceTree = "<group>"; };
 		445417EA23685144001D0ED0 /* SPPreConversationHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPPreConversationHeaderView.swift; sourceTree = "<group>"; };
 		445417EC23685144001D0ED0 /* PreConversationFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreConversationFooter.swift; sourceTree = "<group>"; };
-		445417EE23685144001D0ED0 /* SPTextInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPTextInputView.swift; sourceTree = "<group>"; };
+		445417EE23685144001D0ED0 /* SPCommentTextInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentTextInputView.swift; sourceTree = "<group>"; };
 		445417F023685144001D0ED0 /* SPCommentHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentHeaderView.swift; sourceTree = "<group>"; };
 		445417F223685144001D0ED0 /* SPConversationSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConversationSummaryView.swift; sourceTree = "<group>"; };
 		445417F423685144001D0ED0 /* SPLoaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLoaderView.swift; sourceTree = "<group>"; };
@@ -449,6 +450,7 @@
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5DA8B5A02327E20A0045FCFA /* Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
 		5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettingsViewController.swift; sourceTree = "<group>"; };
+		5DB97791236B25A400E9D547 /* SPNameInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPNameInputView.swift; sourceTree = "<group>"; };
 		5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		6509F433D61590B195982566 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -674,7 +676,7 @@
 			isa = PBXGroup;
 			children = (
 				445417C923685144001D0ED0 /* SPCommentCreationModel.swift */,
-				445417CA23685144001D0ED0 /* SPCommentViewController.swift */,
+				445417CA23685144001D0ED0 /* SPCommentCreationViewController.swift */,
 			);
 			path = Comment;
 			sourceTree = "<group>";
@@ -683,7 +685,7 @@
 			isa = PBXGroup;
 			children = (
 				445417CC23685144001D0ED0 /* SPReplyCreationModel.swift */,
-				445417CD23685144001D0ED0 /* SPReplyViewController.swift */,
+				445417CD23685144001D0ED0 /* SPReplyCreationViewController.swift */,
 			);
 			path = Reply;
 			sourceTree = "<group>";
@@ -734,6 +736,7 @@
 		445417DA23685144001D0ED0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5DB97790236B257000E9D547 /* SPUsernameView */,
 				440E0DB1237D7E0F00757554 /* TypingIndicationView */,
 				445417DB23685144001D0ED0 /* SPMainConversationFooterView.swift */,
 				445417DC23685144001D0ED0 /* ArticleHeader */,
@@ -799,7 +802,7 @@
 		445417ED23685144001D0ED0 /* ExpandableInputView */ = {
 			isa = PBXGroup;
 			children = (
-				445417EE23685144001D0ED0 /* SPTextInputView.swift */,
+				445417EE23685144001D0ED0 /* SPCommentTextInputView.swift */,
 			);
 			path = ExpandableInputView;
 			sourceTree = "<group>";
@@ -1187,6 +1190,14 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		5DB97790236B257000E9D547 /* SPUsernameView */ = {
+			isa = PBXGroup;
+			children = (
+				5DB97791236B25A400E9D547 /* SPNameInputView.swift */,
+			);
+			path = SPUsernameView;
+			sourceTree = "<group>";
+		};
 		6DF3A6F62386CCCE00419B30 /* TableViewFooterTesterViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1548,8 +1559,9 @@
 				445418B523685154001D0ED0 /* SPConstants.swift in Sources */,
 				4454181123685144001D0ED0 /* SPMainConversationViewController.swift in Sources */,
 				4454180D23685144001D0ED0 /* CommentReplyViewController.swift in Sources */,
+				5DB97792236B25A400E9D547 /* SPNameInputView.swift in Sources */,
 				4454181A23685144001D0ED0 /* SPConversationSectionHeaderFooterView.swift in Sources */,
-				4454180A23685144001D0ED0 /* SPCommentViewController.swift in Sources */,
+				4454180A23685144001D0ED0 /* SPCommentCreationViewController.swift in Sources */,
 				445418AB23685154001D0ED0 /* Int+SPExtensions.swift in Sources */,
 				445418A923685154001D0ED0 /* UIFont+Extensions.swift in Sources */,
 				445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */,
@@ -1570,8 +1582,8 @@
 				4454181C23685144001D0ED0 /* MessageContainerView.swift in Sources */,
 				4454181523685144001D0ED0 /* SPArticleHeader.swift in Sources */,
 				445418BF23685154001D0ED0 /* SPCommentsInMemoryCacheService.swift in Sources */,
+				4454182123685144001D0ED0 /* SPCommentTextInputView.swift in Sources */,
 				440E0DB3237D7E3200757554 /* TotalTypingIndicationView.swift in Sources */,
-				4454182123685144001D0ED0 /* SPTextInputView.swift in Sources */,
 				445418A623685154001D0ED0 /* SPShareLink.swift in Sources */,
 				4454181423685144001D0ED0 /* SPMainConversationFooterView.swift in Sources */,
 				445418AC23685154001D0ED0 /* UIDevice+Extensions.swift in Sources */,
@@ -1645,7 +1657,7 @@
 				44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */,
 				445418AA23685154001D0ED0 /* UITableView+SetupExtensions.swift in Sources */,
 				4454180B23685144001D0ED0 /* SPReplyCreationModel.swift in Sources */,
-				4454180C23685144001D0ED0 /* SPReplyViewController.swift in Sources */,
+				4454180C23685144001D0ED0 /* SPReplyCreationViewController.swift in Sources */,
 				441165A32375C3E700B781F3 /* Result.swift in Sources */,
 				445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */,
 			);

@@ -59,12 +59,22 @@ internal final class SPMainConversationDataSource {
             expandAllCommentsIfNeeded()
         }
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     init(with conversationId: String, dataProvider: SPConversationsDataProvider) {
         self.conversationId = conversationId
         self.dataProvider = dataProvider
         self.conversationPublisherName = SPConfigsDataSource.appConfig?.initialization?.name
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateDisplayName),
+            name: .userDisplayNameFrozen,
+            object: nil
+        )
     }
     
     // MARK: - Internal methods and computed properties
@@ -608,6 +618,13 @@ internal final class SPMainConversationDataSource {
     private func resetReplyButton(inCellWith indexPath: IndexPath) {
         cellData[indexPath.section][indexPath.row].repliesButtonState = .collapsed
         delegate?.dataSource(didChangeRowAt: indexPath)
+    }
+
+    @objc
+    public func updateDisplayName(notification: Notification) {
+        guard let user = notification.userInfo?["user"] as? SPUser else { return }
+        guard let id = user.id else { return }
+        users[id]?.displayName = user.displayName
     }
     
 }

@@ -27,11 +27,16 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             updateModelData()
         }
     }
-    
+
     let topContainerView: BaseView = .init()
-    let textInputViewContainer: SPTextInputView = .init()
-    
+    let topContainerStack: UIStackView = .init()
+    var textInputViewContainer: SPCommentTextInputView = .init(
+        hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
+    )
+    lazy var usernameView: SPNameInputView = SPNameInputView()
+
     let activityIndicator: SPLoaderView = SPLoaderView()
+    var showsUserAvatarInTextInput: Bool { !showsUsernameInput }
     
     private let mainContainerView: BaseView = .init()
     private let postButton: BaseButton = .init()
@@ -41,6 +46,19 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var topContainerTopConstraint: NSLayoutConstraint?
     
     private var shouldBeAutoPosted: Bool = true
+    private var showsUsernameInput: Bool {
+
+        guard let config = SPConfigsDataSource.appConfig else { return true }
+        let session = SPUserSessionHolder.session
+
+        let shoudEnterName = config.initialization?.policyForceRegister == false && session.user?.registered == false
+        let didEnterName = session.displayNameFrozen
+
+        return shoudEnterName && !didEnterName
+
+    }
+    
+    private var inputViews = [SPTextInputView]()
     
     deinit {
         unregisterFromKeyboardNotifications()
@@ -52,6 +70,10 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         setupUI()
         setupUserIconHandler()
         registerForKeyboardNotifications()
+        inputViews.append(textInputViewContainer)
+        if showsUsernameInput {
+            inputViews.append(usernameView)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +94,11 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         
         // delay added for keyboard not to appear earlier than the screen
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) {
-            self.textInputViewContainer.makeFirstResponder()
+            if self.showsUsernameInput {
+                self.usernameView.makeFirstResponder()
+            } else {
+                self.textInputViewContainer.makeFirstResponder()
+            }
         }
     }
     
@@ -116,15 +142,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             }
             
             self.updatePostButton()
-            self.model?.fetchNavigationAvatar { [weak self] image, _ in
-                guard
-                    let self = self,
-                    let image = image
-                    else { return }
-                
-                self.textInputViewContainer.updateAvatar(image)
-                self.updateUserIcon(image: image)
-            }
+            self.updateAvatar()
             
             if isAuthenticated && !self.shouldBeAutoPosted {
                 self.post()
@@ -141,26 +159,51 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         navigationItem.setRightBarButton(userRightBarItem!, animated: true)
     }
     
+    func updateModelData() {}
+
+    func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
+        textInputViewContainer.configureCommentType(type)
+        textInputViewContainer.updateText(model?.commentText ?? "")
+    }
+
+    func updateAvatar() {
+        model?.fetchNavigationAvatar { [weak self] image, _ in
+            guard
+                let self = self,
+                let image = image
+                else { return }
+
+            self.setAvatar(image: image)
+        }
+    }
+
+    private func setAvatar(image: UIImage) {
+        self.updateUserIcon(image: image)
+        if self.showsUserAvatarInTextInput {
+            self.textInputViewContainer.updateAvatar(image)
+        } else {
+            self.usernameView.updateAvatar(image)
+        }
+    }
+
     @objc
     private func showProfile() {
         showProfileActions(sender: userIcon)
     }
-    
-    func updateModelData() {}
-    
+
     @objc
     private func post() {
         view.endEditing(true)
         showLoader()
         model?.post()
     }
-    
+
     @objc
     private func presentAuth() {
         view.endEditing(true)
         shouldBeAutoPosted = false
         userAuthFlowDelegate?.presentAuth()
-        
+
         SPAnalyticsHolder.default.log(event: .loginClicked(.commentSignUp), source: .conversation)
     }
 }
@@ -177,8 +220,12 @@ extension CommentReplyViewController {
         }
         scrollView.addSubview(mainContainerView)
         mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton)
+        topContainerView.addSubview(topContainerStack)
+
         configureMainContainer()
+        configureTopContainerStack()
         configureTopContainer()
+        configureUsernameView()
         configureInputContainerView()
         configurePostButton()
     }
@@ -194,16 +241,27 @@ extension CommentReplyViewController {
             $0.width.equal(to: scrollView.widthAnchor)
         }
     }
+
+    private func configureUsernameView() {
+        guard showsUsernameInput else { return }
+
+        topContainerStack.addArrangedSubview(usernameView)
+        usernameView.delegate = self
+        usernameView.layout {
+            $0.height.equal(to: 78)
+            $0.width.equal(to: topContainerStack.widthAnchor)
+        }
+    }
     
     private func configureInputContainerView() {
         textInputViewContainer.backgroundColor = .spBackground0
         textInputViewContainer.delegate = self
         textInputViewContainer.layout {
-            $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.inputViewEdgeInset)
+            $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.bottom.equal(to: postButton.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.height.greaterThanOrEqual(to: 80.0)
+            $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
     
@@ -211,12 +269,26 @@ extension CommentReplyViewController {
         topContainerView.backgroundColor = .spBackground0
         topContainerView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         topContainerView.layout {
-            $0.top.lessThanOrEqual(to: mainContainerView.topAnchor, offsetBy: 20)
+            $0.top.lessThanOrEqual(to: mainContainerView.topAnchor)
             $0.leading.equal(to: mainContainerView.leadingAnchor)
             $0.trailing.equal(to: mainContainerView.trailingAnchor)
             $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
+
+    private func configureTopContainerStack() {
+        topContainerStack.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        topContainerStack.layout {
+            $0.top.equal(to: topContainerView.topAnchor)
+            $0.leading.equal(to: topContainerView.leadingAnchor)
+            $0.bottom.equal(to: topContainerView.bottomAnchor)
+            $0.trailing.equal(to: topContainerView.trailingAnchor)
+        }
+        topContainerStack.alignment = .leading
+        topContainerStack.distribution = .equalSpacing
+        topContainerStack.axis = .vertical
+    }
+
     private func updatePostButton() {
         var postButtonTitle: String = LocalizationManager.localizedString(key: "Post")
         if let config = SPConfigsDataSource.appConfig,
@@ -254,6 +326,8 @@ extension CommentReplyViewController {
     }
 }
 
+// MARK: - Extensions
+
 extension CommentReplyViewController: KeyboardHandable {
     
     func keyboardWillShow(_ notification: Notification) {
@@ -277,27 +351,38 @@ extension CommentReplyViewController: KeyboardHandable {
             withDuration: animationDuration,
             animations: {
                 self.view.layoutIfNeeded()
-            },
-            completion: { _ in
-                self.scrollView.contentInset.top = -self.topContainerView.frame.origin.y
-            }
-        )
+            })
     }
-    
 }
 
 extension CommentReplyViewController: SPTextInputViewDelegate {
-    
+
     func tooLongTextWasPassed() {
         // handle too long text passing
     }
     
-    func textDidChange(_ text: String) {
-        let isEmpty = text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        postButton.isEnabled = !isEmpty
-        model?.updateCommentText(text)
+    func input(_ view: SPTextInputView, didChange text: String) {
+        print(text)
+
+        if view === textInputViewContainer {
+            model?.updateCommentText(text)
+        } else if showsUsernameInput, view === usernameView {
+            SPUserSessionHolder.update(displayName: text)
+        }
+
+        var postEnabled = true
+        for aView in inputViews {
+            if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
+                postEnabled = false
+                break
+            }
+        }
+
+        postButton.isEnabled = postEnabled
     }
 }
+
+// MARK: - Theme
 
 private enum Theme {
     
@@ -309,5 +394,6 @@ private enum Theme {
     static let postButtonFontSize: CGFloat = 15.0
     static let postButtonTrailing: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
-    static let inputViewLeadingInset: CGFloat = 16.0
+    static let inputViewLeadingInset: CGFloat = 10.0
+//    static let inputViewLeadingInset: CGFloat = 16.0
 }

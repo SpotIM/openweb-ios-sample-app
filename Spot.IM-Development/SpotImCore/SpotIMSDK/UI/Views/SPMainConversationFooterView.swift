@@ -15,7 +15,6 @@ internal protocol SPMainConversationFooterViewDelegate: class {
 }
 
 final class SPMainConversationFooterView: BaseView {
-    
     private let cache = NSCache<NSString, UIImage>()
     private let callToActionLabel: BaseLabel = .init()
     private let userAvatarView: SPAvatarView = .init()
