@@ -211,9 +211,7 @@
 		6DA75C91238D5A6F00FBDF19 /* YnetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* YnetViewController.swift */; };
 		6DA75C93238D61D100FBDF19 /* Ynet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Ynet.storyboard */; };
 		6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
-		BF27CB0174A0481BF8EDB88A /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */; };
 		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
-		FD1098EC26512FBA4E3F4BA6 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -281,8 +279,6 @@
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		1CAA0C7553356875A9AA4225 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		2397B30733893F8F513035B7 /* Pods-Shared-SpotImCore.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasewithads.xcconfig"; sourceTree = "<group>"; };
-		269794C77A9854C4A68198FB /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
-		3B27A77E56CD2812B1AE31ED /* Pods-Shared-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
 		440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AnimationSequence.swift"; sourceTree = "<group>"; };
 		440E0DB2237D7E3200757554 /* TotalTypingIndicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalTypingIndicationView.swift; sourceTree = "<group>"; };
 		441165A02375BBC100B781F3 /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
@@ -455,7 +451,6 @@
 		5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettingsViewController.swift; sourceTree = "<group>"; };
 		5DB97791236B25A400E9D547 /* SPNameInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPNameInputView.swift; sourceTree = "<group>"; };
 		5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
-		6509F433D61590B195982566 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DA75C90238D5A6F00FBDF19 /* YnetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YnetViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Ynet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Ynet.storyboard; sourceTree = "<group>"; };
@@ -465,7 +460,6 @@
 		AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF8ED8E7B65C33DB59074C5B /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
-		F84C33E369F0078E4145C37A /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1827,7 +1821,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.12.2;
+				CURRENT_PROJECT_VERSION = 1.16.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1969,7 +1963,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.12.2;
+				CURRENT_PROJECT_VERSION = 1.16.0;
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2245,7 +2239,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = "1.9(ADS)";
+				CURRENT_PROJECT_VERSION = 1.16.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2273,7 +2267,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.12.2;
+				CURRENT_PROJECT_VERSION = 1.16.0;
 				DEVELOPMENT_TEAM = 8H4BKTJCC4;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
