@@ -4,7 +4,6 @@
 "To" = "ל -";
 "Just now" = "כרגע";
 "Conversation" = "שיחה";
-"Add a Comment" = "Add a Comment";
 "Add a Reply" = "Add a Reply";
 "Please provide Spot Key" = "Please provide Spot Key";
 "Please provide Code B" = "Please provide Code B";
@@ -29,6 +28,7 @@
 "Log In" = "התחברות";
 "Cancel" = "ביטול";
 "Are you sure you want to log out?" = "?האם ברצונך להתנתק מהשיחה";
+"Add a Comment" = "הוספת תגובה";
 "Commenting on" = "כתיבת תגובה על";
 "Oops..." = "...אופססס";
 "Leave Page" = "צא מהעמוד";

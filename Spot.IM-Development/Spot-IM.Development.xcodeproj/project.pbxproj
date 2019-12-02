@@ -174,6 +174,7 @@
 		44F247A32379B0F900B36F12 /* BaseUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A22379B0F900B36F12 /* BaseUIImageView.swift */; };
 		44F247A52379B23100B36F12 /* BaseScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A42379B23100B36F12 /* BaseScrollView.swift */; };
 		44F247A72379B75300B36F12 /* BaseTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A62379B75300B36F12 /* BaseTableView.swift */; };
+		4FCADE7777C33500B6BCD2E5 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */; };
 		5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
 		5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
 		5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
@@ -265,6 +266,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00A8CD58A8F0DC066372373C /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		017506665B930AFC0987F034 /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		0D29D981CB6B5E80D1DA4976 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
 		0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
@@ -458,7 +461,9 @@
 		6DA75C92238D61D100FBDF19 /* Ynet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Ynet.storyboard; sourceTree = "<group>"; };
 		6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewFooterTesterViewController.swift; sourceTree = "<group>"; };
 		847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7ECCC93AFBA1CFC484AB0DE /* Pods-Shared-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
 		AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF8ED8E7B65C33DB59074C5B /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
 		F84C33E369F0078E4145C37A /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -477,8 +482,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */,
-				BF27CB0174A0481BF8EDB88A /* Pods_Shared_Spot_IM_Development.framework in Frameworks */,
-				FD1098EC26512FBA4E3F4BA6 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */,
+				4FCADE7777C33500B6BCD2E5 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1213,10 +1217,10 @@
 				C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */,
 				0D29D981CB6B5E80D1DA4976 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */,
 				2397B30733893F8F513035B7 /* Pods-Shared-SpotImCore.releasewithads.xcconfig */,
-				6509F433D61590B195982566 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */,
-				F84C33E369F0078E4145C37A /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */,
-				3B27A77E56CD2812B1AE31ED /* Pods-Shared-Spot-IM.Development.release.xcconfig */,
-				269794C77A9854C4A68198FB /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */,
+				BF8ED8E7B65C33DB59074C5B /* Pods-Shared-Spot-IM.Development.debug.xcconfig */,
+				00A8CD58A8F0DC066372373C /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */,
+				A7ECCC93AFBA1CFC484AB0DE /* Pods-Shared-Spot-IM.Development.release.xcconfig */,
+				017506665B930AFC0987F034 /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1817,7 +1821,7 @@
 		};
 		448F2F7123683097000C5606 /* DebugWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F84C33E369F0078E4145C37A /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */;
+			baseConfigurationReference = 00A8CD58A8F0DC066372373C /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
@@ -1959,7 +1963,7 @@
 		};
 		448F2F75236830A0000C5606 /* ReleaseWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 269794C77A9854C4A68198FB /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */;
+			baseConfigurationReference = 017506665B930AFC0987F034 /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
@@ -2235,7 +2239,7 @@
 		};
 		5D697A5922B65108001AD556 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6509F433D61590B195982566 /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
+			baseConfigurationReference = BF8ED8E7B65C33DB59074C5B /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
@@ -2263,7 +2267,7 @@
 		};
 		5D697A5A22B65108001AD556 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B27A77E56CD2812B1AE31ED /* Pods-Shared-Spot-IM.Development.release.xcconfig */;
+			baseConfigurationReference = A7ECCC93AFBA1CFC484AB0DE /* Pods-Shared-Spot-IM.Development.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
