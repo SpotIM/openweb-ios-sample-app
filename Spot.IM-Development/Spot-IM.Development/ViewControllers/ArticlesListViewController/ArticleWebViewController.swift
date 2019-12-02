@@ -43,6 +43,7 @@ internal final class ArticleWebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .groupTableViewBackground
         title = "Article"
         setup()
@@ -55,9 +56,6 @@ internal final class ArticleWebViewController: UIViewController {
     }
 
     private func setupSpotView() {
-        SPClientSettings.setup(spotKey: spotId)
-        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
-        
         spotIMCoordinator?.preConversationController(
             withPostId: postId,
             container: navigationController,
@@ -79,6 +77,7 @@ internal final class ArticleWebViewController: UIViewController {
 }
 
 extension ArticleWebViewController {
+    
     private func setup() {
         setupScrollView()
         setupWebView()

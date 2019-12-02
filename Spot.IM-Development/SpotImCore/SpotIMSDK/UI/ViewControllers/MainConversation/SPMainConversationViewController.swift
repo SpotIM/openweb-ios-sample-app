@@ -37,7 +37,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private lazy var tableHeader = SPArticleHeader()
     private lazy var footer = SPMainConversationFooterView()
     private var authHandler: AuthenticationHandler?
-    
+    private var typingIndicationView: TotalTypingIndicationView?
+
     internal override var screenTargetType: SPAnScreenTargetType {
         return .main
     }
@@ -69,12 +70,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
             SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
         }
-
         checkAdsAvailability()
         updateHeaderUI()
         configureModelHandlers()
@@ -100,6 +100,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        
+        model.delegates.add(delegate: self)
+        totalTypingCountDidUpdate(count: model.typingCount())
         // scroll to pre-selected comment (tapped on the Pre-Conversation)
         if let indexPath = model.dataSource.indexPathOfComment(with: commentIdToShowOnOpen) {
             wasScrolled = true
@@ -177,8 +180,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                         )
                     }
                 } else if success == false {
-                    // TODO: (Fedin) show alert with unknown error
-                    // print("show error here")
+                    Logger.error("Load conversation request type is not `success`")
                 } else {
                     let messageCount = self.model.dataSource.messageCount
                         SPAnalyticsHolder.default.totalComments = messageCount
@@ -218,8 +220,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                         message: error.localizedDescription
                     )
                 } else if success == false {
-                    // TODO: (Fedin) show alert with unknown error
-                    // print("show error here")
+                    Logger.error("Load conversation next page request type is not `success`")
                 } else {
                     self.sortView.updateCommentsLabel(self.model.dataSource.messageCount ?? 0)
                 }

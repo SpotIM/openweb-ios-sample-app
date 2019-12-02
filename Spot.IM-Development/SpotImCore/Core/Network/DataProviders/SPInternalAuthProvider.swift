@@ -10,14 +10,14 @@ import Foundation
 import Alamofire
 
 internal protocol SPInternalAuthProvider {
-    static func login(completion: @escaping (String?, Error?) -> Void)
+    func login(completion: @escaping (String?, Error?) -> Void)
 }
 
-internal final class SPDefaultInternalAuthProvider: SPInternalAuthProvider {
+internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthProvider {
     
-    static internal func login(completion: @escaping (String?, Error?) -> Void) {
+    internal func login(completion: @escaping (String?, Error?) -> Void) {
         let spRequest = SPInternalAuthRequests.guest
-        guard let spotKey = SPClientSettings.spotKey else {
+        guard let spotKey = SPClientSettings.main.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(nil, SPNetworkError.custom(message))
             return
@@ -27,33 +27,27 @@ internal final class SPDefaultInternalAuthProvider: SPInternalAuthProvider {
         if let token = SPUserSessionHolder.session.token {
             headers["Authorization"] = token
         }
-        // TODO: (Fedin) move Alamofire.request elsewhere
-        Alamofire.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: nil,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .responseData { response in
-                let token = response.response?.allHeaderFields.authorizationHeader
-                var error: Error?
-                if response.error != nil {
-                    let rawReport = RawReportModel(
-                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: nil,
-                        errorData: response.data,
-                        errorMessage: error!.localizedDescription
-                    )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
-                    
-                    error = SPNetworkError.default
-                }
+        
+        manager.execute(
+            request: spRequest,
+            parser: DecodableParser<SPUser>(),
+            headers: headers
+        ) { result, response in
+            let token = response.response?.allHeaderFields.authorizationHeader
+            switch result {
+            case .success(let user):
+                SPUserSessionHolder.updateSessionUser(user: user)
                 
-                let result: Result<SPUser> = defaultDecoder.decodeResponse(from: response)
-                if case let .success(user) = result {
-                    SPUserSessionHolder.updateSessionUser(user: user)
-                }
+            case .failure(let error):
+                let rawReport = RawReportModel(
+                    url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                    parameters: nil,
+                    errorData: response.data,
+                    errorMessage: error.localizedDescription
+                )
+                SPDefaultFailureReporter().sendFailureReport(rawReport)
                 completion(token, error)
             }
+        }
     }
 }

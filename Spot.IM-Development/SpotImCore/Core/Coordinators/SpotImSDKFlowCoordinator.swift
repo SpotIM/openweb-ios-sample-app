@@ -32,7 +32,6 @@ public protocol SpotImLayoutDelegate: class {
     func viewDidResize()
 }
 
-
 extension SpotImSDKNavigationDelegate {
     
     func userDidBecomeUnauthorized() { /* empty default realization, in order to make this function optional */ }
@@ -46,7 +45,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     // MARK: - Services
     
     private lazy var commentsCacheService: SPCommentsInMemoryCacheService = .init()
-    private lazy var imageProvider: SPImageURLProvider = SPCloudinaryImageProvider()
+    
     private lazy var conversationUpdater: SPCommentUpdater = SPCommentFacade()
     
     private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
@@ -60,18 +59,26 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private var shouldAddMain: Bool = false
     private var conversationModel: SPMainConversationModel!
     private let adsManager: AdsManager
+    private let apiManager: ApiManager
+    private let imageProvider: SPImageURLProvider
+    private let realTimeService: RealTimeService?
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration? = nil) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager()
+        apiManager = ApiManager()
+        realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
+        imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
+        
+        configureAPIAndRealTimeHandlers()
         LocalizationManager.updateLocalizationConfiguration(inputConfiguration)
     }
 
     public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
         self.spotLayoutDelegate = delegate
     }
-    
+
     /// Please, provide container (UINavigationViewController) for sdk flows
     public func preConversationController(withPostId postId: String,
                                           container: UIViewController?,
@@ -113,7 +120,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private func buildPreConversationController(with postId: String, completion: @escaping (UIViewController) -> Void) {
         SPAnalyticsHolder.default.prepareForNewPage()
 
-        let conversationDataProvider = SPConversationsFacade()
+        let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
         let conversationDataSource = SPMainConversationDataSource(
             with: postId,
             dataProvider: conversationDataProvider
@@ -122,10 +129,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         let conversationModel = SPMainConversationModel(
             commentUpdater: conversationUpdater,
             conversationDataSource: conversationDataSource,
-            imageProvider: imageProvider
+            imageProvider: imageProvider,
+            realTimeService: realTimeService
         )
         self.conversationModel = conversationModel
+        realTimeService?.delegate = self.conversationModel
         let controller = SPPreConversationViewController(model: conversationModel)
+        self.conversationModel.delegates.add(delegate: controller)
         controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.preConversationDelegate = self
@@ -136,6 +146,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
         let controller = SPMainConversationViewController(model: model)
+    
         controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
@@ -185,6 +196,17 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         }
         let safariController = SFSafariViewController(url: url)
         navigationController?.present(safariController, animated: true)
+    }
+    
+    ///Handles any successfull request and refreshes `RealTimeService` if needed
+    private func configureAPIAndRealTimeHandlers() {
+        apiManager.requestDidSucceed = { [weak self] request in
+            switch request {
+            case _ as SPConversationRequest: self?.realTimeService?.refreshService()
+                
+            default: break
+            }
+        }
     }
 }
 

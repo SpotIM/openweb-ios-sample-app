@@ -27,14 +27,11 @@ internal final class SPAnalyticsHolder {
     
     internal static var `default`: SPAnalyticsService = {
         let service = SPDefaultAnalyticsService()
-        service.sender = SPDefaultAnalyticsSender()
+        service.sender = SPDefaultAnalyticsSender(apiManager: ApiManager())
         return service
     }()
-    
-    internal static func setup() {
-        self.default = SPDefaultAnalyticsService()
-        self.default.sender = SPDefaultAnalyticsSender()
-    }
+
+    private init() {}
 }
 
 internal final class SPDefaultAnalyticsService: SPAnalyticsService {

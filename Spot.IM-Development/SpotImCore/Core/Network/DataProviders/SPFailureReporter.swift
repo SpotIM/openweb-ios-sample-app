@@ -16,32 +16,31 @@ struct RawReportModel {
     let errorMessage: String
 }
 
-internal final class SPDefaultFailureReporter {
+internal final class SPDefaultFailureReporter: NetworkDataProvider {
+    
+    init() {
+        super.init(apiManager: ApiManager())
+    }
     
     func sendFailureReport(_ rawReport: RawReportModel) {
         guard
-            let spotKey = SPClientSettings.spotKey
+            let spotKey = SPClientSettings.main.spotKey
             else { return }
         
         let spRequest = SPFailureReportRequest.error
         let headers = HTTPHeaders.unauthorized(with: spotKey, postId: "")
         let failureReportDataModel = prepareReportDataModel(rawReport)
         
-        Alamofire.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: failureReportDataModel.parameters(),
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .responseJSON { response in
-                switch response.result {
-                case .success(let result):
-                    Logger.verbose("\(result)")
-
-                case .failure(let error):
-                    Logger.error(error)
-                }
-            }
+        manager.execute(
+            request: spRequest,
+            parameters: failureReportDataModel.parameters(),
+            parser: EmptyParser(),
+            headers: headers
+        ) { (result, response) in
+            guard case let .failure(error) = result else { return }
+            
+            Logger.error(error)
+        }
     }
     
     private func prepareReportDataModel(_ rawReport: RawReportModel) -> FailureReportDataModel {

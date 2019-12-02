@@ -19,8 +19,8 @@ final class SPConversationSummaryView: BaseView {
 
     private let commentsCountLabel: BaseLabel = .init()
     private let separatorView: BaseView = .init()
-    private let sortButton: BaseButton = .init(type: .system)
-    private let newCommentsButton: BaseButton = .init(type: .system)
+    private let sortButton: BaseButton = .init()
+    private let newCommentsButton: BaseButton = .init()
 
     internal var dropsShadow: Bool = false
     

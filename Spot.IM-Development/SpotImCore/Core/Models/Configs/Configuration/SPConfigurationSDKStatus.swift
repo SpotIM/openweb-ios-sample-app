@@ -12,5 +12,6 @@ struct SPConfigurationSDKStatus: Decodable {
     
     let enabled: Bool?
     let locale: String?
+    let realtimeEnabled: Bool?
 
 }

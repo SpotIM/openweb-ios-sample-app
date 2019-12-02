@@ -23,6 +23,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var footerView: SPPreConversationFooter = .init()
     
     private var tableViewHeightConstraint: NSLayoutConstraint?
+    
     private let maxSectionCount: Int = 2
     private let readingTracker = SPReadingTracker()
     internal var dataLoaded: (() -> Void)?
@@ -42,6 +43,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
         loadConversation()
         readingTracker.setupTracking(for: view)
+        readingTracker.viewDidBecomeVisible = { [weak self] in
+            let delay = (SPConfigsDataSource.appConfig?.realtime?.startTimeoutMilliseconds ?? 5000) / 1000
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                self?.model.startTypingTracking()
+            }
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -113,6 +121,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     private func setupFooterView() {
+        view.bringSubviewToFront(footerView)
         footerView.delegate = self
         footerView.layout {
             $0.top.greaterThanOrEqual(to: tableView.bottomAnchor)
@@ -142,8 +151,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         )
                     }
                 } else if success == false {
-                    // TODO: (Fedin) show alert with unknown error
-                    // print("show error here")
+                    Logger.error("Load conversation request type is not `success`")
                 } else {
                     self.checkAdsAvailability()
                     
@@ -277,7 +285,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         let commentId = model.dataSource.clippedCellData(for: indexPath)?.commentId
         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
     }
-    
 }
 
 // MARK: - Extensions

@@ -105,8 +105,8 @@ class ViewController: UIViewController {
         }
         
         UserDefaults.standard.setValue(spotId, forKey: key)
-        SPClientSettings.setup(spotKey: spotId)
-        SPClientSettings.darkModeBackgroundColor = #colorLiteral(red: 0.06274509804, green: 0.07058823529, blue: 0.2117647059, alpha: 1) 
+        SPClientSettings.main.setup(spotKey: spotId)
+        SPClientSettings.darkModeBackgroundColor = #colorLiteral(red: 0.06274509804, green: 0.07058823529, blue: 0.2117647059, alpha: 1)
     }
 
     private func setup(with spotId: String, from sender: UIButton) {

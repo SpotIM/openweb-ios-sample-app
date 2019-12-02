@@ -55,8 +55,13 @@
 "Be the first to comment" = "היו הראשונים להגיב";
 "Share" = "שיתוף";
 "What do you think?" = "הוספת תגובה";
+<<<<<<< HEAD
+"Loading" = "טוען...";
+"View Previous Reply" = "הצג תגובות קודמות";
+=======
 "Loading" = "טוען";
 "View Previous Reply" = "הצג תגובה קודמת";
+>>>>>>> 05552c3b9bac134ef36658545b86e65f1665d591
 "Hide Reply" = "הסתר תגובות";
 "View Previous Replies" = "הצג תגובות קודמות";
 "Hide Replies" = "הסתר תגובות";
@@ -74,4 +79,9 @@
 "Replying to " = "תגובה ל";
 "NEW" = "החדש ביותר";
 "Comments" = "תגובות";
+<<<<<<< HEAD
+"Comment" = "תגובות";
+"Typing" = "מגיבים כרגע...";
+=======
 "Comment" = "תגובה";
+>>>>>>> 05552c3b9bac134ef36658545b86e65f1665d591

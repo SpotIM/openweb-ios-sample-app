@@ -8,18 +8,27 @@
 
 import UIKit
 
-public struct SPClientSettings {
+public class SPClientSettings {
     
-    internal private(set) static var spotKey: String?
-
-    public static func setup(spotKey: String?) {
+    public static let main: SPClientSettings = {
+        let settings = SPClientSettings()
+        let apiManager = ApiManager()
+        settings.configProvider = SPDefaultConfigProvider(apiManager: apiManager)
+        
+        return settings
+    }()
+    
+    private(set) var spotKey: String?
+    private var configProvider: SPDefaultConfigProvider!
+    
+    public func setup(spotKey: String?) {
         if self.spotKey != spotKey {
             self.spotKey = spotKey
             UIFont.loadAllFonts
             
             SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
-            
-            SPDefaultConfigProvider.getConfigs { result in
+
+            configProvider.getConfigs { result in
                 SPConfigsDataSource.appConfig = result.appConfig
                 SPConfigsDataSource.adsConfig = result.adsConfig
             }

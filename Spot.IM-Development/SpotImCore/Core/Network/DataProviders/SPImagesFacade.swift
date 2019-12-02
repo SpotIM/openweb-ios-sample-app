@@ -18,9 +18,9 @@ internal protocol SPImageURLProvider {
     func image(with url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> DataRequest?
 }
 
-internal final class SPCloudinaryImageProvider: SPImageURLProvider {
+internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLProvider {
     internal var avatarSize: CGSize?
-
+    
     /// Use prepared url with size here, please
     @discardableResult
     func image(with url: URL?, size: CGSize? = nil,
@@ -32,10 +32,13 @@ internal final class SPCloudinaryImageProvider: SPImageURLProvider {
             
             return nil
         } else {
-            return Alamofire.request(url)
-                .validate()
-                .responseData { response in
-                    switch response.result {
+            let request = SPImageFetchRequest.image(url: url)
+            
+            return manager.execute(
+                request: request,
+                encoding: URLEncoding.default,
+                parser: DecodableParser<Data>()) { (result, _) in
+                    switch result {
                     case .success(let data):
                         let image = UIImage(data: data)
                         if let size = size, let image = image {
@@ -53,7 +56,7 @@ internal final class SPCloudinaryImageProvider: SPImageURLProvider {
                     case .failure(let error):
                         completion(nil, error)
                     }
-                }
+            }
         }
     }
     

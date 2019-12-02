@@ -13,11 +13,11 @@ internal protocol SPAnalyticsSender {
     func sendEvent(with info: SPAnalyticsDTO)
 }
 
-internal final class SPDefaultAnalyticsSender: SPAnalyticsSender {
+internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsSender {
 
     func sendEvent(with info: SPAnalyticsDTO) {
 
-        guard let spotKey = SPClientSettings.spotKey else {
+        guard let spotKey = SPClientSettings.main.spotKey else {
             Logger.error("[ERROR]: No spot key for analytics")
             return
         }
@@ -45,17 +45,23 @@ internal final class SPDefaultAnalyticsSender: SPAnalyticsSender {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         "default",
                                         userSession: SPUserSessionHolder.session)
-
-        Alamofire.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .responseString { response in
-                 SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields)
-                
-        }
+        manager.execute(
+            request: spRequest,
+            parameters: parameters,
+            parser: EmptyParser(),
+            headers: headers
+        ) { _, response in
+        SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields) }
+//        Alamofire.request(spRequest.url,
+//                          method: spRequest.method,
+//                          parameters: parameters,
+//                          encoding: APIConstants.encoding,
+//                          headers: headers)
+//            .validate()
+//            .responseString { response in
+//                 SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields)
+//
+//        }
     }
 
     private enum AnalyticsAPIKeys {

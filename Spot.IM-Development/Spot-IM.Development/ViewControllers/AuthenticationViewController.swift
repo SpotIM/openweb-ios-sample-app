@@ -69,7 +69,7 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     @IBAction func startGenericSSO(_ sender: Any) {
         // TODO: (Fedin) remove SPClientSettings.setup from here
         // when everything working with single key in AppDelegate
-        SPClientSettings.setup(spotKey: .demoGenericSpotKeyForSSO)
+        SPClientSettings.main.setup(spotKey: .demoGenericSpotKeyForSSO)
         
         foxAuthDone = false
         genericAuthenticationIndicator.text = "⏳"
@@ -87,7 +87,7 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     @IBAction func startFoxSSO(_ sender: Any) {
         // TODO: (Fedin) remove SPClientSettings.setup from here
         // when everything working with single key in AppDelegate
-        SPClientSettings.setup(spotKey: .demoFoxSpotKeyForSSO)
+        SPClientSettings.main.setup(spotKey: .demoFoxSpotKeyForSSO)
         
         genericAuthDone = false
         foxTokenIndicator.text = "⏳"
