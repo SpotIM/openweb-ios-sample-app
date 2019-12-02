@@ -19,12 +19,12 @@ protocol SPPreConversationFooterDelegate: class {
 internal final class SPPreConversationFooter: BaseView {
     
     private lazy var separatorView: BaseView = .init()
-    private lazy var showMoreCommentsButton: BaseButton = .init(type: .system)
-    private lazy var termsButton: BaseButton = .init(type: .system)
+    private lazy var showMoreCommentsButton: BaseButton = .init()
+    private lazy var termsButton: BaseButton = .init()
     private lazy var dotLabel: BaseLabel = .init()
-    private lazy var privacyButton: BaseButton = .init(type: .system)
+    private lazy var privacyButton: BaseButton = .init()
     private lazy var spotIMIcon: BaseUIImageView = .init()
-    private lazy var addSpotIMButton: BaseButton = .init(type: .system)
+    private lazy var addSpotIMButton: BaseButton = .init()
     private lazy var bannerContainerView: BaseView = .init()
     private var bannerView: UIView?
     

@@ -37,13 +37,14 @@ internal protocol SPCommentUpdater {
 }
 
 internal final class SPCommentFacade: SPCommentUpdater {
+    
     internal func changeRank(_ change: SPRankChange,
                              for commentId: String?,
                              with parentId: String?,
                              in conversationId: String?,
                              completion: @escaping BooleanCompletion) {
         let spRequest = SPConversationRequest.commentRankChange
-        guard let spotKey = SPClientSettings.spotKey else {
+        guard let spotKey = SPClientSettings.main.spotKey else {
             completion(false, SPNetworkError.custom("Please provide Spot Key"))
             return
         }
@@ -89,7 +90,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
     
     internal func deleteComment(parameters: [String: Any], postId: String,
                                 success: @escaping DeleteCommentHandler, failure: @escaping ErrorHandler) {
-        guard let spotKey = SPClientSettings.spotKey
+        guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
@@ -127,7 +128,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
     
     internal func createComment(parameters: [String: Any], postId: String,
                                 success: @escaping CommentHandler, failure: @escaping ErrorHandler) {
-        guard let spotKey = SPClientSettings.spotKey
+        guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
@@ -166,7 +167,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
     
     func reportComment(parameters: [String: Any], postId: String,
                        success: @escaping SuccessHandler, failure: @escaping ErrorHandler) {
-        guard let spotKey = SPClientSettings.spotKey
+        guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
@@ -196,7 +197,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
     
     func shareComment(parameters: [String: Any], postId: String,
                       success: @escaping ShareCommentHandler, failure: @escaping ErrorHandler) {
-        guard let spotKey = SPClientSettings.spotKey
+        guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
@@ -227,7 +228,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
     
     func editComment(parameters: [String: Any], postId: String,
                      success: @escaping CommentHandler, failure: @escaping ErrorHandler) {
-        guard let spotKey = SPClientSettings.spotKey
+        guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
@@ -244,18 +245,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
-            .responseData { _ in
-                //                let decoder = JSONDecoder()
-                //                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                //                let result: Result<SPComment> = decoder.decodeResponse(from: response)
-                //
-                //                switch result {
-                //                case .success(let comment):
-                //                    success(comment)
-                //                case .failure:
-                //                    failure(SPNetworkError.default)
-                //                }
-            }
+            .responseData { _ in }
     }
     
     private enum ChangeRankAPIKeys {

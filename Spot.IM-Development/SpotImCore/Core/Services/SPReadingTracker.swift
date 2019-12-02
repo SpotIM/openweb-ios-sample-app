@@ -11,6 +11,7 @@ import UIKit
 
 internal final class SPReadingTracker {
 
+    var viewDidBecomeVisible: (() -> Void)?
     private weak var view: UIView?
     private var visibilityTimer: Timer?
     private var readingStartTime: Date?
@@ -75,7 +76,7 @@ internal final class SPReadingTracker {
             spotShowed = true
 
             SPAnalyticsHolder.default.log(event: .viewed, source: .conversation) // should be triggered ONCE
-
+            viewDidBecomeVisible?()
             startReadingTracking()
 
         // view disappeared

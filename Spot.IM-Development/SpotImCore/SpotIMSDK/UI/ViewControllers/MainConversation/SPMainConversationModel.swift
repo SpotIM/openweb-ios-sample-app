@@ -22,16 +22,34 @@ typealias BooleanCompletion = (Bool, Error?) -> Void
 
 let navigationAvatarSize: CGSize = CGSize(width: 25.0, height: 25.0)
 
+protocol MainConversationModelDelegate: class {
+    
+    func totalTypingCountDidUpdate(count: Int)
+    func stopTypingTrack()
+}
+
 final class SPMainConversationModel {
     
+    /// MulticastDelegate for events that should be handled simultaneously in different places
+    /// Beware of `SPMainConversationDataSource` data changings in this way
+    var delegates: MulticastDelegate<MainConversationModelDelegate> = .init()
+    
     private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"
+    private let typingVisibilityAdditionalTimeInterval: Double = 5.0
+
     private let commentUpdater: SPCommentUpdater
     private let imageProvider: SPImageURLProvider
+    private let realTimeService: RealTimeService?
     
+    private var realTimeTimer: Timer?
+    private var realTimeData: RealTimeModel?
+    private var shouldUserBeNotified: Bool = false
+
     private(set) var dataSource: SPMainConversationDataSource
     private(set) var sortOption: SPCommentSortMode = .best {
         didSet {
             if oldValue != sortOption {
+                
                 sortingUpdateHandler?(oldValue == dataSource.sortMode)
             }
         }
@@ -51,13 +69,27 @@ final class SPMainConversationModel {
     
     init(commentUpdater: SPCommentUpdater,
          conversationDataSource: SPMainConversationDataSource,
-         imageProvider: SPImageURLProvider) {
+         imageProvider: SPImageURLProvider,
+         realTimeService: RealTimeService?) {
+        self.realTimeService = realTimeService
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
         dataSource = conversationDataSource
         dataSource.sortIsUpdated = { [weak self] in
-            self?.sortOption = self?.dataSource.sortMode ?? .newest
+            if let self = self {
+                self.sortOption = self.dataSource.sortMode ?? .newest
+            }
         }
+    }
+    
+    func startTypingTracking() {
+        realTimeService?.startRealTimeDataFetching(conversationId: dataSource.conversationId)
+    }
+    
+    func stopTypingTracking() {
+        shouldUserBeNotified = false
+        delegates.invoke { $0.stopTypingTrack() }
+        realTimeService?.stopRealTimeDataFetching(conversationId: dataSource.conversationId)
     }
     
     func handlePendingComment() {
@@ -263,6 +295,48 @@ extension SPMainConversationModel {
     private enum APIKeys {
         static let messageId = "message_id"
         static let parentId = "parent_Id"
+    }
+}
+
+extension SPMainConversationModel: RealTimeServiceDelegate {
+    func realTimeDataDidUpdate(realTimeData: RealTimeModel, shouldUserBeNotified: Bool, timeOffset: Int) {
+        guard let spotId = SPClientSettings.main.spotKey else { return }
+        
+        self.shouldUserBeNotified = shouldUserBeNotified
+        self.realTimeData = realTimeData
+        let fullConversationId = "\(spotId)_\(dataSource.conversationId)"
+        let totalTypingCount: Int = realTimeData.data?.totalTypingCountForConversation(fullConversationId)
+            ?? 0
+        if shouldUserBeNotified {
+            delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount) }
+            
+            scheduleTypingCleaningTimer(
+                timeOffset: Double(timeOffset) + typingVisibilityAdditionalTimeInterval
+            )
+        }
+    }
+    
+    /// Returns current visible typing count
+    func typingCount() -> Int {
+        guard let spotId = SPClientSettings.main.spotKey else { return 0 }
+
+        let fullConversationId = "\(spotId)_\(dataSource.conversationId)"
+        let totalTypingCount = realTimeData?.data?.totalTypingCountForConversation(fullConversationId)
+            ?? 0
+        
+        return shouldUserBeNotified ? totalTypingCount : 0
+    }
+    
+    /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''
+    private func scheduleTypingCleaningTimer(timeOffset: Double) {
+        realTimeTimer?.invalidate()
+        realTimeTimer = nil
+        realTimeTimer = Timer.scheduledTimer(
+            withTimeInterval: timeOffset,
+            repeats: false
+        ) { [weak self] _ in
+            self?.delegates.invoke { $0.totalTypingCountDidUpdate(count: 0) }
+        }
     }
 }
 

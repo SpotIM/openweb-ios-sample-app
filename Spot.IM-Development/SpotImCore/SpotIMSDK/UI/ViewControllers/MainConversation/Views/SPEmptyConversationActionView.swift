@@ -27,7 +27,7 @@ final class SPEmptyConversationActionView: BaseView {
 
     private let iconView: BaseUIImageView = .init()
     private let messageLabel: BaseLabel = .init()
-    private let actionButton: BaseButton = .init(type: .system)
+    private let actionButton: BaseButton = .init()
     private let containerView: BaseView = .init()
     private var action: (() -> Void)?
     

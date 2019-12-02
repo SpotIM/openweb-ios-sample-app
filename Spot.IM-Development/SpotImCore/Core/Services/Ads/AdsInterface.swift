@@ -41,6 +41,7 @@ final class AdsManager {
     
     static var shouldShowInterstitial: Bool = true
     
+    //TODO: Be sure that target is `debugWithAds` `releaseWithAds`
     func adsProvider() -> AdsProvider {
         #if canImport(GoogleMobileAds)
         return GoogleAdsProvider()

@@ -30,13 +30,17 @@ public extension SPAuthenticationProvider {
 public final class SPDefaultAuthProvider: SPAuthenticationProvider {
     
     public weak var ssoAuthDelegate: SSOAthenticationDelegate?
-    
-    public init() {}
+    private let internalAuthProvider: SPDefaultInternalAuthProvider
+    private let manager: ApiManager
+    public init() {
+        manager = ApiManager()
+        internalAuthProvider = SPDefaultInternalAuthProvider(apiManager: manager)
+    }
 
     public func startSSO(with secret: String? = nil,
                          completion: @escaping (_ response: SSOStartResponse?, _ error: Error?) -> Void) {
         
-        SPDefaultInternalAuthProvider.login { (token, error) in
+        internalAuthProvider.login { (token, error) in
             if let error = error {
                 completion(nil, error)
             } else if let token = token {
@@ -48,13 +52,13 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
 
     private func getCodeA(withGuest ssoParams: SPCodeAParameters?,
                           completion: @escaping (_ response: SSOStartResponse?, _ error: Error?) -> Void) {
-        guard let spotKey = SPClientSettings.spotKey else {
+        guard let spotKey = SPClientSettings.main.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(nil, SPNetworkError.custom(message))
             return
         }
         let spRequest = SPInternalAuthRequests.ssoStart
-        var requestParams = ["spot_id": spotKey]
+        var requestParams: [String: Any] = ["spot_id": spotKey]
                              
         if let secret = ssoParams?.secret {
             requestParams["secret"] = secret
@@ -62,54 +66,54 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         
         var headers = HTTPHeaders.unauthorized(with: spotKey, postId: "default")
         headers["Authorization"] = ssoParams?.token
-        Alamofire.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: requestParams as Parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .responseJSON { [weak self] (response) in
-                switch response.result {
-                case .success(let json):
-                    let dict = json as? NSDictionary
-                    let codeA = dict?["code_a"] as? String
-                    let autocomplete = dict?["auto_complete"] as? Bool ?? false
-                    if autocomplete {
-                        SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields)
-                    }
-                    let result = SSOStartResponse(codeA: codeA,
-                                                  jwtToken: ssoParams?.token,
-                                                  autoComplete: autocomplete,
-                                                  success: dict?["success"] as? Bool ?? false)
-                    if result.autoComplete {
-                        SPDefaultInternalAuthProvider.login { _, error in
-                            if error == nil {
-                                self?.ssoAuthDelegate?.ssoFlowDidSucceed()
-                                completion(result, nil)
-                            } else {                                
-                                self?.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                                completion(nil, error)
-                            }
-                        }
-                    } else {
-                        completion(result, nil)
-                    }
-                case .failure(let error):
-                    let rawReport = RawReportModel(url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                                                   parameters: requestParams,
-                                                   errorData: response.data,
-                                                   errorMessage: error.localizedDescription)
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
-                    
-                    completion(nil, SPNetworkError.default)
+        manager.execute(
+            request: spRequest,
+            parameters: requestParams,
+            parser: JSONParser(),
+            headers: headers
+        ) { [weak self] result, response in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let json):
+                let codeA = json["code_a"] as? String
+                let autocomplete = json["auto_complete"] as? Bool ?? false
+                if autocomplete {
+                    SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields)
                 }
+                let result = SSOStartResponse(codeA: codeA,
+                                              jwtToken: ssoParams?.token,
+                                              autoComplete: autocomplete,
+                                              success: json["success"] as? Bool ?? false)
+                if result.autoComplete {
+                    self.internalAuthProvider.login { [weak self] _, error in
+                        if error == nil {
+                            self?.ssoAuthDelegate?.ssoFlowDidSucceed()
+                            completion(result, nil)
+                        } else {
+                            self?.ssoAuthDelegate?.ssoFlowDidFail(with: error)
+                            completion(nil, error)
+                        }
+                    }
+                } else {
+                    completion(result, nil)
+                }
+            case .failure(let error):
+                let rawReport = RawReportModel(url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                                               parameters: requestParams,
+                                               errorData: response.data,
+                                               errorMessage: error.localizedDescription)
+                SPDefaultFailureReporter().sendFailureReport(rawReport)
+                
+                completion(nil, SPNetworkError.default)
             }
+        }
     }
 
     public func completeSSO(with codeB: String?,
                             genericToken: String? = nil,
                             completion: @escaping AuthCompletionHandler) {
-        guard let spotKey = SPClientSettings.spotKey else {
+        guard let spotKey = SPClientSettings.main.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(false, SPNetworkError.custom(message))
             return
@@ -126,52 +130,52 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
             headers["Authorization"] = token
         }
         
-        Alamofire.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: params,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .responseJSON { [weak self] (response) in
-                switch response.result {
-                case .success(let json):
-                    let dict = json as? NSDictionary
-                    let success = dict?["success"] as? Bool ?? false
-                    if success {
-                        self?.updateSession(headers: response.response?.allHeaderFields, completion: completion)
-                    } else {
-                        let errorMessage = LocalizationManager.localizedString(key: "Authentication error")
-                        let error = SPNetworkError.custom(errorMessage)
-                        let rawReport = RawReportModel(
-                            url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                            parameters: params,
-                            errorData: response.data,
-                            errorMessage: error.localizedDescription
-                        )
-                        SPDefaultFailureReporter().sendFailureReport(rawReport)
-                        
-                        self?.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                        completion(false, error)
-                    }
-                case .failure(let error):
+        manager.execute(
+        request: spRequest,
+        parameters: params,
+        parser: JSONParser(),
+        headers: headers
+        ) { [weak self] (result, response) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let json):
+                let success = json["success"] as? Bool ?? false
+                if success {
+                    self.updateSession(headers: response.response?.allHeaderFields, completion: completion)
+                } else {
+                    let errorMessage = LocalizationManager.localizedString(key: "Authentication error")
+                    let error = SPNetworkError.custom(errorMessage)
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: nil,
+                        parameters: params,
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter().sendFailureReport(rawReport)
                     
-                    self?.ssoAuthDelegate?.ssoFlowDidFail(with: SPNetworkError.default)
-                    completion(false, SPNetworkError.default)
+                    self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
+                    completion(false, error)
                 }
+            case .failure(let error):
+                let rawReport = RawReportModel(
+                    url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                    parameters: nil,
+                    errorData: response.data,
+                    errorMessage: error.localizedDescription
+                )
+                SPDefaultFailureReporter().sendFailureReport(rawReport)
+                
+                self.ssoAuthDelegate?.ssoFlowDidFail(with: SPNetworkError.default)
+                completion(false, SPNetworkError.default)
             }
+        }
     }
     
     private func updateSession(headers: [AnyHashable: Any]?, completion: @escaping AuthCompletionHandler) {
         SPUserSessionHolder.updateSession(with: headers)
         let token = headers?.authorizationHeader
-        SPDefaultInternalAuthProvider.login { [weak self] _, error in
+        internalAuthProvider.login { [weak self] _, error in
             if error == nil {
                 self?.ssoAuthDelegate?.ssoFlowDidSucceed()
                 completion(token != nil && !token!.isEmpty, nil)

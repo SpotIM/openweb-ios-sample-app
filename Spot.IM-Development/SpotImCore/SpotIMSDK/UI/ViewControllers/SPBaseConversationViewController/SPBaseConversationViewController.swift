@@ -25,6 +25,11 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
 
     internal var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitMainConv }
 
+    private var typingIndicationView: TotalTypingIndicationView?
+    private var typingViewBottomConstraint: NSLayoutConstraint?
+    private var typingViewCenterConstraint: NSLayoutConstraint?
+    private var typingViewCenterInitialConstraintConstant: CGFloat?
+    
     // MARK: - Internal methods
 
     internal init(model: SPMainConversationModel) {
@@ -57,6 +62,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
 
     internal func setupUI() {
         view.addSubview(tableView)
+        view.sendSubviewToBack(tableView)
         setupTableView()
     }
 
@@ -224,12 +230,116 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
             return cellDataHeight(for: indexPath) + headerSpacing
         }
     }
+    
+    private func handleTypingIndicationViewUpdate(typingCount: Int) {
+        if typingCount <= 0 {
+            hideTypingIndicationView()
+        } else if let typingIndicationView = typingIndicationView {
+            typingIndicationView.setTypingCount(typingCount)
+        } else {
+            createAndShowTypingIndicationView()
+            typingIndicationView?.setTypingCount(typingCount)
+        }
+    }
 }
 
 private extension SPBaseConversationViewController {
 
     private enum Theme {
         static let separatorHeight: CGFloat = 7
+    }
+}
+
+extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
+    
+    func horisontalPositionChangeDidEnd() {
+        guard
+            let currentCenterConstant = typingViewCenterConstraint?.constant
+            else { return }
+        
+        if currentCenterConstant > (view.bounds.width / 4) ||
+            currentCenterConstant < -(view.bounds.width / 4) {
+            model.stopTypingTracking()
+        } else {
+            returnTypingViewToTheCenter()
+        }
+    }
+    
+    func horisontalPositionDidChange(transition: CGFloat) {
+        guard
+            let centerConstraintConstant = typingViewCenterInitialConstraintConstant
+            else { return }
+        
+        typingViewCenterConstraint?.constant = centerConstraintConstant + transition
+    }
+    
+    private func dismissTypingViewToTheSide() {
+        guard
+            let currentCenterConstant = typingViewCenterConstraint?.constant
+            else { return }
+        
+        typingViewCenterConstraint?.constant = currentCenterConstant > 0 ?
+            view.bounds.width :
+            -view.bounds.width
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: { _ in
+            self.typingIndicationView?.removeFromSuperview()
+            self.typingIndicationView = nil
+        })
+    }
+    
+    private func returnTypingViewToTheCenter() {
+        guard
+        let centerConstraintConstant = typingViewCenterInitialConstraintConstant
+        else { return }
+        
+        typingViewCenterConstraint?.constant = centerConstraintConstant
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func hideTypingIndicationView() {
+        typingViewBottomConstraint?.constant = 100.0
+        UIView.animate(
+            withDuration: 0.3,
+            animations: {
+                self.typingIndicationView?.alpha = 0
+                self.view.layoutIfNeeded()
+            },
+            completion: { _ in
+                self.typingIndicationView?.removeFromSuperview()
+                self.typingIndicationView = nil
+            }
+        )
+    }
+    
+    private func createAndShowTypingIndicationView() {
+        typingIndicationView = TotalTypingIndicationView()
+        typingIndicationView?.delegate = self
+        typingIndicationView?.alpha = 0
+        view.insertSubview(typingIndicationView!, aboveSubview: tableView)
+        
+        typingIndicationView!.layout {
+            typingViewBottomConstraint = $0.bottom.equal(to: tableView.bottomAnchor, offsetBy: 100.0)
+            typingViewCenterConstraint = $0.centerX.equal(to: view.centerXAnchor)
+            typingViewCenterInitialConstraintConstant = typingViewCenterConstraint?.constant
+            $0.height.equal(to: 34.0)
+        }
+        view.layoutIfNeeded()
+        
+        typingViewBottomConstraint?.constant = -25.0
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0.0,
+            usingSpringWithDamping: 0.5,
+            initialSpringVelocity: 0.5,
+            animations: {
+                self.typingIndicationView?.alpha = 1
+                self.view.layoutIfNeeded()
+            }
+        )
     }
 }
 
@@ -470,6 +580,17 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         model.dataSource.collapseCommentText(for: indexPath)
         tableView.reloadData()
         handleCommentSizeChange()
+    }
+}
+
+extension SPBaseConversationViewController: MainConversationModelDelegate {
+    
+    func stopTypingTrack() {
+        dismissTypingViewToTheSide()
+    }
+    
+    func totalTypingCountDidUpdate(count: Int) {
+        handleTypingIndicationViewUpdate(typingCount: count)
     }
 }
 

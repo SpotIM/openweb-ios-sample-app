@@ -10,6 +10,8 @@ import Foundation
 
 struct SPConfigurationRealtime: Decodable {
     
+    let cacheTtlSeconds: Int?
+    let enableOnlineUsers: Bool?
     let noOnlinePollingInterval: Int?
     let onlineUserTtlMinutes: Int?
     let onlineUsersBatchSize: Int?
@@ -18,5 +20,6 @@ struct SPConfigurationRealtime: Decodable {
     let startTimeoutMilliseconds: Int?
     let typingUserTtlSeconds: Int?
     let typingUsersBatchSize: Int?
+    let usersTypingInterval: Int?
     
 }

@@ -43,7 +43,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     }
     
     override func viewDidLoad() {
-        SPClientSettings.setup(spotKey: spotId)
+        SPClientSettings.main.setup(spotKey: spotId)
         setupTableView()
         spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
         spotIMCoordinator?.setLayoutDelegate(delegate: self)

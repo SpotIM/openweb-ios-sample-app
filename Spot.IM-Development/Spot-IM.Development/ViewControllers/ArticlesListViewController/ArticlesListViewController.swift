@@ -23,6 +23,7 @@ class ArticlesListViewController: UITableViewController {
     
     init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false) {
         self.spotId = spotId
+        
         self.authenticationControllerId = authenticationControllerId
         self.addToTableView = addToTableView
         
@@ -36,6 +37,8 @@ class ArticlesListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        SPClientSettings.main.setup(spotKey: spotId)
+        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
         setup()
         loadData()
 
@@ -72,12 +75,16 @@ class ArticlesListViewController: UITableViewController {
 extension ArticlesListViewController : ArticleTableViewCellDelegate {
     func articleCellTapped(cell: ArticleTableViewCell, withPost post: Post?) {
         guard let post = post, let postId = postId(post: post) else { return }
-        
+
+//        let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
+//        articleViewController.spotIMCoordinator = spotIMCoordinator
+//        self.navigationController?.pushViewController(articleViewController, animated: true)
         if addToTableView {
             let tableViewController = TableViewFooterTesterViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
             self.navigationController?.pushViewController(tableViewController, animated: true)
         } else {
             let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
+            articleViewController.spotIMCoordinator = spotIMCoordinator
             self.navigationController?.pushViewController(articleViewController, animated: true)
         }
     }
@@ -184,3 +191,12 @@ struct Response: Decodable {
 }
 
 
+extension ArticlesListViewController: SpotImSDKNavigationDelegate {
+    
+    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId) as! UIViewController & SSOAuthenticatable
+        
+        return controller
+    }
+    
+}

@@ -10,16 +10,16 @@ import Foundation
 import Alamofire
 
 internal protocol SPConfigProvider {
-    static func getConfigs(completion: @escaping (ConfigsCompletion) -> Void)
+    func getConfigs(completion: @escaping (ConfigsCompletion) -> Void)
 }
 
 typealias ConfigsCompletion = (appConfig: SPSpotConfiguration?, adsConfig: SPAdsConfiguration?, error: Error?)
 
-internal final class SPDefaultConfigProvider: SPConfigProvider {
+internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvider {
     
     /// app and ads configurations
-    static func getConfigs(completion: @escaping (ConfigsCompletion) -> Void) {
-        guard let spotKey = SPClientSettings.spotKey else {
+    func getConfigs(completion: @escaping (ConfigsCompletion) -> Void) {
+        guard let spotKey = SPClientSettings.main.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion((nil, nil, SPNetworkError.custom(message)))
             return
@@ -27,38 +27,38 @@ internal final class SPDefaultConfigProvider: SPConfigProvider {
         let spRequest = SPConfigRequests.config(spotId: spotKey)
 
         let headers = HTTPHeaders.unauthorized(with: spotKey, postId: "")
-        Alamofire.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: nil,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .responseData { (response) in
-                let result: Result<SPSpotConfiguration> = defaultDecoder.decodeResponse(from: response)
-                switch result {
-                case .success(let appConfig):
-                    if appConfig.initialization?.monetized ?? false {
-                        getAdsConfig { (adsConfig, error) in
-                            completion((appConfig, adsConfig, nil))
-                        }
-                    } else {
-                        completion((appConfig, nil, nil))
+        
+        manager.execute(
+            request: spRequest,
+            parser: DecodableParser<SPSpotConfiguration>(),
+            headers: headers
+        ) { [weak self] result, response in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let appConfig):
+                if appConfig.initialization?.monetized ?? false {
+                    self.getAdsConfig { (adsConfig, error) in
+                        completion((appConfig, adsConfig, nil))
                     }
-                case .failure(let error):
-                    let rawReport = RawReportModel(
-                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: nil,
-                        errorData: response.data,
-                        errorMessage: error.localizedDescription
-                    )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
-                    completion((nil, nil, SPNetworkError.default))
+                } else {
+                    completion((appConfig, nil, nil))
                 }
+            case .failure(let error):
+                let rawReport = RawReportModel(
+                    url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                    parameters: nil,
+                    errorData: response.data,
+                    errorMessage: error.localizedDescription
+                )
+                SPDefaultFailureReporter().sendFailureReport(rawReport)
+                completion((nil, nil, SPNetworkError.default))
             }
+        }
     }
     
-    static func getAdsConfig(completion: @escaping (SPAdsConfiguration?, Error?) -> Void) {
-        guard let spotKey = SPClientSettings.spotKey else {
+    func getAdsConfig(completion: @escaping (SPAdsConfiguration?, Error?) -> Void) {
+        guard let spotKey = SPClientSettings.main.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(nil, SPNetworkError.custom(message))
             return
@@ -68,24 +68,22 @@ internal final class SPDefaultConfigProvider: SPConfigProvider {
         let hour = Int(Date.hourFormatter.string(from: Date()))!
         let params: [String: Any] = ["day": dayName, "hour": hour]
         let headers = HTTPHeaders.unauthorized(with: spotKey, postId: "")
-        Alamofire.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: params,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .responseData { (response) in
+        
+        manager.execute(
+            request: spRequest,
+            parameters: params,
+            parser: DecodableParser<SPAdsConfiguration>(),
+            headers: headers
+        ) { result, response in
+            switch result {
+            case .success(let configuration):
+                completion(configuration, nil)
                 
-                let result: Result<SPAdsConfiguration> = defaultDecoder.decodeResponse(from: response)
-                switch result {
-                case .success(let configuration):
-                    completion(configuration, nil)
-                    
-                case .failure(let error):
-                    Logger.error(error)
-                    completion(nil, SPNetworkError.default)
-                }
+            case .failure(let error):
+                Logger.error(error)
+                completion(nil, SPNetworkError.default)
             }
+        }
     }
 
 }
