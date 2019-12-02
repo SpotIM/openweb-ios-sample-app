@@ -8,31 +8,42 @@
 
 import UIKit
 
-protocol SPTextInputViewDelegate: class {
+internal protocol SPTextInputView: class {
+
+    var text: String? { set get }
+
+}
+
+internal protocol SPTextInputViewDelegate: class {
     
-    func textDidChange(_ text: String)
+    func input(_ view: SPTextInputView, didChange text: String)
     func tooLongTextWasPassed()
     
 }
 
-final class SPTextInputView: BaseView {
+final class SPCommentTextInputView: BaseView, SPTextInputView {
 
     enum CommentType {
         case comment, reply
     }
     
     weak var delegate: SPTextInputViewDelegate?
+
+    var text: String? { get { textInputView.text }
+                        set { textInputView.text = newValue } }
+
     private let textInputView: InputTextView = InputTextView()
-    private let avatarImageView: SPAvatarView = SPAvatarView()
+    private lazy var avatarImageView: SPAvatarView = SPAvatarView()
     
-    private var commentLeadingConstraint: NSLayoutConstraint?
-    private var replyLeadingConstraint: NSLayoutConstraint?
+    private var textToAvatarConstraint: NSLayoutConstraint?
+    private var textToLeadingConstraint: NSLayoutConstraint?
+    private var showingAvatar: Bool = false
 
     // MARK: - Init
     
-    override init(frame: CGRect) {
+    init(frame: CGRect = .zero, hasAvatar: Bool) {
         super.init(frame: frame)
-        
+        showingAvatar = hasAvatar
         setupUI()
     }
 
@@ -46,20 +57,29 @@ final class SPTextInputView: BaseView {
     
     func updateText(_ text: String) {
         textInputView.text = text
-        delegate?.textDidChange(text)
+        delegate?.input(self, didChange: text)
     }
-    
-    func configureCommentType(_ commentType: CommentType, avatar: URL? = nil) {
-        avatarImageView.updateAvatar(avatarUrl: avatar)
-        avatarImageView.updateOnlineStatus(.online)
-        avatarImageView.isHidden = false
-        commentLeadingConstraint?.isActive = true
-        switch commentType {
+
+    func configureCommentType(_ type: CommentType, avatar: URL? = nil) {
+        
+        switch type {
         case .comment:
             textInputView.placeholder = LocalizationManager.localizedString(key: "What do you think?")
             
         case .reply:
             textInputView.placeholder = LocalizationManager.localizedString(key: "Type your reply…")
+        }
+
+        if showingAvatar {
+            avatarImageView.updateAvatar(avatarUrl: avatar)
+            avatarImageView.updateOnlineStatus(.online)
+            avatarImageView.isHidden = false
+            textToLeadingConstraint?.isActive = false
+            textToAvatarConstraint?.isActive = true
+        } else {
+            avatarImageView.isHidden = true
+            textToAvatarConstraint?.isActive = false
+            textToLeadingConstraint?.isActive = true
         }
     }
     
@@ -73,7 +93,7 @@ final class SPTextInputView: BaseView {
         avatarImageView.isHidden = true
         avatarImageView.layout {
             $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor)
+            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.avatarImageViewLeading)
             $0.height.equal(to: Theme.avatarImageViewSize)
             $0.width.equal(to: Theme.avatarImageViewSize)
         }
@@ -84,10 +104,10 @@ final class SPTextInputView: BaseView {
             $0.top.equal(to: topAnchor, offsetBy: Theme.textInputViewTopOffset)
             $0.bottom.equal(to: bottomAnchor)
             $0.trailing.equal(to: trailingAnchor)
-            replyLeadingConstraint = $0.leading.equal(to: leadingAnchor, isActive: false)
-            commentLeadingConstraint = $0.leading.equal(to: avatarImageView.trailingAnchor,
-                                                        offsetBy: Theme.commentLeadingOffset,
-                                                        isActive: false)
+            textToLeadingConstraint = $0.leading.equal(to: leadingAnchor, isActive: false)
+            textToAvatarConstraint = $0.leading.equal(to: avatarImageView.trailingAnchor,
+                                                      offsetBy: Theme.commentLeadingOffset,
+                                                      isActive: false)
         }
         textInputView.delegate = self
         textInputView.tintColor = .brandColor
@@ -98,10 +118,10 @@ final class SPTextInputView: BaseView {
     }
 }
 
-extension SPTextInputView: UITextViewDelegate {
+extension SPCommentTextInputView: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
-        delegate?.textDidChange(textView.text)
+        delegate?.input(self, didChange: textView.text)
     }
     
     func textView(
@@ -132,6 +152,7 @@ private enum Theme {
     static let commentTextFontSize: CGFloat = 16.0
     static let commentLeadingOffset: CGFloat = 11.0
     static let avatarImageViewSize: CGFloat = 39.0
+    static let avatarImageViewLeading: CGFloat = 6.0
     static let textInputViewTopOffset: CGFloat = 4.0
     static let maximumCommentLength: Int = 1000
 }

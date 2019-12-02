@@ -149,6 +149,9 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 let result: Result<SPComment> = defaultDecoder.decodeResponse(from: response)
                 switch result {
                 case .success(let comment):
+
+                    SPUserSessionHolder.freezeDisplayNameIfNeeded()
+
                     success(comment)
                     
                 case .failure(let error):

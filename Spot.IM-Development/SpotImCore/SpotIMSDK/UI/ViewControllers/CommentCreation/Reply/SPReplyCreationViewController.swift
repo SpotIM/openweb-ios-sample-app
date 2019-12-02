@@ -1,5 +1,5 @@
 //
-//  SPReplyViewController.swift
+//  SPReplyCreationViewController.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 8/7/19.
@@ -11,27 +11,24 @@ import UIKit
 final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCreationModel> {
     
     private lazy var commentHeaderView = SPCommentHeaderView()
-    
+
     internal override func updateModelData() {
         configureModelHandlers()
-        topContainerView.addSubview(commentHeaderView)
+        topContainerStack.insertArrangedSubview(commentHeaderView, at: 0)
         commentHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-        commentHeaderView.configure(with: CommentDataModel(author: model?.dataModel.authorName,
-                                                           comment: model?.dataModel.comment)
+        commentHeaderView.configure(
+            with: CommentDataModel(
+                author: model?.dataModel.authorName,
+                comment: model?.dataModel.comment)
         )
-        commentHeaderView.pinEdges(to: topContainerView)
-        textInputViewContainer.configureCommentType(.reply)
-        textInputViewContainer.updateText(model?.commentText ?? "")
-        
-        model?.fetchNavigationAvatar { [weak self] image, _ in
-            guard
-                let self = self,
-                let image = image
-                else { return }
-            
-            self.updateUserIcon(image: image)
-            self.textInputViewContainer.updateAvatar(image)
+
+        commentHeaderView.layout {
+            $0.height.equal(to: 111)
+            $0.width.equal(to: topContainerStack.widthAnchor)
         }
+
+        updateTextInputContainer(with: .reply)
+        updateAvatar()
     }
     
     private func configureModelHandlers() {

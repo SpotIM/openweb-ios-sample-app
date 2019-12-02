@@ -112,7 +112,7 @@ private enum Theme {
     static let commentTopOffset: CGFloat = 22.0
     static let commentBottomOffset: CGFloat = 24.0
     static let trailingOffset: CGFloat = 24.0
-    static let leadingOffset: CGFloat = 16
+    static let leadingOffset: CGFloat = 15.0
     static let separatorHeight: CGFloat = 1.0
     static let titleFontSize: CGFloat = 16.0
     static let commentFontSize: CGFloat = 16.0

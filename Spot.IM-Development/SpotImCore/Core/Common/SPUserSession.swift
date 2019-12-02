@@ -13,7 +13,7 @@ internal protocol SPUserSessionType {
     var user: SPUser? { get set }
     var userId: String? { get set }
     var token: String? { get set }
-    
+    var displayNameFrozen: Bool { get set }
 }
 
 final internal class SPUserSession: SPUserSessionType {
@@ -21,6 +21,7 @@ final internal class SPUserSession: SPUserSessionType {
     internal var user: SPUser?
     internal var userId: String?
     internal var token: String?
+    var displayNameFrozen: Bool = false
     
 }
 
@@ -32,7 +33,10 @@ internal class SPUserSessionHolder {
     }()
 
     static func updateSessionUser(user: SPUser?) {
+        // preserving entered username for unregistered user
+        let displayName = (user?.registered ?? false) ? user?.displayName : session.user?.displayName
         session.user = user
+        session.user?.displayName = displayName
         SPAnalyticsHolder.default.userId = user?.id
         SPAnalyticsHolder.default.isUserRegistered = user?.registered ?? false
     }
@@ -50,6 +54,20 @@ internal class SPUserSessionHolder {
         UserDefaults.standard.setValue(session.userId, forKey: .guestSessionUserIdKey)
         UserDefaults.standard.setValue(session.token, forKey: .guestSessionTokenKey)
     }
+
+    static func update(displayName: String?) {
+        guard let displayName = displayName else { return }
+        session.user?.displayName = displayName
+    }
+
+    static func freezeDisplayNameIfNeeded() {
+        guard session.user?.registered == false else { return }
+        session.displayNameFrozen = true
+        let userInfo = session.user == nil ? nil : ["user" : session.user!]
+        NotificationCenter.default.post(name: .userDisplayNameFrozen, object: nil, userInfo: userInfo)
+    }
+
+    static var displayNameFrozen: Bool { session.displayNameFrozen }
 
     static func resetUserSession() {
         UserDefaults.standard.removeObject(forKey: .guestSessionUserIdKey)
@@ -81,4 +99,8 @@ public final class SPPublicSessionInterface {
     public static func isMe(userId: String) -> Bool {
         return userId == SPUserSessionHolder.session.userId
     }
+}
+
+extension Notification.Name {
+    public static let userDisplayNameFrozen = Notification.Name.init("im.spot.ios.session.UserDisplayNameFrozen")
 }
