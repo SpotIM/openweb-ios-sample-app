@@ -142,7 +142,6 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
         genericToken = nil
         foxAuthDone = false
         genericAuthDone = false
-        SPPublicSessionInterface.resetUser()
     }
 }
 

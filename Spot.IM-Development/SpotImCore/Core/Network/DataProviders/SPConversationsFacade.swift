@@ -10,9 +10,9 @@ import Foundation
 import Alamofire
 
 class NetworkDataProvider {
-    
+
     let manager: ApiManager
-    
+
     init(apiManager: ApiManager) {
         self.manager = apiManager
     }
@@ -55,11 +55,11 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
 
     internal var isLoading = false
     internal var hasNext = defaultHasNext
-    
+
     internal var canLoadNextPage: Bool {
         return !isLoading && hasNext
     }
-    
+
     internal func conversation(
         _ id: String,
         _ mode: SPCommentSortMode,
@@ -68,7 +68,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void) {
         comments(id, mode, page: page, parentId: "", loadingStarted: loadingStarted, completion: completion)
     }
-    
+
     internal func comments(_ id: String,
                            _ mode: SPCommentSortMode,
                            page: SPPaginationPage,
@@ -81,9 +81,10 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             completion(nil, SPNetworkError.custom(message))
             return
         }
-        
+
         let needExtraData = page == .first
         let currentRequestOffset = page == .first ? 0 : self.offset
+
         let depth = parentId.isEmpty ? 2 : 1
         
         // TODO: (Fedin) make sting constants for this
@@ -98,12 +99,11 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         ]
         let headers = HTTPHeaders.basic(
             with: spotKey,
-            id,
-            userSession: SPUserSessionHolder.session)
+            id)
         isLoading = true
-        
+
         loadingStarted?()
-        
+
         manager.execute(
             request: spRequest,
             parameters: parameters,
@@ -113,16 +113,16 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             let timeOffset = page == .first ? 0.0 : 0.0
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + timeOffset) {
                 self.isLoading = false
-                
-                SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields)
-                
+
+                SPUserSessionHolder.updateSession(with: response.response)
+
                 switch result {
                 case .success(let conversation):
                     SPUserSessionHolder.updateSessionUser(user: conversation.user)
                     self.offset = conversation.conversation?.offset ?? self.offset
                     self.hasNext = conversation.conversation?.hasNext ?? false
                     completion(conversation, nil)
-                    
+
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -144,5 +144,5 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         copy.hasNext = hasNext ?? SPConversationsFacade.defaultHasNext
         return copy
     }
-    
+
 }

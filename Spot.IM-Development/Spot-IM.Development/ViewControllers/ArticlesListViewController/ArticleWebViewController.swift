@@ -60,7 +60,7 @@ internal final class ArticleWebViewController: UIViewController {
     private func setupSpotView() {
         spotIMCoordinator?.preConversationController(
             withPostId: postId,
-            container: navigationController,
+            container: navigationController!,
             completion: { [weak self] preConversationVC in
                 guard let self = self else { return }
                 self.addChild(preConversationVC)

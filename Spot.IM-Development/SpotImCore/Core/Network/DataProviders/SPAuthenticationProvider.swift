@@ -79,7 +79,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
                 let codeA = json["code_a"] as? String
                 let autocomplete = json["auto_complete"] as? Bool ?? false
                 if autocomplete {
-                    SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields)
+                    SPUserSessionHolder.updateSession(with: response.response)
                 }
                 let result = SSOStartResponse(codeA: codeA,
                                               jwtToken: ssoParams?.token,
@@ -142,7 +142,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
             case .success(let json):
                 let success = json["success"] as? Bool ?? false
                 if success {
-                    self.updateSession(headers: response.response?.allHeaderFields, completion: completion)
+                    self.updateSession(response: response.response, completion: completion)
                 } else {
                     let errorMessage = LocalizationManager.localizedString(key: "Authentication error")
                     let error = SPNetworkError.custom(errorMessage)
@@ -172,9 +172,9 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         }
     }
     
-    private func updateSession(headers: [AnyHashable: Any]?, completion: @escaping AuthCompletionHandler) {
-        SPUserSessionHolder.updateSession(with: headers)
-        let token = headers?.authorizationHeader
+    private func updateSession(response: HTTPURLResponse?, completion: @escaping AuthCompletionHandler) {
+        SPUserSessionHolder.updateSession(with: response)
+        let token = response?.allHeaderFields.authorizationHeader
         internalAuthProvider.login { [weak self] _, error in
             if error == nil {
                 self?.ssoAuthDelegate?.ssoFlowDidSucceed()

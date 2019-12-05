@@ -34,7 +34,6 @@ public class SPClientSettings {
             }
         }
     }
-    
 
     public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = {
         if UserDefaults.standard.bool(forKey: "demo.isCustomDarkModeEnabled") {

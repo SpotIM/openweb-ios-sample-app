@@ -79,7 +79,6 @@ class ViewController: UIViewController {
 
     
     @IBAction private func showPreConversation(_ sender: UIButton) {
-        SPPublicSessionInterface.resetUser()
         setup(with: .demoMainSpotKey, from: sender)
         performSegue(withIdentifier: "showPreConversationSegue", sender: self)
     }
@@ -100,9 +99,6 @@ class ViewController: UIViewController {
     
     private func setSpotId(spotId:String) {
         let key = "spotIdKey"
-        if let lastSpot = UserDefaults.standard.value(forKey: key) as? String, lastSpot != spotId {
-            SPPublicSessionInterface.resetUser()
-        }
         
         UserDefaults.standard.setValue(spotId, forKey: key)
         SPClientSettings.main.setup(spotKey: spotId)

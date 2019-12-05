@@ -103,7 +103,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         
         self.setupSpotIM = true
         spotIMCoordinator?.preConversationController(withPostId: self.postId,
-                                                     container: navigationController, completion: { preConversationVC in
+                                                     container: navigationController!, completion: { preConversationVC in
                                                         preConversationVC.view.translatesAutoresizingMaskIntoConstraints = false
                                                         self.addChild(preConversationVC)
                                                         self.spotIMContainerView.addSubview(preConversationVC.view)

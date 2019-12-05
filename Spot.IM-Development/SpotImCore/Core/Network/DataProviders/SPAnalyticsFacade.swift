@@ -43,15 +43,14 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
 
         let headers = HTTPHeaders.basic(with: spotKey,
-                                        "default",
-                                        userSession: SPUserSessionHolder.session)
+                                        "default")
         manager.execute(
             request: spRequest,
             parameters: parameters,
             parser: EmptyParser(),
             headers: headers
         ) { _, response in
-        SPUserSessionHolder.updateSession(with: response.response?.allHeaderFields) }
+        SPUserSessionHolder.updateSession(with: response.response) }
 //        Alamofire.request(spRequest.url,
 //                          method: spRequest.method,
 //                          parameters: parameters,
