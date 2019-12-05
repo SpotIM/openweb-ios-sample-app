@@ -11,14 +11,13 @@ import Alamofire
 
 internal extension HTTPHeaders {
     static func basic(with spotId: String,
-                      _ postId: String,
-                      userSession: SPUserSessionType? = nil) -> HTTPHeaders {
+                      _ postId: String) -> HTTPHeaders {
         var headers = unauthorized(with: spotId, postId: postId)
-        if let userId = userSession?.userId, !userId.isEmpty {
+        if let userId = SPUserSessionHolder.session.guid, !userId.isEmpty {
             headers["x-guid"] = userId
         }
 
-        if let token = userSession?.token, !token.isEmpty {
+        if let token = SPUserSessionHolder.session.token, !token.isEmpty {
             headers["Authorization"] = token
         }
         

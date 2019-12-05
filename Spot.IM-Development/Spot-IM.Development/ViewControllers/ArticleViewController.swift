@@ -32,7 +32,7 @@ internal final class ArticleViewController: UIViewController {
 
         spotIMCoordinator?.preConversationController(
             withPostId: postId ?? foxArticleId,
-            container: navigationController,
+            container: navigationController!,
             completion: { [weak self] preConversationVC in
 
                 guard let self = self else { return }

@@ -81,7 +81,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     /// Please, provide container (UINavigationViewController) for sdk flows
     public func preConversationController(withPostId postId: String,
-                                          container: UIViewController?,
+                                          container: UINavigationController,
                                           completion: @escaping (UIViewController) -> Void) {
         containerViewController = container
         
