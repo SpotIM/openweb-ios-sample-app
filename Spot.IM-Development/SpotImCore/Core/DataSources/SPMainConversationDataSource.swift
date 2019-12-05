@@ -236,7 +236,7 @@ internal final class SPMainConversationDataSource {
             page: .next,
             parentId: commentId,
             loadingStarted: loadingStarted) { (response, _) in
-                    if let newUsers = response?.conversation?.users {
+                if let newUsers = response?.conversation?.users {
                     let mergedUsers = self.users.merging(newUsers) { $1 }
                     self.users = mergedUsers
                 }
@@ -494,6 +494,9 @@ internal final class SPMainConversationDataSource {
             var viewModel = commentViewModel(with: comment,
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
+
+            makeRepliesProviderIfNeeded(for: comment)
+            
             guard let id = comment.id, let replies = comment.replies, !replies.isEmpty else {
                 visibleComments.append(viewModel)
                 return
@@ -508,8 +511,6 @@ internal final class SPMainConversationDataSource {
             }
 
             visibleComments.append(viewModel)
-
-            makeRepliesProviderIfNeeded(for: comment)
         }
 
         if replyingToCommentId != nil {

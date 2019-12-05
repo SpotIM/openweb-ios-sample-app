@@ -84,6 +84,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         
         let needExtraData = page == .first
         let currentRequestOffset = page == .first ? 0 : self.offset
+        let depth = parentId.isEmpty ? 2 : 1
         
         // TODO: (Fedin) make sting constants for this
         let parameters: [String: Any] = [
@@ -92,7 +93,8 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             "offset": currentRequestOffset,
             "count": pageSize,
             "parent_id": parentId,
-            "extract_data": needExtraData
+            "extract_data": needExtraData,
+            "depth": depth
         ]
         let headers = HTTPHeaders.basic(
             with: spotKey,
