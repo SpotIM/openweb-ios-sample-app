@@ -160,7 +160,6 @@ extension ArticlesListViewController {
     }
 }
 
-
 // MARK: Layout
 
 extension ArticlesListViewController {
@@ -181,7 +180,6 @@ extension ArticlesListViewController {
     }
 }
 
-
 struct Response: Decodable {
     
     enum CodingKeys: String, CodingKey {
@@ -190,7 +188,6 @@ struct Response: Decodable {
     
     let posts: [Post]?
 }
-
 
 extension ArticlesListViewController: SpotImSDKNavigationDelegate {
     

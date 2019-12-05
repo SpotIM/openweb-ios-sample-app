@@ -79,7 +79,10 @@ class YnetArticlesList: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
+
+        SPClientSettings.main.setup(spotKey: spotId)
         setup()
         setupNavigationBar()
         
@@ -116,6 +119,8 @@ extension YnetArticlesList : ArticleTableViewCellDelegate {
         guard let post = post, let postId = postId(post: post) else { return }
         
         let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: "")
+        spotIMCoordinator?.setLayoutDelegate(delegate: articleViewController)
+        articleViewController.spotIMCoordinator = spotIMCoordinator
         self.navigationController?.pushViewController(articleViewController, animated: true)
     }
 }
@@ -150,4 +155,14 @@ extension YnetArticlesList {
         refresh.addTarget(self, action: #selector(reloadData), for: UIControl.Event.valueChanged)
         tableView.refreshControl = refresh
     }
+}
+
+extension YnetArticlesList: SpotImSDKNavigationDelegate {
+
+    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
+        let storyboard = UIStoryboard(name: "Ynet", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "YnetAuthVC")
+        return controller as! UIViewController & SSOAuthenticatable
+    }
+
 }
