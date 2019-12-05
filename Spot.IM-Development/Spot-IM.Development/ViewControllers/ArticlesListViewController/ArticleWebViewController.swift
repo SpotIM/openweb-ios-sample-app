@@ -20,6 +20,8 @@ internal final class ArticleWebViewController: UIViewController {
     private lazy var webView = WKWebView()
     private lazy var containerView = UIView()
 
+    private var containerHeightConstraint: NSLayoutConstraint?
+
     private lazy var loadingIndicator = UIActivityIndicatorView(style: .gray)
     
     let spotId: String
@@ -137,7 +139,7 @@ extension ArticleWebViewController {
             $0.bottom.equal(to: scrollView.bottomAnchor)
             $0.leading.equal(to: scrollView.leadingAnchor)
             $0.trailing.equal(to: scrollView.trailingAnchor)
-            $0.height.greaterThanOrEqual(to: 400)
+            containerHeightConstraint = $0.height.greaterThanOrEqual(to: 0)
         }
     }
 }
@@ -160,4 +162,10 @@ extension ArticleWebViewController: SpotImSDKNavigationDelegate {
         return controller
     }
     
+}
+
+extension ArticleWebViewController: SpotImLayoutDelegate {
+    func viewHeightDidChange(to newValue: CGFloat) {
+        containerHeightConstraint?.constant = newValue
+    }
 }

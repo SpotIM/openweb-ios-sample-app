@@ -29,6 +29,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     let postId: String
     let url: String
     let authVCId: String
+    var commentViewHeight: CGFloat = 0
     
     init(spotId: String, postId: String, url: String, authenticationControllerId: String) {
         self.spotId = spotId
@@ -52,8 +53,6 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         tableView.dataSource = self
         
         setupContainerView()
-        tableView.estimatedSectionFooterHeight = UITableView.automaticDimension
-        tableView.sectionFooterHeight = UITableView.automaticDimension
         
         setupSpotView()
     }
@@ -91,7 +90,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 1 {
-            return UITableView.automaticDimension
+            return commentViewHeight
         }
         
         return 0
@@ -144,7 +143,8 @@ extension TableViewFooterTesterViewController: SpotImSDKNavigationDelegate {
 }
 
 extension TableViewFooterTesterViewController: SpotImLayoutDelegate {
-    func viewDidResize() {
-        self.tableView.reloadSections(IndexSet(integer: 1), with: .fade)
+    func viewHeightDidChange(to newValue: CGFloat) {
+        commentViewHeight = newValue
+        tableView.reloadSections(IndexSet(integer: 1), with: .none)
     }
 }

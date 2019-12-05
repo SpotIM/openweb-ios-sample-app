@@ -29,7 +29,7 @@ public protocol SpotImSDKNavigationDelegate: class {
 }
 
 public protocol SpotImLayoutDelegate: class {
-    func viewDidResize()
+    func viewHeightDidChange(to newValue: CGFloat)
 }
 
 extension SpotImSDKNavigationDelegate {
@@ -260,8 +260,8 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
         showWebPage(with: APIConstants.joinURLString)
     }
     
-    internal func viewDidResize() {
-        self.spotLayoutDelegate?.viewDidResize()
+    internal func viewHeightDidChange(to height: CGFloat) {
+        self.spotLayoutDelegate?.viewHeightDidChange(to: height)
     }
 
 }

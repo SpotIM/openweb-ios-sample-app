@@ -85,6 +85,7 @@ extension ArticlesListViewController : ArticleTableViewCellDelegate {
         } else {
             let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
             articleViewController.spotIMCoordinator = spotIMCoordinator
+            spotIMCoordinator?.setLayoutDelegate(delegate: articleViewController)
             self.navigationController?.pushViewController(articleViewController, animated: true)
         }
     }
