@@ -9,9 +9,9 @@
 import UIKit
 
 internal final class SPNameInputView: BaseView, SPTextInputView {
-    private lazy var avatarImageView: SPAvatarView = SPAvatarView()
-    private lazy var usernameTextField: UITextField = UITextField()
-    private lazy var separatorView: UIView = UIView()
+    private lazy var avatarImageView: SPAvatarView = .init()
+    private lazy var usernameTextField: BaseTextField = .init()
+    private lazy var separatorView: UIView = .init()
 
     internal weak var delegate: SPTextInputViewDelegate?
 
@@ -71,20 +71,15 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
         usernameTextField.font = font
         usernameTextField.delegate = self
 
-        let paceholderString = NSLocalizedString(
-            "Your nickname",
-            comment: "Nickname placeholder for unregistered users"
-        )
-
         let placeholder = NSAttributedString(
-            string: paceholderString,
+            string: LocalizationManager.localizedString(key: "Your nickname"),
             attributes: [.foregroundColor: UIColor.spForeground2, .font: font]
         )
         usernameTextField.attributedPlaceholder = placeholder
         usernameTextField.layout {
             $0.leading.equal(to: avatarImageView.trailingAnchor, offsetBy: Theme.usernameLeading)
             $0.centerY.equal(to: avatarImageView.centerYAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: Theme.xOffset)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.xOffset)
         }
     }
 

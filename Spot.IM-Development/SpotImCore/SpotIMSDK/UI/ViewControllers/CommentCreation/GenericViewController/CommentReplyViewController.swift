@@ -29,7 +29,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
 
     let topContainerView: BaseView = .init()
-    let topContainerStack: UIStackView = .init()
+    let topContainerStack: BaseStackView = .init()
     var textInputViewContainer: SPCommentTextInputView = .init(
         hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
     )

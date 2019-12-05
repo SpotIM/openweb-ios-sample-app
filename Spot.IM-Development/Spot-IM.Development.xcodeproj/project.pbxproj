@@ -181,8 +181,12 @@
 		5D697A4122B65106001AD556 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		5D697A4622B65108001AD556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */; };
+		5D909AB62397E1D400FF51AD /* Ynet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Ynet.storyboard */; };
+		5D909AB72397E43600FF51AD /* YnetAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D909AB42397E03F00FF51AD /* YnetAuthVC.swift */; };
 		5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		5DB97792236B25A400E9D547 /* SPNameInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB97791236B25A400E9D547 /* SPNameInputView.swift */; };
+		5DBD33E42397F98F003DE0BF /* BaseStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E22397F98F003DE0BF /* BaseStackView.swift */; };
+		5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E623980D6A003DE0BF /* BaseTextField.swift */; };
 		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
@@ -211,6 +215,7 @@
 		6DA75C91238D5A6F00FBDF19 /* YnetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* YnetViewController.swift */; };
 		6DA75C93238D61D100FBDF19 /* Ynet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Ynet.storyboard */; };
 		6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
+		903DFF58C29877F09C7CCAEE /* Pods_Shared_YentSpot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9166E6F53F705AEC0399A2 /* Pods_Shared_YentSpot.framework */; };
 		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -266,6 +271,7 @@
 /* Begin PBXFileReference section */
 		00A8CD58A8F0DC066372373C /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		017506665B930AFC0987F034 /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		04072D11C92F84FB9A0B536D /* Pods-Shared-YentSpot.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		0D29D981CB6B5E80D1DA4976 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
 		0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
@@ -279,6 +285,7 @@
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		1CAA0C7553356875A9AA4225 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		2397B30733893F8F513035B7 /* Pods-Shared-SpotImCore.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		43497C3B9E3BD0EEDB08F0AA /* Pods-Shared-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
 		440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AnimationSequence.swift"; sourceTree = "<group>"; };
 		440E0DB2237D7E3200757554 /* TotalTypingIndicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalTypingIndicationView.swift; sourceTree = "<group>"; };
 		441165A02375BBC100B781F3 /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
@@ -447,19 +454,25 @@
 		5D697A4F22B65108001AD556 /* Spot-IM.DevelopmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Spot-IM.DevelopmentTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot_IM_DevelopmentTests.swift; sourceTree = "<group>"; };
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5D909AB42397E03F00FF51AD /* YnetAuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YnetAuthVC.swift; sourceTree = "<group>"; };
 		5DA8B5A02327E20A0045FCFA /* Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
 		5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettingsViewController.swift; sourceTree = "<group>"; };
 		5DB97791236B25A400E9D547 /* SPNameInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPNameInputView.swift; sourceTree = "<group>"; };
+		5DBD33E22397F98F003DE0BF /* BaseStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseStackView.swift; sourceTree = "<group>"; };
+		5DBD33E623980D6A003DE0BF /* BaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
 		5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DA75C90238D5A6F00FBDF19 /* YnetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YnetViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Ynet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Ynet.storyboard; sourceTree = "<group>"; };
 		6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewFooterTesterViewController.swift; sourceTree = "<group>"; };
 		847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		89080C904BFC65FD7F1DA4CF /* Pods-Shared-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		920D30A1B185BC4027FD05C2 /* Pods-Shared-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
 		A7ECCC93AFBA1CFC484AB0DE /* Pods-Shared-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
 		AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF8ED8E7B65C33DB59074C5B /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
+		DC9166E6F53F705AEC0399A2 /* Pods_Shared_YentSpot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_YentSpot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -492,6 +505,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DA75C7C238D313600FBDF19 /* SpotImCore.framework in Frameworks */,
+				903DFF58C29877F09C7CCAEE /* Pods_Shared_YentSpot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,6 +649,8 @@
 				44F247A22379B0F900B36F12 /* BaseUIImageView.swift */,
 				44F247A42379B23100B36F12 /* BaseScrollView.swift */,
 				44F247A62379B75300B36F12 /* BaseTableView.swift */,
+				5DBD33E22397F98F003DE0BF /* BaseStackView.swift */,
+				5DBD33E623980D6A003DE0BF /* BaseTextField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1115,6 +1131,7 @@
 				0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */,
 				5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */,
 				6DA75C90238D5A6F00FBDF19 /* YnetViewController.swift */,
+				5D909AB42397E03F00FF51AD /* YnetAuthVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1176,6 +1193,7 @@
 			children = (
 				AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */,
 				847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */,
+				DC9166E6F53F705AEC0399A2 /* Pods_Shared_YentSpot.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1215,6 +1233,10 @@
 				00A8CD58A8F0DC066372373C /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */,
 				A7ECCC93AFBA1CFC484AB0DE /* Pods-Shared-Spot-IM.Development.release.xcconfig */,
 				017506665B930AFC0987F034 /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */,
+				920D30A1B185BC4027FD05C2 /* Pods-Shared-YentSpot.debug.xcconfig */,
+				89080C904BFC65FD7F1DA4CF /* Pods-Shared-YentSpot.debugwithads.xcconfig */,
+				43497C3B9E3BD0EEDB08F0AA /* Pods-Shared-YentSpot.release.xcconfig */,
+				04072D11C92F84FB9A0B536D /* Pods-Shared-YentSpot.releasewithads.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1296,11 +1318,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6DA75C89238D313600FBDF19 /* Build configuration list for PBXNativeTarget "YentSpot" */;
 			buildPhases = (
+				72F270DEB0D52BEDEB9300B4 /* [CP] Check Pods Manifest.lock */,
 				6DA75C6B238D313600FBDF19 /* Sources */,
 				6DA75C7B238D313600FBDF19 /* Frameworks */,
 				6DA75C7E238D313600FBDF19 /* Resources */,
 				6DA75C86238D313600FBDF19 /* Embed Frameworks */,
 				6DA75C88238D313600FBDF19 /* Run Script */,
+				E87DC47AAA9D5CB5224727C3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1382,6 +1406,7 @@
 				5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */,
 				0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */,
 				0EAFED7A22E505A900B57E29 /* fastlane in Resources */,
+				5D909AB62397E1D400FF51AD /* Ynet.storyboard in Resources */,
 				4416C655237ABDE700D3F7B9 /* LaunchScreen.storyboard in Resources */,
 				4416C654237ABDE700D3F7B9 /* Main.storyboard in Resources */,
 			);
@@ -1464,6 +1489,28 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" ac77e6a593436ee200d04258b003ab92ab191339 a05dbcb5d1836f904fb416deed65553cd89c41f5d3407e5230dde0bac183e5b6\n";
 		};
+		72F270DEB0D52BEDEB9300B4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shared-YentSpot-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C79D94A2D0EBDB005BC67EF6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1508,6 +1555,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E87DC47AAA9D5CB5224727C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1532,6 +1596,7 @@
 				4454188A23685154001D0ED0 /* SPConversationRequests.swift in Sources */,
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
 				445418B123685154001D0ED0 /* Date+SPExtensions.swift in Sources */,
+				5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */,
 				4454189523685154001D0ED0 /* SPConfigurationSDKStatus.swift in Sources */,
 				4454189023685154001D0ED0 /* SPNetworkError.swift in Sources */,
 				4454189C23685154001D0ED0 /* SPConversationExtraDataRM.swift in Sources */,
@@ -1605,6 +1670,7 @@
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
 				445418A823685154001D0ED0 /* Dictionary+JSONString.swift in Sources */,
 				4454188D23685154001D0ED0 /* FailureReportDataModel.swift in Sources */,
+				5DBD33E42397F98F003DE0BF /* BaseStackView.swift in Sources */,
 				445417FB23685144001D0ED0 /* UIColor+Hex.swift in Sources */,
 				4454189623685154001D0ED0 /* SPConfigurationSpotlight.swift in Sources */,
 				4454181D23685144001D0ED0 /* UserNameView.swift in Sources */,
@@ -1696,6 +1762,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */,
+				5D909AB72397E43600FF51AD /* YnetAuthVC.swift in Sources */,
 				6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */,
 				6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */,
 				6DA75C6F238D313600FBDF19 /* Date+extensions.swift in Sources */,
@@ -2331,6 +2398,7 @@
 		};
 		6DA75C8A238D313600FBDF19 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 920D30A1B185BC4027FD05C2 /* Pods-Shared-YentSpot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;
@@ -2359,6 +2427,7 @@
 		};
 		6DA75C8B238D313600FBDF19 /* DebugWithAds */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89080C904BFC65FD7F1DA4CF /* Pods-Shared-YentSpot.debugwithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;
@@ -2387,6 +2456,7 @@
 		};
 		6DA75C8C238D313600FBDF19 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 43497C3B9E3BD0EEDB08F0AA /* Pods-Shared-YentSpot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;
@@ -2415,6 +2485,7 @@
 		};
 		6DA75C8D238D313600FBDF19 /* ReleaseWithAds */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04072D11C92F84FB9A0B536D /* Pods-Shared-YentSpot.releasewithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;

@@ -39,16 +39,10 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
                 $0.height.equal(to: 85.0)
                 $0.width.equal(to: topContainerStack.widthAnchor)
             }
-            commentingOnLabel.text = NSLocalizedString(
-                "Commenting on",
-                comment: "commenting on title"
-            )
+            commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         } else {
             emptyArticleBottomConstarint?.isActive = true
-            commentingOnLabel.text = NSLocalizedString(
-                "Add a Comment",
-                comment: "commenting on title"
-            )
+            commentingOnLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
         }
 
         updateTextInputContainer(with: .comment)
@@ -70,16 +64,13 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         
         commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
         commentingOnLabel.textColor = .spForeground4
-        commentingOnLabel.text = NSLocalizedString(
-            "Commenting on",
-            comment: "commenting on title"
-        )
+        commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.backgroundColor = commentingContainer.backgroundColor
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.layout {
             $0.top.equal(to: commentingContainer.topAnchor, offsetBy: 25)
             $0.leading.equal(to: commentingContainer.leadingAnchor, offsetBy: 16)
-            $0.trailing.equal(to: commentingContainer.trailingAnchor)
+            $0.trailing.equal(to: commentingContainer.trailingAnchor, offsetBy: -16)
             $0.bottom.equal(to: commentingContainer.bottomAnchor, offsetBy: -16)
         }
         
