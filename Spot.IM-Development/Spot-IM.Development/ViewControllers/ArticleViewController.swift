@@ -14,6 +14,7 @@ internal final class ArticleViewController: UIViewController {
 
     @IBOutlet weak var stubImageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var containerHeightConstraint: NSLayoutConstraint!
     
     var spotId : String?
     var postId: String?
@@ -27,6 +28,7 @@ internal final class ArticleViewController: UIViewController {
 
         let config = InputConfiguration(appLanguage: "en_US")
         spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self, inputConfiguration: config)
+        spotIMCoordinator?.setLayoutDelegate(delegate: self)
 
         spotIMCoordinator?.preConversationController(
             withPostId: postId ?? foxArticleId,
@@ -73,6 +75,12 @@ extension ArticleViewController: SpotImSDKNavigationDelegate {
         return controller
     }
     
+}
+
+extension ArticleViewController: SpotImLayoutDelegate {
+    func viewHeightDidChange(to newValue: CGFloat) {
+        containerHeightConstraint.constant = newValue
+    }
 }
 
 private extension String {

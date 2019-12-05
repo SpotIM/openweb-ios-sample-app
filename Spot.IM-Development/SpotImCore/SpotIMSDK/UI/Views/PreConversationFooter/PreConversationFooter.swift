@@ -136,6 +136,7 @@ internal final class SPPreConversationFooter: BaseView {
             $0.top.equal(to: bannerContainerView.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.horisontalMargin)
             $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
+            $0.height.equal(to: 15)
         }
     }
 
@@ -159,7 +160,6 @@ internal final class SPPreConversationFooter: BaseView {
 
         privacyButton.layout {
             $0.centerY.equal(to: termsButton.centerYAnchor)
-            $0.leading.equal(to: dotLabel.trailingAnchor)
         }
     }
 

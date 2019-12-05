@@ -23,7 +23,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var footerView: SPPreConversationFooter = .init()
     
     private var tableViewHeightConstraint: NSLayoutConstraint?
-    
+
+    private var checkTableViewHeight: CGFloat = 0
     private let maxSectionCount: Int = 2
     private let readingTracker = SPReadingTracker()
     internal var dataLoaded: (() -> Void)?
@@ -33,6 +34,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     internal override var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitPreConv }
+
+    private var totalHeight: CGFloat {
+        header.frame.height +
+        whatYouThinkView.frame.height +
+        tableView.frame.height +
+        footerView.frame.height
+    }
 
     // MARK: - Overrides
 
@@ -54,18 +62,20 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        self.preConversationDelegate?.viewDidResize()
+        guard checkTableViewHeight != totalHeight else { return }
+        checkTableViewHeight = totalHeight
+        UIView.performWithoutAnimation {
+            self.preConversationDelegate?.viewHeightDidChange(to: totalHeight)
+        }
     }
-    
+
     private func updateTableViewHeightIfNeeded() {
         guard let heightConstraint = tableViewHeightConstraint,
             heightConstraint.constant != tableView.contentSize.height
             else { return }
-        
+
         tableViewHeightConstraint?.constant = tableView.contentSize.height
-        self.tableView.layoutIfNeeded()
-        self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
     }
     
     // MARK: - Private methods
@@ -83,8 +93,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     private func setupHeader() {
-        header.set(title: LocalizationManager.localizedString(key: "Conversation")
-        )
+        header.set(title: LocalizationManager.localizedString(key: "Conversation"))
 
         header.layout {
             $0.top.equal(to: view.topAnchor)
@@ -124,9 +133,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         view.bringSubviewToFront(footerView)
         footerView.delegate = self
         footerView.layout {
-            $0.top.greaterThanOrEqual(to: tableView.bottomAnchor)
+            $0.top.equal(to: tableView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
-            $0.bottom.equal(to: view.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
     }
@@ -372,5 +380,5 @@ internal protocol SPPreConversationViewControllerDelegate: class {
     func showTerms()
     func showPrivacy()
     func showAddSpotIM()
-    func viewDidResize()
+    func viewHeightDidChange(to newValue: CGFloat)
 }
