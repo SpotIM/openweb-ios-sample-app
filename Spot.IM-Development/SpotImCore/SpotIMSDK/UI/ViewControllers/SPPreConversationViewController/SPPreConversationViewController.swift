@@ -318,7 +318,7 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     func showMoreComments() {
         if let adsProvider = adsProvider,
             model.adsGroup() == .second,
-            AdsManager.shouldShowInterstitial,
+            AdsManager.shouldShowInterstitial(for: model.dataSource.conversationId),
             adsProvider.showInterstitial(in: self) {
             preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
         } else {
@@ -356,7 +356,7 @@ extension SPPreConversationViewController: AdsProviderDelegate {
     }
     
     func interstitialWillBeShown() {
-        AdsManager.shouldShowInterstitial = false
+        AdsManager.willShowInterstitial(for: model.dataSource.conversationId)
     }
     
     func interstitialDidDismiss() { }
