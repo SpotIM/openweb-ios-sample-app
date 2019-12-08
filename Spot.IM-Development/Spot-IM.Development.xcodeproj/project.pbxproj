@@ -1900,7 +1900,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -2041,7 +2041,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2318,7 +2318,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -2345,7 +2345,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-betatest";
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
