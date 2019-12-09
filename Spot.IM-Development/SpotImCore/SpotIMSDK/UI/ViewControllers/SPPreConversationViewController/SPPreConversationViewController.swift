@@ -315,6 +315,7 @@ extension SPPreConversationViewController { // UITableViewDataSource
 extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     
     func showMoreComments() {
+        SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         if let adsProvider = adsProvider,
             model.adsGroup() == .second,
             AdsManager.shouldShowInterstitial(for: model.dataSource.conversationId),
