@@ -18,7 +18,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
     private lazy var header: SPPreConversationHeaderView = .init()
-    // TODO: (Fedin) rename SPMainConversationFooterView after refactoring
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
     
