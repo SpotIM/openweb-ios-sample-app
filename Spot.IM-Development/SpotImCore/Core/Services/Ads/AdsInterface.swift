@@ -49,7 +49,6 @@ internal final class AdsManager {
         adsViewTracker.trackView(conversation: conversationId)
     }
 
-    //TODO: Be sure that target is `debugWithAds` `releaseWithAds`
     func adsProvider() -> AdsProvider {
         #if canImport(GoogleMobileAds)
         return GoogleAdsProvider()

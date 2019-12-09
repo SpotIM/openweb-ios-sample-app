@@ -15,8 +15,7 @@ internal enum SPCommentSortMode: String, CaseIterable, SPKebabable {
     case oldest
 
     static var initial: SPCommentSortMode {
-        // TODO: (Fedin) change to .best
-        return .newest
+        return .best
     }
 
     var title: String {

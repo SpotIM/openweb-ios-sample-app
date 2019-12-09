@@ -59,7 +59,6 @@ internal final class SPCommentFacade: SPCommentUpdater {
             return
         }
 
-        // TODO: (Fedin) make sting constants for this
         let parameters: [String: Any] = [
             ChangeRankAPIKeys.postId: "\(spotKey)_\(conversationId)",
             ChangeRankAPIKeys.operation: change.subject.rawValue,
