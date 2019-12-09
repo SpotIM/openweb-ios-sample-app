@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 import SpotImCore
 
-class YnetAuthVC: UIViewController {
+class DemoAuthVC: UIViewController {
 
 }
 
-extension YnetAuthVC: SSOAuthenticatable {
+extension DemoAuthVC: SSOAuthenticatable {
     var ssoAuthProvider: SPAuthenticationProvider { YnetAuthProvider() }
 }
 

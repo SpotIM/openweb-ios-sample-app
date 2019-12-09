@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="-1880" y="134"/>
         </scene>
-        <!--Ynet Articles List-->
+        <!--Demo Articles List-->
         <scene sceneID="Jcz-Va-20X">
             <objects>
-                <tableViewController id="NaU-7S-hQr" customClass="YnetArticlesList" customModule="YentSpot" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="NaU-7S-hQr" customClass="DemoArticlesList" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="oR5-O8-4Er">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -53,10 +53,10 @@
             </objects>
             <point key="canvasLocation" x="-954" y="134"/>
         </scene>
-        <!--Ynet AuthVC-->
+        <!--Demo AuthVC-->
         <scene sceneID="O24-DW-GtD">
             <objects>
-                <viewController storyboardIdentifier="YnetAuthVC" id="Rwh-e7-5sf" customClass="YnetAuthVC" customModule="YentSpot" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="YnetAuthVC" id="Rwh-e7-5sf" customClass="DemoAuthVC" customModule="YentSpot" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G1W-Z4-9hj">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
