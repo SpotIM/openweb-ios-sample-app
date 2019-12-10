@@ -37,6 +37,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
             switch result {
             case .success(let user):
                 SPUserSessionHolder.updateSessionUser(user: user)
+                completion(token, nil)
                 
             case .failure(let error):
                 let rawReport = RawReportModel(
