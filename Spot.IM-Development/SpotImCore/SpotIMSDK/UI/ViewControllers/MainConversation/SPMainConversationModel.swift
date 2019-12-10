@@ -141,16 +141,19 @@ final class SPMainConversationModel {
             switch option {
             case .best:
                 return UIAlertAction(title: option.title, style: .default) { _ in
+                    SPAnalyticsHolder.default.log(event: .sortByClicked(option), source: .conversation)
                     self?.sortOption = option
                 }
                 
             case .newest:
                 return UIAlertAction(title: option.title, style: .default) { _ in
+                    SPAnalyticsHolder.default.log(event: .sortByClicked(option), source: .conversation)
                     self?.sortOption = option
                 }
                 
             case .oldest:
                 return UIAlertAction(title: option.title, style: .default) { _ in
+                    SPAnalyticsHolder.default.log(event: .sortByClicked(option), source: .conversation)
                     self?.sortOption = option
                 }
             }
