@@ -201,6 +201,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private func loadCommentsNextPage() {
         guard !model.dataSource.isLoading else { return }
         
+        SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         let mode = model.sortOption
         model.dataSource.comments(
             mode,
