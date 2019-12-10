@@ -51,7 +51,7 @@ class DemoConfiguration {
             articles.append(post4)
             articles.append(post5)
         case .dailyCaller:
-            spotId = "sp_WkhFg09x"
+            spotId = "sp_E6XN2auy"
             spotColor = UIColor(hexString: "#F42626")
             let article1 = Article(url: "https://dailycaller.com/2019/08/05/he-doesnt-know-how-volatile-this-issue-is-pro-gun-group-responds-to-trump-gun-control/", title: "'He Doesn't Know How Volatile This Issue Is': Pro-Gun Group Responds To Trump Gun Control", width: 4706, height: 3136, description: "A gun rights group warned President Donald Trump Monday not to underestimate the volatile effect proposing gun control legislation could have on his base.", thumbnailUrl: "https://images.spot.im/v1/production/vtbnok9nqxxkpnhz7rru")
             let post1 = Post(spotId: spotId, conversationId: spotId + "_post1", publishedAt: "", extractData: article1)
