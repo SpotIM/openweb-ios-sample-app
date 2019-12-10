@@ -28,6 +28,12 @@ public class SPClientSettings {
             
             SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
 
+            NotificationCenter.default.addObserver(
+                    self,
+                    selector: #selector(appMovedToForeground),
+                    name: UIApplication.willEnterForegroundNotification,
+                    object: nil)
+            
             configProvider.getConfigs { result in
                 SPConfigsDataSource.appConfig = result.appConfig
                 SPConfigsDataSource.adsConfig = result.adsConfig
@@ -35,6 +41,11 @@ public class SPClientSettings {
         }
     }
 
+    @objc
+    public func appMovedToForeground(notification: Notification) {
+        SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
+    }
+    
     public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = {
         if UserDefaults.standard.bool(forKey: "demo.isCustomDarkModeEnabled") {
             return SPUserInterfaceStyle(rawValue: UserDefaults.standard.integer(forKey: "demo.interfaceStyle"))
@@ -42,6 +53,10 @@ public class SPClientSettings {
         return nil
     }()
     public static var darkModeBackgroundColor: UIColor = .mineShaft
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
 
 public enum SPUserInterfaceStyle: Int {
