@@ -56,7 +56,7 @@ final class MessageContainerView: BaseView {
         }
     }
     
-    private func isTarget(substring: String, destinationOf gesture: UITapGestureRecognizer) -> Bool {
+    private func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
         guard let string = mainTextLabel.attributedText?.string else { return false }
         
         guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
@@ -65,14 +65,19 @@ final class MessageContainerView: BaseView {
         
         return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
     }
-    
+
     private func checkURLTap(in point: CGPoint) {
         let index = mainTextLabel.indexOfAttributedTextCharacterAtPoint(point: point)
         let url = activeURLs.first { $0.key.contains(index) }?.value
-        
+
         guard let activeUrl = url else { return }
-        
+
         handleURLTap(url: activeUrl)
+    }
+    
+    private func isURLTap(in point: CGPoint) -> Bool {
+        let index = mainTextLabel.indexOfAttributedTextCharacterAtPoint(point: point)
+        return (activeURLs.first { $0.key.contains(index) }?.value != nil)
     }
     
     private func handleURLTap(url: URL) {
@@ -85,6 +90,18 @@ final class MessageContainerView: BaseView {
     
     private func handleReadLessTap() {
         delegate?.readLessTappedInMessageContainer(view: self)
+    }
+
+    private func didHitCustomTarget(with recognizer: UIGestureRecognizer) -> Bool {
+        let readMoreString = LocalizationManager.localizedString(key: "Read More")
+        let readLessString = LocalizationManager.localizedString(key: "Read Less")
+
+        if isTarget(substring: readMoreString, destinationOf: recognizer) ||
+            isTarget(substring: readLessString, destinationOf: recognizer) ||
+            isURLTap(in: recognizer.location(in: mainTextLabel)) {
+            return true
+        }
+        return false
     }
     
     private func setupUI() {
@@ -101,6 +118,7 @@ final class MessageContainerView: BaseView {
     
     private func setupGestureRecognizer() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        tap.delegate = self
         mainTextLabel.addGestureRecognizer(tap)
         mainTextLabel.isUserInteractionEnabled = true
     }
@@ -161,4 +179,10 @@ extension String {
     return String(self[start ..< end])
   }
 
+}
+
+extension MessageContainerView: UIGestureRecognizerDelegate {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return didHitCustomTarget(with: gestureRecognizer)
+    }
 }
