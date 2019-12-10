@@ -3,9 +3,8 @@
 "Minutes" = " דק׳";
 "To" = "ל -";
 "Just now" = "כרגע";
-"Conversation" = "שיחה";
+"Conversation" = "תגובות";
 "Your nickname" = "השם שלך";
-"Add a Reply" = "Add a Reply";
 "Please provide Spot Key" = "Please provide Spot Key";
 "Please provide Code B" = "Please provide Code B";
 "Authentication error" = "Authentication error";
@@ -16,9 +15,9 @@
 "The text you entered might be deleted if not published." = ".במידה ולא יפורסם, הטקסט שכתבת עלול להימחק";
 "It seems we are experiencing technical issues. Please try again" = "נסה שוב עוד כמה דקות.";
 "The Internet connection appears to be offline." = "אופססס! נראה שאנו חווים בעיה בתקשורת";
-"Best" = "הטוב ביותר";
-"Newest" = "החדש ביותר";
-"Oldest" = "הישן ביותר";
+"Best" = "עוררו עניין";
+"Newest" = "מהסוף להתחלה";
+"Oldest" = "מההתחלה לסוף";
 "Admin" = "אדמין";
 "Moderator" = "מנהל";
 "Journalist" = "עיתונאי";
@@ -55,7 +54,7 @@
 "Got it" = "תודה, קיבלתי";
 "Be the first to comment" = "היו הראשונים להגיב";
 "Share" = "שיתוף";
-"What do you think?" = "הוספת תגובה";
+"What do you think?" = "תגובה חדשה";
 "Loading" = "טוען...";
 "View Previous Reply" = "הצג תגובות קודמות";
 "Hide Reply" = "הסתר תגובות";
@@ -63,11 +62,11 @@
 "Hide Replies" = "הסתר תגובות";
 "View Reply" = "הצג תגובה";
 "View Replies" = "הצג תגובות";
-"Reply" = "הגב/י";
+"Reply" = "הגיבו לתגובה";
 "This message was deleted." = "הודעה זו נמחקה.";
 "This message was reported." = "התקבל דיווח על הודעה זו.";
 "This message was rejected." = "תגובה זו לא אושרה.";
-"SHOW MORE COMMENTS" = "תגובות נוספות";
+"SHOW MORE COMMENTS" = "טען תגובות נוספות";
 "Terms" = "תנאים";
 "Privacy" = "פרטיות";
 "Add Spot.IM to your app" = "הוספת Spot.IM לאפליקציה שלך";

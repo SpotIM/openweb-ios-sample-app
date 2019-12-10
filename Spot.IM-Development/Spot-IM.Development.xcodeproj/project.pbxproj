@@ -190,6 +190,11 @@
 		5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E623980D6A003DE0BF /* BaseTextField.swift */; };
 		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		6D4E56AA239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A6239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf */; };
+		6D4E56AB239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A7239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf */; };
+		6D4E56AC239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A8239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf */; };
+		6D4E56AD239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A9239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf */; };
+		6D4E56AF239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56AE239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf */; };
 		6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
 		6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
@@ -512,6 +517,11 @@
 		5DBD33E22397F98F003DE0BF /* BaseStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseStackView.swift; sourceTree = "<group>"; };
 		5DBD33E623980D6A003DE0BF /* BaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
 		5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
+		6D4E56A6239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-ExtraBold.ttf"; sourceTree = "<group>"; };
+		6D4E56A7239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Bold.ttf"; sourceTree = "<group>"; };
+		6D4E56A8239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Light.ttf"; sourceTree = "<group>"; };
+		6D4E56A9239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Regular.ttf"; sourceTree = "<group>"; };
+		6D4E56AE239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Italic.ttf"; sourceTree = "<group>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Demo.storyboard; sourceTree = "<group>"; };
@@ -619,6 +629,7 @@
 		4454179F236850C0001D0ED0 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				6D4E56A5239F9D48005B79B6 /* OpenSansHebrew */,
 				44689B86237473D20024EFC1 /* Ariel */,
 				445417A0236850C0001D0ED0 /* Roboto */,
 				445417A4236850C0001D0ED0 /* OpenSans */,
@@ -1284,6 +1295,18 @@
 			path = SPUsernameView;
 			sourceTree = "<group>";
 		};
+		6D4E56A5239F9D48005B79B6 /* OpenSansHebrew */ = {
+			isa = PBXGroup;
+			children = (
+				6D4E56A7239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf */,
+				6D4E56A6239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf */,
+				6D4E56A8239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf */,
+				6D4E56AE239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf */,
+				6D4E56A9239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf */,
+			);
+			path = OpenSansHebrew;
+			sourceTree = "<group>";
+		};
 		6DF3A6F62386CCCE00419B30 /* TableViewFooterTesterViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1483,11 +1506,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */,
+				6D4E56AA239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf in Resources */,
 				4416C658237ABE3D00D3F7B9 /* Localizable.strings in Resources */,
 				445417AA236850C0001D0ED0 /* OpenSans-RegularItalic.ttf in Resources */,
 				4411659D2375822900B781F3 /* Arial Bold.ttf in Resources */,
+				6D4E56AB239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf in Resources */,
 				4411659E2375822900B781F3 /* Arial Italic.ttf in Resources */,
+				6D4E56AF239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf in Resources */,
 				445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */,
+				6D4E56AC239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf in Resources */,
+				6D4E56AD239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf in Resources */,
 				445417A9236850C0001D0ED0 /* Roboto-Bold.ttf in Resources */,
 				5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */,
 				4411659F2375822900B781F3 /* Arial.ttf in Resources */,
@@ -2603,7 +2631,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2632,7 +2660,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2661,7 +2689,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2690,7 +2718,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
