@@ -12,7 +12,7 @@ internal extension UIFont {
     
     static func preferred(style: SPFontStyle, of size: CGFloat) -> UIFont {
         if LocalizationManager.currentLanguage == .hebrew {
-            return arialHebrew(style: style, of: size)
+            return openSansHebrew(style: style, of: size)
         } else {
             return roboto(style: style, of: size)
         }
@@ -42,6 +42,15 @@ internal extension UIFont {
         return font ?? systemFont(ofSize: size)
     }
     
+    static func openSansHebrew(style: SPFontStyle, of size: CGFloat) -> UIFont {
+        var style = style
+        if style == .medium {
+            style = .bold
+        }
+        let openSansHebrew = name(of: .openSansHebrew, with: style)
+        return UIFont(name: openSansHebrew, size: size) ?? systemFont(ofSize: size)
+    }
+    
     private static func name(of family: SPFontFamily, with style: SPFontStyle) -> String {
         return "\(family.rawValue)-\(style.rawValue)"
     }
@@ -56,6 +65,10 @@ internal extension UIFont {
         registerFontWith(filenameString: "ArialHebrew-Bold.ttf")
         registerFontWith(filenameString: "ArialHebrew.ttf")
         registerFontWith(filenameString: "ArialHebrew-Light.ttf")
+        registerFontWith(filenameString: "OpenSansHebrew-Bold.ttf")
+        registerFontWith(filenameString: "OpenSansHebrew-ExtraBold.ttf")
+        registerFontWith(filenameString: "OpenSansHebrew-Light.ttf")
+        registerFontWith(filenameString: "OpenSansHebrew-Regular.ttf")
     }()
 
     // MARK: - Make custom font bundle register to framework
@@ -94,5 +107,6 @@ internal enum SPFontFamily: String {
     case roboto = "Roboto"
     case openSans = "OpenSans"
     case arialHebrew = "ArialHebrew"
+    case openSansHebrew = "OpenSansHebrew"
 }
 
