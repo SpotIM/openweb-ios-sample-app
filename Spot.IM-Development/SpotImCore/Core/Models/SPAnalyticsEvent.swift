@@ -38,8 +38,6 @@ internal enum SPAnalyticsEvent: Equatable {
         relatedMessage: String?
     )
     case backClicked(SPAnScreenTargetType)          // ⏳
-    case deleteMessage
-    case shareMessage
     case loadMoreComments
 
     var kebabValue: String {
@@ -76,10 +74,6 @@ internal enum SPAnalyticsEvent: Equatable {
             return "create-message-clicked"
         case .backClicked:
             return "back-clicked"
-        case .deleteMessage:
-            return "delete-message-clicked"
-        case .shareMessage:
-            return "share-message-clicked"
         case .loadMoreComments:
             return "load-more-comments-clicked"
         }
