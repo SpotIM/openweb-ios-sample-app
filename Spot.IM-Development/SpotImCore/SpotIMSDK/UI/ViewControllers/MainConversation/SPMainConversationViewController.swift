@@ -146,8 +146,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             guard let self = self else { return }
 
             let sortOption = self.model.sortOption
-
-            SPAnalyticsHolder.default.log(event: .sortByClicked(sortOption), source: .conversation)
             
             self.sortView.updateSortOption(sortOption.title)
             if shoudBeUpdated {
