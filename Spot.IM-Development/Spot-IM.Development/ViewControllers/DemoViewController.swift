@@ -28,8 +28,9 @@ class DemoArticlesList: UITableViewController {
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.barTintColor = DemoConfiguration.shared.spotColor
         navigationController?.navigationBar.isTranslucent = false
+        let fontName = DemoConfiguration.shared.spotFontName + "-Bold"
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
+            NSAttributedString.Key.font: UIFont(name: fontName, size: 20.0) ?? UIFont.systemFont(ofSize: 20.0),
             NSAttributedString.Key.foregroundColor: UIColor.white
         ]
     }

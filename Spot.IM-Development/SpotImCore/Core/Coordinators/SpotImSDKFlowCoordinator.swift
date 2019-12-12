@@ -152,6 +152,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         controller.userAuthFlowDelegate = self
         
         controller.title = LocalizationManager.localizedString(key: "Conversation")
+        
         localCommentReplyDidCreate = { comment in
             model.pendingComment = comment
         }
