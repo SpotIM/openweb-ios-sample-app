@@ -20,6 +20,7 @@ class DemoConfiguration {
     public let spotId: String
     public private(set) var articles = [Post]()
     public let spotColor: UIColor
+    public let spotFontName: String
     
     public static let shared = DemoConfiguration()
     
@@ -28,6 +29,7 @@ class DemoConfiguration {
         let bundleIdEnum: DemoAppsIds = DemoAppsIds(rawValue: bundleId) ?? .unknown
         switch bundleIdEnum {
         case .ynet:
+            spotFontName = "OpenSansHebrew"
             spotId = "sp_0ZYm1p8e"
             spotColor = UIColor(hexString: "#C82F23")
             let article1 = Article(url: "https://www.ynet.co.il/articles/0,7340,L-5631046,00.html", title: "התחבורה הציבורית בדרך ללא מוצא: מחסור חמור באוטובוסים ובנהגים", width: 640, height: 360, description: "יותר מ-2,000 אוטובוסים ו-3,000 נהגים חסרים, הרכש תקוע בסבך משפטי ומשרדי התחבורה והאוצר מגלגלים אחריות. בינתיים הפקקים מתארכים והפתרונות מחכים ליישום. יור ארגון נהגי האוטובוסים מזהיר כי הנהגים עובדים יותר והסכנה לתאונות גוברת. תמונת מצב מדאיגה", thumbnailUrl: "https://images.spot.im/v1/production/wjynavkm1tyevqmqdb5t")
@@ -51,6 +53,7 @@ class DemoConfiguration {
             articles.append(post4)
             articles.append(post5)
         case .dailyCaller:
+            spotFontName = "roboto"
             spotId = "sp_E6XN2auy"
             spotColor = UIColor(hexString: "#F42626")
             let article1 = Article(url: "https://dailycaller.com/2019/08/05/he-doesnt-know-how-volatile-this-issue-is-pro-gun-group-responds-to-trump-gun-control/", title: "'He Doesn't Know How Volatile This Issue Is': Pro-Gun Group Responds To Trump Gun Control", width: 4706, height: 3136, description: "A gun rights group warned President Donald Trump Monday not to underestimate the volatile effect proposing gun control legislation could have on his base.", thumbnailUrl: "https://images.spot.im/v1/production/vtbnok9nqxxkpnhz7rru")
@@ -80,6 +83,7 @@ class DemoConfiguration {
         default:
             spotId = ""
             spotColor = .blue
+            spotFontName = "roboto"
         }
     }
 }

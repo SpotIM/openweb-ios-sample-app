@@ -112,7 +112,7 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
         textInputView.delegate = self
         textInputView.tintColor = .brandColor
         textInputView.backgroundColor = .spBackground0
-        textInputView.font = UIFont.roboto(style: .regular, of: Theme.commentTextFontSize)
+        textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textColor = .spForeground1
         textInputView.textAlignment = .natural
     }
