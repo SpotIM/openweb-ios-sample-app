@@ -26,13 +26,13 @@ final class RealTimeService {
     private var currentConversationId: String?
 
     /// Creates an instance only if the feature enabled on the server
-    init?(realTimeDataProvider: SPRealtimeDataProvider) {
-        guard SPConfigsDataSource.appConfig?.mobileSdk?.realtimeEnabled == true else { return nil }
+    init(realTimeDataProvider: SPRealtimeDataProvider) {
         dataProvider = realTimeDataProvider
     }
     
     /// Start realtime data polling for `conversationId`
     func startRealTimeDataFetching(conversationId: String) {
+        guard SPConfigsDataSource.appConfig?.mobileSdk?.realtimeEnabled == true else { return }
         currentConversationId = conversationId
         failuresInARow = 0
         fetchDataForConversation(id: conversationId)
@@ -40,11 +40,14 @@ final class RealTimeService {
     
     /// Stop realtime data polling for `conversationId`
     func stopRealTimeDataFetching(conversationId: String) {
+        guard SPConfigsDataSource.appConfig?.mobileSdk?.realtimeEnabled == true else { return }
         stoppedConversations.insert(conversationId)
     }
     
     /// Take off  service fetch if it was stopped
     func refreshService() {
+        guard SPConfigsDataSource.appConfig?.mobileSdk?.realtimeEnabled == true else { return }
+        
         failuresInARow = 0
         
         guard
