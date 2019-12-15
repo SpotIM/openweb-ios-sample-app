@@ -592,6 +592,7 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
     func totalTypingCountDidUpdate(count: Int) {
         handleTypingIndicationViewUpdate(typingCount: count)
     }
+    
 }
 
 extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate {

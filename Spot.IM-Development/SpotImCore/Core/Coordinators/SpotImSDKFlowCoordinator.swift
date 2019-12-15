@@ -61,7 +61,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let adsManager: AdsManager
     private let apiManager: ApiManager
     private let imageProvider: SPImageURLProvider
-    private let realTimeService: RealTimeService?
+    private let realTimeService: RealTimeService
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration? = nil) {
@@ -133,9 +133,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             realTimeService: realTimeService
         )
         self.conversationModel = conversationModel
-        realTimeService?.delegate = self.conversationModel
+        realTimeService.delegate = self.conversationModel
         let controller = SPPreConversationViewController(model: conversationModel)
         self.conversationModel.delegates.add(delegate: controller)
+        self.conversationModel.commentsCounterDelegates.add(delegate: controller)
         controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.preConversationDelegate = self
@@ -202,8 +203,9 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     ///Handles any successfull request and refreshes `RealTimeService` if needed
     private func configureAPIAndRealTimeHandlers() {
         apiManager.requestDidSucceed = { [weak self] request in
+            guard let strongSelf = self else { return }
             switch request {
-            case _ as SPConversationRequest: self?.realTimeService?.refreshService()
+            case _ as SPConversationRequest: strongSelf.realTimeService.refreshService()
                 
             default: break
             }

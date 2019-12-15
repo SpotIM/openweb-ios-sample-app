@@ -59,6 +59,14 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if self.model.liveTotalCommentsCount() > 0 {
+            self.header.set(commentCount: self.model.liveTotalCommentsCount().decimalFormatted)
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         guard checkTableViewHeight != totalHeight else { return }
@@ -361,6 +369,12 @@ extension SPPreConversationViewController: AdsProviderDelegate {
     
     func interstitialDidDismiss() { }
     
+}
+
+extension SPPreConversationViewController: CommentsCounterDelegate {
+    func commentsCountDidUpdate(count: Int) {
+        self.header.set(commentCount: count.decimalFormatted)
+    }
 }
 
 private extension SPPreConversationViewController {

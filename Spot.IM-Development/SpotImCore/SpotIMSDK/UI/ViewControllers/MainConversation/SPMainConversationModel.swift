@@ -23,9 +23,12 @@ typealias BooleanCompletion = (Bool, Error?) -> Void
 let navigationAvatarSize: CGSize = CGSize(width: 25.0, height: 25.0)
 
 protocol MainConversationModelDelegate: class {
-    
     func totalTypingCountDidUpdate(count: Int)
     func stopTypingTrack()
+}
+
+protocol CommentsCounterDelegate: class {
+    func commentsCountDidUpdate(count: Int)
 }
 
 final class SPMainConversationModel {
@@ -33,13 +36,14 @@ final class SPMainConversationModel {
     /// MulticastDelegate for events that should be handled simultaneously in different places
     /// Beware of `SPMainConversationDataSource` data changings in this way
     var delegates: MulticastDelegate<MainConversationModelDelegate> = .init()
+    var commentsCounterDelegates: MulticastDelegate<CommentsCounterDelegate> = .init()
     
     private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"
     private let typingVisibilityAdditionalTimeInterval: Double = 5.0
 
     private let commentUpdater: SPCommentUpdater
     private let imageProvider: SPImageURLProvider
-    private let realTimeService: RealTimeService?
+    private let realTimeService: RealTimeService
     
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
@@ -70,7 +74,7 @@ final class SPMainConversationModel {
     init(commentUpdater: SPCommentUpdater,
          conversationDataSource: SPMainConversationDataSource,
          imageProvider: SPImageURLProvider,
-         realTimeService: RealTimeService?) {
+         realTimeService: RealTimeService) {
         self.realTimeService = realTimeService
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
@@ -83,13 +87,13 @@ final class SPMainConversationModel {
     }
     
     func startTypingTracking() {
-        realTimeService?.startRealTimeDataFetching(conversationId: dataSource.conversationId)
+        realTimeService.startRealTimeDataFetching(conversationId: dataSource.conversationId)
     }
     
     func stopTypingTracking() {
         shouldUserBeNotified = false
         delegates.invoke { $0.stopTypingTrack() }
-        realTimeService?.stopRealTimeDataFetching(conversationId: dataSource.conversationId)
+        realTimeService.stopRealTimeDataFetching(conversationId: dataSource.conversationId)
     }
     
     func handlePendingComment() {
@@ -307,8 +311,12 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         let fullConversationId = "\(spotId)_\(dataSource.conversationId)"
         let totalTypingCount: Int = realTimeData.data?.totalTypingCountForConversation(fullConversationId)
             ?? 0
+        let totalCommentsCount: Int = self.liveTotalCommentsCount()
         if shouldUserBeNotified {
             delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount) }
+            if totalCommentsCount > 0 {
+                commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
+            }
             
             scheduleTypingCleaningTimer(
                 timeOffset: Double(timeOffset) + typingVisibilityAdditionalTimeInterval
@@ -325,6 +333,15 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             ?? 0
         
         return shouldUserBeNotified ? totalTypingCount : 0
+    }
+    
+    func liveTotalCommentsCount() -> Int {
+        guard let spotId = SPClientSettings.main.spotKey else { return 0 }
+        let fullConversationId = "\(spotId)_\(dataSource.conversationId)"
+        
+        let commentsCount = realTimeData?.data?.commentsCountForConversation(fullConversationId) ?? 0
+        let repliesCount = realTimeData?.data?.repliesCountForConversation(fullConversationId) ?? 0
+        return commentsCount + repliesCount
     }
     
     /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''

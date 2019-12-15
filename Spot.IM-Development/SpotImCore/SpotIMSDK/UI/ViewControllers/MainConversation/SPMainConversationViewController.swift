@@ -102,7 +102,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
 
         
         model.delegates.add(delegate: self)
+        model.commentsCounterDelegates.add(delegate: self)
+        
         totalTypingCountDidUpdate(count: model.typingCount())
+        if model.liveTotalCommentsCount() > 0 {
+            sortView.updateCommentsLabel(model.liveTotalCommentsCount())
+        }
+        
         // scroll to pre-selected comment (tapped on the Pre-Conversation)
         if let indexPath = model.dataSource.indexPathOfComment(with: commentIdToShowOnOpen) {
             wasScrolled = true
@@ -528,4 +534,10 @@ extension SPMainConversationViewController: AdsProviderDelegate {
     
     func interstitialDidDismiss() {}
     
+}
+
+extension SPMainConversationViewController: CommentsCounterDelegate {
+    func commentsCountDidUpdate(count: Int) {
+        self.sortView.updateCommentsLabel(count)
+    }
 }

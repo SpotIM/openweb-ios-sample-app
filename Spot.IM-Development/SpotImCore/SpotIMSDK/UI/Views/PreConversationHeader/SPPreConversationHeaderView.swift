@@ -23,6 +23,7 @@ internal final class SPPreConversationHeaderView: BaseView {
     }
 
     internal func set(commentCount: String?) {
+        counterLabel.fadeTransition(1.0)
         counterLabel.text = commentCount == nil ? nil : "(\(commentCount!))"
     }
 
