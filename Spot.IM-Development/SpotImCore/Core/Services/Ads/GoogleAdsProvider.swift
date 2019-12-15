@@ -16,7 +16,7 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
     
     private var banner: DFPBannerView?
     private var interstitial: DFPInterstitial?
-    private let bannerSize: GADAdSize = kGADAdSizeLargeBanner
+    private let bannerSize: GADAdSize = kGADAdSizeBanner
     
     override init() {
         super.init()
