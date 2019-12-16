@@ -28,6 +28,7 @@ abstract_target 'Shared' do
     target 'YentSpot'
     target 'DailyCaller'
     target 'Focus.de'
+    target 'MarketWatch'
   end
 
   target 'SpotImCore' do

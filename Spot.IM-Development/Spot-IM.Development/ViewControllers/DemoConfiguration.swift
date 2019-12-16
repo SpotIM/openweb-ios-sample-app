@@ -14,6 +14,7 @@ enum DemoAppsIds: String {
     case ynet = "im.spot.ynet"
     case dailyCaller = "im.spot.dailycaller"
     case focus = "im.spot.focus"
+    case marketWatch = "im.spot.market.watch"
     case unknown = "unknown"
 }
 
@@ -90,6 +91,74 @@ class DemoConfiguration {
             
             let post1 = Post(spotId: spotId, conversationId: spotId + "_focus1", publishedAt: "", extractData: article1)
             articles.append(post1)
+            
+        case .marketWatch:
+            spotId = "sp_E6XN2auy"
+            spotFontName = "roboto"
+            spotColor = .darkGray
+            
+            let article1 = Article(url: "https://www.marketwatch.com/story/stock-futures-point-to-higher-start-buoyed-by-preliminary-us-china-trade-deal-2019-12-16",
+                                   title: "Stock futures point to higher start, buoyed by preliminary U.S.-China trade deal",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Stock-index futures point higher Monday, with the upbeat tone tied to a preliminary U.S.-China trade deal, though questions remain over the details of the...",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/c7q7zt1rerql6mokdspw")
+            let post1 = Post(spotId: spotId,
+                             conversationId: spotId + "_marketwatch1",
+                             publishedAt: "",
+                             extractData: article1)
+            
+            let article2 = Article(url: "https://www.marketwatch.com/story/best-investments-for-2020-and-the-next-decade-according-to-a-top-us-financial-advisor-2019-12-16",
+                                   title: "Best investments for 2020 and the next decade, according to a top U.S. financial advisor",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Double-digit percentage gains for stock markets aren’t just limited to the U.S., with Europe and parts of emerging and Asian markets also having enjoyed a...",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/ppp9zm2b0ayut6rvzx7w")
+            let post2 = Post(spotId: spotId,
+                             conversationId: spotId + "_marketwatch2",
+                             publishedAt: "",
+                             extractData: article2)
+            
+            let article3 = Article(url: "https://www.marketwatch.com/story/how-to-get-disney-apple-tv-amazon-prime-video-or-netflix-for-free-and-what-to-know-before-you-sign-up-2019-12-16",
+                                   title: "How to get Disney+, Apple TV+, Amazon Prime Video or Netflix for ‘free’ — and what to know before you sign up",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Your cellphone plan or new TV could come with discounted or free video streaming.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/wfcgwamjlnlx1jqqppja")
+            let post3 = Post(spotId: spotId,
+                             conversationId: spotId + "_marketwatch3",
+                             publishedAt: "",
+                             extractData: article3)
+            
+            let article4 = Article(url: "https://www.marketwatch.com/story/the-hottest-housing-markets-of-2020-are-far-from-the-coasts-2019-12-12",
+                                   title: "The hottest housing markets of 2020 are far from the coasts",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Home buyers next year are expected to flock to smaller, more affordable cities, according to Realtor.com.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/hatkbq0dconrueby81x8")
+            let post4 = Post(spotId: spotId,
+                             conversationId: spotId + "_marketwatch4",
+                             publishedAt: "",
+                             extractData: article4)
+            
+            let article5 = Article(url: "https://www.marketwatch.com/story/heres-proof-that-401k-plans-are-not-working-for-most-americans-can-you-guess-who-they-are-working-for-2019-12-12",
+                                   title: "Here’s proof that 401(k) plans are not working for most Americans — can you guess who they ARE working for?",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "The country’s in the midst of a savings crisis as families use every penny to cover rising home costs, nosebleed student loan debt and everything in between....",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/kwvdihmuoxo8lqxmq9yu")
+            let post5 = Post(spotId: spotId,
+                             conversationId: spotId + "_marketwatch5",
+                             publishedAt: "",
+                             extractData: article5)
+            
+            articles.append(post1)
+            articles.append(post2)
+            articles.append(post3)
+            articles.append(post4)
+            articles.append(post5)
+            
+            
         default:
             spotId = ""
             spotColor = .blue
