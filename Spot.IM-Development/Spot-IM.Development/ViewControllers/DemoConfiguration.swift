@@ -13,6 +13,7 @@ import SpotImCore
 enum DemoAppsIds: String {
     case ynet = "im.spot.ynet"
     case dailyCaller = "im.spot.dailycaller"
+    case focus = "im.spot.focus"
     case unknown = "unknown"
 }
 
@@ -80,6 +81,15 @@ class DemoConfiguration {
             articles.append(post4)
             articles.append(post5)
             articles.append(post6)
+        case .focus:
+            spotId = "sp_E6XN2auy"
+            spotFontName = "roboto"
+            spotColor = UIColor(hexString: "#c4291e")
+            
+            let article1 = Article(url: "https://www.focus.de/finanzen/boerse/aktien/geheimverhandlungen-mit-der-stadt-bis-zu-600-millionen-teuer-siemens-plant-in-berlin-ein-innovationszentrum_id_11460880.html", title: "Siemens plant jetzt in Berlin größtes Investitions-Projekt der Firmengeschichte", width: 1200, height: 627, description: "Der Siemens-Konzern hat Großes vor in Berlin: Das Unternehmen plant einen Innovationscampus in der Bundeshauptstadt. Es handelt sich um das größte Investitions-Projekt der Firmengeschichte.", thumbnailUrl: "https://images.spot.im/v1/production/dlvhu70zxg2lm1ku54hg")
+            
+            let post1 = Post(spotId: spotId, conversationId: spotId + "_focus1", publishedAt: "", extractData: article1)
+            articles.append(post1)
         default:
             spotId = ""
             spotColor = .blue
