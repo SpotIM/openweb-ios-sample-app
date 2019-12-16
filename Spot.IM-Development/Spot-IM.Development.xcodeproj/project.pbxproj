@@ -196,6 +196,34 @@
 		6D4E56AD239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A9239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf */; };
 		6D4E56AF239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56AE239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf */; };
 		6D4E56B123A178DF005B79B6 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4E56B023A178DF005B79B6 /* UIView+Animations.swift */; };
+		6D4E56EB23A7A5F7005B79B6 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D4E56EC23A7A5F7005B79B6 /* DemoAuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D909AB42397E03F00FF51AD /* DemoAuthVC.swift */; };
+		6D4E56ED23A7A5F7005B79B6 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
+		6D4E56EE23A7A5F7005B79B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
+		6D4E56EF23A7A5F7005B79B6 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
+		6D4E56F023A7A5F7005B79B6 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
+		6D4E56F123A7A5F7005B79B6 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
+		6D4E56F223A7A5F7005B79B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
+		6D4E56F323A7A5F7005B79B6 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
+		6D4E56F423A7A5F7005B79B6 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
+		6D4E56F523A7A5F7005B79B6 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
+		6D4E56F623A7A5F7005B79B6 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		6D4E56F723A7A5F7005B79B6 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
+		6D4E56F823A7A5F7005B79B6 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */; };
+		6D4E56F923A7A5F7005B79B6 /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D42304A043006B1489 /* ArticleModel.swift */; };
+		6D4E56FA23A7A5F7005B79B6 /* ArticleWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125E323054335006B1489 /* ArticleWebViewController.swift */; };
+		6D4E56FB23A7A5F7005B79B6 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
+		6D4E56FC23A7A5F7005B79B6 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
+		6D4E56FE23A7A5F7005B79B6 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
+		6D4E56FF23A7A5F7005B79B6 /* Pods_Shared_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB7DF15965E2BF0A667B6FD /* Pods_Shared_DailyCaller.framework */; };
+		6D4E570123A7A5F7005B79B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
+		6D4E570223A7A5F7005B79B6 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		6D4E570323A7A5F7005B79B6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
+		6D4E570423A7A5F7005B79B6 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
+		6D4E570523A7A5F7005B79B6 /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
+		6D4E570623A7A5F7005B79B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
+		6D4E570723A7A5F7005B79B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
+		6D4E570923A7A5F7005B79B6 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
 		6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
@@ -270,6 +298,13 @@
 			remoteGlobalIDString = 5D697A3A22B65106001AD556;
 			remoteInfo = "Spot-IM.Development";
 		};
+		6D4E56E823A7A5F7005B79B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 44C8788C23608BC100E0E662;
+			remoteInfo = SpotImCore;
+		};
 		6DA75C69238D313600FBDF19 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
@@ -294,6 +329,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				44C8789523608BC100E0E662 /* SpotImCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D4E570823A7A5F7005B79B6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6D4E570923A7A5F7005B79B6 /* SpotImCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -524,6 +570,8 @@
 		6D4E56A9239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Regular.ttf"; sourceTree = "<group>"; };
 		6D4E56AE239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Italic.ttf"; sourceTree = "<group>"; };
 		6D4E56B023A178DF005B79B6 /* UIView+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animations.swift"; sourceTree = "<group>"; };
+		6D4E571123A7A5F7005B79B6 /* Focus.de.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Focus.de.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D4E571223A7A5F7005B79B6 /* DailyCaller copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "DailyCaller copy-Info.plist"; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/DailyCaller copy-Info.plist"; sourceTree = "<absolute>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Demo.storyboard; sourceTree = "<group>"; };
@@ -565,6 +613,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D4E56FD23A7A5F7005B79B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D4E56FE23A7A5F7005B79B6 /* SpotImCore.framework in Frameworks */,
+				6D4E56FF23A7A5F7005B79B6 /* Pods_Shared_DailyCaller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1228,6 +1285,7 @@
 				5D697A6A22B6586C001AD556 /* Frameworks */,
 				F6D45AB80C879EE6B5C01DA4 /* Pods */,
 				6DAFEEC6239CFCCF00441E97 /* YentSpot copy-Info.plist */,
+				6D4E571223A7A5F7005B79B6 /* DailyCaller copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1239,6 +1297,7 @@
 				44C8788D23608BC100E0E662 /* SpotImCore.framework */,
 				6DA75C8E238D313600FBDF19 /* YentSpot.app */,
 				6DAFEEC5239CFCCF00441E97 /* DailyCallerDemo.app */,
+				6D4E571123A7A5F7005B79B6 /* Focus.de.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1414,6 +1473,28 @@
 			productReference = 5D697A4F22B65108001AD556 /* Spot-IM.DevelopmentTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		6D4E56E623A7A5F7005B79B6 /* Focus.de */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D4E570C23A7A5F7005B79B6 /* Build configuration list for PBXNativeTarget "Focus.de" */;
+			buildPhases = (
+				6D4E56E923A7A5F7005B79B6 /* [CP] Check Pods Manifest.lock */,
+				6D4E56EA23A7A5F7005B79B6 /* Sources */,
+				6D4E56FD23A7A5F7005B79B6 /* Frameworks */,
+				6D4E570023A7A5F7005B79B6 /* Resources */,
+				6D4E570823A7A5F7005B79B6 /* Embed Frameworks */,
+				6D4E570A23A7A5F7005B79B6 /* Run Script */,
+				6D4E570B23A7A5F7005B79B6 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6D4E56E723A7A5F7005B79B6 /* PBXTargetDependency */,
+			);
+			name = Focus.de;
+			productName = "Spot-IM.Development";
+			productReference = 6D4E571123A7A5F7005B79B6 /* Focus.de.app */;
+			productType = "com.apple.product-type.application";
+		};
 		6DA75C67238D313600FBDF19 /* YentSpot */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6DA75C89238D313600FBDF19 /* Build configuration list for PBXNativeTarget "YentSpot" */;
@@ -1499,6 +1580,7 @@
 				44C8788C23608BC100E0E662 /* SpotImCore */,
 				6DA75C67238D313600FBDF19 /* YentSpot */,
 				6DAFEE9B239CFCCF00441E97 /* DailyCaller */,
+				6D4E56E623A7A5F7005B79B6 /* Focus.de */,
 			);
 		};
 /* End PBXProject section */
@@ -1544,6 +1626,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D4E570023A7A5F7005B79B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D4E570123A7A5F7005B79B6 /* Assets.xcassets in Resources */,
+				6D4E570223A7A5F7005B79B6 /* Roboto-Italic.ttf in Resources */,
+				6D4E570323A7A5F7005B79B6 /* GoogleService-Info.plist in Resources */,
+				6D4E570423A7A5F7005B79B6 /* fastlane in Resources */,
+				6D4E570523A7A5F7005B79B6 /* Demo.storyboard in Resources */,
+				6D4E570623A7A5F7005B79B6 /* LaunchScreen.storyboard in Resources */,
+				6D4E570723A7A5F7005B79B6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1612,6 +1708,63 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" ac77e6a593436ee200d04258b003ab92ab191339 a05dbcb5d1836f904fb416deed65553cd89c41f5d3407e5230dde0bac183e5b6\n";
+		};
+		6D4E56E923A7A5F7005B79B6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DailyCaller-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D4E570A23A7A5F7005B79B6 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ac77e6a593436ee200d04258b003ab92ab191339 a05dbcb5d1836f904fb416deed65553cd89c41f5d3407e5230dde0bac183e5b6\n";
+		};
+		6D4E570B23A7A5F7005B79B6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		6DA75C88238D313600FBDF19 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1957,6 +2110,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6D4E56EA23A7A5F7005B79B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D4E56EB23A7A5F7005B79B6 /* DarkModeSettingsViewController.swift in Sources */,
+				6D4E56EC23A7A5F7005B79B6 /* DemoAuthVC.swift in Sources */,
+				6D4E56ED23A7A5F7005B79B6 /* FoxAuthenticationViewController.swift in Sources */,
+				6D4E56EE23A7A5F7005B79B6 /* ViewController.swift in Sources */,
+				6D4E56EF23A7A5F7005B79B6 /* Date+extensions.swift in Sources */,
+				6D4E56F023A7A5F7005B79B6 /* Autolayout.swift in Sources */,
+				6D4E56F123A7A5F7005B79B6 /* DemoViewController.swift in Sources */,
+				6D4E56F223A7A5F7005B79B6 /* AppDelegate.swift in Sources */,
+				6D4E56F323A7A5F7005B79B6 /* ArticlesListViewController.swift in Sources */,
+				6D4E56F423A7A5F7005B79B6 /* String+Extensions.swift in Sources */,
+				6D4E56F523A7A5F7005B79B6 /* ArticleViewController.swift in Sources */,
+				6D4E56F623A7A5F7005B79B6 /* AuthenticationViewController.swift in Sources */,
+				6D4E56F723A7A5F7005B79B6 /* TableViewFooterTesterViewController.swift in Sources */,
+				6D4E56F823A7A5F7005B79B6 /* ArticleTableViewCell.swift in Sources */,
+				6D4E56F923A7A5F7005B79B6 /* ArticleModel.swift in Sources */,
+				6D4E56FA23A7A5F7005B79B6 /* ArticleWebViewController.swift in Sources */,
+				6D4E56FB23A7A5F7005B79B6 /* DemoAuthenticationProvider.swift in Sources */,
+				6D4E56FC23A7A5F7005B79B6 /* DemoConfiguration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6DA75C6B238D313600FBDF19 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2019,6 +2197,11 @@
 			isa = PBXTargetDependency;
 			target = 5D697A3A22B65106001AD556 /* Spot-IM.Development */;
 			targetProxy = 5D697A5022B65108001AD556 /* PBXContainerItemProxy */;
+		};
+		6D4E56E723A7A5F7005B79B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 44C8788C23608BC100E0E662 /* SpotImCore */;
+			targetProxy = 6D4E56E823A7A5F7005B79B6 /* PBXContainerItemProxy */;
 		};
 		6DA75C68238D313600FBDF19 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2119,7 +2302,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				ENABLE_BITCODE = NO;
@@ -2132,6 +2315,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2170,7 +2354,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2185,7 +2369,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.14;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2264,7 +2448,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2275,6 +2459,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.sdk-beta";
@@ -2314,7 +2499,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2329,7 +2514,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.14;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2349,7 +2534,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2365,7 +2550,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.14;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2385,7 +2570,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2401,7 +2586,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.14;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2546,7 +2731,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2558,6 +2743,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2574,7 +2760,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2585,6 +2771,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.sdk-beta";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.sdk-beta";
@@ -2636,6 +2823,122 @@
 			};
 			name = Release;
 		};
+		6D4E570D23A7A5F7005B79B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3E221698179C1E551AFF0C2F /* Pods-Shared-DailyCaller.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 102;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = "DailyCaller copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6D4E570E23A7A5F7005B79B6 /* DebugWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CEAF877843FCCC388A4A45F2 /* Pods-Shared-DailyCaller.debugwithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 102;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = "DailyCaller copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugWithAds;
+		};
+		6D4E570F23A7A5F7005B79B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 70D8A0A04CEC426E5A162D80 /* Pods-Shared-DailyCaller.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 102;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = "DailyCaller copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = Focus.de;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6D4E571023A7A5F7005B79B6 /* ReleaseWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4AE069E85103CCF298C00A66 /* Pods-Shared-DailyCaller.releasewithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 102;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = "DailyCaller copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = Focus.de;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseWithAds;
+		};
 		6DA75C8A238D313600FBDF19 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 920D30A1B185BC4027FD05C2 /* Pods-Shared-YentSpot.debug.xcconfig */;
@@ -2644,7 +2947,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2673,7 +2976,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2702,7 +3005,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2731,7 +3034,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2760,7 +3063,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2789,7 +3092,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -2818,7 +3121,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2847,7 +3150,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 102;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2911,6 +3214,17 @@
 				448F2F7223683097000C5606 /* DebugWithAds */,
 				5D697A5D22B65108001AD556 /* Release */,
 				448F2F76236830A0000C5606 /* ReleaseWithAds */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6D4E570C23A7A5F7005B79B6 /* Build configuration list for PBXNativeTarget "Focus.de" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D4E570D23A7A5F7005B79B6 /* Debug */,
+				6D4E570E23A7A5F7005B79B6 /* DebugWithAds */,
+				6D4E570F23A7A5F7005B79B6 /* Release */,
+				6D4E571023A7A5F7005B79B6 /* ReleaseWithAds */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

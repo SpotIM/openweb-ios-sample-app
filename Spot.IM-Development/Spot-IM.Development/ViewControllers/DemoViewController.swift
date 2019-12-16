@@ -110,13 +110,6 @@ extension DemoArticlesList {
     func setupTableView() {
         tableView.register(ArticleTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.separatorStyle = .none
-        setupRefresh()
-    }
-    
-    func setupRefresh() {
-        let refresh = UIRefreshControl()
-        refresh.addTarget(self, action: #selector(reloadData), for: UIControl.Event.valueChanged)
-        tableView.refreshControl = refresh
     }
 }
 
