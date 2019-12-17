@@ -28,7 +28,7 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
             else { return }
         
         let spRequest = SPFailureReportRequest.error
-        let headers = HTTPHeaders.unauthorized(with: spotKey, postId: "")
+        let headers = HTTPHeaders.basic(with: spotKey, postId: "")
         let failureReportDataModel = prepareReportDataModel(rawReport)
         
         manager.execute(

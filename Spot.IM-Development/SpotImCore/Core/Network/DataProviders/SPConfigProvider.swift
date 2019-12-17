@@ -26,7 +26,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
         }
         let spRequest = SPConfigRequests.config(spotId: spotKey)
 
-        let headers = HTTPHeaders.unauthorized(with: spotKey, postId: "")
+        let headers = HTTPHeaders.basic(with: spotKey, postId: "")
         
         manager.execute(
             request: spRequest,
@@ -67,7 +67,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
         let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
         let hour = Int(Date.hourFormatter.string(from: Date()))!
         let params: [String: Any] = ["day": dayName, "hour": hour]
-        let headers = HTTPHeaders.unauthorized(with: spotKey, postId: "")
+        let headers = HTTPHeaders.basic(with: spotKey, postId: "")
         
         manager.execute(
             request: spRequest,

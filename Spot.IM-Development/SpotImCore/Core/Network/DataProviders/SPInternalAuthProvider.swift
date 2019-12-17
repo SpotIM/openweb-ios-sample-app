@@ -23,7 +23,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
             return
         }
 
-        var headers = HTTPHeaders.unauthorized(with: spotKey, postId: "default")
+        var headers = HTTPHeaders.basic(with: spotKey, postId: "default")
         if let token = SPUserSessionHolder.session.token {
             headers["Authorization"] = token
         }

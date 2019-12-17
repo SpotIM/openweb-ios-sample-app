@@ -67,7 +67,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         ]
 
         let headers = HTTPHeaders.basic(with: spotKey,
-                                        conversationId)
+                                        postId: conversationId)
 
         // TODO: (Fedin) move Alamofire.request elsewhere
         Alamofire.request(spRequest.url,
@@ -96,7 +96,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         
         let request = SPConversationRequest.commentPost
         let headers = HTTPHeaders.basic(with: spotKey,
-                                        postId)
+                                        postId: postId)
         
         Alamofire.request(request.url,
                           method: .delete,
@@ -133,7 +133,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         
         let request = SPConversationRequest.commentPost
         let headers = HTTPHeaders.basic(with: spotKey,
-                                        postId)
+                                        postId: postId)
 
         Alamofire.request(request.url,
                           method: .post,
@@ -174,7 +174,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         
         let request = SPConversationRequest.commentReport
         let headers = HTTPHeaders.basic(with: spotKey,
-                                        postId)
+                                        postId: postId)
         
         Alamofire.request(request.url,
                           method: request.method,
@@ -203,7 +203,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         
         let request = SPConversationRequest.commentShare
         let headers = HTTPHeaders.basic(with: spotKey,
-                                        postId)
+                                        postId: postId)
         
         Alamofire.request(request.url,
                           method: request.method,
@@ -233,7 +233,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         
         let request = SPConversationRequest.commentUpdate
         let headers = HTTPHeaders.basic(with: spotKey,
-                                        postId)
+                                        postId: postId)
         
         Alamofire.request(request.url,
                           method: request.method,

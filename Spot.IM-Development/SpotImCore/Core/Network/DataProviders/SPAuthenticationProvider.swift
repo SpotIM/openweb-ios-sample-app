@@ -64,7 +64,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
             requestParams["secret"] = secret
         }
         
-        var headers = HTTPHeaders.unauthorized(with: spotKey, postId: "default")
+        var headers = HTTPHeaders.basic(with: spotKey, postId: "default")
         headers["Authorization"] = ssoParams?.token
         manager.execute(
             request: spRequest,
@@ -125,7 +125,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         }
         let spRequest = SPInternalAuthRequests.ssoComplete
         let params = ["code_b": codeB]
-        var headers = HTTPHeaders.unauthorized(with: spotKey, postId: "default")
+        var headers = HTTPHeaders.basic(with: spotKey, postId: "default")
         if let token = genericToken {
             headers["Authorization"] = token
         }
