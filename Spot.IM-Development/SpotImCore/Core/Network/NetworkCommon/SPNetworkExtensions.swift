@@ -10,9 +10,27 @@ import Foundation
 import Alamofire
 
 internal extension HTTPHeaders {
-    static func basic(with spotId: String,
-                      _ postId: String) -> HTTPHeaders {
-        var headers = unauthorized(with: spotId, postId: postId)
+    static func basic(with spotId: String, postId: String) -> HTTPHeaders {
+        let iosVersion = UIDevice.current.systemVersion
+        let frameworkVersion = Bundle.spot.shortVersion() ?? "na"
+        let hostVerion = Bundle.main.shortVersion() ?? "na"
+        let scheme = Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String ?? "na"
+        let agent = extendedAgent()
+
+        let pageViewId = SPAnalyticsHolder.default.pageViewId
+        
+        var headers: HTTPHeaders = ["Content-Type": "application/json",
+                                    "x-spot-id": spotId,
+                                    "x-post-id": postId,
+                                    "x-platform": UIDevice.current.deviceTypeXPlatformHeader(),
+                                    "x-moblie-gw-version": "v1.0.0",
+                                    "x-platform-version": iosVersion,
+                                    "x-sdk-version": frameworkVersion,
+                                    "x-app-version": hostVerion,
+                                    "x-app-scheme": scheme,
+                                    "User-Agent": agent,
+                                    "x-spotim-page-view-id": pageViewId]
+        
         if let userId = SPUserSessionHolder.session.guid, !userId.isEmpty {
             headers["x-guid"] = userId
         }
@@ -22,28 +40,6 @@ internal extension HTTPHeaders {
         }
         
         return headers
-    }
-
-    static func unauthorized(with spotId: String, postId: String) -> HTTPHeaders {
-        let iosVersion = UIDevice.current.systemVersion
-        let frameworkVersion = Bundle.spot.shortVersion() ?? "na"
-        let hostVerion = Bundle.main.shortVersion() ?? "na"
-        let scheme = Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String ?? "na"
-        let agent = extendedAgent()
-
-        let pageViewId = SPAnalyticsHolder.default.pageViewId
-        return ["Content-Type": "application/json",
-                "x-spot-id": spotId,
-                "x-post-id": postId,
-                "x-platform": UIDevice.current.deviceTypeXPlatformHeader(),
-                "x-moblie-gw-version": "v1.0.0",
-                "x-platform-version": iosVersion,
-                "x-sdk-version": frameworkVersion,
-                "x-app-version": hostVerion,
-                "x-app-scheme": scheme,
-                "User-Agent": agent,
-                "x-spotim-page-view-id": pageViewId
-        ]
     }
 
     private static func extendedAgent() -> String {

@@ -99,7 +99,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         ]
         let headers = HTTPHeaders.basic(
             with: spotKey,
-            id)
+            postId: id)
         isLoading = true
 
         loadingStarted?()

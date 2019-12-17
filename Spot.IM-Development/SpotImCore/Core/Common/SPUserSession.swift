@@ -54,15 +54,11 @@ internal class SPUserSessionHolder {
         }
         
         if forced {
-            session.guid = headers?.userIdHeader
             session.token = headers?.authorizationHeader
         } else {
-            let userId = headers?.userIdHeader ?? session.guid
             let token = headers?.authorizationHeader ?? session.token
-            session.guid = userId
             session.token = token
         }
-        UserDefaults.standard.setValue(session.guid, forKey: .guestSessionUserIdKey)
         UserDefaults.standard.setValue(session.token, forKey: .guestSessionTokenKey)
     }
 

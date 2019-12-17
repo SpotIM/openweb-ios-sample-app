@@ -17,6 +17,7 @@
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		1ECF2C76FDC2736B1445945B /* Pods_Shared_DemoApps_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FE50A09127954BEB1794600 /* Pods_Shared_DemoApps_DailyCaller.framework */; };
 		440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */; };
 		440E0DB3237D7E3200757554 /* TotalTypingIndicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440E0DB2237D7E3200757554 /* TotalTypingIndicationView.swift */; };
 		4411659D2375822900B781F3 /* Arial Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B87237473E60024EFC1 /* Arial Bold.ttf */; };
@@ -174,8 +175,7 @@
 		44F247A32379B0F900B36F12 /* BaseUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A22379B0F900B36F12 /* BaseUIImageView.swift */; };
 		44F247A52379B23100B36F12 /* BaseScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A42379B23100B36F12 /* BaseScrollView.swift */; };
 		44F247A72379B75300B36F12 /* BaseTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A62379B75300B36F12 /* BaseTableView.swift */; };
-		49EBFB2F2846EFBB508243CE /* Pods_Shared_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB7DF15965E2BF0A667B6FD /* Pods_Shared_DailyCaller.framework */; };
-		4FCADE7777C33500B6BCD2E5 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */; };
+		4A9E60D73EA76FEC6B333FEF /* Pods_Shared_DemoApps_YentSpot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDDF167B14462DF8948C6B3E /* Pods_Shared_DemoApps_YentSpot.framework */; };
 		5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
 		5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
 		5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
@@ -190,6 +190,7 @@
 		5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E623980D6A003DE0BF /* BaseTextField.swift */; };
 		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		61F99434BA16C2E2A572C2D8 /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8B928D827B8437D0B4C8965 /* Pods_Shared_DemoApps_Focus_de.framework */; };
 		6D4E56AA239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A6239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf */; };
 		6D4E56AB239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A7239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf */; };
 		6D4E56AC239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A8239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf */; };
@@ -215,7 +216,6 @@
 		6D4E56FB23A7A5F7005B79B6 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
 		6D4E56FC23A7A5F7005B79B6 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
 		6D4E56FE23A7A5F7005B79B6 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
-		6D4E56FF23A7A5F7005B79B6 /* Pods_Shared_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB7DF15965E2BF0A667B6FD /* Pods_Shared_DailyCaller.framework */; };
 		6D4E570123A7A5F7005B79B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		6D4E570223A7A5F7005B79B6 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		6D4E570323A7A5F7005B79B6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
@@ -243,7 +243,6 @@
 		6D4E572823A7B785005B79B6 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
 		6D4E572923A7B785005B79B6 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
 		6D4E572B23A7B785005B79B6 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
-		6D4E572C23A7B785005B79B6 /* Pods_Shared_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB7DF15965E2BF0A667B6FD /* Pods_Shared_DailyCaller.framework */; };
 		6D4E572E23A7B785005B79B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		6D4E572F23A7B785005B79B6 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		6D4E573023A7B785005B79B6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
@@ -306,9 +305,10 @@
 		6DAFEEC8239D022400441E97 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
 		6DAFEEC9239D022400441E97 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
 		6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
-		903DFF58C29877F09C7CCAEE /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		87D6CDCFA21AB261E3948036 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CBBC4320148C0A226A3FF68 /* Pods_Shared_DemoApps_Spot_IM_Development.framework */; };
+		903DFF58C29877F09C7CCAEE /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		A3FFBDD9C8C38C11A46C4FEE /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C44606DD56FB5987201F138 /* Pods_Shared_DemoApps_MarketWatch.framework */; };
 		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
-		E6D5DACDE3AFCC62C48FD7A6 /* Pods_Shared_YentSpot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3A15E4703E3A99B176A0CB8 /* Pods_Shared_YentSpot.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -417,6 +417,7 @@
 /* Begin PBXFileReference section */
 		00A8CD58A8F0DC066372373C /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		017506665B930AFC0987F034 /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		01FFC597EF1E02B2800A150D /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
 		04072D11C92F84FB9A0B536D /* Pods-Shared-YentSpot.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		0D29D981CB6B5E80D1DA4976 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
@@ -429,8 +430,12 @@
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
+		112B9949FEAB69A097941E66 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		16A4E8F03C195AF041762EA9 /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; sourceTree = "<group>"; };
 		1CAA0C7553356875A9AA4225 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		2397B30733893F8F513035B7 /* Pods-Shared-SpotImCore.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		28A93DE50C5DB2123DE11AF6 /* Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		3E133D2749F30280C7BA9FBA /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
 		3E221698179C1E551AFF0C2F /* Pods-Shared-DailyCaller.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DailyCaller.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller.debug.xcconfig"; sourceTree = "<group>"; };
 		43497C3B9E3BD0EEDB08F0AA /* Pods-Shared-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
 		440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AnimationSequence.swift"; sourceTree = "<group>"; };
@@ -592,7 +597,9 @@
 		44F247A42379B23100B36F12 /* BaseScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseScrollView.swift; sourceTree = "<group>"; };
 		44F247A62379B75300B36F12 /* BaseTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableView.swift; sourceTree = "<group>"; };
 		4AE069E85103CCF298C00A66 /* Pods-Shared-DailyCaller.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DailyCaller.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller.releasewithads.xcconfig"; sourceTree = "<group>"; };
-		4CB7DF15965E2BF0A667B6FD /* Pods_Shared_DailyCaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DailyCaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BA8E80591FCF47284262C90 /* Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		55CD27129B02CAD0CA2FC92F /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
+		5CBBC4320148C0A226A3FF68 /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAuthenticationProvider.swift; sourceTree = "<group>"; };
 		5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
 		5D697A3B22B65106001AD556 /* Spot-IM.Development.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spot-IM.Development.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -628,15 +635,30 @@
 		6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoConfiguration.swift; sourceTree = "<group>"; };
 		6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewFooterTesterViewController.swift; sourceTree = "<group>"; };
 		70D8A0A04CEC426E5A162D80 /* Pods-Shared-DailyCaller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DailyCaller.release.xcconfig"; path = "Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller.release.xcconfig"; sourceTree = "<group>"; };
+		7C44606DD56FB5987201F138 /* Pods_Shared_DemoApps_MarketWatch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_MarketWatch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		89080C904BFC65FD7F1DA4CF /* Pods-Shared-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		8C70E1524F9B4392498057DC /* Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		8CB45A3013DD8E68C96E5A5D /* Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		920D30A1B185BC4027FD05C2 /* Pods-Shared-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
+		9A3383CD1A553EE980590B01 /* Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		9FE50A09127954BEB1794600 /* Pods_Shared_DemoApps_DailyCaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_DailyCaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A714780A67DA84CAAE3C022D /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		A7ECCC93AFBA1CFC484AB0DE /* Pods-Shared-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
-		AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3A15E4703E3A99B176A0CB8 /* Pods_Shared_YentSpot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_YentSpot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEB97EF02F8E5886F3E31670 /* Pods-Shared-DemoApps-DailyCaller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; sourceTree = "<group>"; };
+		B0804AE5C035997FCB264060 /* Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
+		BA08A98CE7C1465A52CF32BF /* Pods-Shared-DemoApps-DailyCaller.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.debug.xcconfig"; sourceTree = "<group>"; };
+		BDDF167B14462DF8948C6B3E /* Pods_Shared_DemoApps_YentSpot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_YentSpot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF8ED8E7B65C33DB59074C5B /* Pods-Shared-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		C80D2E54E07FE2B5B130E29B /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
+		C8B928D827B8437D0B4C8965 /* Pods_Shared_DemoApps_Focus_de.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Focus_de.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEAF877843FCCC388A4A45F2 /* Pods-Shared-DailyCaller.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DailyCaller.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		D0D32C741B314C3398975D0B /* Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		D4DCE4DDF8025EF20122A29A /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		D5C780226F5CBD399358CFB5 /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; sourceTree = "<group>"; };
+		D66238765872BED19F3FBF2A /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
+		E1179D8B868D80F3F262626B /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
+		F417CC789E246B9F1BA73E92 /* Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -653,7 +675,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */,
-				4FCADE7777C33500B6BCD2E5 /* Pods_Shared_Spot_IM_Development.framework in Frameworks */,
+				87D6CDCFA21AB261E3948036 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,7 +691,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D4E56FE23A7A5F7005B79B6 /* SpotImCore.framework in Frameworks */,
-				6D4E56FF23A7A5F7005B79B6 /* Pods_Shared_DailyCaller.framework in Frameworks */,
+				61F99434BA16C2E2A572C2D8 /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,7 +700,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D4E572B23A7B785005B79B6 /* SpotImCore.framework in Frameworks */,
-				6D4E572C23A7B785005B79B6 /* Pods_Shared_DailyCaller.framework in Frameworks */,
+				A3FFBDD9C8C38C11A46C4FEE /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,8 +709,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DA75C7C238D313600FBDF19 /* SpotImCore.framework in Frameworks */,
-				903DFF58C29877F09C7CCAEE /* (null) in Frameworks */,
-				E6D5DACDE3AFCC62C48FD7A6 /* Pods_Shared_YentSpot.framework in Frameworks */,
+				4A9E60D73EA76FEC6B333FEF /* Pods_Shared_DemoApps_YentSpot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -697,7 +718,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DAFEEB2239CFCCF00441E97 /* SpotImCore.framework in Frameworks */,
-				49EBFB2F2846EFBB508243CE /* Pods_Shared_DailyCaller.framework in Frameworks */,
+				1ECF2C76FDC2736B1445945B /* Pods_Shared_DemoApps_DailyCaller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1392,10 +1413,12 @@
 		5D697A6A22B6586C001AD556 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AE835B7FAAF4E6ABDBC437C6 /* Pods_Shared_Spot_IM_Development.framework */,
 				847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */,
-				4CB7DF15965E2BF0A667B6FD /* Pods_Shared_DailyCaller.framework */,
-				B3A15E4703E3A99B176A0CB8 /* Pods_Shared_YentSpot.framework */,
+				9FE50A09127954BEB1794600 /* Pods_Shared_DemoApps_DailyCaller.framework */,
+				C8B928D827B8437D0B4C8965 /* Pods_Shared_DemoApps_Focus_de.framework */,
+				7C44606DD56FB5987201F138 /* Pods_Shared_DemoApps_MarketWatch.framework */,
+				5CBBC4320148C0A226A3FF68 /* Pods_Shared_DemoApps_Spot_IM_Development.framework */,
+				BDDF167B14462DF8948C6B3E /* Pods_Shared_DemoApps_YentSpot.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1455,6 +1478,26 @@
 				CEAF877843FCCC388A4A45F2 /* Pods-Shared-DailyCaller.debugwithads.xcconfig */,
 				70D8A0A04CEC426E5A162D80 /* Pods-Shared-DailyCaller.release.xcconfig */,
 				4AE069E85103CCF298C00A66 /* Pods-Shared-DailyCaller.releasewithads.xcconfig */,
+				BA08A98CE7C1465A52CF32BF /* Pods-Shared-DemoApps-DailyCaller.debug.xcconfig */,
+				8CB45A3013DD8E68C96E5A5D /* Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig */,
+				AEB97EF02F8E5886F3E31670 /* Pods-Shared-DemoApps-DailyCaller.release.xcconfig */,
+				F417CC789E246B9F1BA73E92 /* Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig */,
+				01FFC597EF1E02B2800A150D /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */,
+				D4DCE4DDF8025EF20122A29A /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */,
+				D66238765872BED19F3FBF2A /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */,
+				4BA8E80591FCF47284262C90 /* Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig */,
+				D5C780226F5CBD399358CFB5 /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */,
+				28A93DE50C5DB2123DE11AF6 /* Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig */,
+				16A4E8F03C195AF041762EA9 /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */,
+				112B9949FEAB69A097941E66 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */,
+				B0804AE5C035997FCB264060 /* Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig */,
+				D0D32C741B314C3398975D0B /* Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig */,
+				3E133D2749F30280C7BA9FBA /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */,
+				8C70E1524F9B4392498057DC /* Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig */,
+				E1179D8B868D80F3F262626B /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */,
+				A714780A67DA84CAAE3C022D /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */,
+				55CD27129B02CAD0CA2FC92F /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */,
+				9A3383CD1A553EE980590B01 /* Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1776,15 +1819,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.Development/Pods-Shared-Spot-IM.Development-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		445CA560233E117700945F59 /* Run Script */ = {
@@ -1820,7 +1863,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shared-DailyCaller-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-Focus.de-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1851,15 +1894,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6D4E571623A7B785005B79B6 /* [CP] Check Pods Manifest.lock */ = {
@@ -1877,7 +1920,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shared-DailyCaller-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-MarketWatch-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1908,15 +1951,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6DA75C88238D313600FBDF19 /* Run Script */ = {
@@ -1952,7 +1995,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shared-DailyCaller-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-DailyCaller-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1983,15 +2026,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DailyCaller/Pods-Shared-DailyCaller-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		72F270DEB0D52BEDEB9300B4 /* [CP] Check Pods Manifest.lock */ = {
@@ -2009,7 +2052,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shared-YentSpot-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-YentSpot-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2031,7 +2074,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Shared-Spot-IM.Development-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-Spot-IM.Development-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2066,15 +2109,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-YentSpot/Pods-Shared-YentSpot-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2479,7 +2522,7 @@
 		};
 		448F2F7123683097000C5606 /* DebugWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 00A8CD58A8F0DC066372373C /* Pods-Shared-Spot-IM.Development.debugwithads.xcconfig */;
+			baseConfigurationReference = D0D32C741B314C3398975D0B /* Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
@@ -2625,7 +2668,7 @@
 		};
 		448F2F75236830A0000C5606 /* ReleaseWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 017506665B930AFC0987F034 /* Pods-Shared-Spot-IM.Development.releasewithads.xcconfig */;
+			baseConfigurationReference = 8C70E1524F9B4392498057DC /* Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
@@ -2908,7 +2951,7 @@
 		};
 		5D697A5922B65108001AD556 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BF8ED8E7B65C33DB59074C5B /* Pods-Shared-Spot-IM.Development.debug.xcconfig */;
+			baseConfigurationReference = B0804AE5C035997FCB264060 /* Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
@@ -2937,7 +2980,7 @@
 		};
 		5D697A5A22B65108001AD556 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A7ECCC93AFBA1CFC484AB0DE /* Pods-Shared-Spot-IM.Development.release.xcconfig */;
+			baseConfigurationReference = 3E133D2749F30280C7BA9FBA /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
@@ -3008,7 +3051,7 @@
 		};
 		6D4E570D23A7A5F7005B79B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E221698179C1E551AFF0C2F /* Pods-Shared-DailyCaller.debug.xcconfig */;
+			baseConfigurationReference = 01FFC597EF1E02B2800A150D /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3037,7 +3080,7 @@
 		};
 		6D4E570E23A7A5F7005B79B6 /* DebugWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CEAF877843FCCC388A4A45F2 /* Pods-Shared-DailyCaller.debugwithads.xcconfig */;
+			baseConfigurationReference = D4DCE4DDF8025EF20122A29A /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3066,7 +3109,7 @@
 		};
 		6D4E570F23A7A5F7005B79B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 70D8A0A04CEC426E5A162D80 /* Pods-Shared-DailyCaller.release.xcconfig */;
+			baseConfigurationReference = D66238765872BED19F3FBF2A /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3095,7 +3138,7 @@
 		};
 		6D4E571023A7A5F7005B79B6 /* ReleaseWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4AE069E85103CCF298C00A66 /* Pods-Shared-DailyCaller.releasewithads.xcconfig */;
+			baseConfigurationReference = 4BA8E80591FCF47284262C90 /* Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Focus.de;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3124,7 +3167,7 @@
 		};
 		6D4E573A23A7B785005B79B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E221698179C1E551AFF0C2F /* Pods-Shared-DailyCaller.debug.xcconfig */;
+			baseConfigurationReference = D5C780226F5CBD399358CFB5 /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = MarketWatch;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3153,7 +3196,7 @@
 		};
 		6D4E573B23A7B785005B79B6 /* DebugWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CEAF877843FCCC388A4A45F2 /* Pods-Shared-DailyCaller.debugwithads.xcconfig */;
+			baseConfigurationReference = 28A93DE50C5DB2123DE11AF6 /* Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = MarketWatch;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3182,7 +3225,7 @@
 		};
 		6D4E573C23A7B785005B79B6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 70D8A0A04CEC426E5A162D80 /* Pods-Shared-DailyCaller.release.xcconfig */;
+			baseConfigurationReference = 16A4E8F03C195AF041762EA9 /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = MarketWatch;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3211,7 +3254,7 @@
 		};
 		6D4E573D23A7B785005B79B6 /* ReleaseWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4AE069E85103CCF298C00A66 /* Pods-Shared-DailyCaller.releasewithads.xcconfig */;
+			baseConfigurationReference = 112B9949FEAB69A097941E66 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = MarketWatch;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3240,7 +3283,7 @@
 		};
 		6DA75C8A238D313600FBDF19 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 920D30A1B185BC4027FD05C2 /* Pods-Shared-YentSpot.debug.xcconfig */;
+			baseConfigurationReference = E1179D8B868D80F3F262626B /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;
@@ -3269,7 +3312,7 @@
 		};
 		6DA75C8B238D313600FBDF19 /* DebugWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89080C904BFC65FD7F1DA4CF /* Pods-Shared-YentSpot.debugwithads.xcconfig */;
+			baseConfigurationReference = A714780A67DA84CAAE3C022D /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;
@@ -3298,7 +3341,7 @@
 		};
 		6DA75C8C238D313600FBDF19 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 43497C3B9E3BD0EEDB08F0AA /* Pods-Shared-YentSpot.release.xcconfig */;
+			baseConfigurationReference = 55CD27129B02CAD0CA2FC92F /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;
@@ -3327,7 +3370,7 @@
 		};
 		6DA75C8D238D313600FBDF19 /* ReleaseWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 04072D11C92F84FB9A0B536D /* Pods-Shared-YentSpot.releasewithads.xcconfig */;
+			baseConfigurationReference = 9A3383CD1A553EE980590B01 /* Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = YnetAppIcon;
 				BUNDLE_DISPLAY_NAME = YnetSpot;
@@ -3356,7 +3399,7 @@
 		};
 		6DAFEEC1239CFCCF00441E97 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E221698179C1E551AFF0C2F /* Pods-Shared-DailyCaller.debug.xcconfig */;
+			baseConfigurationReference = BA08A98CE7C1465A52CF32BF /* Pods-Shared-DemoApps-DailyCaller.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = DailyCallerAppIcon;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3385,7 +3428,7 @@
 		};
 		6DAFEEC2239CFCCF00441E97 /* DebugWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CEAF877843FCCC388A4A45F2 /* Pods-Shared-DailyCaller.debugwithads.xcconfig */;
+			baseConfigurationReference = 8CB45A3013DD8E68C96E5A5D /* Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = DailyCallerAppIcon;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3414,7 +3457,7 @@
 		};
 		6DAFEEC3239CFCCF00441E97 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 70D8A0A04CEC426E5A162D80 /* Pods-Shared-DailyCaller.release.xcconfig */;
+			baseConfigurationReference = AEB97EF02F8E5886F3E31670 /* Pods-Shared-DemoApps-DailyCaller.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = DailyCallerAppIcon;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
@@ -3443,7 +3486,7 @@
 		};
 		6DAFEEC4239CFCCF00441E97 /* ReleaseWithAds */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4AE069E85103CCF298C00A66 /* Pods-Shared-DailyCaller.releasewithads.xcconfig */;
+			baseConfigurationReference = F417CC789E246B9F1BA73E92 /* Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = DailyCallerAppIcon;
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6D4E571323A7B785005B79B6"
-               BuildableName = "MarketWatch.app"
+               BuildableName = "Market Watch.app"
                BlueprintName = "MarketWatch"
                ReferencedContainer = "container:Spot-IM.Development.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6D4E571323A7B785005B79B6"
-            BuildableName = "MarketWatch.app"
+            BuildableName = "Market Watch.app"
             BlueprintName = "MarketWatch"
             ReferencedContainer = "container:Spot-IM.Development.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6D4E571323A7B785005B79B6"
-            BuildableName = "MarketWatch.app"
+            BuildableName = "Market Watch.app"
             BlueprintName = "MarketWatch"
             ReferencedContainer = "container:Spot-IM.Development.xcodeproj">
          </BuildableReference>
