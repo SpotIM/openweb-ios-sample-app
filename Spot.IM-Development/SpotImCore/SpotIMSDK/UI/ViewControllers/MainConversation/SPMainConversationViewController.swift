@@ -141,11 +141,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     }
 
     // MARK: - Private Methods
-
-    @objc
-    private func reloadFullConversation() {
-        loadFullConversation(removingOldMessages: true)
-    }
     
     private func configureModelHandlers() {
         model.sortingUpdateHandler = { [weak self] shoudBeUpdated in
@@ -155,25 +150,25 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             
             self.sortView.updateSortOption(sortOption.title)
             if shoudBeUpdated {
-                self.loadFullConversation(removingOldMessages: true)
+                self.reloadFullConversation()
             }
         }
     }
     
-    private func loadFullConversation(removingOldMessages: Bool) {
+    @objc
+    private func reloadFullConversation() {
         guard !model.dataSource.isLoading else { return }
 
         let mode = model.sortOption
-        model.dataSource.resetRepliesProviders()
         model.dataSource.conversation(
             mode,
             page: .first,
-            loadingStarted: nil,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
                 
                 self.hideLoader()
                 self.refreshControl.endRefreshing()
+
                 if let error = error {
                     if self.model.areCommentsEmpty() {
                         self.presentErrorView(error: error)
@@ -187,7 +182,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     Logger.error("Load conversation request type is not `success`")
                 } else {
                     let messageCount = self.model.dataSource.messageCount
-                        SPAnalyticsHolder.default.totalComments = messageCount
+                    SPAnalyticsHolder.default.totalComments = messageCount
                     self.sortView.updateCommentsLabel(messageCount ?? 0)
                     
                     if self.model.areCommentsEmpty() {
@@ -195,6 +190,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     } else {
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
+                        self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
                     }
                 }
                 self.tableView.reloadData()
@@ -376,14 +372,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     override func configureErrorAction() -> ConversationStateAction {
         return { [weak self] in
             self?.showLoader()
-            self?.loadFullConversation(removingOldMessages: true)
+            self?.reloadFullConversation()
         }
     }
 
     override func configureNoInternetAction() -> ConversationStateAction {
         return { [weak self] in
             self?.showLoader()
-            self?.loadFullConversation(removingOldMessages: true)
+            self?.reloadFullConversation()
         }
     }
     

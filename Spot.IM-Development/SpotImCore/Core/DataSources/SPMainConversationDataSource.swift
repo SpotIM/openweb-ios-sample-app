@@ -142,6 +142,9 @@ internal final class SPMainConversationDataSource {
                 if self.abData == nil {
                     self.abData = response?.abData
                 }
+
+                self.resetAllComments()
+
                 self.messageCount = response?.conversation?.messagesCount
                 self.thumbnailUrl = response?.extractData?.thumbnailUrl
                 self.conversationTitle = response?.extractData?.title
@@ -261,14 +264,9 @@ internal final class SPMainConversationDataSource {
         }
     }
 
-    internal func resetAllComments() {
+    private func resetAllComments() {
         cellData.removeAll()
         hiddenData.removeAll()
-        resetRepliesProviders()
-        
-    }
-
-    internal func resetRepliesProviders() {
         repliesProviders.removeAll()
     }
     
