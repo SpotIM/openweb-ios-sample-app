@@ -110,7 +110,6 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
                                                       isActive: false)
         }
         textInputView.delegate = self
-        textInputView.tintColor = .brandColor
         textInputView.backgroundColor = .spBackground0
         textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textColor = .spForeground1
