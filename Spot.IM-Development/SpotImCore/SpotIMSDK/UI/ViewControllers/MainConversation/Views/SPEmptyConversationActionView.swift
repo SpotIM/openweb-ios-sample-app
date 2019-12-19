@@ -62,7 +62,7 @@ final class SPEmptyConversationActionView: BaseView {
     
     private func configureContainerView() {
         containerView.addSubviews(iconView, messageLabel, actionButton)
-        containerView.backgroundColor = .white
+        containerView.backgroundColor = .spBackground0
         containerView.layout {
             $0.leading.greaterThanOrEqual(to: leadingAnchor, offsetBy: Theme.containerLeadingTrailingOffset)
             $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -Theme.containerLeadingTrailingOffset)
@@ -74,7 +74,7 @@ final class SPEmptyConversationActionView: BaseView {
     }
     
     private func configureImageView() {
-        iconView.backgroundColor = .white
+        iconView.backgroundColor = .spBackground0
         iconView.layout {
             $0.centerX.equal(to: containerView.centerXAnchor)
             $0.top.equal(to: containerView.topAnchor)
@@ -83,9 +83,9 @@ final class SPEmptyConversationActionView: BaseView {
     
     private func configureMessageLabel(relativeToIcon: Bool) {
         messageLabel.numberOfLines = 0
-        messageLabel.backgroundColor = .white
+        messageLabel.backgroundColor = .spBackground0
         messageLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
-        messageLabel.textColor = .steelGrey
+        messageLabel.textColor = .spForeground3
         messageLabel.textAlignment = .center
         messageLabel.layout {
             $0.leading.equal(to: containerView.leadingAnchor)

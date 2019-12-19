@@ -420,6 +420,9 @@ extension SPMainConversationViewController { // UITableViewDelegate
 extension SPMainConversationViewController { // SPMainConversationDataSourceDelegate
     
     override func reload(shouldBeScrolledToTop: Bool) {
+        stateActionView?.removeFromSuperview()
+        stateActionView = nil
+        
         if shouldBeScrolledToTop {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }

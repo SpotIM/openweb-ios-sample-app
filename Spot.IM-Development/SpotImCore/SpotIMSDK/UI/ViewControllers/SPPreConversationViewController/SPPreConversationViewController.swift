@@ -62,6 +62,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        loadConversation()
         if self.model.liveTotalCommentsCount() > 0 {
             self.header.set(commentCount: self.model.liveTotalCommentsCount().decimalFormatted)
         }
@@ -177,7 +178,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     if self.model.areCommentsEmpty() {
                         self.showEmptyStateView()
                     } else {
-                        
+                        self.hideEmptyStateView()
                         self.header.set(commentCount: (messageCount ?? 0).decimalFormatted)
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
@@ -229,6 +230,14 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")
         footerView.hideShowMoreCommentsButton()
         whatYouThinkView.setCallToAction(text: callToAction)
+    }
+    
+    func hideEmptyStateView() {
+        self.stateActionView?.removeFromSuperview()
+        self.stateActionView = nil
+        
+        footerView.showShowMoreCommentsButton()
+        whatYouThinkView.setCallToAction(text: LocalizationManager.localizedString(key: "What do you think?"))
     }
 
     override func showErrorStateView() {
