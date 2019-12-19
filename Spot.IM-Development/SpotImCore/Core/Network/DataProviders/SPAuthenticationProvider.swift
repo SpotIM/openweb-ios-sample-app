@@ -10,9 +10,13 @@ import Foundation
 import Alamofire
 
 public typealias AuthCompletionHandler = (_ success: Bool, _ error: Error?) -> Void
+public typealias AuthStratCompleteionHandler = (_ response: SSOStartResponse?, _ error: Error?) -> Void
 
 public protocol SPAuthenticationProvider: class {
+    func startSSO(completion: @escaping AuthStratCompleteionHandler)
+    func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler)
     
+    @available(*, deprecated, message: "Use startSSO/ssoWithJwt instead")
     func startSSO(with secret: String?,
                   completion: @escaping (_ response: SSOStartResponse?, _ error: Error?) -> Void)
     
@@ -36,7 +40,30 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         manager = ApiManager()
         internalAuthProvider = SPDefaultInternalAuthProvider(apiManager: manager)
     }
-
+    
+    public func startSSO(completion: @escaping AuthStratCompleteionHandler) {
+        internalAuthProvider.login { (token, error) in
+            if let error = error {
+                completion(nil, error)
+            } else if let token = token {
+                let newParams = SPCodeAParameters(token: token, secret: nil)
+                self.getCodeA(withGuest: newParams, completion: completion)
+            }
+        }
+    }
+    
+    public func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
+        internalAuthProvider.login { (token, error) in
+            if let error = error {
+                completion(nil, error)
+            } else if let token = token {
+                let newParams = SPCodeAParameters(token: token, secret: secret)
+                self.getCodeA(withGuest: newParams, completion: completion)
+            }
+        }
+    }
+    
+    @available(*, deprecated, message: "Use startSSO/ssoWithJwt instead")
     public func startSSO(with secret: String? = nil,
                          completion: @escaping (_ response: SSOStartResponse?, _ error: Error?) -> Void) {
         
@@ -197,10 +224,8 @@ private struct SPCodeAParameters {
 }
 
 public struct SSOStartResponse {
-    
     public var codeA: String?
     public var jwtToken: String?
     public var autoComplete: Bool = false
     public var success: Bool = false
-    
 }
