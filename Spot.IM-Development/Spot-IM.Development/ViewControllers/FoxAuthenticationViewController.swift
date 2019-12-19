@@ -50,7 +50,7 @@ class FoxAuthenticationViewController: UIViewController, SSOAuthenticatable {
     }
     
     private func authenticateWithSpotIm(token:String) {
-        ssoAuthProvider.startSSO(with: token, completion: { [weak self] response, error in
+        ssoAuthProvider.sso(withJwtSecret: token, completion: { [weak self] response, error in
             if let success = response?.success, success {
                 print("Authentication successful!")
                 self?.ssoAuthProvider.ssoAuthDelegate?.ssoFlowDidSucceed()

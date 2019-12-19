@@ -92,7 +92,7 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
         genericAuthDone = false
         foxTokenIndicator.text = "⏳"
         
-        ssoAuthProvider.startSSO(with: .demoFoxSecretForSSO, completion: { (response, error) in
+        ssoAuthProvider.sso(withJwtSecret: .demoFoxSecretForSSO, completion: { (response, error) in
             if let error = error {
                 print(error)
                 self.foxAuthDone = false
