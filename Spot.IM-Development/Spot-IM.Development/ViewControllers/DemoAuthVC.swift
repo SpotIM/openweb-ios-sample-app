@@ -19,6 +19,15 @@ extension DemoAuthVC: SSOAuthenticatable {
 }
 
 class YnetAuthProvider: SPAuthenticationProvider {
+    func startSSO(completion: @escaping AuthStratCompleteionHandler) {
+        
+    }
+    
+    func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
+        
+    }
+    
     func completeSSO(with codeB: String?, genericToken: String?, completion: @escaping AuthCompletionHandler) { }
     var ssoAuthDelegate: SSOAthenticationDelegate?
+    
 }
