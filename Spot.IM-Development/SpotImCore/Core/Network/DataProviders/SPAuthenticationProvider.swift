@@ -45,7 +45,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         internalAuthProvider.login { (token, error) in
             if let error = error {
                 completion(nil, error)
-            } else if let token = token {
+            } else {
                 let newParams = SPCodeAParameters(token: token, secret: nil)
                 self.getCodeA(withGuest: newParams, completion: completion)
             }
@@ -56,7 +56,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         internalAuthProvider.login { (token, error) in
             if let error = error {
                 completion(nil, error)
-            } else if let token = token {
+            } else {
                 let newParams = SPCodeAParameters(token: token, secret: secret)
                 self.getCodeA(withGuest: newParams, completion: completion)
             }
@@ -70,7 +70,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         internalAuthProvider.login { (token, error) in
             if let error = error {
                 completion(nil, error)
-            } else if let token = token {
+            } else {
                 let newParams = SPCodeAParameters(token: token, secret: secret)
                 self.getCodeA(withGuest: newParams, completion: completion)
             }
@@ -92,7 +92,7 @@ public final class SPDefaultAuthProvider: SPAuthenticationProvider {
         }
         
         var headers = HTTPHeaders.basic(with: spotKey, postId: "default")
-        headers["Authorization"] = ssoParams?.token
+        headers["Authorization"] = ssoParams?.token ?? SPUserSessionHolder.session.token
         manager.execute(
             request: spRequest,
             parameters: requestParams,
