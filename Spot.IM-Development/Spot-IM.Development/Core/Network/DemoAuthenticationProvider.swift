@@ -36,6 +36,8 @@ internal class DemoAuthenticationProvider {
                     completion(token, nil)
                 case .failure(let error):
                     completion(nil, error)
+                @unknown default:
+                    fatalError("Unknown result in network response")
                 }
         }
     }
@@ -64,6 +66,8 @@ internal class DemoAuthenticationProvider {
                     completion(codeB, nil)
                 case .failure(let error):
                     completion(nil, error)
+                @unknown default:
+                    fatalError("Unknown result in network response")
                 }
             }
     }

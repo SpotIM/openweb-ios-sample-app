@@ -9,10 +9,7 @@
 import UIKit
 import SpotImCore
 
-class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
-    
-    var ssoAuthProvider: SPAuthenticationProvider = SPDefaultAuthProvider()
-
+class AuthenticstionViewController: UIViewController {
     @IBOutlet weak var genericTokenIndicator: UILabel!
     @IBOutlet weak var genericAuthenticationIndicator: UILabel!
     @IBOutlet weak var getGenericTokenButton: UIButton!
@@ -27,7 +24,7 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
         didSet { updateUI() }
     }
     var codeA: String?
-    var codeB: String?
+
     var  genericAuthDone = false {
         didSet { updateUI() }
     }
@@ -67,16 +64,15 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     }
     
     @IBAction func startGenericSSO(_ sender: Any) {
-        // TODO: (Fedin) remove SPClientSettings.setup from here
-        // when everything working with single key in AppDelegate
-        SPClientSettings.main.setup(spotKey: .demoGenericSpotKeyForSSO)
+        SpotIm.initialize(spotId: .demoGenericSpotKeyForSSO)
         
         foxAuthDone = false
         genericAuthenticationIndicator.text = "⏳"
-        ssoAuthProvider.startSSO { [weak self] response, error in
+        SpotIm.startSSO { [weak self] response, error in
             if let error = error {
                 print(error)
                 self?.genericAuthDone = false
+                self?.genericAuthenticationIndicator.text = "❌"
             } else {
                 self?.codeA = response?.codeA
                 self?.getCodeB(genericToken: response?.jwtToken)
@@ -87,12 +83,12 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     @IBAction func startFoxSSO(_ sender: Any) {
         // TODO: (Fedin) remove SPClientSettings.setup from here
         // when everything working with single key in AppDelegate
-        SPClientSettings.main.setup(spotKey: .demoFoxSpotKeyForSSO)
+        SpotIm.initialize(spotId: .demoFoxSpotKeyForSSO)
         
         genericAuthDone = false
         foxTokenIndicator.text = "⏳"
-        
-        ssoAuthProvider.sso(withJwtSecret: .demoFoxSecretForSSO, completion: { (response, error) in
+    
+        SpotIm.sso(withJwtSecret: .demoFoxSecretForSSO, completion: { (response, error) in
             if let error = error {
                 print(error)
                 self.foxAuthDone = false
@@ -117,14 +113,13 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
                     print(error)
                     self.genericAuthDone = false
                 } else {
-                    self.codeB = codeB
-                    self.completeSSO(genericToken: genericToken)
+                    self.completeSSO(codeB: codeB!)
                 }
         }
     }
     
-    private func completeSSO(genericToken: String?) {
-        ssoAuthProvider.completeSSO(with: codeB, genericToken: genericToken) { (success, error) in
+    private func completeSSO(codeB: String) {
+        SpotIm.completeSSO(with: codeB) { (success, error) in
             if let error = error {
                 print(error)
                 self.genericAuthDone = false
@@ -137,11 +132,20 @@ class AuthenticstionViewController: UIViewController, SSOAuthenticatable {
     }
     
     @IBAction func resetAllAuthentication(_ sender: Any) {
-        codeA = nil
-        codeB = nil
-        genericToken = nil
-        foxAuthDone = false
-        genericAuthDone = false
+        SpotIm.logout { result in
+            switch result {
+            case .success():
+                self.codeA = nil
+                self.genericToken = nil
+                self.foxAuthDone = false
+                self.genericAuthDone = false
+            case .failure(let error):
+                print("Logout error: \(error)")
+            @unknown default:
+                fatalError()
+            }
+            
+        }
     }
 }
 
@@ -152,3 +156,4 @@ private extension String {
     static var demoFoxSecretForSSO: String { return  "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg5REEwNkVEMjAxOCIsInR5cCI6IkpXVCJ9.eyJwaWQiOiJ1cy1lYXN0LTE6ZDc1ODUxZmEtNWZhZi00OWIwLWFmODktYjAwZTYzNTFhMWMwIiwidWlkIjoiWkRjMU9EVXhabUV0TldaaFppMDBPV0l3TFdGbU9Ea3RZakF3WlRZek5URmhNV013Iiwic2lkIjoiZmFmYTRjMTItZDQ5YS00NzQwLTljOTYtZTU2ZTc3ZThlZWZiIiwic2RjIjoidXMtZWFzdC0xIiwiYXR5cGUiOiJpZGVudGl0eSIsImR0eXBlIjoid2ViIiwidXR5cGUiOiJlbWFpbCIsImRpZCI6IiIsIm12cGRpZCI6IiIsInZlciI6MiwiZXhwIjoxNTk5NDY5MTY5LCJqdGkiOiJiMGFmODljNy04MGM4LTRlMzctODQ3Ny0zYTMwMjhiNzgxMjMiLCJpYXQiOjE1Njc5MzMxNjl9.SDExLf1C2yLBmIEGTUSOazVS7dKbdBSHeaewpcOLHnK_RjlxJCOj6RTn0RYsBw1cXgoeJvx9Hp9Hn0vtWcCkt9Hqz5eCY3zeIlxeRy9k0AcnkJEq-gIkA_S-DY47R20Ac_yNEfRf1h7uIkI8AbOz_7-327xpvc-le1mCmOhHt9Rx7pFf1QlIWIPsAD4y9cq4qQvyFylPOxM7KSdYqLeZzUKtsxnEmrHfGvAQw0fTaChiDmxmRKH-_unaWd_naGc3F120yw1BxuYatQu10cYKaFtr3mAbZEMJTrdnC77wXpCpNIKxER1xUemxX4bIiTf0vwdhYBcmDYhg6bmbzPqLfA"
     }
 }
+

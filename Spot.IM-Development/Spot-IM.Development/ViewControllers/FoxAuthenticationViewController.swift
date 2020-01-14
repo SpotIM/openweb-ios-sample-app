@@ -13,10 +13,7 @@ enum FoxError: Error {
     case runtimeError(String)
 }
 
-class FoxAuthenticationViewController: UIViewController, SSOAuthenticatable {
-    
-    var ssoAuthProvider: SPAuthenticationProvider = SPDefaultAuthProvider()
-    
+class FoxAuthenticationViewController: UIViewController {
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     override func viewDidLoad() {
@@ -50,15 +47,13 @@ class FoxAuthenticationViewController: UIViewController, SSOAuthenticatable {
     }
     
     private func authenticateWithSpotIm(token:String) {
-        ssoAuthProvider.sso(withJwtSecret: token, completion: { [weak self] response, error in
+        SpotIm.sso(withJwtSecret: token) { response, error in
             if let success = response?.success, success {
                 print("Authentication successful!")
-                self?.ssoAuthProvider.ssoAuthDelegate?.ssoFlowDidSucceed()
             } else {
                 print("Authentication error:\n\(String(describing: error))")
-                self?.ssoAuthProvider.ssoAuthDelegate?.ssoFlowDidFail(with: error)
             }
-        })
+        }
     }
     
     @IBAction func createAccountTapped(_ sender: Any) {

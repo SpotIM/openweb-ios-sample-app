@@ -44,17 +44,29 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     }
     
     override func viewDidLoad() {
-        SPClientSettings.main.setup(spotKey: spotId)
+        SpotIm.initialize(spotId: spotId)
         setupTableView()
-        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
-        spotIMCoordinator?.setLayoutDelegate(delegate: self)
+        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let coordinator):
+                self.spotIMCoordinator = coordinator
+                coordinator.setLayoutDelegate(delegate: self)
+                
+                self.setupSpotView()
+            case .failure(let error):
+                print(error)
+            @unknown default:
+                fatalError("Got unknown result")
+            }
+        }
+        
         navigationController?.setNavigationBarHidden(false, animated: false)
         tableView.delegate = self
         tableView.dataSource = self
         
-        setupContainerView()
-        
-        setupSpotView()
+        self.setupContainerView()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -102,20 +114,18 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         }
         
         self.setupSpotIM = true
-        spotIMCoordinator?.preConversationController(withPostId: self.postId,
-                                                     container: navigationController!, completion: { preConversationVC in
-                                                        preConversationVC.view.translatesAutoresizingMaskIntoConstraints = false
-                                                        self.addChild(preConversationVC)
-                                                        self.spotIMContainerView.addSubview(preConversationVC.view)
-                                                        
-                                                        preConversationVC.view.topAnchor.constraint(equalTo: self.spotIMContainerView.topAnchor).isActive = true
-                                                        preConversationVC.view.leadingAnchor.constraint(equalTo: self.spotIMContainerView.leadingAnchor).isActive = true
-                                                        preConversationVC.view.bottomAnchor.constraint(equalTo: self.spotIMContainerView.bottomAnchor).isActive = true
-                                                        preConversationVC.view.trailingAnchor.constraint(equalTo: self.spotIMContainerView.trailingAnchor).isActive = true
-                                                        
-                                                        preConversationVC.didMove(toParent: self)
-                                                        //it used to reload the section here but we removed that as that caused non-responsive issues
-        })
+        spotIMCoordinator?.preConversationController(withPostId: self.postId, navigationController: navigationController!) { preConversationVC in
+            preConversationVC.view.translatesAutoresizingMaskIntoConstraints = false
+            self.addChild(preConversationVC)
+            self.spotIMContainerView.addSubview(preConversationVC.view)
+            
+            preConversationVC.view.topAnchor.constraint(equalTo: self.spotIMContainerView.topAnchor).isActive = true
+            preConversationVC.view.leadingAnchor.constraint(equalTo: self.spotIMContainerView.leadingAnchor).isActive = true
+            preConversationVC.view.bottomAnchor.constraint(equalTo: self.spotIMContainerView.bottomAnchor).isActive = true
+            preConversationVC.view.trailingAnchor.constraint(equalTo: self.spotIMContainerView.trailingAnchor).isActive = true
+            
+            preConversationVC.didMove(toParent: self)
+        }
     }
 
     private func setupTableView() {
@@ -129,8 +139,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
 }
 
 extension TableViewFooterTesterViewController: SpotImSDKNavigationDelegate {
-    
-    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
+    func controllerForSSOFlow() -> UIViewController {
         let controller: AuthenticstionViewController = UIStoryboard(
             name: "Main",
             bundle: nil
@@ -139,7 +148,6 @@ extension TableViewFooterTesterViewController: SpotImSDKNavigationDelegate {
         
         return controller
     }
-    
 }
 
 extension TableViewFooterTesterViewController: SpotImLayoutDelegate {

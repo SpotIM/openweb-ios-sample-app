@@ -78,7 +78,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         checkAdsAvailability()
         updateHeaderUI()
         configureModelHandlers()
-        setupUserIconHandler()
+        
+        if let loginUIEnabled = SPConfigsDataSource.appConfig?.mobileSdk?.loginUiEnabled, loginUIEnabled {
+            setupUserIconHandler()
+        }
     
         tableHeader.setAuthor(model.dataSource.conversationPublisherName)
 
@@ -348,7 +351,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private func updateHeaderUI() {
         if model.dataSource.thumbnailUrl != nil ||
             model.dataSource.conversationTitle != nil {
-//            tableView.contentInset = UIEdgeInsets(top: 85, left: 0, bottom: 0, right: 0)
             isHeaderVisible = true
             headerHeightConstraint?.constant = articleHeaderMaxHeight
             tableHeader.setAuthor(model.dataSource.conversationPublisherName)

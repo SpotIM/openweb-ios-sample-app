@@ -11,8 +11,6 @@ import SpotImCore
 
 class ViewController: UIViewController {
 
-    let authProvider = SPDefaultAuthProvider()
-
     @IBOutlet weak var appInfoLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
     var loadingButtonTitleBackup: String?
@@ -32,7 +30,7 @@ class ViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let articleVC = segue.destination as? ArticleViewController {
-            articleVC.spotId = .demoMainSpotKey
+            articleVC.spotId = .demoGenericSpotKeyForSSO
             articleVC.postId = "social-reviews"
         }
     }
@@ -73,13 +71,13 @@ class ViewController: UIViewController {
     }
     
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
-        setup(with: .demoMainSpotKey, from: sender)
-        showArticles(with: .demoMainSpotKey, authenticationControllerId: .defaultAuthenticationControllerId)
+        setup(with: .demoGenericSpotKeyForSSO, from: sender)
+        showArticles(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
     }
 
     
     @IBAction private func showPreConversation(_ sender: UIButton) {
-        setup(with: .demoMainSpotKey, from: sender)
+        setup(with: .demoGenericSpotKeyForSSO, from: sender)
         performSegue(withIdentifier: "showPreConversationSegue", sender: self)
     }
     
@@ -101,7 +99,6 @@ class ViewController: UIViewController {
         let key = "spotIdKey"
         
         UserDefaults.standard.setValue(spotId, forKey: key)
-        SPClientSettings.main.setup(spotKey: spotId)
         SPClientSettings.darkModeBackgroundColor = #colorLiteral(red: 0.06274509804, green: 0.07058823529, blue: 0.2117647059, alpha: 1)
     }
 
@@ -118,6 +115,5 @@ private extension String {
     static var foxAuthenticationControllerId:       String { return "FoxAuthenticationViewController" }
     static var demoGenericSpotKeyForSSO:            String { return "sp_eCIlROSD" }
     static var demoFoxSpotKeyForSSO:                String { return "sp_ANQXRpqH" }
-    static var demoMainSpotKey:                     String { return "sp_ly3RvXf6" }
 }
 

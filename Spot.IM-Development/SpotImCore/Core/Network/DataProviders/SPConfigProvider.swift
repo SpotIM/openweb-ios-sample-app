@@ -8,51 +8,52 @@
 
 import Foundation
 import Alamofire
+import PromiseKit
 
 internal protocol SPConfigProvider {
-    func getConfigs(completion: @escaping (ConfigsCompletion) -> Void)
+    func fetchConfigs() -> Promise<Void>
 }
-
-typealias ConfigsCompletion = (appConfig: SPSpotConfiguration?, adsConfig: SPAdsConfiguration?, error: Error?)
 
 internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvider {
     
     /// app and ads configurations
-    func getConfigs(completion: @escaping (ConfigsCompletion) -> Void) {
-        guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-            completion((nil, nil, SPNetworkError.custom(message)))
-            return
-        }
-        let spRequest = SPConfigRequests.config(spotId: spotKey)
-
-        let headers = HTTPHeaders.basic(with: spotKey, postId: "")
-        
-        manager.execute(
-            request: spRequest,
-            parser: DecodableParser<SPSpotConfiguration>(),
-            headers: headers
-        ) { [weak self] result, response in
-            guard let self = self else { return }
+    func fetchConfigs() -> Promise<Void> {
+        return Promise<Void> { seal in
+            guard let spotKey = SPClientSettings.main.spotKey else {
+                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+                return seal.reject(SPNetworkError.custom(message))
+            }
+            let spRequest = SPConfigRequests.config(spotId: spotKey)
             
-            switch result {
-            case .success(let appConfig):
-                if appConfig.initialization?.monetized ?? false {
-                    self.getAdsConfig { (adsConfig, error) in
-                        completion((appConfig, adsConfig, nil))
+            let headers = HTTPHeaders.basic(with: spotKey)
+            
+            manager.execute(
+                request: spRequest,
+                parser: DecodableParser<SPSpotConfiguration>(),
+                headers: headers
+            ) { result, response in
+                switch result {
+                case .success(let appConfig):
+                    if appConfig.initialization?.monetized ?? false {
+                        self.getAdsConfig { (adsConfig, error) in
+                            SPConfigsDataSource.adsConfig = adsConfig
+                            SPConfigsDataSource.appConfig = appConfig
+                            seal.fulfill_()
+                        }
+                    } else {
+                        SPConfigsDataSource.appConfig = appConfig
+                        seal.fulfill_()
                     }
-                } else {
-                    completion((appConfig, nil, nil))
+                case .failure(let error):
+                    let rawReport = RawReportModel(
+                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                        parameters: nil,
+                        errorData: response.data,
+                        errorMessage: error.localizedDescription
+                    )
+                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    seal.reject(SpotImError.internalError(error.localizedDescription))
                 }
-            case .failure(let error):
-                let rawReport = RawReportModel(
-                    url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                    parameters: nil,
-                    errorData: response.data,
-                    errorMessage: error.localizedDescription
-                )
-                SPDefaultFailureReporter().sendFailureReport(rawReport)
-                completion((nil, nil, SPNetworkError.default))
             }
         }
     }
@@ -67,7 +68,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
         let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
         let hour = Int(Date.hourFormatter.string(from: Date()))!
         let params: [String: Any] = ["day": dayName, "hour": hour]
-        let headers = HTTPHeaders.basic(with: spotKey, postId: "")
+        let headers = HTTPHeaders.basic(with: spotKey)
         
         manager.execute(
             request: spRequest,

@@ -22,32 +22,37 @@ internal final class ArticleViewController: UIViewController {
     let foxArticleId = "urn:uri:base64:11ed1e55-b77b-505b-9ef5-5e42fbd9daed"
 
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let config = InputConfiguration(appLanguage: "en_US")
-        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self, inputConfiguration: config)
-        spotIMCoordinator?.setLayoutDelegate(delegate: self)
-
-        spotIMCoordinator?.preConversationController(
-            withPostId: postId ?? foxArticleId,
-            container: navigationController!,
-            completion: { [weak self] preConversationVC in
-
-                guard let self = self else { return }
-
-                self.addChild(preConversationVC)
-                self.containerView.addSubview(preConversationVC.view)
-
-                preConversationVC.view.layout {
-                    $0.top.equal(to: self.containerView.topAnchor)
-                    $0.leading.equal(to: self.containerView.leadingAnchor)
-                    $0.bottom.equal(to: self.containerView.bottomAnchor)
-                    $0.trailing.equal(to: self.containerView.trailingAnchor)
+        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { [weak self] (result) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let coordinator):
+                self.spotIMCoordinator = coordinator
+                coordinator.preConversationController(withPostId: self.postId ?? self.foxArticleId, navigationController: self.navigationController!) {
+                    [weak self] preConversationVC in
+                    
+                    guard let self = self else { return }
+                    
+                    self.addChild(preConversationVC)
+                    self.containerView.addSubview(preConversationVC.view)
+                    
+                    preConversationVC.view.layout {
+                        $0.top.equal(to: self.containerView.topAnchor)
+                        $0.leading.equal(to: self.containerView.leadingAnchor)
+                        $0.bottom.equal(to: self.containerView.bottomAnchor)
+                        $0.trailing.equal(to: self.containerView.trailingAnchor)
+                    }
+                    preConversationVC.didMove(toParent: self)
                 }
-                preConversationVC.didMove(toParent: self)
-        })
+            case .failure(let error):
+                print(error)
+            @unknown default:
+                fatalError("Got unknown result")
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -64,8 +69,7 @@ internal final class ArticleViewController: UIViewController {
 }
 
 extension ArticleViewController: SpotImSDKNavigationDelegate {
-    
-    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
+    func controllerForSSOFlow() -> UIViewController {
         let controller: AuthenticstionViewController = UIStoryboard(
             name: "Main",
             bundle: nil
@@ -74,7 +78,6 @@ extension ArticleViewController: SpotImSDKNavigationDelegate {
         
         return controller
     }
-    
 }
 
 extension ArticleViewController: SpotImLayoutDelegate {
@@ -83,8 +86,3 @@ extension ArticleViewController: SpotImLayoutDelegate {
     }
 }
 
-private extension String {
-    static var demoGenericSpotKeyForSSO: String { return "sp_eCIlROSD" }
-    static var demoFoxSpotKeyForSSO: String { return "sp_ANQXRpqH" }
-    static var demoMainSpotKey: String { return "sp_ly3RvXf6" }
-}

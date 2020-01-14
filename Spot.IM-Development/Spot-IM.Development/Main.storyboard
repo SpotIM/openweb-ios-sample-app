@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,7 +11,7 @@
         <!--Authenticstion View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="AuthenticstionViewController" id="BYZ-38-t0r" customClass="AuthenticstionViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthenticstionViewController" id="BYZ-38-t0r" customClass="AuthenticstionViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -167,7 +167,7 @@
         <!--Article View Controller-->
         <scene sceneID="gZq-Jd-NbV">
             <objects>
-                <viewController storyboardIdentifier="articleViewController" id="oc6-g4-D2s" customClass="ArticleViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="articleViewController" id="oc6-g4-D2s" customClass="ArticleViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ftL-P1-6zt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -238,7 +238,7 @@
         <!--View Controller-->
         <scene sceneID="a3e-oC-G0f">
             <objects>
-                <viewController id="COS-Sr-MbI" customClass="ViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="COS-Sr-MbI" customClass="ViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BKE-Ut-tNt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -351,7 +351,7 @@ Build: [unknown]</string>
         <!--Fox Authentication View Controller-->
         <scene sceneID="MDj-ZJ-CSk">
             <objects>
-                <viewController storyboardIdentifier="FoxAuthenticationViewController" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FoxAuthenticationViewController" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hKb-AP-Smg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -371,7 +371,7 @@ Build: [unknown]</string>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter your password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PJE-EF-e1t">
                                 <rect key="frame" x="50" y="249" width="275" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <textInputTraits key="textInputTraits" textContentType="password"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0yZ-rP-fQB">
                                 <rect key="frame" x="50" y="330" width="275" height="34"/>
@@ -419,7 +419,7 @@ Build: [unknown]</string>
         <!--Dark Mode Settings View Controller-->
         <scene sceneID="MLR-79-iDN">
             <objects>
-                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="DarkModeSettingsViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="DarkModeSettingsViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kR-Yk-fnP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -468,22 +468,6 @@ Build: [unknown]</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D4v-oL-etS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1365.5999999999999" y="-345.87706146926541"/>
-        </scene>
-        <!--Table View Footer Tester View Controller-->
-        <scene sceneID="xWR-7d-P3Q">
-            <objects>
-                <viewController id="YhO-Vq-JEV" customClass="TableViewFooterTesterViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="II3-dL-fVX">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="HCW-n1-UjU"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="sTP-NU-0UR"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6Mp-K5-Iz5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1484" y="1100.5997001499252"/>
         </scene>
     </scenes>
     <resources>
