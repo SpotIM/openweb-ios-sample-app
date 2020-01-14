@@ -49,7 +49,20 @@ internal final class ArticleWebViewController: UIViewController {
         view.backgroundColor = .groupTableViewBackground
         title = "Article"
         setup()
-        setupSpotView()
+        
+        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { result in
+            switch result {
+            case .success(let coordinator):
+                self.spotIMCoordinator = coordinator
+                coordinator.setLayoutDelegate(delegate: self)
+                self.setupSpotView()
+            case .failure(let error):
+                print("Failed to get flow coordinator: \(error)")
+            @unknown default:
+                fatalError()
+            }
+            
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,23 +71,20 @@ internal final class ArticleWebViewController: UIViewController {
     }
 
     private func setupSpotView() {
-        spotIMCoordinator?.preConversationController(
-            withPostId: postId,
-            container: navigationController!,
-            completion: { [weak self] preConversationVC in
-                guard let self = self else { return }
-                self.addChild(preConversationVC)
-                self.containerView.addSubview(preConversationVC.view)
-                preConversationVC.view.layout {
-                    $0.top.equal(to: self.containerView.topAnchor)
-                    $0.leading.equal(to: self.containerView.leadingAnchor)
-                    $0.bottom.equal(to: self.containerView.bottomAnchor)
-                    $0.trailing.equal(to: self.containerView.trailingAnchor)
-                }
-                
-                preConversationVC.didMove(toParent: self)
+        spotIMCoordinator?.preConversationController(withPostId: postId, navigationController: navigationController!) {
+            [weak self] preConversationVC in
+            guard let self = self else { return }
+            self.addChild(preConversationVC)
+            self.containerView.addSubview(preConversationVC.view)
+            preConversationVC.view.layout {
+                $0.top.equal(to: self.containerView.topAnchor)
+                $0.leading.equal(to: self.containerView.leadingAnchor)
+                $0.bottom.equal(to: self.containerView.bottomAnchor)
+                $0.trailing.equal(to: self.containerView.trailingAnchor)
             }
-        )
+            
+            preConversationVC.didMove(toParent: self)
+        }
     }
 }
 
@@ -155,13 +165,11 @@ extension ArticleWebViewController: WKNavigationDelegate {
 }
 
 extension ArticleWebViewController: SpotImSDKNavigationDelegate {
-    
-    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId) as! UIViewController & SSOAuthenticatable
+    func controllerForSSOFlow() -> UIViewController {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
         
         return controller
     }
-    
 }
 
 extension ArticleWebViewController: SpotImLayoutDelegate {

@@ -76,12 +76,15 @@ internal final class SPCommentFacade: SPCommentUpdater {
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
+            .log(level: .verbose)
             .responseData { response in
                 switch response.result {
                 case .success:
                     completion(true, nil)
                 case .failure:
                     completion(false, SPNetworkError.default)
+                @unknown default:
+                    completion(false, SPNetworkError.custom("Unknown response result"))
                 }
             }
     }
@@ -189,6 +192,9 @@ internal final class SPCommentFacade: SPCommentUpdater {
                     
                 case .failure:
                     failure(SPNetworkError.default)
+                    
+                @unknown default:
+                    failure(SPNetworkError.custom("Unknown response result"))
                 }
             }
     }
@@ -241,6 +247,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
+            .log(level: .simple)
             .responseData { _ in }
     }
     

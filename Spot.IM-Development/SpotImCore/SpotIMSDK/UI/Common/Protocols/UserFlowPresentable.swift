@@ -15,10 +15,7 @@ protocol UserAuthFlowDelegateContainable: class {
 }
 
 protocol UserAuthFlowDelegate: class {
-    
     func presentAuth()
-    func signOut()
-    
 }
 
 protocol UserPresentable: class {
@@ -73,7 +70,14 @@ extension UserPresentable where Self: UIViewController & AlertPresentable & User
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Log Out"),
             style: .destructive) { _ in
-                self.userAuthFlowDelegate?.signOut()
+                SpotIm.logout { result in
+                    switch result {
+                    case .success:
+                        print("Logout succeeded")
+                    case .failure(let error):
+                        print("Logout error: \(error)")
+                    }
+                }
         }
         
         let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),

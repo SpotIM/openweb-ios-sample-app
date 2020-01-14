@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 internal extension HTTPHeaders {
-    static func basic(with spotId: String, postId: String) -> HTTPHeaders {
+    static func basic(with spotId: String, postId: String = "default") -> HTTPHeaders {
         let iosVersion = UIDevice.current.systemVersion
         let frameworkVersion = Bundle.spot.shortVersion() ?? "na"
         let hostVerion = Bundle.main.shortVersion() ?? "na"

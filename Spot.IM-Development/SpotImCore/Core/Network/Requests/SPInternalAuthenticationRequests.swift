@@ -13,6 +13,8 @@ internal enum SPInternalAuthRequests: SPRequest {
     case guest
     case ssoStart
     case ssoComplete
+    case logout
+    case user
 
     internal var method: HTTPMethod {
         return .post
@@ -23,6 +25,8 @@ internal enum SPInternalAuthRequests: SPRequest {
         case .guest:        return "/user/login"
         case .ssoStart:     return "/user/sso/start"
         case .ssoComplete:  return "/user/sso/complete"
+        case .logout:       return "/user/logout"
+        case .user:         return "/user/data"
         }
     }
 

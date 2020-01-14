@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PromiseKit
 
 public class SPClientSettings {
     
@@ -21,6 +22,7 @@ public class SPClientSettings {
     private(set) var spotKey: String?
     private var configProvider: SPDefaultConfigProvider!
     
+    @available(*, deprecated, message: "Use SpotIm.initialize(spotId: String) instead")
     public func setup(spotKey: String?) {
         if self.spotKey != spotKey {
             self.spotKey = spotKey
@@ -34,13 +36,31 @@ public class SPClientSettings {
                     name: UIApplication.willEnterForegroundNotification,
                     object: nil)
             
-            configProvider.getConfigs { result in
-                SPConfigsDataSource.appConfig = result.appConfig
-                SPConfigsDataSource.adsConfig = result.adsConfig
+            firstly {
+                configProvider.fetchConfigs()
+            }.done {
+                
+            }.catch { error in
+                
             }
         }
     }
 
+    internal func setup(spotId: String) -> Promise<Void> {
+        self.spotKey = spotId
+        UIFont.loadAllFonts
+        
+        SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appMovedToForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil)
+        
+        return configProvider.fetchConfigs()
+    }
+    
     @objc
     public func appMovedToForeground(notification: Notification) {
         SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)

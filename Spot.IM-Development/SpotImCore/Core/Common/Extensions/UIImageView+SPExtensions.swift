@@ -49,6 +49,8 @@ internal extension UIImage {
                         }
                     case .failure(let error):
                         completion?(nil, error)
+                    @unknown default:
+                        completion?(nil, SPNetworkError.custom("Unknown response result"))
                     }
                 }
         }

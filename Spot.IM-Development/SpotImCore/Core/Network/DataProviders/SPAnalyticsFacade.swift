@@ -42,8 +42,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.isRegistered] = info.isRegistered
         parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
 
-        let headers = HTTPHeaders.basic(with: spotKey,
-                                        postId: "default")
+        let headers = HTTPHeaders.basic(with: spotKey)
         manager.execute(
             request: spRequest,
             parameters: parameters,

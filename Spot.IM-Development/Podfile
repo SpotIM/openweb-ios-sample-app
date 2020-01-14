@@ -13,6 +13,7 @@ abstract_target 'Shared' do
   use_frameworks!
 
   pod 'Alamofire', '~> 4.8.2'
+  pod 'PromiseKit/CorePromise', '~> 6.8'
 
   abstract_target 'DemoApps' do
     pod 'SnapKit', '~> 4.2.0'
@@ -48,9 +49,10 @@ end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
-      if target.name == 'Alamofire'
+      if target.name == 'Alamofire' || target.name == 'PromiseKit'
           target.build_configurations.each do |config|
               config.build_settings['BITCODE_GENERATION_MODE'] = 'bitcode'
+              config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
           end
       end
   end

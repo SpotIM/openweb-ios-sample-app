@@ -10,32 +10,18 @@
 import UIKit
 import SafariServices
 
-public protocol SSOAuthenticatable: class {
-    
-    var ssoAuthProvider: SPAuthenticationProvider { get }
-    
-}
-
-public protocol SSOAthenticationDelegate: class {
-    
+public protocol SSOAthenticationDelegate: AnyObject {
     func ssoFlowDidSucceed()
     func ssoFlowDidFail(with error: Error?)
+    func userLogout()
 }
 
-public protocol SpotImSDKNavigationDelegate: class {
-    
-    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable
-    
+public protocol SpotImSDKNavigationDelegate: AnyObject {
+    func controllerForSSOFlow() -> UIViewController
 }
 
-public protocol SpotImLayoutDelegate: class {
+public protocol SpotImLayoutDelegate: AnyObject {
     func viewHeightDidChange(to newValue: CGFloat)
-}
-
-extension SpotImSDKNavigationDelegate {
-    
-    func userDidBecomeUnauthorized() { /* empty default realization, in order to make this function optional */ }
-    
 }
 
 final public class SpotImSDKFlowCoordinator: Coordinator {
@@ -48,7 +34,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     private lazy var conversationUpdater: SPCommentUpdater = SPCommentFacade()
     
-    private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
+    private var sdkNavigationDelegate: SpotImSDKNavigationDelegate
     private weak var spotLayoutDelegate: SpotImLayoutDelegate?
     
     private var localCommentReplyDidCreate: ((SPComment) -> Void)?
@@ -64,7 +50,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let realTimeService: RealTimeService
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
-    public init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration? = nil) {
+    internal init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration? = nil) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager()
         apiManager = ApiManager()
@@ -81,9 +67,9 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     /// Please, provide container (UINavigationViewController) for sdk flows
     public func preConversationController(withPostId postId: String,
-                                          container: UINavigationController,
+                                          navigationController: UINavigationController,
                                           completion: @escaping (UIViewController) -> Void) {
-        containerViewController = container
+        containerViewController = navigationController
         
         if let config = SPConfigsDataSource.appConfig {
             if config.mobileSdk?.enabled ?? false {
@@ -270,25 +256,17 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
-    
-    internal func signOut() {
-        SPUserSessionHolder.resetUserSession()
-        authHandlers.forEach { $0.value?.authHandler?(false) }
-        sdkNavigationDelegate?.userDidBecomeUnauthorized()
-    }
-    
     internal func presentAuth() {
-        if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
-            controller.ssoAuthProvider.ssoAuthDelegate = self
-            let container = UINavigationController(rootViewController: controller)
-            let barItem = UIBarButtonItem(title: "Back",
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(hidePresentedViewController))
-            controller.navigationItem.setLeftBarButton(barItem, animated: false)
-            controller.modalPresentationStyle = .fullScreen
-            navigationController?.present(container, animated: true, completion: nil)
-        }
+        let controller = sdkNavigationDelegate.controllerForSSOFlow()
+        SpotIm.authProvider.ssoAuthDelegate = self
+        let container = UINavigationController(rootViewController: controller)
+        let barItem = UIBarButtonItem(title: "Back",
+                                      style: .plain,
+                                      target: self,
+                                      action: #selector(hidePresentedViewController))
+        controller.navigationItem.setLeftBarButton(barItem, animated: false)
+        controller.modalPresentationStyle = .fullScreen
+        navigationController?.present(container, animated: true, completion: nil)
     }
 }
 
@@ -320,5 +298,9 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     
     public func ssoFlowDidFail(with error: Error?) {
         hidePresentedViewController()
+    }
+    
+    public func userLogout() {
+        authHandlers.forEach { $0.value?.authHandler?(false) }
     }
 }

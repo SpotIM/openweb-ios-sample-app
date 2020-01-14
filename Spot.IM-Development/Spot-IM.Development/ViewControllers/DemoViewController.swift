@@ -43,9 +43,20 @@ class DemoArticlesList: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        spotIMCoordinator = SpotImSDKFlowCoordinator(delegate: self)
+        SpotIm.initialize(spotId: spotId)
+        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let coordinator):
+                self.spotIMCoordinator = coordinator
+            case .failure(let error):
+                print(error)
+            @unknown default:
+                fatalError()
+            }
+        }
 
-        SPClientSettings.main.setup(spotKey: spotId)
         setup()
         setupNavigationBar()
         
@@ -82,8 +93,8 @@ extension DemoArticlesList : ArticleTableViewCellDelegate {
         guard let post = post, let postId = postId(post: post) else { return }
         
         let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: "")
-        spotIMCoordinator?.setLayoutDelegate(delegate: articleViewController)
-        articleViewController.spotIMCoordinator = spotIMCoordinator
+        articleViewController.spotIMCoordinator = self.spotIMCoordinator
+        self.spotIMCoordinator?.setLayoutDelegate(delegate: articleViewController)
         self.navigationController?.pushViewController(articleViewController, animated: true)
     }
 }
@@ -115,10 +126,10 @@ extension DemoArticlesList {
 
 extension DemoArticlesList: SpotImSDKNavigationDelegate {
 
-    func controllerForSSOFlow() -> UIViewController & SSOAuthenticatable {
+    func controllerForSSOFlow() -> UIViewController {
         let storyboard = UIStoryboard(name: "Demo", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "DemoAuthVC")
-        return controller as! UIViewController & SSOAuthenticatable
+        return controller
     }
 
 }

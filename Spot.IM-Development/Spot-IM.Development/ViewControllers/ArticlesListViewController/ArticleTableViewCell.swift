@@ -11,7 +11,7 @@ import Cards
 import Kingfisher
 import SnapKit
 
-protocol ArticleTableViewCellDelegate: class {
+protocol ArticleTableViewCellDelegate: AnyObject {
     func articleCellTapped(cell:ArticleTableViewCell, withPost: Post?)
 }
 
