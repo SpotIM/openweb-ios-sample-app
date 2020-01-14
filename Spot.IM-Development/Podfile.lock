@@ -54,7 +54,15 @@ PODS:
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
   - Player (0.13.0)
+  - PromiseKit (6.12.0):
+    - PromiseKit/CorePromise (= 6.12.0)
+    - PromiseKit/Foundation (= 6.12.0)
+    - PromiseKit/UIKit (= 6.12.0)
   - PromiseKit/CorePromise (6.12.0)
+  - PromiseKit/Foundation (6.12.0):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.12.0):
+    - PromiseKit/CorePromise
   - Reveal-SDK (24)
   - SnapKit (4.2.0)
   - SwiftLint (0.34.0)
@@ -69,7 +77,7 @@ DEPENDENCIES:
   - GoogleUtilities (= 6.3.1)
   - Kingfisher
   - nanopb (= 0.3.901)
-  - PromiseKit/CorePromise (~> 6.8)
+  - PromiseKit (~> 6.8)
   - Reveal-SDK
   - SnapKit (~> 4.2.0)
   - SwiftLint (~> 0.34.0)
@@ -107,6 +115,6 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
 
-PODFILE CHECKSUM: 46aab48732d6c9a4a26150deca70b4aaafa6e9b1
+PODFILE CHECKSUM: 2f68f19c0259247bb073f9c716f49998e2b78fd1
 
 COCOAPODS: 1.8.4
