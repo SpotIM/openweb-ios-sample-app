@@ -47,7 +47,6 @@ post_install do |installer|
       if target.name == 'Alamofire' || target.name == 'PromiseKit' || target.name == 'Google-Mobile-Ads-SDK' || target.name == 'GoogleAppMeasurement' || target.name == 'GoogleUtilities' || target.name == 'nanopb' || target.name == 'Pods-Shared-SpotImCore'
           target.build_configurations.each do |config|
               config.build_settings['BITCODE_GENERATION_MODE'] = 'bitcode'
-              config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
           end
       end
   end
