@@ -37,22 +37,34 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
             parser: DecodableParser<SPUser>(),
             headers: headers
         ) { result, response in
-            let token = response.response?.allHeaderFields.authorizationHeader
-            switch result {
-            case .success(let user):
-                SPUserSessionHolder.updateSessionUser(user: user)
-                completion(token, nil)
-                
-            case .failure(let error):
+            let token = response.response?.allHeaderFields.authorizationHeader ?? SPUserSessionHolder.session.token
+            if token == nil {
                 let rawReport = RawReportModel(
                     url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
                     parameters: nil,
                     errorData: response.data,
-                    errorMessage: error.localizedDescription
+                    errorMessage: "Authorization header empty"
                 )
                 SPDefaultFailureReporter().sendFailureReport(rawReport)
-                completion(token, error)
+                completion(nil, SPNetworkError.default)
             }
+            
+            switch result {
+                case .success(let user):
+                    SPUserSessionHolder.updateSessionUser(user: user)
+                    completion(token, nil)
+                    
+                case .failure(let error):
+                    let rawReport = RawReportModel(
+                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                        parameters: nil,
+                        errorData: response.data,
+                        errorMessage: error.localizedDescription
+                    )
+                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    completion(token, error)
+                }
+            
         }
     }
     
