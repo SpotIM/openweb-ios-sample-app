@@ -18,6 +18,17 @@
 			name = "Package iOS";
 			productName = "Package iOS";
 		};
+		6D5DB15823CF5D73003F9D46 /* Package iOS with ads */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 6D5DB15A23CF5D73003F9D46 /* Build configuration list for PBXAggregateTarget "Package iOS with ads" */;
+			buildPhases = (
+				6D5DB15923CF5D73003F9D46 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Package iOS with ads";
+			productName = "Package iOS";
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -1734,6 +1745,7 @@
 				6D4E56E623A7A5F7005B79B6 /* Focus.de */,
 				6D4E571323A7B785005B79B6 /* MarketWatch */,
 				6D4E56B223A67298005B79B6 /* Package iOS */,
+				6D5DB15823CF5D73003F9D46 /* Package iOS with ads */,
 			);
 		};
 /* End PBXProject section */
@@ -2006,6 +2018,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		6D5DB15923CF5D73003F9D46 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\n# Setup\nWORKSPACE=\"Spot-IM.Development.xcworkspace\"\nFRAMEWORK_NAME=\"SpotImCore\"\nBUILD_DIR=\"${SRCROOT}/build\"\nOUTPUT_DIR=\"${SRCROOT}/Products/\"\nOUTPUT=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework\"\nCONFIGURATION=\"${CONFIGURATION}\"\n\nrm -rf \"${BUILD_DIR}\"\nrm -rf \"${OUTPUT}\"\nmkdir -p \"${OUTPUT_DIR}\"\n\n# Build the framework for device and for simulator (using all needed architectures).\nxcodebuild -workspace \"${WORKSPACE}\" -list\n\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator OBJROOT=\"${OBJROOT}/DependantBuilds\"\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch arm64 -arch armv7 only_active_arch=no defines_module=yes -sdk \"iphoneos\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos OBJROOT=\"${OBJROOT}/DependantBuilds\"\n\n# Copy the device version of framework to output.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\" \"${OUTPUT}\"\n\n# Replace the framework executable within the framework with a new version created by merging the device and simulator frameworks' executables with lipo.\nlipo -create -output \"${OUTPUT}/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# Copy the Swift module mappings for the simulator into the framework. The device mappings already exist from step 6.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${OUTPUT}/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# Add the iPhoneSimulator to the CFBundleSupportedPlatforms array\n/usr/libexec/PlistBuddy -c \"Add CFBundleSupportedPlatforms:1 string iPhoneSimulator\" \"${OUTPUT}/Info.plist\"\n\n# Delete build.\nrm -rf \"${BUILD_DIR}\"\n\n";
 		};
 		6DA75C88238D313600FBDF19 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3361,6 +3390,42 @@
 			};
 			name = ReleaseWithAds;
 		};
+		6D5DB15B23CF5D73003F9D46 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		6D5DB15C23CF5D73003F9D46 /* DebugWithAds */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = DebugWithAds;
+		};
+		6D5DB15D23CF5D73003F9D46 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		6D5DB15E23CF5D73003F9D46 /* ReleaseWithAds */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseWithAds;
+		};
 		6DA75C8A238D313600FBDF19 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D84F72C4DB0D4F4F9C3FE2E7 /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */;
@@ -3669,6 +3734,17 @@
 				6D4E573B23A7B785005B79B6 /* DebugWithAds */,
 				6D4E573C23A7B785005B79B6 /* Release */,
 				6D4E573D23A7B785005B79B6 /* ReleaseWithAds */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6D5DB15A23CF5D73003F9D46 /* Build configuration list for PBXAggregateTarget "Package iOS with ads" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D5DB15B23CF5D73003F9D46 /* Debug */,
+				6D5DB15C23CF5D73003F9D46 /* DebugWithAds */,
+				6D5DB15D23CF5D73003F9D46 /* Release */,
+				6D5DB15E23CF5D73003F9D46 /* ReleaseWithAds */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
