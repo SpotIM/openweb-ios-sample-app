@@ -386,7 +386,7 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
 
 private enum Theme {
     
-    static let postButtonBottom: CGFloat = 8.0
+    static let postButtonBottom: CGFloat = 28.0
     static let mainOffset: CGFloat = 16.0
     static let postButtonHeight: CGFloat = 32.0
     static let postButtonRadius: CGFloat = 5.0
