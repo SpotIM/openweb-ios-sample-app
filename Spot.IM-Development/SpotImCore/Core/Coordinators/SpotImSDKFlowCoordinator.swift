@@ -34,7 +34,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     private lazy var conversationUpdater: SPCommentUpdater = SPCommentFacade()
     
-    private var sdkNavigationDelegate: SpotImSDKNavigationDelegate
+    private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
     private weak var spotLayoutDelegate: SpotImLayoutDelegate?
     
     private var localCommentReplyDidCreate: ((SPComment) -> Void)?
@@ -257,16 +257,17 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 
 extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
     internal func presentAuth() {
-        let controller = sdkNavigationDelegate.controllerForSSOFlow()
-        SpotIm.authProvider.ssoAuthDelegate = self
-        let container = UINavigationController(rootViewController: controller)
-        let barItem = UIBarButtonItem(title: "Back",
-                                      style: .plain,
-                                      target: self,
-                                      action: #selector(hidePresentedViewController))
-        controller.navigationItem.setLeftBarButton(barItem, animated: false)
-        controller.modalPresentationStyle = .fullScreen
-        navigationController?.present(container, animated: true, completion: nil)
+        if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
+            SpotIm.authProvider.ssoAuthDelegate = self
+            let container = UINavigationController(rootViewController: controller)
+            let barItem = UIBarButtonItem(title: "Back",
+                                          style: .plain,
+                                          target: self,
+                                          action: #selector(hidePresentedViewController))
+            controller.navigationItem.setLeftBarButton(barItem, animated: false)
+            controller.modalPresentationStyle = .fullScreen
+            navigationController?.present(container, animated: true, completion: nil)
+        }
     }
 }
 
