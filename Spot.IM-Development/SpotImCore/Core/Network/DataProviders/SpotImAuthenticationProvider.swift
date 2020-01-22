@@ -32,6 +32,7 @@ internal class SpotImAuthenticationProvider {
         }
 
         public func startSSO(completion: @escaping AuthStratCompleteionHandler) {
+            SPUserSessionHolder.resetUserSession()
             internalAuthProvider.login { (token, error) in
                 if let error = error {
                     self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
@@ -44,6 +45,7 @@ internal class SpotImAuthenticationProvider {
         }
 
         public func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
+            SPUserSessionHolder.resetUserSession()
             internalAuthProvider.login { (token, error) in
                 if let error = error {
                     self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
