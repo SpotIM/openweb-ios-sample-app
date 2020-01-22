@@ -37,6 +37,11 @@ public enum SpotImResult<T> {
     }
 }
 
+public enum SpotImLoginStatus {
+    case guest
+    case loggedIn
+}
+
 extension SpotImResult where T == Void {
     static var success: SpotImResult {
         return .success(())
@@ -45,8 +50,10 @@ extension SpotImResult where T == Void {
 
 public class SpotIm {
     private static var configurationPromise: Promise<Void>?
+    private static var getUserPromise: Promise<SPUser>?
     private static let apiManager: ApiManager = ApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
+    internal static var currentUser: SPUser?
 
     /**
     Initialize the SDK
@@ -58,6 +65,7 @@ public class SpotIm {
      */
     public static func initialize(spotId: String) {
         configurationPromise = SPClientSettings.main.setup(spotId: spotId)
+        getUserPromise = authProvider.getUser()
     }
 
     /**
@@ -136,6 +144,31 @@ public class SpotIm {
         }
     }
 
+    /**
+     Get the currernt user login status
+     
+     The login status may be one of 2 options:
+     1. Guest - an unauthenticated session
+     2. LoggedIn - an authenticated session
+     - Parameter completion: A completion handler to receive the current login status of the user
+     */
+    public static func getUserLoginStatus(completion: @escaping ((SpotImResult<SpotImLoginStatus>) -> Void)) {
+        execute(call: {
+            if let user = currentUser {
+                completion(.success(user.registered ? SpotImLoginStatus.loggedIn : SpotImLoginStatus.guest))
+            } else {
+                authProvider.getUser().done { user in
+                    currentUser = user
+                    completion(.success(user.registered ? SpotImLoginStatus.loggedIn : SpotImLoginStatus.guest))
+                }.catch { error in
+                    completion(.failure(SpotImError.internalError(error.localizedDescription)))
+                }
+            }
+        }) { (error) in
+            completion(.failure(SpotImError.internalError(error.localizedDescription)))
+        }
+    }
+    
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
         execute(call: {
             firstly {
@@ -152,17 +185,19 @@ public class SpotIm {
 
     // MARK: Private
     private static func execute(call: @escaping () -> Void, failure: @escaping ((SpotImError) -> Void)) {
-        if let configurationPromise = configurationPromise {
+        if let configurationPromise = configurationPromise, let userPromise = getUserPromise {
             firstly {
                 configurationPromise
-            }.done {
+            }.then {
+                userPromise
+            }.done { user in
                 if let enabled = SPConfigsDataSource.appConfig?.mobileSdk?.enabled, enabled {
                     call()
                 } else {
                     Logger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
                 }
-            }.catch { (error) in
+            }.catch { error in
                 Logger.error("SpotIM SDK failed to load the configuration for spot id: \(SPClientSettings.main.spotKey ?? "NONE"), with error: \(error)")
                 if let spotError = error as? SpotImError {
                     failure(spotError)

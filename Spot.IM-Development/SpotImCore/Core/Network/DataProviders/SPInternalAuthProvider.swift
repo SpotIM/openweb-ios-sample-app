@@ -51,6 +51,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
             
             switch result {
                 case .success(let user):
+                    SpotIm.currentUser = user
                     SPUserSessionHolder.updateSessionUser(user: user)
                     completion(token, nil)
                     
@@ -128,6 +129,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
             ) { result, response in
                 switch result {
                 case .success(let user):
+                    SpotIm.currentUser = user
                     SPUserSessionHolder.updateSessionUser(user: user)
                     seal.fulfill(user)
                 case .failure(let error):
