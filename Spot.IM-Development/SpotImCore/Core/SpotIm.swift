@@ -124,6 +124,17 @@ public class SpotIm {
             completion(SpotImResult.failure(error))
         }
     }
+    
+    /**
+    Set your dark theme background color, so Spot.IM components background will match the background of the parent app
+     
+     - Parameter color: The parent app backgournd color for dark theme
+     */
+    public static var darkModeBackgroundColor: UIColor = SpotIm.darkModeBackgroundColor {
+        didSet {
+            SPClientSettings.darkModeBackgroundColor = SpotIm.darkModeBackgroundColor
+        }
+    }
 
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
         execute(call: {

@@ -72,7 +72,8 @@ public class SPClientSettings {
         }
         return nil
     }()
-    public static var darkModeBackgroundColor: UIColor = .mineShaft
+    
+    internal static var darkModeBackgroundColor: UIColor = .mineShaft
     
     deinit {
         NotificationCenter.default.removeObserver(self)
