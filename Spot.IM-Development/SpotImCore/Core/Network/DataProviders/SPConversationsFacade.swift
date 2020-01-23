@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import PromiseKit
 
 class NetworkDataProvider {
 
@@ -40,6 +41,8 @@ internal protocol SPConversationsDataProvider {
                   loadingStarted: (() -> Void)?,
                   completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void)
 
+    func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]>
+    
     func copy(modifyingOffset newOffset: Int?, hasNext: Bool?) -> SPConversationsDataProvider
 }
 
@@ -137,6 +140,49 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         }
     }
 
+    internal func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]> {
+        return Promise { seal in
+            let spRequest = SPConversationRequest.commentsCounters
+            guard let spotKey = SPClientSettings.main.spotKey else {
+                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+                seal.reject(SPNetworkError.custom(message))
+                return
+            }
+            
+            // TODO: (Fedin) make sting constants for this
+            let parameters: [String: Any] = [
+                "conversation_ids": conversationIds,
+            ]
+            let headers = HTTPHeaders.basic(
+                with: spotKey)
+
+            manager.execute(
+                request: spRequest,
+                parameters: parameters,
+                parser: DecodableParser<[String:[String: SPConversationCounters]]>(),
+                headers: headers
+            ) { (result, response) in
+                switch result {
+                case .success(let counters):
+                    if let dic = counters["counts"] {
+                        seal.fulfill(dic)
+                    } else {
+                        seal.reject(SPNetworkError.custom("Bad response: no key 'counts' in json"))
+                    }
+                case .failure(let error):
+                    let rawReport = RawReportModel(
+                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                        parameters: parameters,
+                        errorData: response.data,
+                        errorMessage: error.localizedDescription
+                    )
+                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    seal.reject(error)
+                }
+            }
+        }
+    }
+    
     func copy(modifyingOffset newOffset: Int? = defaultOffset,
               hasNext: Bool? = defaultHasNext) -> SPConversationsDataProvider {
         let copy = SPConversationsFacade(apiManager: manager)
