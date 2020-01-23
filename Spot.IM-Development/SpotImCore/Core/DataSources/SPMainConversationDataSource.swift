@@ -327,12 +327,11 @@ internal final class SPMainConversationDataSource {
         var clippedCellData = [[CommentViewModel]]()
         for section in cellData {
             let filteredSection = section.filter {
-                let isDeleted = $0.isDeleted
                 var isRoot = false
                 if let commentId = $0.commentId, let rootCommentId = $0.rootCommentId, commentId == rootCommentId {
                     isRoot = true
                 }
-                return isRoot && !isDeleted
+                return isRoot
             }
             if !filteredSection.isEmpty {
                 clippedCellData.append(filteredSection)
