@@ -79,6 +79,11 @@ final class SPMainConversationModel {
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
         dataSource = conversationDataSource
+        
+        dataSource.messageCounterUpdated = { [weak self] count in
+            self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }
+        }
+        
         dataSource.sortIsUpdated = { [weak self] in
             if let self = self {
                 self.sortOption = self.dataSource.sortMode ?? .newest
@@ -312,6 +317,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         let totalTypingCount: Int = realTimeData.data?.totalTypingCountForConversation(fullConversationId)
             ?? 0
         let totalCommentsCount: Int = self.liveTotalCommentsCount()
+        self.dataSource.messageCount = totalCommentsCount
         if shouldUserBeNotified {
             delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount) }
             if totalCommentsCount > 0 {

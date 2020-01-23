@@ -29,7 +29,8 @@ internal final class SPMainConversationDataSource {
     weak var delegate: SPMainConversationDataSourceDelegate?
 
     var sortIsUpdated: (() -> Void)?
-    var messageCount: Int?
+    var messageCounterUpdated: ((Int) -> Void)?
+    var messageCount: Int = 0
     var thumbnailUrl: URL?
     var conversationPublisherName: String?
     var conversationTitle: String?
@@ -145,7 +146,9 @@ internal final class SPMainConversationDataSource {
 
                 self.resetAllComments()
 
-                self.messageCount = response?.conversation?.messagesCount
+                self.messageCount = response?.conversation?.messagesCount ?? 0
+                self.messageCounterUpdated?(self.messageCount)
+                
                 self.thumbnailUrl = response?.extractData?.thumbnailUrl
                 self.conversationTitle = response?.extractData?.title
                 self.cellData = self.processed(response?.conversation?.comments)
@@ -188,7 +191,8 @@ internal final class SPMainConversationDataSource {
                 let insertedSections = self.insertedSections(with: processedComments.count)
                 self.cellData.append(contentsOf: processedComments)
 
-                self.messageCount = response?.conversation?.messagesCount
+                self.messageCount = response?.conversation?.messagesCount ?? 0
+                self.messageCounterUpdated?(self.messageCount)
 
                 completion(true, insertedSections, nil)
             }
@@ -737,8 +741,10 @@ extension SPMainConversationDataSource {
     }
     
     private func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
-        messageCount = (messageCount ?? 0) + 1
+        let updatedMessageCount = messageCount + 1
         if sortMode == .newest {
+            self.messageCount = updatedMessageCount
+            self.messageCounterUpdated?(updatedMessageCount)
             cellData.insert([viewModel], at: 0)
             cachedCommentReply = nil
             delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
@@ -755,6 +761,8 @@ extension SPMainConversationDataSource {
                     if dataModel == nil {                        
                         self.cellData.insert([viewModel], at: 0)
                         self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
+                        self.messageCount = updatedMessageCount
+                        self.messageCounterUpdated?(updatedMessageCount)
                     }
                     self.cachedCommentReply = nil
                 }

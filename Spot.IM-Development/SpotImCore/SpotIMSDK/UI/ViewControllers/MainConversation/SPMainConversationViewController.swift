@@ -86,11 +86,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         tableHeader.setAuthor(model.dataSource.conversationPublisherName)
 
         // for case when there are no data passed from the pre-conversation screen
-        if model.dataSource.messageCount ?? 0 <= 0 {
+        if model.dataSource.messageCount <= 0 {
             reloadFullConversation()
         } else {
             updateFooterView()
-            sortView.updateCommentsLabel(model.dataSource.messageCount ?? 0)
+            sortView.updateCommentsLabel(model.dataSource.messageCount)
         }
     }
 
@@ -108,8 +108,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         model.commentsCounterDelegates.add(delegate: self)
         
         totalTypingCountDidUpdate(count: model.typingCount())
-        if model.liveTotalCommentsCount() > 0 {
-            sortView.updateCommentsLabel(model.liveTotalCommentsCount())
+        if model.dataSource.messageCount > 0 {
+            sortView.updateCommentsLabel(model.dataSource.messageCount)
         }
         
         // scroll to pre-selected comment (tapped on the Pre-Conversation)
@@ -186,7 +186,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                 } else {
                     let messageCount = self.model.dataSource.messageCount
                     SPAnalyticsHolder.default.totalComments = messageCount
-                    self.sortView.updateCommentsLabel(messageCount ?? 0)
+                    self.sortView.updateCommentsLabel(messageCount)
                     
                     if self.model.areCommentsEmpty() {
                         self.showEmptyStateView()
@@ -428,7 +428,7 @@ extension SPMainConversationViewController { // SPMainConversationDataSourceDele
         if shouldBeScrolledToTop {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
-        sortView.updateCommentsLabel(model.dataSource.messageCount ?? 0)
+        sortView.updateCommentsLabel(model.dataSource.messageCount)
         tableView.reloadData()
     }
     

@@ -63,8 +63,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         super.viewDidAppear(animated)
         
         loadConversation()
-        if self.model.liveTotalCommentsCount() > 0 {
-            self.header.set(commentCount: self.model.liveTotalCommentsCount().decimalFormatted)
+        if self.model.dataSource.messageCount > 0 {
+            self.header.set(commentCount: self.model.dataSource.messageCount.decimalFormatted)
         }
     }
     
