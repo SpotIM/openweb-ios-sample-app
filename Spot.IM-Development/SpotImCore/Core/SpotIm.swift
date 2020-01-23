@@ -42,6 +42,11 @@ public enum SpotImLoginStatus {
     case loggedIn
 }
 
+public struct SpotImConversationCounters {
+    let comments: Int
+    let replies: Int
+}
+
 extension SpotImResult where T == Void {
     static var success: SpotImResult {
         return .success(())
@@ -53,6 +58,7 @@ public class SpotIm {
     private static var getUserPromise: Promise<SPUser>?
     private static let apiManager: ApiManager = ApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
+    private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     internal static var currentUser: SPUser?
 
     /**
@@ -129,6 +135,28 @@ public class SpotIm {
             let coordinator = SpotImSDKFlowCoordinator(delegate: navigationDelegate)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
+            completion(SpotImResult.failure(error))
+        }
+    }
+    
+    /**
+     Call this method to get the conversation counters (comments, replies) for a [post_id]
+     
+     - Parameter conversationIds: The conversations to get counters for
+     - Parameter completion: A completion handler to receive the  conversation counter
+     */
+    public static func getConversationCounters(conversationIds: [String], completion: @escaping ((SpotImResult<[String:SpotImConversationCounters]>) -> Void)) {
+        execute(call: {
+            conversationDataProvider.commnetsCounters(conversationIds: conversationIds).done { countersData in
+                let counters = Dictionary(uniqueKeysWithValues: countersData.map { key, value in
+                    (key, SpotImConversationCounters(comments: value.comments, replies: value.replies))
+                })
+    
+                completion(SpotImResult.success(counters))
+            }.catch { error in
+                completion(SpotImResult.failure(.internalError(error.localizedDescription)))
+            }
+        }) { error in
             completion(SpotImResult.failure(error))
         }
     }

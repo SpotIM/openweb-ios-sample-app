@@ -226,7 +226,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                 } else if success == false {
                     Logger.error("Load conversation next page request type is not `success`")
                 } else {
-                    self.sortView.updateCommentsLabel(self.model.dataSource.messageCount ?? 0)
+                    self.sortView.updateCommentsLabel(self.model.dataSource.messageCount)
                 }
                 
                 self.tableView.reloadData()

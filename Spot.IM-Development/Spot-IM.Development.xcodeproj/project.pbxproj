@@ -275,6 +275,7 @@
 		6D4E573323A7B785005B79B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
 		6D4E573423A7B785005B79B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D4E573623A7B785005B79B6 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */; };
 		6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
 		6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
@@ -656,6 +657,7 @@
 		6D4E571223A7A5F7005B79B6 /* Focus.de.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Focus.de.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/Focus.de.plist"; sourceTree = "<absolute>"; };
 		6D4E573E23A7B785005B79B6 /* Market Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Market Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D4E573F23A7B785005B79B6 /* MarketWatch.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = MarketWatch.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/MarketWatch.plist"; sourceTree = "<absolute>"; };
+		6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConversationCounters.swift; sourceTree = "<group>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Demo.storyboard; sourceTree = "<group>"; };
@@ -1305,6 +1307,7 @@
 				4454185723685154001D0ED0 /* SPConversation.swift */,
 				4454185323685154001D0ED0 /* SPConversationReadRM.swift */,
 				44689B7C237414850024EFC1 /* SPABData.swift */,
+				6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */,
 			);
 			path = Conversation;
 			sourceTree = "<group>";
@@ -2207,6 +2210,7 @@
 				44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */,
 				445418A723685154001D0ED0 /* UILabel+SPExtensions.swift in Sources */,
 				4454180123685144001D0ED0 /* BaseTextView.swift in Sources */,
+				6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */,
 				4454181623685144001D0ED0 /* SPCommentCell.swift in Sources */,
 				445418A123685154001D0ED0 /* SPConversation.swift in Sources */,
 				4454181323685144001D0ED0 /* SPEmptyConversationActionView.swift in Sources */,

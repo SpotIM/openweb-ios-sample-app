@@ -18,6 +18,7 @@ internal enum SPConversationRequest: SPRequest {
     case commentUpdate
     case commentDelete
     case commentRankChange
+    case commentsCounters
 
     internal var method: HTTPMethod {
         switch self {
@@ -28,6 +29,7 @@ internal enum SPConversationRequest: SPRequest {
         case .commentRankChange: return .post
         case .commentReport: return .post
         case .commentShare: return .post
+        case .commentsCounters: return .post
         }
     }
 
@@ -38,6 +40,7 @@ internal enum SPConversationRequest: SPRequest {
         case .commentRankChange: return "/conversation/rank/message"
         case .commentReport: return "/conversation/report/message"
         case .commentShare:return "/conversation/message/share"
+        case .commentsCounters: return "/conversation/count"
         }
     }
 
