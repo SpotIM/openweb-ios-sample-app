@@ -121,8 +121,7 @@ final class SPMainConversationModel {
     }
     
     func areCommentsEmpty() -> Bool {
-        return dataSource.messageCount == 0 ||
-            dataSource.messageCount == nil
+        return dataSource.messageCount == 0 && pendingComment == nil
     }
     
     func changeRank(with actionModel: RankActionDataModel, completion: @escaping BooleanCompletion) {
