@@ -50,7 +50,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let realTimeService: RealTimeService
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
-    internal init(delegate: SpotImSDKNavigationDelegate, inputConfiguration: InputConfiguration? = nil) {
+    internal init(delegate: SpotImSDKNavigationDelegate, localeId: String?) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager()
         apiManager = ApiManager()
@@ -58,7 +58,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
         
         configureAPIAndRealTimeHandlers()
-        LocalizationManager.updateLocalizationConfiguration(inputConfiguration)
+        
+        if let localeId = localeId {
+            LocalizationManager.setLocale(localeId)
+        }
     }
 
     public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
@@ -67,43 +70,18 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     /// Please, provide container (UINavigationViewController) for sdk flows
     public func preConversationController(withPostId postId: String,
+                                          numberOfPreLoadedMessages: Int = 2,
                                           navigationController: UINavigationController,
                                           completion: @escaping (UIViewController) -> Void) {
         containerViewController = navigationController
-        
-        if let config = SPConfigsDataSource.appConfig {
-            if config.mobileSdk?.enabled ?? false {
-                LocalizationManager.setLocale(config.mobileSdk?.locale)
-                buildPreConversationController(with: postId, completion: completion)
-            }
-        } else {
-            self.postId = postId
-            configCompletion = completion
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(respondToConfigUpdate),
-                name: .spotIMConfigLoaded,
-                object: nil
-            )
-        }
-    }
-
-    @objc
-    private func respondToConfigUpdate() {
-        if let config = SPConfigsDataSource.appConfig, (config.mobileSdk?.enabled ?? false), let postId = postId, let completion = configCompletion {
-            LocalizationManager.setLocale(config.mobileSdk?.locale)
-            buildPreConversationController(with: postId, completion: completion)
-        }
-
-        self.postId = nil
-        configCompletion = nil
+        buildPreConversationController(with: postId, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
 
     private func startFlow(with controller: SPMainConversationViewController) {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    private func buildPreConversationController(with postId: String, completion: @escaping (UIViewController) -> Void) {
+    private func buildPreConversationController(with postId: String, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
         SPAnalyticsHolder.default.prepareForNewPage()
 
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
@@ -120,7 +98,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         )
         self.conversationModel = conversationModel
         realTimeService.delegate = self.conversationModel
-        let controller = SPPreConversationViewController(model: conversationModel)
+        let controller = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages)
         self.conversationModel.delegates.add(delegate: controller)
         self.conversationModel.commentsCounterDelegates.add(delegate: controller)
         controller.adsProvider = adsManager.adsProvider()

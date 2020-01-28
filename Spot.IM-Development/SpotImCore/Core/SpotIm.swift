@@ -147,7 +147,7 @@ public class SpotIm {
      */
     public static func createSpotImFlowCoordinator(navigationDelegate: SpotImSDKNavigationDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
         execute(call: {
-            let coordinator = SpotImSDKFlowCoordinator(delegate: navigationDelegate)
+            let coordinator = SpotImSDKFlowCoordinator(delegate: navigationDelegate, localeId: SPConfigsDataSource.appConfig?.mobileSdk?.locale)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
             completion(SpotImResult.failure(error))
