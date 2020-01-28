@@ -53,12 +53,21 @@ extension SpotImResult where T == Void {
     }
 }
 
+internal let NUM_OF_RETRIES: UInt = 3
+
+private struct InitResult {
+    let config: SpotConfig
+    let user: SPUser
+}
+
 public class SpotIm {
-    private static var configurationPromise: Promise<Void>?
-    private static var getUserPromise: Promise<SPUser>?
+    private static var initPormise: Promise<InitResult>?
+    private static var configurationPromise: Promise<SpotConfig>?
+    private static var userPromise: Promise<SPUser>?
     private static let apiManager: ApiManager = ApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
+    private static var spotId: String?
     internal static var currentUser: SPUser?
 
     /**
@@ -70,8 +79,14 @@ public class SpotIm {
      - Parameter spotId: The SpotId you got from Spot.IM, if you don't have one contact Spot.IM
      */
     public static func initialize(spotId: String) {
-        configurationPromise = SPClientSettings.main.setup(spotId: spotId)
-        getUserPromise = authProvider.getUser()
+        if SpotIm.spotId == nil {
+            SpotIm.spotId = spotId
+            getInitPormise(spotId: spotId).ensure {
+                SPClientSettings.main.sendAppInitEvent()
+            }.catch { error in
+                Logger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
+            }
+        }
     }
 
     /**
@@ -213,20 +228,16 @@ public class SpotIm {
 
     // MARK: Private
     private static func execute(call: @escaping () -> Void, failure: @escaping ((SpotImError) -> Void)) {
-        if let configurationPromise = configurationPromise, let userPromise = getUserPromise {
-            firstly {
-                configurationPromise
-            }.then {
-                userPromise
-            }.done { user in
-                if let enabled = SPConfigsDataSource.appConfig?.mobileSdk?.enabled, enabled {
+        if let spotId = SpotIm.spotId {
+            getInitPormise(spotId: spotId).done { initResult in
+                if let enabled = initResult.config.appConfig.mobileSdk?.enabled, enabled {
                     call()
                 } else {
                     Logger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
                 }
             }.catch { error in
-                Logger.error("SpotIM SDK failed to load the configuration for spot id: \(SPClientSettings.main.spotKey ?? "NONE"), with error: \(error)")
+                Logger.verbose("FAILED!!!!")
                 if let spotError = error as? SpotImError {
                     failure(spotError)
                 } else {
@@ -237,5 +248,54 @@ public class SpotIm {
             Logger.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
             failure(SpotImError.notInitialized)
         }
+    }
+    
+    private static func getConfigPromise(spotId: String) -> Promise<SpotConfig> {
+        if let configurationPromise = configurationPromise, !configurationPromise.isRejected {
+            return configurationPromise
+        }
+        
+        return attempt {
+            let result = SPClientSettings.main.setup(spotId: spotId)
+            configurationPromise = result
+            return result
+        }
+    }
+    
+    private static func getUserPromise() -> Promise<SPUser> {
+        if let userPromise = userPromise, !userPromise.isRejected {
+            return userPromise
+        }
+        
+        return attempt {
+            let result = authProvider.getUser()
+            userPromise = result
+            return result
+        }
+    }
+    
+    private static func getInitPormise(spotId: String) -> Promise<InitResult> {
+        if let initPromise = SpotIm.initPormise, !initPromise.isRejected {
+            return initPromise
+        }
+        
+        let initPromise = getConfigPromise(spotId: spotId).then { config in
+            getUserPromise().map { InitResult(config: config, user: $0) }
+        }
+        
+        SpotIm.initPormise = initPromise
+        return initPromise
+    }
+    
+    private static func attempt<T>(retries: UInt = NUM_OF_RETRIES, delayBeforeRetry: DispatchTimeInterval = .seconds(1), _ body: @escaping () -> Promise<T>) -> Promise<T> {
+        var attempts = 0
+        func attempt() -> Promise<T> {
+            attempts += 1
+            return body().recover { error -> Promise<T> in
+                guard attempts < retries else { throw error }
+                return after(delayBeforeRetry).then(on: nil, attempt)
+            }
+        }
+        return attempt()
     }
 }

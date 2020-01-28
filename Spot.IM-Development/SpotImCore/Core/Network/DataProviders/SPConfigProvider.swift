@@ -11,14 +11,18 @@ import Alamofire
 import PromiseKit
 
 internal protocol SPConfigProvider {
-    func fetchConfigs() -> Promise<Void>
+    func fetchConfigs() -> Promise<SpotConfig>
 }
 
+internal struct SpotConfig {
+    let appConfig: SPSpotConfiguration
+    let adsConfig: SPAdsConfiguration?
+}
 internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvider {
     
     /// app and ads configurations
-    func fetchConfigs() -> Promise<Void> {
-        return Promise<Void> { seal in
+    func fetchConfigs() -> Promise<SpotConfig> {
+        return Promise<SpotConfig> { seal in
             guard let spotKey = SPClientSettings.main.spotKey else {
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
                 return seal.reject(SPNetworkError.custom(message))
@@ -38,11 +42,11 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                         self.getAdsConfig { (adsConfig, error) in
                             SPConfigsDataSource.adsConfig = adsConfig
                             SPConfigsDataSource.appConfig = appConfig
-                            seal.fulfill_()
+                            seal.fulfill(SpotConfig(appConfig: appConfig, adsConfig: adsConfig))
                         }
                     } else {
                         SPConfigsDataSource.appConfig = appConfig
-                        seal.fulfill_()
+                        seal.fulfill(SpotConfig(appConfig: appConfig, adsConfig: nil))
                     }
                 case .failure(let error):
                     let rawReport = RawReportModel(
