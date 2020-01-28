@@ -28,7 +28,7 @@ public class SPClientSettings {
             self.spotKey = spotKey
             UIFont.loadAllFonts
             
-            SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
+            sendAppInitEvent()
 
             NotificationCenter.default.addObserver(
                     self,
@@ -38,7 +38,7 @@ public class SPClientSettings {
             
             firstly {
                 configProvider.fetchConfigs()
-            }.done {
+            }.done { _ in
                 
             }.catch { error in
                 
@@ -46,11 +46,9 @@ public class SPClientSettings {
         }
     }
 
-    internal func setup(spotId: String) -> Promise<Void> {
+    internal func  setup(spotId: String) -> Promise<SpotConfig> {
         self.spotKey = spotId
         UIFont.loadAllFonts
-        
-        SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
         
         NotificationCenter.default.addObserver(
             self,
@@ -59,6 +57,10 @@ public class SPClientSettings {
             object: nil)
         
         return configProvider.fetchConfigs()
+    }
+    
+    internal func sendAppInitEvent() {
+        SPAnalyticsHolder.default.log(event: .appInit, source: .mainPage)
     }
     
     @objc

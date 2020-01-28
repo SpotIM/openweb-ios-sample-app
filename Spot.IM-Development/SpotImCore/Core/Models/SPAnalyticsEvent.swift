@@ -28,6 +28,7 @@ internal enum SPAnalyticsEvent: Equatable {
         messageId: String,
         relatedMessageId: String?
     )
+    case appInit
     case appOpened                                  
     case appClosed                                  
     case sortByOpened                               
@@ -62,6 +63,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "load-more-replies-clicked"
         case .hideMoreRepliesClicked:
             return "hide-more-replies-clicked"
+        case .appInit:
+            return "app-initialized"
         case .appOpened:
             return "app-opened"
         case .appClosed:
