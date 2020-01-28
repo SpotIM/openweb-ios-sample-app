@@ -29,8 +29,8 @@ final class LocalizationManager {
     }
     
     /// Update with locale from client app config `InputConfiguration`
-    static func updateLocalizationConfiguration(_ config: InputConfiguration?) {
-        guard let config = config, !isConfigured else { return }
+    static func updateLocalizationConfiguration(_ config: InputConfiguration) {
+        guard !isConfigured else { return }
         
         isConfigured = true
         currentLanguage = config.language
@@ -38,9 +38,7 @@ final class LocalizationManager {
     }
     
     /// Update with locale from server config
-    static func setLocale(_ localeId: String?) {
-        guard let localeId = localeId else { return }
-        
+    static func setLocale(_ localeId: String) {        
         let config = InputConfiguration(appLanguage: localeId)
         updateLocalizationConfiguration(config)
     }

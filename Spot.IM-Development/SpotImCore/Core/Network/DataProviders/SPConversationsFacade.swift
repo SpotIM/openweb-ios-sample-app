@@ -53,7 +53,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
 
     internal var imageURLProvider: SPImageURLProvider?
 
-    private let pageSize = 10
+    private let pageSize = 15
     private var offset = defaultOffset
 
     internal var isLoading = false

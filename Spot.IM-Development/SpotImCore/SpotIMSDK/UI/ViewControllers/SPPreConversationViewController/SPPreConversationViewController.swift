@@ -10,6 +10,8 @@ import UIKit
 
 internal final class SPPreConversationViewController: SPBaseConversationViewController {
 
+    private let PRE_LOADED_MESSAGES_MAX_NUM = 15
+    
     var adsProvider: AdsProvider? {
         didSet {
             adsProvider?.delegate = self
@@ -24,7 +26,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private var tableViewHeightConstraint: NSLayoutConstraint?
 
     private var checkTableViewHeight: CGFloat = 0
-    private let maxSectionCount: Int = 2
+    private let maxSectionCount: Int
     private let readingTracker = SPReadingTracker()
     internal var dataLoaded: (() -> Void)?
     
@@ -42,7 +44,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     // MARK: - Overrides
-
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int) {
+        self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
+        
+        super.init(model: model)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
