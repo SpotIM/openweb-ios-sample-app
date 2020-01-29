@@ -14,7 +14,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     var adsProvider: AdsProvider? {
         didSet {
-            adsProvider?.delegate = self
+            adsProvider?.bannerDelegate = self
+            adsProvider?.interstitialDelegate = self
         }
     }
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
@@ -290,15 +291,21 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         guard
             let adsConfig = SPConfigsDataSource.adsConfig,
             let tags = adsConfig.tags,
-            model.adsGroup() != nil
+            model.adsGroup() != nil,
+            model.adsGroup() != ABGroup.fourth
             else { return }
         
         for tag in tags {
             guard let adsId = tag.code else { break }
             switch tag.adType {
             case .banner:
+                SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
+                SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
+                
                 adsProvider?.setupAdsBanner(with: adsId, in: self)
             case .interstitial:
+                SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
+                SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
                 adsProvider?.setupInterstitial(with: adsId)
             default:
                 break
@@ -371,20 +378,35 @@ extension SPPreConversationViewController { // SPCommentCellDelegate
 
 }
 
-extension SPPreConversationViewController: AdsProviderDelegate {
-    
-    func bannerAdDidLoad(adBannerSize: CGSize) {
+extension SPPreConversationViewController: AdsProviderBannerDelegate {
+    func bannerLoaded(adBannerSize: CGSize) {
         guard let bannerView = adsProvider?.bannerView else { return }
         
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
         footerView.updateBannerView(bannerView, height: adBannerSize.height)
+    }
+    
+    func bannerFailedToLoad() {
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed), source: .conversation)
+    }
+}
+
+extension SPPreConversationViewController: AdsProviderInterstitialDelegate {
+    func interstitialLoaded() {
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
     }
     
     func interstitialWillBeShown() {
         AdsManager.willShowInterstitial(for: model.dataSource.conversationId)
     }
     
-    func interstitialDidDismiss() { }
+    func interstitialDidDismiss() {
+        
+    }
     
+    func interstitialFailedToLoad() {
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed), source: .conversation)
+    }
 }
 
 extension SPPreConversationViewController: CommentsCounterDelegate {

@@ -40,6 +40,7 @@ internal enum SPAnalyticsEvent: Equatable {
     )
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
+    case engineStatus(SPEngineStatusType)
 
     var kebabValue: String {
         switch self {
@@ -79,6 +80,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "back-clicked"
         case .loadMoreComments:
             return "load-more-comments-clicked"
+        case .engineStatus:
+            return "engine_status"
         }
     }
 }
@@ -144,6 +147,26 @@ internal enum SPAnItemType: String, SPKebabable {
             return "comment"
         case .reply:
             return "reply"
+        }
+    }
+}
+
+internal enum SPEngineStatusType: String, SPKebabable {
+    case engineMonitizationLoad
+    case engineWillInitialize
+    case engineInitialized
+    case engineInitilizeFailed
+    
+    var kebabValue: String {
+        switch self {
+        case .engineMonitizationLoad:
+            return "engine-monetization-load"
+        case .engineWillInitialize:
+            return "engine-will-initialize"
+        case .engineInitialized:
+            return "engine-initialized"
+        case .engineInitilizeFailed:
+            return "engine-initialize-error"
         }
     }
 }

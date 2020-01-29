@@ -27,7 +27,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     
     var adsProvider: AdsProvider? {
         didSet {
-            adsProvider?.delegate = self
+            adsProvider?.bannerDelegate = self
         }
     }
         
@@ -291,6 +291,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             guard let adsId = tag.code else { break }
             switch tag.adType {
             case .banner:
+                SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
+                SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
                 adsProvider?.setupAdsBanner(with: adsId, in: self)
             default:
                 break
@@ -519,22 +521,21 @@ extension SPMainConversationViewController { // Article header scrolling logic
     }
 }
 
-extension SPMainConversationViewController: AdsProviderDelegate {
-    
-    func bannerAdDidLoad(adBannerSize: CGSize) {
+extension SPMainConversationViewController: AdsProviderBannerDelegate {
+    func bannerLoaded(adBannerSize: CGSize) {
         guard
             let bannerView = adsProvider?.bannerView,
             model.adsGroup() == .third
             else { return }
         
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
         footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
         footer.updateBannerView(bannerView, height: adBannerSize.height)
     }
     
-    func interstitialWillBeShown() {}
-    
-    func interstitialDidDismiss() {}
-    
+    func bannerFailedToLoad() {
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed), source: .conversation)
+    }
 }
 
 extension SPMainConversationViewController: CommentsCounterDelegate {

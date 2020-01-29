@@ -8,12 +8,16 @@
 
 import UIKit
 
-internal protocol AdsProviderDelegate: class {
-    
-    func bannerAdDidLoad(adBannerSize: CGSize)
-    
+internal protocol AdsProviderBannerDelegate: class {
+    func bannerLoaded(adBannerSize: CGSize)
+    func bannerFailedToLoad()
+}
+
+internal protocol AdsProviderInterstitialDelegate: class {
+    func interstitialLoaded()
     func interstitialWillBeShown()
     func interstitialDidDismiss()
+    func interstitialFailedToLoad()
 }
 
 internal enum ABGroup: String, CaseIterable {
@@ -23,6 +27,8 @@ internal enum ABGroup: String, CaseIterable {
     case second = "B"
     /// Banner on preconversation screen + sticky banner on main conversation screen
     case third = "C"
+    /// No banners should be shown
+    case fourth = "D"
 }
 
 internal protocol AdsProvider: class {
@@ -34,13 +40,19 @@ internal protocol AdsProvider: class {
     func showInterstitial(in controller: UIViewController) -> Bool
     
     var bannerView: BaseView { get }
-    var delegate: AdsProviderDelegate? { get set }
+    var bannerDelegate: AdsProviderBannerDelegate? { get set }
+    var interstitialDelegate: AdsProviderInterstitialDelegate? { get set }
 }
 
 internal final class AdsManager {
 
     private static var adsViewTracker: SPAdsViewTracker = .init()
-
+    private let spotId: String
+    
+    init(spotId: String) {
+        self.spotId = spotId
+    }
+    
     static func shouldShowInterstitial(for conversationId: String?) -> Bool {
         return !adsViewTracker.isViewedConversation(with: conversationId)
     }
@@ -51,7 +63,7 @@ internal final class AdsManager {
 
     func adsProvider() -> AdsProvider {
         #if canImport(GoogleMobileAds)
-        return GoogleAdsProvider()
+        return GoogleAdsProvider(spotId: self.spotId)
         #else
         return DefaultAdsProvider()
         #endif

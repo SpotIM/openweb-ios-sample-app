@@ -81,6 +81,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         var relatedMessageId: String?
         var itemId: String?
         var reading: Int?
+        var engineStatusType: String?
 
         switch event {
         case .loginClicked(let newTargetType):
@@ -106,6 +107,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             itemId = authorId
         case .sortByClicked(let sortMode):
             targetType = sortMode.kebabValue
+        case .engineStatus(let statusType):
+            engineStatusType = statusType.kebabValue
         default:
             break
         }
@@ -125,7 +128,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
                                   relatedMessageId: relatedMessageId,
                                   readingSeconds: reading,
                                   itemId: itemId,
-                                  totalComments: totalComments)
+                                  totalComments: totalComments,
+                                  engineStatusType: engineStatusType)
         return info
     }
 
