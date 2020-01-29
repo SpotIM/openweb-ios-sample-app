@@ -28,12 +28,14 @@ internal final class ArticleWebViewController: UIViewController {
     let postId: String
     let url: String
     let authenticationControllerId: String
+    let metadata: SpotImArticleMetadata
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
-    init(spotId: String, postId: String, url: String, authenticationControllerId: String) {
+    init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
+        self.metadata = metadata
         self.url = url
         self.authenticationControllerId = authenticationControllerId
         super.init(nibName: nil, bundle: nil)
@@ -71,7 +73,7 @@ internal final class ArticleWebViewController: UIViewController {
     }
 
     private func setupSpotView() {
-        spotIMCoordinator?.preConversationController(withPostId: postId, navigationController: navigationController!) {
+        spotIMCoordinator?.preConversationController(withPostId: postId, articleMetadata: metadata, navigationController: navigationController!) {
             [weak self] preConversationVC in
             guard let self = self else { return }
             self.addChild(preConversationVC)

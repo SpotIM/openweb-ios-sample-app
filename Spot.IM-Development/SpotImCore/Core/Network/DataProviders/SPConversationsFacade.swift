@@ -42,7 +42,7 @@ internal protocol SPConversationsDataProvider {
                   completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void)
 
     func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]>
-    
+    func conversationAsync(articleUrl: String)
     func copy(modifyingOffset newOffset: Int?, hasNext: Bool?) -> SPConversationsDataProvider
 }
 
@@ -179,6 +179,40 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                     SPDefaultFailureReporter().sendFailureReport(rawReport)
                     seal.reject(error)
                 }
+            }
+        }
+    }
+    
+    internal func conversationAsync(articleUrl: String) {
+        let spRequest = SPConversationRequest.conversationAsync
+        guard let spotKey = SPClientSettings.main.spotKey else {
+            return
+        }
+        
+        // TODO: (Fedin) make sting constants for this
+        let parameters: [String: Any] = [
+            "host_url": articleUrl
+        ]
+        let headers = HTTPHeaders.basic(
+            with: spotKey)
+        
+        manager.execute(
+            request: spRequest,
+            parameters: parameters,
+            parser: EmptyParser(),
+            headers: headers
+        ) { (result, response) in
+            switch result {
+            case .success:
+                Logger.verbose("Succesfully sent conversation async")
+            case .failure(let error):
+                let rawReport = RawReportModel(
+                    url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                    parameters: parameters,
+                    errorData: response.data,
+                    errorMessage: error.localizedDescription
+                )
+                SPDefaultFailureReporter().sendFailureReport(rawReport)
             }
         }
     }

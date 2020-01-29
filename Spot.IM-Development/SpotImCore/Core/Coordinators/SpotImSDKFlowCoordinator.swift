@@ -70,23 +70,25 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     /// Please, provide container (UINavigationViewController) for sdk flows
     public func preConversationController(withPostId postId: String,
+                                          articleMetadata: SpotImArticleMetadata,
                                           numberOfPreLoadedMessages: Int = 2,
                                           navigationController: UINavigationController,
                                           completion: @escaping (UIViewController) -> Void) {
         containerViewController = navigationController
-        buildPreConversationController(with: postId, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
+        buildPreConversationController(with: postId, articleMetadata: articleMetadata, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
 
     private func startFlow(with controller: SPMainConversationViewController) {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    private func buildPreConversationController(with postId: String, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
+    private func buildPreConversationController(with postId: String, articleMetadata: SpotImArticleMetadata, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
         SPAnalyticsHolder.default.prepareForNewPage()
 
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
         let conversationDataSource = SPMainConversationDataSource(
             with: postId,
+            hostUrl: articleMetadata.url,
             dataProvider: conversationDataProvider
         )
         conversationDataProvider.imageURLProvider = imageProvider

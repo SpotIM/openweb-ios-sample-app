@@ -31,7 +31,8 @@ internal final class ArticleViewController: UIViewController {
             switch result {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
-                coordinator.preConversationController(withPostId: self.postId ?? self.foxArticleId, navigationController: self.navigationController!) {
+                
+                coordinator.preConversationController(withPostId: self.postId ?? self.foxArticleId, articleMetadata: SpotImArticleMetadata(url: "", title: "", subtitle: "", thumbnailUrl: ""), navigationController: self.navigationController!) {
                     [weak self] preConversationVC in
                     
                     guard let self = self else { return }

@@ -30,12 +30,14 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     let url: String
     let authVCId: String
     var commentViewHeight: CGFloat = 0
+    let metadata: SpotImArticleMetadata
     
-    init(spotId: String, postId: String, url: String, authenticationControllerId: String) {
+    init(spotId: String, postId: String, metadata: SpotImArticleMetadata, url: String, authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
         self.url = url
         self.authVCId = authenticationControllerId
+        self.metadata = metadata
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -114,7 +116,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         }
         
         self.setupSpotIM = true
-        spotIMCoordinator?.preConversationController(withPostId: self.postId, navigationController: navigationController!) { preConversationVC in
+        spotIMCoordinator?.preConversationController(withPostId: self.postId, articleMetadata: self.metadata, navigationController: navigationController!) { preConversationVC in
             preConversationVC.view.translatesAutoresizingMaskIntoConstraints = false
             self.addChild(preConversationVC)
             self.spotIMContainerView.addSubview(preConversationVC.view)
