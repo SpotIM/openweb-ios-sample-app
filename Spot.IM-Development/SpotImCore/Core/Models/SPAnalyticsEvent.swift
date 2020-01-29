@@ -91,11 +91,11 @@ internal enum SPAnSource: String {
     var kebabValue: String {
         switch self {
         case .launcher:
-            return "launcher"
+            return "launcher-sdk"
         case .conversation:
-            return "conversation"
+            return "conversation-sdk"
         case .mainPage:
-            return "main-page"
+            return "main-page-sdk"
         }
     }
 }
