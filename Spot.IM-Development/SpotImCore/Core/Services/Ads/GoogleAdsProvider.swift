@@ -10,15 +10,17 @@ import UIKit
 import GoogleMobileAds
 
 final class GoogleAdsProvider: NSObject, AdsProvider {
-    
     let bannerView: BaseView = .init()
-    weak var delegate: AdsProviderDelegate?
+    weak var bannerDelegate: AdsProviderBannerDelegate?
+    weak var interstitialDelegate: AdsProviderInterstitialDelegate?
     
     private var banner: DFPBannerView?
     private var interstitial: DFPInterstitial?
     private let bannerSize: GADAdSize = kGADAdSizeBanner
+    private let spotId: String
     
-    override init() {
+    init(spotId: String) {
+        self.spotId = spotId
         super.init()
     }
     
@@ -27,13 +29,17 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
         banner?.adUnitID = adId
         banner?.delegate = self
         banner?.rootViewController = controller
-        banner?.load(DFPRequest())
+        let req = DFPRequest()
+        req.customTargeting = ["convSdkSpotId":spotId]
+        banner?.load(req)
     }
     
     func setupInterstitial(with adId: String = Configuration.testInterstitialID) {
         interstitial = DFPInterstitial(adUnitID: adId)
         interstitial?.delegate = self
-        interstitial?.load(DFPRequest())
+        let req = DFPRequest()
+        req.customTargeting = ["convSdkSpotId":spotId]
+        interstitial?.load(req)
     }
     
     func showInterstitial(in controller: UIViewController) -> Bool {
@@ -53,19 +59,19 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
 extension GoogleAdsProvider: GADInterstitialDelegate {
     
     func interstitialDidDismissScreen(_ ad: GADInterstitial) {
-        delegate?.interstitialDidDismiss()
+        interstitialDelegate?.interstitialDidDismiss()
     }
     
     func interstitialWillPresentScreen(_ ad: GADInterstitial) {
-        delegate?.interstitialWillBeShown()
+        interstitialDelegate?.interstitialWillBeShown()
     }
     
     func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
-        //handle error here
+        interstitialDelegate?.interstitialFailedToLoad()
     }
     
     func interstitialDidFail(toPresentScreen ad: GADInterstitial) {
-        delegate?.interstitialDidDismiss()
+        interstitialDelegate?.interstitialDidDismiss()
     }
 }
 
@@ -78,11 +84,12 @@ extension GoogleAdsProvider: GADBannerViewDelegate {
             $0.centerX.equal(to: self.bannerView.centerXAnchor)
             $0.centerY.equal(to: self.bannerView.centerYAnchor)
         }
-        delegate?.bannerAdDidLoad(adBannerSize: bannerSize.size)
+        bannerDelegate?.bannerLoaded(adBannerSize: bannerSize.size)
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
         Logger.error(error)
+        bannerDelegate?.bannerFailedToLoad()
     }
     
 }

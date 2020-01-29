@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 
 final class DefaultAdsProvider: AdsProvider {
-    
     let bannerView: BaseView = .init()
-    weak var delegate: AdsProviderDelegate?
+    weak var bannerDelegate: AdsProviderBannerDelegate?
+    weak var interstitialDelegate: AdsProviderInterstitialDelegate?
 
     func setupAdsBanner(with adId: String, in controller: UIViewController) {}
     func setupInterstitial(with adId: String) {}

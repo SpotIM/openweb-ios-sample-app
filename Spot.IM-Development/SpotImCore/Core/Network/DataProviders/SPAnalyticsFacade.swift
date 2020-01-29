@@ -41,6 +41,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.count] = info.readingSeconds
         parameters[AnalyticsAPIKeys.isRegistered] = info.isRegistered
         parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
+        parameters[AnalyticsAPIKeys.engineStatusType] = info.engineStatusType
 
         let headers = HTTPHeaders.basic(with: spotKey)
         manager.execute(
@@ -69,6 +70,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         static let count = "count" // number of seconds reading comments
         static let isRegistered = "is_registered"
         static let totalComments = "total_comments"
+        static let engineStatusType = "engine_status"
     }
 }
 
@@ -88,4 +90,5 @@ internal struct SPAnalyticsDTO {
     let readingSeconds: Int?
     let itemId: String?
     let totalComments: Int?
+    let engineStatusType: String?
 }

@@ -161,7 +161,12 @@ public class SpotIm {
      */
     public static func createSpotImFlowCoordinator(navigationDelegate: SpotImSDKNavigationDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
         execute(call: {
-            let coordinator = SpotImSDKFlowCoordinator(delegate: navigationDelegate, localeId: SPConfigsDataSource.appConfig?.mobileSdk?.locale)
+            guard let spotId = spotId else {
+                completion(SpotImResult.failure(.internalError("Please call init SDK")))
+                return
+            }
+            
+            let coordinator = SpotImSDKFlowCoordinator(delegate: navigationDelegate, spotId: spotId, localeId: SPConfigsDataSource.appConfig?.mobileSdk?.locale)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
             completion(SpotImResult.failure(error))
