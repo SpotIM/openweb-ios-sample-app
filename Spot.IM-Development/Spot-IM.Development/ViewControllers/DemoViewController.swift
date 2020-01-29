@@ -92,7 +92,8 @@ extension DemoArticlesList : ArticleTableViewCellDelegate {
     func articleCellTapped(cell: ArticleTableViewCell, withPost post: Post?) {
         guard let post = post, let postId = postId(post: post) else { return }
         
-        let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, url: post.extractData.url, authenticationControllerId: "")
+        let metadata = SpotImArticleMetadata(url: post.extractData.url, title: post.extractData.title, subtitle: post.extractData.description, thumbnailUrl: post.extractData.description)
+        let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: "")
         articleViewController.spotIMCoordinator = self.spotIMCoordinator
         self.spotIMCoordinator?.setLayoutDelegate(delegate: articleViewController)
         self.navigationController?.pushViewController(articleViewController, animated: true)

@@ -47,6 +47,20 @@ public struct SpotImConversationCounters {
     let replies: Int
 }
 
+public struct SpotImArticleMetadata {
+    let url: String
+    let title: String
+    let subtitle: String
+    let thumbnailUrl: String
+    
+    public init(url: String, title: String, subtitle: String, thumbnailUrl: String) {
+        self.url = url
+        self.title = title
+        self.subtitle = subtitle
+        self.thumbnailUrl = thumbnailUrl
+    }
+}
+
 extension SpotImResult where T == Void {
     static var success: SpotImResult {
         return .success(())

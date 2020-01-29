@@ -11,6 +11,7 @@ import Alamofire
 
 internal enum SPConversationRequest: SPRequest {
     
+    case conversationAsync
     case conversationRead
     case commentReport
     case commentPost
@@ -22,6 +23,7 @@ internal enum SPConversationRequest: SPRequest {
 
     internal var method: HTTPMethod {
         switch self {
+        case .conversationAsync: return .post
         case .conversationRead: return .post
         case .commentPost: return .post
         case .commentUpdate: return .patch
@@ -35,6 +37,7 @@ internal enum SPConversationRequest: SPRequest {
 
     internal var pathString: String {
         switch self {
+        case .conversationAsync: return "/conversation/async"
         case .conversationRead: return "/conversation/read"
         case .commentPost, .commentUpdate, .commentDelete: return "/conversation/comment"
         case .commentRankChange: return "/conversation/rank/message"

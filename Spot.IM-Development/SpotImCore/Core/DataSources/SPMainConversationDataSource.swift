@@ -65,11 +65,12 @@ internal final class SPMainConversationDataSource {
         NotificationCenter.default.removeObserver(self)
     }
 
-    init(with conversationId: String, dataProvider: SPConversationsDataProvider) {
+    init(with conversationId: String, hostUrl: String, dataProvider: SPConversationsDataProvider) {
         self.conversationId = conversationId
         self.dataProvider = dataProvider
         self.conversationPublisherName = SPConfigsDataSource.appConfig?.initialization?.name
 
+        dataProvider.conversationAsync(articleUrl: hostUrl)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateDisplayName),
