@@ -83,6 +83,7 @@ public class SpotIm {
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?
     internal static var currentUser: SPUser?
+    public static var reinit: Bool = false
 
     /**
     Initialize the SDK
@@ -93,7 +94,16 @@ public class SpotIm {
      - Parameter spotId: The SpotId you got from Spot.IM, if you don't have one contact Spot.IM
      */
     public static func initialize(spotId: String) {
+        if SpotIm.reinit {
+            SpotIm.reinit = false
+            SpotIm.spotId = nil
+            initPormise = nil
+            configurationPromise = nil
+            userPromise = nil
+        }
+        
         if SpotIm.spotId == nil {
+            SpotIm.reinit = false
             SpotIm.spotId = spotId
             getInitPormise(spotId: spotId).ensure {
                 SPClientSettings.main.sendAppInitEvent()

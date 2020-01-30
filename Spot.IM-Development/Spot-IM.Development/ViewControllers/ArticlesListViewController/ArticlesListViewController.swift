@@ -36,6 +36,7 @@ class ArticlesListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        SpotIm.reinit = true
         SpotIm.initialize(spotId: spotId)
         
         setup()
