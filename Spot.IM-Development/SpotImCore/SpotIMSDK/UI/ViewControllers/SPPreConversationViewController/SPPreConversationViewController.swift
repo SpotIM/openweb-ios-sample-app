@@ -70,7 +70,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        loadConversation()
         if self.model.dataSource.messageCount > 0 {
             self.header.set(commentCount: self.model.dataSource.messageCount.decimalFormatted)
         }
