@@ -48,12 +48,14 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let apiManager: ApiManager
     private let imageProvider: SPImageURLProvider
     private let realTimeService: RealTimeService
+    private let spotConfig: SpotConfig
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
-    internal init(delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
+    internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager(spotId: spotId)
         apiManager = ApiManager()
+        self.spotConfig = spotConfig
         realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
         
@@ -96,7 +98,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             commentUpdater: conversationUpdater,
             conversationDataSource: conversationDataSource,
             imageProvider: imageProvider,
-            realTimeService: realTimeService
+            realTimeService: realTimeService,
+            abTestData: spotConfig.abConfig
         )
         self.conversationModel = conversationModel
         realTimeService.delegate = self.conversationModel

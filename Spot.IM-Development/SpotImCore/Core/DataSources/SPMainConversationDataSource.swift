@@ -37,7 +37,6 @@ internal final class SPMainConversationDataSource {
     var minVisibleReplies: Int = 2
 
     private(set) var sortMode: SPCommentSortMode?
-    private(set) var abData: [SPABData]?
     private(set) var conversationId: String
     private(set) var currentUser: SPUser? = SPUserSessionHolder.session.user {
         didSet {
@@ -133,16 +132,12 @@ internal final class SPMainConversationDataSource {
             if let error = error {
                 completion(false, error)
             } else {
-                
                 if let newUsers = response?.conversation?.users {
                     let mergedUsers = self.users.merging(newUsers) { $1 }
                     self.users = mergedUsers
                 }
                 if let extractData = response?.extractData {
                     self.extractData = extractData
-                }
-                if self.abData == nil {
-                    self.abData = response?.abData
                 }
 
                 self.resetAllComments()

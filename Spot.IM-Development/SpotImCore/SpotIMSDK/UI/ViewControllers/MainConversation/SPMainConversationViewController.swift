@@ -283,17 +283,18 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     override func checkAdsAvailability() {
         guard
             let adsConfig = SPConfigsDataSource.adsConfig,
-            let tags = adsConfig.tags,
-            model.adsGroup() != nil
+            let tags = adsConfig.tags
             else { return }
         
         for tag in tags {
             guard let adsId = tag.code else { break }
             switch tag.adType {
             case .banner:
-                SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
-                SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
-                adsProvider?.setupAdsBanner(with: adsId, in: self)
+                if model.adsGroup().mainConversationBannerEnabled() {
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
+                    adsProvider?.setupAdsBanner(with: adsId, in: self)
+                }
             default:
                 break
             }
@@ -524,8 +525,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(adBannerSize: CGSize) {
         guard
-            let bannerView = adsProvider?.bannerView,
-            model.adsGroup() == .third
+            let bannerView = adsProvider?.bannerView
             else { return }
         
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)

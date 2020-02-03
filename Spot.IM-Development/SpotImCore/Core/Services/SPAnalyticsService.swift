@@ -24,6 +24,7 @@ internal protocol SPAnalyticsService {
 }
 
 internal final class SPAnalyticsHolder {
+    static var abActiveTests: [SPABData] = []
     
     internal static var `default`: SPAnalyticsService = {
         let service = SPDefaultAnalyticsService()
@@ -114,10 +115,16 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         }
 
         let lang = Locale.current.identifier.replacingOccurrences(of: "_", with: "-")
-
+        var splitNames: String = ""
+        for test in SPAnalyticsHolder.abActiveTests {
+            splitNames += "\(test.testName):\(test.group)|"
+        }
+        splitNames = String(splitNames.dropLast())
+        
         let info = SPAnalyticsDTO(eventType: event.kebabValue,
                                   source: source.kebabValue,
                                   isRegistered: isUserRegistered,
+                                  splitName: splitNames,
                                   itemType: itemType,
                                   targetType: targetType,
                                   segment: nil, // TODO: (Fedin) remove hardcode

@@ -42,6 +42,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.isRegistered] = info.isRegistered
         parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
         parameters[AnalyticsAPIKeys.engineStatusType] = info.engineStatusType
+        parameters[AnalyticsAPIKeys.splitName] = info.splitName
 
         let headers = HTTPHeaders.basic(with: spotKey)
         manager.execute(
@@ -71,6 +72,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         static let isRegistered = "is_registered"
         static let totalComments = "total_comments"
         static let engineStatusType = "engine_status"
+        static let splitName = "split_name"
     }
 }
 
@@ -78,6 +80,7 @@ internal struct SPAnalyticsDTO {
     let eventType: String
     let source: String
     let isRegistered: Bool
+    let splitName: String
 
     let itemType: String?
     let targetType: String?

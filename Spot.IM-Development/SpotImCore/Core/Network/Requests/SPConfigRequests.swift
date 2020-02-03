@@ -13,11 +13,13 @@ internal enum SPConfigRequests: SPRequest {
     
     case config(spotId: String)
     case adsConfig
+    case abTestData
     
     internal var method: HTTPMethod {
         switch self {
         case .config: return .get
         case .adsConfig: return .post
+        case .abTestData: return .get
         }
     }
 
@@ -25,6 +27,7 @@ internal enum SPConfigRequests: SPRequest {
         switch self {
         case .config(let spotId): return "/config/get/\(spotId)/default"
         case .adsConfig: return "/ads_config"
+        case .abTestData: return "/config/ab_test"
         }
     }
 
