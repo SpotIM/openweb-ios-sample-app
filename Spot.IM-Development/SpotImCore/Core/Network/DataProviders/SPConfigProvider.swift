@@ -16,8 +16,10 @@ internal protocol SPConfigProvider {
 
 internal struct SpotConfig {
     let appConfig: SPSpotConfiguration
+    let abConfig: AbTests
     let adsConfig: SPAdsConfiguration?
 }
+
 internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvider {
     
     /// app and ads configurations
@@ -27,9 +29,28 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
                 return seal.reject(SPNetworkError.custom(message))
             }
-            let spRequest = SPConfigRequests.config(spotId: spotKey)
             
-            let headers = HTTPHeaders.basic(with: spotKey)
+            getConfig(spotId: spotKey).then { config in
+                self.getAbTests(spotId: spotKey).map { (config, $0) }
+            }.then { configAndAbTest -> Promise<SpotConfig> in
+                if configAndAbTest.0.initialization?.monetized ?? false {
+                    return self.getAdsConfig(spotId: spotKey).map { return SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: $0) }
+                } else {
+                    return Promise.value(SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: nil))
+                }
+            }.done { spotConfig in
+                seal.fulfill(spotConfig)
+            }.catch { error in
+                seal.reject(error)
+            }
+        }
+    }
+    
+    private func getConfig(spotId: String) -> Promise<SPSpotConfiguration> {
+        return Promise<SPSpotConfiguration> { seal in
+            let spRequest = SPConfigRequests.config(spotId: spotId)
+            
+            let headers = HTTPHeaders.basic(with: spotId)
             
             manager.execute(
                 request: spRequest,
@@ -38,16 +59,40 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
             ) { result, response in
                 switch result {
                 case .success(let appConfig):
-                    if appConfig.initialization?.monetized ?? false {
-                        self.getAdsConfig { (adsConfig, error) in
-                            SPConfigsDataSource.adsConfig = adsConfig
-                            SPConfigsDataSource.appConfig = appConfig
-                            seal.fulfill(SpotConfig(appConfig: appConfig, adsConfig: adsConfig))
-                        }
-                    } else {
-                        SPConfigsDataSource.appConfig = appConfig
-                        seal.fulfill(SpotConfig(appConfig: appConfig, adsConfig: nil))
-                    }
+                    SPConfigsDataSource.appConfig = appConfig
+                    seal.fulfill(appConfig)
+                case .failure(let error):
+                    let rawReport = RawReportModel(
+                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                        parameters: nil,
+                        errorData: response.data,
+                        errorMessage: error.localizedDescription
+                    )
+                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    seal.reject(SpotImError.internalError(error.localizedDescription))
+                }
+            }
+
+        }
+    }
+    private func getAdsConfig(spotId: String) -> Promise<SPAdsConfiguration> {
+        return Promise<SPAdsConfiguration> { seal in
+            let spRequest = SPAdsConfigRequest.adsConfig
+            let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
+            let hour = Int(Date.hourFormatter.string(from: Date()))!
+            let params: [String: Any] = ["day": dayName, "hour": hour]
+            let headers = HTTPHeaders.basic(with: spotId)
+            
+            manager.execute(
+                request: spRequest,
+                parameters: params,
+                parser: DecodableParser<SPAdsConfiguration>(),
+                headers: headers
+            ) { result, response in
+                switch result {
+                case .success(let configuration):
+                    SPConfigsDataSource.adsConfig = configuration
+                    seal.fulfill(configuration)
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -62,31 +107,31 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
         }
     }
     
-    func getAdsConfig(completion: @escaping (SPAdsConfiguration?, Error?) -> Void) {
-        guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-            completion(nil, SPNetworkError.custom(message))
-            return
-        }
-        let spRequest = SPAdsConfigRequest.adsConfig
-        let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
-        let hour = Int(Date.hourFormatter.string(from: Date()))!
-        let params: [String: Any] = ["day": dayName, "hour": hour]
-        let headers = HTTPHeaders.basic(with: spotKey)
-        
-        manager.execute(
-            request: spRequest,
-            parameters: params,
-            parser: DecodableParser<SPAdsConfiguration>(),
-            headers: headers
-        ) { result, response in
-            switch result {
-            case .success(let configuration):
-                completion(configuration, nil)
-                
-            case .failure(let error):
-                Logger.error(error)
-                completion(nil, SPNetworkError.default)
+    private func getAbTests(spotId: String) -> Promise<AbTests> {
+        return Promise<AbTests> { seal in
+            let spRequest = SPConfigRequests.abTestData
+            
+            let headers = HTTPHeaders.basic(with: spotId)
+            
+            manager.execute(
+                request: spRequest,
+                parser: DecodableParser<AbTests>(),
+                headers: headers
+            ) { result, response in
+                switch result {
+                case .success(let abTestData):
+                    SPAnalyticsHolder.abActiveTests = abTestData.getActiveTests()
+                    seal.fulfill(abTestData)
+                case .failure(let error):
+                    let rawReport = RawReportModel(
+                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                        parameters: nil,
+                        errorData: response.data,
+                        errorMessage: error.localizedDescription
+                    )
+                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    seal.reject(SpotImError.internalError(error.localizedDescription))
+                }
             }
         }
     }

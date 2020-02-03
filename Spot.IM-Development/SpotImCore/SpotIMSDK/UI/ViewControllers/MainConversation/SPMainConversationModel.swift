@@ -48,7 +48,8 @@ final class SPMainConversationModel {
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
     private var shouldUserBeNotified: Bool = false
-
+    private let abTestsData: AbTests
+    
     private(set) var dataSource: SPMainConversationDataSource
     private(set) var sortOption: SPCommentSortMode = .best {
         didSet {
@@ -74,10 +75,13 @@ final class SPMainConversationModel {
     init(commentUpdater: SPCommentUpdater,
          conversationDataSource: SPMainConversationDataSource,
          imageProvider: SPImageURLProvider,
-         realTimeService: RealTimeService) {
+         realTimeService: RealTimeService,
+         abTestData: AbTests) {
         self.realTimeService = realTimeService
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
+        self.abTestsData = abTestData
+        
         dataSource = conversationDataSource
         
         dataSource.messageCounterUpdated = { [weak self] count in
@@ -227,10 +231,14 @@ final class SPMainConversationModel {
         return (isDeletable, isEditable, isReportable)
     }
     
-    func adsGroup() -> ABGroup? {
-        return dataSource.abData?
-            .first(where: { $0.testName == CURRENT_ADS_GROUP_TEST_NAME })?
-            .abTestGroup
+    func adsGroup() -> AdsABGroup {
+        if let abGroup = abTestsData.tests
+        .first(where: { $0.testName == CURRENT_ADS_GROUP_TEST_NAME })?
+            .abTestGroup {
+            return AdsABGroup(abGroup: abGroup)
+        }
+        
+        return AdsABGroup()
     }
     
 }

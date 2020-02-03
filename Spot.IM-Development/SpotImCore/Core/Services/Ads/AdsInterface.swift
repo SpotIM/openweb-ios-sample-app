@@ -20,15 +20,24 @@ internal protocol AdsProviderInterstitialDelegate: class {
     func interstitialFailedToLoad()
 }
 
-internal enum ABGroup: String, CaseIterable {
-    /// Banner on preconversation screen
-    case first = "A"
-    /// Banner on preconversation screen + interstitial on "show more comments" transition
-    case second = "B"
-    /// Banner on preconversation screen + sticky banner on main conversation screen
-    case third = "C"
-    /// No banners should be shown
-    case fourth = "D"
+internal struct AdsABGroup {
+    let abGroup: ABGroup
+    
+    init(abGroup: ABGroup = ABGroup.fourth) {
+        self.abGroup = abGroup
+    }
+    
+    func interstitialEnabled() -> Bool {
+        return self.abGroup == .second
+    }
+    
+    func preConversatioBannerEnabled() -> Bool {
+        return self.abGroup == .first || self.abGroup == .second || self.abGroup == .third
+    }
+    
+    func mainConversationBannerEnabled() -> Bool {
+        return self.abGroup == .third
+    }
 }
 
 internal protocol AdsProvider: class {
@@ -68,6 +77,7 @@ internal final class AdsManager {
         return DefaultAdsProvider()
         #endif
     }
+    
 }
 
 internal final class SPAdsViewTracker {

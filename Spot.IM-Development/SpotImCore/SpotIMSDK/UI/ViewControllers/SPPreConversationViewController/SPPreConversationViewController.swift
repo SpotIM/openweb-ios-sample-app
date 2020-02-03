@@ -186,7 +186,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.showEmptyStateView()
                     } else {
                         self.hideEmptyStateView()
-                        self.header.set(commentCount: (messageCount ?? 0).decimalFormatted)
+                        self.header.set(commentCount: messageCount.decimalFormatted)
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
                     }
@@ -289,23 +289,25 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func checkAdsAvailability() {
         guard
             let adsConfig = SPConfigsDataSource.adsConfig,
-            let tags = adsConfig.tags,
-            model.adsGroup() != nil,
-            model.adsGroup() != ABGroup.fourth
+            let tags = adsConfig.tags
             else { return }
         
         for tag in tags {
             guard let adsId = tag.code else { break }
             switch tag.adType {
             case .banner:
-                SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
-                SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
-                
-                adsProvider?.setupAdsBanner(with: adsId, in: self)
+                if model.adsGroup().preConversatioBannerEnabled() {
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
+                    
+                    adsProvider?.setupAdsBanner(with: adsId, in: self)
+                }
             case .interstitial:
-                SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
-                SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
-                adsProvider?.setupInterstitial(with: adsId)
+                if model.adsGroup().interstitialEnabled() {
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
+                    adsProvider?.setupInterstitial(with: adsId)
+                }
             default:
                 break
             }
@@ -347,7 +349,7 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     func showMoreComments() {
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         if let adsProvider = adsProvider,
-            model.adsGroup() == .second,
+            model.adsGroup().interstitialEnabled(),
             AdsManager.shouldShowInterstitial(for: model.dataSource.conversationId),
             adsProvider.showInterstitial(in: self) {
             preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
