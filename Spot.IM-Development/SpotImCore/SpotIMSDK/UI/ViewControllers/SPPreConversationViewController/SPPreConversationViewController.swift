@@ -66,9 +66,17 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             }
         }
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.updateWhatYouThinkView()
+        
+        self.tableView.reloadData()
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+        
+        self.updateTableViewHeightIfNeeded()
         
         if self.model.dataSource.messageCount > 0 {
             self.header.set(commentCount: self.model.dataSource.messageCount.decimalFormatted)
