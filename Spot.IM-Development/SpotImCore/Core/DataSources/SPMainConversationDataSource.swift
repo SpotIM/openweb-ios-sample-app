@@ -636,6 +636,9 @@ extension SPMainConversationDataSource {
     func deleteComment(with id: String, isSoft: Bool = false, isCascade: Bool = false) {
         guard let indexPath = indexPathOfComment(with: id) else { return }
         
+        self.messageCount = messageCount - 1
+        self.messageCounterUpdated?(self.messageCount)
+        
         handleDeletedCommentReplies(commentId: id, sectionIndexPath: indexPath)
         if isSoft {
             (cellData[indexPath.section])[indexPath.row].isDeleted = true
