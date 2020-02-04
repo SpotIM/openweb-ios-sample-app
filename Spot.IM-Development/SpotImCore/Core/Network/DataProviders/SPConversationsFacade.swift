@@ -189,16 +189,15 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             return
         }
         
-        // TODO: (Fedin) make sting constants for this
         let parameters: [String: Any] = [
             "host_url": articleUrl
         ]
-        let headers = HTTPHeaders.basic(
-            with: spotKey)
+        let headers = HTTPHeaders.basic(with: spotKey)
         
         manager.execute(
             request: spRequest,
             parameters: parameters,
+            encoding: JsonWithoutEscapingSlashesEncoding(),
             parser: EmptyParser(),
             headers: headers
         ) { (result, response) in
@@ -224,5 +223,4 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         copy.hasNext = hasNext ?? SPConversationsFacade.defaultHasNext
         return copy
     }
-
 }

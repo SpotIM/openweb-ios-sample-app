@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Pre-conversation does not update after adding/deleting a comment in main conversation and going back
+- Calling conversation/async with a url parameter that got escaped slashes
 
 ## [0.0.30] - 2020-02-03
 ### Added
