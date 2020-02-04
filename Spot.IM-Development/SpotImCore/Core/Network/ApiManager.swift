@@ -58,6 +58,35 @@ public struct JSONParser: ResponseParser {
     }
 }
 
+
+struct JsonWithoutEscapingSlashesEncoding: ParameterEncoding {
+    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+        guard var urlRequest = urlRequest.urlRequest, let params = parameters else { throw Errors.emptyURLRequest }
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: params), let jsonString = String(data: jsonData, encoding: .utf8) else { throw Errors.encodingProblem }
+        
+        let jsonWithoutEscaping = jsonString.replacingOccurrences(of: "\\/", with: "/")
+        urlRequest.httpBody = jsonWithoutEscaping.data(using: .utf8)
+        
+        return urlRequest
+    }
+}
+
+extension JsonWithoutEscapingSlashesEncoding {
+    enum Errors: Error {
+        case emptyURLRequest
+        case encodingProblem
+    }
+}
+
+extension JsonWithoutEscapingSlashesEncoding.Errors: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+            case .emptyURLRequest: return "Empty url request"
+            case .encodingProblem: return "Encoding problem"
+        }
+    }
+}
+
 final class ApiManager {
     
     typealias APIResponse = (response: HTTPURLResponse?, data: Data?)
@@ -95,5 +124,4 @@ final class ApiManager {
                 completion(parser.parse(data: responseData), (response.response, response.data))
             }
     }
-    
 }
