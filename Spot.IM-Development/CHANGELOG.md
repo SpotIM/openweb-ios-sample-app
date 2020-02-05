@@ -6,11 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.0.31] - 2020-02-05
 ### Fixed
 - Pre-conversation does not update after adding/deleting a comment in main conversation and going back
 - Calling conversation/async with a url parameter that got escaped slashes
 - Create comment screen layout for small size screen
-- Create comment screen layout for iOS 10 devices
+- Create comment screen layout for iOS 10
 
 ## [0.0.30] - 2020-02-03
 ### Added
