@@ -25,11 +25,10 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     internal override func updateModelData() {
         setupHeaderComponentsIfNeeded()
         configureModelHandlers()
-        if shouldShowArticleView(for: model?.dataModel) {
+        if shouldShowArticleView(for: model?.dataModel), #available(iOS 11.0, *) {
             topContainerStack.insertArrangedSubview(articleView, at: 1)
-            if #available(iOS 11.0, *) {
-                topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
-            }
+            
+            topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
 
             articleView.setTitle(model?.dataModel.articleTitle)
             articleView.setImage(with: model?.dataModel.articleImageUrl)
@@ -67,6 +66,15 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.backgroundColor = commentingContainer.backgroundColor
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        commentingOnLabel.sizeToFit()
+        
+        commentingContainer.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.leading.equal(to: topContainerStack.leadingAnchor)
+            $0.trailing.equal(to: topContainerStack.trailingAnchor)
+            $0.height.equal(to: commentingOnLabel.frame.height + 41)
+        }
+        
         commentingOnLabel.layout {
             $0.top.equal(to: commentingContainer.topAnchor, offsetBy: 25)
             $0.leading.equal(to: commentingContainer.leadingAnchor, offsetBy: 16)
