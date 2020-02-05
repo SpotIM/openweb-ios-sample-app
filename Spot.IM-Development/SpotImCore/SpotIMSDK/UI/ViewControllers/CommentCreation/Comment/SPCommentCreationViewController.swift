@@ -25,7 +25,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     internal override func updateModelData() {
         setupHeaderComponentsIfNeeded()
         configureModelHandlers()
-        if shouldShowArticleView(for: model?.dataModel), #available(iOS 11.0, *) {
+        if shouldShowArticleView(for: model?.dataModel), #available(iOS 11.0, *), UIDevice.current.screenType != .iPhones_5_5s_5c_SE {
             topContainerStack.insertArrangedSubview(articleView, at: 1)
             
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
