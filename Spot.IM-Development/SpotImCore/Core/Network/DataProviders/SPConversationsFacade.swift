@@ -42,7 +42,7 @@ internal protocol SPConversationsDataProvider {
                   completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void)
 
     func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]>
-    func conversationAsync(articleUrl: String)
+    func conversationAsync(postId: String, articleUrl: String)
     func copy(modifyingOffset newOffset: Int?, hasNext: Bool?) -> SPConversationsDataProvider
 }
 
@@ -183,7 +183,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         }
     }
     
-    internal func conversationAsync(articleUrl: String) {
+    internal func conversationAsync(postId: String, articleUrl: String) {
         let spRequest = SPConversationRequest.conversationAsync
         guard let spotKey = SPClientSettings.main.spotKey else {
             return
@@ -192,7 +192,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         let parameters: [String: Any] = [
             "host_url": articleUrl
         ]
-        let headers = HTTPHeaders.basic(with: spotKey)
+        let headers = HTTPHeaders.basic(with: spotKey, postId: postId)
         
         manager.execute(
             request: spRequest,

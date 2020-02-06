@@ -10,12 +10,12 @@ import Foundation
 import Alamofire
 
 internal protocol SPAnalyticsSender {
-    func sendEvent(with info: SPAnalyticsDTO)
+    func sendEvent(with info: SPAnalyticsDTO, postId: String?)
 }
 
 internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsSender {
 
-    func sendEvent(with info: SPAnalyticsDTO) {
+    func sendEvent(with info: SPAnalyticsDTO, postId: String?) {
 
         guard let spotKey = SPClientSettings.main.spotKey else {
             Logger.error("[ERROR]: No spot key for analytics")
@@ -43,8 +43,12 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
         parameters[AnalyticsAPIKeys.engineStatusType] = info.engineStatusType
         parameters[AnalyticsAPIKeys.splitName] = info.splitName
-
-        let headers = HTTPHeaders.basic(with: spotKey)
+        
+        var headers = HTTPHeaders.basic(with: spotKey)
+        if let postId = postId {
+            headers = HTTPHeaders.basic(with: spotKey, postId: postId)
+        }
+        
         manager.execute(
             request: spRequest,
             parameters: parameters,

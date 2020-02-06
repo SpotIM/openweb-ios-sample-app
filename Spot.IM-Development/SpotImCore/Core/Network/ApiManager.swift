@@ -106,7 +106,7 @@ final class ApiManager {
                                  parameters: parameters,
                                  encoding: encoding,
                                  headers: headers)
-            .log(level: .verbose)
+            .log(level: .medium)
             .validate()
             .responseData { [weak self] response in
                 

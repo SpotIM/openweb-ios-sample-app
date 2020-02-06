@@ -515,7 +515,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         let rankActionDataModel = RankActionDataModel(change: change,
                                                       commentId: commentId,
                                                       parrentId: replyingToID,
-                                                      conversationId: model.dataSource.conversationId)
+                                                      conversationId: model.dataSource.postId)
         model.changeRank(with: rankActionDataModel) { [weak self] success, error in
             guard let self = self else { return }
 

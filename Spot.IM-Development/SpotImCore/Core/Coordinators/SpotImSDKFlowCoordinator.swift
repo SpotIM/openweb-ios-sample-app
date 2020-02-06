@@ -65,6 +65,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             LocalizationManager.setLocale(localeId)
         }
     }
+    
+    deinit {
+        SPAnalyticsHolder.default.postId = nil
+    }
 
     public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
         self.spotLayoutDelegate = delegate
