@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.32] - 2020-02-06
+### Added
+- Better API logger with only important info
+
+### Fixed
+- Calling conversation/async with a x-post-id=default instead of real post-id
+- Some events that a conversation related called with x-post-id=default
+
 ## [0.0.31] - 2020-02-05
 ### Fixed
 - Pre-conversation does not update after adding/deleting a comment in main conversation and going back
