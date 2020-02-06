@@ -358,7 +358,7 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         if let adsProvider = adsProvider,
             model.adsGroup().interstitialEnabled(),
-            AdsManager.shouldShowInterstitial(for: model.dataSource.conversationId),
+            AdsManager.shouldShowInterstitial(for: model.dataSource.postId),
             adsProvider.showInterstitial(in: self) {
             preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
         } else {
@@ -406,7 +406,7 @@ extension SPPreConversationViewController: AdsProviderInterstitialDelegate {
     }
     
     func interstitialWillBeShown() {
-        AdsManager.willShowInterstitial(for: model.dataSource.conversationId)
+        AdsManager.willShowInterstitial(for: model.dataSource.postId)
     }
     
     func interstitialDidDismiss() {

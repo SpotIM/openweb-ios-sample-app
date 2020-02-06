@@ -37,7 +37,7 @@ internal final class SPMainConversationDataSource {
     var minVisibleReplies: Int = 2
 
     private(set) var sortMode: SPCommentSortMode?
-    private(set) var conversationId: String
+    private(set) var postId: String
     private(set) var currentUser: SPUser? = SPUserSessionHolder.session.user {
         didSet {
             SPAnalyticsHolder.default.userId = currentUser?.id
@@ -64,12 +64,14 @@ internal final class SPMainConversationDataSource {
         NotificationCenter.default.removeObserver(self)
     }
 
-    init(with conversationId: String, hostUrl: String, dataProvider: SPConversationsDataProvider) {
-        self.conversationId = conversationId
+    init(with postId: String, hostUrl: String, dataProvider: SPConversationsDataProvider) {
+        SPAnalyticsHolder.default.postId = postId
+        
+        self.postId = postId
         self.dataProvider = dataProvider
         self.conversationPublisherName = SPConfigsDataSource.appConfig?.initialization?.name
 
-        dataProvider.conversationAsync(articleUrl: hostUrl)
+        dataProvider.conversationAsync(postId: postId, articleUrl: hostUrl)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateDisplayName),
@@ -118,7 +120,7 @@ internal final class SPMainConversationDataSource {
         sortMode = mode
         sortIsUpdated?()
         dataProvider.conversation(
-            conversationId,
+            postId,
             mode,
             page: page,
             loadingStarted: loadingStarted
@@ -162,7 +164,7 @@ internal final class SPMainConversationDataSource {
         sortMode = mode
         sortIsUpdated?()
         dataProvider.conversation(
-            conversationId,
+            postId,
             mode,
             page: page,
             loadingStarted: loadingStarted
@@ -234,7 +236,7 @@ internal final class SPMainConversationDataSource {
         DispatchQueue.main.async { self.updateReplyButton(with: provider, inCellWith: indexPath) }
         
         provider?.comments(
-            conversationId,
+            postId,
             sortMode,
             page: .next,
             parentId: commentId,
@@ -284,9 +286,9 @@ internal final class SPMainConversationDataSource {
                                     currentUserAvatar: currentUserAvatarUrl,
                                     authorName: conversationPublisherName,
                                     articleTitle: conversationTitle,
-                                    postId: conversationId,
+                                    postId: postId,
                                     displayName: currentUserName,
-                                    converstionId: conversationId,
+                                    converstionId: postId,
                                     user: currentUser)
     }
     
@@ -303,7 +305,7 @@ internal final class SPMainConversationDataSource {
                                   authorName: comment?.displayName,
                                   comment: comment?.commentText,
                                   commentId: id,
-                                  postId: conversationId,
+                                  postId: postId,
                                   displayName: currentUserName,
                                   rootCommentId: comment?.rootCommentId,
                                   parentDepth: comment?.depth,

@@ -96,13 +96,13 @@ final class SPMainConversationModel {
     }
     
     func startTypingTracking() {
-        realTimeService.startRealTimeDataFetching(conversationId: dataSource.conversationId)
+        realTimeService.startRealTimeDataFetching(conversationId: dataSource.postId)
     }
     
     func stopTypingTracking() {
         shouldUserBeNotified = false
         delegates.invoke { $0.stopTypingTrack() }
-        realTimeService.stopRealTimeDataFetching(conversationId: dataSource.conversationId)
+        realTimeService.stopRealTimeDataFetching(conversationId: dataSource.postId)
     }
     
     func handlePendingComment() {
@@ -254,7 +254,7 @@ extension SPMainConversationModel {
         }
         commentUpdater.deleteComment(
             parameters: parameters,
-            postId: dataSource.conversationId,
+            postId: dataSource.postId,
             success: { [weak self] deletionData in
                 self?.dataSource.deleteComment(with: id, isSoft: true)
                 completion(nil)
@@ -274,7 +274,7 @@ extension SPMainConversationModel {
         }
         commentUpdater.shareComment(
             parameters: parameters,
-            postId: dataSource.conversationId,
+            postId: dataSource.postId,
             success: { url in
                 completion(url, nil)
             },
@@ -293,7 +293,7 @@ extension SPMainConversationModel {
         }
         commentUpdater.reportComment(
             parameters: parameters,
-            postId: dataSource.conversationId,
+            postId: dataSource.postId,
             success: {
                 self.dataSource.deleteComment(with: id, isCascade: true)
                 completion(nil)
@@ -320,7 +320,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         
         self.shouldUserBeNotified = shouldUserBeNotified
         self.realTimeData = realTimeData
-        let fullConversationId = "\(spotId)_\(dataSource.conversationId)"
+        let fullConversationId = "\(spotId)_\(dataSource.postId)"
         let totalTypingCount: Int = realTimeData.data?.totalTypingCountForConversation(fullConversationId)
             ?? 0
         let totalCommentsCount: Int = self.liveTotalCommentsCount()
@@ -341,7 +341,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
     func typingCount() -> Int {
         guard let spotId = SPClientSettings.main.spotKey else { return 0 }
 
-        let fullConversationId = "\(spotId)_\(dataSource.conversationId)"
+        let fullConversationId = "\(spotId)_\(dataSource.postId)"
         let totalTypingCount = realTimeData?.data?.totalTypingCountForConversation(fullConversationId)
             ?? 0
         
@@ -350,7 +350,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
     
     func liveTotalCommentsCount() -> Int {
         guard let spotId = SPClientSettings.main.spotKey else { return 0 }
-        let fullConversationId = "\(spotId)_\(dataSource.conversationId)"
+        let fullConversationId = "\(spotId)_\(dataSource.postId)"
         
         let commentsCount = realTimeData?.data?.commentsCountForConversation(fullConversationId) ?? 0
         let repliesCount = realTimeData?.data?.repliesCountForConversation(fullConversationId) ?? 0

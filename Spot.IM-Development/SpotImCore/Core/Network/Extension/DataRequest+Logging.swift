@@ -32,6 +32,19 @@ internal extension DataRequest {
             return self
         }
         var message = "[REQUEST] \(method) \(url)"
+        
+        if level == .medium {
+            if let criticalHeaders = self.request?.allHTTPHeaderFields?.filter({ (key: AnyHashable, value: Any) -> Bool in
+                guard let keyString = key as? String else { return false }
+                
+                return keyString == "x-spot-id" || keyString == "x-post-id"
+            }) {
+                for header in criticalHeaders {
+                    message += "\n\(header.key): \(header.value)"
+                }
+            }
+        }
+        
         if level == .verbose {
             if let headers = self.request?.allHTTPHeaderFields {
                 for header in headers {
@@ -44,6 +57,13 @@ internal extension DataRequest {
             }
         }
 
+        if level == .verbose || level == .medium {
+            if let data = self.request?.httpBody,
+                let body = String(data: data, encoding: .utf8) {
+                message += "\n\(body)"
+            }
+        }
+        
         print(message)
 
         return self
@@ -67,12 +87,27 @@ internal extension DataRequest {
                 message += " [!] \(err)"
             }
 
+            if level == .medium {
+                if let criticalHeaders = $0.response?.allHeaderFields.filter({ (key: AnyHashable, value: Any) -> Bool in
+                    guard let keyString = key as? String else { return false }
+                    
+                    return keyString == "x-spot-id" || keyString == "x-post-id"
+                }) {
+                    for header in criticalHeaders {
+                        message += "\n\(header.key): \(header.value)"
+                    }
+                }
+            }
+            
             if level == .verbose {
                 if let headers = $0.response?.allHeaderFields {
                     for header in headers {
                         message += "\n\(header.key): \(header.value)"
                     }
                 }
+            }
+            
+            if level == .verbose || level == .medium {
                 if let data = $0.data,
                     let body = String(data: data, encoding: .utf8) {
                     if body.count > 0 {
