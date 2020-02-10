@@ -30,7 +30,7 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
         banner?.delegate = self
         banner?.rootViewController = controller
         let req = DFPRequest()
-        req.customTargeting = ["convSdkSpotId":spotId]
+        req.customTargeting = ["bannerConvSdkSpotId":spotId]
         banner?.load(req)
     }
     
@@ -38,7 +38,7 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
         interstitial = DFPInterstitial(adUnitID: adId)
         interstitial?.delegate = self
         let req = DFPRequest()
-        req.customTargeting = ["convSdkSpotId":spotId]
+        req.customTargeting = ["interConvSdkSpotId":spotId]
         interstitial?.load(req)
     }
     
