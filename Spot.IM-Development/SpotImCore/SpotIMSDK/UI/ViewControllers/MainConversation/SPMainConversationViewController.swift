@@ -9,10 +9,8 @@
 import UIKit
 
 internal protocol SPCommentsCreationDelegate: class {
-    
     func createComment(with dataModel: SPMainConversationModel)
     func createReply(with dataModel: SPMainConversationModel, to id: String)
-    
 }
 
 final class SPMainConversationViewController: SPBaseConversationViewController,
@@ -400,21 +398,26 @@ extension SPMainConversationViewController { // UITableViewDelegate
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard canAnimateHeader(scrollView) else { return }
+        
         handleArticleHeight(with: scrollView.contentOffset)
     }
     
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-    }
-    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard canAnimateHeader(scrollView) else { return }
+        
         isDragging = true
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        guard canAnimateHeader(scrollView) else { return }
+        
         handleFinalHeaderHeightUpdate()
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard canAnimateHeader(scrollView) else { return }
+        
         isDragging = false
         if !decelerate {
             handleFinalHeaderHeightUpdate()
@@ -489,7 +492,6 @@ extension SPMainConversationViewController { // Article header scrolling logic
         }
         lastOffsetY = currentOffsetY
         updateHeaderHeightInstantly()
-            
     }
     
     /// Instantly updates article header height when scrollView is scrolling
@@ -520,6 +522,12 @@ extension SPMainConversationViewController { // Article header scrolling logic
         }
         scrollingDirection = .static
     }
+    
+    private func canAnimateHeader(_ scrollView: UIScrollView) -> Bool {
+        let scrollViewMaxHeight = scrollView.frame.height + (self.headerHeightConstraint?.constant ?? 0) + articleHeaderMaxHeight
+        return scrollView.contentSize.height > scrollViewMaxHeight
+    }
+
 }
 
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
