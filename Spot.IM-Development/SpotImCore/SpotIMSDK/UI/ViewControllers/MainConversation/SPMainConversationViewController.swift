@@ -186,13 +186,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     SPAnalyticsHolder.default.totalComments = messageCount
                     self.sortView.updateCommentsLabel(messageCount)
                     
-                    if self.model.areCommentsEmpty() {
-                        self.showEmptyStateView()
-                    } else {
-                        self.stateActionView?.removeFromSuperview()
-                        self.stateActionView = nil
-                        self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
-                    }
+                    self.stateActionView?.removeFromSuperview()
+                    self.stateActionView = nil
+                    self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
                 }
                 self.tableView.reloadData()
                 self.updateHeaderUI()

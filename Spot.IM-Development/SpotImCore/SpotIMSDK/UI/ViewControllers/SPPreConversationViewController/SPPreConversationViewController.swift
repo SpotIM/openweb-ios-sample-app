@@ -239,7 +239,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
 
-    override func showEmptyStateView() {
+    func showEmptyStateView() {
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
         let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")
