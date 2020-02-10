@@ -49,6 +49,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let imageProvider: SPImageURLProvider
     private let realTimeService: RealTimeService
     private let spotConfig: SpotConfig
+    private var preConversationViewController: UIViewController?
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
@@ -66,10 +67,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         }
     }
     
-    deinit {
-        SPAnalyticsHolder.default.postId = nil
-    }
-
     public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
         self.spotLayoutDelegate = delegate
     }
@@ -107,15 +104,22 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         )
         self.conversationModel = conversationModel
         realTimeService.delegate = self.conversationModel
-        let controller = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages)
-        self.conversationModel.delegates.add(delegate: controller)
-        self.conversationModel.commentsCounterDelegates.add(delegate: controller)
-        controller.adsProvider = adsManager.adsProvider()
-        controller.delegate = self
-        controller.preConversationDelegate = self
-        controller.dataLoaded = {
-            completion(controller)
+        
+        let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages)
+        
+        self.conversationModel.delegates.add(delegate: preConversationViewController)
+        self.conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
+        preConversationViewController.adsProvider = adsManager.adsProvider()
+        preConversationViewController.delegate = self
+        preConversationViewController.preConversationDelegate = self
+        preConversationViewController.dataLoaded = { [weak self] in
+            guard let preConversationViewController = self?.preConversationViewController else { return }
+            
+            self?.preConversationViewController = nil
+            completion(preConversationViewController)
         }
+        
+        self.preConversationViewController = preConversationViewController
     }
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {

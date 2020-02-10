@@ -62,6 +62,7 @@ internal final class SPMainConversationDataSource {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
+        SPAnalyticsHolder.default.postId = nil
     }
 
     init(with postId: String, hostUrl: String, dataProvider: SPConversationsDataProvider) {
