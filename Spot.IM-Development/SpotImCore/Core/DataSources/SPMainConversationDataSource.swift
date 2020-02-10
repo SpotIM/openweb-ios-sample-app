@@ -751,8 +751,6 @@ extension SPMainConversationDataSource {
             cachedCommentReply = nil
             delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
         } else {
-            sortMode = .newest
-            sortIsUpdated?()
             conversation(.newest, page: .first) { [weak self] result, _ in
                 if result {
                     guard let self = self else { return }

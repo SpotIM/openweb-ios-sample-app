@@ -56,7 +56,6 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        model.handlePendingComment()
         configureBaseModelHandlers()
     }
 
@@ -132,24 +131,6 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
                 actionButtonTitle: LocalizationManager.localizedString(key: "Retry"),
                 action: noInternetAction
             )
-        )
-    }
-
-    internal func showEmptyStateView() {
-        configureEmptyStateView()
-        let emptyStateAction = { [weak self] in
-            guard let self = self, let delegate = self.delegate else { return }
-
-            self.logCreationOpen(with: .comment)
-            delegate.createComment(with: self.model)
-        }
-
-        stateActionView?.configure(
-            actionModel: EmptyActionDataModel(
-                actionMessage: LocalizationManager.localizedString(key: "Be the first to comment on this article."),
-                actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
-                actionButtonTitle: LocalizationManager.localizedString(key: "Write a Comment"),
-                action: emptyStateAction)
         )
     }
 
@@ -615,8 +596,6 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func localCommentWasCreated() {
-        guard navigationController?.visibleViewController == self else { return }
-        
         model.handlePendingComment()
     }
 
