@@ -756,7 +756,6 @@ extension SPMainConversationDataSource {
             delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
         } else {
             Logger.verbose("FirstComment: Refreshing to .newset sorting")
-            Logger.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
             conversation(.newest, page: .first) { [weak self] result, _ in
                 Logger.verbose("FirstComment: Got result from API")
                 Logger.verbose("FirstComment: \(result)")
@@ -772,6 +771,7 @@ extension SPMainConversationDataSource {
                         Logger.verbose("FirstComment: Data model not found, adding it manually")
                         self.cellData.insert([viewModel], at: 0)
                         self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
+                        Logger.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
                         self.messageCount = updatedMessageCount
                         self.messageCounterUpdated?(updatedMessageCount)
                     }

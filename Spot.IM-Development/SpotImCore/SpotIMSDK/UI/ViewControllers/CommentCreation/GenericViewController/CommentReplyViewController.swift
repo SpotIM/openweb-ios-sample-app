@@ -195,6 +195,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     @objc
     private func post() {
         view.endEditing(true)
+        Logger.verbose("FirstComment: Post clicked")
         showLoader()
         model?.post()
     }
@@ -202,6 +203,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     @objc
     private func presentAuth() {
         view.endEditing(true)
+        Logger.verbose("FirstComment: Signup to post clicked")
+        showLoader()
         shouldBeAutoPosted = false
         userAuthFlowDelegate?.presentAuth()
 
