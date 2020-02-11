@@ -88,15 +88,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     
         tableHeader.setAuthor(model.dataSource.conversationPublisherName)
 
-        // for case when there are no data passed from the pre-conversation screen
-        if model.dataSource.messageCount <= 0 {
-            Logger.verbose("FirstComment: Reloading conversation")
-            reloadFullConversation()
-        } else {
-            Logger.verbose("FirstComment: Have some comments in the data source")
-            updateFooterView()
-            sortView.updateCommentsLabel(model.dataSource.messageCount)
-        }
+        Logger.verbose("FirstComment: Have some comments in the data source")
+        updateFooterView()
+        sortView.updateCommentsLabel(model.dataSource.messageCount)
     }
 
     override func viewWillAppear(_ animated: Bool) {

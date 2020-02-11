@@ -77,8 +77,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         
         self.updateTableViewHeightIfNeeded()
         
-        if self.model.dataSource.messageCount > 0 {
+        if self.model.areCommentsEmpty() {
+            self.showEmptyStateView()
+        } else {
+            self.hideEmptyStateView()
             self.header.set(commentCount: self.model.dataSource.messageCount.decimalFormatted)
+            self.stateActionView?.removeFromSuperview()
+            self.stateActionView = nil
         }
     }
     

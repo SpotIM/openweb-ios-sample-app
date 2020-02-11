@@ -7,10 +7,22 @@ import Foundation
 
 struct Logger {
     
-    enum Level: String {
+    enum Level: String, CustomStringConvertible {
         
         case verbose, success, warning, failure
         
+        var description: String {
+            switch self {
+            case .verbose:
+                return "V"
+            case .success:
+                return "S"
+            case .warning:
+                return "W"
+            case .failure:
+                return "E"
+            }
+        }
     }
     
     private init() {}
@@ -36,7 +48,7 @@ struct Logger {
         #if DEBUG
         let startIndex = file.range(of: "/", options: .backwards)?.upperBound
         let fileName = file[startIndex!...]
-        print("\(level.rawValue.uppercased()) [\(printTime())] \(fileName):\(line) | \(string())")
+        print("\(printTime()): \(level.description)/\(fileName)(\(line)): \(string())")
         #endif
     }
     
