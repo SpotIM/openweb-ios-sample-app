@@ -122,6 +122,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     func dismissController() {
+        Logger.verbose("FirstComment: Dismissing creation view controller")
         let transition = CATransition()
         transition.duration = 0.5
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)

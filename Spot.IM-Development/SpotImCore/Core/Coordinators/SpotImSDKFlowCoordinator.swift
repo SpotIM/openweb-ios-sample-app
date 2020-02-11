@@ -131,7 +131,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         
         controller.title = LocalizationManager.localizedString(key: "Conversation")
         
+        Logger.verbose("FirstComment: localCommentReplayDidCreate SET")
         localCommentReplyDidCreate = { comment in
+            Logger.verbose("FirstComment: localCommentReplayDidCreate CALLED")
+            Logger.verbose("FirstComment: setting the pending comment to the model")
             model.pendingComment = comment
         }
         commentReplyCreationBlocked = { commentText in
@@ -265,7 +268,9 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     internal func commentReplyDidCreate(_ comment: SPComment) {
+        Logger.verbose("FirstComment: Did received comment in delegate")
         if shouldAddMain {
+            Logger.verbose("FirstComment: Adding main conversation screen before we continue")
             insertMainConversationToNavigation(conversationModel)
         }
         localCommentReplyDidCreate?(comment)

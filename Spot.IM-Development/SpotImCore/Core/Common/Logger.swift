@@ -36,8 +36,19 @@ struct Logger {
         #if DEBUG
         let startIndex = file.range(of: "/", options: .backwards)?.upperBound
         let fileName = file[startIndex!...]
-        print(" \(level.rawValue.uppercased()) [\(NSDate())] \(fileName)(\(line)) | \(string())")
+        print("\(level.rawValue.uppercased()) [\(printTime())] \(fileName):\(line) | \(string())")
         #endif
+    }
+    
+    private static func printTime() -> String {
+        let date = Date()
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.hour,.minute,.second], from: date)
+        let hour = components.hour
+        let minutes = components.minute
+        let second = components.second
+        
+        return "\(hour ?? 0):\(minutes ?? 0):\(second ?? 0)"
     }
 }
 
