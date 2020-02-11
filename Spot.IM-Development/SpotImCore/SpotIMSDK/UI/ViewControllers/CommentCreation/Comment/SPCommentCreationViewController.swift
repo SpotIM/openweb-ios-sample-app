@@ -96,6 +96,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
 
     private func configureModelHandlers() {
         model?.postCompletionHandler = { [weak self] comment in
+            Logger.verbose("FirstComment: Post clicked")
             guard let self = self else { return }
 
             if comment.status == .block || !comment.published {

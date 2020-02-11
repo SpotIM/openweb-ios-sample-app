@@ -596,6 +596,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func localCommentWasCreated() {
+        Logger.verbose("FirstComment:")
         model.handlePendingComment()
     }
 

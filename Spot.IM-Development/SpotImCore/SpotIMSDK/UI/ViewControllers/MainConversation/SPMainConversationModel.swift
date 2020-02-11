@@ -64,6 +64,7 @@ final class SPMainConversationModel {
     
     var pendingComment: SPComment? {
         didSet {
+            Logger.verbose("FirstComment: Pending comment did set with \(String(describing: pendingComment))")
             if pendingComment != nil {
                 commentsActionDelegate?.localCommentWasCreated()
             }
@@ -106,11 +107,15 @@ final class SPMainConversationModel {
     }
     
     func handlePendingComment() {
+        Logger.verbose("FirstComment: handle called with \(String(describing: pendingComment))")
         guard let comment = pendingComment else { return }
         if !comment.isReply {
             commentsActionDelegate?.localCommentWillBeCreated()
         }
+        
+        Logger.verbose("FirstComment: Dispaching to main with delay!!!!!")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            Logger.verbose("FirstComment: Got back to local posting the comment")
             self?.dataSource.update(with: comment)
             self?.pendingComment = nil
         }

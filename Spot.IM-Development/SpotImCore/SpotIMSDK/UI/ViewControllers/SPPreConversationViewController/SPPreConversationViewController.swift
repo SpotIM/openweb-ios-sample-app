@@ -47,7 +47,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     // MARK: - Overrides
     internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int) {
         self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
-        
         super.init(model: model)
     }
     

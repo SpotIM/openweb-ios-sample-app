@@ -64,11 +64,16 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         }
     }
 
+    override init(model: SPMainConversationModel) {
+        Logger.verbose("FirstComment: Main view controller created")
+        super.init(model: model)
+    }
     // MARK: - Overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Logger.verbose("FirstComment: Main view did load")
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
             SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
@@ -85,8 +90,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
 
         // for case when there are no data passed from the pre-conversation screen
         if model.dataSource.messageCount <= 0 {
+            Logger.verbose("FirstComment: Reloading conversation")
             reloadFullConversation()
         } else {
+            Logger.verbose("FirstComment: Have some comments in the data source")
             updateFooterView()
             sortView.updateCommentsLabel(model.dataSource.messageCount)
         }
@@ -158,15 +165,18 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     
     @objc
     private func reloadFullConversation() {
+        Logger.verbose("FirstComment: Data source loading? \(model.dataSource.isLoading)")
         guard !model.dataSource.isLoading else { return }
 
         let mode = model.sortOption
+        Logger.verbose("FirstComment: Calling conversation API")
         model.dataSource.conversation(
             mode,
             page: .first,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
                 
+                Logger.verbose("FirstComment: API did finish with \(success)")
                 self.hideLoader()
                 self.refreshControl.endRefreshing()
 
@@ -182,6 +192,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                 } else if success == false {
                     Logger.error("Load conversation request type is not `success`")
                 } else {
+                    Logger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
                     let messageCount = self.model.dataSource.messageCount
                     SPAnalyticsHolder.default.totalComments = messageCount
                     self.sortView.updateCommentsLabel(messageCount)
@@ -190,6 +201,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     self.stateActionView = nil
                     self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
                 }
+                Logger.verbose("FirstComment: Calling reload on table view")
                 self.tableView.reloadData()
                 self.updateHeaderUI()
                 self.updateFooterView()
