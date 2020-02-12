@@ -10,18 +10,16 @@
 import UIKit
 import SafariServices
 
-public protocol SSOAthenticationDelegate: AnyObject {
-    func ssoFlowDidSucceed()
-    func ssoFlowDidFail(with error: Error?)
-    func userLogout()
-}
-
 public protocol SpotImSDKNavigationDelegate: AnyObject {
     func controllerForSSOFlow() -> UIViewController
 }
 
 public protocol SpotImLayoutDelegate: AnyObject {
     func viewHeightDidChange(to newValue: CGFloat)
+}
+
+public protocol AuthenticationViewDelegate: AnyObject {
+    func authenticationStarted()
 }
 
 final public class SpotImSDKFlowCoordinator: Coordinator {
@@ -50,6 +48,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let realTimeService: RealTimeService
     private let spotConfig: SpotConfig
     private var preConversationViewController: UIViewController?
+    private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
@@ -159,6 +158,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         navigationController?.view.layer.add(transition, forKey: kCATransition)
         navigationController?.pushViewController(controller, animated: false)
         authHandlers.append(WeakRef(value: controller.userDidSignInHandler()))
+        authenticationViewDelegate = controller
     }
 
     private func insertMainConversationToNavigation(_ dataModel: SPMainConversationModel) {
@@ -287,6 +287,9 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
+    public func ssoFlowStarted() {
+        authenticationViewDelegate?.authenticationStarted()
+    }
     
     public func ssoFlowDidSucceed() {
         hidePresentedViewController()

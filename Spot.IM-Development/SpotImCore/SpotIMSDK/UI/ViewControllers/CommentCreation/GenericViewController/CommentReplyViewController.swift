@@ -204,7 +204,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private func presentAuth() {
         view.endEditing(true)
         Logger.verbose("FirstComment: Signup to post clicked")
-        showLoader()
         shouldBeAutoPosted = false
         userAuthFlowDelegate?.presentAuth()
 
@@ -383,6 +382,12 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
         }
 
         postButton.isEnabled = postEnabled
+    }
+}
+
+extension CommentReplyViewController: AuthenticationViewDelegate {
+    func authenticationStarted() {
+        showLoader()
     }
 }
 
