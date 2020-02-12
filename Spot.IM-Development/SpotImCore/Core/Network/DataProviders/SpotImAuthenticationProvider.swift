@@ -13,6 +13,13 @@ import PromiseKit
 public typealias AuthCompletionHandler = (_ success: Bool, _ error: Error?) -> Void
 public typealias AuthStratCompleteionHandler = (_ response: SSOStartResponse?, _ error: Error?) -> Void
 
+public protocol SSOAthenticationDelegate: AnyObject {
+    func ssoFlowStarted()
+    func ssoFlowDidSucceed()
+    func ssoFlowDidFail(with error: Error?)
+    func userLogout()
+}
+
 public struct SSOStartResponse {
     public var codeA: String?
     public var jwtToken: String?
@@ -32,6 +39,7 @@ internal class SpotImAuthenticationProvider {
         }
 
         public func startSSO(completion: @escaping AuthStratCompleteionHandler) {
+            ssoAuthDelegate?.ssoFlowStarted()
             SPUserSessionHolder.resetUserSession()
             internalAuthProvider.login { (token, error) in
                 if let error = error {
@@ -45,6 +53,7 @@ internal class SpotImAuthenticationProvider {
         }
 
         public func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
+            ssoAuthDelegate?.ssoFlowStarted()
             SPUserSessionHolder.resetUserSession()
             internalAuthProvider.login { (token, error) in
                 if let error = error {
