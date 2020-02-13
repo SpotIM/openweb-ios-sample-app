@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- IDFA for all monetization events
+- Create comment screen shows loader when SSO is in progress
+
+### Fixed
+- Pre-conversation memory leak
+- Main conversation table bounces when there is a small amount of comments
+- First comment does not appear after posting
+
+### Changed
+- DFP custom target
 
 ## [0.0.32] - 2020-02-06
 ### Added
