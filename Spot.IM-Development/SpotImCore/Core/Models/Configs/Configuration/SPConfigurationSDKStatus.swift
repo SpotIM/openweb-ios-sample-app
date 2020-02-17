@@ -9,10 +9,9 @@
 import Foundation
 
 struct SPConfigurationSDKStatus: Decodable {
-    
     let enabled: Bool?
     let locale: String?
     let realtimeEnabled: Bool?
     let loginUiEnabled: Bool?
-    
+    let disableInterstitialOnLogin: Bool?
 }

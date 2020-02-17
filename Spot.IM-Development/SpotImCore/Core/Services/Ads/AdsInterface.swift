@@ -22,13 +22,21 @@ internal protocol AdsProviderInterstitialDelegate: class {
 
 internal struct AdsABGroup {
     let abGroup: ABGroup
+    let isUserRegistered: Bool
+    let disableInterstitialOnLogin: Bool
     
-    init(abGroup: ABGroup = ABGroup.fourth) {
+    init(abGroup: ABGroup = ABGroup.fourth, isUserRegistered: Bool = false, disableInterstitialOnLogin: Bool = false) {
         self.abGroup = abGroup
+        self.isUserRegistered = isUserRegistered
+        self.disableInterstitialOnLogin = disableInterstitialOnLogin
     }
     
     func interstitialEnabled() -> Bool {
-        return self.abGroup == .second
+        if isUserRegistered && disableInterstitialOnLogin {
+            return false
+        } else {
+            return self.abGroup == .second
+        }
     }
     
     func preConversatioBannerEnabled() -> Bool {
