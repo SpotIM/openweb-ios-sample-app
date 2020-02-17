@@ -26,7 +26,7 @@ internal class SPUser: Codable {
     var isModerator: Bool
     var isSuperAdmin: Bool
     var isJournalist: Bool
-    var badgeType: String?
+    let badgeType: String
 
     // commenter only
     var points: Int?
@@ -38,7 +38,7 @@ internal class SPUser: Codable {
     }
     
     var hasGamification: Bool {
-        if let badgeType = badgeType, badgeType != "newbie" {
+        if !badgeType.isEmpty && badgeType != "newbie" {
             return true
         } else {
             return false
@@ -61,7 +61,11 @@ internal class SPUser: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
     
         id = try? container.decode(String.self, forKey: .id)
-        badgeType = try? container.decode(String.self, forKey: .badgeType)
+        do {
+            badgeType = try container.decode(String.self, forKey: .badgeType)
+        } catch {
+            badgeType = ""
+        }
         displayName = try? container.decode(String.self, forKey: .displayName)
         imageId = try? container.decode(String.self, forKey: .imageId)
         isAdmin = (try? container.decode(Bool.self, forKey: .isAdmin)) ?? false
