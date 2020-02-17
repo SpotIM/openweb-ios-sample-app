@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pre-conversation memory leak
 - Main conversation table bounces when there is a small amount of comments
 - First comment does not appear after posting
+- First comment does not have username/avatar after posting
 
 ### Changed
 - DFP custom target

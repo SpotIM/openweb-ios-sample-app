@@ -715,10 +715,14 @@ extension SPMainConversationDataSource {
 
         let displayName = parentComment?.displayName
         
-        let viewModel = commentViewModel(
+        let user = SPUserSessionHolder.session.user
+        let viewModel = CommentViewModel(
             with: comment,
             replyingToCommentId: comment.parentId,
-            replyingToDisplayName: displayName
+            replyingToDisplayName: displayName,
+            color: .brandColor,
+            user: user,
+            userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil)
         )
         
         cachedCommentReply = viewModel
