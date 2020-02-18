@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - IDFA for all monetization events
 - Create comment screen shows loader when SSO is in progress
+- Support for disabling interstitial for logged in user depending on publisher configuration
 
 ### Fixed
 - Pre-conversation memory leak
