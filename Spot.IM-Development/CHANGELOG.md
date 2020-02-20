@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.34] - 2020-02-20
+### Fixed
+- Layout warnings on comment creation screen
+
 ## [0.0.33] - 2020-02-18
 ### Added
 - IDFA for all monetization events
