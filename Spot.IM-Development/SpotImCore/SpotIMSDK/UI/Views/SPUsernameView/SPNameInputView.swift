@@ -68,6 +68,7 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
         let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
 
         usernameTextView.textColor = .spForeground0
+        usernameTextView.backgroundColor = .spBackground0
         usernameTextView.font = font
         usernameTextView.delegate = self
         usernameTextView.textContainer.maximumNumberOfLines = 1
