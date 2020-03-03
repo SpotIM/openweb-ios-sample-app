@@ -10,13 +10,13 @@ import UIKit
 
 internal final class SPNameInputView: BaseView, SPTextInputView {
     private lazy var avatarImageView: SPAvatarView = .init()
-    private lazy var usernameTextField: BaseTextField = .init()
+    private lazy var usernameTextView: InputTextView = .init()
     private lazy var separatorView: UIView = .init()
 
     internal weak var delegate: SPTextInputViewDelegate?
 
-    var text: String? { get { usernameTextField.text }
-                        set { usernameTextField.text = newValue } }
+    var text: String? { get { usernameTextView.text }
+                        set { usernameTextView.text = newValue } }
 
     // MARK: - Overrides
 
@@ -39,13 +39,13 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     }
 
     func makeFirstResponder() {
-        usernameTextField.becomeFirstResponder()
+        usernameTextView.becomeFirstResponder()
     }
 
     // MARK: - Internal methods
 
     private func setup() {
-        addSubviews(avatarImageView, usernameTextField, separatorView)
+        addSubviews(avatarImageView, usernameTextView, separatorView)
 
         setupAvatarImageView()
         setupUsernameTextField()
@@ -67,19 +67,17 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     private func setupUsernameTextField() {
         let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
 
-        usernameTextField.textColor = .spForeground0
-        usernameTextField.font = font
-        usernameTextField.delegate = self
-
-        let placeholder = NSAttributedString(
-            string: LocalizationManager.localizedString(key: "Your nickname"),
-            attributes: [.foregroundColor: UIColor.spForeground2, .font: font]
-        )
-        usernameTextField.attributedPlaceholder = placeholder
-        usernameTextField.layout {
+        usernameTextView.textColor = .spForeground0
+        usernameTextView.font = font
+        usernameTextView.delegate = self
+        usernameTextView.textContainer.maximumNumberOfLines = 1
+        
+        usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your nickname")
+        usernameTextView.layout {
             $0.leading.equal(to: avatarImageView.trailingAnchor, offsetBy: Theme.usernameLeading)
-            $0.centerY.equal(to: avatarImageView.centerYAnchor)
+            $0.centerY.equal(to: avatarImageView.centerYAnchor, offsetBy: usernameTextView.textContainer.lineFragmentPadding)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.xOffset)
+            $0.height.equal(to: avatarImageView.heightAnchor)
         }
     }
 
@@ -98,7 +96,7 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
             self,
             selector: #selector(textFieldDidChange),
             name: UITextField.textDidChangeNotification,
-            object: usernameTextField
+            object: usernameTextView
         )
     }
 
@@ -108,15 +106,19 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     }
 
     private func notifyDelegateAboutChange() {
-        delegate?.input(self, didChange: usernameTextField.text ?? "")
+        delegate?.input(self, didChange: usernameTextView.text ?? "")
     }
 }
 
 // MARK: - Extensions
 
-extension SPNameInputView: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
+extension SPNameInputView: UITextViewDelegate {
+    func textViewDidEndEditing(_ textView: UITextView) {
         notifyDelegateAboutChange()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return text.rangeOfCharacter(from: .newlines) == nil && (textView.text.length + text.length) <= 12
     }
 }
 
