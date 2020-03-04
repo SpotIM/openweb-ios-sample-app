@@ -12,7 +12,7 @@ debug_configurations = ['Debug', 'DebugWithAds']
 abstract_target 'Shared' do
   use_frameworks!
 
-  pod 'Alamofire', '~> 4.8.2'
+  pod 'Alamofire', '~> 4.9.1'
   pod 'PromiseKit', '~> 6.8'
 
   abstract_target 'DemoApps' do
