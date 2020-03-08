@@ -102,3 +102,8 @@ This is an example of a project that uses Spot.IM iOS SDK binary (.framework) vi
 2. Go to spot-id sp_E6XN2auy
 3. Go to settings->advanced
 4. Add the publisher domain to the 'Authorized URLs' section
+
+### Adding more content to the conversations
+1. Go to https://demo-pages.itayd.now.sh/?postId={some-post-id}&spotId=sp_E6XN2auy
+2. Change the post-id in the URL to the post you want to edit
+3. Now you can see the newly created conversation on web to easily create new comments
