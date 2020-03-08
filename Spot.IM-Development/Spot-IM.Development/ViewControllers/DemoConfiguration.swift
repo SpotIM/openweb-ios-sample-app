@@ -15,6 +15,9 @@ enum DemoAppsIds: String {
     case dailyCaller = "im.spot.dailycaller"
     case focus = "im.spot.focus"
     case marketWatch = "im.spot.market.watch"
+    case aol = "im.spot.aol"
+    case express = "im.spot.express"
+    case skySports = "im.spot.sky.sports"
     case unknown = "unknown"
 }
 
@@ -158,7 +161,203 @@ class DemoConfiguration {
             articles.append(post4)
             articles.append(post5)
             
+        case .aol:
+            spotId = "sp_E6XN2auy"
+            spotFontName = "roboto"
+            spotColor = UIColor(hexString: "#3399ff")
             
+            let article1 = Article(url: "https://www.aol.com/article/news/2020/03/07/chinese-hotel-used-to-observe-virus-contacts-collapses/23943274/",
+                                   title: "Hotel used for coronavirus quarantine falls in China",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Dozens of people are trapped after a hotel being used as a coronavirus quarantine facility in eastern China falls.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/mieunoa91a4cnof67oyy")
+            let post1 = Post(spotId: spotId,
+                             conversationId: spotId + "_aol1",
+                             publishedAt: "",
+                             extractData: article1)
+            
+            let article2 = Article(url: "https://www.aol.com/article/lifestyle/2020/03/07/meghan-markle-and-prince-harry-hold-hands-receive-standing-ovation-at-british-music-festival/23943413/",
+                                   title: "Meghan Markle and Prince Harry hold hands, receive 'standing ovation' at British music festival",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Megan Markle and Prince Harry are one-upping their iconic “rain photo” this week by holding hands at a London music festival.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/rhed1l87ugmjrycjcbgx")
+            let post2 = Post(spotId: spotId,
+                             conversationId: spotId + "_aol2",
+                             publishedAt: "",
+                             extractData: article2)
+            
+            let article3 = Article(url: "https://www.aol.com/article/news/2020/03/07/new-york-gov-andrew-cuomo-declares-a-state-of-emergency-and-confirms-76-cases-of-coronavirus-in-the-state/23943266/",
+                                   title: "New York Gov. Andrew Cuomo declares a state of emergency",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "New York Gov. Andrew Cuomo declared a state of emergency on Saturday as the number of novel coronavirus cases surge across the US.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/rcpmwkag8lfnygp9bfuu")
+            let post3 = Post(spotId: spotId,
+                             conversationId: spotId + "_aol3",
+                             publishedAt: "",
+                             extractData: article3)
+            
+            let article4 = Article(url: "https://www.aol.com/article/news/2020/03/07/us-sending-military-police-to-two-border-crossings/23943306/",
+                                   title: "U.S. sending military police to two border crossings",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "The U.S. government says it is sending 160 military police and engineers to two official border crossings to deal with asylum seekers.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/hatkbq0dconrueby81x8")
+            let post4 = Post(spotId: spotId ,
+                             conversationId: spotId + "_aol4",
+                             publishedAt: "",
+                             extractData: article4)
+            
+            let article5 = Article(url: "https://www.aol.com/article/lifestyle/2020/03/07/how-gyms-yoga-studios-responding-coronavirus/23943225/",
+                                   title: "How gyms and yoga studios are responding to coronavirus",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "With mounting concerns of a coronavirus outbreak preying on Americans’ minds the industry is looking to reassure gym-goers and step up standards.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/busxtxfegpqqz1rtxant")
+            let post5 = Post(spotId: spotId,
+                             conversationId: spotId + "_aol5",
+                             publishedAt: "",
+                             extractData: article5)
+            
+            articles.append(post1)
+            articles.append(post2)
+            articles.append(post3)
+            articles.append(post4)
+            articles.append(post5)
+            
+        case .express:
+            spotId = "sp_E6XN2auy"
+            spotFontName = "roboto"
+            spotColor = UIColor(hexString: "#bb1a00")
+            
+            let article1 = Article(url: "https://www.express.co.uk/news/politics/1252244/boris-johnson-nigel-farage-jeremy-corbyn-brexit-news-uk-flooding",
+                                   title: "I agree with Jeremy! Boris Johnson is NOT the leader Britain deserves, says NIGEL FARAGE",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "IN TIMES of trouble, leaders must lead. But doubts are growing in my mind when it comes to Boris Johnson's ability to steer the nation through tricky waters.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/gczghtu8idrruhgex00u")
+            let post1 = Post(spotId: spotId,
+                             conversationId: spotId + "_express1",
+                             publishedAt: "",
+                             extractData: article1)
+            
+            let article2 = Article(url: "https://www.express.co.uk/news/uk/1252331/coronavirus-latest-news-UK-coronavirus-outbreak-italy-lockdown-coronavirus",
+                                   title: "Coronavirus map LIVE: Italians FLEE red zone seconds before lockdown begin - VIDEO",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "ITALIANS desperate to escape the coronavirus outbreak in the north of the country were filmed racing towards trains last night, just hours before a huge lockdown began.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/itnsndwdw05bqgsxl1wg")
+            let post2 = Post(spotId: spotId,
+                             conversationId: spotId + "_express2",
+                             publishedAt: "",
+                             extractData: article2)
+            
+            let article3 = Article(url: "https://www.express.co.uk/news/uk/1251533/eu-news-fisheries-panic-fear-death-loss-uk-waters-brexit-talks-france-spt",
+                                   title: "EU fisheries panic: French fishermen 'fear death' over loss of UK waters in Brexit talks",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "THE EUROPEAN UNION is demanding access to British waters in Brexit talks - but as Boris Johnson holds firm, French fishermen are fearing the worst.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/gr0tpmkdr1bxl04ffcl6")
+            let post3 = Post(spotId: spotId,
+                             conversationId: spotId + "_express3",
+                             publishedAt: "",
+                             extractData: article3)
+            
+            let article4 = Article(url: "https://www.express.co.uk/news/royal/1252321/Meghan-Markle-Duchess-of-Sussex-Prince-Harry-Royal-Family-Dagenham-school-speech-news",
+                                   title: "Meghan Markle SNUB: Did Duchess hit back at Royal Family in first speech since split?",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "MEGHAN MARKLE may have been sending a message to the Royal Family as she stood up on a stage and urged schoolchildren in Dagenham to ‘stand up for your rights' on Saturday.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/vhnptz1fogonohtnzrlw")
+            let post4 = Post(spotId: spotId ,
+                             conversationId: spotId + "_express4",
+                             publishedAt: "",
+                             extractData: article4)
+            
+            let article5 = Article(url: "https://www.express.co.uk/news/politics/1251870/brexit-news-fishing-boris-johnson-uk-eu-trade-deal-latest-conservative-party-majority",
+                                   title: "Fishing FURY: Boris issued dire warning over Brexit gamble - ‘It would ENRAGE public’",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "BORIS JOHNSON has been warned British voters will turn on him if he sacrifices UK fishing for a favourable post-Brexit trade deal with the European Union.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/u0xqndj818lkbtk2a2tz")
+            let post5 = Post(spotId: spotId,
+                             conversationId: spotId + "_express5",
+                             publishedAt: "",
+                             extractData: article5)
+            
+            articles.append(post1)
+            articles.append(post2)
+            articles.append(post3)
+            articles.append(post4)
+            articles.append(post5)
+            
+        case .skySports:
+            spotId = "sp_E6XN2auy"
+            spotFontName = "roboto"
+            spotColor = UIColor(hexString: "#307FE2")
+            
+            let article1 = Article(url: "https://www.skysports.com/football/news/11938/11951093/west-ham-boss-david-moyes-wants-league-cup-replaced-with-british-cup",
+                                   title: "West Ham boss David Moyes wants League Cup replaced with British Cup",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "West Ham manager David Moyes has proposed a British Cup following calls from UEFA president Aleksander Ceferin to scrap the League Cup.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/htmbktmgihczs1qqnex6")
+            let post1 = Post(spotId: spotId,
+                             conversationId: spotId + "_skysports1",
+                             publishedAt: "",
+                             extractData: article1)
+            
+            let article2 = Article(url: "https://www.skysports.com/football/news/11667/11951099/manchester-united-is-ole-gunnar-solskjaer-close-to-success",
+                                   title: "Manchester United: Is Ole Gunnar Solskjaer close to success?",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "There's an old joke about the lower league manager who insists his team are only two players away from challenging for honours - Lionel Messi and Cristiano Ronaldo.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/j4uhtg8ivhazywjvriq6")
+            let post2 = Post(spotId: spotId,
+                             conversationId: spotId + "_skysports2",
+                             publishedAt: "",
+                             extractData: article2)
+            
+            let article3 = Article(url: "https://www.skysports.com/football/news/11668/11949449/frank-lampard-deserves-more-credit-for-work-at-chelsea",
+                                   title: "Frank Lampard deserves more credit for work at Chelsea",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Frank Lampard's reunion with Carlo Ancelotti on Super Sunday will stir memories of Chelsea's glorious past. The pair won a Premier League and FA Cup double together at Stamford Bridge in 2010, bringing more success to a club which was becoming accustomed to it.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/n5ygeh1foikdlo8yqzpj")
+            let post3 = Post(spotId: spotId,
+                             conversationId: spotId + "_skysports3",
+                             publishedAt: "",
+                             extractData: article3)
+            
+            let article4 = Article(url: "https://www.skysports.com/football/news/11095/11949768/bruno-fernandes-personality-and-fire-convinced-me-to-sign-him-for-man-utd-says-ole-gunnar-solskjaer",
+                                   title: "Bruno Fernandes' 'personality and fire' convinced me to sign him for Man Utd, says Ole Gunnar Solskjaer",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Manchester United manager Ole Gunnar Solskjaer has revealed how a scouting trip to Portugal to scout Bruno Fernandes ultimately convinced him to bring him to Old Trafford.",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/n8baitmgarsdok6ktfwt")
+            let post4 = Post(spotId: spotId ,
+                             conversationId: spotId + "_skysports4",
+                             publishedAt: "",
+                             extractData: article4)
+            
+            let article5 = Article(url: "https://www.skysports.com/football/news/11095/11947875/ref-watch-should-evertons-manchester-united-winner-have-stood",
+                                   title: "Ref Watch: Should Everton's Manchester United 'winner' have stood?",
+                                   width: 742,
+                                   height: 1320,
+                                   description: "Why did Dominic Calvert-Lewin's Everton winner get ruled out? Why did no one spot a big mistake in the Carabao Cup final? As always, Dermot Gallagher is here with the answers...",
+                                   thumbnailUrl: "https://images.spot.im/v1/production/w5raxf6gu72bwhwx93wu")
+            let post5 = Post(spotId: spotId,
+                             conversationId: spotId + "_skysports5",
+                             publishedAt: "",
+                             extractData: article5)
+            
+            articles.append(post1)
+            articles.append(post2)
+            articles.append(post3)
+            articles.append(post4)
+            articles.append(post5)
         default:
             spotId = ""
             spotColor = .blue
