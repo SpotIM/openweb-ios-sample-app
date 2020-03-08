@@ -140,7 +140,7 @@ extension ArticleWebViewController {
         }
         
         self.webView.scrollView.isScrollEnabled = false
-        webView.isUserInteractionEnabled = false
+        webView.isUserInteractionEnabled = true
     }
     
     private func setupContainerView() {

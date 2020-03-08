@@ -276,6 +276,87 @@
 		6D4E573423A7B785005B79B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D4E573623A7B785005B79B6 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */; };
+		6D85E4382414E846000265D3 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D85E4392414E846000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
+		6D85E43A2414E846000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
+		6D85E43B2414E846000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
+		6D85E43C2414E846000265D3 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
+		6D85E43D2414E846000265D3 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
+		6D85E43E2414E846000265D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
+		6D85E43F2414E846000265D3 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
+		6D85E4402414E846000265D3 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
+		6D85E4412414E846000265D3 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
+		6D85E4422414E846000265D3 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		6D85E4432414E846000265D3 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
+		6D85E4442414E846000265D3 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */; };
+		6D85E4452414E846000265D3 /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D42304A043006B1489 /* ArticleModel.swift */; };
+		6D85E4462414E846000265D3 /* ArticleWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125E323054335006B1489 /* ArticleWebViewController.swift */; };
+		6D85E4472414E846000265D3 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
+		6D85E4482414E846000265D3 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
+		6D85E44A2414E846000265D3 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
+		6D85E44B2414E846000265D3 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 850F456B64949F1F4FC7962C /* Pods_Shared_DemoApps_MarketWatch.framework */; };
+		6D85E44D2414E846000265D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
+		6D85E44E2414E846000265D3 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		6D85E44F2414E846000265D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
+		6D85E4502414E846000265D3 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
+		6D85E4512414E846000265D3 /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
+		6D85E4522414E846000265D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
+		6D85E4532414E846000265D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
+		6D85E4552414E846000265D3 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6D85E4642414FA4B000265D3 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D85E4652414FA4B000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
+		6D85E4662414FA4B000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
+		6D85E4672414FA4B000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
+		6D85E4682414FA4B000265D3 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
+		6D85E4692414FA4B000265D3 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
+		6D85E46A2414FA4B000265D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
+		6D85E46B2414FA4B000265D3 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
+		6D85E46C2414FA4B000265D3 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
+		6D85E46D2414FA4B000265D3 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
+		6D85E46E2414FA4B000265D3 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		6D85E46F2414FA4B000265D3 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
+		6D85E4702414FA4B000265D3 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */; };
+		6D85E4712414FA4B000265D3 /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D42304A043006B1489 /* ArticleModel.swift */; };
+		6D85E4722414FA4B000265D3 /* ArticleWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125E323054335006B1489 /* ArticleWebViewController.swift */; };
+		6D85E4732414FA4B000265D3 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
+		6D85E4742414FA4B000265D3 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
+		6D85E4762414FA4B000265D3 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
+		6D85E4772414FA4B000265D3 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 850F456B64949F1F4FC7962C /* Pods_Shared_DemoApps_MarketWatch.framework */; };
+		6D85E4792414FA4B000265D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
+		6D85E47A2414FA4B000265D3 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		6D85E47B2414FA4B000265D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
+		6D85E47C2414FA4B000265D3 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
+		6D85E47D2414FA4B000265D3 /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
+		6D85E47E2414FA4B000265D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
+		6D85E47F2414FA4B000265D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
+		6D85E4812414FA4B000265D3 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6D85E49024150B8A000265D3 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D85E49124150B8A000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
+		6D85E49224150B8A000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
+		6D85E49324150B8A000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
+		6D85E49424150B8A000265D3 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
+		6D85E49524150B8A000265D3 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
+		6D85E49624150B8A000265D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
+		6D85E49724150B8A000265D3 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
+		6D85E49824150B8A000265D3 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
+		6D85E49924150B8A000265D3 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
+		6D85E49A24150B8A000265D3 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		6D85E49B24150B8A000265D3 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
+		6D85E49C24150B8A000265D3 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */; };
+		6D85E49D24150B8A000265D3 /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D42304A043006B1489 /* ArticleModel.swift */; };
+		6D85E49E24150B8A000265D3 /* ArticleWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125E323054335006B1489 /* ArticleWebViewController.swift */; };
+		6D85E49F24150B8A000265D3 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
+		6D85E4A024150B8A000265D3 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
+		6D85E4A224150B8A000265D3 /* SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; };
+		6D85E4A324150B8A000265D3 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 850F456B64949F1F4FC7962C /* Pods_Shared_DemoApps_MarketWatch.framework */; };
+		6D85E4A524150B8A000265D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
+		6D85E4A624150B8A000265D3 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		6D85E4A724150B8A000265D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
+		6D85E4A824150B8A000265D3 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
+		6D85E4A924150B8A000265D3 /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
+		6D85E4AA24150B8A000265D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
+		6D85E4AB24150B8A000265D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
+		6D85E4AD24150B8A000265D3 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
 		6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
@@ -364,6 +445,27 @@
 			remoteGlobalIDString = 44C8788C23608BC100E0E662;
 			remoteInfo = SpotImCore;
 		};
+		6D85E4352414E846000265D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 44C8788C23608BC100E0E662;
+			remoteInfo = SpotImCore;
+		};
+		6D85E4612414FA4B000265D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 44C8788C23608BC100E0E662;
+			remoteInfo = SpotImCore;
+		};
+		6D85E48D24150B8A000265D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 44C8788C23608BC100E0E662;
+			remoteInfo = SpotImCore;
+		};
 		6DA75C69238D313600FBDF19 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5D697A3322B65106001AD556 /* Project object */;
@@ -410,6 +512,39 @@
 			dstSubfolderSpec = 10;
 			files = (
 				6D4E573623A7B785005B79B6 /* SpotImCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4542414E846000265D3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6D85E4552414E846000265D3 /* SpotImCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4802414FA4B000265D3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6D85E4812414FA4B000265D3 /* SpotImCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4AC24150B8A000265D3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6D85E4AD24150B8A000265D3 /* SpotImCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,6 +793,12 @@
 		6D4E573E23A7B785005B79B6 /* Market Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Market Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D4E573F23A7B785005B79B6 /* MarketWatch.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = MarketWatch.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/MarketWatch.plist"; sourceTree = "<absolute>"; };
 		6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConversationCounters.swift; sourceTree = "<group>"; };
+		6D85E45D2414E846000265D3 /* AOL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AOL.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D85E45E2414E846000265D3 /* AOL.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = AOL.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/AOL.plist"; sourceTree = "<absolute>"; };
+		6D85E4892414FA4B000265D3 /* Express.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Express.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D85E48A2414FA4C000265D3 /* Express.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Express.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/Express.plist"; sourceTree = "<absolute>"; };
+		6D85E4B524150B8A000265D3 /* SkySports.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkySports.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D85E4B624150B8A000265D3 /* SkySports.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = SkySports.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/SkySports.plist"; sourceTree = "<absolute>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Demo.storyboard; sourceTree = "<group>"; };
@@ -728,6 +869,33 @@
 			files = (
 				6D4E572B23A7B785005B79B6 /* SpotImCore.framework in Frameworks */,
 				FBA7D2DB2DE6793AED31E76E /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4492414E846000265D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E44A2414E846000265D3 /* SpotImCore.framework in Frameworks */,
+				6D85E44B2414E846000265D3 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4752414FA4B000265D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E4762414FA4B000265D3 /* SpotImCore.framework in Frameworks */,
+				6D85E4772414FA4B000265D3 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4A124150B8A000265D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E4A224150B8A000265D3 /* SpotImCore.framework in Frameworks */,
+				6D85E4A324150B8A000265D3 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1394,6 +1562,9 @@
 				6DAFEEC6239CFCCF00441E97 /* DailyCaller.plist */,
 				6D4E571223A7A5F7005B79B6 /* Focus.de.plist */,
 				6D4E573F23A7B785005B79B6 /* MarketWatch.plist */,
+				6D85E45E2414E846000265D3 /* AOL.plist */,
+				6D85E48A2414FA4C000265D3 /* Express.plist */,
+				6D85E4B624150B8A000265D3 /* SkySports.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1407,6 +1578,9 @@
 				6DAFEEC5239CFCCF00441E97 /* DailyCallerDemo.app */,
 				6D4E571123A7A5F7005B79B6 /* Focus.de.app */,
 				6D4E573E23A7B785005B79B6 /* Market Watch.app */,
+				6D85E45D2414E846000265D3 /* AOL.app */,
+				6D85E4892414FA4B000265D3 /* Express.app */,
+				6D85E4B524150B8A000265D3 /* SkySports.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1657,6 +1831,72 @@
 			productReference = 6D4E573E23A7B785005B79B6 /* Market Watch.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6D85E4332414E846000265D3 /* AOL */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D85E4582414E846000265D3 /* Build configuration list for PBXNativeTarget "AOL" */;
+			buildPhases = (
+				6D85E4362414E846000265D3 /* [CP] Check Pods Manifest.lock */,
+				6D85E4372414E846000265D3 /* Sources */,
+				6D85E4492414E846000265D3 /* Frameworks */,
+				6D85E44C2414E846000265D3 /* Resources */,
+				6D85E4542414E846000265D3 /* Embed Frameworks */,
+				6D85E4562414E846000265D3 /* Run Script */,
+				6D85E4572414E846000265D3 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6D85E4342414E846000265D3 /* PBXTargetDependency */,
+			);
+			name = AOL;
+			productName = "Spot-IM.Development";
+			productReference = 6D85E45D2414E846000265D3 /* AOL.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6D85E45F2414FA4B000265D3 /* Express */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D85E4842414FA4B000265D3 /* Build configuration list for PBXNativeTarget "Express" */;
+			buildPhases = (
+				6D85E4622414FA4B000265D3 /* [CP] Check Pods Manifest.lock */,
+				6D85E4632414FA4B000265D3 /* Sources */,
+				6D85E4752414FA4B000265D3 /* Frameworks */,
+				6D85E4782414FA4B000265D3 /* Resources */,
+				6D85E4802414FA4B000265D3 /* Embed Frameworks */,
+				6D85E4822414FA4B000265D3 /* Run Script */,
+				6D85E4832414FA4B000265D3 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6D85E4602414FA4B000265D3 /* PBXTargetDependency */,
+			);
+			name = Express;
+			productName = "Spot-IM.Development";
+			productReference = 6D85E4892414FA4B000265D3 /* Express.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6D85E48B24150B8A000265D3 /* SkySports */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D85E4B024150B8A000265D3 /* Build configuration list for PBXNativeTarget "SkySports" */;
+			buildPhases = (
+				6D85E48E24150B8A000265D3 /* [CP] Check Pods Manifest.lock */,
+				6D85E48F24150B8A000265D3 /* Sources */,
+				6D85E4A124150B8A000265D3 /* Frameworks */,
+				6D85E4A424150B8A000265D3 /* Resources */,
+				6D85E4AC24150B8A000265D3 /* Embed Frameworks */,
+				6D85E4AE24150B8A000265D3 /* Run Script */,
+				6D85E4AF24150B8A000265D3 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6D85E48C24150B8A000265D3 /* PBXTargetDependency */,
+			);
+			name = SkySports;
+			productName = "Spot-IM.Development";
+			productReference = 6D85E4B524150B8A000265D3 /* SkySports.app */;
+			productType = "com.apple.product-type.application";
+		};
 		6DA75C67238D313600FBDF19 /* YentSpot */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6DA75C89238D313600FBDF19 /* Build configuration list for PBXNativeTarget "YentSpot" */;
@@ -1747,6 +1987,9 @@
 				6DAFEE9B239CFCCF00441E97 /* DailyCaller */,
 				6D4E56E623A7A5F7005B79B6 /* Focus.de */,
 				6D4E571323A7B785005B79B6 /* MarketWatch */,
+				6D85E4332414E846000265D3 /* AOL */,
+				6D85E45F2414FA4B000265D3 /* Express */,
+				6D85E48B24150B8A000265D3 /* SkySports */,
 				6D4E56B223A67298005B79B6 /* Package iOS */,
 				6D5DB15823CF5D73003F9D46 /* Package iOS with ads */,
 			);
@@ -1822,6 +2065,48 @@
 				6D4E573223A7B785005B79B6 /* Demo.storyboard in Resources */,
 				6D4E573323A7B785005B79B6 /* LaunchScreen.storyboard in Resources */,
 				6D4E573423A7B785005B79B6 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E44C2414E846000265D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E44D2414E846000265D3 /* Assets.xcassets in Resources */,
+				6D85E44E2414E846000265D3 /* Roboto-Italic.ttf in Resources */,
+				6D85E44F2414E846000265D3 /* GoogleService-Info.plist in Resources */,
+				6D85E4502414E846000265D3 /* fastlane in Resources */,
+				6D85E4512414E846000265D3 /* Demo.storyboard in Resources */,
+				6D85E4522414E846000265D3 /* LaunchScreen.storyboard in Resources */,
+				6D85E4532414E846000265D3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4782414FA4B000265D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E4792414FA4B000265D3 /* Assets.xcassets in Resources */,
+				6D85E47A2414FA4B000265D3 /* Roboto-Italic.ttf in Resources */,
+				6D85E47B2414FA4B000265D3 /* GoogleService-Info.plist in Resources */,
+				6D85E47C2414FA4B000265D3 /* fastlane in Resources */,
+				6D85E47D2414FA4B000265D3 /* Demo.storyboard in Resources */,
+				6D85E47E2414FA4B000265D3 /* LaunchScreen.storyboard in Resources */,
+				6D85E47F2414FA4B000265D3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4A424150B8A000265D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E4A524150B8A000265D3 /* Assets.xcassets in Resources */,
+				6D85E4A624150B8A000265D3 /* Roboto-Italic.ttf in Resources */,
+				6D85E4A724150B8A000265D3 /* GoogleService-Info.plist in Resources */,
+				6D85E4A824150B8A000265D3 /* fastlane in Resources */,
+				6D85E4A924150B8A000265D3 /* Demo.storyboard in Resources */,
+				6D85E4AA24150B8A000265D3 /* LaunchScreen.storyboard in Resources */,
+				6D85E4AB24150B8A000265D3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2038,6 +2323,177 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\n# Setup\nWORKSPACE=\"Spot-IM.Development.xcworkspace\"\nFRAMEWORK_NAME=\"SpotImCore\"\nBUILD_DIR=\"${SRCROOT}/build\"\nOUTPUT_DIR=\"${SRCROOT}/Products/\"\nOUTPUT=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework\"\nCONFIGURATION=\"${CONFIGURATION}\"\n\nrm -rf \"${BUILD_DIR}\"\nrm -rf \"${OUTPUT}\"\nmkdir -p \"${OUTPUT_DIR}\"\n\n# Build the framework for device and for simulator (using all needed architectures).\nxcodebuild -workspace \"${WORKSPACE}\" -list\n\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator OBJROOT=\"${OBJROOT}/DependantBuilds\"\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch arm64 -arch armv7 only_active_arch=no defines_module=yes -sdk \"iphoneos\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos OBJROOT=\"${OBJROOT}/DependantBuilds\"\n\n# Copy the device version of framework to output.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\" \"${OUTPUT}\"\n\n# Replace the framework executable within the framework with a new version created by merging the device and simulator frameworks' executables with lipo.\nlipo -create -output \"${OUTPUT}/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# Copy the Swift module mappings for the simulator into the framework. The device mappings already exist from step 6.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${OUTPUT}/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# Delete build.\nrm -rf \"${BUILD_DIR}\"\n\n";
+		};
+		6D85E4362414E846000265D3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-MarketWatch-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D85E4562414E846000265D3 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ac77e6a593436ee200d04258b003ab92ab191339 a05dbcb5d1836f904fb416deed65553cd89c41f5d3407e5230dde0bac183e5b6\n";
+		};
+		6D85E4572414E846000265D3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D85E4622414FA4B000265D3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-MarketWatch-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D85E4822414FA4B000265D3 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ac77e6a593436ee200d04258b003ab92ab191339 a05dbcb5d1836f904fb416deed65553cd89c41f5d3407e5230dde0bac183e5b6\n";
+		};
+		6D85E4832414FA4B000265D3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D85E48E24150B8A000265D3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Shared-DemoApps-MarketWatch-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6D85E4AE24150B8A000265D3 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" ac77e6a593436ee200d04258b003ab92ab191339 a05dbcb5d1836f904fb416deed65553cd89c41f5d3407e5230dde0bac183e5b6\n";
+		};
+		6D85E4AF24150B8A000265D3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		6DA75C88238D313600FBDF19 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2435,6 +2891,78 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6D85E4372414E846000265D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E4382414E846000265D3 /* DarkModeSettingsViewController.swift in Sources */,
+				6D85E4392414E846000265D3 /* FoxAuthenticationViewController.swift in Sources */,
+				6D85E43A2414E846000265D3 /* ViewController.swift in Sources */,
+				6D85E43B2414E846000265D3 /* Date+extensions.swift in Sources */,
+				6D85E43C2414E846000265D3 /* Autolayout.swift in Sources */,
+				6D85E43D2414E846000265D3 /* DemoViewController.swift in Sources */,
+				6D85E43E2414E846000265D3 /* AppDelegate.swift in Sources */,
+				6D85E43F2414E846000265D3 /* ArticlesListViewController.swift in Sources */,
+				6D85E4402414E846000265D3 /* String+Extensions.swift in Sources */,
+				6D85E4412414E846000265D3 /* ArticleViewController.swift in Sources */,
+				6D85E4422414E846000265D3 /* AuthenticationViewController.swift in Sources */,
+				6D85E4432414E846000265D3 /* TableViewFooterTesterViewController.swift in Sources */,
+				6D85E4442414E846000265D3 /* ArticleTableViewCell.swift in Sources */,
+				6D85E4452414E846000265D3 /* ArticleModel.swift in Sources */,
+				6D85E4462414E846000265D3 /* ArticleWebViewController.swift in Sources */,
+				6D85E4472414E846000265D3 /* DemoAuthenticationProvider.swift in Sources */,
+				6D85E4482414E846000265D3 /* DemoConfiguration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E4632414FA4B000265D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E4642414FA4B000265D3 /* DarkModeSettingsViewController.swift in Sources */,
+				6D85E4652414FA4B000265D3 /* FoxAuthenticationViewController.swift in Sources */,
+				6D85E4662414FA4B000265D3 /* ViewController.swift in Sources */,
+				6D85E4672414FA4B000265D3 /* Date+extensions.swift in Sources */,
+				6D85E4682414FA4B000265D3 /* Autolayout.swift in Sources */,
+				6D85E4692414FA4B000265D3 /* DemoViewController.swift in Sources */,
+				6D85E46A2414FA4B000265D3 /* AppDelegate.swift in Sources */,
+				6D85E46B2414FA4B000265D3 /* ArticlesListViewController.swift in Sources */,
+				6D85E46C2414FA4B000265D3 /* String+Extensions.swift in Sources */,
+				6D85E46D2414FA4B000265D3 /* ArticleViewController.swift in Sources */,
+				6D85E46E2414FA4B000265D3 /* AuthenticationViewController.swift in Sources */,
+				6D85E46F2414FA4B000265D3 /* TableViewFooterTesterViewController.swift in Sources */,
+				6D85E4702414FA4B000265D3 /* ArticleTableViewCell.swift in Sources */,
+				6D85E4712414FA4B000265D3 /* ArticleModel.swift in Sources */,
+				6D85E4722414FA4B000265D3 /* ArticleWebViewController.swift in Sources */,
+				6D85E4732414FA4B000265D3 /* DemoAuthenticationProvider.swift in Sources */,
+				6D85E4742414FA4B000265D3 /* DemoConfiguration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D85E48F24150B8A000265D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D85E49024150B8A000265D3 /* DarkModeSettingsViewController.swift in Sources */,
+				6D85E49124150B8A000265D3 /* FoxAuthenticationViewController.swift in Sources */,
+				6D85E49224150B8A000265D3 /* ViewController.swift in Sources */,
+				6D85E49324150B8A000265D3 /* Date+extensions.swift in Sources */,
+				6D85E49424150B8A000265D3 /* Autolayout.swift in Sources */,
+				6D85E49524150B8A000265D3 /* DemoViewController.swift in Sources */,
+				6D85E49624150B8A000265D3 /* AppDelegate.swift in Sources */,
+				6D85E49724150B8A000265D3 /* ArticlesListViewController.swift in Sources */,
+				6D85E49824150B8A000265D3 /* String+Extensions.swift in Sources */,
+				6D85E49924150B8A000265D3 /* ArticleViewController.swift in Sources */,
+				6D85E49A24150B8A000265D3 /* AuthenticationViewController.swift in Sources */,
+				6D85E49B24150B8A000265D3 /* TableViewFooterTesterViewController.swift in Sources */,
+				6D85E49C24150B8A000265D3 /* ArticleTableViewCell.swift in Sources */,
+				6D85E49D24150B8A000265D3 /* ArticleModel.swift in Sources */,
+				6D85E49E24150B8A000265D3 /* ArticleWebViewController.swift in Sources */,
+				6D85E49F24150B8A000265D3 /* DemoAuthenticationProvider.swift in Sources */,
+				6D85E4A024150B8A000265D3 /* DemoConfiguration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6DA75C6B238D313600FBDF19 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2505,6 +3033,21 @@
 			isa = PBXTargetDependency;
 			target = 44C8788C23608BC100E0E662 /* SpotImCore */;
 			targetProxy = 6D4E571523A7B785005B79B6 /* PBXContainerItemProxy */;
+		};
+		6D85E4342414E846000265D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 44C8788C23608BC100E0E662 /* SpotImCore */;
+			targetProxy = 6D85E4352414E846000265D3 /* PBXContainerItemProxy */;
+		};
+		6D85E4602414FA4B000265D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 44C8788C23608BC100E0E662 /* SpotImCore */;
+			targetProxy = 6D85E4612414FA4B000265D3 /* PBXContainerItemProxy */;
+		};
+		6D85E48C24150B8A000265D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 44C8788C23608BC100E0E662 /* SpotImCore */;
+			targetProxy = 6D85E48D24150B8A000265D3 /* PBXContainerItemProxy */;
 		};
 		6DA75C68238D313600FBDF19 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2605,7 +3148,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				ENABLE_BITCODE = NO;
@@ -2657,7 +3200,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2751,7 +3294,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -2802,7 +3345,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2837,7 +3380,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -2873,7 +3416,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3034,7 +3577,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3063,7 +3606,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3170,7 +3713,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3199,7 +3742,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3228,7 +3771,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3257,7 +3800,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3286,7 +3829,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3315,7 +3858,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3344,7 +3887,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3373,7 +3916,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3430,6 +3973,354 @@
 			};
 			name = ReleaseWithAds;
 		};
+		6D85E4592414E846000265D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 490956A5F750A260A646549B /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AOL;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 139;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = AOL.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6D85E45A2414E846000265D3 /* DebugWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1FA9F47DE9A299A765BFE2FE /* Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AOL;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 139;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = AOL.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugWithAds;
+		};
+		6D85E45B2414E846000265D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1285EDB6735264628724B70D /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AOL;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 139;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = AOL.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "AOL demo app";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6D85E45C2414E846000265D3 /* ReleaseWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B59C6968BD13A80AD78E4343 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AOL;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 139;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = AOL.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "AOL demo app";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseWithAds;
+		};
+		6D85E4852414FA4B000265D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 490956A5F750A260A646549B /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Express;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 139;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = Express.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6D85E4862414FA4B000265D3 /* DebugWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1FA9F47DE9A299A765BFE2FE /* Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Express;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 139;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = Express.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugWithAds;
+		};
+		6D85E4872414FA4B000265D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1285EDB6735264628724B70D /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Express;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 139;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = Express.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Express demo app";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6D85E4882414FA4B000265D3 /* ReleaseWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B59C6968BD13A80AD78E4343 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = Express;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 139;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = Express.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Express demo app";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseWithAds;
+		};
+		6D85E4B124150B8A000265D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 490956A5F750A260A646549B /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = SkySports;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 139;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = SkySports.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6D85E4B224150B8A000265D3 /* DebugWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1FA9F47DE9A299A765BFE2FE /* Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = SkySports;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 139;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = SkySports.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DebugWithAds;
+		};
+		6D85E4B324150B8A000265D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1285EDB6735264628724B70D /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = SkySports;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 139;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = SkySports.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Sky Sports";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		6D85E4B424150B8A000265D3 /* ReleaseWithAds */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B59C6968BD13A80AD78E4343 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = SkySports;
+				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 139;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = SkySports.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Demo;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Sky Sports";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = ReleaseWithAds;
+		};
 		6DA75C8A238D313600FBDF19 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D84F72C4DB0D4F4F9C3FE2E7 /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */;
@@ -3438,7 +4329,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3467,7 +4358,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3496,7 +4387,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3525,7 +4416,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3554,7 +4445,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3583,7 +4474,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3612,7 +4503,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3641,7 +4532,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 139;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -3749,6 +4640,39 @@
 				6D5DB15C23CF5D73003F9D46 /* DebugWithAds */,
 				6D5DB15D23CF5D73003F9D46 /* Release */,
 				6D5DB15E23CF5D73003F9D46 /* ReleaseWithAds */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6D85E4582414E846000265D3 /* Build configuration list for PBXNativeTarget "AOL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D85E4592414E846000265D3 /* Debug */,
+				6D85E45A2414E846000265D3 /* DebugWithAds */,
+				6D85E45B2414E846000265D3 /* Release */,
+				6D85E45C2414E846000265D3 /* ReleaseWithAds */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6D85E4842414FA4B000265D3 /* Build configuration list for PBXNativeTarget "Express" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D85E4852414FA4B000265D3 /* Debug */,
+				6D85E4862414FA4B000265D3 /* DebugWithAds */,
+				6D85E4872414FA4B000265D3 /* Release */,
+				6D85E4882414FA4B000265D3 /* ReleaseWithAds */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6D85E4B024150B8A000265D3 /* Build configuration list for PBXNativeTarget "SkySports" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D85E4B124150B8A000265D3 /* Debug */,
+				6D85E4B224150B8A000265D3 /* DebugWithAds */,
+				6D85E4B324150B8A000265D3 /* Release */,
+				6D85E4B424150B8A000265D3 /* ReleaseWithAds */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
