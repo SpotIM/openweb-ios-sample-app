@@ -16,7 +16,6 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
     
     private var banner: DFPBannerView?
     private var interstitial: DFPInterstitial?
-    private let bannerSize: GADAdSize = kGADAdSizeBanner
     private let spotId: String
     
     init(spotId: String) {
@@ -24,8 +23,19 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
         super.init()
     }
     
-    func setupAdsBanner(with adId: String = Configuration.testBannerID, in controller: UIViewController) {
-        banner = DFPBannerView(adSize: bannerSize)
+    func setupAdsBanner(with adId: String = Configuration.testBannerID, in controller: UIViewController, validSizes: Set<AdSize>) {
+        var sizes: [NSValue] = validSizes.map { (size) -> NSValue in
+            let gadSize = parseAdSizeToGADAdSize(adSize: size)
+            return NSValueFromGADAdSize(gadSize)
+        }
+        
+        if sizes.isEmpty {
+            let defaultSize = parseAdSizeToGADAdSize(adSize: .small)
+            sizes.append(NSValueFromGADAdSize(defaultSize))
+        }
+        
+        banner = DFPBannerView()
+        banner?.validAdSizes = sizes
         banner?.adUnitID = adId
         banner?.delegate = self
         banner?.rootViewController = controller
@@ -53,7 +63,16 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
         return true
     }
     
-
+    private func parseAdSizeToGADAdSize(adSize: AdSize) -> GADAdSize {
+        switch adSize {
+        case .small:
+            return kGADAdSizeBanner
+        case .medium:
+            return kGADAdSizeLargeBanner
+        case .large:
+            return kGADAdSizeMediumRectangle
+        }
+    }
 }
 
 extension GoogleAdsProvider: GADInterstitialDelegate {
@@ -84,7 +103,7 @@ extension GoogleAdsProvider: GADBannerViewDelegate {
             $0.centerX.equal(to: self.bannerView.centerXAnchor)
             $0.centerY.equal(to: self.bannerView.centerYAnchor)
         }
-        bannerDelegate?.bannerLoaded(adBannerSize: bannerSize.size)
+        bannerDelegate?.bannerLoaded(adBannerSize: bannerView.adSize.size)
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {

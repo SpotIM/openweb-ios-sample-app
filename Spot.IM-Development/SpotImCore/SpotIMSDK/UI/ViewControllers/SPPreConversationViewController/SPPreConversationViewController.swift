@@ -12,12 +12,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     private let PRE_LOADED_MESSAGES_MAX_NUM = 15
     
-    var adsProvider: AdsProvider? {
-        didSet {
-            adsProvider?.bannerDelegate = self
-            adsProvider?.interstitialDelegate = self
-        }
-    }
+    let adsProvider: AdsProvider
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
     private lazy var header: SPPreConversationHeaderView = .init()
@@ -45,9 +40,15 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider) {
+        
+        self.adsProvider = adsProvider
         self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
+        
         super.init(model: model)
+        
+        adsProvider.bannerDelegate = self
+        adsProvider.interstitialDelegate = self
     }
     
     override func viewDidLoad() {
@@ -312,13 +313,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
                     
-                    adsProvider?.setupAdsBanner(with: adsId, in: self)
+                    adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small, .medium, .large])
                 }
             case .interstitial:
                 if model.adsGroup().interstitialEnabled() {
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
-                    adsProvider?.setupInterstitial(with: adsId)
+                    adsProvider.setupInterstitial(with: adsId)
                 }
             default:
                 break
@@ -360,8 +361,7 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     
     func showMoreComments() {
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
-        if let adsProvider = adsProvider,
-            model.adsGroup().interstitialEnabled(),
+        if  model.adsGroup().interstitialEnabled(),
             AdsManager.shouldShowInterstitial(for: model.dataSource.postId),
             adsProvider.showInterstitial(in: self) {
             preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
@@ -393,7 +393,7 @@ extension SPPreConversationViewController { // SPCommentCellDelegate
 
 extension SPPreConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(adBannerSize: CGSize) {
-        guard let bannerView = adsProvider?.bannerView else { return }
+        let bannerView = adsProvider.bannerView
         
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
         footerView.updateBannerView(bannerView, height: adBannerSize.height)

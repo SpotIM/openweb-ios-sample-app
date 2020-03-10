@@ -48,9 +48,14 @@ internal struct AdsABGroup {
     }
 }
 
+internal enum AdSize {
+    case small
+    case medium
+    case large
+}
+
 internal protocol AdsProvider: class {
-    
-    func setupAdsBanner(with adId: String, in controller: UIViewController)
+    func setupAdsBanner(with adId: String, in controller: UIViewController, validSizes: Set<AdSize>)
     func setupInterstitial(with adId: String)
     
     ///Return` true` or `false` if interstitial ready or not

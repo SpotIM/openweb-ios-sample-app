@@ -104,11 +104,11 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.conversationModel = conversationModel
         realTimeService.delegate = self.conversationModel
         
-        let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages)
+        let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages, adsProvider: adsManager.adsProvider())
         
         self.conversationModel.delegates.add(delegate: preConversationViewController)
         self.conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
-        preConversationViewController.adsProvider = adsManager.adsProvider()
+        
         preConversationViewController.delegate = self
         preConversationViewController.preConversationDelegate = self
         preConversationViewController.dataLoaded = { [weak self] in
@@ -122,9 +122,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
-        let controller = SPMainConversationViewController(model: model)
+        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider())
     
-        controller.adsProvider = adsManager.adsProvider()
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         
