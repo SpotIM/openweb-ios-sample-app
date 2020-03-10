@@ -23,11 +23,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     var commentIdToShowOnOpen: String?
     
-    var adsProvider: AdsProvider? {
-        didSet {
-            adsProvider?.bannerDelegate = self
-        }
-    }
+    let adsProvider: AdsProvider
         
     private let sortView = SPConversationSummaryView()
 
@@ -64,9 +60,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         }
     }
 
-    override init(model: SPMainConversationModel) {
+    init(model: SPMainConversationModel, adsProvider: AdsProvider) {
         Logger.verbose("FirstComment: Main view controller created")
+        self.adsProvider = adsProvider
+        
         super.init(model: model)
+        
+        adsProvider.bannerDelegate = self
     }
     // MARK: - Overrides
     
@@ -293,7 +293,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                 if model.adsGroup().mainConversationBannerEnabled() {
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
-                    adsProvider?.setupAdsBanner(with: adsId, in: self)
+                    adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small])
                 }
             default:
                 break
@@ -534,9 +534,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
 
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(adBannerSize: CGSize) {
-        guard
-            let bannerView = adsProvider?.bannerView
-            else { return }
+        let bannerView = adsProvider.bannerView
         
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
         footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
