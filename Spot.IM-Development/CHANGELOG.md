@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for more banner ad sizes
 
+### Changed
+- Placement of the pre-conversation ad. From bottom to top of the UI
+
 ## [0.0.35] - 2020-03-04
 ### Changed
 - UITextField to UITextView in comment creation screen to resolve focusing issue with Channel 7
