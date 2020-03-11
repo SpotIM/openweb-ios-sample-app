@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Placement of the pre-conversation ad. From bottom to top of the UI
 
+### Fixed
+- Sticky banner in main conversation not showing
+
 ## [0.0.35] - 2020-03-04
 ### Changed
 - UITextField to UITextView in comment creation screen to resolve focusing issue with Channel 7
