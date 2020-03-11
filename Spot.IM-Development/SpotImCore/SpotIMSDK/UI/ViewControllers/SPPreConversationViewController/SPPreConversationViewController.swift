@@ -15,6 +15,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     let adsProvider: AdsProvider
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
+    private lazy var bannerView: PreConversationBannerView = .init()
     private lazy var header: SPPreConversationHeaderView = .init()
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
@@ -33,6 +34,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     internal override var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitPreConv }
 
     private var totalHeight: CGFloat {
+        bannerView.frame.height +
+        Theme.bannerViewMargin +
         header.frame.height +
         whatYouThinkView.frame.height +
         tableView.frame.height +
@@ -109,10 +112,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     // MARK: - Private methods
 
     override func setupUI() {
-        view.addSubviews(header, whatYouThinkView, footerView)
+        view.addSubviews(bannerView, header, whatYouThinkView, footerView)
 
         super.setupUI()
 
+        setupBannerView()
         setupHeader()
         setupWhatYouThinkView()
         setupFooterView()
@@ -120,11 +124,19 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         footerView.setShowMoreCommentsButtonColor(color: .brandColor, withSeparator: true)
     }
     
+    private func setupBannerView() {
+        bannerView.layout {
+            $0.leading.equal(to: view.leadingAnchor)
+            $0.trailing.equal(to: view.trailingAnchor)
+            $0.top.equal(to: view.topAnchor)
+        }
+    }
+
     private func setupHeader() {
         header.set(title: LocalizationManager.localizedString(key: "Conversation"))
 
         header.layout {
-            $0.top.equal(to: view.topAnchor)
+            $0.top.equal(to: bannerView.bottomAnchor, offsetBy: Theme.bannerViewMargin)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.headerHeight)
@@ -144,7 +156,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.height.equal(to: Theme.whatYouThinkHeight)
         }
     }
-
+    
     override func setupTableView() {
         super.setupTableView()
 
@@ -396,7 +408,12 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
         let bannerView = adsProvider.bannerView
         
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
-        footerView.updateBannerView(bannerView, height: adBannerSize.height)
+    
+        self.bannerView.layout {
+            $0.height.equal(to: adBannerSize.height)
+        }
+        
+        self.bannerView.update(bannerView, height: adBannerSize.height)
     }
     
     func bannerFailedToLoad() {
@@ -433,6 +450,7 @@ private extension SPPreConversationViewController {
     private enum Theme {
         static let whatYouThinkHeight: CGFloat = 64
         static let headerHeight: CGFloat = 50
+        static let bannerViewMargin: CGFloat = 40
     }
 
 }

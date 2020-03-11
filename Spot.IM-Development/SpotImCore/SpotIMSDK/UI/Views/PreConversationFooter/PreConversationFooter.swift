@@ -25,12 +25,10 @@ internal final class SPPreConversationFooter: BaseView {
     private lazy var privacyButton: BaseButton = .init()
     private lazy var spotIMIcon: BaseUIImageView = .init()
     private lazy var addSpotIMButton: BaseButton = .init()
-    private lazy var bannerContainerView: BaseView = .init()
-    private var bannerView: UIView?
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
     private var moreCommentsTopConstraint: NSLayoutConstraint?
-    private var bannerContainerHeight: NSLayoutConstraint?
+    
     
     internal weak var delegate: SPPreConversationFooterDelegate?
 
@@ -45,31 +43,16 @@ internal final class SPPreConversationFooter: BaseView {
         showMoreCommentsButton.backgroundColor = color
         separatorView.isHidden = !withSeparator
     }
-
-    func updateBannerView(_ bannerView: UIView, height: CGFloat) {
-        self.bannerView?.removeFromSuperview()
-        self.bannerView = bannerView
-        bannerContainerView.addSubview(bannerView)
-        bannerView.layout {
-            $0.height.equal(to: height)
-            $0.leading.equal(to: bannerContainerView.leadingAnchor)
-            $0.trailing.equal(to: bannerContainerView.trailingAnchor)
-            $0.bottom.equal(to: bannerContainerView.bottomAnchor)
-        }
-        bannerContainerHeight?.constant = height + 30.0
-    }
     
     private func setup() {
         addSubviews(separatorView,
                     showMoreCommentsButton,
-                    bannerContainerView,
                     termsButton,
                     dotLabel,
                     privacyButton,
                     spotIMIcon,
                     addSpotIMButton)
         setupShowMoreCommentsButton()
-        setupBannerView()
         setupTermsButton()
         setupDotLabel()
         setupPrivacyButton()
@@ -115,15 +98,6 @@ internal final class SPPreConversationFooter: BaseView {
             moreCommentsHeightConstraint = $0.height.equal(to: Theme.showMoreCommentsButtonHeight)
         }
     }
-
-    private func setupBannerView() {
-        bannerContainerView.layout {
-            $0.top.equal(to: showMoreCommentsButton.bottomAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            bannerContainerHeight = $0.height.equal(to: 0.0)
-        }
-    }
     
     private func setupTermsButton() {
         let title = LocalizationManager.localizedString(key: "Terms")
@@ -133,7 +107,7 @@ internal final class SPPreConversationFooter: BaseView {
         termsButton.addTarget(self, action: #selector(showTerms), for: .touchUpInside)
 
         termsButton.layout {
-            $0.top.equal(to: bannerContainerView.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
+            $0.top.equal(to: showMoreCommentsButton.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.horisontalMargin)
             $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
             $0.height.equal(to: 15)
