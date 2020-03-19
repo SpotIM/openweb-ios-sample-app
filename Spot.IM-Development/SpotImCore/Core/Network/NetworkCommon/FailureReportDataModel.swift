@@ -26,13 +26,22 @@ extension ParametersPresentable where Self: Encodable {
 }
 
 struct FailureReportDataModel: Encodable, ParametersPresentable {
-    
     let errorSource: String
     let httpPayload: FailureHttpPayload
     let isRegistered: Bool
     let platform: String
     let userId: String
+}
 
+struct MonetizationFailureModel: Encodable, ParametersPresentable {
+    let source: MonetizationSource
+    let reason: String
+    let bannerType: AdType
+}
+
+enum MonetizationSource: String, Encodable {
+    case preConversation = "pre_converstaion"
+    case mainConversation = "main_conversation"
 }
 
 struct FailureHttpPayload: Encodable {

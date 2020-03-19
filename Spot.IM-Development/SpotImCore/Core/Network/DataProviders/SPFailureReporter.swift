@@ -43,6 +43,24 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         }
     }
     
+    func sendMonetizationFaliureReport(_ faluireData: ParametersPresentable) {
+        guard let spotKey = SPClientSettings.main.spotKey else { return }
+        
+        let spRequest = SPFailureReportRequest.error
+        let headers = HTTPHeaders.basic(with: spotKey)
+        
+        manager.execute(
+            request: spRequest,
+            parameters: faluireData.parameters(),
+            parser: EmptyParser(),
+            headers: headers
+        ) { (result, response) in
+            guard case let .failure(error) = result else { return }
+            
+            Logger.error(error)
+        }
+    }
+    
     private func prepareReportDataModel(_ rawReport: RawReportModel) -> FailureReportDataModel {
         var bodyString: String = rawReport.errorMessage
         if let data = rawReport.errorData, let dataString = String(data: data, encoding: .utf8) {

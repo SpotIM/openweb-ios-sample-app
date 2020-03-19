@@ -76,6 +76,9 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
 }
 
 extension GoogleAdsProvider: GADInterstitialDelegate {
+    func interstitialDidReceiveAd(_ ad: GADInterstitial) {
+        interstitialDelegate?.interstitialLoaded()
+    }
     
     func interstitialDidDismissScreen(_ ad: GADInterstitial) {
         interstitialDelegate?.interstitialDidDismiss()
@@ -86,7 +89,7 @@ extension GoogleAdsProvider: GADInterstitialDelegate {
     }
     
     func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
-        interstitialDelegate?.interstitialFailedToLoad()
+        interstitialDelegate?.interstitialFailedToLoad(error: error)
     }
     
     func interstitialDidFail(toPresentScreen ad: GADInterstitial) {
@@ -108,7 +111,7 @@ extension GoogleAdsProvider: GADBannerViewDelegate {
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
         Logger.error(error)
-        bannerDelegate?.bannerFailedToLoad()
+        bannerDelegate?.bannerFailedToLoad(error: error)
     }
     
 }
