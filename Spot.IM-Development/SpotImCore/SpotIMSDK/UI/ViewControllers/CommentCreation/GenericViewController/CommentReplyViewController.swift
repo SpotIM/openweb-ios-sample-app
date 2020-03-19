@@ -224,7 +224,7 @@ extension CommentReplyViewController {
         scrollView.addSubview(mainContainerView)
         mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton)
         topContainerView.addSubview(topContainerStack)
-
+        
         configureMainContainer()
         configureTopContainerStack()
         configureTopContainer()
@@ -321,8 +321,7 @@ extension CommentReplyViewController {
         
         postButton.addCornerRadius(Theme.postButtonRadius)
         postButton.layout {
-            mainContainerBottomConstraint = $0.bottom.equal(to: mainContainerView.layoutMarginsGuide.bottomAnchor,
-                                                            offsetBy: -Theme.postButtonBottom)
+            mainContainerBottomConstraint = $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.postButtonTrailing)
             $0.height.equal(to: Theme.postButtonHeight)
         }
@@ -338,14 +337,14 @@ extension CommentReplyViewController: KeyboardHandable {
             let expandedKeyboardHeight = notification.keyboardSize?.height,
             let animationDuration = notification.keyboardAnimationDuration
             else { return }
-        updateBottomConstraint(constant: expandedKeyboardHeight + Theme.postButtonBottom,
+        updateBottomConstraint(constant: expandedKeyboardHeight - Theme.postButtonBottom,
                                animationDuration: animationDuration)
     }
     
     func keyboardWillHide(_ notification: Notification) {
         guard let animationDuration = notification.keyboardAnimationDuration else { return }
         
-        updateBottomConstraint(constant: Theme.mainOffset, animationDuration: animationDuration)
+        updateBottomConstraint(constant: 0, animationDuration: animationDuration)
     }
     
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
@@ -394,8 +393,7 @@ extension CommentReplyViewController: AuthenticationViewDelegate {
 // MARK: - Theme
 
 private enum Theme {
-    
-    static let postButtonBottom: CGFloat = 28.0
+    static let postButtonBottom: CGFloat = 15.0
     static let mainOffset: CGFloat = 16.0
     static let postButtonHeight: CGFloat = 32.0
     static let postButtonRadius: CGFloat = 5.0
@@ -404,5 +402,4 @@ private enum Theme {
     static let postButtonTrailing: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
     static let inputViewLeadingInset: CGFloat = 10.0
-//    static let inputViewLeadingInset: CGFloat = 16.0
 }
