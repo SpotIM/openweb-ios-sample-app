@@ -16,7 +16,7 @@ struct SPAdsConfiguration: Decodable {
     let monetizationId: String?
 }
 
-enum AdType: String{
+enum AdType: String, Encodable {
     case banner = "sdk_banner"
     case interstitial = "sdk_interstitial"
 }

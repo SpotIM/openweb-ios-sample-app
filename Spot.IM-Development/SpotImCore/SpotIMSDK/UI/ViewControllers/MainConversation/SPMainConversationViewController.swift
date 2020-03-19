@@ -541,7 +541,9 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
         footer.updateBannerView(bannerView, height: adBannerSize.height)
     }
     
-    func bannerFailedToLoad() {
+    func bannerFailedToLoad(error: Error) {
+        let monetizationFailureData = MonetizationFailureModel(source: .mainConversation, reason: error.localizedDescription, bannerType: .banner)
+        SPDefaultFailureReporter().sendMonetizationFaliureReport(monetizationFailureData)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed), source: .conversation)
     }
 }

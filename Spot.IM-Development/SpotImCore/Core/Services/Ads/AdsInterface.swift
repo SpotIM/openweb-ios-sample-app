@@ -10,14 +10,14 @@ import UIKit
 
 internal protocol AdsProviderBannerDelegate: class {
     func bannerLoaded(adBannerSize: CGSize)
-    func bannerFailedToLoad()
+    func bannerFailedToLoad(error: Error)
 }
 
 internal protocol AdsProviderInterstitialDelegate: class {
     func interstitialLoaded()
     func interstitialWillBeShown()
     func interstitialDidDismiss()
-    func interstitialFailedToLoad()
+    func interstitialFailedToLoad(error: Error)
 }
 
 internal struct AdsABGroup {
