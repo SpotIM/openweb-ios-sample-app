@@ -50,8 +50,13 @@ class FoxAuthenticationViewController: UIViewController {
         SpotIm.sso(withJwtSecret: token) { response, error in
             if let success = response?.success, success {
                 print("Authentication successful!")
+                self.navigationController?.popViewController(animated: true)
             } else {
                 print("Authentication error:\n\(String(describing: error))")
+                let alert = UIAlertController(title: "Failed authenticating with SpotIm", message: error?.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                   }))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
@@ -61,6 +66,7 @@ class FoxAuthenticationViewController: UIViewController {
             UIApplication.shared.open(url)
         }
     }
+    
     private func authenticate(email:String, password:String,  completion: @escaping (_ token: String?, _ error: String?) -> Void) {
         
         let parameters = ["email": email, "password": password]

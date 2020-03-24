@@ -29,15 +29,17 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
+    let useLoginDelegate: Bool
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
-    init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String) {
+    init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String, useLoginDelegate: Bool) {
         self.spotId = spotId
         self.postId = postId
         self.metadata = metadata
         self.url = url
         self.authenticationControllerId = authenticationControllerId
+        self.useLoginDelegate = useLoginDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,18 +54,33 @@ internal final class ArticleWebViewController: UIViewController {
         title = "Article"
         setup()
         
-        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { result in
-            switch result {
-            case .success(let coordinator):
-                self.spotIMCoordinator = coordinator
-                coordinator.setLayoutDelegate(delegate: self)
-                self.setupSpotView()
-            case .failure(let error):
-                print("Failed to get flow coordinator: \(error)")
-            @unknown default:
-                fatalError()
+        if useLoginDelegate {
+            SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { result in
+                switch result {
+                case .success(let coordinator):
+                    self.spotIMCoordinator = coordinator
+                    coordinator.setLayoutDelegate(delegate: self)
+                    self.setupSpotView()
+                case .failure(let error):
+                    print("Failed to get flow coordinator: \(error)")
+                @unknown default:
+                    fatalError()
+                }
+                
             }
-            
+        } else { // USE OLD LOGIN DELEGATE SpotImSDKNavigationDelegate
+            SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { result in
+                switch result {
+                case .success(let coordinator):
+                    self.spotIMCoordinator = coordinator
+                    coordinator.setLayoutDelegate(delegate: self)
+                    self.setupSpotView()
+                case .failure(let error):
+                    print("Failed to get flow coordinator: \(error)")
+                @unknown default:
+                    fatalError()
+                }
+            }
         }
     }
     
@@ -171,6 +188,14 @@ extension ArticleWebViewController: SpotImSDKNavigationDelegate {
         let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
         
         return controller
+    }
+}
+
+extension ArticleWebViewController: SpotImLoginDelegate {
+    func startLoginFlow() {
+        let controller = controllerForSSOFlow()
+        controller.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 

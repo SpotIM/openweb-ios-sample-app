@@ -22,6 +22,10 @@ public protocol AuthenticationViewDelegate: AnyObject {
     func authenticationStarted()
 }
 
+public protocol SpotImLoginDelegate: AnyObject {
+    func startLoginFlow()
+}
+
 final public class SpotImSDKFlowCoordinator: Coordinator {
     
     weak var containerViewController: UIViewController?
@@ -34,6 +38,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
     private weak var spotLayoutDelegate: SpotImLayoutDelegate?
+    private weak var loginDelegate: SpotImLoginDelegate?
     
     private var localCommentReplyDidCreate: ((SPComment) -> Void)?
     private var commentReplyCreationBlocked: ((String?) -> Void)?
@@ -53,6 +58,21 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
         sdkNavigationDelegate = delegate
+        adsManager = AdsManager(spotId: spotId)
+        apiManager = ApiManager()
+        self.spotConfig = spotConfig
+        realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
+        imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
+        
+        configureAPIAndRealTimeHandlers()
+        
+        if let localeId = localeId {
+            LocalizationManager.setLocale(localeId)
+        }
+    }
+    
+    internal init(spotConfig: SpotConfig, loginDelegate: SpotImLoginDelegate, spotId: String, localeId: String?) {
+        self.loginDelegate = loginDelegate
         adsManager = AdsManager(spotId: spotId)
         apiManager = ApiManager()
         self.spotConfig = spotConfig
@@ -250,8 +270,10 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 
 extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
     internal func presentAuth() {
-        if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
-            SpotIm.authProvider.ssoAuthDelegate = self
+        SpotIm.authProvider.ssoAuthDelegate = self
+        if let loginDelegate = self.loginDelegate {
+            loginDelegate.startLoginFlow()
+        } else if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
             let container = UINavigationController(rootViewController: controller)
             let barItem = UIBarButtonItem(title: "Back",
                                           style: .plain,
@@ -281,7 +303,9 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     @objc
     private func hidePresentedViewController() {
-        navigationController?.dismiss(animated: true, completion: nil)
+        if let _ = sdkNavigationDelegate {
+            navigationController?.dismiss(animated: true, completion: nil)
+        }
     }
 }
 
