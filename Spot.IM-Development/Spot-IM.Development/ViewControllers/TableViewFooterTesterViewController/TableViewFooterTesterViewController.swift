@@ -48,7 +48,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     override func viewDidLoad() {
         SpotIm.initialize(spotId: spotId)
         setupTableView()
-        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { [weak self] result in
+        SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -140,15 +140,16 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     }
 }
 
-extension TableViewFooterTesterViewController: SpotImSDKNavigationDelegate {
-    func controllerForSSOFlow() -> UIViewController {
+extension TableViewFooterTesterViewController: SpotImLoginDelegate {
+    func startLoginFlow() {
         let controller: AuthenticstionViewController = UIStoryboard(
             name: "Main",
             bundle: nil
         ).instantiateViewController(withIdentifier: "AuthenticstionViewController")
             as! AuthenticstionViewController
         
-        return controller
+        controller.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 

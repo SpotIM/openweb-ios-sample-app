@@ -167,8 +167,10 @@ public class SpotIm {
 
      The SpotImSDKFlowCoordinator is the start point to interact with SpotIm commenting system UI
 
+     - Parameter navigationDelegate: DEPRECATED - please use LoginDelegate instead
      - Parameter completion: A completion handler to receive the response/error of the completeSSO process
      */
+    @available(*, deprecated, message: "Use SpotIm.createSpotImFlowCoordinator(loginDelegate: LoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) instead")
     public static func createSpotImFlowCoordinator(navigationDelegate: SpotImSDKNavigationDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
         execute(call: { initResult in
             guard let spotId = spotId else {
@@ -177,6 +179,28 @@ public class SpotIm {
             }
             
             let coordinator = SpotImSDKFlowCoordinator(spotConfig: initResult.config, delegate: navigationDelegate, spotId: spotId, localeId: initResult.config.appConfig.mobileSdk?.locale)
+            completion(SpotImResult.success(coordinator))
+        }) { (error) in
+            completion(SpotImResult.failure(error))
+        }
+    }
+    
+    /**
+    Factory method to create a SpotImSDKFlowCoordinator objcet
+
+     The SpotImSDKFlowCoordinator is the start point to interact with SpotIm commenting system UI
+
+     - Parameter loginDelegate: A delegate to notify the parent app that a login flow was requested by the user
+     - Parameter completion: A completion handler to receive the response/error of the completeSSO process
+     */
+    public static func createSpotImFlowCoordinator(loginDelegate: SpotImLoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
+        execute(call: { initResult in
+            guard let spotId = spotId else {
+                completion(SpotImResult.failure(.internalError("Please call init SDK")))
+                return
+            }
+            
+            let coordinator = SpotImSDKFlowCoordinator(spotConfig: initResult.config, loginDelegate: loginDelegate, spotId: spotId, localeId: initResult.config.appConfig.mobileSdk?.locale)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
             completion(SpotImResult.failure(error))

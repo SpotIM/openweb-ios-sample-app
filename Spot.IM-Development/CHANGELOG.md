@@ -8,9 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Error report when monetization ads fail to load
+- LoginDelegate - A new and better way to trigger a login flow from the SDK to the parent app
+  SpotIm.createSpotImFlowCoordinator(loginDelegate: LoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void))
 
 ### Fixed
 - Floating 'post' button on create comment screen
+
+### Deprecated
+- SpotIm.createSpotImFlowCoordinator(navigationDelegate: SpotImSDKNavigationDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void))
 
 ## [0.0.36] - 2020-03-11
 ### Added

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,7 +11,7 @@
         <!--Authenticstion View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="AuthenticstionViewController" id="BYZ-38-t0r" customClass="AuthenticstionViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthenticstionViewController" id="BYZ-38-t0r" customClass="AuthenticstionViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -167,7 +167,7 @@
         <!--Article View Controller-->
         <scene sceneID="gZq-Jd-NbV">
             <objects>
-                <viewController storyboardIdentifier="articleViewController" id="oc6-g4-D2s" customClass="ArticleViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="articleViewController" id="oc6-g4-D2s" customClass="ArticleViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ftL-P1-6zt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -238,13 +238,13 @@
         <!--View Controller-->
         <scene sceneID="a3e-oC-G0f">
             <objects>
-                <viewController id="COS-Sr-MbI" customClass="ViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="COS-Sr-MbI" customClass="ViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BKE-Ut-tNt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="htH-kI-1Pw">
-                                <rect key="frame" x="97" y="584" width="181" height="30"/>
+                                <rect key="frame" x="97" y="464.5" width="181" height="30"/>
                                 <state key="normal" title="Authentication Playground"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="show" id="K30-vi-Uta"/>
@@ -258,28 +258,28 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qNv-s9-0hd">
-                                <rect key="frame" x="83" y="499" width="209" height="30"/>
-                                <state key="normal" title="Show SSO Demo Spot Articles"/>
+                                <rect key="frame" x="95.5" y="384.5" width="184" height="30"/>
+                                <state key="normal" title="Show Fox News (Old login)"/>
                                 <connections>
-                                    <action selector="showMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="umK-bc-ChK"/>
+                                    <action selector="showFoxWithOldLogin:" destination="COS-Sr-MbI" eventType="touchUpInside" id="ApA-0X-vps"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0p1-DY-kYy">
-                                <rect key="frame" x="107.5" y="539" width="160" height="30"/>
+                                <rect key="frame" x="107.5" y="424.5" width="160" height="30"/>
                                 <state key="normal" title="Show Pre-conversation"/>
                                 <connections>
                                     <action selector="showPreConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="dJN-oM-5sz"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hsr-To-3uz">
-                                <rect key="frame" x="105" y="449" width="165" height="30"/>
-                                <state key="normal" title="Show Fox News Articles"/>
+                                <rect key="frame" x="92" y="344.5" width="191" height="30"/>
+                                <state key="normal" title="Show Fox News (New login)"/>
                                 <connections>
                                     <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kdg-Eo-W3h"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZp-Pq-loo">
-                                <rect key="frame" x="100" y="409" width="175" height="30"/>
+                                <rect key="frame" x="100" y="304.5" width="175" height="30"/>
                                 <state key="normal" title="Show Demo Spot Articles"/>
                                 <connections>
                                     <action selector="showDemoSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kt7-rq-mfA"/>
@@ -302,7 +302,7 @@ Build: [unknown]</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ont-uO-1R5">
-                                <rect key="frame" x="107.5" y="371" width="160" height="30"/>
+                                <rect key="frame" x="107.5" y="266.5" width="160" height="30"/>
                                 <accessibility key="accessibilityConfiguration" identifier="table"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="KpZ-11-9rs"/>
@@ -327,13 +327,14 @@ Build: [unknown]</string>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="leading" secondItem="HBy-no-NuF" secondAttribute="leading" constant="16" id="Y7q-eb-1UH"/>
                             <constraint firstItem="qNv-s9-0hd" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="eZF-RF-FMJ"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="ejj-AI-zUk"/>
-                            <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="0p1-DY-kYy" secondAttribute="bottom" constant="15" id="fDp-gw-dg5"/>
+                            <constraint firstItem="htH-kI-1Pw" firstAttribute="firstBaseline" secondItem="0p1-DY-kYy" secondAttribute="baseline" constant="40" id="fDp-gw-dg5"/>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="gcn-lI-X2U"/>
                             <constraint firstItem="AZp-Pq-loo" firstAttribute="top" secondItem="Ont-uO-1R5" secondAttribute="bottom" constant="8" id="iXV-eF-4OM"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="83" id="k1b-5a-uP0"/>
                             <constraint firstItem="Hsr-To-3uz" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="oVv-iZ-6yH"/>
-                            <constraint firstItem="HBy-no-NuF" firstAttribute="bottom" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="53" id="pce-Zc-Y3e"/>
-                            <constraint firstItem="qNv-s9-0hd" firstAttribute="top" secondItem="Hsr-To-3uz" secondAttribute="bottom" constant="20" id="zsj-6u-sls"/>
+                            <constraint firstItem="HBy-no-NuF" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="53" id="pce-Zc-Y3e"/>
+                            <constraint firstItem="Ont-uO-1R5" firstAttribute="firstBaseline" secondItem="pTy-M9-4cH" secondAttribute="baseline" constant="40" id="sqo-TJ-LzE"/>
+                            <constraint firstItem="qNv-s9-0hd" firstAttribute="firstBaseline" secondItem="Hsr-To-3uz" secondAttribute="baseline" constant="40" id="zsj-6u-sls"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="HBy-no-NuF"/>
                     </view>
@@ -351,13 +352,13 @@ Build: [unknown]</string>
         <!--Fox Authentication View Controller-->
         <scene sceneID="MDj-ZJ-CSk">
             <objects>
-                <viewController storyboardIdentifier="FoxAuthenticationViewController" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FoxAuthenticationViewController" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hKb-AP-Smg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign In" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLI-M2-6hL">
-                                <rect key="frame" x="138.5" y="80" width="98.5" height="38.5"/>
+                                <rect key="frame" x="138" y="80" width="99" height="38.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="32"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -419,7 +420,7 @@ Build: [unknown]</string>
         <!--Dark Mode Settings View Controller-->
         <scene sceneID="MLR-79-iDN">
             <objects>
-                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="DarkModeSettingsViewController" customModule="DailyCallerDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="DarkModeSettingsViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kR-Yk-fnP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

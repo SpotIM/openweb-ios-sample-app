@@ -26,7 +26,7 @@ internal final class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { [weak self] (result) in
+        SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let coordinator):
@@ -69,15 +69,16 @@ internal final class ArticleViewController: UIViewController {
 
 }
 
-extension ArticleViewController: SpotImSDKNavigationDelegate {
-    func controllerForSSOFlow() -> UIViewController {
+extension ArticleViewController: SpotImLoginDelegate {
+    func startLoginFlow() {
         let controller: AuthenticstionViewController = UIStoryboard(
             name: "Main",
             bundle: nil
         ).instantiateViewController(withIdentifier: "AuthenticstionViewController")
             as! AuthenticstionViewController
-        
-        return controller
+
+        controller.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
