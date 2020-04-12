@@ -234,7 +234,7 @@ public class SpotIm {
      
      - Parameter color: The parent app backgournd color for dark theme
      */
-    public static var darkModeBackgroundColor: UIColor = SpotIm.darkModeBackgroundColor {
+    public static var darkModeBackgroundColor: UIColor = SPClientSettings.darkModeBackgroundColor {
         didSet {
             SPClientSettings.darkModeBackgroundColor = SpotIm.darkModeBackgroundColor
         }
