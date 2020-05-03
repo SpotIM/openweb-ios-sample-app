@@ -75,7 +75,7 @@ private struct InitResult {
 }
 
 public class SpotIm {
-    private static var initPormise: Promise<InitResult>?
+    private static var initPormise: Promise<SpotConfig>?
     private static var configurationPromise: Promise<SpotConfig>?
     private static var userPromise: Promise<SPUser>?
     private static let apiManager: ApiManager = ApiManager()
@@ -172,13 +172,13 @@ public class SpotIm {
      */
     @available(*, deprecated, message: "Use SpotIm.createSpotImFlowCoordinator(loginDelegate: LoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) instead")
     public static func createSpotImFlowCoordinator(navigationDelegate: SpotImSDKNavigationDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
-        execute(call: { initResult in
+        execute(call: { config in
             guard let spotId = spotId else {
                 completion(SpotImResult.failure(.internalError("Please call init SDK")))
                 return
             }
             
-            let coordinator = SpotImSDKFlowCoordinator(spotConfig: initResult.config, delegate: navigationDelegate, spotId: spotId, localeId: initResult.config.appConfig.mobileSdk?.locale)
+            let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, delegate: navigationDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk?.locale)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
             completion(SpotImResult.failure(error))
@@ -194,13 +194,13 @@ public class SpotIm {
      - Parameter completion: A completion handler to receive the response/error of the completeSSO process
      */
     public static func createSpotImFlowCoordinator(loginDelegate: SpotImLoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
-        execute(call: { initResult in
+        execute(call: { config in
             guard let spotId = spotId else {
                 completion(SpotImResult.failure(.internalError("Please call init SDK")))
                 return
             }
             
-            let coordinator = SpotImSDKFlowCoordinator(spotConfig: initResult.config, loginDelegate: loginDelegate, spotId: spotId, localeId: initResult.config.appConfig.mobileSdk?.locale)
+            let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, loginDelegate: loginDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk?.locale)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
             completion(SpotImResult.failure(error))
@@ -249,8 +249,12 @@ public class SpotIm {
      - Parameter completion: A completion handler to receive the current login status of the user
      */
     public static func getUserLoginStatus(completion: @escaping ((SpotImResult<SpotImLoginStatus>) -> Void)) {
-        execute(call: { initResult in
-            completion(.success(initResult.user.registered ? SpotImLoginStatus.loggedIn : SpotImLoginStatus.guest))
+        execute(call: { _ in
+            if let user = SPUserSessionHolder.session.user {
+                completion(.success(user.registered ? .loggedIn : .guest))
+            } else {
+                completion(.failure(SpotImError.notInitialized))
+            }
         }) { (error) in
             completion(.failure(SpotImError.internalError(error.localizedDescription)))
         }
@@ -271,11 +275,11 @@ public class SpotIm {
     }
 
     // MARK: Private
-    private static func execute(call: @escaping (InitResult) -> Void, failure: @escaping ((SpotImError) -> Void)) {
+    private static func execute(call: @escaping (SpotConfig) -> Void, failure: @escaping ((SpotImError) -> Void)) {
         if let spotId = SpotIm.spotId {
-            getInitPormise(spotId: spotId).done { initResult in
-                if let enabled = initResult.config.appConfig.mobileSdk?.enabled, enabled {
-                    call(initResult)
+            getInitPormise(spotId: spotId).done { config in
+                if let enabled = config.appConfig.mobileSdk?.enabled, enabled {
+                    call(config)
                 } else {
                     Logger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
@@ -318,13 +322,13 @@ public class SpotIm {
         }
     }
     
-    private static func getInitPormise(spotId: String) -> Promise<InitResult> {
+    private static func getInitPormise(spotId: String) -> Promise<SpotConfig> {
         if let initPromise = SpotIm.initPormise, !initPromise.isRejected {
             return initPromise
         }
         
         let initPromise = getConfigPromise(spotId: spotId).then { config in
-            getUserPromise().map { InitResult(config: config, user: $0) }
+            getUserPromise().map { _ in config }
         }
         
         SpotIm.initPormise = initPromise

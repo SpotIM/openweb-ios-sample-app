@@ -88,19 +88,25 @@ class AuthenticstionViewController: UIViewController {
         genericAuthDone = false
         foxTokenIndicator.text = "⏳"
     
-        SpotIm.sso(withJwtSecret: .demoFoxSecretForSSO, completion: { (response, error) in
-            if let error = error {
-                print(error)
-                self.foxAuthDone = false
-            } else {
-                if let autoComplete = response?.autoComplete, autoComplete {
-                    self.foxAuthDone = response?.success ?? false
+        SpotIm.getUserLoginStatus { (loginStatus) in
+            print("BEFORE login \(loginStatus))")
+            SpotIm.sso(withJwtSecret: .demoFoxSecretForSSO, completion: { (response, error) in
+                if let error = error {
+                    print(error)
+                    self.foxAuthDone = false
                 } else {
-                    self.codeA = response?.codeA
-                    self.getCodeB()
+                    SpotIm.getUserLoginStatus { loginStatus in
+                        print("After login \(loginStatus))")
+                    }
+                    if let autoComplete = response?.autoComplete, autoComplete {
+                        self.foxAuthDone = response?.success ?? false
+                    } else {
+                        self.codeA = response?.codeA
+                        self.getCodeB()
+                    }
                 }
-            }
-        })
+            })
+        }
     }
     
     private func getCodeB(genericToken: String? = nil) {
@@ -132,19 +138,25 @@ class AuthenticstionViewController: UIViewController {
     }
     
     @IBAction func resetAllAuthentication(_ sender: Any) {
-        SpotIm.logout { result in
-            switch result {
-            case .success():
-                self.codeA = nil
-                self.genericToken = nil
-                self.foxAuthDone = false
-                self.genericAuthDone = false
-            case .failure(let error):
-                print("Logout error: \(error)")
-            @unknown default:
-                fatalError()
+        SpotIm.getUserLoginStatus { (loginStatus) in
+            print("BEFORE logout \(loginStatus))")
+            SpotIm.logout { result in
+                switch result {
+                case .success():
+                    SpotIm.getUserLoginStatus { loginStatus in
+                        print("AFTER logout \(loginStatus))")
+                    }
+                    self.codeA = nil
+                    self.genericToken = nil
+                    self.foxAuthDone = false
+                    self.genericAuthDone = false
+                case .failure(let error):
+                    print("Logout error: \(error)")
+                @unknown default:
+                    fatalError()
+                }
+                
             }
-            
         }
     }
 }
