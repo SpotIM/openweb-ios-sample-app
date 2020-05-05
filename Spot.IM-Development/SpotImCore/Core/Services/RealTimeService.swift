@@ -32,7 +32,7 @@ final class RealTimeService {
     
     /// Start realtime data polling for `conversationId`
     func startRealTimeDataFetching(conversationId: String) {
-        guard SPConfigsDataSource.appConfig?.mobileSdk?.realtimeEnabled == true else { return }
+        guard SPConfigsDataSource.appConfig?.mobileSdk.realtimeEnabled == true else { return }
         currentConversationId = conversationId
         failuresInARow = 0
         fetchDataForConversation(id: conversationId)
@@ -40,13 +40,13 @@ final class RealTimeService {
     
     /// Stop realtime data polling for `conversationId`
     func stopRealTimeDataFetching(conversationId: String) {
-        guard SPConfigsDataSource.appConfig?.mobileSdk?.realtimeEnabled == true else { return }
+        guard SPConfigsDataSource.appConfig?.mobileSdk.realtimeEnabled == true else { return }
         stoppedConversations.insert(conversationId)
     }
     
     /// Take off  service fetch if it was stopped
     func refreshService() {
-        guard SPConfigsDataSource.appConfig?.mobileSdk?.realtimeEnabled == true else { return }
+        guard SPConfigsDataSource.appConfig?.mobileSdk.realtimeEnabled == true else { return }
         
         failuresInARow = 0
         

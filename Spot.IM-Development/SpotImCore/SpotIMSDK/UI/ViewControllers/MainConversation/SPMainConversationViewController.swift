@@ -82,7 +82,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         updateHeaderUI()
         configureModelHandlers()
         
-        if let loginUIEnabled = SPConfigsDataSource.appConfig?.mobileSdk?.loginUiEnabled, loginUIEnabled {
+        if let loginUIEnabled = SPConfigsDataSource.appConfig?.mobileSdk.loginUiEnabled, loginUIEnabled {
             setupUserIconHandler()
         }
     

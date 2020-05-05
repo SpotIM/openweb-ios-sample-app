@@ -251,15 +251,18 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
     }
 
     internal func showTerms() {
-        showWebPage(with: APIConstants.termsURLString)
+        let urlString = spotConfig.appConfig.mobileSdk.openwebBrandUpdated ? spotConfig.appConfig.mobileSdk.openwebTermsUrl : APIConstants.termsURLString
+        showWebPage(with: urlString)
     }
 
     internal func showPrivacy() {
-        showWebPage(with: APIConstants.privacyURLString)
+        let urlString = spotConfig.appConfig.mobileSdk.openwebBrandUpdated ? spotConfig.appConfig.mobileSdk.openwebPrivacyUrl : APIConstants.privacyURLString
+        showWebPage(with: urlString)
     }
 
     internal func showAddSpotIM() {
-        showWebPage(with: APIConstants.joinURLString)
+        let urlString = spotConfig.appConfig.mobileSdk.openwebBrandUpdated ? spotConfig.appConfig.mobileSdk.openwebWebsiteUrl : APIConstants.joinURLString
+        showWebPage(with: urlString)
     }
     
     internal func viewHeightDidChange(to height: CGFloat) {

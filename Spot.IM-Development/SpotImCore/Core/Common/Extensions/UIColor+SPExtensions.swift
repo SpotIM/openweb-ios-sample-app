@@ -34,9 +34,20 @@ internal extension UIColor {
     static let lightGreyBlue = #colorLiteral(red: 0.7137254902, green: 0.7254901961, blue: 0.7333333333, alpha: 1)   // #B6B9BB
     static let almostBlack = #colorLiteral(red: 0.137254902, green: 0.137254902, blue: 0.137254902, alpha: 1)     // #353535
     static let grayishBrown = #colorLiteral(red: 0.4549019608, green: 0.4549019608, blue: 0.4549019608, alpha: 1)    // #747474
+    static let openWebBrandColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) // #000000 Full black
 
+    private static var defaultBrandColor: UIColor {
+        get {
+            if let openwebBrandUpdated = SPConfigsDataSource.appConfig?.mobileSdk.openwebBrandUpdated, openwebBrandUpdated == true {
+                return UIColor.openWebBrandColor
+            } else {
+                return UIColor.clearBlue
+            }
+        }
+    }
+    
     static var brandColor: UIColor {
-        UIColor.color(with: SPConfigsDataSource.appConfig?.initialization?.brandColor) ?? clearBlue
+        UIColor.color(with: SPConfigsDataSource.appConfig?.initialization?.brandColor) ?? UIColor.defaultBrandColor
     }
 
     static var spBackground0: UIColor {
