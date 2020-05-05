@@ -52,7 +52,7 @@ public struct SpotImArticleMetadata {
     let title: String
     let subtitle: String
     let thumbnailUrl: String
-    
+
     public init(url: String, title: String, subtitle: String, thumbnailUrl: String) {
         self.url = url
         self.title = title
@@ -101,7 +101,7 @@ public class SpotIm {
             configurationPromise = nil
             userPromise = nil
         }
-        
+
         if SpotIm.spotId == nil {
             SpotIm.reinit = false
             SpotIm.spotId = spotId
@@ -177,14 +177,14 @@ public class SpotIm {
                 completion(SpotImResult.failure(.internalError("Please call init SDK")))
                 return
             }
-            
-            let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, delegate: navigationDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk?.locale)
+
+            let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, delegate: navigationDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk.locale)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
     }
-    
+
     /**
     Factory method to create a SpotImSDKFlowCoordinator objcet
 
@@ -199,17 +199,17 @@ public class SpotIm {
                 completion(SpotImResult.failure(.internalError("Please call init SDK")))
                 return
             }
-            
-            let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, loginDelegate: loginDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk?.locale)
+
+            let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, loginDelegate: loginDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk.locale)
             completion(SpotImResult.success(coordinator))
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
     }
-    
+
     /**
      Call this method to get the conversation counters (comments, replies) for a [post_id]
-     
+
      - Parameter conversationIds: The conversations to get counters for
      - Parameter completion: A completion handler to receive the  conversation counter
      */
@@ -219,7 +219,7 @@ public class SpotIm {
                 let counters = Dictionary(uniqueKeysWithValues: countersData.map { key, value in
                     (key, SpotImConversationCounters(comments: value.comments, replies: value.replies))
                 })
-    
+
                 completion(SpotImResult.success(counters))
             }.catch { error in
                 completion(SpotImResult.failure(.internalError(error.localizedDescription)))
@@ -228,10 +228,10 @@ public class SpotIm {
             completion(SpotImResult.failure(error))
         }
     }
-    
+
     /**
     Set your dark theme background color, so Spot.IM components background will match the background of the parent app
-     
+
      - Parameter color: The parent app backgournd color for dark theme
      */
     public static var darkModeBackgroundColor: UIColor = SPClientSettings.darkModeBackgroundColor {
@@ -242,7 +242,7 @@ public class SpotIm {
 
     /**
      Get the currernt user login status
-     
+
      The login status may be one of 2 options:
      1. Guest - an unauthenticated session
      2. LoggedIn - an authenticated session
@@ -259,12 +259,12 @@ public class SpotIm {
             completion(.failure(SpotImError.internalError(error.localizedDescription)))
         }
     }
-    
+
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
         execute(call: { _ in
             firstly {
                 authProvider.logout()
-            }.done { 
+            }.done {
                 completion(.success)
             }.catch { (error) in
                 completion(.failure(SpotImError.internalError(error.localizedDescription)))
@@ -278,7 +278,7 @@ public class SpotIm {
     private static func execute(call: @escaping (SpotConfig) -> Void, failure: @escaping ((SpotImError) -> Void)) {
         if let spotId = SpotIm.spotId {
             getInitPormise(spotId: spotId).done { config in
-                if let enabled = config.appConfig.mobileSdk?.enabled, enabled {
+                if let enabled = config.appConfig.mobileSdk.enabled, enabled {
                     call(config)
                 } else {
                     Logger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
@@ -297,44 +297,44 @@ public class SpotIm {
             failure(SpotImError.notInitialized)
         }
     }
-    
+
     private static func getConfigPromise(spotId: String) -> Promise<SpotConfig> {
         if let configurationPromise = configurationPromise, !configurationPromise.isRejected {
             return configurationPromise
         }
-        
+
         return attempt {
             let result = SPClientSettings.main.setup(spotId: spotId)
             configurationPromise = result
             return result
         }
     }
-    
+
     private static func getUserPromise() -> Promise<SPUser> {
         if let userPromise = userPromise, !userPromise.isRejected {
             return userPromise
         }
-        
+
         return attempt {
             let result = authProvider.getUser()
             userPromise = result
             return result
         }
     }
-    
+
     private static func getInitPormise(spotId: String) -> Promise<SpotConfig> {
         if let initPromise = SpotIm.initPormise, !initPromise.isRejected {
             return initPromise
         }
-        
+
         let initPromise = getConfigPromise(spotId: spotId).then { config in
             getUserPromise().map { _ in config }
         }
-        
+
         SpotIm.initPormise = initPromise
         return initPromise
     }
-    
+
     private static func attempt<T>(retries: UInt = NUM_OF_RETRIES, delayBeforeRetry: DispatchTimeInterval = .seconds(1), _ body: @escaping () -> Promise<T>) -> Promise<T> {
         var attempts = 0
         func attempt() -> Promise<T> {

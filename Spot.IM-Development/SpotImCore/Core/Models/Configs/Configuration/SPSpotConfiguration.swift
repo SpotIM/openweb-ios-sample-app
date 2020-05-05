@@ -23,7 +23,7 @@ struct SPSpotConfiguration: Decodable {
     let conversation: SPConfigurationConversation?
     let realtime: SPConfigurationRealtime?
     let spotlight: SPConfigurationSpotlight?
-    let mobileSdk: SPConfigurationSDKStatus?
+    let mobileSdk: SPConfigurationSDKStatus
     let sso: SPConfigurationSSO?
     let reactions: SPConfigurationReactions?
 }

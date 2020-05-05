@@ -28,14 +28,13 @@ internal final class SPPreConversationFooter: BaseView {
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
     private var moreCommentsTopConstraint: NSLayoutConstraint?
-    
-    
+        
     internal weak var delegate: SPPreConversationFooterDelegate?
 
-    override init(frame: CGRect) {
+    init(frame: CGRect = .zero, openwebEnabled: Bool) {
         super.init(frame: frame)
 
-        setup()
+        setup(openwebEnabled: openwebEnabled)
     }
 
     func setShowMoreCommentsButtonColor(color: UIColor, withSeparator: Bool = false) {
@@ -44,7 +43,7 @@ internal final class SPPreConversationFooter: BaseView {
         separatorView.isHidden = !withSeparator
     }
     
-    private func setup() {
+    private func setup(openwebEnabled: Bool) {
         addSubviews(separatorView,
                     showMoreCommentsButton,
                     termsButton,
@@ -56,8 +55,8 @@ internal final class SPPreConversationFooter: BaseView {
         setupTermsButton()
         setupDotLabel()
         setupPrivacyButton()
-        setupSpotIMIcon()
-        setupAddSpotIMButton()
+        setupSpotIMIcon(openwebEnabled: openwebEnabled)
+        setupAddSpotIMButton(opebwebEnabled: openwebEnabled)
     }
 
     func hideShowMoreCommentsButton() {
@@ -137,8 +136,8 @@ internal final class SPPreConversationFooter: BaseView {
         }
     }
 
-    private func setupSpotIMIcon() {
-        spotIMIcon.image = UIImage(spNamed: "spotIconSimple")
+    private func setupSpotIMIcon(openwebEnabled: Bool) {
+        spotIMIcon.image = openwebEnabled ? UIImage(spNamed: "openwebIconSimple") : UIImage(spNamed: "spotIconSimple")
         spotIMIcon.layout {
             $0.width.equal(to: Theme.bottomRowSize)
             $0.height.equal(to: Theme.bottomRowSize)
@@ -147,8 +146,8 @@ internal final class SPPreConversationFooter: BaseView {
         }
     }
 
-    private func setupAddSpotIMButton() {
-        let title = LocalizationManager.localizedString(key: "Add Spot.IM to your app")
+    private func setupAddSpotIMButton(opebwebEnabled: Bool) {
+        let title = opebwebEnabled ? LocalizationManager.localizedString(key: "Powered by OpenWeb") : LocalizationManager.localizedString(key: "Add Spot.IM to your app")
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
         addSpotIMButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
