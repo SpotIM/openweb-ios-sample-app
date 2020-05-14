@@ -20,7 +20,7 @@ public protocol SSOAthenticationDelegate: AnyObject {
     func userLogout()
 }
 
-public struct SSOStartResponse {
+public struct SSOStartResponse: Codable {
     public var codeA: String?
     public var jwtToken: String?
     public var autoComplete: Bool = false
