@@ -42,7 +42,7 @@ public enum SpotImLoginStatus {
     case loggedIn
 }
 
-public struct SpotImConversationCounters {
+public struct SpotImConversationCounters: Codable {
     let comments: Int
     let replies: Int
 }
