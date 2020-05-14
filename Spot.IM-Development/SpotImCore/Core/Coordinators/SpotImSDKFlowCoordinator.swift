@@ -110,7 +110,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
         let conversationDataSource = SPMainConversationDataSource(
             with: postId,
-            hostUrl: articleMetadata.url,
+            articleMetadata: articleMetadata,
             dataProvider: conversationDataProvider
         )
         conversationDataProvider.imageURLProvider = imageProvider

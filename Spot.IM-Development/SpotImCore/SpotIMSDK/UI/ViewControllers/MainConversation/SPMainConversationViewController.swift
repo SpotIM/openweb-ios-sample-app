@@ -85,8 +85,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         if let loginUIEnabled = SPConfigsDataSource.appConfig?.mobileSdk.loginUiEnabled, loginUIEnabled {
             setupUserIconHandler()
         }
-    
-        tableHeader.setAuthor(model.dataSource.conversationPublisherName)
 
         Logger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
@@ -352,14 +350,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     }
 
     private func updateHeaderUI() {
-        if model.dataSource.thumbnailUrl != nil ||
-            model.dataSource.conversationTitle != nil {
-            isHeaderVisible = true
-            headerHeightConstraint?.constant = articleHeaderMaxHeight
-            tableHeader.setAuthor(model.dataSource.conversationPublisherName)
-            tableHeader.setImage(with: model.dataSource.thumbnailUrl)
-            tableHeader.setTitle(model.dataSource.conversationTitle)
-        }
+        isHeaderVisible = true
+        headerHeightConstraint?.constant = articleHeaderMaxHeight
+        tableHeader.setAuthor(model.dataSource.articleMetadata.subtitle)
+        tableHeader.setImage(with: URL(string: model.dataSource.articleMetadata.thumbnailUrl))
+        tableHeader.setTitle(model.dataSource.articleMetadata.title)
     }
 
     override func configureEmptyStateView() {

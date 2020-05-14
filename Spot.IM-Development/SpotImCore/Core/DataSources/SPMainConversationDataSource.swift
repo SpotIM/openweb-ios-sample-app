@@ -28,12 +28,10 @@ internal final class SPMainConversationDataSource {
     
     weak var delegate: SPMainConversationDataSourceDelegate?
 
+    let articleMetadata: SpotImArticleMetadata
     var sortIsUpdated: (() -> Void)?
     var messageCounterUpdated: ((Int) -> Void)?
     var messageCount: Int = 0
-    var thumbnailUrl: URL?
-    var conversationPublisherName: String?
-    var conversationTitle: String?
     var minVisibleReplies: Int = 2
 
     private(set) var sortMode: SPCommentSortMode?
@@ -65,14 +63,14 @@ internal final class SPMainConversationDataSource {
         SPAnalyticsHolder.default.postId = nil
     }
 
-    init(with postId: String, hostUrl: String, dataProvider: SPConversationsDataProvider) {
+    init(with postId: String, articleMetadata: SpotImArticleMetadata, dataProvider: SPConversationsDataProvider) {
         SPAnalyticsHolder.default.postId = postId
         
         self.postId = postId
         self.dataProvider = dataProvider
-        self.conversationPublisherName = SPConfigsDataSource.appConfig?.initialization?.name
-
-        dataProvider.conversationAsync(postId: postId, articleUrl: hostUrl)
+        self.articleMetadata = articleMetadata
+    
+        dataProvider.conversationAsync(postId: postId, articleUrl: articleMetadata.url)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateDisplayName),
@@ -148,8 +146,6 @@ internal final class SPMainConversationDataSource {
                 self.messageCount = response?.conversation?.messagesCount ?? 0
                 self.messageCounterUpdated?(self.messageCount)
                 
-                self.thumbnailUrl = response?.extractData?.thumbnailUrl
-                self.conversationTitle = response?.extractData?.title
                 self.cellData = self.processed(response?.conversation?.comments)
             
                 completion(true, nil)
@@ -283,10 +279,8 @@ internal final class SPMainConversationDataSource {
     }
     
     internal func commentCreationModel() -> SPCommentCreationDTO {
-        return SPCommentCreationDTO(articleImageUrl: thumbnailUrl,
+        return SPCommentCreationDTO(articleMetadata: articleMetadata,
                                     currentUserAvatar: currentUserAvatarUrl,
-                                    authorName: conversationPublisherName,
-                                    articleTitle: conversationTitle,
                                     postId: postId,
                                     displayName: currentUserName,
                                     converstionId: postId,

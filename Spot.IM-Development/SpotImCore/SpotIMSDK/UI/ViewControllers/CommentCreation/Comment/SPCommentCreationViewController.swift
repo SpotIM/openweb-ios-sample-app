@@ -30,9 +30,9 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
             
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
 
-            articleView.setTitle(model?.dataModel.articleTitle)
-            articleView.setImage(with: model?.dataModel.articleImageUrl)
-            articleView.setAuthor(model?.dataModel.authorName)
+            articleView.setTitle(model?.dataModel.articleMetadata.title)
+            articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))
+            articleView.setAuthor(model?.dataModel.articleMetadata.subtitle)
 
             articleView.layout {
                 $0.height.equal(to: 85.0)
@@ -118,7 +118,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     }
 
     private func shouldShowArticleView(for model: SPCommentCreationDTO?) -> Bool {
-        model?.articleTitle != nil || model?.articleImageUrl != nil
+        model != nil
     }
     
 }

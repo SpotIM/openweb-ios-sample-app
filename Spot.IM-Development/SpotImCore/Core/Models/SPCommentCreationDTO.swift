@@ -9,11 +9,8 @@
 import Foundation
 
 struct SPCommentCreationDTO {
-    
-    let articleImageUrl: URL?
+    let articleMetadata: SpotImArticleMetadata
     let currentUserAvatar: URL?
-    let authorName: String?
-    let articleTitle: String?
     let postId: String
     let displayName: String
     let converstionId: String
