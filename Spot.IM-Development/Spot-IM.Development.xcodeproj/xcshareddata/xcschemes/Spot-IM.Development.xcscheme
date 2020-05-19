@@ -28,34 +28,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F57870AEA1444985EF2DD31118D10E92"
-               BuildableName = "Pods_Spot_IM_Development.framework"
-               BlueprintName = "Pods-Spot-IM.Development"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5D9151C122AD3CC70027E473"
-               BuildableName = "Spot_IM_Core.framework"
-               BlueprintName = "Spot.IM-Core"
-               ReferencedContainer = "container:../spotim-ios-sdk/Spot.IM-Core.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D697A3A22B65106001AD556"
                BuildableName = "Spot-IM.Development.app"
                BlueprintName = "Spot-IM.Development"
