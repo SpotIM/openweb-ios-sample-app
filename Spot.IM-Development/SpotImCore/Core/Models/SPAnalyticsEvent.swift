@@ -40,7 +40,7 @@ internal enum SPAnalyticsEvent: Equatable {
     )
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
-    case engineStatus(SPEngineStatusType)
+    case engineStatus(SPEngineStatusType, SPEngineTargetType)
 
     var kebabValue: String {
         switch self {
@@ -156,6 +156,7 @@ internal enum SPEngineStatusType: String, SPKebabable {
     case engineWillInitialize
     case engineInitialized
     case engineInitilizeFailed
+    case engineMonetizationView
     
     var kebabValue: String {
         switch self {
@@ -167,6 +168,22 @@ internal enum SPEngineStatusType: String, SPKebabable {
             return "engine-initialized"
         case .engineInitilizeFailed:
             return "engine-initialize-error"
+        case .engineMonetizationView:
+            return "engine-monetization-view"
+        }
+    }
+}
+
+internal enum SPEngineTargetType: String {
+    case banner
+    case interstitial
+
+    var kebabValue: String {
+        switch self {
+        case .banner:
+            return "banner"
+        case .interstitial:
+            return "interstitial"
         }
     }
 }

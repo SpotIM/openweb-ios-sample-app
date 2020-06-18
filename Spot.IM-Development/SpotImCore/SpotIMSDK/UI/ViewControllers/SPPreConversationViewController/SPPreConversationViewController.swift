@@ -25,6 +25,10 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private var checkTableViewHeight: CGFloat = 0
     private let maxSectionCount: Int
     private let readingTracker = SPReadingTracker()
+    private let visibilityTracker = ViewVisibilityTracker()
+    private let bannerVisisilityTracker = ViewVisibilityTracker()
+    private var didBecomeVisible: Bool = false
+    
     internal var dataLoaded: (() -> Void)?
     
     internal override var screenTargetType: SPAnScreenTargetType {
@@ -42,6 +46,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         footerView.frame.height
     }
 
+    deinit {
+        self.readingTracker.stopReadingTracking()
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     // MARK: - Overrides
     internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider) {
         
@@ -57,17 +66,18 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(appMovedToBackground),
+        name: UIApplication.willResignActiveNotification,
+        object: nil)
+        
         SPAnalyticsHolder.default.log(event: .loaded, source: .launcher)
 
         loadConversation()
-        readingTracker.setupTracking(for: view)
-        readingTracker.viewDidBecomeVisible = { [weak self] in
-            let delay = (SPConfigsDataSource.appConfig?.realtime?.startTimeoutMilliseconds ?? 5000) / 1000
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
-                self?.model.startTypingTracking()
-            }
-        }
+        
+        self.visibilityTracker.setup(view: view, delegate: self)
+        self.bannerVisisilityTracker.setup(view: self.bannerView, delegate: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -89,6 +99,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
         }
+        
+        self.visibilityTracker.startTracking()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.visibilityTracker.stopTracking()
+        super.viewWillDisappear(animated)
     }
     
     override func viewDidLayoutSubviews() {
@@ -322,15 +339,15 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             switch tag.adType {
             case .banner:
                 if model.adsGroup().preConversatioBannerEnabled() {
-                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
-                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
                     
                     adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small, .medium, .large])
                 }
             case .interstitial:
                 if model.adsGroup().interstitialEnabled() {
-                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
-                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .interstitial), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .interstitial), source: .conversation)
                     adsProvider.setupInterstitial(with: adsId)
                 }
             default:
@@ -348,6 +365,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func didTapComment(with indexPath: IndexPath) {
         let commentId = model.dataSource.clippedCellData(for: indexPath)?.commentId
         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
+    }
+    
+    @objc
+    private func appMovedToBackground() {
+        SPAnalyticsHolder.default.log(event: .appClosed, source: .mainPage)
     }
 }
 
@@ -407,29 +429,32 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(adBannerSize: CGSize) {
         let bannerView = adsProvider.bannerView
         
-        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
     
         self.bannerView.layout {
             $0.height.equal(to: adBannerSize.height)
         }
         
         self.bannerView.update(bannerView, height: adBannerSize.height)
+        
+        self.bannerVisisilityTracker.startTracking()
     }
     
     func bannerFailedToLoad(error: Error) {
         let monetizationFailureData = MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .banner)
         SPDefaultFailureReporter().sendMonetizationFaliureReport(monetizationFailureData)
-        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }
 }
 
 extension SPPreConversationViewController: AdsProviderInterstitialDelegate {
     func interstitialLoaded() {
-        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .interstitial), source: .conversation)
     }
     
     func interstitialWillBeShown() {
         AdsManager.willShowInterstitial(for: model.dataSource.postId)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .interstitial), source: .conversation)
     }
     
     func interstitialDidDismiss() {
@@ -439,7 +464,7 @@ extension SPPreConversationViewController: AdsProviderInterstitialDelegate {
     func interstitialFailedToLoad(error: Error) {
         let monetizationFailureData = MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .interstitial)
         SPDefaultFailureReporter().sendMonetizationFaliureReport(monetizationFailureData)
-        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .interstitial), source: .conversation)
     }
 }
 
@@ -449,6 +474,34 @@ extension SPPreConversationViewController: CommentsCounterDelegate {
     }
 }
 
+extension SPPreConversationViewController: ViewVisibilityDelegate {
+    func viewDidBecomeVisible(view: UIView) {
+        if view == self.view {
+            if !didBecomeVisible {
+                didBecomeVisible = true
+                SPAnalyticsHolder.default.log(event: .viewed, source: .conversation)
+            }
+            let delay = (SPConfigsDataSource.appConfig?.realtime?.startTimeoutMilliseconds ?? 5000) / 1000
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                self.model.startTypingTracking()
+            }
+            
+            readingTracker.startReadingTracking()
+        }
+        
+        if view == self.bannerView {
+            SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
+            self.bannerVisisilityTracker.shutdown()
+        }
+    }
+    
+    func viewDidDisappear(view: UIView) {
+        if view == self.view {
+            readingTracker.stopReadingTracking()
+        }
+    }
+}
 private extension SPPreConversationViewController {
 
     private enum Theme {

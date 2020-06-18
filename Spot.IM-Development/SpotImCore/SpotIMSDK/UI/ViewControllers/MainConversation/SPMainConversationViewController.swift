@@ -289,8 +289,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             switch tag.adType {
             case .banner:
                 if model.adsGroup().mainConversationBannerEnabled() {
-                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad), source: .conversation)
-                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
                     adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small])
                 }
             default:
@@ -531,7 +531,8 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(adBannerSize: CGSize) {
         let bannerView = adsProvider.bannerView
         
-        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
         footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
         footer.updateBannerView(bannerView, height: adBannerSize.height)
     }
@@ -539,7 +540,7 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerFailedToLoad(error: Error) {
         let monetizationFailureData = MonetizationFailureModel(source: .mainConversation, reason: error.localizedDescription, bannerType: .banner)
         SPDefaultFailureReporter().sendMonetizationFaliureReport(monetizationFailureData)
-        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }
 }
 

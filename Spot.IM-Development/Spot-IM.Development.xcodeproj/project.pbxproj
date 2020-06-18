@@ -215,6 +215,7 @@
 		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		6BCE240697E8B73320FD59E6 /* Pods_Shared_SpotImNoAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA6BF31548693DB019E7E2E6 /* Pods_Shared_SpotImNoAds.framework */; };
+		6D0A3314247D44DC003B11C6 /* ViewVisibilityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */; };
 		6D22A40B23AF79D800DCE08A /* SpotIm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D22A40A23AF79D800DCE08A /* SpotIm.swift */; };
 		6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D22A46223BA51CA00DCE08A /* SpotImAuthenticationProvider.swift */; };
 		6D22A46623BBA26700DCE08A /* DataRequest+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D22A46523BBA26700DCE08A /* DataRequest+Logging.swift */; };
@@ -939,6 +940,7 @@
 		5F3FC4B023872DCFAC1C5071 /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; sourceTree = "<group>"; };
 		6394E7A86C9ADEE394495AC3 /* Pods-Shared-DemoApps-DailyCaller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; sourceTree = "<group>"; };
 		6766CF5F17247A3E6C2D62D8 /* Pods_Shared_DemoApps_DailyCaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_DailyCaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewVisibilityTracker.swift; sourceTree = "<group>"; };
 		6D22A40A23AF79D800DCE08A /* SpotIm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotIm.swift; sourceTree = "<group>"; };
 		6D22A46223BA51CA00DCE08A /* SpotImAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotImAuthenticationProvider.swift; sourceTree = "<group>"; };
 		6D22A46523BBA26700DCE08A /* DataRequest+Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataRequest+Logging.swift"; sourceTree = "<group>"; };
@@ -1615,6 +1617,7 @@
 				448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */,
 				44689B71237185090024EFC1 /* LocalizationManager.swift */,
 				449F5F71237C064F00F81EA3 /* RealTimeService.swift */,
+				6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2923,6 +2926,7 @@
 				445418B223685154001D0ED0 /* UIImageView+SPExtensions.swift in Sources */,
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
 				4454188823685154001D0ED0 /* SPAnalyticsRequest.swift in Sources */,
+				6D0A3314247D44DC003B11C6 /* ViewVisibilityTracker.swift in Sources */,
 				6D22A46A23BC864100DCE08A /* SpotImRequestLogLevel.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
 				441165A92379720500B781F3 /* SPImageFetchRequest.swift in Sources */,

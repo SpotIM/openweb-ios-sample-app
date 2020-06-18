@@ -48,31 +48,16 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     private (set) var pageViewId: String = UUID().uuidString
     public var lastRecordedMainViewedPageViewId: String = ""
     internal var postId: String?
-    
-    private var didLogLoadedConversation = false
 
     func log(event: SPAnalyticsEvent, source: SPAnSource) {
-        guard shouldLog(event: event, source: source) else { return }
-        if event == .viewed, source == .conversation {
-            didLogLoadedConversation = true
-        }
-
         sender?.sendEvent(with: analyticsInfo(from: event, source: source), postId: postId)
     }
 
     internal func prepareForNewPage() {
         pageViewId = UUID().uuidString
-        didLogLoadedConversation = false
         isUserRegistered = false
         userId = nil
         totalComments = 0
-    }
-
-    private func shouldLog(event: SPAnalyticsEvent, source: SPAnSource) -> Bool {
-        if event == .viewed, source == .conversation, didLogLoadedConversation {
-            return false
-        }
-        return true
     }
 
     private func analyticsInfo(from event: SPAnalyticsEvent,
@@ -111,8 +96,9 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             itemId = authorId
         case .sortByClicked(let sortMode):
             targetType = sortMode.kebabValue
-        case .engineStatus(let statusType):
+        case .engineStatus(let statusType, let engineStatusTargetType):
             engineStatusType = statusType.kebabValue
+            targetType = engineStatusTargetType.kebabValue
         default:
             break
         }
