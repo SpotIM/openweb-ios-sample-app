@@ -14,4 +14,13 @@ extension UIView {
         views.forEach { addSubview($0) }
     }
     
+    var isVisibleToUser: Bool {
+        guard let windowHeight = window?.frame.size.height else {
+            return false
+        }
+        
+        let absoluteY = convert(CGPoint.zero, to: nil).y
+        
+        return absoluteY < windowHeight
+    }
 }
