@@ -98,10 +98,9 @@ final class ApiManager {
                     parameters: [String: Any]? = nil,
                     encoding: ParameterEncoding = JSONEncoding.default,
                     parser: T,
-                    headers: [String: String]? = nil,
+                    headers: HTTPHeaders? = nil,
                     completion: @escaping (_ result: Result<T.Representation>, _ response: APIResponse) -> Void) -> DataRequest where T: ResponseParser {
-        
-        return Alamofire.request(request.url,
+        return AF.request(request.url,
                                  method: request.method,
                                  parameters: parameters,
                                  encoding: encoding,

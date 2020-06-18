@@ -117,7 +117,7 @@ extension ArticlesListViewController {
     private func fetchData(completion: @escaping (_ data:Response?, _ error:Bool) -> Void) {
         let url = "https://api-gw.spot.im/v1.0.0/feed/spot/\(spotId)/post/default/pitc?count=30&offset=0"
         
-        Alamofire.request(url,
+        AF.request(url,
                           method: .get,
                           parameters: nil,
                           encoding: JSONEncoding.default,

@@ -26,47 +26,48 @@ internal extension DataRequest {
         guard level != .none else {
             return self
         }
-        guard
-            let method = self.request?.httpMethod,
-            let url = self.request?.url else {
-            return self
-        }
-        var message = "[REQUEST] \(method) \(url)"
-        
-        if level == .medium {
-            if let criticalHeaders = self.request?.allHTTPHeaderFields?.filter({ (key: AnyHashable, value: Any) -> Bool in
-                guard let keyString = key as? String else { return false }
-                
-                return keyString == "x-spot-id" || keyString == "x-post-id"
-            }) {
-                for header in criticalHeaders {
-                    message += "\n\(header.key): \(header.value)"
+        return self.cURLDescription { _ in
+            guard
+                let method = self.request?.httpMethod,
+                let url = self.request?.url else {
+                return
+            }
+            
+            var message = "[REQUEST] \(method) \(url)"
+            
+            if level == .medium {
+                if let criticalHeaders = self.request?.allHTTPHeaderFields?.filter({ (key: AnyHashable, value: Any) -> Bool in
+                    guard let keyString = key as? String else { return false }
+                    
+                    return keyString == "x-spot-id" || keyString == "x-post-id"
+                }) {
+                    for header in criticalHeaders {
+                        message += "\n\(header.key): \(header.value)"
+                    }
                 }
             }
-        }
-        
-        if level == .verbose {
-            if let headers = self.request?.allHTTPHeaderFields {
-                for header in headers {
-                    message += "\n\(header.key): \(header.value)"
+            
+            if level == .verbose {
+                if let headers = self.request?.allHTTPHeaderFields {
+                    for header in headers {
+                        message += "\n\(header.key): \(header.value)"
+                    }
+                }
+                if let data = self.request?.httpBody,
+                    let body = String(data: data, encoding: .utf8) {
+                    message += "\n\(body)"
                 }
             }
-            if let data = self.request?.httpBody,
-                let body = String(data: data, encoding: .utf8) {
-                message += "\n\(body)"
-            }
-        }
 
-        if level == .verbose || level == .medium {
-            if let data = self.request?.httpBody,
-                let body = String(data: data, encoding: .utf8) {
-                message += "\n\(body)"
+            if level == .verbose || level == .medium {
+                if let data = self.request?.httpBody,
+                    let body = String(data: data, encoding: .utf8) {
+                    message += "\n\(body)"
+                }
             }
+            
+            print(message)
         }
-        
-        print(message)
-
-        return self
     }
 
     @discardableResult
@@ -74,14 +75,15 @@ internal extension DataRequest {
         guard level != .none else {
             return self
         }
+        
         return self.response(completionHandler: {
             guard
                 let method = $0.request?.httpMethod,
                 let url = $0.request?.url else {
                 return
             }
-
-            var message = "[RESPONSE] \(method) \($0.response?.statusCode ?? -1) \(url) \(String(format: "%.3fms", $0.timeline.requestDuration * 1000))"
+            
+            var message = "[RESPONSE] \(method) \($0.response?.statusCode ?? -1) \(url) \(String(format: "%.3fms", ($0.metrics?.taskInterval.duration ?? 0) * 1000))"
 
             if let err = $0.error?.localizedDescription {
                 message += " [!] \(err)"

@@ -43,7 +43,7 @@ internal extension HTTPHeaders {
     }
 
     private static func extendedAgent() -> String {
-        var agent = Alamofire.SessionManager.defaultHTTPHeaders["User-Agent"] ?? "na"
+        var agent = HTTPHeaders.default.dictionary["User-Agent"] ?? "na"
         let device = UIDevice.modelIdentifier()
         agent.insert(contentsOf: device.appending(" "), at: agent.startIndex)
         return agent

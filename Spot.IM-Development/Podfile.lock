@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.9.1)
+  - Alamofire (5.2.0)
   - Cards (1.4.0):
     - Player (= 0.13.0)
   - Crashlytics (3.14.0):
@@ -50,7 +50,7 @@ PODS:
   - SwiftLint (0.34.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.9.1)
+  - Alamofire (~> 5.2)
   - Cards
   - Crashlytics
   - Fabric
@@ -79,7 +79,7 @@ SPEC REPOS:
     - SwiftLint
 
 SPEC CHECKSUMS:
-  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  Alamofire: c1ca147559e730bfb2182c8c7aafbdd90a867987
   Cards: 45ae6bd0eca7b5e8016d3b6cb30b60b04753f68f
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
@@ -94,6 +94,6 @@ SPEC CHECKSUMS:
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
 
-PODFILE CHECKSUM: 2e58f721ce526d99c758f5fa77f4ca5ac1baad63
+PODFILE CHECKSUM: 7dbff3888dd58fd204b71d533577ce9deafa8900
 
 COCOAPODS: 1.8.4
