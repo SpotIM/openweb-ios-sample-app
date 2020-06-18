@@ -22,7 +22,7 @@ internal class DemoAuthenticationProvider {
         let params = ["username": username,
                       "password": password]
 
-        Alamofire.request(url,
+        AF.request(url,
                           method: .post,
                           parameters: params,
                           encoding: JSONEncoding.default,
@@ -36,8 +36,6 @@ internal class DemoAuthenticationProvider {
                     completion(token, nil)
                 case .failure(let error):
                     completion(nil, error)
-                @unknown default:
-                    fatalError("Unknown result in network response")
                 }
         }
     }
@@ -54,7 +52,7 @@ internal class DemoAuthenticationProvider {
                                   "username": username ?? "",
                                   "access_token_network": accessTokenNetwork ?? "",
                                   "is_environment_staging": false]
-        Alamofire.request(url,
+        AF.request(url,
                           method: .post,
                           parameters: params,
                           encoding: JSONEncoding.default,
@@ -66,8 +64,6 @@ internal class DemoAuthenticationProvider {
                     completion(codeB, nil)
                 case .failure(let error):
                     completion(nil, error)
-                @unknown default:
-                    fatalError("Unknown result in network response")
                 }
             }
     }

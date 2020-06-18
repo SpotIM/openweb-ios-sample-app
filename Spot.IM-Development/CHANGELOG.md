@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Updated Alamofire dependency to 5.0 [#121](https://github.com/SpotIM/spotim-ios-sdk-demo-apps/pull/121)
 - engine-monetization-view event [#120](https://github.com/SpotIM/spotim-ios-sdk-demo-apps/pull/120)
 
 ## [1.0.2] - 2020-05-19

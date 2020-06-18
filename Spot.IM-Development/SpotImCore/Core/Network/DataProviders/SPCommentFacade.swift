@@ -70,21 +70,19 @@ internal final class SPCommentFacade: SPCommentUpdater {
                                         postId: conversationId)
 
         // TODO: (Fedin) move Alamofire.request elsewhere
-        Alamofire.request(spRequest.url,
+        AF.request(spRequest.url,
                           method: spRequest.method,
                           parameters: parameters,
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
-            .log(level: .verbose)
+            .log(level: .medium)
             .responseData { response in
                 switch response.result {
                 case .success:
                     completion(true, nil)
                 case .failure:
                     completion(false, SPNetworkError.default)
-                @unknown default:
-                    completion(false, SPNetworkError.custom("Unknown response result"))
                 }
             }
     }
@@ -101,12 +99,13 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
-        Alamofire.request(request.url,
+        AF.request(request.url,
                           method: .delete,
                           parameters: parameters,
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
+            .log(level: .medium)
             .responseData { response in
                 let result: Result<SPCommentDelete> = defaultDecoder.decodeResponse(from: response)
                 
@@ -138,12 +137,13 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
 
-        Alamofire.request(request.url,
+        AF.request(request.url,
                           method: .post,
                           parameters: parameters,
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
+            .log(level: .medium)
             .responseData { response in
                 let result: Result<SPComment> = defaultDecoder.decodeResponse(from: response)
                 switch result {
@@ -179,12 +179,13 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
-        Alamofire.request(request.url,
+        AF.request(request.url,
                           method: request.method,
                           parameters: parameters,
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
+            .log(level: .medium)
             .responseData { response in
                 switch response.result {
                 case .success:
@@ -192,9 +193,6 @@ internal final class SPCommentFacade: SPCommentUpdater {
                     
                 case .failure:
                     failure(SPNetworkError.default)
-                    
-                @unknown default:
-                    failure(SPNetworkError.custom("Unknown response result"))
                 }
             }
     }
@@ -211,12 +209,13 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
-        Alamofire.request(request.url,
+        AF.request(request.url,
                           method: request.method,
                           parameters: parameters,
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
+            .log(level: .medium)
             .responseData { response in
                 let result: Result<SPShareLink> = defaultDecoder.decodeResponse(from: response)
                 switch result {
@@ -241,13 +240,13 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
-        Alamofire.request(request.url,
+        AF.request(request.url,
                           method: request.method,
                           parameters: parameters,
                           encoding: APIConstants.encoding,
                           headers: headers)
             .validate()
-            .log(level: .simple)
+            .log(level: .medium)
             .responseData { _ in }
     }
     
