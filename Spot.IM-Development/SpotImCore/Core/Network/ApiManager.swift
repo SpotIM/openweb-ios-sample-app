@@ -93,6 +93,14 @@ final class ApiManager {
     
     var requestDidSucceed: ((SPRequest) -> Void)?
     
+    let session: Alamofire.Session
+    
+    init() {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 10
+        session = Session(configuration: configuration)
+    }
+    
     @discardableResult
     func execute<T>(request: SPRequest,
                     parameters: [String: Any]? = nil,
@@ -100,7 +108,8 @@ final class ApiManager {
                     parser: T,
                     headers: HTTPHeaders? = nil,
                     completion: @escaping (_ result: Result<T.Representation>, _ response: APIResponse) -> Void) -> DataRequest where T: ResponseParser {
-        return AF.request(request.url,
+        
+        return session.request(request.url,
                                  method: request.method,
                                  parameters: parameters,
                                  encoding: encoding,

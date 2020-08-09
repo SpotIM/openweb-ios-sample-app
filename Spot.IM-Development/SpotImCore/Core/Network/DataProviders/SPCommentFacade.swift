@@ -38,6 +38,13 @@ internal protocol SPCommentUpdater {
 
 internal final class SPCommentFacade: SPCommentUpdater {
     
+    let apiManager: ApiManager
+    
+    init(apiManager: ApiManager) {
+        self.apiManager = apiManager
+    }
+
+    
     internal func changeRank(_ change: SPRankChange,
                              for commentId: String?,
                              with parentId: String?,
@@ -69,22 +76,19 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: conversationId)
 
-        // TODO: (Fedin) move Alamofire.request elsewhere
-        AF.request(spRequest.url,
-                          method: spRequest.method,
-                          parameters: parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .log(level: .medium)
-            .responseData { response in
-                switch response.result {
-                case .success:
-                    completion(true, nil)
-                case .failure:
-                    completion(false, SPNetworkError.default)
-                }
-            }
+        apiManager.execute(request: spRequest,
+                           parameters: parameters,
+                           encoding: APIConstants.encoding,
+                           parser: EmptyParser(),
+                           headers: headers) { (result, response) in
+                            switch result {
+                            case .success:
+                                completion(true, nil)
+                            case .failure(_):
+                                completion(false, SPNetworkError.default)
+                            }
+                            
+        }
     }
     
     internal func deleteComment(parameters: [String: Any], postId: String,
@@ -95,34 +99,29 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 return
         }
         
-        let request = SPConversationRequest.commentPost
+        let request = SPConversationRequest.commentDelete
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
-        AF.request(request.url,
-                          method: .delete,
-                          parameters: parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .log(level: .medium)
-            .responseData { response in
-                let result: Result<SPCommentDelete> = defaultDecoder.decodeResponse(from: response)
-                
-                switch result {
-                case .success(let deletionData):
-                    success(deletionData)
-                case .failure(let error):
-                    let rawReport = RawReportModel(
-                        url: request.method.rawValue + " " + request.url.absoluteString,
-                        parameters: parameters,
-                        errorData: response.data,
-                        errorMessage: error.localizedDescription
-                    )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
-                    failure(SPNetworkError.default)
-                }
-            }
+        apiManager.execute(request: request,
+                           parameters: parameters,
+                           encoding: APIConstants.encoding,
+                           parser: DecodableParser<SPCommentDelete>(),
+                           headers: headers) { (result, response) in
+                            switch result {
+                            case .success(let deletionData):
+                                success(deletionData)
+                            case .failure(let error):
+                                let rawReport = RawReportModel(
+                                    url: request.method.rawValue + " " + request.url.absoluteString,
+                                    parameters: parameters,
+                                    errorData: response.data,
+                                    errorMessage: error.localizedDescription
+                                )
+                                SPDefaultFailureReporter().sendFailureReport(rawReport)
+                                failure(SPNetworkError.default)
+                            }
+        }
     }
     
     internal func createComment(parameters: [String: Any], postId: String,
@@ -136,35 +135,28 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let request = SPConversationRequest.commentPost
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
-
-        AF.request(request.url,
-                          method: .post,
-                          parameters: parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .log(level: .medium)
-            .responseData { response in
-                let result: Result<SPComment> = defaultDecoder.decodeResponse(from: response)
-                switch result {
-                case .success(let comment):
-
-                    SPUserSessionHolder.freezeDisplayNameIfNeeded()
-
-                    success(comment)
-                    
-                case .failure(let error):
-                    let rawReport = RawReportModel(
-                        url: request.method.rawValue + " " + request.url.absoluteString,
-                        parameters: parameters,
-                        errorData: response.data,
-                        errorMessage: error.localizedDescription
-                    )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
-                    
-                    failure(SPNetworkError.default)
-                }
-            }
+        
+        apiManager.execute(request: request,
+                           parameters: parameters,
+                           encoding: APIConstants.encoding,
+                           parser: DecodableParser<SPComment>(),
+                           headers: headers) { (result, response) in
+                            switch result {
+                            case .success(let comment):
+                                SPUserSessionHolder.freezeDisplayNameIfNeeded()
+                                success(comment)
+                            case .failure(let error):
+                                let rawReport = RawReportModel(
+                                    url: request.method.rawValue + " " + request.url.absoluteString,
+                                    parameters: parameters,
+                                    errorData: response.data,
+                                    errorMessage: error.localizedDescription
+                                )
+                                SPDefaultFailureReporter().sendFailureReport(rawReport)
+                                
+                                failure(SPNetworkError.default)
+                            }
+        }
     }
     
     func reportComment(parameters: [String: Any], postId: String,
@@ -179,22 +171,18 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
-        AF.request(request.url,
-                          method: request.method,
-                          parameters: parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .log(level: .medium)
-            .responseData { response in
-                switch response.result {
-                case .success:
-                    success()
-                    
-                case .failure:
-                    failure(SPNetworkError.default)
-                }
-            }
+        apiManager.execute(request: request,
+                           parameters: parameters,
+                           encoding: APIConstants.encoding,
+                           parser: EmptyParser(),
+                           headers: headers) { (result, response) in
+                            switch result {
+                            case .success:
+                                success()
+                            case .failure(_):
+                                failure(SPNetworkError.default)
+                            }
+        }
     }
     
     func shareComment(parameters: [String: Any], postId: String,
@@ -208,24 +196,18 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let request = SPConversationRequest.commentShare
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
-        
-        AF.request(request.url,
-                          method: request.method,
-                          parameters: parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .log(level: .medium)
-            .responseData { response in
-                let result: Result<SPShareLink> = defaultDecoder.decodeResponse(from: response)
-                switch result {
-                case .success(let link):
-                    success(link.reference)
-                    
-                case .failure:
-                    failure(SPNetworkError.default)
-                }
-            }
+        apiManager.execute(request: request,
+                           parameters: parameters,
+                           encoding: APIConstants.encoding,
+                           parser: DecodableParser<SPShareLink>(),
+                           headers: headers) { (result, response) in
+                            switch result {
+                            case .success(let link):
+                                success(link.reference)
+                            case .failure(_):
+                                failure(SPNetworkError.default)
+                            }
+        }
     }
     
     func editComment(parameters: [String: Any], postId: String,
@@ -240,14 +222,18 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let headers = HTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
-        AF.request(request.url,
-                          method: request.method,
-                          parameters: parameters,
-                          encoding: APIConstants.encoding,
-                          headers: headers)
-            .validate()
-            .log(level: .medium)
-            .responseData { _ in }
+        apiManager.execute(request: request,
+                           parameters: parameters,
+                           encoding: APIConstants.encoding,
+                           parser: DecodableParser<SPComment>(),
+                           headers: headers) { (result, response) in
+                            switch result {
+                            case .success(let comment):
+                                success(comment)
+                            case .failure(_):
+                                failure(SPNetworkError.default)
+                            }
+        }
     }
     
     private enum ChangeRankAPIKeys {

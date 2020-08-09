@@ -22,7 +22,7 @@ final class SPReplyCreationModel: CommentStateable {
     
     init(replyCreationDTO: SPReplyCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
-         updater: SPCommentUpdater = SPCommentFacade(),
+         updater: SPCommentUpdater,
          imageProvider: SPImageURLProvider
         ) {
         self.imageProvider = imageProvider

@@ -34,7 +34,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     private lazy var commentsCacheService: SPCommentsInMemoryCacheService = .init()
     
-    private lazy var conversationUpdater: SPCommentUpdater = SPCommentFacade()
+    private let conversationUpdater: SPCommentUpdater
     
     private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
     private weak var spotLayoutDelegate: SpotImLayoutDelegate?
@@ -60,6 +60,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager(spotId: spotId)
         apiManager = ApiManager()
+        conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
         realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
@@ -75,6 +76,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.loginDelegate = loginDelegate
         adsManager = AdsManager(spotId: spotId)
         apiManager = ApiManager()
+        conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
         realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
@@ -221,6 +223,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         
         let model = SPCommentCreationModel(commentCreationDTO: dataModel.dataSource.commentCreationModel(),
                                            cacheService: commentsCacheService,
+                                           updater: conversationUpdater,
                                            imageProvider: imageProvider)
         controller.model = model
         dataModel.dataSource.showReplies = true
@@ -234,6 +237,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         
         let model = SPReplyCreationModel(replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
                                          cacheService: commentsCacheService,
+                                         updater: conversationUpdater,
                                          imageProvider: imageProvider)
         controller.model = model
         dataModel.dataSource.showReplies = true
