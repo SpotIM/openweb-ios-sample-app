@@ -32,7 +32,7 @@ final class SPCommentCreationModel: CommentStateable {
     
     init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
-         updater: SPCommentUpdater = SPCommentFacade(),
+         updater: SPCommentUpdater,
          imageProvider: SPImageURLProvider
         ) {
         self.imageProvider = imageProvider
