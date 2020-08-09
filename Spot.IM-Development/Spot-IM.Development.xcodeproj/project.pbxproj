@@ -279,6 +279,7 @@
 		6D4E573423A7B785005B79B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D4E573623A7B785005B79B6 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */; };
+		6D58D57024E04206001C4D94 /* ViewVisibilityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */; };
 		6D616E9F2473E45300E64083 /* SpotImCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 44C8793B23608E3500E0E662 /* SpotImCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6D616EA12473E45300E64083 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417C123685144001D0ED0 /* BaseView.swift */; };
 		6D616EA22473E45300E64083 /* SPPreConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D423685144001D0ED0 /* SPPreConversationViewController.swift */; };
@@ -3163,6 +3164,7 @@
 				6D616F2B2473E45300E64083 /* UIImageView+SPExtensions.swift in Sources */,
 				6D616F2C2473E45300E64083 /* SPConfigProvider.swift in Sources */,
 				6D616F2D2473E45300E64083 /* SPAnalyticsRequest.swift in Sources */,
+				6D58D57024E04206001C4D94 /* ViewVisibilityTracker.swift in Sources */,
 				6D616F2E2473E45300E64083 /* SpotImRequestLogLevel.swift in Sources */,
 				6D616F2F2473E45300E64083 /* SPConfigurationReactions.swift in Sources */,
 				6D616F302473E45300E64083 /* SPImageFetchRequest.swift in Sources */,
