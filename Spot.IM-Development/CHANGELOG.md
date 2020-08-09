@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2020-08-09
 ### Changed
 - Reduced network timeout interval from 60 seconds to 10 seconds [#123](https://github.com/SpotIM/spotim-ios-sdk-demo-apps/pull/123)
 
