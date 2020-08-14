@@ -68,6 +68,7 @@ public class SPClientSettings {
         SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
     }
     
+    @available(*, deprecated, message: "Use SpotIm.overrideUserInterfaceStyle instead")
     public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = {
         if UserDefaults.standard.bool(forKey: "demo.isCustomDarkModeEnabled") {
             return SPUserInterfaceStyle(rawValue: UserDefaults.standard.integer(forKey: "demo.interfaceStyle"))
