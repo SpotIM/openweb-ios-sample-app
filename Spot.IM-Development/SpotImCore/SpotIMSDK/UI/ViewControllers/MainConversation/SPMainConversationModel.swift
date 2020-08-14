@@ -185,7 +185,7 @@ final class SPMainConversationModel {
         return actions
     }
     
-    func commentAvailableActions(_ commentId: String) -> [UIAlertAction] {
+    func commentAvailableActions(_ commentId: String, sender: UIButton) -> [UIAlertAction] {
         let viewModel = dataSource.commentViewModel(commentId)
         let availability = commentActionsAvailability(viewModel: viewModel)
         
@@ -194,14 +194,14 @@ final class SPMainConversationModel {
         let shareAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Share"),
             style: .default) { [weak self] _ in
-                self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId))
+                self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId), sender: sender)
         }
         actions.append(shareAction)
         if availability.isReportable {
             let reportAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Report"),
                 style: .default) { [weak self] _ in
-                    self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId))
+                    self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId), sender: sender)
             }
             actions.append(reportAction)
         }
@@ -210,7 +210,7 @@ final class SPMainConversationModel {
             let deleteAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Delete"),
                 style: .default) { [weak self] _ in
-                    self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId))
+                    self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId), sender: sender)
             }
             actions.append(deleteAction)
         }
@@ -377,7 +377,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
 
 protocol CommentsActionDelegate: class {
     
-    func prepareFlowForAction(_ type: ActionType)
+    func prepareFlowForAction(_ type: ActionType, sender: UIButton)
     func localCommentWasCreated()
     func localCommentWillBeCreated()
     func messageCreationBlocked(with messageText: String?)

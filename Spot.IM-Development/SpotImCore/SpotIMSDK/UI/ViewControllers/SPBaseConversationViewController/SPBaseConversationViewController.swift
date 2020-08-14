@@ -543,7 +543,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             source: .conversation
         )
         
-        let actions = model.commentAvailableActions(commentId)
+        let actions = model.commentAvailableActions(commentId, sender: sender)
         if !actions.isEmpty {
             showActionSheet(actions: actions, sender: sender)
         }
@@ -606,7 +606,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         }
     }
     
-    func prepareFlowForAction(_ type: ActionType) {
+    func prepareFlowForAction(_ type: ActionType, sender: UIButton) {
         switch type {
         case .delete(let commentId):
             showCommentDeletionFlow(commentId)
@@ -618,7 +618,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             model.editComment(with: commentId)
             
         case .share(let commentId):
-            showCommentShareFlow(commentId)
+            showCommentShareFlow(commentId, sender: sender)
         }
     }
     
@@ -675,7 +675,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             actions: [noAction, yesAction])
     }
     
-    private func showCommentShareFlow(_ commentId: String) {
+    private func showCommentShareFlow(_ commentId: String, sender: UIButton) {
         showLoader()
         model.shareComment(with: commentId) { [weak self] url, error in
             guard let self = self else { return }
@@ -688,6 +688,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 )
             } else if let url = url {
                 let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
         }
