@@ -241,6 +241,17 @@ public class SpotIm {
     }
 
     /**
+    Set your dark theme background color, so Spot.IM components background will match the background of the parent app
+
+     - Parameter color: The parent app backgournd color for dark theme
+     */
+    public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = SPClientSettings.overrideUserInterfaceStyle {
+        didSet {
+            SPClientSettings.overrideUserInterfaceStyle = SpotIm.overrideUserInterfaceStyle
+        }
+    }
+    
+    /**
      Get the currernt user login status
 
      The login status may be one of 2 options:
