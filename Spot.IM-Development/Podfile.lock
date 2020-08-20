@@ -5,39 +5,36 @@ PODS:
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
   - Fabric (1.10.2)
-  - Google-Mobile-Ads-SDK (7.64.0):
+  - Google-Mobile-Ads-SDK (7.50.0):
     - GoogleAppMeasurement (~> 6.0)
-    - GoogleUserMessagingPlatform (~> 1.1)
-  - GoogleAppMeasurement (6.7.2):
-    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
-    - GoogleUtilities/MethodSwizzler (~> 6.7)
-    - GoogleUtilities/Network (~> 6.7)
-    - "GoogleUtilities/NSData+zlib (~> 6.7)"
-    - nanopb (~> 1.30905.0)
-  - GoogleUserMessagingPlatform (1.1.0)
-  - GoogleUtilities/AppDelegateSwizzler (6.7.2):
+  - GoogleAppMeasurement (6.3.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (= 0.3.9011)
+  - GoogleUtilities/AppDelegateSwizzler (6.5.1):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (6.7.2):
-    - PromisesObjC (~> 1.2)
-  - GoogleUtilities/Logger (6.7.2):
+  - GoogleUtilities/Environment (6.5.1)
+  - GoogleUtilities/Logger (6.5.1):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (6.7.2):
+  - GoogleUtilities/MethodSwizzler (6.5.1):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (6.7.2):
+  - GoogleUtilities/Network (6.5.1):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (6.7.2)"
-  - GoogleUtilities/Reachability (6.7.2):
+  - "GoogleUtilities/NSData+zlib (6.5.1)"
+  - GoogleUtilities/Reachability (6.5.1):
     - GoogleUtilities/Logger
   - Kingfisher (4.10.1)
-  - nanopb (1.30905.0):
-    - nanopb/decode (= 1.30905.0)
-    - nanopb/encode (= 1.30905.0)
-  - nanopb/decode (1.30905.0)
-  - nanopb/encode (1.30905.0)
+  - nanopb (0.3.9011):
+    - nanopb/decode (= 0.3.9011)
+    - nanopb/encode (= 0.3.9011)
+  - nanopb/decode (0.3.9011)
+  - nanopb/encode (0.3.9011)
   - Player (0.13.0)
   - PromiseKit (6.13.1):
     - PromiseKit/CorePromise (= 6.13.1)
@@ -48,7 +45,6 @@ PODS:
     - PromiseKit/CorePromise
   - PromiseKit/UIKit (6.13.1):
     - PromiseKit/CorePromise
-  - PromisesObjC (1.2.10)
   - Reveal-SDK (24)
   - SnapKit (4.2.0)
   - SwiftLint (0.34.0)
@@ -58,7 +54,7 @@ DEPENDENCIES:
   - Cards
   - Crashlytics
   - Fabric
-  - Google-Mobile-Ads-SDK (= 7.64)
+  - Google-Mobile-Ads-SDK (= 7.50)
   - Kingfisher
   - PromiseKit (~> 6.8)
   - Reveal-SDK
@@ -73,13 +69,11 @@ SPEC REPOS:
     - Fabric
     - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
-    - GoogleUserMessagingPlatform
     - GoogleUtilities
     - Kingfisher
     - nanopb
     - Player
     - PromiseKit
-    - PromisesObjC
     - Reveal-SDK
     - SnapKit
     - SwiftLint
@@ -89,19 +83,17 @@ SPEC CHECKSUMS:
   Cards: 45ae6bd0eca7b5e8016d3b6cb30b60b04753f68f
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
-  Google-Mobile-Ads-SDK: aec52559ce73ddf1e6478d1904dd71a741f1bc61
-  GoogleAppMeasurement: 3def7652b1f5b5a576178dc332e2a36a260fbef6
-  GoogleUserMessagingPlatform: 9dc714d2e1f0aa727b9cc52d266dc1b155f4c3f2
-  GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
+  Google-Mobile-Ads-SDK: d48dbaf5bae1ab7a94a9786f493c26c454bc6f16
+  GoogleAppMeasurement: 39ecba10918b21c83877d392246157f65db351cf
+  GoogleUtilities: 06eb53bb579efe7099152735900dd04bf09e7275
   Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
-  nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
+  nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Player: 968d8d07d923bcdd6f7e4091c9e306eb44a5f7a4
   PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
-  PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   Reveal-SDK: 5d7e56b8f018c0a88b3a2c10bf68d598bbd3b071
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
 
-PODFILE CHECKSUM: eeeee477e4df089656e0fe64fbd678bbdb1bac4d
+PODFILE CHECKSUM: 7dbff3888dd58fd204b71d533577ce9deafa8900
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.8.4
