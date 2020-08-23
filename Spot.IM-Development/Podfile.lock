@@ -51,7 +51,6 @@ PODS:
   - PromisesObjC (1.2.10)
   - Reveal-SDK (24)
   - SnapKit (4.2.0)
-  - SwiftLint (0.34.0)
 
 DEPENDENCIES:
   - Alamofire (~> 5.2)
@@ -63,7 +62,6 @@ DEPENDENCIES:
   - PromiseKit (~> 6.8)
   - Reveal-SDK
   - SnapKit (~> 4.2.0)
-  - SwiftLint (~> 0.34.0)
 
 SPEC REPOS:
   trunk:
@@ -82,7 +80,6 @@ SPEC REPOS:
     - PromisesObjC
     - Reveal-SDK
     - SnapKit
-    - SwiftLint
 
 SPEC CHECKSUMS:
   Alamofire: c1ca147559e730bfb2182c8c7aafbdd90a867987
@@ -100,8 +97,7 @@ SPEC CHECKSUMS:
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   Reveal-SDK: 5d7e56b8f018c0a88b3a2c10bf68d598bbd3b071
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
-  SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
 
-PODFILE CHECKSUM: eeeee477e4df089656e0fe64fbd678bbdb1bac4d
+PODFILE CHECKSUM: 513bfc7530d38b0eec958b0f18e0d5cfafd3389f
 
 COCOAPODS: 1.9.3
