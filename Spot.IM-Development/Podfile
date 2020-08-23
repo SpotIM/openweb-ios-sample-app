@@ -15,7 +15,7 @@ abstract_target 'Shared' do
   pod 'Alamofire', '~> 5.2'
   pod 'PromiseKit', '~> 6.8'
   target 'SpotImNoAds'
-  
+
   abstract_target 'DemoApps' do
     pod 'SnapKit', '~> 4.2.0'
     pod 'Cards'
@@ -34,19 +34,17 @@ abstract_target 'Shared' do
   end
 
   target 'SpotImCore' do
-    pod 'SwiftLint', '~> 0.34.0', :configurations => debug_configurations
+#    pod 'SwiftLint', '~> 0.34.0', :configurations => debug_configurations
     # Pods for configurations with google ads
-    pod 'Google-Mobile-Ads-SDK', '= 7.50', :configurations => ads_configurations
+    pod 'Google-Mobile-Ads-SDK', '= 7.64', :configurations => ads_configurations
   end
 
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
-      if target.name == 'Alamofire' || target.name == 'PromiseKit' || target.name == 'Google-Mobile-Ads-SDK' || target.name == 'GoogleAppMeasurement' || target.name == 'GoogleUtilities' || target.name == 'nanopb' || target.name == 'Pods-Shared-SpotImCore'
-          target.build_configurations.each do |config|
-              config.build_settings['BITCODE_GENERATION_MODE'] = 'bitcode'
-          end
-      end
+    target.build_configurations.each do |config|
+      config.build_settings['BITCODE_GENERATION_MODE'] = 'bitcode'
+    end
   end
 end
