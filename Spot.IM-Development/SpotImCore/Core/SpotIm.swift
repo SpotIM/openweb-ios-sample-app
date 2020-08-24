@@ -75,7 +75,6 @@ private struct InitResult {
 }
 
 public class SpotIm {
-    private static var initPormise: Promise<SpotConfig>?
     private static var configurationPromise: Promise<SpotConfig>?
     private static var userPromise: Promise<SPUser>?
     private static let apiManager: ApiManager = ApiManager()
@@ -97,7 +96,6 @@ public class SpotIm {
         if SpotIm.reinit {
             SpotIm.reinit = false
             SpotIm.spotId = nil
-            initPormise = nil
             configurationPromise = nil
             userPromise = nil
         }
@@ -105,7 +103,7 @@ public class SpotIm {
         if SpotIm.spotId == nil {
             SpotIm.reinit = false
             SpotIm.spotId = spotId
-            getInitPormise(spotId: spotId).ensure {
+            getConfigPromise(spotId: spotId).ensure {
                 SPClientSettings.main.sendAppInitEvent()
             }.catch { error in
                 Logger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
@@ -241,9 +239,9 @@ public class SpotIm {
     }
 
     /**
-    Set your dark theme background color, so Spot.IM components background will match the background of the parent app
+    Set your interface style manually instead of using system settings
 
-     - Parameter color: The parent app backgournd color for dark theme
+     - Parameter SPUserInterfaceStyle: The style to set to the conversation SDK
      */
     public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = SPClientSettings.overrideUserInterfaceStyle {
         didSet {
@@ -288,9 +286,18 @@ public class SpotIm {
     // MARK: Private
     private static func execute(call: @escaping (SpotConfig) -> Void, failure: @escaping ((SpotImError) -> Void)) {
         if let spotId = SpotIm.spotId {
-            getInitPormise(spotId: spotId).done { config in
+            getConfigPromise(spotId: spotId).done { config in
                 if let enabled = config.appConfig.mobileSdk.enabled, enabled {
-                    call(config)
+                    getUserPromise().done { user in
+                        call(config)
+                    }.catch { error in
+                        Logger.verbose("FAILED!!!!")
+                        if let spotError = error as? SpotImError {
+                            failure(spotError)
+                        } else {
+                            failure(SpotImError.internalError(error.localizedDescription))
+                        }
+                    }
                 } else {
                     Logger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
@@ -331,19 +338,6 @@ public class SpotIm {
             userPromise = result
             return result
         }
-    }
-
-    private static func getInitPormise(spotId: String) -> Promise<SpotConfig> {
-        if let initPromise = SpotIm.initPormise, !initPromise.isRejected {
-            return initPromise
-        }
-
-        let initPromise = getConfigPromise(spotId: spotId).then { config in
-            getUserPromise().map { _ in config }
-        }
-
-        SpotIm.initPormise = initPromise
-        return initPromise
     }
 
     private static func attempt<T>(retries: UInt = NUM_OF_RETRIES, delayBeforeRetry: DispatchTimeInterval = .seconds(1), _ body: @escaping () -> Promise<T>) -> Promise<T> {

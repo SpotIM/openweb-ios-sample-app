@@ -30,10 +30,14 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                 return seal.reject(SPNetworkError.custom(message))
             }
             
-            getConfig(spotId: spotKey).then { config in
-                self.getAbTests(spotId: spotKey).map { (config, $0) }
+            getConfig(spotId: spotKey).then { config -> Promise<(SPSpotConfiguration, AbTests)> in
+                if config.mobileSdk.enabled ?? false {
+                    return self.getAbTests(spotId: spotKey).map { (config, $0) }
+                } else {
+                    return Promise.value((config, AbTests()))
+                }
             }.then { configAndAbTest -> Promise<SpotConfig> in
-                if configAndAbTest.0.initialization?.monetized ?? false {
+                if configAndAbTest.0.mobileSdk.enabled ?? false && configAndAbTest.0.initialization?.monetized ?? false {
                     return self.getAdsConfig(spotId: spotKey).map { return SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: $0) }
                 } else {
                     return Promise.value(SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: nil))
