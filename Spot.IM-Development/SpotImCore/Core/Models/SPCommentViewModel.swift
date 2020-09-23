@@ -70,8 +70,13 @@ internal struct CommentViewModel {
             repliesButtonState = .hidden
         }
 
-        // FIXME: (Fedin) first content could be not text
-        commentText = "\(comment.content?.first?.text ?? "no text")"
+        if let htmlText = comment.content?.first?.text,
+            let data = htmlText.data(using: String.Encoding.unicode, allowLossyConversion: false),
+            let attributedHtmlString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
+            commentText = attributedHtmlString.string
+        } else {
+            commentText = "no text"
+        }
 
         if let time = comment.writtenAt {
             timestamp = Date(timeIntervalSince1970: time).timeAgo()
