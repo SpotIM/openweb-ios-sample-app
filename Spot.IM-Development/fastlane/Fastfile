@@ -28,7 +28,17 @@ platform :ios do
     upload_to_testflight
   end
 
-  lane :bump_version do
+  lane :release_pod do
+    xcodebuild(
+      scheme: "Package iOS with ads",
+      configuration: "Release",
+      destination: "generic/platform=iOS",
+      clean: true,
+      build: true
+    )
+  end
+
+  private_lane :bump_version do
     increment_version_number_in_xcodeproj(
       bump_type: 'patch',
       scheme: 'Spot-IM.Development'
