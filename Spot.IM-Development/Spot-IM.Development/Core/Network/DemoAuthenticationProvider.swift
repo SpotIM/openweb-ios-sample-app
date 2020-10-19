@@ -11,8 +11,8 @@ import Alamofire
 
 internal class DemoAuthenticationProvider {
 
-    private static let loginURLString = "https://sso-demo.now.sh/api/login"
-    private static let codeBURLString = "https://sso-demo.now.sh/api/spotim-sso"
+    private static let loginURLString = "https://ow-sso-server.now.sh/api/login"
+    private static let codeBURLString = "https://ow-sso-server.now.sh/api/spotim-sso"
 
     internal static func logIn(with username: String,
                                password: String,
@@ -50,17 +50,21 @@ internal class DemoAuthenticationProvider {
         let params: Parameters = ["code_a": codeA ?? "",
                                   "access_token": accessToken ?? "",
                                   "username": username ?? "",
-                                  "access_token_network": accessTokenNetwork ?? "",
-                                  "is_environment_staging": false]
+                                  "environment": "production"]
+        
+        let headers: HTTPHeaders = ["access-token-network": accessTokenNetwork ?? ""]
+        
         AF.request(url,
                           method: .post,
                           parameters: params,
                           encoding: JSONEncoding.default,
-                          headers: nil)
+                          headers: headers)
             .validate()
-            .responseString { response in
+            .responseJSON { response in
                 switch response.result {
-                case .success(let codeB):
+                case .success(let json):
+                    let dict = json as? NSDictionary
+                    let codeB = dict?["code_b"] as? String
                     completion(codeB, nil)
                 case .failure(let error):
                     completion(nil, error)

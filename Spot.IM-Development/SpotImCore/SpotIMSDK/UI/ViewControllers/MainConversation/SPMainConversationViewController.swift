@@ -104,7 +104,17 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         model.delegates.add(delegate: self)
         model.commentsCounterDelegates.add(delegate: self)
         
-        totalTypingCountDidUpdate(count: model.typingCount())
+        do {
+            let typingCount = try model.typingCount()
+            totalTypingCountDidUpdate(count: typingCount)
+        } catch {
+            if let realtimeError = error as? RealTimeErorr {
+                model.stopRealTimeFetching()
+                let realtimeFailureReport = RealTimeFailureModel(reason: realtimeError.description)
+                SPDefaultFailureReporter.shared.sendRealTimeFailureReport(realtimeFailureReport)
+            }
+        }
+        
         if model.dataSource.messageCount > 0 {
             sortView.updateCommentsLabel(model.dataSource.messageCount)
         }
@@ -539,7 +549,7 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     
     func bannerFailedToLoad(error: Error) {
         let monetizationFailureData = MonetizationFailureModel(source: .mainConversation, reason: error.localizedDescription, bannerType: .banner)
-        SPDefaultFailureReporter().sendMonetizationFaliureReport(monetizationFailureData)
+        SPDefaultFailureReporter.shared.sendMonetizationFaliureReport(monetizationFailureData)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }
 }

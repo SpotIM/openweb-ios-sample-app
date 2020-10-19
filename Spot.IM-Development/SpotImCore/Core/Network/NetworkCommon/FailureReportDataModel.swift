@@ -39,6 +39,10 @@ struct MonetizationFailureModel: Encodable, ParametersPresentable {
     let bannerType: AdType
 }
 
+struct RealTimeFailureModel: Encodable, ParametersPresentable {
+    let reason: String
+}
+
 enum MonetizationSource: String, Encodable {
     case preConversation = "pre_converstaion"
     case mainConversation = "main_conversation"

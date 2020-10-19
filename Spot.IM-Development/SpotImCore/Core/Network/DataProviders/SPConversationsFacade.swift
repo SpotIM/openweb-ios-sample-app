@@ -133,7 +133,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     completion(nil, error.spError())
                 }
             }
@@ -176,7 +176,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     seal.reject(error)
                 }
             }
@@ -211,7 +211,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                     errorData: response.data,
                     errorMessage: error.localizedDescription
                 )
-                SPDefaultFailureReporter().sendFailureReport(rawReport)
+                SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
             }
         }
     }
