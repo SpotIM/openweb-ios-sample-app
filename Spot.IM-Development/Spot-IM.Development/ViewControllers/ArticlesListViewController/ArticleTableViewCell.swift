@@ -12,7 +12,7 @@ import Kingfisher
 import SnapKit
 
 protocol ArticleTableViewCellDelegate: AnyObject {
-    func articleCellTapped(cell:ArticleTableViewCell, withPost: Post?)
+    func articleCellTapped(withPost: Post?)
 }
 
 class ArticleTableViewCell : UITableViewCell {
@@ -97,6 +97,6 @@ class ArticleTableViewCell : UITableViewCell {
 
 extension ArticleTableViewCell : CardDelegate {
     func cardDidTapInside(card: Card) {
-        self.delegate?.articleCellTapped(cell: self, withPost: self.post)
+        self.delegate?.articleCellTapped(withPost: self.post)
     }
 }

@@ -19,7 +19,7 @@ final class RealTimeService {
     
     private let dataProvider: SPRealtimeDataProvider
     private var nextFetchTimeOffset: Int = 0
-    private weak var realTimeTimer: Timer?
+    private var realTimeTimer: Timer?
     private var stoppedConversations: Set<String> = Set<String>()
     private var nextRequestTimeOffset: Int = 5
     private var failuresInARow: Int = 0
@@ -38,12 +38,17 @@ final class RealTimeService {
         fetchDataForConversation(id: conversationId)
     }
     
-    /// Stop realtime data polling for `conversationId`
-    func stopRealTimeDataFetching(conversationId: String) {
+    func stopRealTimeDataFetching() {
+        guard SPConfigsDataSource.appConfig?.mobileSdk.realtimeEnabled == true else { return }
+        
+        realTimeTimer?.invalidate()
+        realTimeTimer = nil
+    }
+    
+    func stopShowingRealtimeUI(for conversationId: String) {
         guard SPConfigsDataSource.appConfig?.mobileSdk.realtimeEnabled == true else { return }
         stoppedConversations.insert(conversationId)
     }
-    
     /// Take off  service fetch if it was stopped
     func refreshService() {
         guard SPConfigsDataSource.appConfig?.mobileSdk.realtimeEnabled == true else { return }

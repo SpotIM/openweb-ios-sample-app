@@ -46,11 +46,11 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private var configCompletion: ((UIViewController) -> Void)?
     private var postId: String?
     private var shouldAddMain: Bool = false
-    private var conversationModel: SPMainConversationModel!
+    private weak var conversationModel: SPMainConversationModel?
     private let adsManager: AdsManager
     private let apiManager: ApiManager
     private let imageProvider: SPImageURLProvider
-    private let realTimeService: RealTimeService
+    private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
@@ -62,7 +62,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         apiManager = ApiManager()
         conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
-        realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
         
         configureAPIAndRealTimeHandlers()
@@ -78,7 +77,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         apiManager = ApiManager()
         conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
-        realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
         
         configureAPIAndRealTimeHandlers()
@@ -99,9 +97,20 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                                           navigationController: UINavigationController,
                                           completion: @escaping (UIViewController) -> Void) {
         containerViewController = navigationController
-        buildPreConversationController(with: postId, articleMetadata: articleMetadata, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
+        let encodedPostId = encodePostId(postId: postId)
+        buildPreConversationController(with: encodedPostId, articleMetadata: articleMetadata, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
 
+    private func encodePostId(postId: String) -> String {
+        let result = postId.replacingOccurrences(of: "urn:uri:base64:", with: "urn$3Auri$3Abase64$3A")
+            .replacingOccurrences(of: ",", with: ";")
+            .replacingOccurrences(of: "_", with: "$")
+            .replacingOccurrences(of: ":", with: "~")
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "/", with: "$2F")
+        return result
+    }
+    
     private func startFlow(with controller: SPMainConversationViewController) {
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -116,6 +125,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             dataProvider: conversationDataProvider
         )
         conversationDataProvider.imageURLProvider = imageProvider
+        let realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
         let conversationModel = SPMainConversationModel(
             commentUpdater: conversationUpdater,
             conversationDataSource: conversationDataSource,
@@ -123,13 +133,16 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             realTimeService: realTimeService,
             abTestData: spotConfig.abConfig
         )
-        self.conversationModel = conversationModel
-        realTimeService.delegate = self.conversationModel
+
+        realTimeService.delegate = conversationModel
+        self.realTimeService = realTimeService
         
         let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages, adsProvider: adsManager.adsProvider())
         
-        self.conversationModel.delegates.add(delegate: preConversationViewController)
-        self.conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
+        conversationModel.delegates.add(delegate: preConversationViewController)
+        conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
+
+        self.conversationModel = conversationModel
         
         preConversationViewController.delegate = self
         preConversationViewController.preConversationDelegate = self
@@ -206,7 +219,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         apiManager.requestDidSucceed = { [weak self] request in
             guard let strongSelf = self else { return }
             switch request {
-            case _ as SPConversationRequest: strongSelf.realTimeService.refreshService()
+            case _ as SPConversationRequest: strongSelf.realTimeService?.refreshService()
                 
             default: break
             }
@@ -297,9 +310,9 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     internal func commentReplyDidCreate(_ comment: SPComment) {
         Logger.verbose("FirstComment: Did received comment in delegate")
-        if shouldAddMain {
+        if let model = conversationModel, shouldAddMain {
             Logger.verbose("FirstComment: Adding main conversation screen before we continue")
-            insertMainConversationToNavigation(conversationModel)
+            insertMainConversationToNavigation(model)
         }
         localCommentReplyDidCreate?(comment)
     }

@@ -72,7 +72,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     seal.reject(SpotImError.internalError(error.localizedDescription))
                 }
             }
@@ -104,7 +104,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     seal.reject(SpotImError.internalError(error.localizedDescription))
                 }
             }
@@ -133,7 +133,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     seal.reject(SpotImError.internalError(error.localizedDescription))
                 }
             }

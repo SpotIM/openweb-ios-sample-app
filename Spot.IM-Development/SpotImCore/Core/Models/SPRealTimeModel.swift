@@ -9,22 +9,32 @@
 import Foundation
 
 struct RealTimeModel: Decodable {
-
     let data: RealTimeDataModel?
     let nextFetch: Int
     let timestamp: Int
+}
+
+internal enum RealTimeErorr: Error, CustomStringConvertible {
+    case conversationNotFound
+    case corruptedData
     
+    var description: String {
+        switch self {
+        case .conversationNotFound:
+            return "conversationNotFound"
+        case .corruptedData:
+            return "corruptedData"
+        }
+    }
 }
 
 struct RealTimeDataModel: Decodable {
     
     enum CodingKeys: String, CodingKey {
-        
         case conversationCountMessages = "conversation/count-messages"
         case conversationTypingV2Count = "conversation/typing-v2-count"
         case conversationTypingV2Users = "conversation/typing-v2-users"
         case onlineUsers = "online/users"
-        
     }
     
     private let conversationCountMessages: [String: [RealTimeMessagesCountModel]]?
@@ -32,36 +42,54 @@ struct RealTimeDataModel: Decodable {
     private let conversationTypingV2Users: [String: [RealTimeTypingUsersModel]]?
     private let onlineUsers: [String: [RealTimeOnlineUserModel]]?
     
-    /// Will return replies count in conversation if it exists and `0` if not
-    func repliesCountForConversation(_ id: String) -> Int {
-        return conversationCountMessages?[id]?.first?.replies ?? 0
+    func totalCommentsCountForConversation(_ id: String) throws -> Int {
+        let commentsCounter = try commentsCountForConversation(id)
+        let repliesCounter = try repliesCountForConversation(id)
+        
+        return commentsCounter + repliesCounter
     }
     
-    /// Will return comments count in conversation if it exists and `0` if not
-    func commentsCountForConversation(_ id: String) -> Int {
-        return conversationCountMessages?[id]?.first?.comments ?? 0
+    /// Will return replies count in conversation if it exists and throw conversationNotFound exception if not
+    func repliesCountForConversation(_ id: String) throws -> Int {
+        let conversationCounterData = try self.getRealTimeMessagesCountModel(id)
+        
+        return conversationCounterData.replies
     }
     
-    /// Will return typing count in conversation if it exists and `0` if not
-    func totalTypingCountForConversation(_ id: String) -> Int {
-        //return conversationTypingV2Count?[id]?.first?["Overall"] ?? 0
-        let count = conversationTypingV2Users?[id]?.first(where: { $0.key == "Overall" })?.count ?? 0
+    /// Will return comments count in conversation if it exists and throw conversationNotFound exception if not
+    func commentsCountForConversation(_ id: String) throws -> Int {
+        let conversationCounterData = try self.getRealTimeMessagesCountModel(id)
+        
+        return conversationCounterData.comments
+    }
+    
+    /// Will return typing count in conversation if it exists and throw conversationNotFound exception if not
+    func totalTypingCountForConversation(_ id: String) throws -> Int {
+        guard let typingCountDataArray = conversationTypingV2Users?[id] else {
+            throw RealTimeErorr.conversationNotFound
+        }
+        
+        guard let count = typingCountDataArray.first(where: { $0.key == "Overall" })?.count else {
+            throw RealTimeErorr.corruptedData
+        }
+        
         return count
     }
     
-    /// Will return typing count in conversation for comment if it exists and `0` if not
-    func typingCountForConversation(_ id: String, commentId: String) -> Int {
-        return conversationTypingV2Count?[id]?.first?[commentId] ?? 0
-    }
-    
-    /// Will return online users array in conversation if it exists and empty array if not
-    func onlineUsersForConversation(_ id: String, commentId: String) -> [RealTimeOnlineUserModel] {
-        return onlineUsers?[id] ?? [RealTimeOnlineUserModel]()
+    private func getRealTimeMessagesCountModel(_ id: String) throws -> RealTimeMessagesCountModel {
+        guard let conversationDataArray = conversationCountMessages?[id] else {
+            throw RealTimeErorr.conversationNotFound
+        }
+        
+        guard let conversationCounterData = conversationDataArray.first else {
+            throw RealTimeErorr.corruptedData
+        }
+        
+        return conversationCounterData
     }
 }
 
 struct RealTimeMessagesCountModel: Decodable {
-    
     enum CodingKeys: String, CodingKey {
         
         case replies = "Replies"
@@ -74,20 +102,15 @@ struct RealTimeMessagesCountModel: Decodable {
 }
 
 struct RealTimeOnlineUserModel: Decodable {
-    
-    let email: String
     let userId: String
     let displayName: String
     let userName: String
     let registered: Bool
     let imageId: String
-    
 }
 
 struct RealTimeTypingUsersModel: Decodable {
-    
     let users: [RealTimeOnlineUserModel]?
     let count: Int
     let key: String
-    
 }

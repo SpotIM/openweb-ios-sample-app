@@ -18,7 +18,9 @@ struct RawReportModel {
 
 internal final class SPDefaultFailureReporter: NetworkDataProvider {
     
-    init() {
+    static let shared = SPDefaultFailureReporter()
+    
+    private init() {
         super.init(apiManager: ApiManager())
     }
     
@@ -43,7 +45,7 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         }
     }
     
-    func sendMonetizationFaliureReport(_ faluireData: ParametersPresentable) {
+    func sendMonetizationFaliureReport(_ failureData: ParametersPresentable) {
         guard let spotKey = SPClientSettings.main.spotKey else { return }
         
         let spRequest = SPFailureReportRequest.error
@@ -51,7 +53,25 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         
         manager.execute(
             request: spRequest,
-            parameters: faluireData.parameters(),
+            parameters: failureData.parameters(),
+            parser: EmptyParser(),
+            headers: headers
+        ) { (result, response) in
+            guard case let .failure(error) = result else { return }
+            
+            Logger.error(error)
+        }
+    }
+    
+    func sendRealTimeFailureReport(_ failureData: ParametersPresentable) {
+        guard let spotKey = SPClientSettings.main.spotKey else { return }
+        
+        let spRequest = SPFailureReportRequest.error
+        let headers = HTTPHeaders.basic(with: spotKey)
+        
+        manager.execute(
+            request: spRequest,
+            parameters: failureData.parameters(),
             parser: EmptyParser(),
             headers: headers
         ) { (result, response) in

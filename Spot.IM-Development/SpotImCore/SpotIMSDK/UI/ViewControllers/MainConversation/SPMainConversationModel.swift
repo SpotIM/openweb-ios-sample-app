@@ -64,7 +64,6 @@ final class SPMainConversationModel {
     
     var pendingComment: SPComment? {
         didSet {
-            Logger.verbose("FirstComment: Pending comment did set with \(String(describing: pendingComment))")
             if pendingComment != nil {
                 commentsActionDelegate?.localCommentWasCreated()
             }
@@ -103,19 +102,20 @@ final class SPMainConversationModel {
     func stopTypingTracking() {
         shouldUserBeNotified = false
         delegates.invoke { $0.stopTypingTrack() }
-        realTimeService.stopRealTimeDataFetching(conversationId: dataSource.postId)
+        realTimeService.stopShowingRealtimeUI(for: dataSource.postId)
+    }
+   
+    func stopRealTimeFetching() {
+        realTimeService.stopRealTimeDataFetching()
     }
     
     func handlePendingComment() {
-        Logger.verbose("FirstComment: handle called with \(String(describing: pendingComment))")
         guard let comment = pendingComment else { return }
         if !comment.isReply {
             commentsActionDelegate?.localCommentWillBeCreated()
         }
         
-        Logger.verbose("FirstComment: Dispaching to main with delay!!!!!")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            Logger.verbose("FirstComment: Got back to local posting the comment")
             self?.dataSource.update(with: comment)
             self?.pendingComment = nil
         }
@@ -321,45 +321,44 @@ extension SPMainConversationModel {
 
 extension SPMainConversationModel: RealTimeServiceDelegate {
     func realTimeDataDidUpdate(realTimeData: RealTimeModel, shouldUserBeNotified: Bool, timeOffset: Int) {
-        guard let spotId = SPClientSettings.main.spotKey else { return }
+        guard let spotId = SPClientSettings.main.spotKey, let data = realTimeData.data else { return }
         
         self.shouldUserBeNotified = shouldUserBeNotified
         self.realTimeData = realTimeData
         let fullConversationId = "\(spotId)_\(dataSource.postId)"
-        let totalTypingCount: Int = realTimeData.data?.totalTypingCountForConversation(fullConversationId)
-            ?? 0
-        let totalCommentsCount: Int = self.liveTotalCommentsCount()
-        self.dataSource.messageCount = totalCommentsCount
-        if shouldUserBeNotified {
-            delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount) }
-            if totalCommentsCount > 0 {
-                commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
+        
+        do {
+            let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
+            let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
+            self.dataSource.messageCount = totalCommentsCount
+            if shouldUserBeNotified {
+                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount) }
+                if totalCommentsCount > 0 {
+                    commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
+                }
+                
+                scheduleTypingCleaningTimer(
+                    timeOffset: Double(timeOffset) + typingVisibilityAdditionalTimeInterval
+                )
             }
-            
-            scheduleTypingCleaningTimer(
-                timeOffset: Double(timeOffset) + typingVisibilityAdditionalTimeInterval
-            )
+        } catch {
+            if let realtimeError = error as? RealTimeErorr {
+                Logger.error("Failed to update real time data: \(realtimeError)")
+                stopRealTimeFetching()
+                let realtimeFailureReport = RealTimeFailureModel(reason: realtimeError.description)
+                SPDefaultFailureReporter.shared.sendRealTimeFailureReport(realtimeFailureReport)
+            }
         }
     }
     
     /// Returns current visible typing count
-    func typingCount() -> Int {
-        guard let spotId = SPClientSettings.main.spotKey else { return 0 }
+    func typingCount() throws -> Int {
+        guard let spotId = SPClientSettings.main.spotKey, let data = self.realTimeData?.data else { return 0 }
 
         let fullConversationId = "\(spotId)_\(dataSource.postId)"
-        let totalTypingCount = realTimeData?.data?.totalTypingCountForConversation(fullConversationId)
-            ?? 0
+        let totalTypingCount = try data.totalTypingCountForConversation(fullConversationId)
         
         return shouldUserBeNotified ? totalTypingCount : 0
-    }
-    
-    func liveTotalCommentsCount() -> Int {
-        guard let spotId = SPClientSettings.main.spotKey else { return 0 }
-        let fullConversationId = "\(spotId)_\(dataSource.postId)"
-        
-        let commentsCount = realTimeData?.data?.commentsCountForConversation(fullConversationId) ?? 0
-        let repliesCount = realTimeData?.data?.repliesCountForConversation(fullConversationId) ?? 0
-        return commentsCount + repliesCount
     }
     
     /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''

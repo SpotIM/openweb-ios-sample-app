@@ -45,7 +45,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                     errorData: response.data,
                     errorMessage: "Authorization header empty"
                 )
-                SPDefaultFailureReporter().sendFailureReport(rawReport)
+                SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                 completion(nil, SPNetworkError.default)
             }
             
@@ -63,7 +63,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     completion(token, error)
                 }
             
@@ -101,7 +101,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     seal.reject(error)
                 }
             }
@@ -140,7 +140,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter().sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
                     seal.reject(error)
                 }
             }
