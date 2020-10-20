@@ -355,8 +355,8 @@ internal final class SPMainConversationDataSource {
 
         cellData[indexPath.section][indexPath.row].rankedByUser = rankChange.to.rawValue
 
-        var rankUp = Int(cellData[indexPath.section][indexPath.row].rankUp ?? "") ?? 0
-        var rankDown = Int(cellData[indexPath.section][indexPath.row].rankDown ?? "") ?? 0
+        var rankUp = cellData[indexPath.section][indexPath.row].rankUp
+        var rankDown = cellData[indexPath.section][indexPath.row].rankDown
 
         switch (rankChange.from, rankChange.to) {
         case (.unrank, .up):
@@ -375,8 +375,8 @@ internal final class SPMainConversationDataSource {
             rankDown -= 1
         default: break
         }
-        cellData[indexPath.section][indexPath.row].rankUp = rankUp > 0 ? String(rankUp) : ""
-        cellData[indexPath.section][indexPath.row].rankDown = rankDown > 0 ? String(rankDown) : ""
+        cellData[indexPath.section][indexPath.row].rankUp = rankUp
+        cellData[indexPath.section][indexPath.row].rankDown = rankDown
 
         delegate?.dataSource(didChangeRowAt: indexPath)
     }
