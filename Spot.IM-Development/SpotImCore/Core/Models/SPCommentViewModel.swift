@@ -19,8 +19,8 @@ internal struct CommentViewModel {
     var timestamp: String?
     var commentText: String?
     var rankedByUser: Int = 0
-    var rankUp: String?
-    var rankDown: String?
+    var rankUp: Int = 0
+    var rankDown: Int = 0
     var repliesRawCount: Int?
     var repliesCount: String?
     var depth: Int = 0
@@ -88,10 +88,10 @@ internal struct CommentViewModel {
         }
 
         if let ranksUp = comment.rank?.ranksUp, ranksUp > 0 {
-            rankUp = ranksUp.kmFormatted
+            rankUp = ranksUp
         }
         if let ranksDown = comment.rank?.ranksDown, ranksDown > 0 {
-            rankDown = ranksDown.kmFormatted
+            rankDown = ranksDown
         }
 
         rankedByUser = comment.rank?.rankedByCurrentUser ?? 0

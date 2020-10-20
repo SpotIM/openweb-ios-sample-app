@@ -62,12 +62,12 @@ final class CommentActionsView: BaseView {
         rankDownButton.lineColor = color
     }
 
-    func setRankUp(_ rank: String?) {
-        rankUpLabel.text = rank
+    func setRankUp(_ rank: Int) {
+        rankUpLabel.text = rank.kmFormatted
     }
 
-    func setRankDown(_ rank: String?) {
-        rankDownLabel.text = rank
+    func setRankDown(_ rank: Int) {
+        rankDownLabel.text = rank.kmFormatted
     }
 
     func setRanked(with rankedByUser: Int?) {
