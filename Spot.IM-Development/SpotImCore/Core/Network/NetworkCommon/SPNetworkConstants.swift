@@ -18,12 +18,9 @@ internal struct APIConstants {
 }
 
 internal struct APIParamKeysContants {
-    static internal let CODE_A = "code_a"
     static internal let CODE_B = "code_b"
     static internal let SPOT_ID = "spot_id"
     static internal let SECRET = "secret"
-    static internal let AUTO_COMPLETE = "auto_complete"
-    static internal let SUCCESS = "success"
 }
 
 internal struct APIHeadersConstants {

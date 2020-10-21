@@ -20,13 +20,15 @@ class ArticlesListViewController: UITableViewController {
     var data : Response?
     let addToTableView: Bool
     let useLoginDelegate: Bool
+    let shouldReinit: Bool
     
-    init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false, useLoginDelegate: Bool) {
+    init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false, useLoginDelegate: Bool, shouldReinint: Bool) {
         self.spotId = spotId
         
         self.authenticationControllerId = authenticationControllerId
         self.addToTableView = addToTableView
         self.useLoginDelegate = useLoginDelegate
+        self.shouldReinit = shouldReinint
         
         super.init(style: .plain)
     }
@@ -38,7 +40,7 @@ class ArticlesListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        SpotIm.reinit = true
+        SpotIm.reinit = shouldReinit
         SpotIm.initialize(spotId: spotId)
         
         setup()

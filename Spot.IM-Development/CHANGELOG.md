@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - 0 comments counter on Fox mobile app (Realtime not working due to post-id encoding)
+- Realtime fetch memory leak
+- Realtime not working on Fox mobile app
+- Rank up/down counter disappear when user try to take action and the counter is larger than 1k
+- Compatibility issue with swift 5.3
+
+### Added
+- Saving user data until it expired to reduce server load
 
 ## [1.0.10] - 2020-09-27
 ### Added

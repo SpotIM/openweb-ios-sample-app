@@ -27,6 +27,19 @@ public struct SSOStartResponse: Codable {
     public var success: Bool = false
 }
 
+internal struct SSOStartResponseInternal: Codable {
+    public var codeA: String?
+    public var autoComplete: Bool = false
+    public var success: Bool = false
+    public var user: SPUser?
+}
+
+internal struct SSOCompleteResponseInternal: Codable {
+    public var success: Bool = false
+    public var user: SPUser?
+}
+
+
 internal class SpotImAuthenticationProvider {
         public weak var ssoAuthDelegate: SSOAthenticationDelegate?
 
@@ -85,29 +98,24 @@ internal class SpotImAuthenticationProvider {
             manager.execute(
                 request: spRequest,
                 parameters: requestParams,
-                parser: JSONParser(),
+                parser: DecodableParser<SSOStartResponseInternal>(),
                 headers: headers
             ) { result, response in
                 switch result {
-                case .success(let json):
-                    let codeA = json[APIParamKeysContants.CODE_A] as? String
-                    let autocomplete = json[APIParamKeysContants.AUTO_COMPLETE] as? Bool ?? false
-                    let result = SSOStartResponse(codeA: codeA,
+                case .success(let ssoResponse):
+                    let result = SSOStartResponse(codeA: ssoResponse.codeA,
                                                   jwtToken: ssoParams?.token,
-                                                  autoComplete: autocomplete,
-                                                  success: json[APIParamKeysContants.SUCCESS] as? Bool ?? false)
-                    if result.autoComplete {
+                                                  autoComplete: ssoResponse.autoComplete,
+                                                  success: ssoResponse.success)
+                    if ssoResponse.autoComplete {
                         SPUserSessionHolder.updateSession(with: response.response)
-                        firstly {
-                            self.internalAuthProvider.user()
-                        }.done { [weak self] _ in
-                            self?.ssoAuthDelegate?.ssoFlowDidSucceed()
-                            completion(result, nil)
-                        }.catch { [weak self] error in
-                            self?.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                            completion(nil, error)
+                        
+                        if let user = ssoResponse.user {
+                            SPUserSessionHolder.updateSessionUser(user: user)
                         }
-
+                        
+                        self.ssoAuthDelegate?.ssoFlowDidSucceed()
+                        completion(result, nil)
                     } else {
                         completion(result, nil)
                     }
@@ -145,24 +153,20 @@ internal class SpotImAuthenticationProvider {
         manager.execute(
             request: spRequest,
             parameters: params,
-            parser: JSONParser(),
+            parser: DecodableParser<SSOCompleteResponseInternal>(),
             headers: headers
         ) { (result, response) in
             switch result {
-            case .success(let json):
-                let success = json[APIParamKeysContants.SUCCESS] as? Bool ?? false
-                if success {
+            case .success(let ssoResponse):
+                if ssoResponse.success {
                     let token = response.response?.allHeaderFields.authorizationHeader
                     SPUserSessionHolder.session.token = token ?? SPUserSessionHolder.session.token
-                    firstly {
-                        self.internalAuthProvider.user()
-                    }.done { [weak self] user in
-                        self?.ssoAuthDelegate?.ssoFlowDidSucceed()
-                        completion(token != nil && !token!.isEmpty, nil)
-                    }.catch { [weak self] error in
-                        self?.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                        completion(false, error)
+                    if let user = ssoResponse.user {
+                        SPUserSessionHolder.updateSessionUser(user: user)
                     }
+                                       
+                    self.ssoAuthDelegate?.ssoFlowDidSucceed()
+                    completion(token != nil && !token!.isEmpty, nil)
                 } else {
                     let errorMessage = LocalizationManager.localizedString(key: "Authentication error")
                     let error = SPNetworkError.custom(errorMessage)

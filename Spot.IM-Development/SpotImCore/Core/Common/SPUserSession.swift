@@ -34,11 +34,15 @@ internal class SPUserSessionHolder {
 
     static func updateSessionUser(user: SPUser?) {
         // preserving entered username for unregistered user
-        let displayName = (user?.registered ?? false) ? user?.displayName : session.user?.displayName
         session.user = user
-        session.user?.displayName = displayName
         SPAnalyticsHolder.default.userId = user?.id
         SPAnalyticsHolder.default.isUserRegistered = user?.registered ?? false
+        
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(user) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: .userSessionKey)
+        }
     }
 
     static func updateSession(with response: HTTPURLResponse?, forced: Bool = false) {
@@ -78,6 +82,7 @@ internal class SPUserSessionHolder {
 
     static func resetUserSession() {
         UserDefaults.standard.removeObject(forKey: .guestSessionTokenKey)
+        UserDefaults.standard.removeObject(forKey: .userSessionKey)
         session = loadOrCreateGuestUserSession()
     }
 
@@ -90,6 +95,12 @@ internal class SPUserSessionHolder {
         
         session.guid = UserDefaults.standard.string(forKey: .guestSessionUserIdKey)
         session.token = UserDefaults.standard.string(forKey: .guestSessionTokenKey)
+        if let savedUser = UserDefaults.standard.object(forKey: .userSessionKey) as? Data {
+            let decoder = JSONDecoder()
+            if let user = try? decoder.decode(SPUser.self, from: savedUser) {
+                session.user = user
+            }
+        }
 
         return session
     }
@@ -98,6 +109,7 @@ internal class SPUserSessionHolder {
 private extension String {
     static let guestSessionUserIdKey = "session.guest.userId"
     static let guestSessionTokenKey = "session.guest.token"
+    static let userSessionKey = "session.user"
 }
 
 public final class SPPublicSessionInterface {

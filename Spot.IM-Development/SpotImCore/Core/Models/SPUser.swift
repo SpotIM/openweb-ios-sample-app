@@ -8,11 +8,11 @@
 
 import UIKit
 
-internal class SPUser: Codable {
+internal class SPUser: Codable, CustomDebugStringConvertible {
     
     enum CodingKeys: String, CodingKey {
         case id, userId, displayName, userName, imageId, registered,
-        isAdmin, isModerator, isSuperAdmin, isJournalist, badgeType, points
+        isAdmin, isModerator, isSuperAdmin, isJournalist, badgeType, points, tokenExpiration
     }
     
     // all users
@@ -27,6 +27,7 @@ internal class SPUser: Codable {
     var isSuperAdmin: Bool
     var isJournalist: Bool
     let badgeType: String
+    let tokenExpiration: Int?
 
     // commenter only
     var points: Int?
@@ -57,6 +58,15 @@ internal class SPUser: Codable {
         }
     }
     
+    var expired: Bool {
+        guard let tokenExpiration = tokenExpiration else {
+            return true
+        }
+        
+        let now = Date().timeIntervalSince1970
+        return tokenExpiration <= Int(now)
+    }
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
     
@@ -76,6 +86,7 @@ internal class SPUser: Codable {
         registered = (try? container.decode(Bool.self, forKey: .registered)) ?? false
         userId = try? container.decode(String.self, forKey: .userId)
         userName = try? container.decode(String.self, forKey: .userName)
+        tokenExpiration = try? container.decode(Int.self, forKey: .tokenExpiration)
         id = id ?? userId
     }
     
@@ -93,6 +104,7 @@ internal class SPUser: Codable {
         try container.encode(registered, forKey: .registered)
         try container.encode(userId, forKey: .userId)
         try container.encode(userName, forKey: .userName)
+        try container.encode(tokenExpiration, forKey: .tokenExpiration)
     }
     
     func imageURL(size: CGSize) -> URL? {
@@ -115,6 +127,16 @@ internal class SPUser: Codable {
         )
         
         return result.appending("/")
+    }
+    
+    var debugDescription: String {
+        var result = "\n"
+        result += "DEBUG: This is user: \(String(describing: id))\n"
+        result += "DEBUG: Display Name: \(String(describing: displayName))\n"
+        result += "DEBUG: User Name: \(String(describing: userName))\n"
+        result += "DEBUG: Is Registered: \(registered)\n"
+        result += "DEBUG: Token Expiration: \(String(describing: Date(timeIntervalSince1970: TimeInterval(tokenExpiration ?? 0))))"
+        return result
     }
 }
 
