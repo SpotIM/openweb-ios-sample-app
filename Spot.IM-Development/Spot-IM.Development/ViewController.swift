@@ -14,10 +14,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var appInfoLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
     var loadingButtonTitleBackup: String?
+    var currentSpotId: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        currentSpotId = UserDefaults.standard.string(forKey: "spotIdKey") ?? ""
         setupUI()
         fillVersionAndBuildNumber()
     }
@@ -67,7 +69,7 @@ class ViewController: UIViewController {
     
     @IBAction private func showFoxWithOldLogin(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
-        self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table", useLoginDelegate: false)
+        showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table", useLoginDelegate: false)
     }
     
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
@@ -83,18 +85,18 @@ class ViewController: UIViewController {
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
-        self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+        showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
     }
 
     private func showArticles(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false, useLoginDelegate: Bool = true) {
-        let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, useLoginDelegate: useLoginDelegate)
+        let shouldReinit = spotId != currentSpotId
+        currentSpotId = spotId
+        let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, useLoginDelegate: useLoginDelegate, shouldReinint: shouldReinit)
         navigationController?.pushViewController(controller, animated: true)
     }
     
     private func setSpotId(spotId:String) {
-        let key = "spotIdKey"
-        
-        UserDefaults.standard.setValue(spotId, forKey: key)
+        UserDefaults.standard.setValue(spotId, forKey: "spotIdKey")
         SpotIm.darkModeBackgroundColor = #colorLiteral(red: 0.06274509804, green: 0.07058823529, blue: 0.2117647059, alpha: 1)
     }
 

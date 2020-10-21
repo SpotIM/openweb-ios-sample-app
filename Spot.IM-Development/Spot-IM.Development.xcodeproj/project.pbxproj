@@ -2412,7 +2412,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\n# Setup\nWORKSPACE=\"Spot-IM.Development.xcworkspace\"\nFRAMEWORK_NAME=\"SpotImNoAds\"\nBUILD_DIR=\"${SRCROOT}/build\"\nOUTPUT_DIR=\"${SRCROOT}/Products/\"\nOUTPUT=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework\"\nCONFIGURATION=\"${CONFIGURATION}\"\nDEVICE_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework.dSYM\"\nSIMULATOR_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework.dSYM\"\n\nrm -rf \"${BUILD_DIR}\"\nrm -rf \"${OUTPUT}\"\nmkdir -p \"${OUTPUT_DIR}\"\n\n# Build the framework for device and for simulator (using all needed architectures).\nxcodebuild -workspace \"${WORKSPACE}\" -list\n\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator OBJROOT=\"${OBJROOT}/DependantBuilds\"\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch arm64 -arch armv7 -arch armv7s only_active_arch=no defines_module=yes -sdk \"iphoneos\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos OBJROOT=\"${OBJROOT}/DependantBuilds\"\n\n# Copy the device version of framework to output. + dsym file\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\" \"${OUTPUT}\"\n\n# Replace the framework executable within the framework with a new version created by merging the device and simulator frameworks' executables with lipo.\nlipo -create -output \"${OUTPUT}/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# Copy the Swift module mappings for the simulator into the framework. The device mappings already exist from step 6.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${OUTPUT}/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# Create dsym files for crash reporting for our lib\ncp -r \"${DEVICE_DSYM_PATH}\" \"$OUTPUT_DIR\"\nlipo -create -output \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${DEVICE_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${SIMULATOR_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" || exit 1\n\nUUIDs=$(dwarfdump --uuid \"${DEVICE_DSYM_PATH}\" | cut -d ' ' -f2)\nfor file in `find \"${DEVICE_BCSYMBOLMAP_PATH}\" -name \"*.bcsymbolmap\" -type f`; do\nfileName=$(basename \"$file\" \".bcsymbolmap\")\nfor UUID in $UUIDs; do\nif [[ \"$UUID\" = \"$fileName\" ]]; then\ncp -R \"$file\" \"$OUTPUT_DIR\"\ndsymutil --symbol-map \"$OUTPUT_DIR\"/\"$fileName\".bcsymbolmap \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM\"\nfi\ndone\ndone\n\n";
+			shellScript = "set -e\n\n# Setup\nWORKSPACE=\"Spot-IM.Development.xcworkspace\"\nFRAMEWORK_NAME=\"SpotImNoAds\"\nBUILD_DIR=\"${SRCROOT}/build\"\nOUTPUT_DIR=\"${SRCROOT}/Products/\"\nOUTPUT=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework\"\nOUTPUT_DSYM=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework.dSYM\"\nCONFIGURATION=\"${CONFIGURATION}\"\nDEVICE_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework.dSYM\"\nSIMULATOR_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework.dSYM\"\n\nrm -rf \"${BUILD_DIR}\"\nrm -rf \"${OUTPUT}\"\nrm -rf \"${OUTPUT_DSYM}\"\nmkdir -p \"${OUTPUT_DIR}\"\n\n# Build the framework for device and for simulator (using all needed architectures).\nxcodebuild -workspace \"${WORKSPACE}\" -list\n\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator OBJROOT=\"${OBJROOT}/DependantBuilds\"\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch arm64 -arch armv7 -arch armv7s only_active_arch=no defines_module=yes -sdk \"iphoneos\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos OBJROOT=\"${OBJROOT}/DependantBuilds\"\n\n# Copy the device version of framework to output. + dsym file\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\" \"${OUTPUT}\"\n\n# Replace the framework executable within the framework with a new version created by merging the device and simulator frameworks' executables with lipo.\nlipo -create -output \"${OUTPUT}/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# Copy the Swift module mappings for the simulator into the framework. The device mappings already exist from step 6.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${OUTPUT}/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# Create dsym files for crash reporting for our lib\ncp -r \"${DEVICE_DSYM_PATH}\" \"$OUTPUT_DIR\"\nlipo -create -output \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${DEVICE_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${SIMULATOR_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" || exit 1\n\nUUIDs=$(dwarfdump --uuid \"${DEVICE_DSYM_PATH}\" | cut -d ' ' -f2)\nfor file in `find \"${DEVICE_BCSYMBOLMAP_PATH}\" -name \"*.bcsymbolmap\" -type f`; do\nfileName=$(basename \"$file\" \".bcsymbolmap\")\nfor UUID in $UUIDs; do\nif [[ \"$UUID\" = \"$fileName\" ]]; then\ncp -R \"$file\" \"$OUTPUT_DIR\"\ndsymutil --symbol-map \"$OUTPUT_DIR\"/\"$fileName\".bcsymbolmap \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM\"\nfi\ndone\ndone\n\n";
 		};
 		6D4E56E923A7A5F7005B79B6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2543,7 +2543,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\n# Setup\nWORKSPACE=\"Spot-IM.Development.xcworkspace\"\nFRAMEWORK_NAME=\"SpotImCore\"\nBUILD_DIR=\"${SRCROOT}/build\"\nOUTPUT_DIR=\"${SRCROOT}/Products/\"\nOUTPUT=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework\"\nCONFIGURATION=\"${CONFIGURATION}\"\nDEVICE_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework.dSYM\"\nSIMULATOR_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework.dSYM\"\n\nrm -rf \"${BUILD_DIR}\"\nrm -rf \"${OUTPUT}\"\nmkdir -p \"${OUTPUT_DIR}\"\n\n# Build the framework for device and for simulator (using all needed architectures).\nxcodebuild -workspace \"${WORKSPACE}\" -list\n\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator OBJROOT=\"${OBJROOT}/DependantBuilds\"\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch arm64 -arch armv7 only_active_arch=no defines_module=yes -sdk \"iphoneos\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos OBJROOT=\"${OBJROOT}/DependantBuilds\"\n\n# Copy the device version of framework to output.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\" \"${OUTPUT}\"\n\n# Replace the framework executable within the framework with a new version created by merging the device and simulator frameworks' executables with lipo.\nlipo -create -output \"${OUTPUT}/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# Copy the Swift module mappings for the simulator into the framework. The device mappings already exist from step 6.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${OUTPUT}/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# Create dsym files for crash reporting for our lib\ncp -r \"${DEVICE_DSYM_PATH}\" \"$OUTPUT_DIR\"\nlipo -create -output \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${DEVICE_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${SIMULATOR_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" || exit 1\n\nUUIDs=$(dwarfdump --uuid \"${DEVICE_DSYM_PATH}\" | cut -d ' ' -f2)\nfor file in `find \"${DEVICE_BCSYMBOLMAP_PATH}\" -name \"*.bcsymbolmap\" -type f`; do\nfileName=$(basename \"$file\" \".bcsymbolmap\")\nfor UUID in $UUIDs; do\nif [[ \"$UUID\" = \"$fileName\" ]]; then\ncp -R \"$file\" \"$OUTPUT_DIR\"\ndsymutil --symbol-map \"$OUTPUT_DIR\"/\"$fileName\".bcsymbolmap \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM\"\nfi\ndone\ndone\n\n";
+			shellScript = "set -e\n\n# Setup\nWORKSPACE=\"Spot-IM.Development.xcworkspace\"\nFRAMEWORK_NAME=\"SpotImCore\"\nBUILD_DIR=\"${SRCROOT}/build\"\nOUTPUT_DIR=\"${SRCROOT}/Products/\"\nOUTPUT=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework\"\nOUTPUT_DSYM=\"${OUTPUT_DIR}/${FRAMEWORK_NAME}.framework.dSYM\"\nCONFIGURATION=\"${CONFIGURATION}\"\nDEVICE_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework.dSYM\"\nSIMULATOR_DSYM_PATH=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework.dSYM\"\n\nrm -rf \"${BUILD_DIR}\"\nrm -rf \"${OUTPUT}\"\nrm -rf \"${OUTPUT_DSYM}\"\nmkdir -p \"${OUTPUT_DIR}\"\n\n# Build the framework for device and for simulator (using all needed architectures).\nxcodebuild -workspace \"${WORKSPACE}\" -list\n\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch x86_64 -arch i386 only_active_arch=no defines_module=yes -sdk \"iphonesimulator\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator OBJROOT=\"${OBJROOT}/DependantBuilds\"\nxcodebuild -workspace \"${WORKSPACE}\" -scheme \"${FRAMEWORK_NAME}\" -configuration ${CONFIGURATION} -arch arm64 -arch armv7 only_active_arch=no defines_module=yes -sdk \"iphoneos\" clean build CONFIGURATION_BUILD_DIR=${BUILD_DIR}/${CONFIGURATION}-iphoneos OBJROOT=\"${OBJROOT}/DependantBuilds\"\n\n# Copy the device version of framework to output.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework\" \"${OUTPUT}\"\n\n# Replace the framework executable within the framework with a new version created by merging the device and simulator frameworks' executables with lipo.\nlipo -create -output \"${OUTPUT}/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n# Copy the Swift module mappings for the simulator into the framework. The device mappings already exist from step 6.\ncp -r \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FRAMEWORK_NAME}.framework/Modules/${FRAMEWORK_NAME}.swiftmodule/\" \"${OUTPUT}/Modules/${FRAMEWORK_NAME}.swiftmodule\"\n\n# Create dsym files for crash reporting for our lib\ncp -r \"${DEVICE_DSYM_PATH}\" \"$OUTPUT_DIR\"\nlipo -create -output \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${DEVICE_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" \\\n\"${SIMULATOR_DSYM_PATH}/Contents/Resources/DWARF/${FRAMEWORK_NAME}\" || exit 1\n\nUUIDs=$(dwarfdump --uuid \"${DEVICE_DSYM_PATH}\" | cut -d ' ' -f2)\nfor file in `find \"${DEVICE_BCSYMBOLMAP_PATH}\" -name \"*.bcsymbolmap\" -type f`; do\nfileName=$(basename \"$file\" \".bcsymbolmap\")\nfor UUID in $UUIDs; do\nif [[ \"$UUID\" = \"$fileName\" ]]; then\ncp -R \"$file\" \"$OUTPUT_DIR\"\ndsymutil --symbol-map \"$OUTPUT_DIR\"/\"$fileName\".bcsymbolmap \"$OUTPUT_DIR/${FRAMEWORK_NAME}.framework.dSYM\"\nfi\ndone\ndone\n\n";
 		};
 		6D85E4562414E846000265D3 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3435,7 +3435,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
@@ -3449,7 +3449,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3464,7 +3464,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3472,7 +3472,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -3490,7 +3490,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3505,7 +3505,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -3584,7 +3584,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3596,7 +3596,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "SpotIm Demo";
@@ -3612,7 +3612,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3620,7 +3620,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -3638,7 +3638,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -3653,7 +3653,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -3673,7 +3673,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3689,7 +3689,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -3709,7 +3709,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -3725,7 +3725,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -3870,7 +3870,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
@@ -3883,7 +3883,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3900,7 +3900,7 @@
 				BUNDLE_DISPLAY_NAME = "SpotIm Beta";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3912,7 +3912,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "SpotIm Demo";
@@ -3928,7 +3928,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3936,7 +3936,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -3951,7 +3951,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3959,7 +3959,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4012,7 +4012,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4024,7 +4024,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4041,7 +4041,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4053,7 +4053,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4070,7 +4070,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4081,7 +4081,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = Focus.de;
@@ -4099,7 +4099,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4110,7 +4110,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = Focus.de;
@@ -4128,7 +4128,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4140,7 +4140,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.market.watch;
 				PRODUCT_NAME = "Market Watch";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4157,7 +4157,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4169,7 +4169,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.market.watch;
 				PRODUCT_NAME = "Market Watch";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4186,7 +4186,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4197,7 +4197,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.market.watch;
 				PRODUCT_NAME = "Market Watch";
 				PROVISIONING_PROFILE_SPECIFIER = "Market Watch";
@@ -4215,7 +4215,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4226,7 +4226,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.market.watch;
 				PRODUCT_NAME = "Market Watch";
 				PROVISIONING_PROFILE_SPECIFIER = "Market Watch";
@@ -4281,7 +4281,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -4297,7 +4297,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImNoAds";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -4317,7 +4317,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -4332,7 +4332,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImNoAds";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -4352,7 +4352,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -4368,7 +4368,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImNoAds";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -4388,7 +4388,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -4403,7 +4403,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImNoAds";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -4421,7 +4421,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4433,7 +4433,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4449,7 +4449,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4461,7 +4461,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4477,7 +4477,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4488,7 +4488,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "AOL demo app";
@@ -4505,7 +4505,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4516,7 +4516,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "AOL demo app";
@@ -4533,7 +4533,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4545,7 +4545,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4561,7 +4561,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4573,7 +4573,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4589,7 +4589,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4600,7 +4600,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Express demo app";
@@ -4617,7 +4617,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4628,7 +4628,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Express demo app";
@@ -4645,7 +4645,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4657,7 +4657,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4673,7 +4673,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4685,7 +4685,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4701,7 +4701,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4712,7 +4712,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Sky Sports";
@@ -4729,7 +4729,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4740,7 +4740,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Sky Sports";
@@ -4758,7 +4758,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4770,7 +4770,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ynet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4787,7 +4787,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4799,7 +4799,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ynet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4816,7 +4816,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4827,7 +4827,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ynet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4845,7 +4845,7 @@
 				BUNDLE_DISPLAY_NAME = YnetSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4856,7 +4856,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ynet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = YnetSpot;
@@ -4874,7 +4874,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4886,7 +4886,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.dailycaller;
 				PRODUCT_NAME = DailyCallerDemo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4903,7 +4903,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -4915,7 +4915,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.dailycaller;
 				PRODUCT_NAME = DailyCallerDemo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4932,7 +4932,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4943,7 +4943,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.dailycaller;
 				PRODUCT_NAME = DailyCallerDemo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4961,7 +4961,7 @@
 				BUNDLE_DISPLAY_NAME = DailyCallerSpot;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 156;
+				CURRENT_PROJECT_VERSION = 159;
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
@@ -4972,7 +4972,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.dailycaller;
 				PRODUCT_NAME = DailyCallerDemo;
 				PROVISIONING_PROFILE_SPECIFIER = "Daily Caller Demo App";

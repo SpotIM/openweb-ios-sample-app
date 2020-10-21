@@ -81,7 +81,6 @@ public class SpotIm {
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?
-    internal static var currentUser: SPUser?
     public static var reinit: Bool = false
 
     /**
@@ -96,6 +95,7 @@ public class SpotIm {
         if SpotIm.reinit {
             SpotIm.reinit = false
             SpotIm.spotId = nil
+            SPUserSessionHolder.resetUserSession()
             configurationPromise = nil
             userPromise = nil
         }

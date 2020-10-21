@@ -26,6 +26,16 @@ Push a new beta build to TestFlight
 fastlane ios release_pod
 ```
 
+### ios prepare_demo_app
+```
+fastlane ios prepare_demo_app
+```
+
+### ios bump_version
+```
+fastlane ios bump_version
+```
+
 
 ----
 

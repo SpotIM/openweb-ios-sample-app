@@ -121,7 +121,6 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
 
                 switch result {
                 case .success(let conversation):
-                    SPUserSessionHolder.updateSessionUser(user: conversation.user)
                     self.offset = conversation.conversation?.offset ?? self.offset
                     self.hasNext = conversation.conversation?.hasNext ?? false
                     completion(conversation, nil)

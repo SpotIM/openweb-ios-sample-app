@@ -51,7 +51,6 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
             
             switch result {
                 case .success(let user):
-                    SpotIm.currentUser = user
                     SPUserSessionHolder.updateSession(with: response.response)
                     SPUserSessionHolder.updateSessionUser(user: user)
                     completion(token, nil)
@@ -116,32 +115,35 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                 return
             }
             
-            let spRequest = SPInternalAuthRequests.user
-
-            var headers = HTTPHeaders.basic(with: spotKey)
-            if let token = SPUserSessionHolder.session.token {
-                headers["Authorization"] = token
-            }
-
-            manager.execute(
-                request: spRequest,
-                parser: DecodableParser<SPUser>(),
-                headers: headers
-            ) { result, response in
-                switch result {
-                case .success(let user):
-                    SpotIm.currentUser = user
-                    SPUserSessionHolder.updateSessionUser(user: user)
-                    seal.fulfill(user)
-                case .failure(let error):
-                    let rawReport = RawReportModel(
-                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: nil,
-                        errorData: response.data,
-                        errorMessage: error.localizedDescription
-                    )
-                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
-                    seal.reject(error)
+            if let user = SPUserSessionHolder.session.user, !user.expired {
+                seal.fulfill(user)
+            } else {
+                let spRequest = SPInternalAuthRequests.user
+                
+                var headers = HTTPHeaders.basic(with: spotKey)
+                if let token = SPUserSessionHolder.session.token {
+                    headers["Authorization"] = token
+                }
+                
+                manager.execute(
+                    request: spRequest,
+                    parser: DecodableParser<SPUser>(),
+                    headers: headers
+                ) { result, response in
+                    switch result {
+                    case .success(let user):
+                        SPUserSessionHolder.updateSessionUser(user: user)
+                        seal.fulfill(user)
+                    case .failure(let error):
+                        let rawReport = RawReportModel(
+                            url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                            parameters: nil,
+                            errorData: response.data,
+                            errorMessage: error.localizedDescription
+                        )
+                        SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+                        seal.reject(error)
+                    }
                 }
             }
         }
