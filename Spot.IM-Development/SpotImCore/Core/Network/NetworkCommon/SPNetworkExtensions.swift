@@ -9,7 +9,11 @@
 import Foundation
 import Alamofire
 
+fileprivate let OPENWEB_TOKEN_HEADER = "x-openweb-token"
+
 internal extension HTTPHeaders {
+    
+    
     static func basic(with spotId: String, postId: String = "default") -> HTTPHeaders {
         let iosVersion = UIDevice.current.systemVersion
         let frameworkVersion = Bundle.spot.shortVersion() ?? "na"
@@ -39,6 +43,10 @@ internal extension HTTPHeaders {
             headers["Authorization"] = token
         }
         
+        if let openwebToken = SPUserSessionHolder.session.openwebToken, !openwebToken.isEmpty {
+            headers[OPENWEB_TOKEN_HEADER] = openwebToken
+        }
+        
         return headers
     }
 
@@ -53,6 +61,10 @@ internal extension HTTPHeaders {
 internal extension Dictionary where Key == AnyHashable, Value == Any {
     var authorizationHeader: String? {
         return self["Authorization"] as? String
+    }
+    
+    var openwebTokenHeader: String? {
+        return self[OPENWEB_TOKEN_HEADER] as? String
     }
 
     var userIdHeader: String? {

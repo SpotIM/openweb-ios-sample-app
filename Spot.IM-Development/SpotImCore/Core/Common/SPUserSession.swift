@@ -13,6 +13,7 @@ internal protocol SPUserSessionType {
     var user: SPUser? { get set }
     var guid: String? { get set }
     var token: String? { get set }
+    var openwebToken: String? { get set }
     var displayNameFrozen: Bool { get set }
 }
 
@@ -21,6 +22,7 @@ final internal class SPUserSession: SPUserSessionType {
     internal var user: SPUser?
     internal var guid: String?
     internal var token: String?
+    internal var openwebToken: String?
     var displayNameFrozen: Bool = false
 
 }
@@ -59,11 +61,13 @@ internal class SPUserSessionHolder {
         
         if forced {
             session.token = headers?.authorizationHeader
+            session.openwebToken = headers?.openwebTokenHeader
         } else {
-            let token = headers?.authorizationHeader ?? session.token
-            session.token = token
+            session.token = headers?.authorizationHeader ?? session.token
+            session.openwebToken = headers?.openwebTokenHeader ?? session.openwebToken
         }
         UserDefaults.standard.setValue(session.token, forKey: .guestSessionTokenKey)
+        UserDefaults.standard.setValue(session.openwebToken, forKey: .openwebSessionToken)
     }
 
     static func update(displayName: String?) {
@@ -95,6 +99,8 @@ internal class SPUserSessionHolder {
         
         session.guid = UserDefaults.standard.string(forKey: .guestSessionUserIdKey)
         session.token = UserDefaults.standard.string(forKey: .guestSessionTokenKey)
+        session.openwebToken = UserDefaults.standard.string(forKey: .openwebSessionToken)
+        
         if let savedUser = UserDefaults.standard.object(forKey: .userSessionKey) as? Data {
             let decoder = JSONDecoder()
             if let user = try? decoder.decode(SPUser.self, from: savedUser) {
@@ -109,6 +115,7 @@ internal class SPUserSessionHolder {
 private extension String {
     static let guestSessionUserIdKey = "session.guest.userId"
     static let guestSessionTokenKey = "session.guest.token"
+    static let openwebSessionToken = "openweb.session.toekn"
     static let userSessionKey = "session.user"
 }
 
