@@ -24,7 +24,7 @@ internal class LayoutProperty<Anchor: LayoutAnchor> {
     fileprivate let anchor: Anchor
     fileprivate let kind: Kind
     
-    public enum Kind { case leading, trailing, top, bottom, centerX, centerY, width, height }
+    public enum Kind { case leading, trailing, top, bottom, centerX, centerY, width, height, left, right }
     
     public init(anchor: Anchor, kind: Kind) {
         self.anchor = anchor
@@ -55,6 +55,8 @@ internal final class LayoutProxy {
     public lazy var lastBaseline = property(with: view.lastBaselineAnchor, kind: .bottom)
     public lazy var width = attribute(with: view.widthAnchor, kind: .width)
     public lazy var height = attribute(with: view.heightAnchor, kind: .height)
+    public lazy var left = property(with: view.leftAnchor, kind: .left)
+    public lazy var right = property(with: view.rightAnchor, kind: .right)
     
     private let view: UIView
     
@@ -311,6 +313,8 @@ internal final class Layout: NSObject {
     public weak var centerY: NSLayoutConstraint?
     public weak var width: NSLayoutConstraint?
     public weak var height: NSLayoutConstraint?
+    public weak var left: NSLayoutConstraint?
+    public weak var right: NSLayoutConstraint?
     
     fileprivate func update<A: LayoutAnchor>(constraint: NSLayoutConstraint, kind: LayoutProperty<A>.Kind) {
         switch kind {
@@ -322,6 +326,8 @@ internal final class Layout: NSObject {
         case .centerY: centerY = constraint
         case .width: width = constraint
         case .height: height = constraint
+        case .left: left = constraint
+        case .right: right = constraint
         }
     }
 }

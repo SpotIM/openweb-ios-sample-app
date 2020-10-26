@@ -37,13 +37,7 @@ internal extension UIColor {
     static let openWebBrandColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) // #000000 Full black
 
     private static var defaultBrandColor: UIColor {
-        get {
-            if let openwebBrandUpdated = SPConfigsDataSource.appConfig?.mobileSdk.openwebBrandUpdated, openwebBrandUpdated == true {
-                return UIColor.openWebBrandColor
-            } else {
-                return UIColor.clearBlue
-            }
-        }
+        UIColor.openWebBrandColor
     }
     
     static var brandColor: UIColor {

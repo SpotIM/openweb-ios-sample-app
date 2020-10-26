@@ -19,13 +19,21 @@ final class LocalizationManager {
         guard
             let language = currentLanguage,
             let localizationPath = Bundle.spot.path(
-                forResource: language.rawValue,
+                forResource: language.langStringsPath,
                 ofType: "lproj"
             ),
             let localizationBundle = Bundle(path: localizationPath)
             else { return NSLocalizedString(key, comment: "") }
         
         return localizationBundle.localizedString(forKey: key, value: "", table: nil)
+    }
+    
+    static func getTextAlignment() -> NSTextAlignment {
+        guard let isRTL = currentLanguage?.isRightToLeft else {
+            return .natural
+        }
+        
+        return isRTL ? .right : .left
     }
     
     /// Update with locale from client app config `InputConfiguration`
@@ -41,5 +49,12 @@ final class LocalizationManager {
     static func setLocale(_ localeId: String) {        
         let config = InputConfiguration(appLanguage: localeId)
         updateLocalizationConfiguration(config)
+    }
+    
+    static func reset() {
+        isConfigured = false
+        let config = InputConfiguration(appLanguage: "en")
+        currentLanguage = config.language
+        locale = config.locale
     }
 }

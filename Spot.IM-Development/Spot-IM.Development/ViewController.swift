@@ -77,10 +77,24 @@ class ViewController: UIViewController {
         showArticles(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
     }
 
+    @IBAction func showsp_mobileSSO(_ sender: UIButton) {
+        setup(with: .demoSpotKeyForMobileSSO, from: sender)
+        showArticles(with: .demoSpotKeyForMobileSSO, authenticationControllerId: .defaultAuthenticationControllerId)
+    }
     
-    @IBAction private func showPreConversation(_ sender: UIButton) {
-        setup(with: .demoGenericSpotKeyForSSO, from: sender)
-        performSegue(withIdentifier: "showPreConversationSegue", sender: self)
+    @IBAction func showsp_mobileGuest(_ sender: UIButton) {
+        setup(with: .demoSpotKeyForMobileGuest, from: sender)
+        showArticles(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationControllerId)
+    }
+    
+    @IBAction func showsp_mobileSocial(_ sender: UIButton) {
+        setup(with: .demoSpotKeyForMobileSocial, from: sender)
+        showArticles(with: .demoSpotKeyForMobileSocial, authenticationControllerId: .defaultAuthenticationControllerId)
+    }
+    
+    @IBAction func show_spmobileSocialGuest(_ sender: UIButton) {
+        setup(with: .demoSpotKeyForMobileSocialGuest, from: sender)
+        showArticles(with: .demoSpotKeyForMobileSocialGuest, authenticationControllerId: .defaultAuthenticationControllerId)
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
@@ -113,5 +127,9 @@ private extension String {
     static var foxAuthenticationControllerId:       String { return "FoxAuthenticationViewController" }
     static var demoGenericSpotKeyForSSO:            String { return "sp_eCIlROSD" }
     static var demoFoxSpotKeyForSSO:                String { return "sp_ANQXRpqH" }
+    static var demoSpotKeyForMobileSSO:             String { return "sp_mobileSSO" }
+    static var demoSpotKeyForMobileGuest:           String { return "sp_mobileGuest" }
+    static var demoSpotKeyForMobileSocial:          String { return "sp_mobileSocial" }
+    static var demoSpotKeyForMobileSocialGuest:     String { return "sp_mobileSocialGuest" }
 }
 

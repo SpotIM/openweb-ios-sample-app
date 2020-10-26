@@ -98,6 +98,7 @@ public class SpotIm {
             SPUserSessionHolder.resetUserSession()
             configurationPromise = nil
             userPromise = nil
+            LocalizationManager.reset()
         }
 
         if SpotIm.spotId == nil {

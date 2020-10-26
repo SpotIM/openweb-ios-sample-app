@@ -41,14 +41,7 @@ final class SPConversationSummaryView: BaseView {
         configureButtonsTargets()
     }
     
-    // MARK: - Internal methods
-
-    func updateNewComments(_ newCommentsCount: Int) {
-        newCommentsButton.isHidden = newCommentsCount <= 0
-        let newString: String = LocalizationManager.localizedString(key: "NEW")
-        newCommentsButton.setTitle("\(newCommentsCount) " + newString, for: .normal)
-    }
-    
+    // MARK: - Internal methods    
     func updateCommentsLabel(_ newCommentsCount: Int) {
         let commentsText: String = newCommentsCount > 1 ?
             LocalizationManager.localizedString(key: "Comments") :

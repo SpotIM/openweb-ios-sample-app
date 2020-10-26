@@ -113,7 +113,7 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
         textInputView.backgroundColor = .spBackground0
         textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textColor = .spForeground1
-        textInputView.textAlignment = .natural
+        textInputView.textAlignment = LocalizationManager.getTextAlignment()
     }
 }
 
