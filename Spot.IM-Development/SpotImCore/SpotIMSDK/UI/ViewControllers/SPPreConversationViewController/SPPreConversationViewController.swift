@@ -37,13 +37,19 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     internal override var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitPreConv }
 
+    private var actualBannerMargin: CGFloat {
+        bannerView.frame.height == 0 ? 0 : Theme.bannerViewMargin
+    }
+    
     private var totalHeight: CGFloat {
-        bannerView.frame.height +
-        Theme.bannerViewMargin +
-        header.frame.height +
-        whatYouThinkView.frame.height +
-        tableView.frame.height +
-        footerView.frame.height
+        let result = bannerView.frame.height +
+            actualBannerMargin +
+            header.frame.height +
+            whatYouThinkView.frame.height +
+            tableView.frame.height +
+            footerView.frame.height
+        
+        return result
     }
 
     deinit {
@@ -153,7 +159,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         header.set(title: LocalizationManager.localizedString(key: "Conversation"))
 
         header.layout {
-            $0.top.equal(to: bannerView.bottomAnchor, offsetBy: Theme.bannerViewMargin)
+            $0.top.equal(to: bannerView.bottomAnchor, offsetBy: actualBannerMargin)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.headerHeight)
