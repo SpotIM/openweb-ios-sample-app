@@ -14,7 +14,7 @@
 "Sort By" = "סנן לפי";
 "The text you entered might be deleted if not published." = ".במידה ולא יפורסם, הטקסט שכתבת עלול להימחק";
 "It seems we are experiencing technical issues. Please try again" = "נסה שוב עוד כמה דקות.";
-"The Internet connection appears to be offline." = "אופססס! נראה שאנו חווים בעיה בתקשורת";
+"The Internet connection appears to be offline." = "נראה שאנו חווים בעיה בתקשורת.";
 "Best" = "עוררו עניין";
 "Newest" = "מהסוף להתחלה";
 "Oldest" = "מההתחלה לסוף";
@@ -69,11 +69,9 @@
 "SHOW MORE COMMENTS" = "טען תגובות נוספות";
 "Terms" = "תנאים";
 "Privacy" = "פרטיות";
-"Add Spot.IM to your app" = "מנוהל ע״י Spot.IM";
 "Powered by OpenWeb" = "מנוהל ע״י OpenWeb";
 "Type your reply…" = "כתוב/י את תגובתך";
 "Replying to " = "תגובה ל";
-"NEW" = "החדש ביותר";
 "Comments" = "תגובות";
 "Comment" = "תגובות";
 "Typing" = "מגיבים כרגע...";

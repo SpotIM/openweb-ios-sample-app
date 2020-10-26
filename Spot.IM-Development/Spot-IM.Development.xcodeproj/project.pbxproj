@@ -946,6 +946,7 @@
 		6D22A46223BA51CA00DCE08A /* SpotImAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotImAuthenticationProvider.swift; sourceTree = "<group>"; };
 		6D22A46523BBA26700DCE08A /* DataRequest+Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataRequest+Logging.swift"; sourceTree = "<group>"; };
 		6D22A46923BC864100DCE08A /* SpotImRequestLogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotImRequestLogLevel.swift; sourceTree = "<group>"; };
+		6D430DE824C70EF0008A469A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6D4E56A6239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-ExtraBold.ttf"; sourceTree = "<group>"; };
 		6D4E56A7239F9D5C005B79B6 /* OpenSansHebrew-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Bold.ttf"; sourceTree = "<group>"; };
 		6D4E56A8239F9D5C005B79B6 /* OpenSansHebrew-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Light.ttf"; sourceTree = "<group>"; };
@@ -966,6 +967,8 @@
 		6D85E4B524150B8A000265D3 /* SkySports.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkySports.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D85E4B624150B8A000265D3 /* SkySports.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = SkySports.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/SkySports.plist"; sourceTree = "<absolute>"; };
 		6D85E4B82418E783000265D3 /* PreConversationBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreConversationBannerView.swift; sourceTree = "<group>"; };
+		6D92BDEF24C98258005E3683 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		6D92BDF024C988B8005E3683 /* ar-001 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-001"; path = "ar-001.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Demo.storyboard; sourceTree = "<group>"; };
@@ -2170,8 +2173,11 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 				he,
+				es,
+				Base,
+				"pt-PT",
+				"ar-001",
 			);
 			mainGroup = 5D697A3222B65106001AD556;
 			productRefGroup = 5D697A3C22B65106001AD556 /* Products */;
@@ -3354,6 +3360,9 @@
 			children = (
 				4416C659237ABE3D00D3F7B9 /* en */,
 				4416C65B237ABE4700D3F7B9 /* he */,
+				6D430DE824C70EF0008A469A /* es */,
+				6D92BDEF24C98258005E3683 /* pt-PT */,
+				6D92BDF024C988B8005E3683 /* ar-001 */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

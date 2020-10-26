@@ -25,16 +25,17 @@ internal final class SPPreConversationFooter: BaseView {
     private lazy var privacyButton: BaseButton = .init()
     private lazy var spotIMIcon: BaseUIImageView = .init()
     private lazy var addSpotIMButton: BaseButton = .init()
+    private lazy var openwebLinkView: BaseView = .init()
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
     private var moreCommentsTopConstraint: NSLayoutConstraint?
         
     internal weak var delegate: SPPreConversationFooterDelegate?
 
-    init(frame: CGRect = .zero, openwebEnabled: Bool) {
+    override init(frame: CGRect = .zero) {
         super.init(frame: frame)
 
-        setup(openwebEnabled: openwebEnabled)
+        setup()
     }
 
     func setShowMoreCommentsButtonColor(color: UIColor, withSeparator: Bool = false) {
@@ -43,20 +44,22 @@ internal final class SPPreConversationFooter: BaseView {
         separatorView.isHidden = !withSeparator
     }
     
-    private func setup(openwebEnabled: Bool) {
+    private func setup() {
+        openwebLinkView.addSubviews(spotIMIcon,
+                                    addSpotIMButton)
         addSubviews(separatorView,
                     showMoreCommentsButton,
                     termsButton,
                     dotLabel,
                     privacyButton,
-                    spotIMIcon,
-                    addSpotIMButton)
+                    openwebLinkView)
         setupShowMoreCommentsButton()
         setupTermsButton()
         setupDotLabel()
         setupPrivacyButton()
-        setupSpotIMIcon(openwebEnabled: openwebEnabled)
-        setupAddSpotIMButton(opebwebEnabled: openwebEnabled)
+        setupSpotIMIcon()
+        setupAddSpotIMButton()
+        setupOpenWebLinkView()
     }
 
     func hideShowMoreCommentsButton() {
@@ -136,18 +139,18 @@ internal final class SPPreConversationFooter: BaseView {
         }
     }
 
-    private func setupSpotIMIcon(openwebEnabled: Bool) {
-        spotIMIcon.image = openwebEnabled ? UIImage(spNamed: "openwebIconSimple") : UIImage(spNamed: "spotIconSimple")
+    private func setupSpotIMIcon() {
+        spotIMIcon.image = UIImage(spNamed: "openwebIconSimple")
         spotIMIcon.layout {
             $0.width.equal(to: Theme.bottomRowSize)
             $0.height.equal(to: Theme.bottomRowSize)
             $0.centerY.equal(to: addSpotIMButton.centerYAnchor)
-            $0.trailing.equal(to: addSpotIMButton.leadingAnchor, offsetBy: -Theme.iconOffset)
+            $0.left.equal(to: openwebLinkView.leftAnchor)
         }
     }
 
-    private func setupAddSpotIMButton(opebwebEnabled: Bool) {
-        let title = opebwebEnabled ? LocalizationManager.localizedString(key: "Powered by OpenWeb") : LocalizationManager.localizedString(key: "Add Spot.IM to your app")
+    private func setupAddSpotIMButton() {
+        let title = LocalizationManager.localizedString(key: "Powered by OpenWeb")
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
         addSpotIMButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
@@ -155,11 +158,21 @@ internal final class SPPreConversationFooter: BaseView {
 
         addSpotIMButton.layout {
             $0.centerY.equal(to: privacyButton.centerYAnchor)
+            $0.right.equal(to: openwebLinkView.rightAnchor)
+        }
+    }
+
+    private func setupOpenWebLinkView() {
+        addSpotIMButton.sizeToFit()
+        openwebLinkView.layout {
+            $0.width.equal(to: Theme.bottomRowSize + Theme.iconOffset + addSpotIMButton.frame.width)
+            $0.height.equal(to: addSpotIMButton.heightAnchor)
+            $0.centerY.equal(to: privacyButton.centerYAnchor)
             $0.leading.greaterThanOrEqual(to: privacyButton.trailingAnchor)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.horisontalMargin)
         }
     }
-
+    
     @objc
     private func showMoreComments() {
         delegate?.showMoreComments()

@@ -14,7 +14,6 @@ struct SPConfigurationSDKStatus: Decodable {
     let realtimeEnabled: Bool?
     let loginUiEnabled: Bool?
     let disableInterstitialOnLogin: Bool?
-    let openwebBrandUpdated: Bool
     let openwebWebsiteUrl: String
     let openwebPrivacyUrl: String
     let openwebTermsUrl: String

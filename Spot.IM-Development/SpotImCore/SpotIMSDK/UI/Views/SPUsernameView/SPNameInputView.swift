@@ -68,6 +68,7 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
         let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
 
         usernameTextView.textColor = .spForeground0
+        usernameTextView.textAlignment = LocalizationManager.getTextAlignment()
         usernameTextView.backgroundColor = .spBackground0
         usernameTextView.font = font
         usernameTextView.delegate = self

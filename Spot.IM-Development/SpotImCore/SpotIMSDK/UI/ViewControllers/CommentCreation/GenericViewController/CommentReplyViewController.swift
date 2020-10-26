@@ -259,6 +259,7 @@ extension CommentReplyViewController {
     private func configureInputContainerView() {
         textInputViewContainer.backgroundColor = .spBackground0
         textInputViewContainer.delegate = self
+
         textInputViewContainer.layout {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)

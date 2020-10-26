@@ -18,7 +18,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var bannerView: PreConversationBannerView = .init()
     private lazy var header: SPPreConversationHeaderView = .init()
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
-    private lazy var footerView: SPPreConversationFooter = .init(openwebEnabled: SPConfigsDataSource.appConfig?.mobileSdk.openwebBrandUpdated ?? false)
+    private lazy var footerView: SPPreConversationFooter = .init()
     
     private var tableViewHeightConstraint: NSLayoutConstraint?
 

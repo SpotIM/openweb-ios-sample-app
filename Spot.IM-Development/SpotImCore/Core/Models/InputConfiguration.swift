@@ -11,9 +11,27 @@ import UIKit
 enum SupportedLanguage: String {
     case hebrew = "he"
     case english = "en"
+    case arabic = "ar"
+    case spanish = "es"
+    case portoguese = "pt"
+    
+    var langStringsPath: String {
+        switch self {
+        case .hebrew:
+            return "he"
+        case .english:
+            return "en"
+        case .arabic:
+            return "ar-001"
+        case .spanish:
+            return "es"
+        case .portoguese:
+            return "pt-PT"
+        }
+    }
     
     var isRightToLeft: Bool {
-        return self == .hebrew
+        return self == .hebrew || self == .arabic
     }
     
     var customSemanticAttribute: UISemanticContentAttribute {
