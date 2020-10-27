@@ -43,7 +43,7 @@ internal class BaseViewController: UIViewController {
     }
 
     private func overrideInterfaceStyleIfNeeded() {
-        guard #available(iOS 13.0, *), let style = SPClientSettings.overrideUserInterfaceStyle else { return }
+        guard #available(iOS 13.0, *), let style = SpotIm.overrideUserInterfaceStyle else { return }
         overrideUserInterfaceStyle = style.nativeValue
     }
 }

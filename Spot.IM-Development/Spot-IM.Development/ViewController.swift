@@ -67,11 +67,6 @@ class ViewController: UIViewController {
         appInfoLabel.text = resultString
     }
     
-    @IBAction private func showFoxWithOldLogin(_ sender: UIButton) {
-        setSpotId(spotId: .demoFoxSpotKeyForSSO)
-        showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table", useLoginDelegate: false)
-    }
-    
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
         setup(with: .demoGenericSpotKeyForSSO, from: sender)
         showArticles(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
@@ -102,10 +97,10 @@ class ViewController: UIViewController {
         showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
     }
 
-    private func showArticles(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false, useLoginDelegate: Bool = true) {
+    private func showArticles(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
         let shouldReinit = spotId != currentSpotId
         currentSpotId = spotId
-        let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, useLoginDelegate: useLoginDelegate, shouldReinint: shouldReinit)
+        let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, shouldReinint: shouldReinit)
         navigationController?.pushViewController(controller, animated: true)
     }
     

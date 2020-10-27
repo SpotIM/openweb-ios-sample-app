@@ -30,9 +30,14 @@ class ArticleTableViewCell : UITableViewCell {
             card.subtitle = extract.description.truncated(limit: 100)
             
             if let url = URL(string: extract.thumbnailUrl) {
-                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(OverlayImageProcessor(overlay: .black))], progressBlock: nil) { [weak self] (image, err, cache, url) in
-                    guard id == self?.post?.conversationId, let image = image else { return }
-                    self?.card.backgroundImage = image
+                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(OverlayImageProcessor(overlay: .black))]) { [weak self] result in
+                    switch result {
+                    case .failure(let error):
+                        print("Error loading image: \(error)")
+                    case .success(let imageResult):
+                        guard id == self?.post?.conversationId else { return }
+                        self?.card.backgroundImage = imageResult.image
+                    }
                 }
             }
            

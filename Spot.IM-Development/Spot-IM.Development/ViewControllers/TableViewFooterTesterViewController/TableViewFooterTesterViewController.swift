@@ -59,8 +59,6 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
                 self.setupSpotView()
             case .failure(let error):
                 print(error)
-            @unknown default:
-                fatalError("Got unknown result")
             }
         }
         

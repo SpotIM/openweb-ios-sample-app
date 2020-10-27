@@ -99,7 +99,7 @@ public enum SPUserInterfaceStyle: Int {
     }
 
     static var current: SPUserInterfaceStyle {
-        if let style = SPClientSettings.overrideUserInterfaceStyle {
+        if let style = SpotIm.overrideUserInterfaceStyle {
             return style
         } else if #available(iOS 13, *) {
             return UIScreen.main.traitCollection.userInterfaceStyle == .dark ? .dark : .light

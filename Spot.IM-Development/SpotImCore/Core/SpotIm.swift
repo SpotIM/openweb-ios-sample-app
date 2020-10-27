@@ -244,11 +244,7 @@ public class SpotIm {
 
      - Parameter SPUserInterfaceStyle: The style to set to the conversation SDK
      */
-    public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = SPClientSettings.overrideUserInterfaceStyle {
-        didSet {
-            SPClientSettings.overrideUserInterfaceStyle = SpotIm.overrideUserInterfaceStyle
-        }
-    }
+    public static var overrideUserInterfaceStyle: SPUserInterfaceStyle?
     
     /**
      Get the currernt user login status

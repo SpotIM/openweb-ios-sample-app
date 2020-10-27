@@ -152,8 +152,6 @@ class AuthenticstionViewController: UIViewController {
                     self.genericAuthDone = false
                 case .failure(let error):
                     print("Logout error: \(error)")
-                @unknown default:
-                    fatalError()
                 }
                 
             }

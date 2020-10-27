@@ -36,6 +36,8 @@ internal extension UIDevice {
             return "ios_tv"
         case .carPlay:
             return "ios_car"
+        case .mac:
+            return "mac"
         @unknown default:
             return "unsuppoted new value " + String(self.userInterfaceIdiom.rawValue)
         }
