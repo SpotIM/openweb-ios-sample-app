@@ -53,7 +53,7 @@ class DarkModeSettingsViewController: UIViewController {
     @IBAction func changeMode(_ sender: UISegmentedControl) {
         interfaceStyle = sender.selectedSegmentIndex
         let style: SPUserInterfaceStyle = interfaceStyle == 0 ? .light : .dark
-        SPClientSettings.overrideUserInterfaceStyle = style
+        SpotIm.overrideUserInterfaceStyle = style
     }
 
     private func setCustomDarkMode(enabled: Bool) {
@@ -62,9 +62,9 @@ class DarkModeSettingsViewController: UIViewController {
 
         if enabled {
             let style: SPUserInterfaceStyle = interfaceStyle == 0 ? .light : .dark
-            SPClientSettings.overrideUserInterfaceStyle = style
+            SpotIm.overrideUserInterfaceStyle = style
         } else {
-            SPClientSettings.overrideUserInterfaceStyle = nil
+            SpotIm.overrideUserInterfaceStyle = nil
         }
     }
 

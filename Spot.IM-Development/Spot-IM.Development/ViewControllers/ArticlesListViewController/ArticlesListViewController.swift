@@ -19,15 +19,13 @@ class ArticlesListViewController: UITableViewController {
     let authenticationControllerId: String
     var data : Response?
     let addToTableView: Bool
-    let useLoginDelegate: Bool
     let shouldReinit: Bool
     
-    init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false, useLoginDelegate: Bool, shouldReinint: Bool) {
+    init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false, shouldReinint: Bool) {
         self.spotId = spotId
         
         self.authenticationControllerId = authenticationControllerId
         self.addToTableView = addToTableView
-        self.useLoginDelegate = useLoginDelegate
         self.shouldReinit = shouldReinint
         
         super.init(style: .plain)
@@ -89,7 +87,7 @@ extension ArticlesListViewController : ArticleTableViewCellDelegate {
             let tableViewController = TableViewFooterTesterViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
             self.navigationController?.pushViewController(tableViewController, animated: true)
         } else {
-            let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: authenticationControllerId, useLoginDelegate: useLoginDelegate)
+            let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
             self.navigationController?.pushViewController(articleViewController, animated: true)
         }
     }

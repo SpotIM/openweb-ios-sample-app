@@ -29,17 +29,15 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
-    let useLoginDelegate: Bool
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
-    init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String, useLoginDelegate: Bool) {
+    init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
         self.metadata = metadata
         self.url = url
         self.authenticationControllerId = authenticationControllerId
-        self.useLoginDelegate = useLoginDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,33 +52,16 @@ internal final class ArticleWebViewController: UIViewController {
         title = "Article"
         setup()
         
-        if useLoginDelegate {
-            SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { result in
-                switch result {
-                case .success(let coordinator):
-                    self.spotIMCoordinator = coordinator
-                    coordinator.setLayoutDelegate(delegate: self)
-                    self.setupSpotView()
-                case .failure(let error):
-                    print("Failed to get flow coordinator: \(error)")
-                @unknown default:
-                    fatalError()
-                }
-                
+        SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { result in
+            switch result {
+            case .success(let coordinator):
+                self.spotIMCoordinator = coordinator
+                coordinator.setLayoutDelegate(delegate: self)
+                self.setupSpotView()
+            case .failure(let error):
+                print("Failed to get flow coordinator: \(error)")
             }
-        } else { // USE OLD LOGIN DELEGATE SpotImSDKNavigationDelegate
-            SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { result in
-                switch result {
-                case .success(let coordinator):
-                    self.spotIMCoordinator = coordinator
-                    coordinator.setLayoutDelegate(delegate: self)
-                    self.setupSpotView()
-                case .failure(let error):
-                    print("Failed to get flow coordinator: \(error)")
-                @unknown default:
-                    fatalError()
-                }
-            }
+            
         }
     }
     

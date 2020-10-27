@@ -50,8 +50,6 @@ internal final class ArticleViewController: UIViewController {
                 }
             case .failure(let error):
                 print(error)
-            @unknown default:
-                fatalError("Got unknown result")
             }
         }
     }
