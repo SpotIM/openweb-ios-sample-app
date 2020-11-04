@@ -36,7 +36,7 @@ internal final class PreConversationBannerView: BaseView {
     
     private func setupBannerContainerView() {
         bannerContainerView.layout {
-            $0.top.equal(to: topAnchor, offsetBy: 20.0)
+            $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.equal(to: trailingAnchor)
             bannerContainerHeight = $0.height.equal(to: 0.0)
