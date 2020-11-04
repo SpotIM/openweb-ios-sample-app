@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Large gap above pre-conversation when there's no banner ad
 
+### Changed
+- Retry mechanism implementation (should avoid crashes)
+
 ## [1.0.11] - 2020-10-21
 ### Fixed
 - 0 comments counter on Fox mobile app (Realtime not working due to post-id encoding)
