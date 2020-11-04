@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Large gap above pre-conversation when there's no banner ad
 
 ### Changed
-- Retry mechanism implementation (should avoid crashes)
+- Retry mechanism implementation (should prevent crashes)
 
 ## [1.0.11] - 2020-10-21
 ### Fixed
