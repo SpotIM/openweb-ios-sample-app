@@ -318,11 +318,9 @@ public class SpotIm {
             return configurationPromise
         }
 
-        return attempt {
-            let result = SPClientSettings.main.setup(spotId: spotId)
-            configurationPromise = result
-            return result
-        }
+        let result = SPClientSettings.main.setup(spotId: spotId)
+        configurationPromise = result
+        return result
     }
 
     private static func getUserPromise() -> Promise<SPUser> {
@@ -330,22 +328,9 @@ public class SpotIm {
             return userPromise
         }
 
-        return attempt {
-            let result = authProvider.getUser()
-            userPromise = result
-            return result
-        }
-    }
-
-    private static func attempt<T>(retries: UInt = NUM_OF_RETRIES, delayBeforeRetry: DispatchTimeInterval = .seconds(1), _ body: @escaping () -> Promise<T>) -> Promise<T> {
-        var attempts = 0
-        func attempt() -> Promise<T> {
-            attempts += 1
-            return body().recover { error -> Promise<T> in
-                guard attempts < retries else { throw error }
-                return after(delayBeforeRetry).then(on: nil, attempt)
-            }
-        }
-        return attempt()
+        
+        let result = authProvider.getUser()
+        userPromise = result
+        return result
     }
 }
