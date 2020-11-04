@@ -98,7 +98,9 @@ final class ApiManager {
     init() {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        session = Session(configuration: configuration)
+        let retryableHttpMethods: Set<HTTPMethod> = [.delete, .get, .head, .options, .put, .trace, .post] // Added POST to the default set as most of our requests are POST
+        let retryPolicy = RetryPolicy(retryLimit: 3, retryableHTTPMethods: retryableHttpMethods)
+        session = Session(configuration: configuration, interceptor: retryPolicy)
     }
     
     @discardableResult
