@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.13] - 2020-11-15
+### Fixed
+- Compatibility issue with swift 5.3.1
+
 ## [1.0.12] - 2020-11-08
 ### Added
 - Translations for Arabic, Spanish and Portuguese
