@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,7 +19,9 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2wZ-ea-mne">
                                 <rect key="frame" x="105.5" y="617" width="164" height="30"/>
-                                <state key="normal" title="reset all authentications"/>
+                                <state key="normal" title="reset all authentications">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="resetAllAuthentication:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TCS-FO-aw6"/>
                                 </connections>
@@ -48,7 +50,9 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ua6-ML-Y4R">
                                         <rect key="frame" x="210" y="58" width="42" height="30"/>
-                                        <state key="normal" title="Log In"/>
+                                        <state key="normal" title="Log In">
+                                            <color key="titleColor" systemColor="labelColor"/>
+                                        </state>
                                         <connections>
                                             <action selector="logIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mDr-06-GRs"/>
                                         </connections>
@@ -100,7 +104,9 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SDr-Zq-72M">
                                         <rect key="frame" x="210" y="50" width="42" height="30"/>
-                                        <state key="normal" title="Log In"/>
+                                        <state key="normal" title="Log In">
+                                            <color key="titleColor" systemColor="labelColor"/>
+                                        </state>
                                         <connections>
                                             <action selector="startFoxSSO:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jlk-3y-SNj"/>
                                         </connections>
@@ -249,7 +255,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Enw-qr-7Yp"/>
                                 </constraints>
-                                <state key="normal" title="Authentication Playground"/>
+                                <state key="normal" title="Authentication Playground">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="show" id="K30-vi-Uta"/>
                                 </connections>
@@ -262,7 +270,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="vof-Hc-A7m"/>
                                 </constraints>
-                                <state key="normal" title="Show sp_mobileSSO"/>
+                                <state key="normal" title="Show sp_mobileSSO">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="showsp_mobileSSO:" destination="COS-Sr-MbI" eventType="touchUpInside" id="bFJ-0u-qnB"/>
                                 </connections>
@@ -272,7 +282,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="RoJ-27-Jxo"/>
                                 </constraints>
-                                <state key="normal" title="Show sp_mobileSocial"/>
+                                <state key="normal" title="Show sp_mobileSocial">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="showsp_mobileSocial:" destination="COS-Sr-MbI" eventType="touchUpInside" id="LZK-i6-YMk"/>
                                 </connections>
@@ -282,7 +294,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="2lq-tq-Ls8"/>
                                 </constraints>
-                                <state key="normal" title="Show sp_mobileSocialGuest"/>
+                                <state key="normal" title="Show sp_mobileSocialGuest">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="show_spmobileSocialGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="YDn-7x-T72"/>
                                 </connections>
@@ -292,7 +306,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="7Jf-eq-pKe"/>
                                 </constraints>
-                                <state key="normal" title="Show Fox News (New login)"/>
+                                <state key="normal" title="Show Fox News (New login)">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kdg-Eo-W3h"/>
                                 </connections>
@@ -302,7 +318,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="zYi-OH-ba9"/>
                                 </constraints>
-                                <state key="normal" title="Show Demo Spot Articles"/>
+                                <state key="normal" title="Show Demo Spot Articles">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="showDemoSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kt7-rq-mfA"/>
                                 </connections>
@@ -318,7 +336,10 @@ Build: [unknown]</string>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ELI-s3-pbx">
                                 <rect key="frame" x="238" y="58" width="119" height="28"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <state key="normal" title="Dark mode settings"/>
+                                <color key="tintColor" systemColor="labelColor"/>
+                                <state key="normal" title="Dark mode settings">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <segue destination="afI-iB-Nmt" kind="show" id="HUT-J0-M8W"/>
                                 </connections>
@@ -329,7 +350,9 @@ Build: [unknown]</string>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Xff-6B-YBx"/>
                                 </constraints>
-                                <state key="normal" title="Show Demo Table View"/>
+                                <state key="normal" title="Show Demo Table View">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="yiT-6s-KbC"/>
                                 </connections>
@@ -339,7 +362,9 @@ Build: [unknown]</string>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="oZl-57-cHJ"/>
                                 </constraints>
-                                <state key="normal" title="Show sp_mobileGuest"/>
+                                <state key="normal" title="Show sp_mobileGuest">
+                                    <color key="titleColor" systemColor="labelColor"/>
+                                </state>
                                 <connections>
                                     <action selector="showsp_mobileGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="uEF-Ec-8X5"/>
                                 </connections>
@@ -509,6 +534,9 @@ Build: [unknown]</string>
     <resources>
         <image name="ArticleStub" width="375" height="972"/>
         <image name="spot_logo" width="90" height="90"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

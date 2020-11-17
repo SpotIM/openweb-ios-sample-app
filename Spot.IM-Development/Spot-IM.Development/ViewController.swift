@@ -46,13 +46,13 @@ class ViewController: UIViewController {
     private func setupNavigationBar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
 
-        navigationController?.navigationBar.backgroundColor = #colorLiteral(red: 0.1882352941, green: 0.4980392157, blue: 0.8862745098, alpha: 1)
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.1882352941, green: 0.4980392157, blue: 0.8862745098, alpha: 1)
+        navigationController?.navigationBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
-            NSAttributedString.Key.foregroundColor: UIColor.white
+            NSAttributedString.Key.foregroundColor: UIColor.black
         ]
     }
 
