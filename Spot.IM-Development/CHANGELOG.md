@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.14] - 2020-11-19
+###
+- Removed restricted dependency on Google-Ads-Sdk 7.67 so partners can update to later versions
+
 ## [1.0.13] - 2020-11-15
 ### Fixed
 - Compatibility issue with swift 5.3.1
