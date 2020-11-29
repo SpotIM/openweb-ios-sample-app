@@ -225,6 +225,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
                     self.tableView.reloadData()
                 }
             },
+            loadingFinished: {
+                // Removing loader section
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            },
             completion: { (success, _, error) in
                 if let error = error {
                     self.showAlert(

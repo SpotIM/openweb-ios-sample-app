@@ -32,6 +32,7 @@ internal protocol SPConversationsDataProvider {
                       _ mode: SPCommentSortMode,
                       page: SPPaginationPage,
                       loadingStarted: (() -> Void)?,
+                      loadingFinished: (() -> Void)?,
                       completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void)
 
     func comments(_ conversationId: String,
@@ -39,6 +40,7 @@ internal protocol SPConversationsDataProvider {
                   page: SPPaginationPage,
                   parentId: String,
                   loadingStarted: (() -> Void)?,
+                  loadingFinished: (() -> Void)?,
                   completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void)
 
     func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]>
@@ -68,8 +70,9 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         _ mode: SPCommentSortMode,
         page: SPPaginationPage,
         loadingStarted: (() -> Void)? = nil,
+        loadingFinished: (() -> Void)?,
         completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void) {
-        comments(id, mode, page: page, parentId: "", loadingStarted: loadingStarted, completion: completion)
+        comments(id, mode, page: page, parentId: "", loadingStarted: loadingStarted, loadingFinished: loadingFinished, completion: completion)
     }
 
     internal func comments(_ id: String,
@@ -77,6 +80,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                            page: SPPaginationPage,
                            parentId: String,
                            loadingStarted: (() -> Void)? = nil,
+                           loadingFinished: (() -> Void)?,
                            completion: @escaping (SPConversationReadRM?, SPNetworkError?) -> Void) {
         let spRequest = SPConversationRequest.conversationRead
         guard let spotKey = SPClientSettings.main.spotKey else {
@@ -116,6 +120,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             let timeOffset = page == .first ? 0.0 : 0.0
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + timeOffset) {
                 self.isLoading = false
+                loadingFinished?()
 
                 SPUserSessionHolder.updateSession(with: response.response)
 

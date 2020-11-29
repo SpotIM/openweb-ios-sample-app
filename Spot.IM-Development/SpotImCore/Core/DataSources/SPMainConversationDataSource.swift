@@ -115,6 +115,7 @@ internal final class SPMainConversationDataSource {
     internal func conversation(_ mode: SPCommentSortMode,
                                page: SPPaginationPage,
                                loadingStarted: (() -> Void)? = nil,
+                               loadingFinished: (() -> Void)? = nil,
                                completion: @escaping (Bool, SPNetworkError?) -> Void) {
         sortMode = mode
         sortIsUpdated?()
@@ -122,7 +123,8 @@ internal final class SPMainConversationDataSource {
             postId,
             mode,
             page: page,
-            loadingStarted: loadingStarted
+            loadingStarted: loadingStarted,
+            loadingFinished: loadingFinished
         ) { [weak self] (response, error) in
             guard let self = self
                 else {
@@ -141,8 +143,6 @@ internal final class SPMainConversationDataSource {
                     self.extractData = extractData
                 }
 
-                self.resetAllComments()
-
                 self.messageCount = response?.conversation?.messagesCount ?? 0
                 self.messageCounterUpdated?(self.messageCount)
                 
@@ -157,6 +157,7 @@ internal final class SPMainConversationDataSource {
         _ mode: SPCommentSortMode,
         page: SPPaginationPage,
         loadingStarted: (() -> Void)? = nil,
+        loadingFinished: (() -> Void)? = nil,
         completion: @escaping (Bool, IndexSet?, Error?) -> Void) {
         sortMode = mode
         sortIsUpdated?()
@@ -164,7 +165,8 @@ internal final class SPMainConversationDataSource {
             postId,
             mode,
             page: page,
-            loadingStarted: loadingStarted
+            loadingStarted: loadingStarted,
+            loadingFinished: loadingFinished
         ) { [weak self] (response, error) in
             guard
                 let self = self
@@ -208,7 +210,8 @@ internal final class SPMainConversationDataSource {
     internal func showMoreReplies(
         for commentId: String?,
         sortMode: SPCommentSortMode,
-        loadingStarted: (() -> Void)? = nil) {
+        loadingStarted: (() -> Void)? = nil,
+        loadingFinished: (() -> Void)? = nil) {
         
         guard let commentId = commentId, let indexPath = indexPathOfComment(with: commentId) else { return }
         
@@ -237,7 +240,8 @@ internal final class SPMainConversationDataSource {
             sortMode,
             page: .next,
             parentId: commentId,
-            loadingStarted: loadingStarted) { (response, _) in
+            loadingStarted: loadingStarted,
+            loadingFinished: loadingFinished) { (response, _) in
                 if let newUsers = response?.conversation?.users {
                     let mergedUsers = self.users.merging(newUsers) { $1 }
                     self.users = mergedUsers
