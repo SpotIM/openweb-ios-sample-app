@@ -107,6 +107,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         let headers = HTTPHeaders.basic(
             with: spotKey,
             postId: id)
+        Logger.warn("DEBUG: Is loading = true")
         isLoading = true
 
         loadingStarted?()
@@ -117,8 +118,8 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             parser: DecodableParser<SPConversationReadRM>(),
             headers: headers
         ) { (result, response) in
-            let timeOffset = page == .first ? 0.0 : 0.0
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + timeOffset) {
+            DispatchQueue.main.async {
+                Logger.warn("DEBUG: Is loading = false")
                 self.isLoading = false
                 loadingFinished?()
 
