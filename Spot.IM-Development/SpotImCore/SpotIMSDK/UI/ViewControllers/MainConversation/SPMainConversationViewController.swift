@@ -214,6 +214,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private func loadCommentsNextPage() {
         guard !model.dataSource.isLoading else { return }
         
+        Logger.warn("DEBUG: Loading next page")
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         let mode = model.sortOption
         model.dataSource.comments(
@@ -221,15 +222,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             page: .next,
             loadingStarted: {
                 // showing loader section
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+                Logger.warn("DEBUG: Loading started called")
+                self.tableView.reloadData()
             },
             loadingFinished: {
                 // Removing loader section
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
+                Logger.warn("DEBUG: Loading finished called")
+                self.tableView.reloadData()
             },
             completion: { (success, _, error) in
                 if let error = error {

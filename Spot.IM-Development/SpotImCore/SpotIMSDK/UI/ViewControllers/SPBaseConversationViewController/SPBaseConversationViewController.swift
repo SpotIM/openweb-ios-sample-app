@@ -331,10 +331,13 @@ extension SPBaseConversationViewController: UITableViewDataSource {
     }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return model.dataSource.numberOfSections()
+        let result = model.dataSource.numberOfSections()
+        Logger.warn("DEBUG: numberOfSections called - result = \(result)")
+        return result
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        Logger.warn("DEBUG: cell for tow called for indexPath: \(indexPath)")
         if shouldShowLoader(forRowAt: indexPath) {
             let identifier = String(describing: SPLoaderCell.self)
             guard let loaderCell = tableView.dequeueReusableCell(withIdentifier: identifier,
