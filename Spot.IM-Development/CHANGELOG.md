@@ -7,8 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.15] - 2020-12-02
+### Fixed
+- Crash when scrolling conversation fast
+- Crash on pull to refresh converstaion
+
+### Removed
+- Call to ab_test endpoint to avoid overloading the server for no reason, for now there are no active tests on iOS
+
 ## [1.0.14] - 2020-11-19
-###
+### Fixed
 - Removed restricted dependency on Google-Ads-Sdk 7.67 so partners can update to later versions
 
 ## [1.0.13] - 2020-11-15
