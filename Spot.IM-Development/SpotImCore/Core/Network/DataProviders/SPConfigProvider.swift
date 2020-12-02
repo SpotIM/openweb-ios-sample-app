@@ -32,9 +32,9 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
             
             getConfig(spotId: spotKey).then { config -> Promise<(SPSpotConfiguration, AbTests)> in
                 if config.mobileSdk.enabled ?? false {
-                    return self.getAbTests(spotId: spotKey).map { (config, $0) }
+                    return self.getAbTests(spotId: spotKey, config: config).map { (config, $0) }
                 } else {
-                    return Promise.value((config, AbTests()))
+                    return Promise.value((config, AbTests(tests: [])))
                 }
             }.then { configAndAbTest -> Promise<SpotConfig> in
                 if configAndAbTest.0.mobileSdk.enabled ?? false && configAndAbTest.0.initialization?.monetized ?? false {
@@ -111,32 +111,40 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
         }
     }
     
-    private func getAbTests(spotId: String) -> Promise<AbTests> {
+    private func getAbTests(spotId: String, config: SPSpotConfiguration) -> Promise<AbTests> {
         return Promise<AbTests> { seal in
-            let spRequest = SPConfigRequests.abTestData
-            
-            let headers = HTTPHeaders.basic(with: spotId)
-            
-            manager.execute(
-                request: spRequest,
-                parser: DecodableParser<AbTests>(),
-                headers: headers
-            ) { result, response in
-                switch result {
-                case .success(let abTestData):
-                    SPAnalyticsHolder.abActiveTests = abTestData.getActiveTests()
-                    seal.fulfill(abTestData)
-                case .failure(let error):
-                    let rawReport = RawReportModel(
-                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: nil,
-                        errorData: response.data,
-                        errorMessage: error.localizedDescription
-                    )
-                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
-                    seal.reject(SpotImError.internalError(error.localizedDescription))
-                }
+            // THIS IS THE FINAL RESULT OF THE ONLY TEST WE HAD ON IOS
+            var tests = [SPABData(testName: "33", group: "D")]
+            if let monetized = config.initialization?.monetized, monetized {
+                tests = [SPABData(testName: "33", group: "B")]
             }
+            seal.fulfill(AbTests(tests: tests))
+            
+            // REMOVING THIS CALL UNTIL WE WILL HAVE ACTIVE TESTS BACK ON IOS TO REDUCE STRESS FROM BE
+//            let spRequest = SPConfigRequests.abTestData
+//
+//            let headers = HTTPHeaders.basic(with: spotId)
+            
+//            manager.execute(
+//                request: spRequest,
+//                parser: DecodableParser<AbTests>(),
+//                headers: headers
+//            ) { result, response in
+//                switch result {
+//                case .success(let abTestData):
+//                    SPAnalyticsHolder.abActiveTests = abTestData.getActiveTests()
+//                    seal.fulfill(abTestData)
+//                case .failure(let error):
+//                    let rawReport = RawReportModel(
+//                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+//                        parameters: nil,
+//                        errorData: response.data,
+//                        errorMessage: error.localizedDescription
+//                    )
+//                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+//                    seal.reject(SpotImError.internalError(error.localizedDescription))
+//                }
+//            }
         }
     }
 
