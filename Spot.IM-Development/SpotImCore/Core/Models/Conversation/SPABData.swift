@@ -28,8 +28,8 @@ struct AbTests: Decodable {
         self.tests = try container.decode([SPABData].self, forKey: .abData)
     }
     
-    init() {
-        tests = []
+    init(tests: [SPABData]) {
+        self.tests = tests
     }
     
     func getActiveTests() -> [SPABData] {
@@ -53,5 +53,11 @@ struct SPABData: Decodable {
         testName = try container.decode(String.self, forKey: .testName)
         group = try container.decode(String.self, forKey: .group)
         abTestGroup = ABGroup(rawValue: group)
+    }
+    
+    init(testName: String, group: String) {
+        self.testName = testName
+        self.group = group
+        self.abTestGroup = ABGroup(rawValue: group)
     }
 }
