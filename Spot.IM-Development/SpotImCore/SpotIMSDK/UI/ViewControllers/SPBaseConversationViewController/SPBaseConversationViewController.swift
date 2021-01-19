@@ -707,9 +707,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                                         style: .default)
         showAlert(
             title: LocalizationManager.localizedString(key: "Your comment has been rejected"),
-            message: LocalizationManager.localizedString(key: 
-                "It seems like your comment has violated our policy."
-                    + "We recommend you try again with different phrasing."),
+            message: LocalizationManager.localizedString(key: "It seems like your comment has violated our policy. We recommend you try again with different phrasing."),
             actions: [copyAction, gotItAction]
         )
     }
