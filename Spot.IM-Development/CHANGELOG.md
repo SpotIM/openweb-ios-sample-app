@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.16] - 2021-20-01
+### Fixed
+- Error message translation - comment creation
+
+### Internal
+- Fix xCode preferences
+
 ## [1.0.15] - 2020-12-02
 ### Fixed
 - Crash when scrolling conversation fast
