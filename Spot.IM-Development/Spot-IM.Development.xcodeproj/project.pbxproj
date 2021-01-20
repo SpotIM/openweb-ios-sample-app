@@ -953,18 +953,12 @@
 		6D4E56AE239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSansHebrew-Italic.ttf"; sourceTree = "<group>"; };
 		6D4E56B023A178DF005B79B6 /* UIView+Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animations.swift"; sourceTree = "<group>"; };
 		6D4E571123A7A5F7005B79B6 /* Focus.de.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Focus.de.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D4E571223A7A5F7005B79B6 /* Focus.de.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Focus.de.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/Focus.de.plist"; sourceTree = "<absolute>"; };
 		6D4E573E23A7B785005B79B6 /* Market Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Market Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D4E573F23A7B785005B79B6 /* MarketWatch.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = MarketWatch.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/MarketWatch.plist"; sourceTree = "<absolute>"; };
 		6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConversationCounters.swift; sourceTree = "<group>"; };
 		6D616F4F2473E45300E64083 /* SpotImNoAds.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SpotImNoAds.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D616F502473E45300E64083 /* SpotImNoAds.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = SpotImNoAds.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/SpotImNoAds.plist"; sourceTree = "<absolute>"; };
 		6D85E45D2414E846000265D3 /* AOL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AOL.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D85E45E2414E846000265D3 /* AOL.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = AOL.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/AOL.plist"; sourceTree = "<absolute>"; };
 		6D85E4892414FA4B000265D3 /* Express.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Express.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D85E48A2414FA4C000265D3 /* Express.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Express.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/Express.plist"; sourceTree = "<absolute>"; };
 		6D85E4B524150B8A000265D3 /* SkySports.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkySports.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D85E4B624150B8A000265D3 /* SkySports.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = SkySports.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/SkySports.plist"; sourceTree = "<absolute>"; };
 		6D85E4B82418E783000265D3 /* PreConversationBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreConversationBannerView.swift; sourceTree = "<group>"; };
 		6D92BDEF24C98258005E3683 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6D92BDF024C988B8005E3683 /* ar-001 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-001"; path = "ar-001.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -972,7 +966,6 @@
 		6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
 		6DA75C92238D61D100FBDF19 /* Demo.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Demo.storyboard; sourceTree = "<group>"; };
 		6DAFEEC5239CFCCF00441E97 /* DailyCallerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyCallerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6DAFEEC6239CFCCF00441E97 /* DailyCaller.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = DailyCaller.plist; path = "/Users/rotemitzhak/Developer/spotim-ios-sdk-demo-apps/Spot.IM-Development/DailyCaller.plist"; sourceTree = "<absolute>"; };
 		6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoConfiguration.swift; sourceTree = "<group>"; };
 		6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewFooterTesterViewController.swift; sourceTree = "<group>"; };
 		7406707252157CD408A30755 /* Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; sourceTree = "<group>"; };
@@ -992,6 +985,15 @@
 		D5E5855E5E2B8A5C15F7FEE4 /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
 		D84F72C4DB0D4F4F9C3FE2E7 /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
 		E3E01D2E95BE3559589E690E /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
+		E68C23F925B85611005307CC /* YnetSpot.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = YnetSpot.plist; sourceTree = "<group>"; };
+		E68C23FA25B85611005307CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E68C23FB25B85611005307CC /* Focus.de.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Focus.de.plist; sourceTree = "<group>"; };
+		E68C23FC25B85612005307CC /* MarketWatch.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MarketWatch.plist; sourceTree = "<group>"; };
+		E68C23FD25B85612005307CC /* DailyCaller.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = DailyCaller.plist; sourceTree = "<group>"; };
+		E68C23FE25B85612005307CC /* SpotImNoAds.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SpotImNoAds.plist; sourceTree = "<group>"; };
+		E68C23FF25B85612005307CC /* Express.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Express.plist; sourceTree = "<group>"; };
+		E68C240025B85612005307CC /* SkySports.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SkySports.plist; sourceTree = "<group>"; };
+		E68C240125B85633005307CC /* AOL.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AOL.plist; sourceTree = "<group>"; };
 		ECA186D6993CFFBF521D9FB1 /* Pods-Shared-SpotImCore.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		F47FEEF0E3AC88BAF89C7D65 /* Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		FA6BF31548693DB019E7E2E6 /* Pods_Shared_SpotImNoAds.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImNoAds.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1172,7 +1174,6 @@
 		445417AC23685144001D0ED0 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				448E1117236C5D130005C9F9 /* Libraries */,
 				445417AD23685144001D0ED0 /* Common */,
 				445417C623685144001D0ED0 /* ViewControllers */,
 				445417DA23685144001D0ED0 /* Views */,
@@ -1666,13 +1667,6 @@
 			path = Ariel;
 			sourceTree = "<group>";
 		};
-		448E1117236C5D130005C9F9 /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Libraries;
-			sourceTree = "<group>";
-		};
 		44C8788E23608BC100E0E662 /* SpotImCore */ = {
 			isa = PBXGroup;
 			children = (
@@ -1734,13 +1728,15 @@
 				5D697A3C22B65106001AD556 /* Products */,
 				5D697A6A22B6586C001AD556 /* Frameworks */,
 				F6D45AB80C879EE6B5C01DA4 /* Pods */,
-				6DAFEEC6239CFCCF00441E97 /* DailyCaller.plist */,
-				6D4E571223A7A5F7005B79B6 /* Focus.de.plist */,
-				6D4E573F23A7B785005B79B6 /* MarketWatch.plist */,
-				6D85E45E2414E846000265D3 /* AOL.plist */,
-				6D85E48A2414FA4C000265D3 /* Express.plist */,
-				6D85E4B624150B8A000265D3 /* SkySports.plist */,
-				6D616F502473E45300E64083 /* SpotImNoAds.plist */,
+				E68C23FD25B85612005307CC /* DailyCaller.plist */,
+				E68C23FF25B85612005307CC /* Express.plist */,
+				E68C240125B85633005307CC /* AOL.plist */,
+				E68C23FB25B85611005307CC /* Focus.de.plist */,
+				E68C23FA25B85611005307CC /* GoogleService-Info.plist */,
+				E68C23FC25B85612005307CC /* MarketWatch.plist */,
+				E68C240025B85612005307CC /* SkySports.plist */,
+				E68C23FE25B85612005307CC /* SpotImNoAds.plist */,
+				E68C23F925B85611005307CC /* YnetSpot.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1938,7 +1934,7 @@
 			buildConfigurationList = 5D697A5822B65108001AD556 /* Build configuration list for PBXNativeTarget "Spot-IM.Development" */;
 			buildPhases = (
 				C79D94A2D0EBDB005BC67EF6 /* [CP] Check Pods Manifest.lock */,
-				563C17232155E6E6981CB273 /* [CP] Prepare Artifacts */,
+				F0BBDA11D3EE49BBCC04ED58 /* [CP] Prepare Artifacts */,
 				5D697A3722B65106001AD556 /* Sources */,
 				5D697A3822B65106001AD556 /* Frameworks */,
 				5D697A3922B65106001AD556 /* Resources */,
@@ -1979,7 +1975,7 @@
 			buildConfigurationList = 6D4E570C23A7A5F7005B79B6 /* Build configuration list for PBXNativeTarget "Focus.de" */;
 			buildPhases = (
 				6D4E56E923A7A5F7005B79B6 /* [CP] Check Pods Manifest.lock */,
-				386D0794BED49ECD68AD8B2E /* [CP] Prepare Artifacts */,
+				0F09114BD711864CAB818E17 /* [CP] Prepare Artifacts */,
 				6D4E56EA23A7A5F7005B79B6 /* Sources */,
 				6D4E56FD23A7A5F7005B79B6 /* Frameworks */,
 				6D4E570023A7A5F7005B79B6 /* Resources */,
@@ -2002,7 +1998,7 @@
 			buildConfigurationList = 6D4E573923A7B785005B79B6 /* Build configuration list for PBXNativeTarget "MarketWatch" */;
 			buildPhases = (
 				6D4E571623A7B785005B79B6 /* [CP] Check Pods Manifest.lock */,
-				0802328348CEC9CBFB3F8051 /* [CP] Prepare Artifacts */,
+				F814411875C14598292B75F8 /* [CP] Prepare Artifacts */,
 				6D4E571723A7B785005B79B6 /* Sources */,
 				6D4E572A23A7B785005B79B6 /* Frameworks */,
 				6D4E572D23A7B785005B79B6 /* Resources */,
@@ -2104,7 +2100,7 @@
 			buildConfigurationList = 6DA75C89238D313600FBDF19 /* Build configuration list for PBXNativeTarget "YentSpot" */;
 			buildPhases = (
 				72F270DEB0D52BEDEB9300B4 /* [CP] Check Pods Manifest.lock */,
-				EEEF7E72391F1E89071AE470 /* [CP] Prepare Artifacts */,
+				A331EF752C7110FAD093D7E1 /* [CP] Prepare Artifacts */,
 				6DA75C6B238D313600FBDF19 /* Sources */,
 				6DA75C7B238D313600FBDF19 /* Frameworks */,
 				6DA75C7E238D313600FBDF19 /* Resources */,
@@ -2127,7 +2123,7 @@
 			buildConfigurationList = 6DAFEEC0239CFCCF00441E97 /* Build configuration list for PBXNativeTarget "DailyCaller" */;
 			buildPhases = (
 				6DAFEE9E239CFCCF00441E97 /* [CP] Check Pods Manifest.lock */,
-				B789A41C417437B504BCE05C /* [CP] Prepare Artifacts */,
+				95370BFC3FDBB80B60B7A021 /* [CP] Prepare Artifacts */,
 				6DAFEE9F239CFCCF00441E97 /* Sources */,
 				6DAFEEB1239CFCCF00441E97 /* Frameworks */,
 				6DAFEEB4239CFCCF00441E97 /* Resources */,
@@ -2371,21 +2367,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0802328348CEC9CBFB3F8051 /* [CP] Prepare Artifacts */ = {
+		0F09114BD711864CAB818E17 /* [CP] Prepare Artifacts */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Prepare Artifacts";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3811922C4C3F70751EE6D2FD /* [CP] Embed Pods Frameworks */ = {
@@ -2405,23 +2401,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		386D0794BED49ECD68AD8B2E /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		445CA560233E117700945F59 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2439,23 +2418,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" ac77e6a593436ee200d04258b003ab92ab191339 a05dbcb5d1836f904fb416deed65553cd89c41f5d3407e5230dde0bac183e5b6\n";
-		};
-		563C17232155E6E6981CB273 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		6D4E56B823A67569005B79B6 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2778,7 +2740,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B789A41C417437B504BCE05C /* [CP] Prepare Artifacts */ = {
+		95370BFC3FDBB80B60B7A021 /* [CP] Prepare Artifacts */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2793,6 +2755,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-artifacts.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A331EF752C7110FAD093D7E1 /* [CP] Prepare Artifacts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Prepare Artifacts";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C79D94A2D0EBDB005BC67EF6 /* [CP] Check Pods Manifest.lock */ = {
@@ -2856,21 +2835,38 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EEEF7E72391F1E89071AE470 /* [CP] Prepare Artifacts */ = {
+		F0BBDA11D3EE49BBCC04ED58 /* [CP] Prepare Artifacts */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Prepare Artifacts";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F814411875C14598292B75F8 /* [CP] Prepare Artifacts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Prepare Artifacts";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
