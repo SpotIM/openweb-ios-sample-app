@@ -179,7 +179,6 @@
 		445418B923685154001D0ED0 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187223685154001D0ED0 /* ImageCache.swift */; };
 		445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187423685154001D0ED0 /* AdsInterface.swift */; };
 		445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187523685154001D0ED0 /* DefaultAdsProvider.swift */; };
-		445418BC23685154001D0ED0 /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187623685154001D0ED0 /* GoogleAdsProvider.swift */; };
 		445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187723685154001D0ED0 /* SPAnalyticsService.swift */; };
 		445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187823685154001D0ED0 /* SPReadingTracker.swift */; };
 		445418BF23685154001D0ED0 /* SPCommentsInMemoryCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */; };
@@ -402,7 +401,6 @@
 		6D616F182473E45300E64083 /* SPPaginationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454184323685153001D0ED0 /* SPPaginationPage.swift */; };
 		6D616F192473E45300E64083 /* SPConfigurationRealtime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454184B23685154001D0ED0 /* SPConfigurationRealtime.swift */; };
 		6D616F1A2473E45300E64083 /* UIButton+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B123685144001D0ED0 /* UIButton+Extensions.swift */; };
-		6D616F1B2473E45300E64083 /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187623685154001D0ED0 /* GoogleAdsProvider.swift */; };
 		6D616F1C2473E45300E64083 /* SPFailureReportRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454183823685153001D0ED0 /* SPFailureReportRequest.swift */; };
 		6D616F1D2473E45300E64083 /* SPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454183A23685153001D0ED0 /* SPRequest.swift */; };
 		6D616F1E2473E45300E64083 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417AE23685144001D0ED0 /* Autolayout.swift */; };
@@ -895,7 +893,6 @@
 		4454187223685154001D0ED0 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		4454187423685154001D0ED0 /* AdsInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdsInterface.swift; sourceTree = "<group>"; };
 		4454187523685154001D0ED0 /* DefaultAdsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultAdsProvider.swift; sourceTree = "<group>"; };
-		4454187623685154001D0ED0 /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
 		4454187723685154001D0ED0 /* SPAnalyticsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAnalyticsService.swift; sourceTree = "<group>"; };
 		4454187823685154001D0ED0 /* SPReadingTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReadingTracker.swift; sourceTree = "<group>"; };
 		4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentsInMemoryCacheService.swift; sourceTree = "<group>"; };
@@ -1632,7 +1629,6 @@
 			children = (
 				4454187423685154001D0ED0 /* AdsInterface.swift */,
 				4454187523685154001D0ED0 /* DefaultAdsProvider.swift */,
-				4454187623685154001D0ED0 /* GoogleAdsProvider.swift */,
 			);
 			path = Ads;
 			sourceTree = "<group>";
@@ -2919,7 +2915,6 @@
 				4454189123685154001D0ED0 /* SPPaginationPage.swift in Sources */,
 				4454189723685154001D0ED0 /* SPConfigurationRealtime.swift in Sources */,
 				445417F723685144001D0ED0 /* UIButton+Extensions.swift in Sources */,
-				445418BC23685154001D0ED0 /* GoogleAdsProvider.swift in Sources */,
 				4454188723685154001D0ED0 /* SPFailureReportRequest.swift in Sources */,
 				4454188923685154001D0ED0 /* SPRequest.swift in Sources */,
 				445417F523685144001D0ED0 /* Autolayout.swift in Sources */,
@@ -3157,7 +3152,6 @@
 				6D616F182473E45300E64083 /* SPPaginationPage.swift in Sources */,
 				6D616F192473E45300E64083 /* SPConfigurationRealtime.swift in Sources */,
 				6D616F1A2473E45300E64083 /* UIButton+Extensions.swift in Sources */,
-				6D616F1B2473E45300E64083 /* GoogleAdsProvider.swift in Sources */,
 				6D616F1C2473E45300E64083 /* SPFailureReportRequest.swift in Sources */,
 				6D616F1D2473E45300E64083 /* SPRequest.swift in Sources */,
 				6D616F1E2473E45300E64083 /* Autolayout.swift in Sources */,
