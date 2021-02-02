@@ -581,6 +581,7 @@
 		B6CDEB3918630A9D643A80E1 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29397720AC569CFD0296574D /* Pods_Shared_DemoApps_Spot_IM_Development.framework */; };
 		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
 		D30C600C817F29DF24219F05 /* Pods_Shared_DemoApps_YentSpot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B6FE71E4B53E9B74782BFC /* Pods_Shared_DemoApps_YentSpot.framework */; };
+		E685AC2A25C97DC4008FECDB /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685AC2925C97DC4008FECDB /* GoogleAdsProvider.swift */; };
 		FBA7D2DB2DE6793AED31E76E /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 850F456B64949F1F4FC7962C /* Pods_Shared_DemoApps_MarketWatch.framework */; };
 /* End PBXBuildFile section */
 
@@ -985,6 +986,7 @@
 		D5E5855E5E2B8A5C15F7FEE4 /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
 		D84F72C4DB0D4F4F9C3FE2E7 /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
 		E3E01D2E95BE3559589E690E /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
+		E685AC2925C97DC4008FECDB /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
 		E68C23F925B85611005307CC /* YnetSpot.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = YnetSpot.plist; sourceTree = "<group>"; };
 		E68C23FA25B85611005307CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E68C23FB25B85611005307CC /* Focus.de.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Focus.de.plist; sourceTree = "<group>"; };
@@ -1761,6 +1763,7 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
+				E685AC2825C97DB5008FECDB /* SpotImAdsProvider */,
 				5DA8B59C2327E2010045FCFA /* Common */,
 				0E1125DC2304BC48006B1489 /* Extension */,
 				5D4943B72302CA8C00AA7541 /* ViewControllers */,
@@ -1853,6 +1856,14 @@
 			path = TableViewFooterTesterViewController;
 			sourceTree = "<group>";
 		};
+		E685AC2825C97DB5008FECDB /* SpotImAdsProvider */ = {
+			isa = PBXGroup;
+			children = (
+				E685AC2925C97DC4008FECDB /* GoogleAdsProvider.swift */,
+			);
+			path = SpotImAdsProvider;
+			sourceTree = "<group>";
+		};
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1934,7 +1945,6 @@
 			buildConfigurationList = 5D697A5822B65108001AD556 /* Build configuration list for PBXNativeTarget "Spot-IM.Development" */;
 			buildPhases = (
 				C79D94A2D0EBDB005BC67EF6 /* [CP] Check Pods Manifest.lock */,
-				F0BBDA11D3EE49BBCC04ED58 /* [CP] Prepare Artifacts */,
 				5D697A3722B65106001AD556 /* Sources */,
 				5D697A3822B65106001AD556 /* Frameworks */,
 				5D697A3922B65106001AD556 /* Resources */,
@@ -1975,7 +1985,6 @@
 			buildConfigurationList = 6D4E570C23A7A5F7005B79B6 /* Build configuration list for PBXNativeTarget "Focus.de" */;
 			buildPhases = (
 				6D4E56E923A7A5F7005B79B6 /* [CP] Check Pods Manifest.lock */,
-				0F09114BD711864CAB818E17 /* [CP] Prepare Artifacts */,
 				6D4E56EA23A7A5F7005B79B6 /* Sources */,
 				6D4E56FD23A7A5F7005B79B6 /* Frameworks */,
 				6D4E570023A7A5F7005B79B6 /* Resources */,
@@ -1998,7 +2007,6 @@
 			buildConfigurationList = 6D4E573923A7B785005B79B6 /* Build configuration list for PBXNativeTarget "MarketWatch" */;
 			buildPhases = (
 				6D4E571623A7B785005B79B6 /* [CP] Check Pods Manifest.lock */,
-				F814411875C14598292B75F8 /* [CP] Prepare Artifacts */,
 				6D4E571723A7B785005B79B6 /* Sources */,
 				6D4E572A23A7B785005B79B6 /* Frameworks */,
 				6D4E572D23A7B785005B79B6 /* Resources */,
@@ -2100,7 +2108,6 @@
 			buildConfigurationList = 6DA75C89238D313600FBDF19 /* Build configuration list for PBXNativeTarget "YentSpot" */;
 			buildPhases = (
 				72F270DEB0D52BEDEB9300B4 /* [CP] Check Pods Manifest.lock */,
-				A331EF752C7110FAD093D7E1 /* [CP] Prepare Artifacts */,
 				6DA75C6B238D313600FBDF19 /* Sources */,
 				6DA75C7B238D313600FBDF19 /* Frameworks */,
 				6DA75C7E238D313600FBDF19 /* Resources */,
@@ -2123,7 +2130,6 @@
 			buildConfigurationList = 6DAFEEC0239CFCCF00441E97 /* Build configuration list for PBXNativeTarget "DailyCaller" */;
 			buildPhases = (
 				6DAFEE9E239CFCCF00441E97 /* [CP] Check Pods Manifest.lock */,
-				95370BFC3FDBB80B60B7A021 /* [CP] Prepare Artifacts */,
 				6DAFEE9F239CFCCF00441E97 /* Sources */,
 				6DAFEEB1239CFCCF00441E97 /* Frameworks */,
 				6DAFEEB4239CFCCF00441E97 /* Resources */,
@@ -2367,23 +2373,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0F09114BD711864CAB818E17 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-artifacts.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3811922C4C3F70751EE6D2FD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2740,40 +2729,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		95370BFC3FDBB80B60B7A021 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-artifacts.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A331EF752C7110FAD093D7E1 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-artifacts.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		C79D94A2D0EBDB005BC67EF6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2833,40 +2788,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F0BBDA11D3EE49BBCC04ED58 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-artifacts.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F814411875C14598292B75F8 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-artifacts.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3037,6 +2958,7 @@
 			files = (
 				443B328D236997F00000BB60 /* DarkModeSettingsViewController.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
+				E685AC2A25C97DC4008FECDB /* GoogleAdsProvider.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
 				5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */,

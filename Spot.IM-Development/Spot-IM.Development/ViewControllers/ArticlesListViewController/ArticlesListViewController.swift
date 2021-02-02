@@ -40,6 +40,9 @@ class ArticlesListViewController: UITableViewController {
         
         SpotIm.reinit = shouldReinit
         SpotIm.initialize(spotId: spotId)
+        
+        // This is an example for SpotImNoAds (i.e. no ads dependecies in SDK) with a custom AdsProvider implementation
+//         from the publisher target which utilize the dependecies from the app target instead of the SDK.
         SpotIm.setAdsProvider(adsProvider: GoogleAdsProvider(spotId: spotId))
         setup()
         loadData()
