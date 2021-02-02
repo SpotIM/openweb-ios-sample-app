@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMobileAds
+import SpotImCore
 
 final class GoogleAdsProvider: NSObject, AdsProvider {
     let bannerView: BaseView = .init()
@@ -110,7 +111,7 @@ extension GoogleAdsProvider: GADBannerViewDelegate {
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
-        Logger.error(error)
+        print("adView didFailToReceiveAdWithError - \(error)")
         bannerDelegate?.bannerFailedToLoad(error: error)
     }
     
