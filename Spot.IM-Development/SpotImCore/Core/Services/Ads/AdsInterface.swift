@@ -56,6 +56,9 @@ public enum AdSize {
 }
 
 public protocol AdsProvider: class {
+    
+    func version() -> String
+    func setSpotId(spotId: String)
     func setupAdsBanner(with adId: String, in controller: UIViewController, validSizes: Set<AdSize>)
     func setupInterstitial(with adId: String)
     
@@ -90,6 +93,7 @@ internal final class AdsManager {
         
         #else
         if let publisherAdsProvider = SpotIm.adsProvider {
+            publisherAdsProvider.setSpotId(spotId: self.spotId)
             return publisherAdsProvider
         }
         return DefaultAdsProvider()
