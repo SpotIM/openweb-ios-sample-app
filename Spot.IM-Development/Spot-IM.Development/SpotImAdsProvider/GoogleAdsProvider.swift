@@ -17,11 +17,16 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
     
     private var banner: DFPBannerView?
     private var interstitial: DFPInterstitial?
-    private let spotId: String
+    private var spotId: String = ""
     
-    init(spotId: String) {
-        self.spotId = spotId
+    override init() {
         super.init()
+    }
+    
+    func version() -> String { return "1.0" }
+    
+    func setSpotId(spotId: String) {
+        self.spotId = spotId
     }
     
     func setupAdsBanner(with adId: String = Configuration.testBannerID, in controller: UIViewController, validSizes: Set<AdSize>) {
