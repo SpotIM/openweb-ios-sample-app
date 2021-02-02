@@ -8,12 +8,13 @@
 
 import UIKit
 
-internal protocol AdsProviderBannerDelegate: class {
+
+public protocol AdsProviderBannerDelegate: class {
     func bannerLoaded(adBannerSize: CGSize)
     func bannerFailedToLoad(error: Error)
 }
 
-internal protocol AdsProviderInterstitialDelegate: class {
+public protocol AdsProviderInterstitialDelegate: class {
     func interstitialLoaded()
     func interstitialWillBeShown()
     func interstitialDidDismiss()
@@ -48,13 +49,13 @@ internal struct AdsABGroup {
     }
 }
 
-internal enum AdSize {
+public enum AdSize {
     case small
     case medium
     case large
 }
 
-internal protocol AdsProvider: class {
+public protocol AdsProvider: class {
     func setupAdsBanner(with adId: String, in controller: UIViewController, validSizes: Set<AdSize>)
     func setupInterstitial(with adId: String)
     
@@ -86,7 +87,11 @@ internal final class AdsManager {
     func adsProvider() -> AdsProvider {
         #if canImport(GoogleMobileAds)
         return GoogleAdsProvider(spotId: self.spotId)
+        
         #else
+        if let publisherAdsProvider = SpotIm.adsProvider {
+            return publisherAdsProvider
+        }
         return DefaultAdsProvider()
         #endif
     }

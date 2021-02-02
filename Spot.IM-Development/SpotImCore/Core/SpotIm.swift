@@ -82,6 +82,7 @@ public class SpotIm {
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?
     public static var reinit: Bool = false
+    public static var adsProvider: AdsProvider?
 
     /**
     Initialize the SDK
@@ -110,6 +111,10 @@ public class SpotIm {
                 Logger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
             }
         }
+    }
+    
+    public static func setAdsProvider(adsProvider: AdsProvider) {
+        self.adsProvider = adsProvider
     }
 
     /**

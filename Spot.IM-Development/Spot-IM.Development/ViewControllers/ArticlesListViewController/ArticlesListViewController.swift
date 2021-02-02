@@ -40,7 +40,7 @@ class ArticlesListViewController: UITableViewController {
         
         SpotIm.reinit = shouldReinit
         SpotIm.initialize(spotId: spotId)
-        
+        SpotIm.setAdsProvider(adsProvider: GoogleAdsProvider(spotId: spotId))
         setup()
         loadData()
 
