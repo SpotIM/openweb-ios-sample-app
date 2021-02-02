@@ -88,18 +88,12 @@ internal final class AdsManager {
     }
 
     func adsProvider() -> AdsProvider {
-        #if canImport(GoogleMobileAds)
-        return GoogleAdsProvider(spotId: self.spotId)
-        
-        #else
         if let publisherAdsProvider = SpotIm.adsProvider {
             publisherAdsProvider.setSpotId(spotId: self.spotId)
             return publisherAdsProvider
         }
         return DefaultAdsProvider()
-        #endif
     }
-    
 }
 
 internal final class SPAdsViewTracker {
