@@ -553,6 +553,7 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     }
     
     func bannerFailedToLoad(error: Error) {
+        Logger.error("error bannerFailedToLoad - \(error)")
         let monetizationFailureData = MonetizationFailureModel(source: .mainConversation, reason: error.localizedDescription, bannerType: .banner)
         SPDefaultFailureReporter.shared.sendMonetizationFaliureReport(monetizationFailureData)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
