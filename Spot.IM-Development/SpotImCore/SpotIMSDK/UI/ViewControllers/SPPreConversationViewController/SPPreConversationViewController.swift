@@ -447,6 +447,7 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     }
     
     func bannerFailedToLoad(error: Error) {
+        Logger.error("error bannerFailedToLoad - \(error)")
         let monetizationFailureData = MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .banner)
         SPDefaultFailureReporter.shared.sendMonetizationFaliureReport(monetizationFailureData)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)

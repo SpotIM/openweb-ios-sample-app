@@ -116,7 +116,6 @@ extension GoogleAdsProvider: GADBannerViewDelegate {
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
-        print("adView didFailToReceiveAdWithError - \(error)")
         bannerDelegate?.bannerFailedToLoad(error: error)
     }
     
