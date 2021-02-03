@@ -580,6 +580,10 @@
 		CCC61B50B2CFEE6CFFF61360 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847146661D2DAAF9954862ED /* Pods_Shared_SpotImCore.framework */; };
 		D30C600C817F29DF24219F05 /* Pods_Shared_DemoApps_YentSpot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B6FE71E4B53E9B74782BFC /* Pods_Shared_DemoApps_YentSpot.framework */; };
 		E685AC2A25C97DC4008FECDB /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685AC2925C97DC4008FECDB /* GoogleAdsProvider.swift */; };
+		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
+		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
+		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
+		E685ACD125CAEE84008FECDB /* sp_config_response_google_true.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */; };
 		FBA7D2DB2DE6793AED31E76E /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 850F456B64949F1F4FC7962C /* Pods_Shared_DemoApps_MarketWatch.framework */; };
 /* End PBXBuildFile section */
 
@@ -984,6 +988,10 @@
 		D84F72C4DB0D4F4F9C3FE2E7 /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
 		E3E01D2E95BE3559589E690E /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
 		E685AC2925C97DC4008FECDB /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
+		E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spot_IM_ConfigApiTests.swift; sourceTree = "<group>"; };
+		E685ACB825CAE6C3008FECDB /* sp_config_response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sp_config_response.json; sourceTree = "<group>"; };
+		E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SPTestsUtils.swift; path = "Spot-IM.DevelopmentTests/SPTestsUtils.swift"; sourceTree = SOURCE_ROOT; };
+		E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sp_config_response_google_true.json; sourceTree = "<group>"; };
 		E68C23F925B85611005307CC /* YnetSpot.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = YnetSpot.plist; sourceTree = "<group>"; };
 		E68C23FA25B85611005307CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E68C23FB25B85611005307CC /* Focus.de.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Focus.de.plist; sourceTree = "<group>"; };
@@ -1779,7 +1787,10 @@
 		5D697A5222B65108001AD556 /* Spot-IM.DevelopmentTests */ = {
 			isa = PBXGroup;
 			children = (
+				E685ACB725CAE6C3008FECDB /* mock_responses */,
 				5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */,
+				E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */,
+				E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */,
 				5D697A5522B65108001AD556 /* Info.plist */,
 			);
 			path = "Spot-IM.DevelopmentTests";
@@ -1858,6 +1869,15 @@
 				E685AC2925C97DC4008FECDB /* GoogleAdsProvider.swift */,
 			);
 			path = SpotImAdsProvider;
+			sourceTree = "<group>";
+		};
+		E685ACB725CAE6C3008FECDB /* mock_responses */ = {
+			isa = PBXGroup;
+			children = (
+				E685ACB825CAE6C3008FECDB /* sp_config_response.json */,
+				E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */,
+			);
+			path = mock_responses;
 			sourceTree = "<group>";
 		};
 		F6D45AB80C879EE6B5C01DA4 /* Pods */ = {
@@ -2243,6 +2263,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E685ACD125CAEE84008FECDB /* sp_config_response_google_true.json in Resources */,
+				E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2974,7 +2996,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */,
 				5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */,
+				E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3475,8 +3499,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 170;
-				DEVELOPMENT_TEAM = B88KG2QXHX;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3624,8 +3649,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 170;
-				DEVELOPMENT_TEAM = B88KG2QXHX;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3942,8 +3968,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 170;
-				DEVELOPMENT_TEAM = B88KG2QXHX;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3965,8 +3992,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 170;
-				DEVELOPMENT_TEAM = B88KG2QXHX;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
 				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
