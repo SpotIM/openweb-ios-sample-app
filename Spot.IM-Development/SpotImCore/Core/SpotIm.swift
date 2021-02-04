@@ -82,7 +82,7 @@ public class SpotIm {
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?
     public static var reinit: Bool = false
-    public static var adsProvider: AdsProvider?
+    public static var googleAdsProvider: AdsProvider?
 
     /**
     Initialize the SDK
@@ -113,8 +113,8 @@ public class SpotIm {
         }
     }
     
-    public static func setAdsProvider(adsProvider: AdsProvider) {
-        self.adsProvider = adsProvider
+    public static func setGoogleAdsProvider(googleAdsProvider: AdsProvider) {
+        self.googleAdsProvider = googleAdsProvider
     }
 
     /**
@@ -207,7 +207,7 @@ public class SpotIm {
             // googleAdsProviderRequired key is optional in appConfig so first we need to check if exists.
             // if googleAdsProviderRequired exists AND "true" AND publisher didn't provide an adsProvider we will fail
             if let googleAdsProviderRequired = config.appConfig.mobileSdk.googleAdsProviderRequired,
-               googleAdsProviderRequired && SpotIm.adsProvider == nil {
+               googleAdsProviderRequired && SpotIm.googleAdsProvider == nil {
                 completion(SpotImResult.failure(.internalError("Make sure to call setAdsProvider() with an AdsProvider")))
                 return
             }
