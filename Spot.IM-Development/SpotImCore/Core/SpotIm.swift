@@ -203,6 +203,14 @@ public class SpotIm {
                 completion(SpotImResult.failure(.internalError("Please call init SDK")))
                 return
             }
+            
+            // googleAdsProviderRequired key is optional in appConfig so first we need to check if exists.
+            // if googleAdsProviderRequired exists AND "true" AND publisher didn't provide an adsProvider we will fail
+            if let googleAdsProviderRequired = config.appConfig.mobileSdk.googleAdsProviderRequired,
+               googleAdsProviderRequired && SpotIm.adsProvider == nil {
+                completion(SpotImResult.failure(.internalError("Make sure to call setAdsProvider() with an AdsProvider")))
+                return
+            }
 
             let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, loginDelegate: loginDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk.locale)
             completion(SpotImResult.success(coordinator))
