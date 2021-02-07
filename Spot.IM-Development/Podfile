@@ -21,7 +21,7 @@ abstract_target 'Shared' do
     pod 'Crashlytics'
     pod 'Google-Mobile-Ads-SDK', '= 7.67'
     
-    pod 'Reveal-SDK', :configurations => ['Debug'] # dependency only on debug/release build
+    pod 'Reveal-SDK', :configurations => ['Debug'] # dependency only on "debug" build
 
     target 'Spot-IM.Development'
     target 'YentSpot'
