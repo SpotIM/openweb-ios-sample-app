@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2021-07-02
+
+### Major Change
+
+- Removed depedency of 'Google-Mobile-Ads-SDK' from SpotImCore. From now on publishers will pass an "AdsProvider" to the SDK and the only dependency on 'Google-Mobile-Ads-SDK' will be in the app target.
+
+
 ## [1.0.16] - 2021-20-01
 ### Fixed
 - Error message translation - comment creation
