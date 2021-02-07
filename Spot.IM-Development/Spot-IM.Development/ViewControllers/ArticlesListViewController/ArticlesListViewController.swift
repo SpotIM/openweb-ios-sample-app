@@ -41,6 +41,10 @@ class ArticlesListViewController: UITableViewController {
         SpotIm.reinit = shouldReinit
         SpotIm.initialize(spotId: spotId)
         
+        // This is the new implementation for publishers with monetization. The app developer should provide the AdsProvider implementation instance
+        // to utilize the ad-network dependecies from the app target instead of the SDK.
+        SpotIm.setGoogleAdsProvider(googleAdsProvider: GoogleAdsProvider())
+        
         setup()
         loadData()
 

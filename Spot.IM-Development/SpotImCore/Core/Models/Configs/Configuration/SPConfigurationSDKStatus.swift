@@ -17,4 +17,5 @@ struct SPConfigurationSDKStatus: Decodable {
     let openwebWebsiteUrl: String
     let openwebPrivacyUrl: String
     let openwebTermsUrl: String
+    let googleAdsProviderRequired: Bool?
 }

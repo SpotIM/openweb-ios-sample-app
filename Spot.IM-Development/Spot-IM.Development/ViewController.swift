@@ -8,6 +8,7 @@
 
 import UIKit
 import SpotImCore
+import GoogleMobileAds
 
 class ViewController: UIViewController {
 
@@ -16,12 +17,20 @@ class ViewController: UIViewController {
     var loadingButtonTitleBackup: String?
     var currentSpotId: String = ""
 
+    var adLoader:GADAdLoader!
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         currentSpotId = UserDefaults.standard.string(forKey: "spotIdKey") ?? ""
         setupUI()
         fillVersionAndBuildNumber()
+        
+        print("Google Mobile Ads SDK version: \(DFPRequest.sdkVersion())")
+        self.adLoader = GADAdLoader(adUnitID: "/282897603/elnuevodia.com/home/app_scroll", rootViewController: self, adTypes: [.nativeCustomTemplate], options: nil)
+        self.adLoader?.delegate = self
+        self.adLoader?.load(GADRequest())
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -128,3 +137,30 @@ private extension String {
     static var demoSpotKeyForMobileSocialGuest:     String { return "sp_mobileSocialGuest" }
 }
 
+extension ViewController: GADAdLoaderDelegate, GADNativeCustomTemplateAdLoaderDelegate {
+
+
+    // MARK: - GADAdLoaderDelegate Methods
+    
+    func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: GADRequestError) {
+        print("adLoader - didFailToReceiveAdWithError: \(error)")
+
+    }
+
+    func adLoaderDidFinishLoading(_ adLoader: GADAdLoader) {
+        print("adLoaderDidFinishLoading")
+    }
+
+
+    func nativeCustomTemplateIDs(for adLoader: GADAdLoader) -> [String] {
+        return ["10067603"]
+    }
+
+    func adLoader(
+        _ adLoader: GADAdLoader,
+        didReceive nativeCustomTemplateAd: GADNativeCustomTemplateAd
+    ) {
+        print("Received custom native ad: \(nativeCustomTemplateAd)")
+
+    }
+}

@@ -82,6 +82,7 @@ public class SpotIm {
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?
     public static var reinit: Bool = false
+    public static var googleAdsProvider: AdsProvider?
 
     /**
     Initialize the SDK
@@ -110,6 +111,10 @@ public class SpotIm {
                 Logger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
             }
         }
+    }
+    
+    public static func setGoogleAdsProvider(googleAdsProvider: AdsProvider) {
+        self.googleAdsProvider = googleAdsProvider
     }
 
     /**
@@ -196,6 +201,14 @@ public class SpotIm {
         execute(call: { config in
             guard let spotId = spotId else {
                 completion(SpotImResult.failure(.internalError("Please call init SDK")))
+                return
+            }
+            
+            // googleAdsProviderRequired key is optional in appConfig so first we need to check if exists.
+            // if googleAdsProviderRequired exists AND "true" AND publisher didn't provide an adsProvider we will fail
+            if let googleAdsProviderRequired = config.appConfig.mobileSdk.googleAdsProviderRequired,
+               googleAdsProviderRequired && SpotIm.googleAdsProvider == nil {
+                completion(SpotImResult.failure(.internalError("Make sure to call setAdsProvider() with an AdsProvider")))
                 return
             }
 
