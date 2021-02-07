@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Spot_IM_Development
+@testable import SpotImCore
 
 class Spot_IM_DevelopmentTests: XCTestCase {
 

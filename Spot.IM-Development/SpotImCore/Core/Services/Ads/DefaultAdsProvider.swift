@@ -13,7 +13,9 @@ final class DefaultAdsProvider: AdsProvider {
     let bannerView: BaseView = .init()
     weak var bannerDelegate: AdsProviderBannerDelegate?
     weak var interstitialDelegate: AdsProviderInterstitialDelegate?
-
+    
+    func version() -> String { return "1.0" }
+    func setSpotId(spotId: String) { }
     func setupAdsBanner(with adId: String, in controller: UIViewController, validSizes: Set<AdSize>) {}
     func setupInterstitial(with adId: String) {}
     func showInterstitial(in controller: UIViewController) -> Bool { return false }

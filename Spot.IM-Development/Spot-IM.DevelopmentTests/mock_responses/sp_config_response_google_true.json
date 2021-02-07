@@ -1,0 +1,941 @@
+{
+	"ab-test-changer": {
+		"enabled": true
+	},
+	"ab_test_config": {
+		"tests": [{
+			"short_name": "100",
+			"version": "v2"
+		}, {
+			"short_name": "101",
+			"version": "v2"
+		}, {
+			"short_name": "32",
+			"version": "v1"
+		}, {
+			"short_name": "33",
+			"version": "v1"
+		}, {
+			"short_name": "34",
+			"version": "v2"
+		}, {
+			"short_name": "35",
+			"version": "v1"
+		}, {
+			"short_name": "37",
+			"version": "v1"
+		}, {
+			"short_name": "46",
+			"version": "v2"
+		}, {
+			"short_name": "47",
+			"version": "v1"
+		}, {
+			"short_name": "48",
+			"version": "v1"
+		}, {
+			"short_name": "51",
+			"version": "v1"
+		}, {
+			"short_name": "55",
+			"version": "v1"
+		}, {
+			"short_name": "56",
+			"version": "v1"
+		}, {
+			"short_name": "600",
+			"version": "v1"
+		}]
+	},
+	"admin-panel": {
+		"openDashboardUrl": "https://admin.spot.im/spot/{SPOT_ID}/moderation/{CONTENT_TYPE}/folder/pending/tag/all?conversation={CONV_ID}",
+		"showNewSpotlightPage": false,
+		"text_analyze_enabled": true,
+		"viewAllFromUserUrl": "https://admin.spot.im/spot/{SPOT_ID}/moderation/{CONTENT_TYPE}/folder/pending/tag/all?user={USER_ID}"
+	},
+	"ads": {
+		"adBlockerBaitUrl": "https://publisher-assets.spot.im/ad/event-tracking/pixel-ads-google-adsense.html",
+		"enableBrowsi": false,
+		"enableSegmenter": true,
+		"feather_mode_behavior": "aggressive",
+		"feather_mode_delay_time": 5000,
+		"feather_mode_delay_type": "scroll",
+		"persistent_dbv": true,
+		"render_display_ads_in_iframe": true,
+		"safeframe_percentage": 50
+	},
+	"analytics-pusher": {
+		"enabled": false
+	},
+	"apm": {
+		"driver_name": "influxdb-telemetry",
+		"is_enabled": true,
+		"sample_rate": 1
+	},
+	"authentication": {
+		"real_user_mode": false,
+		"version": 1
+	},
+	"broadcast": {
+		"enabled": true
+	},
+	"communityView": {
+		"reverseTabsOrder": false
+	},
+	"conversation": {
+		"ab_test_enabled": true,
+		"adsEnabled": false,
+		"adsLazyLoadMargin": "600px",
+		"adsPositionRate": 10,
+		"ads_enabled": false,
+		"ads_enabled_external": {
+			"__AB": {
+				"38:A": true
+			}
+		},
+		"ads_start_position": 10,
+		"ads_style_version": 1,
+		"afterclickModerationEnabled": false,
+		"blackListedErrors": ["Request failed with status code 403", "Network Error"],
+		"communityGuidelinesEnabled": false,
+		"communityGuidelinesInMessageStatus": true,
+		"communityGuidelinesTitle": {
+			"key": "defaultTitle.1",
+			"modalValue": "here",
+			"value": "Your voice matters. Discussions are moderated for civility. Read our guidelines {{modalValue}}"
+		},
+		"cssModulesForShadowDOM": "conversation conversation-survey @spotim/ui-components @spotim/ads @spotim/user-image feed @spotim/entities @spotim/content-entities @spotim/user-info @spotim/rich-editor @spotim/toast-provider @spotim/svg-provider @spotim/notifications-bell",
+		"default_community_view": "Explore",
+		"disableImageUploadInLiveBlog": false,
+		"disable_badges": false,
+		"disable_conversation_user_settings": false,
+		"disable_footer_links": false,
+		"disable_gif_button": false,
+		"disable_header_facelist": false,
+		"disable_image_upload_button": false,
+		"disable_profile_user_settings": false,
+		"disable_rich_editor_buttons": false,
+		"disable_share": false,
+		"disable_sticky_messages": false,
+		"disable_user_profile": false,
+		"disable_vote_down": false,
+		"disable_vote_up": false,
+		"enableLoadingIndicator": true,
+		"enableMessageApproveForAdminAndModerator": true,
+		"enableMessageApproveForCommunityModerator": true,
+		"enablePendingMessageRejectForCommunityModerator": true,
+		"enablePublishedMessageRejectForCommunityModerator": false,
+		"enableUsersMuting": true,
+		"enable_community_view": false,
+		"enable_date_format": false,
+		"enable_explore_onboarding": false,
+		"enable_menus_shadow_dom": false,
+		"enable_read_only_context_menu": true,
+		"explore_mode_alignment": "start",
+		"firstFetchCount_compact": 5,
+		"forceSimpleEditor": false,
+		"header_format": "full",
+		"hide_conversation_button_enabled": false,
+		"hide_header": false,
+		"hide_user_area": false,
+		"isUseShadowDomOnMain": true,
+		"isUseShadowDomOnOverlays": true,
+		"is_read_only_mode": false,
+		"is_replies_sorting_v2_enabled": false,
+		"message_fetch_count": 25,
+		"message_length_desktop_max_chars": 1500,
+		"message_length_limit_first_message": false,
+		"message_length_max_lines": 8,
+		"message_length_mobile_max_chars": 1500,
+		"message_length_should_limit": false,
+		"notify_typing_interval_sec": 10,
+		"read_batch_size": 10,
+		"realtimeModerationEnabled": false,
+		"realtime_moderation_time_ms": 500,
+		"returnUserMutingError": false,
+		"rich_editor_max_chars": 1500,
+		"show_ads_with_empty_conversation": false,
+		"show_cancel_button": false,
+		"show_disqus_header": false,
+		"signup_cta_enabled": true,
+		"social_enable": false,
+		"status_fetch_default_fallback_status": "approved",
+		"status_fetch_interval_in_ms": 1000,
+		"status_fetch_retry_count": 2,
+		"status_fetch_timeout_in_ms": 3000,
+		"subscriber_badge": {
+			"name": "star",
+			"type": "fa-solid"
+		},
+		"survey_below_show_more_comments_enabled": false,
+		"translation_text_overrides": {
+			"en": {
+				"user.badges.journalist": "Journalist"
+			}
+		},
+		"use_traffic_redirect_api": false,
+		"users_cache_ttl_seconds": 300
+	},
+	"conversation-ads": {
+		"texts": {
+			"acknowledgeModal": {
+				"button": "Close",
+				"description": "We appreciate your time and consideration. Thanks for helping us make your community platform a better place! \\ud83e\\udd17",
+				"title": "Thanks for your input!"
+			},
+			"infoModal": {
+				"description": "We know,  having ads in the conversation is not our favorite, either. However, to keep providing you with a free commenting platform, we will be showing a small amount. Don't worry, you can always hide ads in this conversation.",
+				"primaryButton": "Got It",
+				"secondaryButton": "I'd prefer not to see ads",
+				"title": "Why am I seeing this ad?"
+			},
+			"menu": {
+				"showInfoModal": "Why am I seeing this ad?",
+				"showPollModal": "Hide from this conversation"
+			},
+			"pollModal": {
+				"pollAnswers": ["Makes it hard to read comments", "Too many ads", "It’s repetitive", "It’s offensive", "It’s not interesting", "I’ve already purchased"],
+				"primaryButton": "Done",
+				"secondaryButton": "Skip",
+				"title": "Removed! Tell us why:"
+			}
+		}
+	},
+	"conversation-page": {
+		"cssModulesForShadowDOM": "conversation-page @spotim/user-image @spotim/ui-components @spotim/user-info @spotim/entities @spotim/notifications-bell",
+		"enableShadowDOM": false,
+		"enabled": true
+	},
+	"conversation-survey": {
+		"click_ttl": 2,
+		"enabled": true,
+		"exit_ttl": 7,
+		"minimum_num_of_comments": 10,
+		"viewability_percentage": {
+			"none": 50,
+			"q2": 50
+		}
+	},
+	"css-variables-dark": {
+		"ads-text-color": "#f0f1f1",
+		"border-color": "#302f2f",
+		"border-color-muted": "#ffffff40",
+		"card-background-color": "#1a1b1c",
+		"color-scheme-l1": "rgba(var(--spotim-color-scheme-l6-rgb, 242,242,242), 0.2)",
+		"color-scheme-l2": "rgba(var(--spotim-color-scheme-l6-rgb, 242,242,242), 0.2)",
+		"color-scheme-l3": "rgba(var(--spotim-color-scheme-l6-rgb, 242,242,242), 0.2)",
+		"color-scheme-l4": "rgba(var(--spotim-color-scheme-l6-rgb, 242,242,242), 0.3)",
+		"color-scheme-l5": "rgba(var(--spotim-color-scheme-l6-rgb, 242,242,242), 0.65)",
+		"color-scheme-l6": "#f2f2f2",
+		"color-scheme-l6-rgb": "242,242,242",
+		"content-loader-primary-color": "#030303",
+		"content-loaders-secondary-color": "#333333",
+		"conversation-background-color": "transparent",
+		"extract-background-color": "#302f2f",
+		"input-background-color": "#373e44",
+		"input-separator-color": "#646566",
+		"list-item-background": "#353535",
+		"list-item-foreground": "#7b7f83",
+		"message-separator-color": "#7b7f83",
+		"message-text-color": "#ffffff",
+		"overlay-background-color": "#212121",
+		"overlay-border-color": "#302f2f",
+		"page-background-color": "#1a1b1c",
+		"pitc-header-color": "#ffffff",
+		"pitc-top-comment-color": "#d4d6d7",
+		"progress-bar-background-color": "#000000",
+		"reactions-reaction-text-color": "#d4d6d7",
+		"reactions-title-color": "#ffffff",
+		"star-color-empty": "#373e44",
+		"text-color-default": "#ffffff",
+		"text-color-muted": "#ffffff",
+		"text-color-product-header": "#ffffff",
+		"text-color-tooltip": "#707070",
+		"text-color-x-muted": "#d4d6d7",
+		"text-color-xx-muted": "#b6b9bb",
+		"tooltip-background-color": "#212121",
+		"tooltip-border-color": "#302f2f",
+		"user-image-font-color": "#ffffff"
+	},
+	"css-variables-default": {
+		"action-font-weight": "normal",
+		"ads-text-color": "#373e44",
+		"border-color": "#e3e3e3",
+		"border-color-muted": "#00000014",
+		"border-radius-buttons": "var(--spotim-border-radius-medium)",
+		"border-radius-inputs": "var(--spotim-border-radius-small)",
+		"border-radius-medium": "6px",
+		"border-radius-modals": "var(--spotim-border-radius-small)",
+		"border-radius-popovers": "var(--spotim-border-radius-small)",
+		"border-radius-small": "4px",
+		"box-shadow-medium": "0 2px 15px 0 rgba(0, 0, 0, 0.1)",
+		"brand-color": "darkgray",
+		"brand-text-color": "white",
+		"card-background-color": "white",
+		"color-badge": "var(--spotim-brand-color)",
+		"color-scheme-g1": "#ffffff",
+		"color-scheme-g2": "#000000",
+		"color-scheme-g3": "#35b940",
+		"color-scheme-g4": "#db3737",
+		"color-scheme-g5": "#3968ff",
+		"color-scheme-l1": "rgba(var(--spotim-color-scheme-l6-rgb, 7,7,7), 0.05)",
+		"color-scheme-l2": "rgba(var(--spotim-color-scheme-l6-rgb, 7,7,7), 0.1)",
+		"color-scheme-l3": "rgba(var(--spotim-color-scheme-l6-rgb, 7,7,7), 0.2)",
+		"color-scheme-l4": "rgba(var(--spotim-color-scheme-l6-rgb, 7,7,7), 0.3)",
+		"color-scheme-l5": "rgba(var(--spotim-color-scheme-l6-rgb, 7,7,7), 0.65)",
+		"color-scheme-l6": "#070707",
+		"color-scheme-l6-rgb": "7,7,7",
+		"content-loader-primary-color": "#f3f3f3",
+		"content-loaders-secondary-color": "#dddddd",
+		"conversation-background-color": "transparent",
+		"conversation-max-width": "700px",
+		"danger-color": "#db3737",
+		"extract-background-color": "#ffffff",
+		"font-family": "Open Sans, Open Sans Hebrew, Arial",
+		"font-family-action": "var(--spotim-font-family)",
+		"font-family-badge": "var(--spotim-font-family)",
+		"font-family-buttons": "var(--spotim-font-family)",
+		"font-family-comments-count": "var(--spotim-font-family-t4)",
+		"font-family-community-question": "Open Sans, Open Sans Hebrew, Arial",
+		"font-family-date-format": "var(--spotim-font-family)",
+		"font-family-product-header": "Open Sans, Open Sans Hebrew, Arial",
+		"font-family-product-subheader": "Open Sans, Open Sans Hebrew, Arial",
+		"font-family-t1": "var(--spotim-font-family)",
+		"font-family-t2": "var(--spotim-font-family)",
+		"font-family-t3": "var(--spotim-font-family)",
+		"font-family-t4": "var(--spotim-font-family)",
+		"font-family-t5": "var(--spotim-font-family)",
+		"font-family-t6": "var(--spotim-font-family)",
+		"font-family-username": "var(--spotim-font-family)",
+		"font-size-action": "var(--spotim-font-size-medium)",
+		"font-size-badge": "9px",
+		"font-size-buttons": "var(--spotim-font-size-medium)",
+		"font-size-comments-count": "var(--spotim-font-size-t4)",
+		"font-size-community-question": "24px",
+		"font-size-date-format": "var(--spotim-font-size-small)",
+		"font-size-large": "16px",
+		"font-size-medium": "14px",
+		"font-size-message-actions": "14px",
+		"font-size-product-header": "24px",
+		"font-size-product-subheader": "16px",
+		"font-size-small": "13px",
+		"font-size-t1": "24px",
+		"font-size-t2": "20px",
+		"font-size-t3": "18px",
+		"font-size-t4": "15px",
+		"font-size-t5": "13px",
+		"font-size-t6": "12px",
+		"font-size-user-image": "15.6px",
+		"font-size-username": "var(--spotim-font-size-medium)",
+		"font-size-x-large": "24px",
+		"font-size-x-small": "11px",
+		"font-size-xx-large": "27px",
+		"font-size-xx-small": "9px",
+		"font-style-community-question": "italic",
+		"font-weight-bold": "bold",
+		"font-weight-comments-count": "var(--spotim-font-weight-t4)",
+		"font-weight-normal": "400",
+		"font-weight-product-header": "bold",
+		"font-weight-product-subheader": "400",
+		"font-weight-semibold": "600",
+		"font-weight-username": "var(--spotim-font-weight-bold)",
+		"input-background-color": "#ffffff",
+		"input-separator-color": "#d4d6d7",
+		"letter-spacing-action": "normal",
+		"letter-spacing-badge": "normal",
+		"letter-spacing-body": "normal",
+		"letter-spacing-buttons": "normal",
+		"letter-spacing-date-format": "normal",
+		"letter-spacing-modal-body": "normal",
+		"letter-spacing-product-header": "normal",
+		"letter-spacing-product-subheader": "normal",
+		"letter-spacing-t1": "normal",
+		"letter-spacing-t2": "normal",
+		"letter-spacing-t3": "normal",
+		"letter-spacing-t4": "normal",
+		"letter-spacing-t5": "normal",
+		"letter-spacing-t6": "normal",
+		"letter-spacing-username": "normal",
+		"line-height-action": "24px",
+		"line-height-date-format": "21px",
+		"line-height-medium": "1.5",
+		"line-height-product-header": "1.5",
+		"line-height-product-subheader": "30px",
+		"line-height-t1": "1.5em",
+		"line-height-t2": "1.5em",
+		"line-height-t3": "1.5em",
+		"line-height-t4": "1.5em",
+		"line-height-t5": "1.5em",
+		"line-height-t6": "1.5em",
+		"list-item-background": "#f7f7f7",
+		"list-item-foreground": "#e5e6e6",
+		"max-reading-width": "700px",
+		"menu-z-index": "2147483647",
+		"message-font-size-large": "21px",
+		"message-font-size-regular": "14px",
+		"message-font-size-small": "13px",
+		"message-font-size-x-large": "24px",
+		"message-font-size-x-small": "12px",
+		"message-letter-spacing": "-0.01111em",
+		"message-line-height": "1.67",
+		"message-margins": "5px",
+		"message-separator-color": "#e3e3e3",
+		"message-stack-margin": "15px",
+		"message-text-color": "#222222",
+		"modal-backdrop-background-color": "rgba(255, 255, 255, 0.7)",
+		"modal-backdrop-color": "rgba(0, 0, 0, 0.4)",
+		"modal-border-padding": "10px",
+		"modal-border-radius": "10px 10px 0px 0px",
+		"modal-full-width": "calc(100vw - 80px)",
+		"modal-margin-top": "initial",
+		"modal-max-width": "1400px",
+		"modals-backdrop-color": "rgba(0, 0, 0, 0.4)",
+		"overlay-background-color": "#ffffff",
+		"overlay-border-color": "transparent",
+		"overlay-z-index": "2147483646",
+		"page-background-color": "white",
+		"pitc-article-title-font-family": "Open Sans, Open Sans Hebrew, Arial",
+		"pitc-article-title-font-weight": "600",
+		"pitc-header-color": "black",
+		"pitc-header-font-family": "Open Sans, sans-serif",
+		"pitc-header-font-size": "24px",
+		"pitc-header-font-weight": "bold",
+		"pitc-header-line-height": "normal",
+		"pitc-top-comment-color": "black",
+		"pitc-top-comment-font-family": "Open Sans, sans-serif",
+		"pitc-top-comment-font-weight": "600",
+		"progress-bar-background-color": "#e5e6e6",
+		"reactions-reaction-font-family": "Open Sans, Open Sans Hebrew, Arial",
+		"reactions-reaction-font-size": "11px",
+		"reactions-reaction-font-weight": "400",
+		"reactions-reaction-line-height": "38px",
+		"reactions-reaction-text-color": "#7b7f83",
+		"reactions-title-color": "black",
+		"reactions-title-font-family": "Open Sans, Open Sans Hebrew, Arial",
+		"reactions-title-font-size": "18px",
+		"reactions-title-font-weight": "700",
+		"reactions-title-line-height": "30px",
+		"rich-editor-font-size": "16px",
+		"safeframe-modal-backdrop-color": "rgba(255, 255, 255, 0.7)",
+		"say-control-action-color": "#a8abae",
+		"say-control-border-color": "#e3e3e3",
+		"say-control-box-shadow": "0 0 0 1px var(--spotim-color-scheme-l3)",
+		"shadow-scheme-s1": "0 2px 20px 0 rgba(0,0,0,0.07)",
+		"spotlight-button-font-size\t": "12px",
+		"spotlight-button-font-weight": "600",
+		"spotlight-card-font-size": "16px",
+		"spotlight-card-font-weight": "300",
+		"spotlight-font-family": "Open Sans, sans-serif",
+		"spotlight-title-font-size": "24px",
+		"spotlight-title-font-weight": "bold",
+		"star-color-empty": "#e3e3e3",
+		"star-color-full": "#fabb09",
+		"strong-border-color": "#a8abae",
+		"success-color": "#35b840",
+		"text-color-action": "var(--spotim-color-scheme-l5)",
+		"text-color-badge": "var(--spotim-brand-text-color)",
+		"text-color-comments-count": "var(--spotim-color-scheme-l5)",
+		"text-color-date-format": "var(--spotim-color-scheme-l5)",
+		"text-color-default": "black",
+		"text-color-muted": "#373e44",
+		"text-color-product-header": "#373e44",
+		"text-color-product-subheader": "#7b7f83",
+		"text-color-tooltip": "#ffffff",
+		"text-color-x-muted": "#7b7f83",
+		"text-color-xx-muted": "#a8abae",
+		"text-transform-action": "none",
+		"text-transform-buttons": "inherit",
+		"text-transform-comments-count": "var(--spotim-text-transform-t4)",
+		"text-transform-date-format": "none",
+		"text-transform-product-header": "none",
+		"text-transform-product-subheader": "none",
+		"text-transform-username": "inherit",
+		"user-image-border": "none",
+		"user-image-font-color": "#373e44",
+		"user-image-font-size": "15.6px",
+		"user-image-font-weight": "400",
+		"user-image-line-height": "1.67",
+		"user-name-font-family": "var(--spotim-font-family)",
+		"warning-color": "#fabb09"
+	},
+	"css-variables-mobile": {
+		"font-size-large": "18px",
+		"font-size-message-actions": "15px",
+		"font-size-product-header": "21px",
+		"font-size-x-large": "24px",
+		"font-size-xx-large": "27px",
+		"message-font-size-large": "21px",
+		"message-font-size-medium": "undefined",
+		"message-font-size-small": "15px",
+		"message-font-size-x-large": "24px",
+		"message-font-size-x-small": "12px",
+		"pitc-article-title-font-family": "Open Sans, Open Sans Hebrew, Arial",
+		"pitc-article-title-font-weight": "600",
+		"pitc-header-font-size": "22px"
+	},
+	"deployer": {
+		"deployer_test": 5,
+		"test": 1
+	},
+	"enricher": {
+		"enabled": false
+	},
+	"events-collector": {
+		"batching": true
+	},
+	"extract": {
+		"freeze_url_time_in_minutes": 1440
+	},
+	"feed": {
+		"adRows": "top",
+		"adsEnabled": true,
+		"adsOnlyInFirstBatch": false,
+		"count": 5,
+		"enableShadowDOM": true,
+		"enableTagsBar": false,
+		"enabled": false,
+		"feature_toggle": false,
+		"firstFetchMaxCount": 5,
+		"hashtagAlgorithm": false,
+		"hashtags_feature": false,
+		"infiniteScrollEnabled": false,
+		"loadMoreCount": 10,
+		"postModalInShadow": true,
+		"showAdEntity": false,
+		"showAdEntity_external": {
+			"__AB": {
+				"66:B": true
+			}
+		},
+		"showArticleSnippet": false,
+		"showArticleSnippet_external": {
+			"__AB": {
+				"65:B": true
+			}
+		},
+		"showMessageInMobile": true,
+		"spot_tags_priority": ["category", "category", "category", "category", "category"],
+		"tagsLoadSwitch": 10,
+		"tags_rules": {
+			"replace_words": {
+				"a.d.d.": "mental disorder",
+				"alcoholism": "addiction",
+				"arson": "crime",
+				"assault": "crime",
+				"bipolar disorder": "mental disorder",
+				"bribery": "crime",
+				"burglary": "crime",
+				"death penalty": "legal issues",
+				"depression": "mental disorder",
+				"drug trafficking": "crime",
+				"embezzlement": "crime",
+				"fraud": "crime",
+				"hate crime": "crime",
+				"human trafficking": "crime",
+				"human-trafficking": "crime",
+				"incest-abuse-support": "",
+				"jared": "",
+				"jared jr.": "",
+				"just jared": "",
+				"karen": "",
+				"kidnapping": "crime",
+				"larceny": "crime",
+				"netflix": "",
+				"organized crime": "crime",
+				"paedophilia": "crime",
+				"panic and anxiety": "mental disorder",
+				"pedophile island": "",
+				"pedophilia": "",
+				"piracy": "crime",
+				"pornography": "society",
+				"prostitution": "crime",
+				"racism": "society",
+				"rape": "crime",
+				"robbery": "crime",
+				"sexual-offence": "",
+				"smoking addiction": "addiction",
+				"smuggling": "crime",
+				"substance abuse": "addiction",
+				"torture": "crime",
+				"unrest and war": "society",
+				"unrest-war": "society",
+				"usury": "crime"
+			}
+		},
+		"topArticleCommentsCount": 3
+	},
+	"griffin": {
+		"enabled": false,
+		"numCommentsThreshold": 0,
+		"percentage": 0
+	},
+	"init": {
+		"ads": null,
+		"avatars.font": null,
+		"avatars.font_background_color": null,
+		"avatars.initials": false,
+		"avatars.numbered": false,
+		"avatars.scheme": "colorful",
+		"brand_color": "#775173",
+		"category_id": 1,
+		"circulation.enabled": false,
+		"circulation.rows_count": 1,
+		"comment_replies_max_depth": 3,
+		"connect_networks": ["facebook", "google", "twitter", "email"],
+		"connect_networks.0": "facebook",
+		"connect_networks.1": "google",
+		"connect_networks.2": "twitter",
+		"connect_networks.3": "email",
+		"custom_login": false,
+		"display_name_in_say_control_for_guests": false,
+		"emoji_keyboard_enabled": true,
+		"emojis_enabled": true,
+		"enable_dislikes": false,
+		"enable_realtime_comments_sticky": true,
+		"enable_spotim_utm": true,
+		"enable_user_points": true,
+		"external_public_profile": false,
+		"giphy_level": "PG_13",
+		"has_community": false,
+		"id": "sp_eCIlROSD",
+		"injection.frame_script": null,
+		"injection.frame_style": null,
+		"injection.host_options": null,
+		"inpage_skin": "light",
+		"lazy_load_margin": "800px",
+		"loading_indicator_enabled": false,
+		"ltr": true,
+		"main_language": "en",
+		"mini_newsfeed_enabled": true,
+		"monetized": true,
+		"multiple_moderators_mode": false,
+		"name": "test-mobile-sso",
+		"network.id": "net_test-new",
+		"newsfeed_position": "right",
+		"newsfeed_skin": "light",
+		"open_links_in_new_tab": false,
+		"opening_mode": "on_click",
+		"platform": "universal",
+		"policy.allow_guests_to_like": true,
+		"policy.force_register": false,
+		"policy.roger_mode": false,
+		"recommendation_enabled": true,
+		"rich_say_control_enabled": true,
+		"sort_by": "best",
+		"sso_editable_profile": false,
+		"sso_enabled": true,
+		"sso_started_by_spotim": false,
+		"sub_category_id": 1,
+		"ticker_icon": null,
+		"ticker_icon_size": 16,
+		"ticker_skin": "white",
+		"uppercase_msgs_enabled": false,
+		"user_moderation_enabled": false,
+		"website_url": "www.DefaultSpotImWebSite.com",
+		"whitelisted_urls.0": "demo-pages.itayd.now.sh"
+	},
+	"launcher": {
+		"authenticate_immediately": false,
+		"defer_load_until_scroll": true,
+		"fonts_to_inject": [],
+		"force_embedded_ad_unit": false,
+		"force_standalone_ad_unit": true,
+		"immediateConfig": [{
+			"excludeSources": ["pitc"],
+			"module": "conversation-page"
+		}],
+		"include_config": true,
+		"prefetch_assets": ["ads"],
+		"product_order_in_main_area": [{
+			"module": "reactions"
+		}, {
+			"module": "pitc"
+		}, {
+			"module": "spotlight"
+		}, {
+			"module": "tag-tester"
+		}, {
+			"module": "multiplex"
+		}, {
+			"module": "conversation"
+		}, {
+			"module": "pitc-double-decker"
+		}],
+		"shouldAddPitcLoader": false,
+		"should_auth_with_access_token": true,
+		"spotlight_blacklist": {},
+		"spotlight_blacklisted_post_ids": []
+	},
+	"messages-count": {
+		"enabled": true
+	},
+	"metrics_reporting": {
+		"exposePerformanceEvents": []
+	},
+	"mirror": {
+		"enabled": false,
+		"percentage": 0
+	},
+	"mobile-sdk": {
+		"ads_web_view_config": {
+			"B": {
+				"displayMode": "onLoad",
+				"html": "\u003c!DOCTYPE html\u003e\r\n\u003chtml\u003e\r\n   \u003chead\u003e\r\n      \u003cstyle\u003e\r\n         div.hidden {\r\n         display: none;\r\n         }\r\n      \u003c/style\u003e\r\n   \u003c/head\u003e\r\n   \u003cbody\u003e\r\n      \u003cscript async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\"\u003e\u003c/script\u003e\r\n      \u003cscript\u003e\r\n         window.googletag = window.googletag || {cmd: []};\r\n         googletag.cmd.push(function() {\r\n         if(!document.__defineGetter__) {\r\n             Object.defineProperty(document, 'cookie', {get: function(){return '';},\r\n                                                         set: function(){return true;}\r\n                                                        });\r\n         } else {\r\n             document.__defineGetter__('cookie', function(){return '';});\r\n             document.__defineSetter__('cookie', function(){return true;});\r\n         };\r\n         window.slot1 = googletag.defineSlot('/39694909/Apps/WV-Barstool', [[300, 250]], 'div-gpt-ad-1594310485565-0').addService(googletag.pubads());\r\n         window.slot2 = googletag.defineSlot('/39694909/Apps/WV-Barstool', [[300, 250]], 'div-gpt-ad-1594310485565-1').addService(googletag.pubads());\r\n         googletag.pubads().enableSingleRequest();\r\n         googletag.enableServices();\r\n         });\r\n      \u003c/script\u003e\r\n      \u003cdiv id='div-gpt-ad-1594310485565-0'\u003e\u003c/div\u003e\r\n      \u003cdiv id='div-gpt-ad-1594310485565-1'\u003e\u003c/div\u003e\r\n      \u003cscript\u003e\r\n         googletag.cmd.push(function() {\r\n                googletag.pubads().refresh([window.slot1]);\r\n              });\r\n      \u003c/script\u003e\r\n      \u003cdiv id=\"aniplayer\" class=\"hidden\"\u003e\u003c/div\u003e\r\n      \u003cscript type=\"text/javascript\" id=\"aniviewJS\"\u003e\r\n         (function()\r\n         {\r\n         \tvar myPlayer;\r\n         \tvar adConfig = {\r\n                        \r\n         \t\tpublisherId \t: '5e0e296628a061270b21ccab',\r\n         \t\tchannelId\t\t: '5f01876cfbd9aa387d745d78', \r\n         \t\tref1\t\t\t: 'AV_APPNAME=\\'Barstool Sports\\'\u0026AV_APPPKGNAME=com.DesignMenace.BarstoolSports\u0026AV_IDFA=${AID_IDFA}',\r\n         \t\twidth           : 300,\r\n         \t\theight          : 250,\r\n         \t\tautoPlay        : true,\r\n         \t\tloop            : false,\r\n         \t\tmode\t\t\t: 0,\r\n         \t\tvastRetry \t    : 3, \r\n         \t\terrorLimit\t\t: 10, \t\t\t\r\n         \t\tsoundButton     : true,\r\n         \t\tpauseButton     : true,\r\n         \t\tcloseButton     : false,\r\n         \t\tpreloader  \t\t:{\r\n         \t\t\t\t\t\t\ttype: '', \r\n         \t\t\t\t\t\t\tlink : '', \r\n         \t\t\t\t\t\t\tclickthrough :'', \r\n         \t\t\t\t\t\t\tposter:''\r\n         \t\t\t\t\t\t},\r\n         \t\tposition\t\t: 'aniplayer'\r\n         \t};\r\n         \r\n         \t(new Image).src = \"https://track1.aniview.com/track?pid=\"+adConfig.publisherId+\"\u0026cid=\"+adConfig.channelId+\"\u0026e=playerLoaded\"+\"\u0026cb=\"+Date.now();\r\n         \tvar PlayerUrl = 'https://player.aniview.com/script/6.1/player.js'+'?v=1\u0026type=s\u0026pid='+adConfig.publisherId;\r\n         \tfunction downloadScript(src,adData) {\r\n         \t   var scp = document.createElement('script');\r\n         \t   scp.src = src;\r\n         \t   scp.onload = function() {\r\n         \t\t\t\tmyPlayer= new avPlayer(adData);\r\n         \t\t\t\tmyPlayer.onPlay    = function(type) {\r\n                         \tgoogletag.cmd.push(function() {\r\n                 \t\t\t\tgoogletag.destroySlots([window.slot1]);\r\n              \t\t\t\t });\r\n                       \t\tdocument.getElementById(\"aniplayer\").className = \"\";\r\n         \t\t\t\t}; \r\n         \t\t\tmyPlayer.onClick    = function(type) {\r\n         \t\t\t};\r\n         \t\t\tmyPlayer.onError    = function(type) {\r\n         \t\t\t};\r\n         \t\t\tmyPlayer.play(adConfig);\r\n                     myPlayer.onPlay100 = function(type) {\r\n                         googletag.cmd.push(function() {\r\n                \t\t\t\tgoogletag.pubads().refresh([window.slot2]);\r\n              \t\t\t});\r\n                         document.getElementById(\"aniplayer\").className = \"hidden\";\r\n         \t\t\t};\r\n         \t   };\r\n         \t\tdocument.getElementsByTagName('head')[0].appendChild(scp);\r\n         \t};\r\n         \tdownloadScript(PlayerUrl,adConfig);\r\n         })();\r\n      \u003c/script\u003e\r\n   \u003c/body\u003e\r\n\u003c/html\u003e"
+			},
+			"C": {
+				"displayMode": "onLoad",
+				"html": "\u003cscript async src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'\u003e\u003c/script\u003e\u003cscript\u003ewindow.googletag = window.googletag || {cmd: []};googletag.cmd.push(function() {if(!document.__defineGetter__) {Object.defineProperty(document, 'cookie', {get: function(){return ''},set: function(){return true},});} else {document.__defineGetter__(\"cookie\", function() { return '';} );document.__defineSetter__(\"cookie\", function() {} );}googletag.defineSlot('/39694909/Apps/WV-Barstool', [[300, 250]], 'div-gpt-ad-1585556537808-0').addService(googletag.pubads());googletag.pubads().enableSingleRequest();googletag.enableServices();});\u003c/script\u003e\u003cdiv id='div-gpt-ad-1585556537808-0'\u003e\u003cscript\u003egoogletag.cmd.push(function() { googletag.display('div-gpt-ad-1585556537808-0'); });\u003c/script\u003e\u003c/div\u003e"
+			},
+			"D": {
+				"displayMode": "onView",
+				"html": "\u003cscript async src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'\u003e\u003c/script\u003e\u003cscript\u003ewindow.googletag = window.googletag || {cmd: []};googletag.cmd.push(function() {if(!document.__defineGetter__) {Object.defineProperty(document, 'cookie', {get: function(){return ''},set: function(){return true},});} else {document.__defineGetter__(\"cookie\", function() { return '';} );document.__defineSetter__(\"cookie\", function() {} );}googletag.defineSlot('/39694909/Apps/WV-Barstool', [[300, 250]], 'div-gpt-ad-1585556537808-0').addService(googletag.pubads());googletag.pubads().enableSingleRequest();googletag.enableServices();});\u003c/script\u003e\u003cdiv id='div-gpt-ad-1585556537808-0'\u003e\u003cscript\u003egoogletag.cmd.push(function() { googletag.display('div-gpt-ad-1585556537808-0'); });\u003c/script\u003e\u003c/div\u003e"
+			}
+		},
+		"ads_web_view_config_v2": {
+			"A": {
+				"displayMode": "onLoad",
+				"html": "\u003c!DOCTYPE html\u003e\r\n\u003chtml\u003e\r\n   \u003chead\u003e\r\n      \u003cstyle\u003e\r\n         div.hidden {\r\n         display: none;\r\n         }\r\n      \u003c/style\u003e\r\n   \u003c/head\u003e\r\n   \u003cbody\u003e\r\n      \u003cdiv id=\"aniplayer\"\u003e\u003c/div\u003e\r\n      \u003cscript type=\"text/javascript\" id=\"aniviewJS\"\u003e\r\n         (function()\r\n         {\r\n         \tvar myPlayer;\r\n         \tvar adConfig = {\r\n                        \r\n         \t\tpublisherId \t: '5e0e296628a061270b21ccab',\r\n         \t\tchannelId\t\t: '5e650ba028a061178c39ddd8', \r\n         \t\tref1\t\t\t: 'AV_APPNAME=\\'LiveMixtapes\\'\u0026AV_APPPKGNAME=com.livemixtapes\u0026AV_IDFA=${AID_IDFA}',\r\n         \t\twidth           : 300,\r\n         \t\theight          : 250,\r\n         \t\tautoPlay        : true,\r\n         \t\tloop            : false,\r\n         \t\tmode\t\t\t: 0,\r\n         \t\tvastRetry \t    : 3, \r\n         \t\terrorLimit\t\t: 10, \t\t\t\r\n         \t\tsoundButton     : true,\r\n         \t\tpauseButton     : true,\r\n         \t\tcloseButton     : false,\r\n         \t\tpreloader  \t\t:{\r\n         \t\t\t\t\t\t\ttype: '', \r\n         \t\t\t\t\t\t\tlink : '', \r\n         \t\t\t\t\t\t\tclickthrough :'', \r\n         \t\t\t\t\t\t\tposter:''\r\n         \t\t\t\t\t\t},\r\n         \t\tposition\t\t: 'aniplayer'\r\n         \t};\r\n         \r\n         \t(new Image).src = \"https://track1.aniview.com/track?pid=\"+adConfig.publisherId+\"\u0026cid=\"+adConfig.channelId+\"\u0026e=playerLoaded\"+\"\u0026cb=\"+Date.now();\r\n         \tvar PlayerUrl = 'https://player.aniview.com/script/6.1/player.js'+'?v=1\u0026type=s\u0026pid='+adConfig.publisherId;\r\n         \tfunction downloadScript(src,adData) {\r\n         \t   var scp = document.createElement('script');\r\n         \t   scp.src = src;\r\n         \t   scp.onload = function() {\r\n         \t\t\tmyPlayer= new avPlayer(adData);\r\n         \t\t\tmyPlayer.onPlay    = function(type) {\r\n\t\t\t\t\t\tSpotIm_Android_JS.showWebView();\r\n         \t\t\t}; \r\n         \t\t\tmyPlayer.onClick    = function(type) {\r\n         \t\t\t};\r\n         \t\t\tmyPlayer.onError    = function(type) {\r\n         \t\t\t};\r\n         \t\t\tmyPlayer.play(adConfig);\r\n                    myPlayer.onPlay100 = function(type) {\r\n\t\t\t\t\t\tSpotIm_Android_JS.hideWebView();\r\n         \t\t\t};\r\n         \t   };\r\n         \t\tdocument.getElementsByTagName('head')[0].appendChild(scp);\r\n         \t};\r\n         \tdownloadScript(PlayerUrl,adConfig);\r\n         })();\r\n      \u003c/script\u003e\r\n   \u003c/body\u003e\r\n\u003c/html\u003e"
+			}
+		},
+		"blitz_enabled": true,
+		"config_validation_time_seconds": 360,
+		"disable_ads_for_subscribers": true,
+		"disable_interstitial_on_login": true,
+		"enabled": true,
+		"google_ads_provider_required": true,
+		"interstitial_enabled": true,
+		"locale": "en_US",
+		"login_ui_enabled": false,
+		"openweb_brand_updated": true,
+		"openweb_privacy_url": "https://www.openweb.com/legal-and-privacy/privacy?utm_source=Product\u0026utm_medium=Footer",
+		"openweb_terms_url": "https://www.openweb.com/legal-and-privacy/terms-of-use?utm_source=Product\u0026utm_medium=Footer",
+		"openweb_website_url": "https://www.openweb.com/?utm_source=Product\u0026utm_medium=Footer",
+		"play_store_url": "https://play.google.com/store/apps/details?id=com.DesignMenace.BarstoolSports\u0026hl=en",
+		"pre_conversation_banner_enabled": true,
+		"profile_enabled": true,
+		"pubmatic_config": {
+			"ad_unit_id": "OtherASBannerAdUnit",
+			"profile_id": 1165,
+			"pub_id": "156276"
+		},
+		"realtime_enabled": true,
+		"typing_enabled": true,
+		"web_ads_enabled": true
+	},
+	"moderation": {
+		"approve_message_v2_enabled": true,
+		"block_allow_user_v2_enabled": true,
+		"content_aware_events": false,
+		"create_v2_enabled": true,
+		"delete_v2_enabled": true,
+		"edit_v2_enabled": true,
+		"limit_live_blog_min": 6000,
+		"limit_messages_min": 7000,
+		"maximum_ugc_content_length": 10000,
+		"maximum_ugc_title_length": 80,
+		"message_status_redis_key_pattern": "moderation:message-status:%s",
+		"minimum_ugc_content_length": 140,
+		"minimum_ugc_reputation": 1,
+		"minimum_ugc_title_length": 8,
+		"reject_message_v2_enabled": true,
+		"report_v2_enabled": true,
+		"roles_with_ugc_reputation_bypass": ["journalist", "moderator", "owner", "super-admin", "system-admin"],
+		"suspensions_enabled": false,
+		"v2_cross_project_flag_enabled": true
+	},
+	"multiplex": {
+		"enabled": false
+	},
+	"newsfeed": {
+		"enabled": false
+	},
+	"notifications": {
+		"comment-on-post": true,
+		"message-status-changed-on-post-approved\t": true,
+		"message-status-changed-on-post-blocked": true,
+		"post-approved": true,
+		"post-rejected": true,
+		"replied-your-message": true,
+		"use_notifier_v2": false
+	},
+	"pitc": {
+		"article_ignore_search_params": ["spot_im_reply_id", "spot_reset_password", "spot_ticket", "spot_im_verify", "spot_im_comment_id", "spot_im_highlight_immediate", "spot_im_scroll_to_comments", "spot_im_expand_reply", "spot_im_load_app_immediately", "spot_im_open_profile_followers", "spot_im_redirect_source"],
+		"compact": false,
+		"disableUgc": false,
+		"disable_tracking_params": false,
+		"enabled": false,
+		"imageQuality": 50,
+		"isDoubleDecker": false,
+		"minCardsCount": 3,
+		"min_comments_count": 0,
+		"remove_scroll_arrows": false,
+		"remove_title": false
+	},
+	"pitc-ab-tester": {
+		"enabled": false
+	},
+	"reactions": {
+		"adOnLoad": true,
+		"enabled": false,
+		"properties": {
+			"is_active": false,
+			"max_reactions": 4,
+			"max_score": 10,
+			"min_reactions": 2,
+			"mode": "off",
+			"reactions": [{
+				"id": "happy",
+				"is_active": true,
+				"name": null,
+				"pos": 0
+			}, {
+				"id": "surprised",
+				"is_active": true,
+				"name": null,
+				"pos": 1
+			}, {
+				"id": "sad",
+				"is_active": true,
+				"name": null,
+				"pos": 2
+			}, {
+				"id": "angry",
+				"is_active": true,
+				"name": null,
+				"pos": 3
+			}],
+			"title": null
+		},
+		"reactions_assets_path": {
+			"base_url": "https://images.spot.im/image/fetch/{CLOUDINARY_PARAMS}/https://static-cdn.spot.im/reactions/"
+		},
+		"shadowDomEnabled": false,
+		"shouldRenderAdBelow": false,
+		"showAdBeforeContent": false,
+		"temporary--force-show_below_conversation_stack": false
+	},
+	"realtime": {
+		"no_online_polling_interval": 40,
+		"online_user_ttl_minutes": 3,
+		"online_users_batch_size": 20,
+		"polling_interval": 20,
+		"read_batch_size": 25,
+		"start_timeout_milliseconds": 500,
+		"typing_user_ttl_seconds": 10,
+		"typing_users_batch_size": 10,
+		"users_typing_interval": 15
+	},
+	"registration": {
+		"hide_email_connect": false,
+		"set_token_complete_sso": false
+	},
+	"reputation": {
+		"feature": 100,
+		"follow": 50,
+		"mute": -50,
+		"ranked_down": -1,
+		"received_ranked_down": -2,
+		"received_ranked_up": 10
+	},
+	"rich_editor": {
+		"use_mention_v2": false
+	},
+	"safe_frame": {
+		"modal_margin_compensation_desktop": 150,
+		"modal_margin_compensation_mobile": 0,
+		"whitelist_local_storage_keys": ["SPOTIM_DEVICE_UUID_V2", "SPOTIM_DEVICE_V2", "SPOTIM_USER_SORTING", "SPOT_AB", "SPOTIM_REPORTED_COMMENTS", "SPOTIM_CONVERSATION_SURVEY"]
+	},
+	"share": {
+		"ref_suffix_addition": "a=b",
+		"should_add_suffix": false
+	},
+	"shared": {
+		"authenticate_back_off_time_seconds": 2,
+		"badge_variant": "outlined",
+		"cloudinary_api_key": 468332229667797,
+		"date_format": "en-US",
+		"default_community_view": "Conversation",
+		"defensiveJsMode": false,
+		"disableCustomBodyScroll": true,
+		"disable_captcha": false,
+		"disable_user_avatar": false,
+		"disable_user_image_upload": false,
+		"disable_user_profile": false,
+		"disable_user_profile_privacy": false,
+		"disable_user_profile_settings": false,
+		"enableScrollUnderModal": false,
+		"enable_email_encryption": false,
+		"enable_menus_shadow_dom": false,
+		"enable_negative_user_reputation": false,
+		"enable_publisher_profile_settings": false,
+		"enable_remove_user_email_local_storage": false,
+		"enable_sso_login": false,
+		"enable_sso_logout": false,
+		"enable_user_reputation": false,
+		"facebook_app_id": 513908128626683,
+		"facebook_client_token": "65c0919b7399a68861abeab2c3300c2d",
+		"homepage_url": "https://www.openweb.com/?utm_source=Product\u0026utm_medium=Footer",
+		"is_new_branding": true,
+		"privacy_url": "https://www.openweb.com/legal-and-privacy/privacy/?utm_source=Product\u0026utm_medium=Footer",
+		"publisher_profile_settings": false,
+		"realtime_moderation_enbled": true,
+		"share_api_version": 2,
+		"terms_url": "https://www.openweb.com/legal-and-privacy/terms-of-use/?utm_source=Product\u0026utm_medium=Footer",
+		"user_image_background_color": false,
+		"user_image_background_override": {
+			"color": "grey",
+			"shouldOverride": false
+		},
+		"user_image_initial_max_characters": 2,
+		"user_image_initial_size_ratio": 0.4,
+		"user_image_is_initials": true,
+		"user_image_staff_background_color": false,
+		"user_image_staff_border": false,
+		"user_image_staff_text_color": false,
+		"votes_type": "like"
+	},
+	"sherlock": {
+		"enabled": false
+	},
+	"spotlight": {
+		"disclaimer": {},
+		"enableDisclaimer": false,
+		"enabled": false,
+		"isSidebar": false,
+		"load_once": true,
+		"minCommentsPerMonth": 1000,
+		"textOverrides": {},
+		"type": "form"
+	},
+	"sso": {
+		"login_json": "json{\"type\": \"regular\", \"secret_var\": \"\", \"start_endpoint\": \"/start\"}",
+		"user_metadata_enabled": false
+	},
+	"stars-rating": {
+		"enabled": false
+	},
+	"tag-tester": {
+		"enabled": true
+	},
+	"tag-tester-spotlight": {
+		"enabled": true
+	},
+	"test": {
+		"enabled": false
+	},
+	"time-spent": {
+		"enabled": true,
+		"intersection_values": 20,
+		"interval_milliseconds": 1000,
+		"timeout_milliseconds": 2000
+	},
+	"user": {
+		"temp_guests": false
+	},
+	"user-profile": {
+		"allowFollow": false,
+		"enable_reputation_translation": false,
+		"enabled_user_management_v2_requests": false,
+		"messageStatusEnabled": true
+	}
+}

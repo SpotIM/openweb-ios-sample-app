@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMobileAds
+import SpotImCore
 
 final class GoogleAdsProvider: NSObject, AdsProvider {
     let bannerView: BaseView = .init()
@@ -16,11 +17,16 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
     
     private var banner: DFPBannerView?
     private var interstitial: DFPInterstitial?
-    private let spotId: String
+    private var spotId: String = ""
     
-    init(spotId: String) {
-        self.spotId = spotId
+    override init() {
         super.init()
+    }
+    
+    func version() -> String { return "1.0" }
+    
+    func setSpotId(spotId: String) {
+        self.spotId = spotId
     }
     
     func setupAdsBanner(with adId: String = Configuration.testBannerID, in controller: UIViewController, validSizes: Set<AdSize>) {
@@ -102,15 +108,12 @@ extension GoogleAdsProvider: GADBannerViewDelegate {
     func adViewDidReceiveAd(_ bannerView: GADBannerView) {
         bannerView.translatesAutoresizingMaskIntoConstraints = false
         self.bannerView.addSubview(bannerView)
-        bannerView.layout {
-            $0.centerX.equal(to: self.bannerView.centerXAnchor)
-            $0.centerY.equal(to: self.bannerView.centerYAnchor)
-        }
+        bannerView.centerXAnchor.constraint(equalTo: self.bannerView.centerXAnchor).isActive = true
+        bannerView.centerYAnchor.constraint(equalTo: self.bannerView.centerYAnchor).isActive = true
         bannerDelegate?.bannerLoaded(adBannerSize: bannerView.adSize.size)
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
-        Logger.error(error)
         bannerDelegate?.bannerFailedToLoad(error: error)
     }
     
