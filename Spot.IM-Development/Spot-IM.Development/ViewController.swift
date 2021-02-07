@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         setupUI()
         fillVersionAndBuildNumber()
         
-        print("Google Mobile Ads SDK version: \(DFPRequest.sdkVersion())")
+        print("Google Mobile Ads SDK version: \(GADMobileAds.sharedInstance().sdkVersion)")
         self.adLoader = GADAdLoader(adUnitID: "/282897603/elnuevodia.com/home/app_scroll", rootViewController: self, adTypes: [.nativeCustomTemplate], options: nil)
         self.adLoader?.delegate = self
         self.adLoader?.load(GADRequest())
