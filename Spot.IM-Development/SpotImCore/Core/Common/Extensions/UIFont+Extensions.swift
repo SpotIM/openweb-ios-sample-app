@@ -86,8 +86,11 @@ internal extension UIFont {
         let fontRef = CGFont(dataProvider)
         var errorRef: Unmanaged<CFError>?
         if CTFontManagerRegisterGraphicsFont(fontRef!, &errorRef) == false {
+            // https://stackoverflow.com/a/43368507/583425 - memory leak fix
+            let message = errorRef.debugDescription
+            errorRef?.release()
             Logger.error(
-                "Failed to register font"
+                "Failed to register font - error: \(message)"
                 + "\nRegister graphics font failed"
                 + "\nThis font may have already been registered in the main bundle."
             )
