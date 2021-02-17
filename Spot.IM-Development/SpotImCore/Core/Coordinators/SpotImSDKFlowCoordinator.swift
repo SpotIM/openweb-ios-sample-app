@@ -100,15 +100,24 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         let encodedPostId = encodePostId(postId: postId)
         buildPreConversationController(with: encodedPostId, articleMetadata: articleMetadata, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
+
     
-    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
+    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         let encodedPostId = encodePostId(postId: postId)
         let dataModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        let controller = conversationController(with: dataModel)
-        self.conversationModel = dataModel
-        controller.commentIdToShowOnOpen = selectedCommentId
-        self.conversationModel!.dataSource.showReplies = true
-        navigationController.pushViewController(controller, animated: true)
+        self.loadConversation(model: dataModel) { result in
+            switch result {
+            case .success( _):
+                let controller = self.conversationController(with: dataModel)
+                self.conversationModel = dataModel
+                controller.commentIdToShowOnOpen = selectedCommentId
+                self.conversationModel!.dataSource.showReplies = true
+                navigationController.pushViewController(controller, animated: true)
+                completion(.success(true))
+            case .failure(let spNetworkError):
+                completion(.failure(spNetworkError))
+            }
+        }
     }
     
     private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
@@ -132,11 +141,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
         realTimeService.delegate = conversationModel
         self.realTimeService = realTimeService
-        self.loadConversation(model: conversationModel)
         return conversationModel
     }
     
-    private func loadConversation(model:SPMainConversationModel) {
+    private func loadConversation(model:SPMainConversationModel, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !model.dataSource.isLoading else { return }
 
         let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
@@ -147,25 +155,17 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             loadingStarted: {},
             completion: { (success, error) in
                 if let error = error {
-                    if model.areCommentsEmpty() {
-                        //TODO report error
-                        // self.presentErrorView(error: error)
-                    } else {
-                        //TODO report error
-//                        self.showAlert(
-//                            title: LocalizationManager.localizedString(key: "Oops..."),
-//                            message: error.localizedDescription
-//                        )
-                    }
+                    completion(.failure(error))
                 } else if success == false {
+                    completion(.failure(SPNetworkError.requestFailed))
                     Logger.error("Load conversation request type is not `success`")
                 } else {
                     
                     let messageCount = model.dataSource.messageCount
                     SPAnalyticsHolder.default.totalComments = messageCount
                     SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
-                }
-                // TODO notifiy completion success here
+                    completion(.success(true))
+                }                
             }
         )
     }
