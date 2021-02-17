@@ -57,7 +57,8 @@ internal final class ArticleWebViewController: UIViewController {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
                 coordinator.setLayoutDelegate(delegate: self)
-                self.setupSpotView()
+                coordinator.showFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+//                 self.setupSpotView()
             case .failure(let error):
                 print("Failed to get flow coordinator: \(error)")
             }
