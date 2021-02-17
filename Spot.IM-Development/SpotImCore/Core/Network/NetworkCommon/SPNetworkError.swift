@@ -14,21 +14,23 @@ enum SPNetworkErrorCode: Int {
     case `default` = 10001
     case emptyResponse = 10002
     case noInternet = 10003
+    case requestFailed = 10004
     
 }
 
-enum SPNetworkError: Error {
+public enum SPNetworkError: Error {
     
     case custom(_ description: String)
     case `default`
     case emptyResponse
     case noInternet
+    case requestFailed
     
 }
 
 extension SPNetworkError: LocalizedError {
     
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case .default:
             return LocalizationManager.localizedString(key: "It seems we are experiencing technical issues. Please try again")
@@ -41,6 +43,9 @@ extension SPNetworkError: LocalizedError {
             
         case .noInternet:
             return LocalizationManager.localizedString(key: "The Internet connection appears to be offline.")
+        
+        case .requestFailed:
+            return LocalizationManager.localizedString(key: "Load conversation request failed")
         }
     }
 }
@@ -65,6 +70,9 @@ extension SPNetworkError: CustomNSError {
             
         case .noInternet:
             return SPNetworkErrorCode.noInternet.rawValue
+        
+        case .requestFailed:
+            return SPNetworkErrorCode.requestFailed.rawValue
             
         }
     }
