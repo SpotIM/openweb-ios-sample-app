@@ -57,7 +57,16 @@ internal final class ArticleWebViewController: UIViewController {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
                 coordinator.setLayoutDelegate(delegate: self)
-                coordinator.showFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+                coordinator.showFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil) { result in
+                    switch result {
+                    case .success(let didSucceed):
+                        if didSucceed {
+                            print("Successfully created and opened FullConversationVC")
+                        }
+                    case .failure(let spError):
+                        print("Error in showFullConversationViewController() - error: \(spError.localizedDescription)")
+                    }
+                }
 //                 self.setupSpotView()
             case .failure(let error):
                 print("Failed to get flow coordinator: \(error)")
