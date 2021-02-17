@@ -100,7 +100,76 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         let encodedPostId = encodePostId(postId: postId)
         buildPreConversationController(with: encodedPostId, articleMetadata: articleMetadata, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
+    
+    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
+        let encodedPostId = encodePostId(postId: postId)
+        let dataModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        let controller = conversationController(with: dataModel)
+        self.conversationModel = dataModel
+        controller.commentIdToShowOnOpen = selectedCommentId
+        self.conversationModel!.dataSource.showReplies = true
+        navigationController.pushViewController(controller, animated: true)
+    }
+    
+    private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
+        SPAnalyticsHolder.default.prepareForNewPage()
 
+        let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
+        let conversationDataSource = SPMainConversationDataSource(
+            with: postId,
+            articleMetadata: articleMetadata,
+            dataProvider: conversationDataProvider
+        )
+        conversationDataProvider.imageURLProvider = imageProvider
+        let realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
+        let conversationModel = SPMainConversationModel(
+            commentUpdater: conversationUpdater,
+            conversationDataSource: conversationDataSource,
+            imageProvider: imageProvider,
+            realTimeService: realTimeService,
+            abTestData: spotConfig.abConfig
+        )
+
+        realTimeService.delegate = conversationModel
+        self.realTimeService = realTimeService
+        self.loadConversation(model: conversationModel)
+        return conversationModel
+    }
+    
+    private func loadConversation(model:SPMainConversationModel) {
+        guard !model.dataSource.isLoading else { return }
+
+        let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
+        let sortMode = SPCommentSortMode(rawValue: sortModeRaw) ?? .initial
+        model.dataSource.conversation(
+            sortMode,
+            page: .first,
+            loadingStarted: {},
+            completion: { (success, error) in
+                if let error = error {
+                    if model.areCommentsEmpty() {
+                        //TODO report error
+                        // self.presentErrorView(error: error)
+                    } else {
+                        //TODO report error
+//                        self.showAlert(
+//                            title: LocalizationManager.localizedString(key: "Oops..."),
+//                            message: error.localizedDescription
+//                        )
+                    }
+                } else if success == false {
+                    Logger.error("Load conversation request type is not `success`")
+                } else {
+                    
+                    let messageCount = model.dataSource.messageCount
+                    SPAnalyticsHolder.default.totalComments = messageCount
+                    SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
+                }
+                // TODO notifiy completion success here
+            }
+        )
+    }
+        
     private func encodePostId(postId: String) -> String {
         let result = postId.replacingOccurrences(of: "urn:uri:base64:", with: "urn$3Auri$3Abase64$3A")
             .replacingOccurrences(of: ",", with: ";")
