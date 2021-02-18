@@ -104,6 +104,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         let encodedPostId = encodePostId(postId: postId)
+        containerViewController = navigationController
         let dataModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
         self.loadConversation(model: dataModel) { result in
             switch result {
@@ -112,7 +113,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 self.conversationModel = dataModel
                 controller.commentIdToShowOnOpen = selectedCommentId
                 self.conversationModel!.dataSource.showReplies = true
-                navigationController.pushViewController(controller, animated: true)
+                self.startFlow(with: controller)
                 completion(.success(true))
             case .failure(let spNetworkError):
                 completion(.failure(spNetworkError))
@@ -165,7 +166,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                     SPAnalyticsHolder.default.totalComments = messageCount
                     SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
                     completion(.success(true))
-                }                
+                }
             }
         )
     }
