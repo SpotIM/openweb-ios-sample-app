@@ -62,7 +62,7 @@ internal final class ArticleWebViewController: UIViewController {
                     self.openSpotImFullConversation()
                 }
                 else {
-                    self.setupSpotView()
+                    self.setupSpotPreConversationView()
                 }
             case .failure(let error):
                 print("Failed to get flow coordinator: \(error)")
@@ -91,7 +91,7 @@ internal final class ArticleWebViewController: UIViewController {
         }
     }
 
-    private func setupSpotView() {
+    private func setupSpotPreConversationView() {
         spotIMCoordinator?.preConversationController(withPostId: postId, articleMetadata: metadata, navigationController: navigationController!) {
             [weak self] preConversationVC in
             guard let self = self else { return }
