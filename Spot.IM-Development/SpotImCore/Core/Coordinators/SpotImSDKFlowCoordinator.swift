@@ -95,24 +95,27 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                                           articleMetadata: SpotImArticleMetadata,
                                           numberOfPreLoadedMessages: Int = 2,
                                           navigationController: UINavigationController,
-                                          completion: @escaping (UIViewController) -> Void) {
-        containerViewController = navigationController
+                                          completion: @escaping (UIViewController) -> Void)
+    {
         let encodedPostId = encodePostId(postId: postId)
-        buildPreConversationController(with: encodedPostId, articleMetadata: articleMetadata, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
+        containerViewController = navigationController
+        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.conversationModel = conversationModel
+        buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
 
-    
-    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
+    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void)
+    {
         let encodedPostId = encodePostId(postId: postId)
         containerViewController = navigationController
-        let dataModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.loadConversation(model: dataModel) { result in
+        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.conversationModel = conversationModel
+        self.loadConversation(model: conversationModel) { result in
             switch result {
             case .success( _):
-                let controller = self.conversationController(with: dataModel)
-                self.conversationModel = dataModel
+                let controller = self.conversationController(with: conversationModel)
                 controller.commentIdToShowOnOpen = selectedCommentId
-                self.conversationModel!.dataSource.showReplies = true
+                conversationModel.dataSource.showReplies = true
                 self.startFlow(with: controller)
                 completion(.success(true))
             case .failure(let spNetworkError):
@@ -185,34 +188,12 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    private func buildPreConversationController(with postId: String, articleMetadata: SpotImArticleMetadata, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
-        SPAnalyticsHolder.default.prepareForNewPage()
-
-        let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
-        let conversationDataSource = SPMainConversationDataSource(
-            with: postId,
-            articleMetadata: articleMetadata,
-            dataProvider: conversationDataProvider
-        )
-        conversationDataProvider.imageURLProvider = imageProvider
-        let realTimeService = RealTimeService(realTimeDataProvider: DefaultRealtimeDataProvider(apiManager: apiManager))
-        let conversationModel = SPMainConversationModel(
-            commentUpdater: conversationUpdater,
-            conversationDataSource: conversationDataSource,
-            imageProvider: imageProvider,
-            realTimeService: realTimeService,
-            abTestData: spotConfig.abConfig
-        )
-
-        realTimeService.delegate = conversationModel
-        self.realTimeService = realTimeService
+    private func buildPreConversationController(with conversationModel: SPMainConversationModel, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
         
         let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages, adsProvider: adsManager.adsProvider())
         
         conversationModel.delegates.add(delegate: preConversationViewController)
         conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
-
-        self.conversationModel = conversationModel
         
         preConversationViewController.delegate = self
         preConversationViewController.preConversationDelegate = self
