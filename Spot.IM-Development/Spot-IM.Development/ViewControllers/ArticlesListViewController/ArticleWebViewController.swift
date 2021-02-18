@@ -29,6 +29,7 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
+    let shouldOpenFullConversation = false
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
@@ -57,27 +58,37 @@ internal final class ArticleWebViewController: UIViewController {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
                 coordinator.setLayoutDelegate(delegate: self)
-                coordinator.showFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil) { result in
-                    switch result {
-                    case .success(let didSucceed):
-                        if didSucceed {
-                            print("Successfully created and opened FullConversationVC")
-                        }
-                    case .failure(let spError):
-                        print("Error in showFullConversationViewController() - error: \(spError.localizedDescription)")
-                    }
+                if self.shouldOpenFullConversation {
+                    self.openSpotImFullConversation()
                 }
-//                 self.setupSpotView()
+                else {
+                    self.setupSpotView()
+                }
             case .failure(let error):
                 print("Failed to get flow coordinator: \(error)")
             }
-            
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    private func openSpotImFullConversation() {
+        guard let coordinator = self.spotIMCoordinator else {
+            return
+        }
+        coordinator.showFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil) { result in
+            switch result {
+            case .success(let didSucceed):
+                if didSucceed {
+                    print("Successfully created and opened FullConversationVC")
+                }
+            case .failure(let spError):
+                print("Error in showFullConversationViewController() - error: \(spError.localizedDescription)")
+            }
+        }
     }
 
     private func setupSpotView() {
