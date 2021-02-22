@@ -104,7 +104,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
 
-    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void)
+    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
     {
         let encodedPostId = encodePostId(postId: postId)
         containerViewController = navigationController
@@ -117,9 +117,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 controller.commentIdToShowOnOpen = selectedCommentId
                 conversationModel.dataSource.showReplies = true
                 self.startFlow(with: controller)
-                completion(.success(true))
+                //TODO success
             case .failure(let spNetworkError):
-                completion(.failure(spNetworkError))
+                break
+                // TODO handle failue
             }
         }
     }
