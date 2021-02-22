@@ -95,27 +95,63 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                                           articleMetadata: SpotImArticleMetadata,
                                           numberOfPreLoadedMessages: Int = 2,
                                           navigationController: UINavigationController,
-                                          completion: @escaping (UIViewController) -> Void) {
-        containerViewController = navigationController
+                                          completion: @escaping (UIViewController) -> Void)
+    {
         let encodedPostId = encodePostId(postId: postId)
-        buildPreConversationController(with: encodedPostId, articleMetadata: articleMetadata, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
-    }
-
-    private func encodePostId(postId: String) -> String {
-        let result = postId.replacingOccurrences(of: "urn:uri:base64:", with: "urn$3Auri$3Abase64$3A")
-            .replacingOccurrences(of: ",", with: ";")
-            .replacingOccurrences(of: "_", with: "$")
-            .replacingOccurrences(of: ":", with: "~")
-            .replacingOccurrences(of: " ", with: "")
-            .replacingOccurrences(of: "/", with: "$2F")
-        return result
+        containerViewController = navigationController
+        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.conversationModel = conversationModel
+        buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
-    private func startFlow(with controller: SPMainConversationViewController) {
-        navigationController?.pushViewController(controller, animated: true)
+    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata) {
+        showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
     }
-
-    private func buildPreConversationController(with postId: String, articleMetadata: SpotImArticleMetadata, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
+    
+    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
+    {
+        let encodedPostId = encodePostId(postId: postId)
+        containerViewController = navigationController
+        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.conversationModel = conversationModel
+        self.loadConversation(model: conversationModel) { result in
+            switch result {
+            case .success( _):
+                let controller = self.conversationController(with: conversationModel)
+                controller.commentIdToShowOnOpen = selectedCommentId
+                conversationModel.dataSource.showReplies = true
+                self.startFlow(with: controller)
+            case .failure(let spNetworkError):
+                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.presentFailureAlert(navigationController: navigationController, spNetworkError: spNetworkError) { _ in
+                    self.showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
+                }
+                break
+            }
+        }
+    }
+    
+    private func presentFailureAlert(navigationController: UINavigationController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
+        let retryAction = UIAlertAction(
+            title: LocalizationManager.localizedString(key: "Retry"),
+            style: .default,
+            handler: retryHandler)
+        
+        let okAction = UIAlertAction(
+            title: LocalizationManager.localizedString(key: "OK"),
+            style: .default)
+        
+        let alert = UIAlertController(
+            title: LocalizationManager.localizedString(key: "Oops..."),
+            message: spNetworkError.localizedDescription,
+            preferredStyle: .alert
+        )
+        alert.addAction(retryAction)
+        alert.addAction(okAction)
+        navigationController.present(alert, animated: true, completion: nil)
+    }
+    
+    private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
         SPAnalyticsHolder.default.prepareForNewPage()
 
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
@@ -136,13 +172,55 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
         realTimeService.delegate = conversationModel
         self.realTimeService = realTimeService
+        return conversationModel
+    }
+    
+    private func loadConversation(model:SPMainConversationModel, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
+        guard !model.dataSource.isLoading else { return }
+
+        let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
+        let sortMode = SPCommentSortMode(rawValue: sortModeRaw) ?? .initial
+        model.dataSource.conversation(
+            sortMode,
+            page: .first,
+            loadingStarted: {},
+            completion: { (success, error) in
+                if let error = error {
+                    completion(.failure(error))
+                } else if success == false {
+                    completion(.failure(SPNetworkError.requestFailed))
+                    Logger.error("Load conversation request type is not `success`")
+                } else {
+                    
+                    let messageCount = model.dataSource.messageCount
+                    SPAnalyticsHolder.default.totalComments = messageCount
+                    SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
+                    completion(.success(true))
+                }
+            }
+        )
+    }
+        
+    private func encodePostId(postId: String) -> String {
+        let result = postId.replacingOccurrences(of: "urn:uri:base64:", with: "urn$3Auri$3Abase64$3A")
+            .replacingOccurrences(of: ",", with: ";")
+            .replacingOccurrences(of: "_", with: "$")
+            .replacingOccurrences(of: ":", with: "~")
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "/", with: "$2F")
+        return result
+    }
+    
+    private func startFlow(with controller: SPMainConversationViewController) {
+        navigationController?.pushViewController(controller, animated: true)
+    }
+
+    private func buildPreConversationController(with conversationModel: SPMainConversationModel, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
         
         let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages, adsProvider: adsManager.adsProvider())
         
         conversationModel.delegates.add(delegate: preConversationViewController)
         conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
-
-        self.conversationModel = conversationModel
         
         preConversationViewController.delegate = self
         preConversationViewController.preConversationDelegate = self
