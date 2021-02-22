@@ -107,11 +107,12 @@ internal final class ArticleWebViewController: UIViewController {
     }
     
     @objc private func openSpotImFullConversation() {
-        print("Button Clicked")
         guard let coordinator = self.spotIMCoordinator else {
             return
         }
-        coordinator.showFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+        coordinator.showFullConversationViewController(navigationController: self.navigationController!,
+                                                       withPostId: self.postId,
+                                                       articleMetadata: self.metadata)
     }
 }
 

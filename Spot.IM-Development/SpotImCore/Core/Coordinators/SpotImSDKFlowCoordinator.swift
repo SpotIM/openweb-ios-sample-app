@@ -103,7 +103,11 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.conversationModel = conversationModel
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
-
+    
+    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata) {
+        showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
+    }
+    
     public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
     {
         let encodedPostId = encodePostId(postId: postId)
@@ -117,12 +121,34 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 controller.commentIdToShowOnOpen = selectedCommentId
                 conversationModel.dataSource.showReplies = true
                 self.startFlow(with: controller)
-                //TODO success
             case .failure(let spNetworkError):
+                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.presentFailureAlert(navigationController: navigationController, spNetworkError: spNetworkError) { _ in
+                    self.showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
+                }
                 break
-                // TODO handle failue
             }
         }
+    }
+    
+    private func presentFailureAlert(navigationController: UINavigationController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
+        let retryAction = UIAlertAction(
+            title: LocalizationManager.localizedString(key: "Retry"),
+            style: .default,
+            handler: retryHandler)
+        
+        let okAction = UIAlertAction(
+            title: LocalizationManager.localizedString(key: "OK"),
+            style: .default)
+        
+        let alert = UIAlertController(
+            title: LocalizationManager.localizedString(key: "Oops..."),
+            message: spNetworkError.localizedDescription,
+            preferredStyle: .alert
+        )
+        alert.addAction(retryAction)
+        alert.addAction(okAction)
+        navigationController.present(alert, animated: true, completion: nil)
     }
     
     private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
