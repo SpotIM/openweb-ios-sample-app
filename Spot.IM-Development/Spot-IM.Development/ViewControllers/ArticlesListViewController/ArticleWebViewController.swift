@@ -29,6 +29,7 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
+    let shouldShowOpenFullConversationButton = false
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
@@ -57,11 +58,15 @@ internal final class ArticleWebViewController: UIViewController {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
                 coordinator.setLayoutDelegate(delegate: self)
-                self.setupSpotView()
+                if self.shouldShowOpenFullConversationButton {
+                    self.showOpenFullConversationButton()
+                }
+                else {
+                    self.setupSpotPreConversationView()
+                }
             case .failure(let error):
                 print("Failed to get flow coordinator: \(error)")
             }
-            
         }
     }
     
@@ -69,8 +74,22 @@ internal final class ArticleWebViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
+    
+    private func showOpenFullConversationButton() {
+        let button:UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
+        button.backgroundColor = .black
+        button.setTitle("Open Full Conversation", for: .normal)
+        button.addTarget(self, action:#selector(self.openSpotImFullConversation), for: .touchUpInside)
+        self.containerView.addSubview(button)
+        button.layout {
+            $0.top.equal(to: self.containerView.topAnchor)
+            $0.leading.equal(to: self.containerView.leadingAnchor)
+            $0.bottom.equal(to: self.containerView.bottomAnchor)
+            $0.trailing.equal(to: self.containerView.trailingAnchor)
+       }
+    }
 
-    private func setupSpotView() {
+    private func setupSpotPreConversationView() {
         spotIMCoordinator?.preConversationController(withPostId: postId, articleMetadata: metadata, navigationController: navigationController!) {
             [weak self] preConversationVC in
             guard let self = self else { return }
@@ -82,9 +101,18 @@ internal final class ArticleWebViewController: UIViewController {
                 $0.bottom.equal(to: self.containerView.bottomAnchor)
                 $0.trailing.equal(to: self.containerView.trailingAnchor)
             }
-            
+
             preConversationVC.didMove(toParent: self)
         }
+    }
+    
+    @objc private func openSpotImFullConversation() {
+        guard let coordinator = self.spotIMCoordinator else {
+            return
+        }
+        coordinator.showFullConversationViewController(navigationController: self.navigationController!,
+                                                       withPostId: self.postId,
+                                                       articleMetadata: self.metadata)
     }
 }
 
