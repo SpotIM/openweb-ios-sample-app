@@ -21,7 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Fabric.with([Crashlytics.self])
         GADMobileAds.sharedInstance().start(completionHandler: nil)
-
+        // Custom fonts example
+        SpotIm.customFontFamiliy = "BigShouldersDisplay"
         return true
     }
 }
