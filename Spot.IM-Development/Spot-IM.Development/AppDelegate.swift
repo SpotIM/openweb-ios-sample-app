@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Fabric.with([Crashlytics.self])
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         // Custom fonts example
-        SpotIm.customFontFamiliy = "BigShouldersDisplay"
+        // SpotIm.customFontFamiliy = "BigShouldersDisplay"
         return true
     }
 }
