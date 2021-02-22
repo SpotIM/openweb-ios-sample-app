@@ -23,7 +23,7 @@ internal extension UIFont {
     
     static func customFont(customFontFamily:String, style: SPFontStyle, of size: CGFloat) -> UIFont {
         let fontName = "\(customFontFamily)-\(style.rawValue)"
-        return UIFont(name: fontName, size: size) ?? systemFont(ofSize: size)
+        return UIFont(name: fontName, size: size) ?? roboto(style: style, of: size)
     }
     
     static func roboto(style: SPFontStyle, of size: CGFloat) -> UIFont {
