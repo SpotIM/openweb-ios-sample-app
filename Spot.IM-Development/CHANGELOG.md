@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2021-07-23
+
+### Major Change
+
+- Feature - New method `coordinator.showFullConversationViewController()` to open full conversation directly (instead of doing it from pre-conversation)
+- Feature - Support setting of custom fonts on the widget by the publisher via `SpotIm.customFontFamiliy = "<font_family>"`
+- Bug fix - Memory leak (see https://stackoverflow.com/a/43368507/583425)
+
 ## [1.1.0] - 2021-07-02
 
 ### Major Change
