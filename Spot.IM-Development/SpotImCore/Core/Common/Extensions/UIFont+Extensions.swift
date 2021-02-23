@@ -11,13 +11,21 @@ import UIKit
 internal extension UIFont {
     
     static func preferred(style: SPFontStyle, of size: CGFloat) -> UIFont {
+        if let customFontFamily = SpotIm.customFontFamiliy {
+            return customFont(customFontFamily: customFontFamily, style: style, of: size)
+        }
         if LocalizationManager.currentLanguage == .hebrew {
             return openSansHebrew(style: style, of: size)
         } else {
             return roboto(style: style, of: size)
         }
     }
-
+    
+    static func customFont(customFontFamily:String, style: SPFontStyle, of size: CGFloat) -> UIFont {
+        let fontName = "\(customFontFamily)-\(style.rawValue)"
+        return UIFont(name: fontName, size: size) ?? roboto(style: style, of: size)
+    }
+    
     static func roboto(style: SPFontStyle, of size: CGFloat) -> UIFont {
         let robotoName = name(of: .roboto, with: style)
         
