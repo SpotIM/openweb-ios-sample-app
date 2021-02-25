@@ -162,6 +162,15 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         //Override this method in your VC if you need to configure advertisement
     }
     
+    func disableAdsForUser() -> Bool {
+        guard let config = SPConfigsDataSource.appConfig,
+              let disableAdsForSubscribers = config.mobileSdk.disableAdsForSubscribers,
+              let user = SPUserSessionHolder.session.user,
+              let ssoData = user.ssoData
+        else { return false }
+        return disableAdsForSubscribers && ssoData.isSubscriber
+    }
+    
     internal func handleCommentSizeChange() {
         // implement in subclasses if needed
     }

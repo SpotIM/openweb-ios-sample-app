@@ -295,6 +295,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
 
     override func checkAdsAvailability() {
         guard
+            !disableAdsForUser(),
             let adsConfig = SPConfigsDataSource.adsConfig,
             let tags = adsConfig.tags
             else { return }
