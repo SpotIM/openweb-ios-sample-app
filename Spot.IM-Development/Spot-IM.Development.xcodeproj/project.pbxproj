@@ -31,6 +31,7 @@
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
+		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
 		2679B34929ED5001EFFBF34D /* Pods_Shared_DemoApps_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6766CF5F17247A3E6C2D62D8 /* Pods_Shared_DemoApps_DailyCaller.framework */; };
 		33CA5A8045BCE4A87ACB924F /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6A5A0F00DBFA8C0AC94000 /* Pods_Shared_DemoApps_Focus_de.framework */; };
 		440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */; };
@@ -583,6 +584,7 @@
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		14539DD1C64F6F1AF9F9ECA8 /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		16670C6F25E68EEE00822D2D /* SPSSOData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPSSOData.swift; sourceTree = "<group>"; };
 		1B6A5A0F00DBFA8C0AC94000 /* Pods_Shared_DemoApps_Focus_de.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Focus_de.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		29397720AC569CFD0296574D /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1395,6 +1397,7 @@
 				4454185923685154001D0ED0 /* SPAnalyticsEvent.swift */,
 				4454185A23685154001D0ED0 /* SPCommentSortMode.swift */,
 				4454185B23685154001D0ED0 /* SPUser.swift */,
+				16670C6F25E68EEE00822D2D /* SPSSOData.swift */,
 				4454185C23685154001D0ED0 /* SPShareLink.swift */,
 				44689B6F237070F30024EFC1 /* InputConfiguration.swift */,
 				4416C65C237B119200D3F7B9 /* SPRealTimeModel.swift */,
@@ -2629,6 +2632,7 @@
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
 				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
 				449F5F74237C5D7300F81EA3 /* MulticastDelegate.swift in Sources */,
+				16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */,
 				445418B023685154001D0ED0 /* WeakRef+Generic.swift in Sources */,
 				4454188123685154001D0ED0 /* SPAnalyticsFacade.swift in Sources */,
 				4454188623685154001D0ED0 /* SPCommentFacade.swift in Sources */,
