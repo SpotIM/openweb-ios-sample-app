@@ -12,7 +12,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     
     enum CodingKeys: String, CodingKey {
         case id, userId, displayName, userName, imageId, registered,
-        isAdmin, isModerator, isSuperAdmin, isJournalist, badgeType, points, tokenExpiration
+        isAdmin, isModerator, isSuperAdmin, isJournalist, badgeType, points, tokenExpiration, ssoData
     }
     
     // all users
@@ -28,6 +28,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     var isJournalist: Bool
     let badgeType: String
     let tokenExpiration: Int?
+    let ssoData: SPSSOData?
 
     // commenter only
     var points: Int?
@@ -87,6 +88,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
         userId = try? container.decode(String.self, forKey: .userId)
         userName = try? container.decode(String.self, forKey: .userName)
         tokenExpiration = try? container.decode(Int.self, forKey: .tokenExpiration)
+        ssoData = try? container.decode(SPSSOData?.self, forKey: .ssoData)
         id = id ?? userId
     }
     
@@ -105,6 +107,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
         try container.encode(userId, forKey: .userId)
         try container.encode(userName, forKey: .userName)
         try container.encode(tokenExpiration, forKey: .tokenExpiration)
+        try container.encode(ssoData, forKey: .ssoData)
     }
     
     func imageURL(size: CGSize) -> URL? {
