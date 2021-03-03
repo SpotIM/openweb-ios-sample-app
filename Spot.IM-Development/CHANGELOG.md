@@ -5,9 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2021-03-03
 
-## [1.2.0] - 2021-07-23
+### Major Change
+
+- XCFramework support - starting this version SDK will be delivered as XCFramework (all iOS frameworks should be distributed as XCFramework according to Apple - see https://developer.apple.com/videos/play/wwdc2019/416/)
+
+- Fix - `use_mudalar_headers!` setting in Podfile didn't work
+
+- Feature - Disable monetization for subscribers according to server setting.
+
+
+## [1.2.0] - 2021-02-23
 
 ### Major Change
 
@@ -15,14 +24,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feature - Support setting of custom fonts on the widget by the publisher via `SpotIm.customFontFamiliy = "<font_family>"`
 - Bug fix - Memory leak (see https://stackoverflow.com/a/43368507/583425)
 
-## [1.1.0] - 2021-07-02
+## [1.1.0] - 2021-02-07
 
 ### Major Change
 
 - Removed depedency of 'Google-Mobile-Ads-SDK' from SpotImCore. From now on publishers will pass an "AdsProvider" to the SDK and the only dependency on 'Google-Mobile-Ads-SDK' will be in the app target.
 
 
-## [1.0.16] - 2021-20-01
+## [1.0.16] - 2021-01-20
 ### Fixed
 - Error message translation - comment creation
 
