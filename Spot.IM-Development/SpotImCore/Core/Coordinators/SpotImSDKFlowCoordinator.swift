@@ -145,7 +145,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     public func showFullConversationViewController(inViewController viewController: UIViewController, embeddedInNavController navController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
     {
         let encodedPostId = encodePostId(postId: postId)
-        containerViewController = navigationController
+        self.containerViewController = navController
         let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
         self.conversationModel = conversationModel
         self.loadConversation(model: conversationModel) { result in
@@ -156,17 +156,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 conversationModel.dataSource.showReplies = true
                 navController.viewControllers = [conversationController]
                 
-                
                 // back button
                 let backButton = UIButton(type: .custom)
                 backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
                 backButton.setImage(UIImage(spNamed: "backButton"), for: .normal) // Image can be downloaded from here below link
-                
                 backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
                 conversationController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
                 
-                
-                self.containerViewController = navController
                 viewController.present(navController, animated: true, completion: nil)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
