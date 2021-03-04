@@ -110,9 +110,7 @@ internal final class ArticleWebViewController: UIViewController {
         guard let coordinator = self.spotIMCoordinator else {
             return
         }
-        coordinator.showFullConversationViewController(navigationController: self.navigationController!,
-                                                       withPostId: self.postId,
-                                                       articleMetadata: self.metadata)
+        coordinator.showFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
     }
 }
 

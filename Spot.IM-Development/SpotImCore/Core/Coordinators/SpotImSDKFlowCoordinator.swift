@@ -123,7 +123,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 self.startFlow(with: controller)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
-                self.presentFailureAlert(navigationController: navigationController, spNetworkError: spNetworkError) { _ in
+                self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
                     self.showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
                 break
@@ -131,7 +131,58 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         }
     }
     
-    private func presentFailureAlert(navigationController: UINavigationController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
+    
+    public func showFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
+        
+        // create nav controller in code to be the container for conversationController
+        let navController = UINavigationController()
+        navController.modalPresentationStyle = .fullScreen
+        navController.navigationBar.barTintColor = .spBackground0
+        navController.navigationBar.backgroundColor = .spBackground0
+        self.showFullConversationViewController(inViewController: viewController, embeddedInNavController: navController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
+    }
+    
+    public func showFullConversationViewController(inViewController viewController: UIViewController, embeddedInNavController navController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
+    {
+        let encodedPostId = encodePostId(postId: postId)
+        containerViewController = navigationController
+        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.conversationModel = conversationModel
+        self.loadConversation(model: conversationModel) { result in
+            switch result {
+            case .success( _):
+                let conversationController = self.conversationController(with: conversationModel)
+                conversationController.commentIdToShowOnOpen = selectedCommentId
+                conversationModel.dataSource.showReplies = true
+                navController.viewControllers = [conversationController]
+                
+                
+                // back button
+                let backButton = UIButton(type: .custom)
+                backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
+                backButton.setImage(UIImage(spNamed: "backButton"), for: .normal) // Image can be downloaded from here below link
+                
+                backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
+                conversationController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+                
+                
+                self.containerViewController = navController
+                viewController.present(navController, animated: true, completion: nil)
+            case .failure(let spNetworkError):
+                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
+                    self.showFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
+                }
+                break
+            }
+        }
+    }
+    
+    @IBAction func onClickCloseFullConversation(_ sender: UIButton) {
+        self.closeMainConversation()
+    }
+    
+    private func presentFailureAlert(viewController: UIViewController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
         let retryAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Retry"),
             style: .default,
@@ -148,7 +199,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         )
         alert.addAction(retryAction)
         alert.addAction(okAction)
-        navigationController.present(alert, animated: true, completion: nil)
+        viewController.present(alert, animated: true, completion: nil)
     }
     
     private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
