@@ -142,7 +142,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.showFullConversationViewController(inViewController: viewController, embeddedInNavController: navController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
     }
     
-    public func showFullConversationViewController(inViewController viewController: UIViewController, embeddedInNavController navController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
+    private func showFullConversationViewController(inViewController viewController: UIViewController, embeddedInNavController navController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
     {
         let encodedPostId = encodePostId(postId: postId)
         self.containerViewController = navController
