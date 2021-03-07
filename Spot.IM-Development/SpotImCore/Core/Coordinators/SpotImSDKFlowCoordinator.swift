@@ -104,11 +104,11 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
-    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata) {
-        showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
+    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata) {
+        pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
     }
     
-    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
+    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
     {
         let encodedPostId = encodePostId(postId: postId)
         containerViewController = navigationController
@@ -124,7 +124,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
-                    self.showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
+                    self.pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
                 break
             }
@@ -132,7 +132,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
     
     
-    public func showFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
+    public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
         
         // create nav controller in code to be the container for conversationController
         let navController = UINavigationController()
@@ -167,7 +167,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
-                    self.showFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
+                    self.presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
                 break
             }
