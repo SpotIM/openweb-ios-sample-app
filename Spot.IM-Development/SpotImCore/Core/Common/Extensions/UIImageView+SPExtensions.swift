@@ -17,6 +17,8 @@ internal extension UIImageView {
         return UIImage.load(with: url) { image, error in
             if let completion = completion {
                 completion(image, error)
+            } else if (error != nil) {
+                self.image = nil
             } else {
                 self.image = image
             }
