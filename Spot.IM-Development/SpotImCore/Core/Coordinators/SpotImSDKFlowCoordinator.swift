@@ -110,16 +110,12 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
     {
-        let encodedPostId = encodePostId(postId: postId)
-        containerViewController = navigationController
-        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.conversationModel = conversationModel
-        self.loadConversation(model: conversationModel) { result in
+        self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let controller = self.conversationController(with: conversationModel)
+                let controller = self.conversationController(with: self.conversationModel!)
                 controller.commentIdToShowOnOpen = selectedCommentId
-                conversationModel.dataSource.showReplies = true
+                self.conversationModel!.dataSource.showReplies = true
                 self.startFlow(with: controller)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
@@ -139,21 +135,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         navController.modalPresentationStyle = .fullScreen
         navController.navigationBar.barTintColor = .spBackground0
         navController.navigationBar.backgroundColor = .spBackground0
-        self.showFullConversationViewController(inViewController: viewController, embeddedInNavController: navController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
-    }
-    
-    private func showFullConversationViewController(inViewController viewController: UIViewController, embeddedInNavController navController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
-    {
-        let encodedPostId = encodePostId(postId: postId)
-        self.containerViewController = navController
-        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.conversationModel = conversationModel
-        self.loadConversation(model: conversationModel) { result in
+        
+        self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let conversationController = self.conversationController(with: conversationModel)
+                let conversationController = self.conversationController(with: self.conversationModel!)
                 conversationController.commentIdToShowOnOpen = selectedCommentId
-                conversationModel.dataSource.showReplies = true
+                self.conversationModel!.dataSource.showReplies = true
                 navController.viewControllers = [conversationController]
                 
                 // back button
@@ -172,6 +160,14 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 break
             }
         }
+    }
+    
+    private func prepareAndLoadConversation(containerViewController: UIViewController?, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
+        let encodedPostId = encodePostId(postId: postId)
+        self.containerViewController = containerViewController
+        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.conversationModel = conversationModel
+        self.loadConversation(model: conversationModel, completion: completion)
     }
     
     @IBAction func onClickCloseFullConversation(_ sender: UIButton) {
