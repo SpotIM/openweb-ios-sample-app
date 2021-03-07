@@ -52,6 +52,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let imageProvider: SPImageURLProvider
     private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
+    private var isLoadingConversation: Bool = false
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
@@ -135,7 +136,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         navController.modalPresentationStyle = .fullScreen
         navController.navigationBar.barTintColor = .spBackground0
         navController.navigationBar.backgroundColor = .spBackground0
-        
         self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
@@ -163,6 +163,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
     
     private func prepareAndLoadConversation(containerViewController: UIViewController?, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
+        guard !self.isLoadingConversation else { return }
         let encodedPostId = encodePostId(postId: postId)
         self.containerViewController = containerViewController
         let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
@@ -220,14 +221,16 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     private func loadConversation(model:SPMainConversationModel, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !model.dataSource.isLoading else { return }
-
+        
         let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
         let sortMode = SPCommentSortMode(rawValue: sortModeRaw) ?? .initial
+        self.isLoadingConversation = true
         model.dataSource.conversation(
             sortMode,
             page: .first,
             loadingStarted: {},
             completion: { (success, error) in
+                self.isLoadingConversation = false
                 if let error = error {
                     completion(.failure(error))
                 } else if success == false {
