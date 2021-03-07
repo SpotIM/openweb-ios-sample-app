@@ -29,7 +29,7 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
-    let shouldShowOpenFullConversationButton = false
+    let shouldShowOpenFullConversationButton = true
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
@@ -110,9 +110,7 @@ internal final class ArticleWebViewController: UIViewController {
         guard let coordinator = self.spotIMCoordinator else {
             return
         }
-        coordinator.showFullConversationViewController(navigationController: self.navigationController!,
-                                                       withPostId: self.postId,
-                                                       articleMetadata: self.metadata)
+        coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
     }
 }
 

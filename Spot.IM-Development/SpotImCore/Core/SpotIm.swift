@@ -84,7 +84,7 @@ public class SpotIm {
     public static var reinit: Bool = false
     public static var googleAdsProvider: AdsProvider?
     
-    public static var customFontFamiliy: String? = nil
+    public static var customFontFamily: String? = nil
     
     /**
     Initialize the SDK

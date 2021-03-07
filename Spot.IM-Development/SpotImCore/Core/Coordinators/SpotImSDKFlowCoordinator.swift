@@ -52,6 +52,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private let imageProvider: SPImageURLProvider
     private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
+    private var isLoadingConversation: Bool = false
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
@@ -104,34 +105,77 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
-    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata) {
-        showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
+    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata) {
+        pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
     }
     
-    public func showFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
+    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
     {
-        let encodedPostId = encodePostId(postId: postId)
-        containerViewController = navigationController
-        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.conversationModel = conversationModel
-        self.loadConversation(model: conversationModel) { result in
+        self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let controller = self.conversationController(with: conversationModel)
+                let controller = self.conversationController(with: self.conversationModel!)
                 controller.commentIdToShowOnOpen = selectedCommentId
-                conversationModel.dataSource.showReplies = true
+                self.conversationModel!.dataSource.showReplies = true
                 self.startFlow(with: controller)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
-                self.presentFailureAlert(navigationController: navigationController, spNetworkError: spNetworkError) { _ in
-                    self.showFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
+                self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
+                    self.pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
                 break
             }
         }
     }
     
-    private func presentFailureAlert(navigationController: UINavigationController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
+    
+    public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
+        
+        // create nav controller in code to be the container for conversationController
+        let navController = UINavigationController()
+        navController.modalPresentationStyle = .fullScreen
+        navController.navigationBar.barTintColor = .spBackground0
+        navController.navigationBar.backgroundColor = .spBackground0
+        self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
+            switch result {
+            case .success( _):
+                let conversationController = self.conversationController(with: self.conversationModel!)
+                conversationController.commentIdToShowOnOpen = selectedCommentId
+                self.conversationModel!.dataSource.showReplies = true
+                navController.viewControllers = [conversationController]
+                
+                // back button
+                let backButton = UIButton(type: .custom)
+                backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
+                backButton.setImage(UIImage(spNamed: "backButton"), for: .normal) // Image can be downloaded from here below link
+                backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
+                conversationController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+                
+                viewController.present(navController, animated: true, completion: nil)
+            case .failure(let spNetworkError):
+                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
+                    self.presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
+                }
+                break
+            }
+        }
+    }
+    
+    private func prepareAndLoadConversation(containerViewController: UIViewController?, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
+        guard !self.isLoadingConversation else { return }
+        let encodedPostId = encodePostId(postId: postId)
+        self.containerViewController = containerViewController
+        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.conversationModel = conversationModel
+        self.loadConversation(model: conversationModel, completion: completion)
+    }
+    
+    @IBAction func onClickCloseFullConversation(_ sender: UIButton) {
+        self.closeMainConversation()
+    }
+    
+    private func presentFailureAlert(viewController: UIViewController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
         let retryAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Retry"),
             style: .default,
@@ -148,7 +192,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         )
         alert.addAction(retryAction)
         alert.addAction(okAction)
-        navigationController.present(alert, animated: true, completion: nil)
+        viewController.present(alert, animated: true, completion: nil)
     }
     
     private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
@@ -177,14 +221,16 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     private func loadConversation(model:SPMainConversationModel, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !model.dataSource.isLoading else { return }
-
+        
         let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
         let sortMode = SPCommentSortMode(rawValue: sortModeRaw) ?? .initial
+        self.isLoadingConversation = true
         model.dataSource.conversation(
             sortMode,
             page: .first,
             loadingStarted: {},
             completion: { (success, error) in
+                self.isLoadingConversation = false
                 if let error = error {
                     completion(.failure(error))
                 } else if success == false {

@@ -11,7 +11,7 @@ import UIKit
 internal extension UIFont {
     
     static func preferred(style: SPFontStyle, of size: CGFloat) -> UIFont {
-        if let customFontFamily = SpotIm.customFontFamiliy {
+        if let customFontFamily = SpotIm.customFontFamily {
             return customFont(customFontFamily: customFontFamily, style: style, of: size)
         }
         if LocalizationManager.currentLanguage == .hebrew {
