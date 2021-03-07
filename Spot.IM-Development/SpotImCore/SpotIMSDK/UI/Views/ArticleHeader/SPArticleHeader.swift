@@ -27,7 +27,16 @@ internal final class SPArticleHeader: BaseView {
     // MARK: - Internal methods
 
     internal func setImage(with url: URL?) {
-        conversationImageView.setImage(with: url)
+        conversationImageView.setImage(with: url) { image, error in
+            if error != nil {
+                self.conversationImageView.layout {
+                    $0.width.equal(to: 0)
+                }
+            }
+            else if let image = image {
+                self.conversationImageView.image = image
+            }
+        }
     }
 
     internal func setTitle(_ title: String?) {
