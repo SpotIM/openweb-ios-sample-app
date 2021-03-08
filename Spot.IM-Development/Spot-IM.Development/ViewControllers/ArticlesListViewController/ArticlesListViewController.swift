@@ -130,8 +130,7 @@ extension ArticlesListViewController {
     }
     
     private func fetchData(completion: @escaping (_ data:Response?, _ error:Bool) -> Void) {
-        let url = "https://api-gw.spot.im/v1.0.0/feed/spot/\(spotId)/post/default/pitc?count=30&offset=0"
-        
+        let url = "https://api-2-0.spot.im/v1.0.0/feed/pitc/v1/\(spotId)/default?count=30&offset=0"
         AF.request(url,
                           method: .get,
                           parameters: nil,
