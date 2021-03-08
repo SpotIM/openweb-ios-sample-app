@@ -8,7 +8,10 @@
 
 import UIKit
 
-internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable {
+internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
+    
+    weak var userAuthFlowDelegate: UserAuthFlowDelegate?
+    private var authHandler: AuthenticationHandler?
 
     internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
     internal weak var delegate: SPCommentsCreationDelegate?
@@ -57,6 +60,21 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         super.viewDidAppear(animated)
         
         configureBaseModelHandlers()
+        
+    }
+    
+    func userDidSignInHandler() -> AuthenticationHandler? {
+        authHandler = AuthenticationHandler()
+        authHandler?.authHandler = { [weak self] isAuthenticated in
+            self?.userSignedIn(isAuthenticated: isAuthenticated)
+        }
+
+        return authHandler
+    }
+    
+    
+    func userSignedIn(isAuthenticated: Bool) {
+        // Override this method in your VC if you need to get signed in event
     }
 
     internal func setupUI() {
