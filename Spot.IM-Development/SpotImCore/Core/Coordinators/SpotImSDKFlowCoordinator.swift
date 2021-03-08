@@ -269,6 +269,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
         
         preConversationViewController.delegate = self
+        preConversationViewController.userAuthFlowDelegate = self
+        
         preConversationViewController.preConversationDelegate = self
         preConversationViewController.dataLoaded = { [weak self] in
             guard let preConversationViewController = self?.preConversationViewController else { return }
