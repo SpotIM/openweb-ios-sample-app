@@ -127,8 +127,36 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         commentIdToShowOnOpen = nil
     }
     
-    override func userSignedIn(isAuthenticated: Bool) {
-        reloadFullConversation()
+    override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
+        Logger.verbose("FirstComment: API did finish with \(success)")
+        self.hideLoader()
+        self.refreshControl.endRefreshing()
+
+        if let error = error {
+            if self.model.areCommentsEmpty() {
+                self.presentErrorView(error: error)
+            } else {
+                self.showAlert(
+                    title: LocalizationManager.localizedString(key: "Oops..."),
+                    message: error.localizedDescription
+                )
+            }
+        } else if success == false {
+            Logger.error("Load conversation request type is not `success`")
+        } else {
+            Logger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
+            let messageCount = self.model.dataSource.messageCount
+            SPAnalyticsHolder.default.totalComments = messageCount
+            self.sortView.updateCommentsLabel(messageCount)
+            
+            self.stateActionView?.removeFromSuperview()
+            self.stateActionView = nil
+            self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
+        }
+        Logger.verbose("FirstComment: Calling reload on table view")
+        self.tableView.reloadData()
+        self.updateHeaderUI()
+        self.updateFooterView()
     }
     
     @objc
@@ -169,36 +197,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             page: .first,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
-                
-                Logger.verbose("FirstComment: API did finish with \(success)")
-                self.hideLoader()
-                self.refreshControl.endRefreshing()
-
-                if let error = error {
-                    if self.model.areCommentsEmpty() {
-                        self.presentErrorView(error: error)
-                    } else {
-                        self.showAlert(
-                            title: LocalizationManager.localizedString(key: "Oops..."),
-                            message: error.localizedDescription
-                        )
-                    }
-                } else if success == false {
-                    Logger.error("Load conversation request type is not `success`")
-                } else {
-                    Logger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
-                    let messageCount = self.model.dataSource.messageCount
-                    SPAnalyticsHolder.default.totalComments = messageCount
-                    self.sortView.updateCommentsLabel(messageCount)
-                    
-                    self.stateActionView?.removeFromSuperview()
-                    self.stateActionView = nil
-                    self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
-                }
-                Logger.verbose("FirstComment: Calling reload on table view")
-                self.tableView.reloadData()
-                self.updateHeaderUI()
-                self.updateFooterView()
+                self.handleConversationReloaded(success: success, error: error)
             }
         )
     }
