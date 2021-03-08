@@ -374,6 +374,15 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
     }
     
+    override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
+        self.tableView.reloadData()
+        
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+        
+        self.updateTableViewHeightIfNeeded()
+    }
+    
     @objc
     private func appMovedToBackground() {
         SPAnalyticsHolder.default.log(event: .appClosed, source: .mainPage)

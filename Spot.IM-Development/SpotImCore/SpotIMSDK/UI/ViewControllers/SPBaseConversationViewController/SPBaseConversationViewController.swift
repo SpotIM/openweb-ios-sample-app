@@ -66,15 +66,29 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     func userDidSignInHandler() -> AuthenticationHandler? {
         authHandler = AuthenticationHandler()
         authHandler?.authHandler = { [weak self] isAuthenticated in
-            self?.userSignedIn(isAuthenticated: isAuthenticated)
+            self?.reloadConversation()
         }
 
         return authHandler
     }
     
+    private func reloadConversation() {
+        let mode = model.sortOption
+        Logger.verbose("FirstComment: Calling conversation API")
+        model.dataSource.conversation(
+            mode,
+            page: .first,
+            completion: { [weak self] (success, error) in
+                guard let self = self else { return }
+                Logger.verbose("FirstComment: API did finish with \(success)")
+                self.handleConversationReloaded(success: success, error: error)
+            }
+        )
+    }
     
-    func userSignedIn(isAuthenticated: Bool) {
-        // Override this method in your VC if you need to get signed in event
+    
+    func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
+        // Override this method in your VC to handle
     }
 
     internal func setupUI() {
@@ -522,6 +536,12 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     }
 
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
+        guard let config = SPConfigsDataSource.appConfig,
+           config.initialization?.policyAllowGuestsToLike == false || SPUserSessionHolder.session.user?.registered == true else {
+            userAuthFlowDelegate?.presentAuth()
+            return
+        }
+        
         model.dataSource.updateRank(with: change, inCellWith: commentId)
         let rankActionDataModel = RankActionDataModel(change: change,
                                                       commentId: commentId,
