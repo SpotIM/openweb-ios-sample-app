@@ -277,6 +277,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             completion(preConversationViewController)
         }
         
+        authHandlers.append(WeakRef(value: preConversationViewController.userDidSignInHandler()))
+        
         self.preConversationViewController = preConversationViewController
     }
 

@@ -13,14 +13,12 @@ internal protocol SPCommentsCreationDelegate: class {
     func createReply(with dataModel: SPMainConversationModel, to id: String)
 }
 
-final class SPMainConversationViewController: SPBaseConversationViewController,
-    UserAuthFlowDelegateContainable,
-    UserPresentable {
+final class SPMainConversationViewController: SPBaseConversationViewController, UserPresentable {
     
     enum ScrollingDirection {
         case up, down, `static`
     }
-    weak var userAuthFlowDelegate: UserAuthFlowDelegate?
+    
     var commentIdToShowOnOpen: String?
     
     let adsProvider: AdsProvider
@@ -30,7 +28,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
     private lazy var footer = SPMainConversationFooterView()
-    private var authHandler: AuthenticationHandler?
     private var typingIndicationView: TotalTypingIndicationView?
 
     internal override var screenTargetType: SPAnScreenTargetType {
@@ -130,13 +127,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         commentIdToShowOnOpen = nil
     }
     
-    func userDidSignInHandler() -> AuthenticationHandler? {
-        authHandler = AuthenticationHandler()
-        authHandler?.authHandler = { [weak self] isAuthenticated in
-            self?.reloadFullConversation()
-        }
-        
-        return authHandler
+    override func userSignedIn(isAuthenticated: Bool) {
+        reloadFullConversation()
     }
     
     @objc
