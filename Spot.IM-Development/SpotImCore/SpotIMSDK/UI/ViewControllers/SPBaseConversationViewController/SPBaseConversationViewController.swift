@@ -63,17 +63,27 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         
     }
     
+    func didStartSignInFlowForChangeRank() {
+        // Override this method in your VC to handle
+    }
+    
     func userDidSignInHandler() -> AuthenticationHandler? {
         authHandler = AuthenticationHandler()
         authHandler?.authHandler = { [weak self] isAuthenticated in
-            self?.reloadConversation()
+            self?.handleUserSignedIn(isAuthenticated: isAuthenticated)
         }
 
         return authHandler
     }
     
+    func handleUserSignedIn(isAuthenticated: Bool) {
+        // Override this method in your VC to handle
+        self.reloadConversation()
+    }
+    
     @objc
     internal func reloadConversation() {
+        guard !model.dataSource.isLoading else { return }
         let mode = model.sortOption
         Logger.verbose("FirstComment: Calling conversation API")
         model.dataSource.conversation(
@@ -538,8 +548,9 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
 
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
         guard let config = SPConfigsDataSource.appConfig,
-           config.initialization?.policyAllowGuestsToLike == false || SPUserSessionHolder.session.user?.registered == true else {
+           config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
             userAuthFlowDelegate?.presentAuth()
+            self.didStartSignInFlowForChangeRank()
             return
         }
         
