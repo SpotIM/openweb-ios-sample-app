@@ -453,8 +453,6 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     private func hidePresentedViewController() {
         if let _ = sdkNavigationDelegate {
             navigationController?.dismiss(animated: true, completion: nil)
-        } else {
-            self.navigationController?.popViewController(animated: true)
         }
     }
 }
