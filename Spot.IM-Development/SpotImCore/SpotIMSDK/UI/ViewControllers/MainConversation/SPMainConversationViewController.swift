@@ -180,26 +180,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             
             self.sortView.updateSortOption(sortOption.title)
             if shoudBeUpdated {
-                self.reloadFullConversation()
+                self.reloadConversation()
             }
         }
-    }
-    
-    @objc
-    private func reloadFullConversation() {
-        Logger.verbose("FirstComment: Data source loading? \(model.dataSource.isLoading)")
-        guard !model.dataSource.isLoading else { return }
-
-        let mode = model.sortOption
-        Logger.verbose("FirstComment: Calling conversation API")
-        model.dataSource.conversation(
-            mode,
-            page: .first,
-            completion: { [weak self] (success, error) in
-                guard let self = self else { return }
-                self.handleConversationReloaded(success: success, error: error)
-            }
-        )
     }
 
     private func loadCommentsNextPage() {
@@ -336,7 +319,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         } else {
             tableView.addSubview(refreshControl)
         }
-        refreshControl.addTarget(self, action: #selector(reloadFullConversation), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(reloadConversation), for: .valueChanged)
     }
 
     private func insertLoaderCell() {
@@ -379,14 +362,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     override func configureErrorAction() -> ConversationStateAction {
         return { [weak self] in
             self?.showLoader()
-            self?.reloadFullConversation()
+            self?.reloadConversation()
         }
     }
 
     override func configureNoInternetAction() -> ConversationStateAction {
         return { [weak self] in
             self?.showLoader()
-            self?.reloadFullConversation()
+            self?.reloadConversation()
         }
     }
     

@@ -72,7 +72,8 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         return authHandler
     }
     
-    private func reloadConversation() {
+    @objc
+    internal func reloadConversation() {
         let mode = model.sortOption
         Logger.verbose("FirstComment: Calling conversation API")
         model.dataSource.conversation(
