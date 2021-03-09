@@ -28,6 +28,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private let visibilityTracker = ViewVisibilityTracker()
     private let bannerVisisilityTracker = ViewVisibilityTracker()
     private var didBecomeVisible: Bool = false
+    private var isWaitingForSignIn: Bool = false
     
     internal var dataLoaded: (() -> Void)?
     
@@ -372,6 +373,16 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func didTapComment(with indexPath: IndexPath) {
         let commentId = model.dataSource.clippedCellData(for: indexPath)?.commentId
         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
+    }
+    
+    override func didStartSignInFlowForChangeRank() {
+        self.isWaitingForSignIn = true
+    }
+    
+    override func handleUserSignedIn(isAuthenticated: Bool) {
+        guard self.isWaitingForSignIn else { return }
+        self.isWaitingForSignIn = false
+        super.handleUserSignedIn(isAuthenticated: isAuthenticated)
     }
     
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
