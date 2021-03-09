@@ -204,6 +204,9 @@ extension ArticleWebViewController: SpotImLoginDelegate {
         controller.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(controller, animated: true)
     }
+    
+    // func controllerForSSOFlow() -> UIViewController
+    // implemented in SpotImSDKNavigationDelegate
 }
 
 extension ArticleWebViewController: SpotImLayoutDelegate {
