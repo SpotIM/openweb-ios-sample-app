@@ -50,7 +50,6 @@ class FoxAuthenticationViewController: UIViewController {
         SpotIm.sso(withJwtSecret: token) { response, error in
             if let success = response?.success, success {
                 print("Authentication successful!")
-                self.navigationController?.popViewController(animated: true)
             } else {
                 print("Authentication error:\n\(String(describing: error))")
                 let alert = UIAlertController(title: "Failed authenticating with SpotIm", message: error?.localizedDescription, preferredStyle: .alert)
