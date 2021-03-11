@@ -8,7 +8,10 @@
 
 import UIKit
 
-internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable {
+internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
+    
+    weak var userAuthFlowDelegate: UserAuthFlowDelegate?
+    private var authHandler: AuthenticationHandler?
 
     internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
     internal weak var delegate: SPCommentsCreationDelegate?
@@ -57,6 +60,46 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         super.viewDidAppear(animated)
         
         configureBaseModelHandlers()
+        
+    }
+    
+    func didStartSignInFlowForChangeRank() {
+        // Override this method in your VC to handle
+    }
+    
+    func userDidSignInHandler() -> AuthenticationHandler? {
+        authHandler = AuthenticationHandler()
+        authHandler?.authHandler = { [weak self] isAuthenticated in
+            self?.handleUserSignedIn(isAuthenticated: isAuthenticated)
+        }
+
+        return authHandler
+    }
+    
+    func handleUserSignedIn(isAuthenticated: Bool) {
+        // Override this method in your VC to handle
+        self.reloadConversation()
+    }
+    
+    @objc
+    internal func reloadConversation() {
+        guard !model.dataSource.isLoading else { return }
+        let mode = model.sortOption
+        Logger.verbose("FirstComment: Calling conversation API")
+        model.dataSource.conversation(
+            mode,
+            page: .first,
+            completion: { [weak self] (success, error) in
+                guard let self = self else { return }
+                Logger.verbose("FirstComment: API did finish with \(success)")
+                self.handleConversationReloaded(success: success, error: error)
+            }
+        )
+    }
+    
+    
+    func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
+        // Override this method in your VC to handle
     }
 
     internal func setupUI() {
@@ -504,6 +547,13 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     }
 
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
+        guard let config = SPConfigsDataSource.appConfig,
+           config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
+            userAuthFlowDelegate?.presentAuth()
+            self.didStartSignInFlowForChangeRank()
+            return
+        }
+        
         model.dataSource.updateRank(with: change, inCellWith: commentId)
         let rankActionDataModel = RankActionDataModel(change: change,
                                                       commentId: commentId,
