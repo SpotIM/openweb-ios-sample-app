@@ -42,9 +42,6 @@ internal final class ArticleWebViewController: UIViewController {
         self.shouldShowOpenFullConversationButton = UserDefaults.standard.bool(forKey: "shouldShowOpenFullConversation")
         self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
         
-        UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
-        UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -204,9 +201,14 @@ extension ArticleWebViewController: WKNavigationDelegate {
 
 extension ArticleWebViewController: SpotImLoginDelegate {
     func startLoginFlow() {
-        let controller = controllerForSSOFlow()
-        controller.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(controller, animated: true)
+        if (self.shouldPresentFullConInNewNavStack == false) {
+            let controller = controllerForSSOFlow()
+            controller.modalPresentationStyle = .fullScreen
+            navigationController?.pushViewController(controller, animated: true)
+        }
+        else {
+            print("SDK notify that we started the Login flow - navigation is handled by the SDK")
+        }
     }
     
     func controllerForSSOFlow() -> UIViewController {
