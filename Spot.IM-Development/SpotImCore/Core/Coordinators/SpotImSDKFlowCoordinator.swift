@@ -465,6 +465,12 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
         if let _ = sdkNavigationDelegate {
             navigationController?.dismiss(animated: true, completion: nil)
         }
+        else if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 
@@ -475,10 +481,6 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     
     public func ssoFlowDidSucceed() {
         hidePresentedViewController()
-        if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
-            self.navigationController?.dismiss(animated: true, completion: nil)
-        }
-        
         authHandlers.forEach { $0.value?.authHandler?(true) }
     }
     
