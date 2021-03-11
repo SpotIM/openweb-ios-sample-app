@@ -53,7 +53,7 @@ class FoxAuthenticationViewController: UIViewController {
             if let success = response?.success, success {
                 print("Authentication successful!")
                 if (!self.shouldPresentFullConInNewNavStack) {
-                    // If the publisher implements startLoginFlow() with pushViewController - we should pop it here
+                    // If the SDK uses the same navigation stack as the app - we should pop the Auth VC here
                     self.navigationController?.popViewController(animated: true)
                 }
             } else {
