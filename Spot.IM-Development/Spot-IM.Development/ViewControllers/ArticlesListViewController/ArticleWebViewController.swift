@@ -29,7 +29,7 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
-    let shouldShowOpenFullConversationButton = true
+    let shouldShowOpenFullConversationButton = false
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
@@ -190,13 +190,6 @@ extension ArticleWebViewController: WKNavigationDelegate {
     }
 }
 
-extension ArticleWebViewController: SpotImSDKNavigationDelegate {
-    func controllerForSSOFlow() -> UIViewController {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-        
-        return controller
-    }
-}
 
 extension ArticleWebViewController: SpotImLoginDelegate {
     func startLoginFlow() {
@@ -205,8 +198,10 @@ extension ArticleWebViewController: SpotImLoginDelegate {
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    // func controllerForSSOFlow() -> UIViewController
-    // implemented in SpotImSDKNavigationDelegate
+    func controllerForSSOFlow() -> UIViewController {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+        return controller
+    }
 }
 
 extension ArticleWebViewController: SpotImLayoutDelegate {
