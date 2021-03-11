@@ -13,14 +13,12 @@ internal protocol SPCommentsCreationDelegate: class {
     func createReply(with dataModel: SPMainConversationModel, to id: String)
 }
 
-final class SPMainConversationViewController: SPBaseConversationViewController,
-    UserAuthFlowDelegateContainable,
-    UserPresentable {
+final class SPMainConversationViewController: SPBaseConversationViewController, UserPresentable {
     
     enum ScrollingDirection {
         case up, down, `static`
     }
-    weak var userAuthFlowDelegate: UserAuthFlowDelegate?
+    
     var commentIdToShowOnOpen: String?
     
     let adsProvider: AdsProvider
@@ -30,7 +28,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
     private lazy var footer = SPMainConversationFooterView()
-    private var authHandler: AuthenticationHandler?
     private var typingIndicationView: TotalTypingIndicationView?
 
     internal override var screenTargetType: SPAnScreenTargetType {
@@ -130,13 +127,36 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         commentIdToShowOnOpen = nil
     }
     
-    func userDidSignInHandler() -> AuthenticationHandler? {
-        authHandler = AuthenticationHandler()
-        authHandler?.authHandler = { [weak self] isAuthenticated in
-            self?.reloadFullConversation()
+    override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
+        Logger.verbose("FirstComment: API did finish with \(success)")
+        self.hideLoader()
+        self.refreshControl.endRefreshing()
+
+        if let error = error {
+            if self.model.areCommentsEmpty() {
+                self.presentErrorView(error: error)
+            } else {
+                self.showAlert(
+                    title: LocalizationManager.localizedString(key: "Oops..."),
+                    message: error.localizedDescription
+                )
+            }
+        } else if success == false {
+            Logger.error("Load conversation request type is not `success`")
+        } else {
+            Logger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
+            let messageCount = self.model.dataSource.messageCount
+            SPAnalyticsHolder.default.totalComments = messageCount
+            self.sortView.updateCommentsLabel(messageCount)
+            
+            self.stateActionView?.removeFromSuperview()
+            self.stateActionView = nil
+            self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
         }
-        
-        return authHandler
+        Logger.verbose("FirstComment: Calling reload on table view")
+        self.tableView.reloadData()
+        self.updateHeaderUI()
+        self.updateFooterView()
     }
     
     @objc
@@ -160,55 +180,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
             
             self.sortView.updateSortOption(sortOption.title)
             if shoudBeUpdated {
-                self.reloadFullConversation()
+                self.reloadConversation()
             }
         }
-    }
-    
-    @objc
-    private func reloadFullConversation() {
-        Logger.verbose("FirstComment: Data source loading? \(model.dataSource.isLoading)")
-        guard !model.dataSource.isLoading else { return }
-
-        let mode = model.sortOption
-        Logger.verbose("FirstComment: Calling conversation API")
-        model.dataSource.conversation(
-            mode,
-            page: .first,
-            completion: { [weak self] (success, error) in
-                guard let self = self else { return }
-                
-                Logger.verbose("FirstComment: API did finish with \(success)")
-                self.hideLoader()
-                self.refreshControl.endRefreshing()
-
-                if let error = error {
-                    if self.model.areCommentsEmpty() {
-                        self.presentErrorView(error: error)
-                    } else {
-                        self.showAlert(
-                            title: LocalizationManager.localizedString(key: "Oops..."),
-                            message: error.localizedDescription
-                        )
-                    }
-                } else if success == false {
-                    Logger.error("Load conversation request type is not `success`")
-                } else {
-                    Logger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
-                    let messageCount = self.model.dataSource.messageCount
-                    SPAnalyticsHolder.default.totalComments = messageCount
-                    self.sortView.updateCommentsLabel(messageCount)
-                    
-                    self.stateActionView?.removeFromSuperview()
-                    self.stateActionView = nil
-                    self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
-                }
-                Logger.verbose("FirstComment: Calling reload on table view")
-                self.tableView.reloadData()
-                self.updateHeaderUI()
-                self.updateFooterView()
-            }
-        )
     }
 
     private func loadCommentsNextPage() {
@@ -345,7 +319,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
         } else {
             tableView.addSubview(refreshControl)
         }
-        refreshControl.addTarget(self, action: #selector(reloadFullConversation), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(reloadConversation), for: .valueChanged)
     }
 
     private func insertLoaderCell() {
@@ -388,14 +362,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController,
     override func configureErrorAction() -> ConversationStateAction {
         return { [weak self] in
             self?.showLoader()
-            self?.reloadFullConversation()
+            self?.reloadConversation()
         }
     }
 
     override func configureNoInternetAction() -> ConversationStateAction {
         return { [weak self] in
             self?.showLoader()
-            self?.reloadFullConversation()
+            self?.reloadConversation()
         }
     }
     
