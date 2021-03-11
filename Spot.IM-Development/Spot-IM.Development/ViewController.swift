@@ -103,7 +103,24 @@ class ViewController: UIViewController {
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
-        showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+        let alert = UIAlertController(title: "Alert", message: "Please choose in which setting to open an article", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Pre-Conversation", style: .default, handler: { action in
+            self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+        }))
+        alert.addAction(UIAlertAction(title: "Full-Conversation - Push", style: .default, handler: { action in
+            UserDefaults.standard.setValue(true, forKey: "shouldShowOpenFullConversation")
+            UserDefaults.standard.setValue(false, forKey: "shouldPresentInNewNavStack")
+            self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+        }))
+        alert.addAction(UIAlertAction(title: "Full-Conversation - Present", style: .default, handler: { action in
+            UserDefaults.standard.setValue(true, forKey: "shouldShowOpenFullConversation")
+            UserDefaults.standard.setValue(true, forKey: "shouldPresentInNewNavStack")
+            self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        
     }
 
     private func showArticles(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
