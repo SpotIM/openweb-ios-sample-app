@@ -29,8 +29,8 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
-    let shouldShowOpenFullConversationButton = false
-    
+    let shouldShowOpenFullConversationButton:Bool
+    let shouldPresentFullConInNewNavStack:Bool
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
     init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String) {
@@ -39,6 +39,12 @@ internal final class ArticleWebViewController: UIViewController {
         self.metadata = metadata
         self.url = url
         self.authenticationControllerId = authenticationControllerId
+        self.shouldShowOpenFullConversationButton = UserDefaults.standard.bool(forKey: "shouldShowOpenFullConversation")
+        self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
+        
+        UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
+        UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -110,7 +116,12 @@ internal final class ArticleWebViewController: UIViewController {
         guard let coordinator = self.spotIMCoordinator else {
             return
         }
-        coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+        if (self.shouldPresentFullConInNewNavStack) {
+            coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+        }
+        else {
+            coordinator.pushFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata)
+        }
     }
 }
 
