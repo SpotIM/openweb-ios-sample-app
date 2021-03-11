@@ -54,7 +54,6 @@ class FoxAuthenticationViewController: UIViewController {
                 print("Authentication successful!")
                 if (!self.shouldPresentFullConInNewNavStack) {
                     // If the publisher implements startLoginFlow() with pushViewController - we should pop it here
-                    print("If the publisher implements startLoginFlow() with pushViewController - we should pop it here")
                     self.navigationController?.popViewController(animated: true)
                 }
             } else {
