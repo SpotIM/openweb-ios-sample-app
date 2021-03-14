@@ -33,6 +33,10 @@ public extension SpotImLoginDelegate {
         assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for controllerForSSOFlow()")
         return UIViewController()
     }
+    
+    func startLoginFlow() {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginFlow()")
+    }
 }
 
 final public class SpotImSDKFlowCoordinator: Coordinator {
@@ -431,7 +435,9 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
                 let authViewController = loginDelegate.controllerForSSOFlow()
                 navigationController?.present(authViewController, animated: true, completion: nil)
             }
-            loginDelegate.startLoginFlow()
+            else {
+                loginDelegate.startLoginFlow()
+            }
         } else if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
             // Deprecated - this code should be removed once the deprecated sdkNavigationDelegate is deleted from the SDK
             let container = UINavigationController(rootViewController: controller)
