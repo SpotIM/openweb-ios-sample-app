@@ -433,6 +433,7 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
             }
             loginDelegate.startLoginFlow()
         } else if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
+            // Deprecated - this code should be removed once the deprecated sdkNavigationDelegate is deleted from the SDK
             let container = UINavigationController(rootViewController: controller)
             let barItem = UIBarButtonItem(title: "Back",
                                           style: .plain,
