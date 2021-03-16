@@ -16,9 +16,11 @@ enum FoxError: Error {
 class FoxAuthenticationViewController: UIViewController {
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    var shouldPresentFullConInNewNavStack:Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
         title = "Authentication"
     }
     
@@ -50,7 +52,10 @@ class FoxAuthenticationViewController: UIViewController {
         SpotIm.sso(withJwtSecret: token) { response, error in
             if let success = response?.success, success {
                 print("Authentication successful!")
-                self.navigationController?.popViewController(animated: true)
+                if (!self.shouldPresentFullConInNewNavStack) {
+                    // If the SDK uses the same navigation stack as the app - we should pop the Auth VC here
+                    self.navigationController?.popViewController(animated: true)
+                }
             } else {
                 print("Authentication error:\n\(String(describing: error))")
                 let alert = UIAlertController(title: "Failed authenticating with SpotIm", message: error?.localizedDescription, preferredStyle: .alert)

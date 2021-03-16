@@ -51,6 +51,13 @@ class ArticlesListViewController: UITableViewController {
         title = "Articles"
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        if self.isMovingFromParent {
+            UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
+            UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
