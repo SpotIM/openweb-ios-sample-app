@@ -29,8 +29,8 @@ internal final class ArticleWebViewController: UIViewController {
     let url: String
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
-    let shouldShowOpenFullConversationButton = true
-    
+    let shouldShowOpenFullConversationButton:Bool
+    let shouldPresentFullConInNewNavStack:Bool
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
     init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String) {
@@ -39,6 +39,9 @@ internal final class ArticleWebViewController: UIViewController {
         self.metadata = metadata
         self.url = url
         self.authenticationControllerId = authenticationControllerId
+        self.shouldShowOpenFullConversationButton = UserDefaults.standard.bool(forKey: "shouldShowOpenFullConversation")
+        self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -110,7 +113,12 @@ internal final class ArticleWebViewController: UIViewController {
         guard let coordinator = self.spotIMCoordinator else {
             return
         }
-        coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+        if (self.shouldPresentFullConInNewNavStack) {
+            coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+        }
+        else {
+            coordinator.pushFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata)
+        }
     }
 }
 
@@ -190,19 +198,22 @@ extension ArticleWebViewController: WKNavigationDelegate {
     }
 }
 
-extension ArticleWebViewController: SpotImSDKNavigationDelegate {
-    func controllerForSSOFlow() -> UIViewController {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-        
-        return controller
-    }
-}
 
 extension ArticleWebViewController: SpotImLoginDelegate {
     func startLoginFlow() {
-        let controller = controllerForSSOFlow()
-        controller.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(controller, animated: true)
+        if (self.shouldPresentFullConInNewNavStack == false) {
+            let controller = controllerForSSOFlow()
+            controller.modalPresentationStyle = .fullScreen
+            navigationController?.pushViewController(controller, animated: true)
+        }
+        else {
+            print("SDK notify that we started the Login flow - navigation is handled by the SDK")
+        }
+    }
+    
+    func controllerForSSOFlow() -> UIViewController {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+        return controller
     }
 }
 

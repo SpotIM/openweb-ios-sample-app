@@ -24,6 +24,19 @@ public protocol AuthenticationViewDelegate: AnyObject {
 
 public protocol SpotImLoginDelegate: AnyObject {
     func startLoginFlow()
+    func controllerForSSOFlow() -> UIViewController
+}
+
+// Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
+public extension SpotImLoginDelegate {
+    func controllerForSSOFlow() -> UIViewController {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for controllerForSSOFlow()")
+        return UIViewController()
+    }
+    
+    func startLoginFlow() {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginFlow()")
+    }
 }
 
 final public class SpotImSDKFlowCoordinator: Coordinator {
@@ -53,6 +66,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
     private var isLoadingConversation: Bool = false
+    private let SPOTIM_NAV_CONTROL_TAG = 11223344;
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
@@ -133,6 +147,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         
         // create nav controller in code to be the container for conversationController
         let navController = UINavigationController()
+        navController.view.tag = SPOTIM_NAV_CONTROL_TAG
         navController.modalPresentationStyle = .fullScreen
         navController.navigationBar.barTintColor = .spBackground0
         navController.navigationBar.backgroundColor = .spBackground0
@@ -420,8 +435,15 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
     internal func presentAuth() {
         SpotIm.authProvider.ssoAuthDelegate = self
         if let loginDelegate = self.loginDelegate {
-            loginDelegate.startLoginFlow()
+            if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
+                let authViewController = loginDelegate.controllerForSSOFlow()
+                navigationController?.present(authViewController, animated: true, completion: nil)
+            }
+            else {
+                loginDelegate.startLoginFlow()
+            }
         } else if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
+            // Deprecated - this code should be removed once the deprecated sdkNavigationDelegate is deleted from the SDK
             let container = UINavigationController(rootViewController: controller)
             let barItem = UIBarButtonItem(title: "Back",
                                           style: .plain,
@@ -451,8 +473,8 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     @objc
     private func hidePresentedViewController() {
-        if let _ = sdkNavigationDelegate {
-            navigationController?.dismiss(animated: true, completion: nil)
+        if self.sdkNavigationDelegate != nil || (self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG) {
+            self.navigationController?.dismiss(animated: true, completion: nil)
         }
     }
 }
