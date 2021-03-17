@@ -108,10 +108,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         guard let userId = SPUserSessionHolder.session.user?.id else {
             return
         }
-        openProfileWebScreen(userId: userId)
+        openProfileWebScreen(userId: userId, isMyProfile: true)
     }
     
-    private func openProfileWebScreen(userId: String) {
+    private func openProfileWebScreen(userId: String, isMyProfile: Bool) {
         guard let spotId = SPClientSettings.main.spotKey else { return }
         let params = SPWebSDKProvider.Params(
             module: .profile,
@@ -120,7 +120,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
             userId: userId
         )
         
-        if SPPublicSessionInterface.isMe(userId: userId) {
+        if isMyProfile {
             params.userAccessToken =  SPUserSessionHolder.session.token
             params.userOwToken = SPUserSessionHolder.session.openwebToken
         }
@@ -558,13 +558,15 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
               let comment = model.dataSource.commentViewModel(commentId),
               let authorId = comment.authorId else { return }
         
-        trackProfileClicked(commentId: commentId, authorId: authorId)
+        let isMyProfile = SPPublicSessionInterface.isMe(userId: authorId)
         
-        openProfileWebScreen(userId: authorId)
+        trackProfileClicked(commentId: commentId, authorId: authorId, isMyProfile: isMyProfile)
+        
+        openProfileWebScreen(userId: authorId, isMyProfile: isMyProfile)
     }
     
-    private func trackProfileClicked(commentId: String, authorId: String) {
-        if SPPublicSessionInterface.isMe(userId: authorId) {
+    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool) {
+        if isMyProfile {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
         } else {
             SPAnalyticsHolder.default.log(
