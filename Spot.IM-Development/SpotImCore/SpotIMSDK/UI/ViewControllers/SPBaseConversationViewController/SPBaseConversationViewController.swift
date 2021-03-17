@@ -103,6 +103,30 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         // Override this method in your VC to handle
     }
+    
+    private func openMyProfileWebScreen() {
+        guard let userId = SPUserSessionHolder.session.user?.id else {
+            return
+        }
+        openProfileWebScreen(userId: userId)
+    }
+    
+    private func openProfileWebScreen(userId: String) {
+        guard let spotId = SPClientSettings.main.spotKey else { return }
+        let params = SPWebSDKProvider.Params(
+            module: .profile,
+            spotId: spotId,
+            postId: model.dataSource.postId,
+            userId: userId
+        )
+        
+        if SPPublicSessionInterface.isMe(userId: userId) {
+            params.userAccessToken =  SPUserSessionHolder.session.token
+            params.userOwToken = SPUserSessionHolder.session.openwebToken
+        }
+        
+        SPWebSDKProvider.openWebModule(delegate: webSDKDelegate, params: params)
+    }
 
     internal func setupUI() {
         view.addSubview(tableView)
@@ -539,23 +563,6 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         openProfileWebScreen(userId: authorId)
     }
     
-    private func openProfileWebScreen(userId: String) {
-        guard let spotId = SPClientSettings.main.spotKey else { return }
-        let params = SPWebSDKProvider.Params(
-            module: .profile,
-            spotId: spotId,
-            postId: model.dataSource.postId,
-            userId: userId
-        )
-        
-        if SPPublicSessionInterface.isMe(userId: userId) {
-            params.userAccessToken =  SPUserSessionHolder.session.token
-            params.userOwToken = SPUserSessionHolder.session.openwebToken
-        }
-        
-        SPWebSDKProvider.openWebModule(delegate: webSDKDelegate, params: params)
-    }
-    
     private func trackProfileClicked(commentId: String, authorId: String) {
         if SPPublicSessionInterface.isMe(userId: authorId) {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
@@ -665,11 +672,14 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
 }
 
 extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate {
-
-    func footerViewDidTap(_ foorterView: SPMainConversationFooterView) {
+    func labelContainerDidTap(_ foorterView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
         logCreationOpen(with: .comment)
         delegate.createComment(with: model)
+    }
+    
+    func userAvatarDidTap(_ foorterView: SPMainConversationFooterView) {
+        openMyProfileWebScreen()
     }
 }
 

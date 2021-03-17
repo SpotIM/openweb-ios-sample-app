@@ -10,7 +10,9 @@ import UIKit
 
 internal protocol SPMainConversationFooterViewDelegate: class {
     
-    func footerViewDidTap(_ foorterView: SPMainConversationFooterView)
+    func labelContainerDidTap(_ foorterView: SPMainConversationFooterView)
+    
+    func userAvatarDidTap(_ foorterView: SPMainConversationFooterView)
     
 }
 
@@ -19,7 +21,6 @@ final class SPMainConversationFooterView: BaseView {
     private let callToActionLabel: BaseLabel = .init()
     private let userAvatarView: SPAvatarView = .init()
     private let labelContainer: BaseView = .init()
-    private let button: BaseButton = .init()
     
     private lazy var separatorView: BaseView = .init()
     private lazy var bannerContainerView: BaseView = .init()
@@ -65,14 +66,10 @@ final class SPMainConversationFooterView: BaseView {
     }
     
     private func setup() {
-        addSubviews(bannerContainerView, labelContainer, userAvatarView, button, separatorView)
-        button.addTarget(self, action: #selector(tap), for: .touchUpInside)
-        button.layout {
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.top.equal(to: labelContainer.topAnchor)
-        }
+        addSubviews(bannerContainerView, labelContainer, userAvatarView, separatorView)
+        labelContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(labelContainerTap)))
+        labelContainer.isUserInteractionEnabled = true
+        userAvatarView.delegate = self
         setupBannerView()
         setupUserAvatarImageView()
         setupCallToActionLabel()
@@ -183,8 +180,14 @@ final class SPMainConversationFooterView: BaseView {
     }
     
     @objc
-    private func tap() {
-        delegate?.footerViewDidTap(self)
+    private func labelContainerTap() {
+        delegate?.labelContainerDidTap(self)
+    }
+}
+
+extension SPMainConversationFooterView: AvatarViewDelegate {
+    func avatarDidTapped() {
+        delegate?.userAvatarDidTap(self)
     }
 }
 
