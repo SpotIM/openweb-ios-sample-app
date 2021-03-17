@@ -35,12 +35,16 @@ internal final class SPWebSDKProvider {
             url.appendQueryParam(name: "user_id", value: userId)
         }
         if let userAccessToken = params.userAccessToken {
-            url.appendQueryParam(name: "user_access_token", value: userAccessToken)
+            url.appendQueryParam(name: "user_access_token", value: getCleanToken(token: userAccessToken))
         }
         if let userOwToken = params.userOwToken {
             url.appendQueryParam(name: "user_ow_token", value: userOwToken)
         }
         return url.absoluteString
+    }
+    
+    private static func getCleanToken(token: String) -> String {
+        return token.replacingOccurrences(of: "Bearer ", with: "")
     }
 }
 
