@@ -287,6 +287,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         preConversationViewController.userAuthFlowDelegate = self
         
         preConversationViewController.preConversationDelegate = self
+        preConversationViewController.webSDKDelegate = self
         preConversationViewController.dataLoaded = { [weak self] in
             guard let preConversationViewController = self?.preConversationViewController else { return }
             
@@ -304,6 +305,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
         controller.delegate = self
         controller.userAuthFlowDelegate = self
+        controller.webSDKDelegate = self
         
         controller.title = LocalizationManager.localizedString(key: "Conversation")
         
@@ -367,6 +369,12 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             default: break
             }
         }
+    }
+}
+
+extension SpotImSDKFlowCoordinator: SPWebSDKDelegate {
+    func openWebSDKPage(with urlString: String) {
+        showWebPage(with: urlString)
     }
 }
 

@@ -12,6 +12,8 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     private var authHandler: AuthenticationHandler?
+    
+    weak var webSDKDelegate: SPWebSDKDelegate?
 
     internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
     internal weak var delegate: SPCommentsCreationDelegate?
@@ -528,9 +530,33 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
 extension SPBaseConversationViewController: SPCommentCellDelegate {
     
     func respondToAuthorTap(for commentId: String?) {
-        guard let commentId = commentId else { return }
-        let comment = model.dataSource.commentViewModel(commentId)
-        guard let authorId = comment?.authorId else { return }
+        guard let commentId = commentId,
+              let comment = model.dataSource.commentViewModel(commentId),
+              let authorId = comment.authorId else { return }
+        
+        trackProfileClicked(commentId: commentId, authorId: authorId)
+        
+        openProfileWebScreen(userId: authorId)
+    }
+    
+    private func openProfileWebScreen(userId: String) {
+        guard let spotId = SPClientSettings.main.spotKey else { return }
+        let params = SPWebSDKProvider.Params(
+            module: .profile,
+            spotId: spotId,
+            postId: model.dataSource.postId,
+            userId: userId
+        )
+        
+        if SPPublicSessionInterface.isMe(userId: userId) {
+            params.userAccessToken =  SPUserSessionHolder.session.token
+            params.userOwToken = SPUserSessionHolder.session.openwebToken
+        }
+        
+        SPWebSDKProvider.openWebModule(delegate: webSDKDelegate, params: params)
+    }
+    
+    private func trackProfileClicked(commentId: String, authorId: String) {
         if SPPublicSessionInterface.isMe(userId: authorId) {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
         } else {
