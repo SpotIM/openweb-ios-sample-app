@@ -16,7 +16,7 @@ internal final class PreConversationBannerView: BaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        addSubviews(bannerContainerView)
+        self.addSubview(bannerContainerView)
         
         setupBannerContainerView()
     }
