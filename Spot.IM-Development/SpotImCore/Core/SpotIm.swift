@@ -281,6 +281,29 @@ public class SpotIm {
         }
     }
 
+    /**
+     Get the currernt user login status with the user ID (if registered)
+
+     The login status may be one of 2 options:
+     1. Guest - an unauthenticated session
+     2. LoggedIn - an authenticated session
+     - Parameter completion: A completion handler to receive the current login status of the user
+     - SpotImResult returns the "user id" for a logged-in user
+     */
+    public static func getUserLoginStatusWithId(completion: @escaping ((SpotImResult<(SpotImLoginStatus, String?)>) -> Void)) {
+        execute(call: { _ in
+            if let user = SPUserSessionHolder.session.user {
+                let loginStatus:SpotImLoginStatus = user.registered ? .loggedIn : .guest
+                let userId = user.registered ? user.id : nil
+                completion(.success((loginStatus, userId)))
+            } else {
+                completion(.failure(SpotImError.notInitialized))
+            }
+        }) { (error) in
+            completion(.failure(SpotImError.internalError(error.localizedDescription)))
+        }
+    }
+    
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
         execute(call: { _ in
             firstly {
