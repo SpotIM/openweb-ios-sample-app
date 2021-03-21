@@ -202,18 +202,19 @@ extension ArticleWebViewController: WKNavigationDelegate {
 extension ArticleWebViewController: SpotImLoginDelegate {
     func startLoginFlow() {
         if (self.shouldPresentFullConInNewNavStack == false) {
-            let controller = controllerForSSOFlow()
-            controller.modalPresentationStyle = .fullScreen
-            navigationController?.pushViewController(controller, animated: true)
+            let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+            authViewController.modalPresentationStyle = .fullScreen
+            navigationController?.pushViewController(authViewController, animated: true)
         }
         else {
             print("SDK notify that we started the Login flow - navigation is handled by the SDK")
         }
     }
     
-    func controllerForSSOFlow() -> UIViewController {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-        return controller
+    
+    func presentControllerForSSOFlow(with spotNavController: UIViewController) {
+        let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+        spotNavController.present(authViewController, animated: true, completion: nil)
     }
 }
 
