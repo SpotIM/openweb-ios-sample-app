@@ -112,7 +112,9 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     }
     
     private func openProfileWebScreen(userId: String, isMyProfile: Bool) {
-        guard let spotId = SPClientSettings.main.spotKey else { return }
+        guard let mobileSdkConfig = SPConfigsDataSource.appConfig?.mobileSdk,
+              mobileSdkConfig.profileEnabled == true,
+              let spotId = SPClientSettings.main.spotKey else { return }
         let params = SPWebSDKProvider.Params(
             module: .profile,
             spotId: spotId,
