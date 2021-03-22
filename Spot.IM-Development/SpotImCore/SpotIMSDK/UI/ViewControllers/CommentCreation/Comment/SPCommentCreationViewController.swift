@@ -26,18 +26,20 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         setupHeaderComponentsIfNeeded()
         configureModelHandlers()
         if shouldShowArticleView(for: model?.dataModel), #available(iOS 11.0, *), UIDevice.current.screenType != .iPhones_5_5s_5c_SE {
-            topContainerStack.insertArrangedSubview(articleView, at: 1)
+            
+            if (SpotIm.displayArticleHeader) {
+                topContainerStack.insertArrangedSubview(articleView, at: 1)
+                articleView.setTitle(model?.dataModel.articleMetadata.title)
+                articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))
+                articleView.setAuthor(model?.dataModel.articleMetadata.subtitle)
+
+                articleView.layout {
+                    $0.height.equal(to: 85.0)
+                    $0.width.equal(to: topContainerStack.widthAnchor)
+                }
+            }
             
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
-
-            articleView.setTitle(model?.dataModel.articleMetadata.title)
-            articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))
-            articleView.setAuthor(model?.dataModel.articleMetadata.subtitle)
-
-            articleView.layout {
-                $0.height.equal(to: 85.0)
-                $0.width.equal(to: topContainerStack.widthAnchor)
-            }
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         } else {
             emptyArticleBottomConstarint?.isActive = true

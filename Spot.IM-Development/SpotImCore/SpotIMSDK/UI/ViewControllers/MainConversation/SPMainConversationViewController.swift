@@ -246,6 +246,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
     
     private func configureTableHeaderView() {
+        if (SpotIm.displayArticleHeader == false) {
+            tableHeader.removeFromSuperview()
+            return
+        }
         view.bringSubviewToFront(tableHeader)
         tableHeader.clipsToBounds = true
         tableHeader.layout {
@@ -260,7 +264,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.setupTableView()
 
         tableView.layout {
-            $0.top.equal(to: tableHeader.bottomAnchor)
+            $0.top.equal(to: SpotIm.displayArticleHeader ? tableHeader.bottomAnchor : sortView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.bottom.equal(to: footer.topAnchor)
@@ -340,6 +344,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     private func updateHeaderUI() {
+        if SpotIm.displayArticleHeader == false {
+            return
+        }
         isHeaderVisible = true
         headerHeightConstraint?.constant = articleHeaderMaxHeight
         tableHeader.setAuthor(model.dataSource.articleMetadata.subtitle)
