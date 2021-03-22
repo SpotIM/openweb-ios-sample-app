@@ -24,14 +24,13 @@ public protocol AuthenticationViewDelegate: AnyObject {
 
 public protocol SpotImLoginDelegate: AnyObject {
     func startLoginFlow()
-    func controllerForSSOFlow() -> UIViewController
+    func presentControllerForSSOFlow(with spotNavController: UIViewController)
 }
 
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
-    func controllerForSSOFlow() -> UIViewController {
-        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for controllerForSSOFlow()")
-        return UIViewController()
+    func presentControllerForSSOFlow(with spotNavController: UIViewController) {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for presentControllerForSSOFlow()")
     }
     
     func startLoginFlow() {
@@ -436,8 +435,7 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
         SpotIm.authProvider.ssoAuthDelegate = self
         if let loginDelegate = self.loginDelegate {
             if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
-                let authViewController = loginDelegate.controllerForSSOFlow()
-                navigationController?.present(authViewController, animated: true, completion: nil)
+                loginDelegate.presentControllerForSSOFlow(with: self.navigationController!)
             }
             else {
                 loginDelegate.startLoginFlow()
