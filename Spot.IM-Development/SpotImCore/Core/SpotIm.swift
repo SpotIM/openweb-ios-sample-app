@@ -262,7 +262,7 @@ public class SpotIm {
     public static var overrideUserInterfaceStyle: SPUserInterfaceStyle?
     
     /**
-     Get the currernt user login status
+     Get the current user login status
 
      The login status may be one of 2 options:
      1. Guest - an unauthenticated session
@@ -282,7 +282,7 @@ public class SpotIm {
     }
 
     /**
-     Get the currernt user login status with the user ID (if registered)
+     Get the current user login status with the user ID (if registered)
 
      The login status may be one of 2 options:
      1. Guest - an unauthenticated session
@@ -301,6 +301,18 @@ public class SpotIm {
             }
         }) { (error) in
             completion(.failure(SpotImError.internalError(error.localizedDescription)))
+        }
+    }
+    
+    /**
+     Get the current user ID (if registered)
+     */
+    public static func getUserId() -> String? {
+        if let user = SPUserSessionHolder.session.user {
+            let userId = user.registered ? user.id : nil
+            return userId
+        } else {
+            return nil
         }
     }
     
