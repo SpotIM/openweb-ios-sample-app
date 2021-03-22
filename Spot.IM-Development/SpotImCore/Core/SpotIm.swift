@@ -307,7 +307,7 @@ public class SpotIm {
     /**
      Get the current user ID (if registered)
      */
-    public static func getUserId() -> String? {
+    public static func getRegisteredUserId() -> String? {
         if let user = SPUserSessionHolder.session.user {
             let userId = user.registered ? user.id : nil
             return userId
