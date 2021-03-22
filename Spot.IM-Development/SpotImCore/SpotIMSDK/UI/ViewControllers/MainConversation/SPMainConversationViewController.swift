@@ -47,6 +47,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var isDragging: Bool = false
     private var isHeaderVisible: Bool = false
     private var wasScrolled: Bool = false
+    private var displayArticleHeader: Bool = true
 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
@@ -60,7 +61,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     init(model: SPMainConversationModel, adsProvider: AdsProvider) {
         Logger.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
-        
+        self.displayArticleHeader = SpotIm.displayArticleHeader
         super.init(model: model)
         
         adsProvider.bannerDelegate = self
@@ -246,7 +247,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
     
     private func configureTableHeaderView() {
-        if (SpotIm.displayArticleHeader == false) {
+        if (self.displayArticleHeader == false) {
             tableHeader.removeFromSuperview()
             return
         }
@@ -264,7 +265,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.setupTableView()
 
         tableView.layout {
-            $0.top.equal(to: SpotIm.displayArticleHeader ? tableHeader.bottomAnchor : sortView.bottomAnchor)
+            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : sortView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.bottom.equal(to: footer.topAnchor)
@@ -344,7 +345,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     private func updateHeaderUI() {
-        if SpotIm.displayArticleHeader == false {
+        if self.displayArticleHeader == false {
             return
         }
         isHeaderVisible = true
