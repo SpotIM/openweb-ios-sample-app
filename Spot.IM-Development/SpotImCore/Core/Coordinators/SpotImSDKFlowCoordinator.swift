@@ -471,7 +471,7 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     @objc
     private func hidePresentedViewController() {
-        if self.sdkNavigationDelegate != nil || (self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG) {
+        if self.sdkNavigationDelegate != nil {
             self.navigationController?.dismiss(animated: true, completion: nil)
         }
     }
