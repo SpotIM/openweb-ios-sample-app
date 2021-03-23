@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2021-03-23
+
+### Changes
+
+- Feature - new `getUserLoginStatusWithId()` method which returns the "user id" together with the status.
+- Feature - new `getRegisteredUserId()` method which returns the "user id"
+- Feature - new property `displayArticleHeader` to allow publisher to control wheter article header should be displayed (on top of conversation)
+- Feature - new SSO login `SpotImLoginDelegate` method `func presentControllerForSSOFlow(with spotNavController: UIViewController)`
+
 ## [1.4.1] - 2021-03-18
 
 ### Changes
