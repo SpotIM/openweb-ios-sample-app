@@ -350,6 +350,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
                     
+                    adsProvider.bannerView.subviews.forEach({$0.removeFromSuperview()}) // cleanup previous banners if exists
                     adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small, .medium, .large])
                 }
             case .interstitial:
@@ -457,7 +458,7 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
         let bannerView = adsProvider.bannerView
         
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
-    
+ 
         self.bannerView.layout {
             $0.height.equal(to: adBannerSize.height)
         }
