@@ -23,7 +23,6 @@ internal class BaseViewController: UIViewController {
 
         view.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? view.semanticContentAttribute
-        edgesForExtendedLayout = []
         overrideInterfaceStyleIfNeeded()
     }
     
@@ -34,7 +33,6 @@ internal class BaseViewController: UIViewController {
         let backItem = UIBarButtonItem()
         backItem.title = ""
         navigationItem.backBarButtonItem = backItem
-        edgesForExtendedLayout = []
     }
     
     @available(*, unavailable)
