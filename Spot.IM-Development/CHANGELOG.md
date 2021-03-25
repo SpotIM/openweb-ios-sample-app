@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2021-03-23
+
+### Changes
+
+- Feature - new `getUserLoginStatusWithId()` method which returns the "user id" together with the status.
+- Feature - new `getRegisteredUserId()` method which returns the "user id"
+- Feature - new property `displayArticleHeader` to allow publisher to control wheter article header should be displayed (on top of conversation)
+- Feature - new SSO login `SpotImLoginDelegate` method `func presentControllerForSSOFlow(with spotNavController: UIViewController)`
+
+## [1.4.1] - 2021-03-18
+
+### Changes
+
+- Bug fix - On pre-conversation banner ad appeared twice (added a cleanup before reload).
+
+## [1.4.0] - 2021-03-16
+
+### Major Change
+
+- Open Full Conversation - SDK exposes 2 new methods to open full-conversation VC directly from the Article Screen (without pre-conversation). Example code: 
+`coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)`
+
+- Fix - user action Like\Dislike - guest not allowed to rank, first the user must login.
+
+- Fix - Article header in the widget - if the image is missing don't leave space.
+
+- Internal - Switch to new PITC endpoint that sample app uses #157
+
+- Internal - Add 3 options for SSO login (pre-con, push full, present full)
+
+
+
 ## [1.3.0] - 2021-03-03
 
 ### Major Change

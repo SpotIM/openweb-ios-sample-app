@@ -56,6 +56,9 @@ class FoxAuthenticationViewController: UIViewController {
                     // If the SDK uses the same navigation stack as the app - we should pop the Auth VC here
                     self.navigationController?.popViewController(animated: true)
                 }
+                else {
+                    self.dismiss(animated: true, completion: nil)
+                }
             } else {
                 print("Authentication error:\n\(String(describing: error))")
                 let alert = UIAlertController(title: "Failed authenticating with SpotIm", message: error?.localizedDescription, preferredStyle: .alert)

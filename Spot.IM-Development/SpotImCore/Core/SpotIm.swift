@@ -85,6 +85,7 @@ public class SpotIm {
     public static var googleAdsProvider: AdsProvider?
     
     public static var customFontFamily: String? = nil
+    public static var displayArticleHeader: Bool = true
     
     /**
     Initialize the SDK
@@ -262,7 +263,7 @@ public class SpotIm {
     public static var overrideUserInterfaceStyle: SPUserInterfaceStyle?
     
     /**
-     Get the currernt user login status
+     Get the current user login status
 
      The login status may be one of 2 options:
      1. Guest - an unauthenticated session
@@ -281,6 +282,41 @@ public class SpotIm {
         }
     }
 
+    /**
+     Get the current user login status with the user ID (if registered)
+
+     The login status may be one of 2 options:
+     1. Guest - an unauthenticated session
+     2. LoggedIn - an authenticated session
+     - Parameter completion: A completion handler to receive the current login status of the user
+     - SpotImResult returns the "user id" for a logged-in user
+     */
+    public static func getUserLoginStatusWithId(completion: @escaping ((SpotImResult<(SpotImLoginStatus, String?)>) -> Void)) {
+        execute(call: { _ in
+            if let user = SPUserSessionHolder.session.user {
+                let loginStatus:SpotImLoginStatus = user.registered ? .loggedIn : .guest
+                let userId = user.registered ? user.id : nil
+                completion(.success((loginStatus, userId)))
+            } else {
+                completion(.failure(SpotImError.notInitialized))
+            }
+        }) { (error) in
+            completion(.failure(SpotImError.internalError(error.localizedDescription)))
+        }
+    }
+    
+    /**
+     Get the current user ID (if registered)
+     */
+    public static func getRegisteredUserId() -> String? {
+        if let user = SPUserSessionHolder.session.user {
+            let userId = user.registered ? user.id : nil
+            return userId
+        } else {
+            return nil
+        }
+    }
+    
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
         execute(call: { _ in
             firstly {
