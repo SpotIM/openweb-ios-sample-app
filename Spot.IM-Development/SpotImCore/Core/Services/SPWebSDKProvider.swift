@@ -8,20 +8,15 @@
 
 import Foundation
 
-internal protocol SPWebSDKDelegate: class {
-    func openWebSDKPage(with urlString: String)
-}
-
 internal final class SPWebSDKProvider {
     
     enum WebModule: String {
         case profile = "user-profile"
-        case communityGuidelines = "community-guidelines"
     }
     
-    internal static func openWebModule(delegate: SPWebSDKDelegate?, params: Params) {
+    internal static func openWebModule(delegate: SPSafariWebPageDelegate?, params: Params) {
         if let urlString = getUrlString(params: params) {
-            delegate?.openWebSDKPage(with: urlString)
+            delegate?.openWebPage(with: urlString)
         }
     }
     

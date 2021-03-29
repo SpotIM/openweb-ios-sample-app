@@ -27,6 +27,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
+    private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
     private var typingIndicationView: TotalTypingIndicationView?
 
@@ -48,11 +49,18 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var isHeaderVisible: Bool = false
     private var wasScrolled: Bool = false
     private var displayArticleHeader: Bool = true
+    
+    private var isCommunityGudelinesVisible: Bool = false
+    private var communityGudelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
+    private var communityGudelinesMinHeight: CGFloat = 0.0
+    private var currentCommunityGudelinesHeightConstant: CGFloat = 0.0
+    private var communityGudelinesHeightConstraint: NSLayoutConstraint?
 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
             if oldValue != scrollingDirection {
                 currentHeightConstant = headerHeightConstraint?.constant ?? 0.0
+                currentCommunityGudelinesHeightConstant = communityGudelinesHeightConstraint?.constant ?? 0.0
                 initialOffsetY = lastOffsetY
             }
         }
@@ -87,6 +95,16 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         Logger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         sortView.updateCommentsLabel(model.dataSource.messageCount)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if isCommunityGudelinesVisible && communityGudelinesHeightConstraint == nil {
+            communityGudelinesMaxHeight = communityGuidelinesView.frame.height
+            communityGuidelinesView.layout {
+                communityGudelinesHeightConstraint = $0.height.equal(to: communityGuidelinesView.frame.height)
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -223,11 +241,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupUI() {
-        view.addSubviews(footer, sortView, tableHeader)
+        view.addSubviews(footer, sortView, tableHeader, communityGuidelinesView)
 
         super.setupUI()
     
         setupSortView()
+        configureCommunityGuidelinesView()
         configureTableHeaderView()
         setupFooterView()
         setupRefreshControl()
@@ -246,6 +265,26 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
     
+    private func configureCommunityGuidelinesView() {
+        communityGuidelinesView.layout {
+            $0.top.equal(to: sortView.bottomAnchor)
+            $0.leading.equal(to: view.leadingAnchor)
+            $0.trailing.equal(to: view.trailingAnchor)
+        }
+        if let htmlString = getCommunityGuidelinesTextIfExists() {
+            isCommunityGudelinesVisible = true
+            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+            communityGuidelinesView.delegate = self
+            view.bringSubviewToFront(communityGuidelinesView)
+            communityGuidelinesView.clipsToBounds = true
+        } else {
+            communityGuidelinesView.isHidden = true
+            communityGuidelinesView.layout {
+                $0.height.equal(to: 0.0)
+            }
+        }
+    }
+    
     private func configureTableHeaderView() {
         if (self.displayArticleHeader == false) {
             tableHeader.removeFromSuperview()
@@ -254,7 +293,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         view.bringSubviewToFront(tableHeader)
         tableHeader.clipsToBounds = true
         tableHeader.layout {
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             headerHeightConstraint = $0.height.equal(to: 0.0)
@@ -265,7 +304,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.setupTableView()
 
         tableView.layout {
-            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : sortView.bottomAnchor)
+            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : communityGuidelinesView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.bottom.equal(to: footer.topAnchor)
@@ -407,7 +446,7 @@ extension SPMainConversationViewController { // UITableViewDelegate
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         guard canAnimateHeader(scrollView) else { return }
         
-        handleFinalHeaderHeightUpdate()
+        handleFinalHeaderHeightUpdate(with: scrollView.contentOffset)
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -415,7 +454,7 @@ extension SPMainConversationViewController { // UITableViewDelegate
         
         isDragging = false
         if !decelerate {
-            handleFinalHeaderHeightUpdate()
+            handleFinalHeaderHeightUpdate(with: scrollView.contentOffset)
         }
     }
 }
@@ -481,23 +520,49 @@ extension SPMainConversationViewController { // Article header scrolling logic
     
     /// Takes care of article header height updates using scrollView contentOffset vaule
     private func handleArticleHeight(with scrollViewContentOffset: CGPoint) {
-        let currentOffsetY = scrollViewContentOffset.y + articleHeaderMaxHeight
+        let currentOffsetY = scrollViewContentOffset.y
         if isDragging {
             scrollingDirection = currentOffsetY > lastOffsetY ? .up : .down
         }
         lastOffsetY = currentOffsetY
-        updateHeaderHeightInstantly()
+
+        updateCommunityGuidelinedHeightInstantly(contentOffsetY: scrollViewContentOffset.y)
+        updateHeaderHeightInstantly(contentOffsetY: scrollViewContentOffset.y)
     }
     
     /// Instantly updates article header height when scrollView is scrolling
-    private func updateHeaderHeightInstantly() {
+    private func updateCommunityGuidelinedHeightInstantly(contentOffsetY: CGFloat) {
+        guard isCommunityGudelinesVisible else { return }
+        if scrollingDirection == .down && communityGudelinesHeightConstraint?.constant == communityGudelinesMaxHeight {
+            return
+        }
+        if lastOffsetY > 0 {
+            if (scrollingDirection == .down && contentOffsetY > communityGudelinesMaxHeight) {
+                return
+            }
+            
+            let calculatedHeight = communityGudelinesMaxHeight - lastOffsetY
+            let newHeight: CGFloat = max(calculatedHeight, 0)
+            
+            communityGudelinesHeightConstraint?.constant = newHeight
+        } else {
+            communityGudelinesHeightConstraint?.constant = communityGudelinesMaxHeight
+        }
+    }
+    
+    /// Instantly updates article header height when scrollView is scrolling
+    private func updateHeaderHeightInstantly(contentOffsetY: CGFloat) {
         guard isHeaderVisible else { return }
         
+        guard !isCommunityGudelinesVisible || (communityGudelinesHeightConstraint?.constant == communityGudelinesMinHeight || communityGudelinesHeightConstraint?.constant == communityGudelinesMaxHeight) else { return }
+        
         if lastOffsetY > 0 {
-            let calculatedHeight = currentHeightConstant - (lastOffsetY - initialOffsetY)
-            let newHeight: CGFloat = calculatedHeight > articleHeaderMaxHeight
-                ? articleHeaderMaxHeight
-                : (calculatedHeight < articleHeaderMinHeight) ? articleHeaderMinHeight : calculatedHeight
+            var calculatedHeight = currentHeightConstant - (lastOffsetY - initialOffsetY)
+            if isCommunityGudelinesVisible {
+                calculatedHeight += (contentOffsetY < communityGudelinesMaxHeight + communityGudelinesMaxHeight) ? communityGudelinesMaxHeight : 0
+            }
+            
+            let newHeight: CGFloat = max(min(calculatedHeight, articleHeaderMaxHeight), articleHeaderMinHeight)
             
             headerHeightConstraint?.constant = newHeight
         } else {
@@ -506,12 +571,25 @@ extension SPMainConversationViewController { // Article header scrolling logic
     }
     
     /// Updates article header height after scroll view did end actions using `scrollingDirection` property
-    private func handleFinalHeaderHeightUpdate() {
-        guard scrollingDirection != .static, isHeaderVisible else { return }
-        let finaleHeight: CGFloat = scrollingDirection == .up
-            ? (lastOffsetY <= articleHeaderMinHeight ? articleHeaderMaxHeight : articleHeaderMinHeight)
-            : articleHeaderMaxHeight
-        headerHeightConstraint?.constant = finaleHeight
+    private func handleFinalHeaderHeightUpdate(with scrollViewContentOffset: CGPoint) {
+        guard scrollingDirection != .static else { return }
+        
+        if (isCommunityGudelinesVisible) {
+            let finaleHeightCommunityGuidelines: CGFloat
+            if (scrollViewContentOffset.y <= communityGudelinesMaxHeight * 0.8) {
+                finaleHeightCommunityGuidelines = communityGudelinesMaxHeight
+            } else {
+                finaleHeightCommunityGuidelines = (communityGudelinesHeightConstraint?.constant ?? 0) < communityGudelinesMaxHeight * 0.5 ? communityGudelinesMinHeight : communityGudelinesMaxHeight
+            }
+                
+            communityGudelinesHeightConstraint?.constant = finaleHeightCommunityGuidelines
+        }
+        
+        if (isHeaderVisible) {
+            let finaleHeight: CGFloat = (headerHeightConstraint?.constant ?? 0) < articleHeaderMaxHeight * 0.5 ? articleHeaderMinHeight: articleHeaderMaxHeight
+            headerHeightConstraint?.constant = finaleHeight
+        }
+        
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }

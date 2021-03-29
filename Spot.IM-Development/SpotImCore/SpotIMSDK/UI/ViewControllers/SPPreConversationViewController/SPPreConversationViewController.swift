@@ -16,6 +16,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
     private lazy var bannerView: PreConversationBannerView = .init()
+    private lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
     private lazy var header: SPPreConversationHeaderView = .init()
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
@@ -136,12 +137,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     // MARK: - Private methods
 
     override func setupUI() {
-        view.addSubviews(bannerView, header, whatYouThinkView, footerView)
+        view.addSubviews(bannerView, header, communityGuidelinesView, whatYouThinkView, footerView)
 
         super.setupUI()
 
         setupBannerView()
         setupHeader()
+        setupCommunityGuidelinesView()
         setupWhatYouThinkView()
         setupFooterView()
 
@@ -166,6 +168,24 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.height.equal(to: Theme.headerHeight)
         }
     }
+    
+    private func setupCommunityGuidelinesView() {
+        communityGuidelinesView.layout {
+            $0.top.equal(to: header.bottomAnchor)
+            $0.leading.equal(to: view.leadingAnchor)
+            $0.trailing.equal(to: view.trailingAnchor)
+        }
+        if let htmlString = getCommunityGuidelinesTextIfExists() {
+            communityGuidelinesView.delegate = self
+            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+            communityGuidelinesView.setupPreConversationConstraints()
+        } else {
+            communityGuidelinesView.isHidden = true
+            communityGuidelinesView.layout {
+                $0.height.equal(to: 0.0)
+            }
+        }
+    }
 
     private func setupWhatYouThinkView() {
         view.bringSubviewToFront(whatYouThinkView)
@@ -174,7 +194,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         whatYouThinkView.showsSeparator = false
         whatYouThinkView.delegate = self
         whatYouThinkView.layout {
-            $0.top.equal(to: header.bottomAnchor)
+            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.whatYouThinkHeight)
