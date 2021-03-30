@@ -53,14 +53,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var isCommunityGudelinesVisible: Bool = false
     private var communityGudelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
     private var communityGudelinesMinHeight: CGFloat = 0.0
-    private var currentCommunityGudelinesHeightConstant: CGFloat = 0.0
     private var communityGudelinesHeightConstraint: NSLayoutConstraint?
 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
             if oldValue != scrollingDirection {
                 currentHeightConstant = headerHeightConstraint?.constant ?? 0.0
-                currentCommunityGudelinesHeightConstant = communityGudelinesHeightConstraint?.constant ?? 0.0
                 initialOffsetY = lastOffsetY
             }
         }
@@ -526,18 +524,18 @@ extension SPMainConversationViewController { // Article header scrolling logic
         }
         lastOffsetY = currentOffsetY
 
-        updateCommunityGuidelinedHeightInstantly(contentOffsetY: scrollViewContentOffset.y)
-        updateHeaderHeightInstantly(contentOffsetY: scrollViewContentOffset.y)
+        updateCommunityGuidelinedHeightInstantly()
+        updateHeaderHeightInstantly()
     }
     
     /// Instantly updates article header height when scrollView is scrolling
-    private func updateCommunityGuidelinedHeightInstantly(contentOffsetY: CGFloat) {
+    private func updateCommunityGuidelinedHeightInstantly() {
         guard isCommunityGudelinesVisible else { return }
         if scrollingDirection == .down && communityGudelinesHeightConstraint?.constant == communityGudelinesMaxHeight {
             return
         }
         if lastOffsetY > 0 {
-            if (scrollingDirection == .down && contentOffsetY > communityGudelinesMaxHeight) {
+            if (scrollingDirection == .down && lastOffsetY > communityGudelinesMaxHeight) {
                 return
             }
             
@@ -551,15 +549,15 @@ extension SPMainConversationViewController { // Article header scrolling logic
     }
     
     /// Instantly updates article header height when scrollView is scrolling
-    private func updateHeaderHeightInstantly(contentOffsetY: CGFloat) {
+    private func updateHeaderHeightInstantly() {
         guard isHeaderVisible else { return }
         
-        guard !isCommunityGudelinesVisible || (communityGudelinesHeightConstraint?.constant == communityGudelinesMinHeight || communityGudelinesHeightConstraint?.constant == communityGudelinesMaxHeight) else { return }
+        guard !isCommunityGudelinesVisible || communityGudelinesHeightConstraint?.constant == communityGudelinesMinHeight else { return }
         
         if lastOffsetY > 0 {
             var calculatedHeight = currentHeightConstant - (lastOffsetY - initialOffsetY)
             if isCommunityGudelinesVisible {
-                calculatedHeight += (contentOffsetY < communityGudelinesMaxHeight + communityGudelinesMaxHeight) ? communityGudelinesMaxHeight : 0
+                calculatedHeight += (lastOffsetY < communityGudelinesMaxHeight + communityGudelinesMaxHeight) ? communityGudelinesMaxHeight : 0
             }
             
             let newHeight: CGFloat = max(min(calculatedHeight, articleHeaderMaxHeight), articleHeaderMinHeight)
