@@ -33,6 +33,11 @@
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
 		1234E50D6291AF3A3A6DF3E1 /* libPods-Shared-DemoApps-MarketWatch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C527BA33409DF386F0374AA /* libPods-Shared-DemoApps-MarketWatch.a */; };
 		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
+		16A12A60260115BE00A7B3F6 /* SPWebSDKProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A5F260115BE00A7B3F6 /* SPWebSDKProvider.swift */; };
+		16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A642601188100A7B3F6 /* URL+QueryParams.swift */; };
+		16A12A6D2608DCDA00A7B3F6 /* SPCommunityGuidelinesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A6C2608DCDA00A7B3F6 /* SPCommunityGuidelinesView.swift */; };
+		16A12A8A2608E49500A7B3F6 /* String+SPExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */; };
+		16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */; };
 		182BE3B9B67AB394B8892E1C /* libPods-Shared-SpotImCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */; };
 		2A185E713E9BAF4830A77AA1 /* libPods-Shared-DemoApps-Focus.de.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */; };
 		440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */; };
@@ -586,6 +591,11 @@
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		14539DD1C64F6F1AF9F9ECA8 /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		16670C6F25E68EEE00822D2D /* SPSSOData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPSSOData.swift; sourceTree = "<group>"; };
+		16A12A5F260115BE00A7B3F6 /* SPWebSDKProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPWebSDKProvider.swift; sourceTree = "<group>"; };
+		16A12A642601188100A7B3F6 /* URL+QueryParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+QueryParams.swift"; sourceTree = "<group>"; };
+		16A12A6C2608DCDA00A7B3F6 /* SPCommunityGuidelinesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityGuidelinesView.swift; sourceTree = "<group>"; };
+		16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SPExtentions.swift"; sourceTree = "<group>"; };
+		16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityGuidelinesTitle.swift; sourceTree = "<group>"; };
 		1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-Focus.de.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		2C527BA33409DF386F0374AA /* libPods-Shared-DemoApps-MarketWatch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-MarketWatch.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -946,6 +956,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		16A12A6B2608DCB100A7B3F6 /* CommunityGuidelinesView */ = {
+			isa = PBXGroup;
+			children = (
+				16A12A6C2608DCDA00A7B3F6 /* SPCommunityGuidelinesView.swift */,
+			);
+			path = CommunityGuidelinesView;
+			sourceTree = "<group>";
+		};
 		440E0DB1237D7E0F00757554 /* TypingIndicationView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1165,6 +1183,7 @@
 		445417DA23685144001D0ED0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				16A12A6B2608DCB100A7B3F6 /* CommunityGuidelinesView */,
 				6D85E4B72418E766000265D3 /* PreConversationBanner */,
 				5DB97790236B257000E9D547 /* SPUsernameView */,
 				440E0DB1237D7E0F00757554 /* TypingIndicationView */,
@@ -1394,6 +1413,7 @@
 				4454185523685154001D0ED0 /* SPComment.swift */,
 				4454185623685154001D0ED0 /* SPCommentViewModel.swift */,
 				4454185823685154001D0ED0 /* SPCommentCreationDTO.swift */,
+				16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */,
 				4454185923685154001D0ED0 /* SPAnalyticsEvent.swift */,
 				4454185A23685154001D0ED0 /* SPCommentSortMode.swift */,
 				4454185B23685154001D0ED0 /* SPUser.swift */,
@@ -1437,6 +1457,8 @@
 				4454186A23685154001D0ED0 /* UIImageView+SPExtensions.swift */,
 				4454186B23685154001D0ED0 /* Bundle+SPExtensions.swift */,
 				4454186C23685154001D0ED0 /* IndexPath+SPExtensions.swift */,
+				16A12A642601188100A7B3F6 /* URL+QueryParams.swift */,
+				16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1453,6 +1475,7 @@
 				44689B71237185090024EFC1 /* LocalizationManager.swift */,
 				449F5F71237C064F00F81EA3 /* RealTimeService.swift */,
 				6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */,
+				16A12A5F260115BE00A7B3F6 /* SPWebSDKProvider.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2604,6 +2627,7 @@
 				4454189E23685154001D0ED0 /* SPConversationReadRM.swift in Sources */,
 				445418B723685154001D0ED0 /* AuthenticationHandler.swift in Sources */,
 				4454187F23685154001D0ED0 /* SPInternalAuthProvider.swift in Sources */,
+				16A12A60260115BE00A7B3F6 /* SPWebSDKProvider.swift in Sources */,
 				4454182323685144001D0ED0 /* SPConversationSummaryView.swift in Sources */,
 				44F2479F2379AD0100B36F12 /* BaseLabel.swift in Sources */,
 				4454180823685144001D0ED0 /* KeyboardHandable.swift in Sources */,
@@ -2629,6 +2653,7 @@
 				445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */,
 				4454181B23685144001D0ED0 /* CommentActionsView.swift in Sources */,
 				445417FE23685144001D0ED0 /* NSAttributedString+Extensions.swift in Sources */,
+				16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */,
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
 				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
 				449F5F74237C5D7300F81EA3 /* MulticastDelegate.swift in Sources */,
@@ -2676,11 +2701,13 @@
 				44F247A32379B0F900B36F12 /* BaseUIImageView.swift in Sources */,
 				4454189423685154001D0ED0 /* SPConfigurationInitialization.swift in Sources */,
 				4416C661237B16C800D3F7B9 /* SPRealtimeDataRequest.swift in Sources */,
+				16A12A6D2608DCDA00A7B3F6 /* SPCommunityGuidelinesView.swift in Sources */,
 				4454180723685144001D0ED0 /* UserFlowPresentable.swift in Sources */,
 				4454188E23685154001D0ED0 /* SPNetworkConstants.swift in Sources */,
 				4454181823685144001D0ED0 /* SPBaseTableViewCell.swift in Sources */,
 				445418A423685154001D0ED0 /* SPCommentSortMode.swift in Sources */,
 				445417FC23685144001D0ED0 /* UIBarButton+UIImage.swift in Sources */,
+				16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */,
 				445418A223685154001D0ED0 /* SPCommentCreationDTO.swift in Sources */,
 				44F247A72379B75300B36F12 /* BaseTableView.swift in Sources */,
 				44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */,
@@ -2715,6 +2742,7 @@
 				4454188823685154001D0ED0 /* SPAnalyticsRequest.swift in Sources */,
 				6D0A3314247D44DC003B11C6 /* ViewVisibilityTracker.swift in Sources */,
 				6D22A46A23BC864100DCE08A /* SpotImRequestLogLevel.swift in Sources */,
+				16A12A8A2608E49500A7B3F6 /* String+SPExtentions.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
 				441165A92379720500B781F3 /* SPImageFetchRequest.swift in Sources */,
 				44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */,
