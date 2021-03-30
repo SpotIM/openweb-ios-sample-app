@@ -25,18 +25,16 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     internal override func updateModelData() {
         setupHeaderComponentsIfNeeded()
         configureModelHandlers()
-        if shouldShowArticleView(for: model?.dataModel), #available(iOS 11.0, *), UIDevice.current.screenType != .iPhones_5_5s_5c_SE {
+        if shouldShowArticleView(for: model?.dataModel), #available(iOS 11.0, *), UIDevice.current.screenType != .iPhones_5_5s_5c_SE, SpotIm.displayArticleHeader {
             
-            if (SpotIm.displayArticleHeader) {
-                topContainerStack.insertArrangedSubview(articleView, at: 1)
-                articleView.setTitle(model?.dataModel.articleMetadata.title)
-                articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))
-                articleView.setAuthor(model?.dataModel.articleMetadata.subtitle)
+            topContainerStack.insertArrangedSubview(articleView, at: 1)
+            articleView.setTitle(model?.dataModel.articleMetadata.title)
+            articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))
+            articleView.setAuthor(model?.dataModel.articleMetadata.subtitle)
 
-                articleView.layout {
-                    $0.height.equal(to: 85.0)
-                    $0.width.equal(to: topContainerStack.widthAnchor)
-                }
+            articleView.layout {
+                $0.height.equal(to: 85.0)
+                $0.width.equal(to: topContainerStack.widthAnchor)
             }
             
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
