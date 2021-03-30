@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.3] - 2021-03-30
+
+### Added
+- Profile page
+- Community guidelines
+
+### Fixed
+- Description on comment screen when header is hided
+- Nav bar when conversation view controller is pushed
+
 ## [1.4.2] - 2021-03-23
 
 ### Changes
@@ -24,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Major Change
 
-- Open Full Conversation - SDK exposes 2 new methods to open full-conversation VC directly from the Article Screen (without pre-conversation). Example code: 
+- Open Full Conversation - SDK exposes 2 new methods to open full-conversation VC directly from the Article Screen (without pre-conversation). Example code:
 `coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)`
 
 - Fix - user action Like\Dislike - guest not allowed to rank, first the user must login.
