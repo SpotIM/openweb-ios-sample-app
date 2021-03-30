@@ -13,5 +13,6 @@ struct SPConfigurationConversation: Decodable {
     let readBatchSize: Int?
     let socialEnable: Bool?
     let typingAggregationTimeSeconds: Int?
-    
+    let communityGuidelinesEnabled: Bool?
+    let communityGuidelinesTitle: SPCommunityGuidelinesTitle?
 }

@@ -27,6 +27,10 @@ public protocol SpotImLoginDelegate: AnyObject {
     func presentControllerForSSOFlow(with spotNavController: UIViewController)
 }
 
+internal protocol SPSafariWebPageDelegate: class {
+    func openWebPage(with urlString: String)
+}
+
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
     func presentControllerForSSOFlow(with spotNavController: UIViewController) {
@@ -286,7 +290,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         preConversationViewController.userAuthFlowDelegate = self
         
         preConversationViewController.preConversationDelegate = self
-        preConversationViewController.webSDKDelegate = self
+        preConversationViewController.webPageDelegate = self
         preConversationViewController.dataLoaded = { [weak self] in
             guard let preConversationViewController = self?.preConversationViewController else { return }
             
@@ -304,7 +308,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
         controller.delegate = self
         controller.userAuthFlowDelegate = self
-        controller.webSDKDelegate = self
+        controller.webPageDelegate = self
         
         controller.title = LocalizationManager.localizedString(key: "Conversation")
         
@@ -371,8 +375,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
 }
 
-extension SpotImSDKFlowCoordinator: SPWebSDKDelegate {
-    func openWebSDKPage(with urlString: String) {
+extension SpotImSDKFlowCoordinator: SPSafariWebPageDelegate {
+    func openWebPage(with urlString: String) {
         showWebPage(with: urlString)
     }
 }
