@@ -56,7 +56,7 @@
 		4416C65D237B119200D3F7B9 /* SPRealTimeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416C65C237B119200D3F7B9 /* SPRealTimeModel.swift */; };
 		4416C65F237B15A800D3F7B9 /* SPRealtimeDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416C65E237B15A800D3F7B9 /* SPRealtimeDataProvider.swift */; };
 		4416C661237B16C800D3F7B9 /* SPRealtimeDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416C660237B16C800D3F7B9 /* SPRealtimeDataRequest.swift */; };
-		443B328D236997F00000BB60 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		443B328D236997F00000BB60 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4454179E236850C0001D0ED0 /* SPAssets.xcassets */; };
 		445417A7236850C0001D0ED0 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445417A1236850C0001D0ED0 /* Roboto-Medium.ttf */; };
 		445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445417A2236850C0001D0ED0 /* Roboto-Regular.ttf */; };
@@ -220,7 +220,7 @@
 		6D4E56AD239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56A9239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf */; };
 		6D4E56AF239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4E56AE239FA02C005B79B6 /* OpenSansHebrew-Italic.ttf */; };
 		6D4E56B123A178DF005B79B6 /* UIView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4E56B023A178DF005B79B6 /* UIView+Animations.swift */; };
-		6D4E56EB23A7A5F7005B79B6 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D4E56EB23A7A5F7005B79B6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6D4E56ED23A7A5F7005B79B6 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D4E56EE23A7A5F7005B79B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D4E56EF23A7A5F7005B79B6 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
@@ -246,7 +246,7 @@
 		6D4E570623A7A5F7005B79B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
 		6D4E570723A7A5F7005B79B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D4E570923A7A5F7005B79B6 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6D4E571823A7B785005B79B6 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D4E571823A7B785005B79B6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6D4E571A23A7B785005B79B6 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D4E571B23A7B785005B79B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D4E571C23A7B785005B79B6 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
@@ -273,7 +273,7 @@
 		6D4E573423A7B785005B79B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D4E573623A7B785005B79B6 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */; };
-		6D85E4382414E846000265D3 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D85E4382414E846000265D3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6D85E4392414E846000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D85E43A2414E846000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D85E43B2414E846000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
@@ -299,7 +299,7 @@
 		6D85E4522414E846000265D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
 		6D85E4532414E846000265D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D85E4552414E846000265D3 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6D85E4642414FA4B000265D3 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D85E4642414FA4B000265D3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6D85E4652414FA4B000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D85E4662414FA4B000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D85E4672414FA4B000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
@@ -325,7 +325,7 @@
 		6D85E47E2414FA4B000265D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
 		6D85E47F2414FA4B000265D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D85E4812414FA4B000265D3 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6D85E49024150B8A000265D3 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6D85E49024150B8A000265D3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6D85E49124150B8A000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D85E49224150B8A000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D85E49324150B8A000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
@@ -352,7 +352,7 @@
 		6D85E4AB24150B8A000265D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D85E4AD24150B8A000265D3 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D85E4B92418E783000265D3 /* PreConversationBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D85E4B82418E783000265D3 /* PreConversationBannerView.swift */; };
-		6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6DA75C6C238D313600FBDF19 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6DA75C6F238D313600FBDF19 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
@@ -377,7 +377,7 @@
 		6DA75C87238D313600FBDF19 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6DA75C91238D5A6F00FBDF19 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
 		6DA75C93238D61D100FBDF19 /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
-		6DAFEEA0239CFCCF00441E97 /* DarkModeSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */; };
+		6DAFEEA0239CFCCF00441E97 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6DAFEEA2239CFCCF00441E97 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DAFEEA3239CFCCF00441E97 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6DAFEEA4239CFCCF00441E97 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
@@ -774,7 +774,7 @@
 		5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot_IM_DevelopmentTests.swift; sourceTree = "<group>"; };
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5DA8B5A02327E20A0045FCFA /* Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
-		5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarkModeSettingsViewController.swift; sourceTree = "<group>"; };
+		5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5DB97791236B25A400E9D547 /* SPNameInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPNameInputView.swift; sourceTree = "<group>"; };
 		5DBD33E22397F98F003DE0BF /* BaseStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseStackView.swift; sourceTree = "<group>"; };
 		5DBD33E623980D6A003DE0BF /* BaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
@@ -1565,7 +1565,7 @@
 				0E1125CE23049F7A006B1489 /* ArticlesListViewController */,
 				5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */,
 				0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */,
-				5DA9B7F52358C7E9006DF43D /* DarkModeSettingsViewController.swift */,
+				5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */,
 				6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */,
 				6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */,
 			);
@@ -2759,7 +2759,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				443B328D236997F00000BB60 /* DarkModeSettingsViewController.swift in Sources */,
+				443B328D236997F00000BB60 /* SettingsViewController.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
 				E685AC2A25C97DC4008FECDB /* GoogleAdsProvider.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
@@ -2792,7 +2792,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D4E56EB23A7A5F7005B79B6 /* DarkModeSettingsViewController.swift in Sources */,
+				6D4E56EB23A7A5F7005B79B6 /* SettingsViewController.swift in Sources */,
 				6D4E56ED23A7A5F7005B79B6 /* FoxAuthenticationViewController.swift in Sources */,
 				6D4E56EE23A7A5F7005B79B6 /* ViewController.swift in Sources */,
 				6D4E56EF23A7A5F7005B79B6 /* Date+extensions.swift in Sources */,
@@ -2816,7 +2816,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D4E571823A7B785005B79B6 /* DarkModeSettingsViewController.swift in Sources */,
+				6D4E571823A7B785005B79B6 /* SettingsViewController.swift in Sources */,
 				6D4E571A23A7B785005B79B6 /* FoxAuthenticationViewController.swift in Sources */,
 				6D4E571B23A7B785005B79B6 /* ViewController.swift in Sources */,
 				6D4E571C23A7B785005B79B6 /* Date+extensions.swift in Sources */,
@@ -2840,7 +2840,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D85E4382414E846000265D3 /* DarkModeSettingsViewController.swift in Sources */,
+				6D85E4382414E846000265D3 /* SettingsViewController.swift in Sources */,
 				6D85E4392414E846000265D3 /* FoxAuthenticationViewController.swift in Sources */,
 				6D85E43A2414E846000265D3 /* ViewController.swift in Sources */,
 				6D85E43B2414E846000265D3 /* Date+extensions.swift in Sources */,
@@ -2864,7 +2864,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D85E4642414FA4B000265D3 /* DarkModeSettingsViewController.swift in Sources */,
+				6D85E4642414FA4B000265D3 /* SettingsViewController.swift in Sources */,
 				6D85E4652414FA4B000265D3 /* FoxAuthenticationViewController.swift in Sources */,
 				6D85E4662414FA4B000265D3 /* ViewController.swift in Sources */,
 				6D85E4672414FA4B000265D3 /* Date+extensions.swift in Sources */,
@@ -2888,7 +2888,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D85E49024150B8A000265D3 /* DarkModeSettingsViewController.swift in Sources */,
+				6D85E49024150B8A000265D3 /* SettingsViewController.swift in Sources */,
 				6D85E49124150B8A000265D3 /* FoxAuthenticationViewController.swift in Sources */,
 				6D85E49224150B8A000265D3 /* ViewController.swift in Sources */,
 				6D85E49324150B8A000265D3 /* Date+extensions.swift in Sources */,
@@ -2912,7 +2912,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6DA75C6C238D313600FBDF19 /* DarkModeSettingsViewController.swift in Sources */,
+				6DA75C6C238D313600FBDF19 /* SettingsViewController.swift in Sources */,
 				6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */,
 				6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */,
 				6DA75C6F238D313600FBDF19 /* Date+extensions.swift in Sources */,
@@ -2936,7 +2936,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6DAFEEA0239CFCCF00441E97 /* DarkModeSettingsViewController.swift in Sources */,
+				6DAFEEA0239CFCCF00441E97 /* SettingsViewController.swift in Sources */,
 				6DAFEEA2239CFCCF00441E97 /* FoxAuthenticationViewController.swift in Sources */,
 				6DAFEEA3239CFCCF00441E97 /* ViewController.swift in Sources */,
 				6DAFEEA4239CFCCF00441E97 /* Date+extensions.swift in Sources */,

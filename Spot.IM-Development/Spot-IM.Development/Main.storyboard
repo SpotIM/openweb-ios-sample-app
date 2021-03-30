@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -334,10 +334,10 @@ Build: [unknown]</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ELI-s3-pbx">
-                                <rect key="frame" x="238" y="58" width="119" height="28"/>
+                                <rect key="frame" x="306" y="58" width="51" height="28"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="tintColor" systemColor="labelColor"/>
-                                <state key="normal" title="Dark mode settings">
+                                <state key="normal" title="Settings">
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
                                 <connections>
@@ -477,22 +477,28 @@ Build: [unknown]</string>
             </objects>
             <point key="canvasLocation" x="2310" y="361"/>
         </scene>
-        <!--Dark Mode Settings View Controller-->
+        <!--Settings View Controller-->
         <scene sceneID="MLR-79-iDN">
             <objects>
-                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="DarkModeSettingsViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="SettingsViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kR-Yk-fnP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="override system dark mode" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kMe-b0-d39">
-                                <rect key="frame" x="138" y="583.5" width="165" height="16"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Override system dark mode" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kMe-b0-d39">
+                                <rect key="frame" x="60" y="582" width="178.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hide article header" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fki-wM-TQv">
+                                <rect key="frame" x="60" y="121" width="123" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="aKr-SD-OJK">
-                                <rect key="frame" x="138" y="615" width="221" height="32"/>
+                                <rect key="frame" x="60" y="615" width="255" height="32"/>
                                 <segments>
                                     <segment title="Light"/>
                                     <segment title="Dark"/>
@@ -502,27 +508,54 @@ Build: [unknown]</string>
                                 </connections>
                             </segmentedControl>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RrX-Ol-vho">
-                                <rect key="frame" x="309" y="576" width="51" height="31"/>
+                                <rect key="frame" x="266" y="576" width="51" height="31"/>
                                 <connections>
                                     <action selector="switchDarkMode:" destination="afI-iB-Nmt" eventType="valueChanged" id="fVv-XM-N0a"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dark mode settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bTW-Wt-zDR">
+                                <rect key="frame" x="98.5" y="526.5" width="178" height="25.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTs-Sn-XWm">
+                                <rect key="frame" x="112.5" y="65" width="150" height="26"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="COa-ig-fWj">
+                                <rect key="frame" x="266" y="114" width="51" height="31"/>
+                                <connections>
+                                    <action selector="switchHideArticleHeader:" destination="afI-iB-Nmt" eventType="valueChanged" id="Ru8-2g-Gws"/>
                                 </connections>
                             </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pIh-k2-j8N"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Fki-wM-TQv" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="1QX-Pv-Y6q"/>
+                            <constraint firstItem="bTW-Wt-zDR" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="8cf-uB-SEj"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="bottom" secondItem="aKr-SD-OJK" secondAttribute="bottom" constant="21" id="8mJ-Rf-Yvc"/>
-                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="aKr-SD-OJK" secondAttribute="trailing" constant="16" id="aZB-ir-P0C"/>
-                            <constraint firstItem="RrX-Ol-vho" firstAttribute="leading" secondItem="kMe-b0-d39" secondAttribute="trailing" constant="6" id="dkw-TX-bR8"/>
-                            <constraint firstItem="aKr-SD-OJK" firstAttribute="leading" secondItem="kMe-b0-d39" secondAttribute="leading" id="jWd-Jl-344"/>
-                            <constraint firstItem="kMe-b0-d39" firstAttribute="centerY" secondItem="RrX-Ol-vho" secondAttribute="centerY" id="nby-6F-Nao"/>
+                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="aKr-SD-OJK" secondAttribute="trailing" constant="60" id="ABi-XR-SpD"/>
+                            <constraint firstItem="kMe-b0-d39" firstAttribute="top" secondItem="bTW-Wt-zDR" secondAttribute="bottom" constant="30" id="Guk-xR-Fik"/>
+                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="COa-ig-fWj" secondAttribute="trailing" constant="60" id="IIP-D6-Bgg"/>
+                            <constraint firstItem="Fki-wM-TQv" firstAttribute="top" secondItem="mTs-Sn-XWm" secondAttribute="bottom" constant="30" id="Iyl-MM-LJX"/>
+                            <constraint firstItem="aKr-SD-OJK" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="JID-vg-Zmg"/>
+                            <constraint firstItem="mTs-Sn-XWm" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="WKT-FA-Ssj"/>
+                            <constraint firstItem="COa-ig-fWj" firstAttribute="centerY" secondItem="Fki-wM-TQv" secondAttribute="centerY" id="XW5-xw-L7s"/>
+                            <constraint firstItem="mTs-Sn-XWm" firstAttribute="top" secondItem="pIh-k2-j8N" secondAttribute="top" constant="21" id="ckz-A8-QEs"/>
+                            <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="kMe-b0-d39" secondAttribute="bottom" constant="16" id="lPA-MJ-6K0"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="RrX-Ol-vho" secondAttribute="bottom" constant="8" id="ukZ-kp-Elp"/>
-                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="RrX-Ol-vho" secondAttribute="trailing" constant="17" id="wpP-Ab-X9e"/>
+                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="RrX-Ol-vho" secondAttribute="trailing" constant="60" id="wpP-Ab-X9e"/>
+                            <constraint firstItem="kMe-b0-d39" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="zT7-od-D5y"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zdw-3c-jGR"/>
                     <connections>
                         <outlet property="darkModeSwitch" destination="RrX-Ol-vho" id="dF2-iX-Gco"/>
+                        <outlet property="hideArtcleHeaderSwitch" destination="COa-ig-fWj" id="X8E-u4-OcZ"/>
                         <outlet property="modeControl" destination="aKr-SD-OJK" id="DcC-wq-pGd"/>
                     </connections>
                 </viewController>
