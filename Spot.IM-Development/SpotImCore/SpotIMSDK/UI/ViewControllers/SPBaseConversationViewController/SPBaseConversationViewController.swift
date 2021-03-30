@@ -12,6 +12,8 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     private var authHandler: AuthenticationHandler?
+    
+    weak var webPageDelegate: SPSafariWebPageDelegate?
 
     internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
     internal weak var delegate: SPCommentsCreationDelegate?
@@ -100,6 +102,51 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     
     func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         // Override this method in your VC to handle
+    }
+    
+    internal func getCommunityGuidelinesTextIfExists() -> String? {
+        guard let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
+              conversationConfig.communityGuidelinesEnabled == true,
+              let communityGuidelinesTitle = conversationConfig.communityGuidelinesTitle else {
+            return nil
+        }
+        return getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesTitle)
+    }
+    
+    private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
+        var htmlString = communityGuidelinesTitle.value
+        
+        // remove <p> and </p> tags to control the text height by the sdk
+        htmlString = htmlString.replacingOccurrences(of: "<p>", with: "")
+        htmlString = htmlString.replacingOccurrences(of: "</p>", with: "")
+        
+        return htmlString
+    }
+    
+    private func openMyProfileWebScreen() {
+        guard let userId = SPUserSessionHolder.session.user?.id else {
+            return
+        }
+        openProfileWebScreen(userId: userId, isMyProfile: true)
+    }
+    
+    private func openProfileWebScreen(userId: String, isMyProfile: Bool) {
+        guard let mobileSdkConfig = SPConfigsDataSource.appConfig?.mobileSdk,
+              mobileSdkConfig.profileEnabled == true,
+              let spotId = SPClientSettings.main.spotKey else { return }
+        let params = SPWebSDKProvider.Params(
+            module: .profile,
+            spotId: spotId,
+            postId: model.dataSource.postId,
+            userId: userId
+        )
+        
+        if isMyProfile {
+            params.userAccessToken =  SPUserSessionHolder.session.token
+            params.userOwToken = SPUserSessionHolder.session.openwebToken
+        }
+        
+        SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
     }
 
     internal func setupUI() {
@@ -528,10 +575,19 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
 extension SPBaseConversationViewController: SPCommentCellDelegate {
     
     func respondToAuthorTap(for commentId: String?) {
-        guard let commentId = commentId else { return }
-        let comment = model.dataSource.commentViewModel(commentId)
-        guard let authorId = comment?.authorId else { return }
-        if SPPublicSessionInterface.isMe(userId: authorId) {
+        guard let commentId = commentId,
+              let comment = model.dataSource.commentViewModel(commentId),
+              let authorId = comment.authorId else { return }
+        
+        let isMyProfile = SPPublicSessionInterface.isMe(userId: authorId)
+        
+        trackProfileClicked(commentId: commentId, authorId: authorId, isMyProfile: isMyProfile)
+        
+        openProfileWebScreen(userId: authorId, isMyProfile: isMyProfile)
+    }
+    
+    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool) {
+        if isMyProfile {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
         } else {
             SPAnalyticsHolder.default.log(
@@ -639,11 +695,14 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
 }
 
 extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate {
-
-    func footerViewDidTap(_ foorterView: SPMainConversationFooterView) {
+    func labelContainerDidTap(_ foorterView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
         logCreationOpen(with: .comment)
         delegate.createComment(with: model)
+    }
+    
+    func userAvatarDidTap(_ foorterView: SPMainConversationFooterView) {
+        openMyProfileWebScreen()
     }
 }
 
@@ -769,5 +828,11 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             message: LocalizationManager.localizedString(key: "It seems like your comment has violated our policy. We recommend you try again with different phrasing."),
             actions: [copyAction, gotItAction]
         )
+    }
+}
+
+extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
+    func clickOnUrl(url: URL) {
+        webPageDelegate?.openWebPage(with: url.absoluteString)
     }
 }
