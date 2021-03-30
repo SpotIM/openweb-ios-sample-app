@@ -13,7 +13,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     private var authHandler: AuthenticationHandler?
     
-    weak var webSDKDelegate: SPWebSDKDelegate?
+    weak var webPageDelegate: SPSafariWebPageDelegate?
 
     internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
     internal weak var delegate: SPCommentsCreationDelegate?
@@ -104,6 +104,25 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         // Override this method in your VC to handle
     }
     
+    internal func getCommunityGuidelinesTextIfExists() -> String? {
+        guard let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
+              conversationConfig.communityGuidelinesEnabled == true,
+              let communityGuidelinesTitle = conversationConfig.communityGuidelinesTitle else {
+            return nil
+        }
+        return getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesTitle)
+    }
+    
+    private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
+        var htmlString = communityGuidelinesTitle.value
+        
+        // remove <p> and </p> tags to control the text height by the sdk
+        htmlString = htmlString.replacingOccurrences(of: "<p>", with: "")
+        htmlString = htmlString.replacingOccurrences(of: "</p>", with: "")
+        
+        return htmlString
+    }
+    
     private func openMyProfileWebScreen() {
         guard let userId = SPUserSessionHolder.session.user?.id else {
             return
@@ -127,7 +146,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
             params.userOwToken = SPUserSessionHolder.session.openwebToken
         }
         
-        SPWebSDKProvider.openWebModule(delegate: webSDKDelegate, params: params)
+        SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
     }
 
     internal func setupUI() {
@@ -809,5 +828,11 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             message: LocalizationManager.localizedString(key: "It seems like your comment has violated our policy. We recommend you try again with different phrasing."),
             actions: [copyAction, gotItAction]
         )
+    }
+}
+
+extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
+    func clickOnUrl(url: URL) {
+        webPageDelegate?.openWebPage(with: url.absoluteString)
     }
 }
