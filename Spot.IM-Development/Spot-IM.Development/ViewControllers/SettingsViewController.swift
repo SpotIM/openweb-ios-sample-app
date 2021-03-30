@@ -1,5 +1,5 @@
 //
-//  DarkModeSettingsViewController.swift
+//  SettingsViewController.swift
 //  Spot-IM.Development
 //
 //  Created by Andriy Fedin on 17/10/19.
@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 import SpotImCore
 
-class DarkModeSettingsViewController: UIViewController {
+class SettingsViewController: UIViewController {
     
+    @IBOutlet weak var hideArtcleHeaderSwitch: UISwitch!
     @IBOutlet weak var darkModeSwitch: UISwitch!
     @IBOutlet weak var modeControl: UISegmentedControl!
     
@@ -20,6 +21,12 @@ class DarkModeSettingsViewController: UIViewController {
         get { UserDefaults.standard.bool(forKey: "demo.isCustomDarkModeEnabled") }
         set { setCustomDarkMode(enabled: newValue) }
     }
+    
+    var isHideArticleHeaderEnabled: Bool {
+        get { !SpotIm.displayArticleHeader }
+        set { SpotIm.displayArticleHeader = !newValue }
+    }
+    
     var interfaceStyle: Int {
         get { UserDefaults.standard.integer(forKey: "demo.interfaceStyle") }
         set { UserDefaults.standard.set(newValue, forKey: "demo.interfaceStyle") }
@@ -38,6 +45,8 @@ class DarkModeSettingsViewController: UIViewController {
         }
 
         darkModeSwitch.isOn = isCustomDarkModeEnabled
+        hideArtcleHeaderSwitch.isOn = isHideArticleHeaderEnabled
+        
         modeControl.isHidden = !isCustomDarkModeEnabled
         modeControl.selectedSegmentIndex = interfaceStyle
     }
@@ -45,6 +54,11 @@ class DarkModeSettingsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(navBarHiddenOldValue, animated: animated)
     }
+    
+    @IBAction func switchHideArticleHeader(_ sender: UISwitch) {
+        isHideArticleHeaderEnabled = sender.isOn
+    }
+    
 
     @IBAction func switchDarkMode(_ sender: UISwitch) {
         isCustomDarkModeEnabled = sender.isOn
