@@ -49,7 +49,6 @@ PODS:
   - PromiseKit/UIKit (6.13.1):
     - PromiseKit/CorePromise
   - PromisesObjC (1.2.12)
-  - Reveal-SDK (27)
   - SnapKit (4.2.0)
 
 DEPENDENCIES:
@@ -60,7 +59,6 @@ DEPENDENCIES:
   - Google-Mobile-Ads-SDK (= 7.69)
   - Kingfisher
   - PromiseKit (~> 6.8)
-  - Reveal-SDK
   - SnapKit (~> 4.2.0)
 
 SPEC REPOS:
@@ -78,7 +76,6 @@ SPEC REPOS:
     - Player
     - PromiseKit
     - PromisesObjC
-    - Reveal-SDK
     - SnapKit
 
 SPEC CHECKSUMS:
@@ -95,9 +92,8 @@ SPEC CHECKSUMS:
   Player: 968d8d07d923bcdd6f7e4091c9e306eb44a5f7a4
   PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
-  Reveal-SDK: 306e2880395ee396f5a8b4c485c3a86dd19866c7
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: 48f240b439adc3eba596c0a4dbafe6fbf6b1bd22
+PODFILE CHECKSUM: 0e5c39b53201d872d8bdbac7e7fdfe592e7ffd81
 
 COCOAPODS: 1.10.0
