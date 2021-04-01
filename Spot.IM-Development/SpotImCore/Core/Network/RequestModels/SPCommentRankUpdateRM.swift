@@ -16,6 +16,25 @@ struct SPRankChange {
     var reversed: SPRankChange {
         return SPRankChange(from: self.to, to: self.from, subject: subject)
     }
+    
+    func mapRankChangeToOperation() -> String {
+        switch self.subject {
+        case .up:
+            if self.from == .up {
+                return "toggle-like"
+            } else {
+                return "like"
+            }
+        case .down:
+            if self.from == .down {
+                return "toggle-dislike"
+            } else {
+                return "dislike"
+            }
+        default:
+            return ""
+        }
+    }
 }
 
 enum SPRank: Int {
