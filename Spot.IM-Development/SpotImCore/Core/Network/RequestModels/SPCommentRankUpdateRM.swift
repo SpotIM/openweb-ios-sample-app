@@ -16,17 +16,14 @@ struct SPRankChange {
         return SPRankChange(from: self.to, to: self.from)
     }
     
-    func mapRankChangeToOperation() -> String? {
-        var operation: String? {
-            switch (self.from, self.to) {
+    var operation: String? {
+        switch (self.from, self.to) {
             case (_, .up): return "like"
             case (.up, .unrank): return "toggle-like"
             case (_, .down): return "dislike"
             case (.down, .unrank): return "toggle-dislike"
             default: return nil
-            }
         }
-        return operation
     }
 }
 

@@ -66,7 +66,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
             return
         }
         
-        guard let operation = change.mapRankChangeToOperation() else {
+        guard let operation = change.operation else {
             completion(false, SPNetworkError.custom("Invalid operation"))
             return
         }
