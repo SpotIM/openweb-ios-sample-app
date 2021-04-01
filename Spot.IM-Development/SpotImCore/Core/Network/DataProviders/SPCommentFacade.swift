@@ -65,10 +65,15 @@ internal final class SPCommentFacade: SPCommentUpdater {
             completion(false, SPNetworkError.custom("Conversation ID is required"))
             return
         }
+        
+        guard let operation = change.mapRankChangeToOperation() else {
+            completion(false, SPNetworkError.custom("Invalid operation"))
+            return
+        }
 
         let parameters: [String: Any] = [
             ChangeRankAPIKeys.postId: "\(spotKey)_\(conversationId)",
-            ChangeRankAPIKeys.operation: change.mapRankChangeToOperation(),
+            ChangeRankAPIKeys.operation: operation,
             ChangeRankAPIKeys.parentId: parentId ?? "",
             ChangeRankAPIKeys.messageId: commentId
         ]
