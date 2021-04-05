@@ -256,7 +256,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         sortView.delegate = self
         sortView.updateSortOption(model.sortOption.title)
         sortView.layout {
-            $0.top.equal(to: view.topAnchor)
+            $0.top.equal(to: topLayoutGuide.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.height.equal(to: 44.0)
