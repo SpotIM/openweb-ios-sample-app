@@ -28,6 +28,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     private let avatarImageView: SPAvatarView = SPAvatarView()
     private let userNameView: UserNameView = .init()
+    private let commentLabelsView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: BaseView = .init()
@@ -83,12 +84,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         contentView.addSubviews(headerView,
                                 avatarImageView,
                                 userNameView,
+                                commentLabelsView,
                                 messageView,
                                 replyActionsView,
                                 moreRepliesView)
         configureHeaderView()
         configureAvatarView()
         configureUserNameView()
+        configureCommentLabelsView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
@@ -134,9 +137,16 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
+    private func configureCommentLabelsView() {
+        commentLabelsView.layout {
+            $0.top.equal(to: userNameView.bottomAnchor, offsetBy: 10)
+            $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
+        }
+    }
+    
     private func configureMessageView() {
         messageView.layout {
-            $0.top.equal(to: userNameView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
+            $0.top.equal(to: commentLabelsView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
             $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
