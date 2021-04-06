@@ -222,7 +222,7 @@ final class CommentActionsView: BaseView {
             to = .unrank
         }
 
-        delegate?.rankUp(SPRankChange(from: from, to: to, subject: .up))
+        delegate?.rankUp(SPRankChange(from: from, to: to))
     }
 
     @objc
@@ -240,7 +240,7 @@ final class CommentActionsView: BaseView {
             to = .unrank
         }
 
-        delegate?.rankDown(SPRankChange(from: from, to: to, subject: .down))
+        delegate?.rankDown(SPRankChange(from: from, to: to))
     }
 }
 
