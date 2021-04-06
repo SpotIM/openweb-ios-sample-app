@@ -74,7 +74,6 @@ internal final class SPCommentFacade: SPCommentUpdater {
         let parameters: [String: Any] = [
             ChangeRankAPIKeys.postId: "\(spotKey)_\(conversationId)",
             ChangeRankAPIKeys.operation: operation,
-            ChangeRankAPIKeys.parentId: parentId ?? "",
             ChangeRankAPIKeys.messageId: commentId
         ]
 
