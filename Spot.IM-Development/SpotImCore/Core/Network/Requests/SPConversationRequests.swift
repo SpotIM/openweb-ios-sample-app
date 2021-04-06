@@ -40,7 +40,7 @@ internal enum SPConversationRequest: SPRequest {
         case .conversationAsync: return "/conversation/async"
         case .conversationRead: return "/conversation/read"
         case .commentPost, .commentUpdate, .commentDelete: return "/conversation/comment"
-        case .commentRankChange: return "/conversation/rank/message"
+        case .commentRankChange: return "/rank/rank/message"
         case .commentReport: return "/conversation/report/message"
         case .commentShare:return "/conversation/message/share"
         case .commentsCounters: return "/conversation/count"
