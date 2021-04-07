@@ -141,7 +141,8 @@ internal struct CommentViewModel {
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
         let userViewHeight: CGFloat = badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
-
+        let commentLabelHeight: CGFloat = Theme.commentLabelViewHeight
+        
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
         let deletedOffset = isDeleted ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
@@ -153,6 +154,7 @@ internal struct CommentViewModel {
             + (isDeleted ? 0.0 : Theme.replyActionsViewHeight)
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
+            + commentLabelHeight //TODO: check if labels exist - else put 0
 
         return height
     }
@@ -182,6 +184,7 @@ internal struct CommentViewModel {
         static let moreRepliesViewHeight: CGFloat = 31.0
         static let moreRepliesTopOffset: CGFloat = 12.0
         static let lastInSectionOffset: CGFloat = 19.0
+        static let commentLabelViewHeight: CGFloat = 28.0
     }
 
     private func message() -> String {
