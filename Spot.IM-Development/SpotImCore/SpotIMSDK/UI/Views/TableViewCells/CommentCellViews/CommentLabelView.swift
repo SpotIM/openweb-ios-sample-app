@@ -38,16 +38,13 @@ internal final class CommentLabelView: BaseView {
 //    }
     
     private func configureLabel() {
-        label.backgroundColor = .green //.spBackground0
         label.font = .preferred(style: .regular, of: Theme.fontSize)
         label.text = "label text"
-        label.textColor = .red
         label.layout {
-            $0.top.equal(to: labelContainer.topAnchor, offsetBy: 10)
-            $0.bottom.equal(to: labelContainer.bottomAnchor, offsetBy: -10)
+            $0.top.equal(to: labelContainer.topAnchor, offsetBy: 5)
+            $0.bottom.equal(to: labelContainer.bottomAnchor, offsetBy: -5)
             $0.trailing.equal(to: labelContainer.trailingAnchor, offsetBy: -10)
             $0.leading.equal(to: labelContainer.leadingAnchor, offsetBy: 10)
-//            $0.leading.equal(to: iconImageView.trailingAnchor, offsetBy: 5)
         }
     }
 
