@@ -17,6 +17,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
     private let avatarView: SPAvatarView = .init()
     private let userNameView: UserNameView = .init()
+    private let commentLabelsView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     
@@ -127,9 +128,10 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, userNameView, messageView, replyActionsView, moreRepliesView)
+        contentView.addSubviews(avatarView, userNameView, commentLabelsView, messageView, replyActionsView, moreRepliesView)
         configureAvatarView()
         configureUserNameView()
+        configureCommentLabelsView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
@@ -155,9 +157,16 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
     
+    private func configureCommentLabelsView() {
+        commentLabelsView.layout {
+            $0.top.equal(to: userNameView.bottomAnchor, offsetBy: 10)
+            $0.leading.equal(to: messageView.leadingAnchor)
+        }
+    }
+    
     private func configureMessageView() {
         messageView.layout {
-            $0.top.equal(to: userNameView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
+            $0.top.equal(to: commentLabelsView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
             textViewLeadingConstraint = $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
