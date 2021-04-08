@@ -12,7 +12,7 @@ struct SPSpotConfiguration: Decodable {
     
     enum CodingKeys: String, CodingKey {
         
-        case apm, conversation, realtime, spotlight, sso, reactions
+        case apm, conversation, realtime, spotlight, sso, reactions, shared
         case initialization = "init"
         case mobileSdk = "mobile-sdk"
         
@@ -26,4 +26,5 @@ struct SPSpotConfiguration: Decodable {
     let mobileSdk: SPConfigurationSDKStatus
     let sso: SPConfigurationSSO?
     let reactions: SPConfigurationReactions?
+    let shared: SPConfigurationShared?
 }
