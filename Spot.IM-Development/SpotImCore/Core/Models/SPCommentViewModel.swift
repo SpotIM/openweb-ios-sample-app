@@ -24,7 +24,8 @@ internal struct CommentViewModel {
     var repliesRawCount: Int?
     var repliesCount: String?
     var depth: Int = 0
-
+    var commentLabel: SPLabelConfiguration?
+    
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
 
@@ -63,7 +64,17 @@ internal struct CommentViewModel {
         hasOffset = comment.isReply
         parentCommentId = comment.parentId
         depth = comment.depth ?? 0
-
+        
+        // cross given commentLabels to appConfig labels
+        if let labelIds = comment.additionalData?.labels?.ids, labelIds.count > 0 {
+            if let section = comment.additionalData?.labels?.section,
+               let sectionLabels = SPConfigsDataSource.appConfig?.shared?.commentLabels?[section] {
+                commentLabel = sectionLabels.getLabelById(labelId: labelIds[0])
+            } else if let sectionLabels = SPConfigsDataSource.appConfig?.shared?.commentLabels?["default"] {
+                commentLabel = sectionLabels.getLabelById(labelId: labelIds[0])
+            }
+        }
+        
         if comment.hasNext {
             repliesButtonState = .collapsed
         } else {
@@ -146,7 +157,7 @@ internal struct CommentViewModel {
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
         let deletedOffset = isDeleted ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
-
+        
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
             + userViewHeight
@@ -154,7 +165,7 @@ internal struct CommentViewModel {
             + (isDeleted ? 0.0 : Theme.replyActionsViewHeight)
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
-            + commentLabelHeight //TODO: check if labels exist - else put 0
+            + (commentLabel == nil ? 0.0 : commentLabelHeight)
 
         return height
     }

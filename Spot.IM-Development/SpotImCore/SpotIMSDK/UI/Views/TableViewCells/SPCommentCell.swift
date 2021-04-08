@@ -37,6 +37,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private var commentId: String?
     private var replyingToId: String?
     private var repliesButtonState: RepliesButtonState = .collapsed
+    private var commentLabel: SPLabelConfiguration?
     
     private var replyActionsViewHeightConstraint: NSLayoutConstraint?
     private var moreRepliesViewHeightConstraint: NSLayoutConstraint?
@@ -76,6 +77,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit)
+        updateCommentLabelView(with: data)
     }
 
     // MARK: - Private Methods - View setup
@@ -202,6 +204,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         userViewHeightConstraint?.constant = userViewHeight
         userNameViewTopConstraint?.constant = dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset
 
+    }
+    
+    private func updateCommentLabelView(with dataModel: CommentViewModel) {
+        if let commentLabel = dataModel.commentLabel {
+            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, hexColor: commentLabel.color, labelText: commentLabel.text)
+        } else {
+            commentLabelsView.setState(state: .hidden)
+        }
     }
     
     private func updateActionView(with dataModel: CommentViewModel) {
