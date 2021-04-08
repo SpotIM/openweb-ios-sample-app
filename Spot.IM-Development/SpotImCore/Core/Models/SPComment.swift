@@ -12,7 +12,7 @@ internal struct SPComment: Decodable, Equatable {
     
     enum CodingKeys: String, CodingKey {
         case id, parentId, rootComment, depth, userId, writtenAt, time, repliesCount, totalRepliesCount, offset,
-        status, hasNext, edited, deleted, published, rank, content, users, replies, isReply
+        status, hasNext, edited, deleted, published, rank, content, users, replies, isReply, additionalData
     }
     
     var id: String?
@@ -34,6 +34,7 @@ internal struct SPComment: Decodable, Equatable {
     var content: [Content]?
     var users: [String: CommentUser]?
     var replies: [SPComment]?
+    var additionalData: AdditionalData?
 
     var isReply: Bool {
         guard let id = id, let rootComment = rootComment else {
@@ -71,6 +72,7 @@ internal struct SPComment: Decodable, Equatable {
         content = try? container.decode([Content].self, forKey: .content)
         users = try? container.decode([String: CommentUser].self, forKey: .users)
         replies = try? container.decode([SPComment].self, forKey: .replies)
+        additionalData = try? container.decode(AdditionalData.self, forKey: .additionalData)
     }
 
     enum Status: String {
@@ -112,6 +114,15 @@ extension SPComment {
 
     struct CommentUser: Decodable, Equatable {
         var id: String?
+    }
+    
+    struct AdditionalData: Decodable, Equatable {
+        var labels: CommentLabel?
+    }
+    
+    struct CommentLabel: Decodable, Equatable {
+        var section: String?
+        var ids: [String]?
     }
     
 }
