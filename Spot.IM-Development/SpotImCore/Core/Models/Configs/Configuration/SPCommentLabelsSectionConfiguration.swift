@@ -14,4 +14,11 @@ struct SPCommentLabelsSectionConfiguration: Decodable {
     let guidelineText: String?
     let maxSelected: Int?
     let minSelected: Int?
+    
+    func getLabelById(labelId: String) -> SPLabelConfiguration? {
+        if let label = labels?.filter({ $0.id == labelId })[0] {
+            return label
+        }
+        return nil
+    }
 }
