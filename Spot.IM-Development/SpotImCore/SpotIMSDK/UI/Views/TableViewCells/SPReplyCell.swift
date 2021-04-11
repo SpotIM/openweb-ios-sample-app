@@ -45,6 +45,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateUserView(with: data)
         updateActionView(with: data)
         updateAvatarView(with: data)
+        updateCommentLabelView(with: data)
         messageView.delegate = self
         
         textViewLeadingConstraint?.constant = data.depthOffset()
@@ -122,6 +123,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             avatarView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
         } else {
             avatarView.updateOnlineStatus(.offline)
+        }
+    }
+    
+    private func updateCommentLabelView(with dataModel: CommentViewModel) {
+        if let commentLabel = dataModel.commentLabel {
+            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, rgbColor: commentLabel.color, labelText: commentLabel.text)
+        } else {
+            commentLabelsView.setState(state: .hidden)
         }
     }
     

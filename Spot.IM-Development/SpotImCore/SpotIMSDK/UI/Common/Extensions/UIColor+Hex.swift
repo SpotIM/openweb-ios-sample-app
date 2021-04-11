@@ -33,4 +33,18 @@ extension UIColor {
             alpha: CGFloat(1.0)
         )
     }
+    
+    static func rgbToHex(with rgbColor: String?) -> String? {
+        guard let rgb = rgbColor else {return nil}
+        
+        let seperatedRgb = rgb.components(separatedBy: ",").map({ Int($0.trimmingCharacters(in: .whitespacesAndNewlines)) })
+        guard seperatedRgb.count >= 3, let rgbRedValue = seperatedRgb[0], let rgbGreenValue = seperatedRgb[1], let rgbBlueValue = seperatedRgb[2]
+        else {return nil}
+        
+        
+        // https://stackoverflow.com/a/49151217
+        let hexValue = String(format:"%02X", rgbRedValue) + String(format:"%02X", rgbGreenValue) + String(format:"%02X", rgbBlueValue)
+
+        return hexValue
+    }
 }

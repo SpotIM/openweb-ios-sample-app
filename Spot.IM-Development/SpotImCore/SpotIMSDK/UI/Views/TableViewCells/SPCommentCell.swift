@@ -208,7 +208,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabel = dataModel.commentLabel {
-            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, hexColor: commentLabel.color, labelText: commentLabel.text)
+            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, rgbColor: commentLabel.color, labelText: commentLabel.text)
         } else {
             commentLabelsView.setState(state: .hidden)
         }
