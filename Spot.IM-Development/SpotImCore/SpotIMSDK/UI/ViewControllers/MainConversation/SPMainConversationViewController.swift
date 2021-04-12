@@ -49,6 +49,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var isHeaderVisible: Bool = false
     private var wasScrolled: Bool = false
     private var displayArticleHeader: Bool = true
+    private var communityGuidelinesHtmlString: String? = nil
     
     private var isCommunityGudelinesVisible: Bool = false
     private var communityGudelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
@@ -118,6 +119,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.footer.updateColorsAccordingToStyle()
         self.tableHeader.updateColorsAccordingToStyle()
         self.sortView.updateColorsAccordingToStyle()
+        self.communityGuidelinesView.updateColorsAccordingToStyle()
+        if let htmlString = self.communityGuidelinesHtmlString {
+            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -298,6 +303,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.trailing.equal(to: view.trailingAnchor)
         }
         if let htmlString = getCommunityGuidelinesTextIfExists() {
+            communityGuidelinesHtmlString = htmlString
             isCommunityGudelinesVisible = true
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
             communityGuidelinesView.delegate = self
