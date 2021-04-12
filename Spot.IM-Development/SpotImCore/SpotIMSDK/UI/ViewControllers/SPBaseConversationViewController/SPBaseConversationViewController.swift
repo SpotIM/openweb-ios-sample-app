@@ -65,6 +65,18 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 12.0, *) {
+            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                print("oded - reloadData")
+                self.tableView.reloadData()
+            }
+        } else {
+            self.tableView.reloadData()
+        }
+    }
+    
     func didStartSignInFlowForChangeRank() {
         // Override this method in your VC to handle
     }
@@ -471,6 +483,12 @@ extension SPBaseConversationViewController: UITableViewDataSource {
             commentCell.delegate = self
             
             return commentCell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let commentCell = cell as? SPCommentCell {
+            commentCell.updateColorsAccordingToStyle()
         }
     }
 
