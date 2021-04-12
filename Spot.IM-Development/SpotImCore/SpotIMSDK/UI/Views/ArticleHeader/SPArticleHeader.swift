@@ -23,6 +23,18 @@ internal final class SPArticleHeader: BaseView {
         
         setup()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        conversationImageView.backgroundColor = .spBackground0
+        separatorView.backgroundColor = .spSeparator2
+        titlesContainer.backgroundColor = .spBackground0
+        conversationTitleLabel.backgroundColor = .spBackground0
+        conversationTitleLabel.textColor = .spForeground4
+        conversationAuthorLabel.backgroundColor = .spBackground0
+        conversationAuthorLabel.textColor = .spForeground2
+    }
 
     // MARK: - Internal methods
 

@@ -41,6 +41,17 @@ final class SPConversationSummaryView: BaseView {
         configureButtonsTargets()
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        commentsCountLabel.textColor = .spForeground4
+        commentsCountLabel.backgroundColor = .spBackground0
+        sortButton.setTitleColor(.spForeground4, for: .normal)
+        newCommentsButton.setTitleColor(.white, for: .normal)
+        newCommentsButton.backgroundColor = .brandColor
+        separatorView.backgroundColor = .spSeparator2
+    }
+    
     // MARK: - Internal methods    
     func updateCommentsLabel(_ newCommentsCount: Int) {
         let commentsText: String = newCommentsCount > 1 ?

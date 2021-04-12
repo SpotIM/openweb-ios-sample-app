@@ -111,19 +111,26 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.view.backgroundColor = .spBackground0
+        self.tableView.backgroundColor = .spBackground0
+        self.footer.updateColorsAccordingToStyle()
+        self.tableHeader.updateColorsAccordingToStyle()
+        self.sortView.updateColorsAccordingToStyle()
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if #available(iOS 12.0, *) {
             if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
                 print("oded - reloadData \(self.tableView)")
                 self.tableView.reloadData()
-                self.footer.updateColorsAccordingToStyle()
-                self.view.backgroundColor = .spBackground0
+                self.updateColorsAccordingToStyle()
             }
         } else {
             self.tableView.reloadData()
-            self.footer.updateColorsAccordingToStyle()
-            self.view.backgroundColor = .spBackground0
+            self.updateColorsAccordingToStyle()
         }
     }
 
