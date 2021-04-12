@@ -28,6 +28,19 @@ final class SPCommentHeaderView: BaseView {
         setup()
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        replyingLabel.backgroundColor = .spBackground0
+        replyingLabel.textColor = .spForeground4
+        commentAuthorLabel.backgroundColor = .spBackground0
+        commentAuthorLabel.textColor = .spForeground1
+        closeButton.backgroundColor = .spBackground0
+        commentLabel.backgroundColor = .spBackground0
+        commentLabel.textColor = .spForeground1
+        separatorView.backgroundColor = .spSeparator2
+    }
+    
     // MARK: - Internal methods
     
     internal func configure(with commentModel: CommentDataModel) {
@@ -44,12 +57,11 @@ final class SPCommentHeaderView: BaseView {
         setupCloseButton()
         setupCommentLabel()
         setupSeparatorView()
+        updateColorsAccordingToStyle()
     }
     
     private func setupReplyingLabel() {
         replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
-        replyingLabel.backgroundColor = .spBackground0
-        replyingLabel.textColor = .spForeground4
         replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
         replyingLabel.layout {
             $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
@@ -58,8 +70,6 @@ final class SPCommentHeaderView: BaseView {
     }
     
     private func setupCommentAuthorLabel() {
-        commentAuthorLabel.backgroundColor = .spBackground0
-        commentAuthorLabel.textColor = .spForeground1
         commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         
         commentAuthorLabel.layout {
@@ -72,7 +82,6 @@ final class SPCommentHeaderView: BaseView {
     
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
-        closeButton.backgroundColor = .spBackground0
         closeButton.layout {
             $0.centerY.equal(to: commentAuthorLabel.centerYAnchor)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -6.0)
@@ -82,9 +91,7 @@ final class SPCommentHeaderView: BaseView {
     }
     
     private func setupCommentLabel() {
-        commentLabel.backgroundColor = .spBackground0
         commentLabel.numberOfLines = 3
-        commentLabel.textColor = .spForeground1
         commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
         
         commentLabel.layout {
@@ -96,7 +103,6 @@ final class SPCommentHeaderView: BaseView {
     }
     
     private func setupSeparatorView() {
-        separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
             $0.leading.equal(to: leadingAnchor)
             $0.bottom.equal(to: bottomAnchor)

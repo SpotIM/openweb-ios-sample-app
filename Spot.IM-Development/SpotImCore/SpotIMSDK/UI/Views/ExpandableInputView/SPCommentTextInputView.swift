@@ -46,6 +46,14 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
         showingAvatar = hasAvatar
         setupUI()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        textInputView.backgroundColor = .spBackground0
+        textInputView.textColor = .spForeground1
+        avatarImageView.updateColorsAccordingToStyle()
+    }
 
     func makeFirstResponder() {
         textInputView.becomeFirstResponder()
@@ -87,6 +95,7 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
         addSubviews(textInputView, avatarImageView)
         configureAvatarView()
         configureTextInputView()
+        updateColorsAccordingToStyle()
     }
     
     private func configureAvatarView() {
@@ -110,9 +119,7 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
                                                       isActive: false)
         }
         textInputView.delegate = self
-        textInputView.backgroundColor = .spBackground0
         textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
-        textInputView.textColor = .spForeground1
         textInputView.textAlignment = LocalizationManager.getTextAlignment()
     }
 }
