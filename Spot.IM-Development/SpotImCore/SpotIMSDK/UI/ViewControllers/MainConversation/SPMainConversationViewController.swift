@@ -345,6 +345,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
     
     private func updateFooterView() {
+        footer.updateColorsAccordingToStyle()
         footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard
