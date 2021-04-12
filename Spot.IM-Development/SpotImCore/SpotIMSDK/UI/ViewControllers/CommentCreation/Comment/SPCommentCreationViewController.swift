@@ -12,6 +12,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
     private let commentingOnLabel: BaseLabel = .init()
+    private let commentingContainer: UIView = .init()
     private let closeButton: BaseButton = .init()
 
     private var emptyArticleBottomConstarint: NSLayoutConstraint?
@@ -21,7 +22,35 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         super.viewDidLoad()
         topContainerView.bringSubviewToFront(closeButton)
     }
-
+    
+    // Handle dark mode \ light mode change
+    override func updateColorsAccordingToStyle() {
+        super.updateColorsAccordingToStyle()
+        articleView.updateColorsAccordingToStyle()
+        commentingContainer.backgroundColor = .spBackground0
+        commentingOnLabel.textColor = .spForeground4
+        commentingOnLabel.backgroundColor = .spBackground0
+        closeButton.backgroundColor = .spBackground0
+        updateAvatar() // placeholder is adjusted to theme
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let state = UIApplication.shared.applicationState
+        if #available(iOS 12.0, *) {
+            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                // traitCollectionDidChange() is called multiple times, see: https://stackoverflow.com/a/63380259/583425
+                if state != .background {
+                    self.updateColorsAccordingToStyle()
+                }
+            }
+        } else {
+            if state != .background {
+                self.updateColorsAccordingToStyle()
+            }
+        }
+    }
+    
     internal override func updateModelData() {
         setupHeaderComponentsIfNeeded()
         configureModelHandlers()
@@ -53,8 +82,6 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
             return
         }
 
-        let commentingContainer = UIView.init()
-        commentingContainer.backgroundColor = .spBackground0
         commentingContainer.addSubview(commentingOnLabel)
 
         topContainerStack.insertArrangedSubview(commentingContainer, at: 0)
@@ -62,9 +89,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         topContainerView.addSubview(closeButton)
         
         commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
-        commentingOnLabel.textColor = .spForeground4
         commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
-        commentingOnLabel.backgroundColor = commentingContainer.backgroundColor
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.sizeToFit()
         
@@ -83,7 +108,6 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         }
         
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
-        closeButton.backgroundColor = .spBackground0
         closeButton.layout {
             $0.centerY.equal(to: topContainerView.topAnchor, offsetBy: 35)
             $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -5.0)
