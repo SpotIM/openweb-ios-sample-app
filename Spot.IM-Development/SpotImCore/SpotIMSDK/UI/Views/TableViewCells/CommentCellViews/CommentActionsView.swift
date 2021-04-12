@@ -117,12 +117,11 @@ final class CommentActionsView: BaseView {
         configureReplyButton()
         configureRankUpButton()
         configureRankDownButton()
+        updateColorsAccordingToStyle()
     }
 
     private func configureReplyButton() {
-        replyButton.backgroundColor = .spBackground0
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
-        replyButton.setTitleColor(.buttonTitle, for: .normal)
         replyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.fontSize)
         replyButton.setTitle(replyDefaultTitle, for: .normal)
         replyButton.layout {
@@ -136,9 +135,7 @@ final class CommentActionsView: BaseView {
     }
 
     private func configureRankUpButton() {
-        rankUpButton.backgroundColor = .spBackground0
         rankUpButton.addTarget(self, action: #selector(rankUp), for: .touchUpInside)
-        rankUpButton.imageColorOff = .buttonTitle
         rankUpButton.setContentHuggingPriority(.required, for: .horizontal)
         let width = Theme.engagementStackHeight - Theme.rankButtonHorizontalInset * 2
         rankUpButton.layout {
@@ -148,10 +145,8 @@ final class CommentActionsView: BaseView {
             $0.trailing.equal(to: rankUpLabel.leadingAnchor)
         }
 
-        rankUpLabel.backgroundColor = .spBackground0
         rankUpLabel.textAlignment = .center
         rankUpLabel.font = .preferred(style: .regular, of: Theme.fontSize)
-        rankUpLabel.textColor = .buttonTitle
         rankUpLabel.setContentHuggingPriority(.required, for: .horizontal)
         rankUpLabel.layout {
             $0.centerY.equal(to: replyButton.centerYAnchor)
@@ -160,9 +155,7 @@ final class CommentActionsView: BaseView {
     }
 
     private func configureRankDownButton() {
-        rankDownButton.backgroundColor = .spBackground0
         rankDownButton.addTarget(self, action: #selector(rankDown), for: .touchUpInside)
-        rankDownButton.imageColorOff = .buttonTitle
         rankDownButton.setContentHuggingPriority(.required, for: .horizontal)
         let width = Theme.engagementStackHeight - Theme.rankButtonHorizontalInset * 2
         rankDownButton.layout {
@@ -172,10 +165,8 @@ final class CommentActionsView: BaseView {
             $0.trailing.equal(to: rankDownLabel.leadingAnchor)
         }
 
-        rankDownLabel.backgroundColor = .spBackground0
         rankDownLabel.textAlignment = .center
         rankDownLabel.font = .preferred(style: .regular, of: Theme.fontSize)
-        rankDownLabel.textColor = .buttonTitle
         rankDownLabel.setContentHuggingPriority(.required, for: .horizontal)
         rankDownLabel.layout {
             $0.centerY.equal(to: replyButton.centerYAnchor)

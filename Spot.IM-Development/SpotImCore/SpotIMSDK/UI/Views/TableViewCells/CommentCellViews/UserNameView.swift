@@ -112,6 +112,7 @@ internal final class UserNameView: BaseView {
         configureLeaderBadge()
         configureBadgeTagLabel()
         configureSubtitleAndDateLabels()
+        updateColorsAccordingToStyle()
     }
 
     private func configureDeletedLabel() {
@@ -138,9 +139,7 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureUserNameLabel() {
-        userNameLabel.textColor = .spForeground1
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        userNameLabel.backgroundColor = .spBackground0
         userNameLabel.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
@@ -159,7 +158,6 @@ internal final class UserNameView: BaseView {
     }
 
     private func setupMoreButton() {
-        moreButton.backgroundColor = .spBackground0
         let image = UIImage(spNamed: "menu_icon")
         moreButton.setImage(image, for: .normal)
         moreButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
@@ -184,7 +182,6 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureBadgeTagLabel() {
-        badgeTagLabel.backgroundColor = .spBackground0
         badgeTagLabel.font = .preferred(style: .medium, of: Theme.fontSize)
         badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         badgeTagLabel.layout {
@@ -194,8 +191,6 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureSubtitleAndDateLabels() {
-        subtitleLabel.textColor = .spForeground3
-        subtitleLabel.backgroundColor = .spBackground0
         subtitleLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -207,8 +202,6 @@ internal final class UserNameView: BaseView {
             $0.trailing.equal(to: dateLabel.leadingAnchor)
         }
 
-        dateLabel.textColor = .spForeground3
-        dateLabel.backgroundColor = .spBackground0
         dateLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         dateLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         dateLabel.isUserInteractionEnabled = false
