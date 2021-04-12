@@ -66,11 +66,11 @@ internal final class SPArticleHeader: BaseView {
         setupConversationImageView()
         setupConversationTitleContainer()
         configureSeparatorView()
+        updateColorsAccordingToStyle()
     }
 
     private func setupConversationImageView() {
         conversationImageView.image = UIImage(spNamed: "imagePlaceholder", for: .light)
-        conversationImageView.backgroundColor = .spBackground0
         conversationImageView.contentMode = .scaleAspectFill
         conversationImageView.clipsToBounds = true
         conversationImageView.addCornerRadius(Theme.imageCornerRadius)
@@ -84,7 +84,6 @@ internal final class SPArticleHeader: BaseView {
     }
 
     private func configureSeparatorView() {
-        separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
             $0.leading.equal(to: leadingAnchor)
             $0.bottom.equal(to: bottomAnchor)
@@ -95,7 +94,6 @@ internal final class SPArticleHeader: BaseView {
     
     private func setupConversationTitleContainer() {
         titlesContainer.addSubviews(conversationTitleLabel, conversationAuthorLabel)
-        titlesContainer.backgroundColor = .spBackground0
         titlesContainer.layout {
             $0.leading.equal(to: conversationImageView.trailingAnchor, offsetBy: Theme.insetShort)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.titlesTrailingOffset)
@@ -108,8 +106,6 @@ internal final class SPArticleHeader: BaseView {
     private func setupConversationTitleLabel() {
         conversationTitleLabel.text = LocalizationManager.localizedString(key: "Loading")
         conversationTitleLabel.numberOfLines = 2
-        conversationTitleLabel.backgroundColor = .spBackground0
-        conversationTitleLabel.textColor = .spForeground4
         conversationTitleLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
 
         conversationTitleLabel.layout {
@@ -121,8 +117,6 @@ internal final class SPArticleHeader: BaseView {
     
     private func setupConversationAuthorLabel() {
         conversationAuthorLabel.numberOfLines = 1
-        conversationAuthorLabel.backgroundColor = .spBackground0
-        conversationAuthorLabel.textColor = .spForeground2
         conversationAuthorLabel.font = UIFont.preferred(style: .regular, of: Theme.subTitleFontSize)
         
         conversationAuthorLabel.layout {
