@@ -110,6 +110,22 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #available(iOS 12.0, *) {
+            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                print("oded - reloadData \(self.tableView)")
+                self.tableView.reloadData()
+                self.footer.updateColorsAccordingToStyle()
+                self.view.backgroundColor = .spBackground0
+            }
+        } else {
+            self.tableView.reloadData()
+            self.footer.updateColorsAccordingToStyle()
+            self.view.backgroundColor = .spBackground0
+        }
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
