@@ -30,6 +30,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private let bannerVisisilityTracker = ViewVisibilityTracker()
     private var didBecomeVisible: Bool = false
     private var isWaitingForSignIn: Bool = false
+    private var communityGuidelinesHtmlString: String? = nil
     
     internal var dataLoaded: (() -> Void)?
     
@@ -125,6 +126,39 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             self.preConversationDelegate?.viewHeightDidChange(to: totalHeight)
         }
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.view.backgroundColor = .spBackground0
+        self.tableView.backgroundColor = .spBackground0
+        self.bannerView.updateColorsAccordingToStyle()
+        self.whatYouThinkView.updateColorsAccordingToStyle()
+        self.communityGuidelinesView.updateColorsAccordingToStyle()
+        if let htmlString = self.communityGuidelinesHtmlString {
+            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+        }
+        self.header.updateColorsAccordingToStyle()
+        self.footerView.updateColorsAccordingToStyle()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let state = UIApplication.shared.applicationState
+        if #available(iOS 12.0, *) {
+            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                // traitCollectionDidChange() is called multiple times, see: https://stackoverflow.com/a/63380259/583425
+                if state != .background {
+                    self.tableView.reloadData()
+                    self.updateColorsAccordingToStyle()
+                }
+            }
+        } else {
+            if state != .background {
+                self.tableView.reloadData()
+                self.updateColorsAccordingToStyle()
+            }
+        }
+    }
 
     private func updateTableViewHeightIfNeeded() {
         guard let heightConstraint = tableViewHeightConstraint,
@@ -177,6 +211,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.trailing.equal(to: view.trailingAnchor)
         }
         if let htmlString = getCommunityGuidelinesTextIfExists() {
+            communityGuidelinesHtmlString = htmlString
             communityGuidelinesView.delegate = self
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
             communityGuidelinesView.setupPreConversationConstraints()
