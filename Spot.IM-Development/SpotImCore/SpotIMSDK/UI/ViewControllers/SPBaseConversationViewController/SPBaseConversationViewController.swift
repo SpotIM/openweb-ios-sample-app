@@ -69,7 +69,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         super.traitCollectionDidChange(previousTraitCollection)
         if #available(iOS 12.0, *) {
             if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
-                print("oded - reloadData")
+                print("oded - reloadData \(self.tableView)")
                 self.tableView.reloadData()
             }
         } else {
@@ -489,6 +489,9 @@ extension SPBaseConversationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let commentCell = cell as? SPCommentCell {
             commentCell.updateColorsAccordingToStyle()
+        }
+        if let replyCell = cell as? SPReplyCell {
+            replyCell.updateColorsAccordingToStyle()
         }
     }
 
