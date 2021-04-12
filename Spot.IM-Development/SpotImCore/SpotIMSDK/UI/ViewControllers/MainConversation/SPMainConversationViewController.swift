@@ -144,19 +144,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         commentIdToShowOnOpen = nil
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if #available(iOS 12.0, *) {
-            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
-                print("oded - reloadData")
-                self.tableView.reloadData()
-            }
-        } else {
-            self.tableView.reloadData()
-        }
-        
-    }
-    
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         Logger.verbose("FirstComment: API did finish with \(success)")
         self.hideLoader()
@@ -438,7 +425,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
 extension SPMainConversationViewController { // UITableViewDelegate
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         loadNextPageIfNeeded(forRowAt: indexPath)
     }
     

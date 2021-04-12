@@ -32,6 +32,21 @@ internal final class UserNameView: BaseView {
 
         setupUI()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        userNameLabel.textColor = .spForeground1
+        userNameLabel.backgroundColor = .spBackground0
+        moreButton.backgroundColor = .spBackground0
+        badgeTagLabel.backgroundColor = .spBackground0
+        subtitleLabel.textColor = .spForeground3
+        subtitleLabel.backgroundColor = .spBackground0
+        dateLabel.textColor = .spForeground3
+        dateLabel.backgroundColor = .spBackground0
+        configureDeletedLabel()
+    }
+
 
     func setDeleted(_ isDeleted: Bool) {
         deletedMessageLabel.isHidden = !isDeleted

@@ -37,6 +37,22 @@ final class CommentActionsView: BaseView {
         clipsToBounds = true
         setupUI()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        replyButton.backgroundColor = .spBackground0
+        replyButton.setTitleColor(.buttonTitle, for: .normal)
+        rankUpButton.backgroundColor = .spBackground0
+        rankUpButton.imageColorOff = .buttonTitle
+        rankUpLabel.backgroundColor = .spBackground0
+        rankUpLabel.textColor = .buttonTitle
+        rankDownButton.backgroundColor = .spBackground0
+        rankDownButton.imageColorOff = .buttonTitle
+        rankDownLabel.backgroundColor = .spBackground0
+        rankDownLabel.textColor = .buttonTitle
+    }
+    
 
     /// Will collapse and disable button if disabled
     func setReplyButton(enabled: Bool) {
