@@ -21,6 +21,16 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     override func viewDidLoad() {
         super.viewDidLoad()
         topContainerView.bringSubviewToFront(closeButton)
+        NotificationCenter.default.addObserver(
+           self,
+           selector: #selector(overrideUserInterfaceStyleDidChange),
+           name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
+           object: nil)
+    }
+    
+    @objc
+    private func overrideUserInterfaceStyleDidChange() {
+        self.updateColorsAccordingToStyle()
     }
     
     // Handle dark mode \ light mode change
