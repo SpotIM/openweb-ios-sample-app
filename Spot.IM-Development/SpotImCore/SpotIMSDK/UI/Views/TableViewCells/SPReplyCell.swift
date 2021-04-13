@@ -128,9 +128,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabel = dataModel.commentLabel {
-            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, rgbColor: commentLabel.color, labelText: commentLabel.text)
+            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, rgbColor: commentLabel.color, labelText: commentLabel.text, state: .readOnly)
         } else {
-            commentLabelsView.setState(state: .hidden)
+            commentLabelsView.setLabel(iconName: nil, iconType: nil, rgbColor: nil, labelText: nil, state: .hidden)
         }
     }
     
