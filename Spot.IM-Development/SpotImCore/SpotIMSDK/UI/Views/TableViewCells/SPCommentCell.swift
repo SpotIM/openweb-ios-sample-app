@@ -208,9 +208,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabel = dataModel.commentLabel {
-            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, rgbColor: commentLabel.color, labelText: commentLabel.text)
+            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, rgbColor: commentLabel.color, labelText: commentLabel.text, state: .readOnly)
         } else {
-            commentLabelsView.setState(state: .hidden)
+            print("updateCommentLabelView hidden")
+            commentLabelsView.setLabel(iconName: nil, iconType: nil, rgbColor: nil, labelText: nil, state: .hidden)
         }
     }
     
@@ -395,7 +396,7 @@ private enum Theme {
     static let bottomOffset: CGFloat = 15.0
     static let leadingOffset: CGFloat = 16.0
     static let trailingOffset: CGFloat = 16.0
-    static let messageContainerTopOffset: CGFloat = 14.0
+    static let messageContainerTopOffset: CGFloat = 5.0
     static let replyActionsViewHeight: CGFloat = 49.0
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let userViewCollapsedHeight: CGFloat = 44.0
