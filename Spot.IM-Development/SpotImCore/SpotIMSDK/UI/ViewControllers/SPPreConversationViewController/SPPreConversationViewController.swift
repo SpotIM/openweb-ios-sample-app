@@ -75,12 +75,19 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         NotificationCenter.default.addObserver(
         self,
         selector: #selector(appMovedToBackground),
         name: UIApplication.willResignActiveNotification,
         object: nil)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(overrideUserInterfaceStyleDidChange),
+            name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
+            object: nil)
+
         
         SPAnalyticsHolder.default.log(event: .loaded, source: .launcher)
 
@@ -140,6 +147,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.header.updateColorsAccordingToStyle()
         self.footerView.updateColorsAccordingToStyle()
     }
+    
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -454,6 +462,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     @objc
     private func appMovedToBackground() {
         SPAnalyticsHolder.default.log(event: .appClosed, source: .mainPage)
+    }
+    
+    @objc
+    private func overrideUserInterfaceStyleDidChange() {
+        self.tableView.reloadData()
+        self.updateColorsAccordingToStyle()
     }
 }
 
