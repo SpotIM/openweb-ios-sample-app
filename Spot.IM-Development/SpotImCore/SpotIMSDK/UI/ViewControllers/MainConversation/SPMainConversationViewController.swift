@@ -94,6 +94,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         Logger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         sortView.updateCommentsLabel(model.dataSource.messageCount)
+        NotificationCenter.default.addObserver(
+           self,
+           selector: #selector(overrideUserInterfaceStyleDidChange),
+           name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
+           object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -142,6 +147,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 self.updateColorsAccordingToStyle()
             }
         }
+    }
+    
+    @objc
+    private func overrideUserInterfaceStyleDidChange() {
+        self.tableView.reloadData()
+        self.updateColorsAccordingToStyle()
     }
 
     override func viewDidAppear(_ animated: Bool) {

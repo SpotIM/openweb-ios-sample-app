@@ -19,6 +19,20 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
         updateAvatar() // placeholder is adjusted to theme
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(
+           self,
+           selector: #selector(overrideUserInterfaceStyleDidChange),
+           name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
+           object: nil)
+    }
+    
+    @objc
+    private func overrideUserInterfaceStyleDidChange() {
+        self.updateColorsAccordingToStyle()
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         let state = UIApplication.shared.applicationState
