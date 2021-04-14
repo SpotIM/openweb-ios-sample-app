@@ -79,6 +79,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         replyActionsView.updateColorsAccordingToStyle()
         avatarView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
+        commentLabelsView.updateColorsAccordingToStyle()
     }
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {

@@ -30,7 +30,7 @@ internal final class CommentLabelView: BaseView {
             self.commentLabelColor = color
             // update UI
             DispatchQueue.main.async() {
-                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(SPUserInterfaceStyle.isDarkMode ? Theme.idleBackgroundOpacityDM : Theme.idleBackgroundOpacity)
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
                 self.label.textColor = self.commentLabelColor
                 self.label.text = labelText
                 self.setState(state: state)
@@ -75,6 +75,24 @@ internal final class CommentLabelView: BaseView {
         
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.backgroundColor = .clear
+        self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+    }
+
+    // MARK: - Private
+
+    private func setupUI() {
+        addSubviews(labelContainer)
+        self.layout {
+            commentLabelViewHeightConstraint = $0.height.equal(to: Theme.labelHeight)
+        }
+        configureLabelContainer()
+        configureLabel()
+        configureIconImageView()
+    }
+    
     private func configureLabelContainer() {
         labelContainer.addSubviews(iconImageView, label)
         labelContainer.layer.cornerRadius = 3
@@ -101,18 +119,6 @@ internal final class CommentLabelView: BaseView {
             $0.bottom.equal(to: labelContainer.bottomAnchor, offsetBy: -Theme.verticalMargin)
             $0.trailing.equal(to: labelContainer.trailingAnchor, offsetBy: -Theme.horizontalMargin)
         }
-    }
-
-    // MARK: - Private
-
-    private func setupUI() {
-        addSubviews(labelContainer)
-        self.layout {
-            commentLabelViewHeightConstraint = $0.height.equal(to: Theme.labelHeight)
-        }
-        configureLabelContainer()
-        configureLabel()
-        configureIconImageView()
     }
 }
 
