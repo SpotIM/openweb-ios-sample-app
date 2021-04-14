@@ -42,6 +42,10 @@ final class MessageContainerView: BaseView {
         mainTextLabel.attributedText = clippedText
     }
     
+    func updateColorsAccordingToStyle() {
+        mainTextLabel.backgroundColor = .spBackground0
+    }
+    
     @objc
     private func handleTap(gesture: UITapGestureRecognizer) {
         let readMoreString = LocalizationManager.localizedString(key: "Read More")
