@@ -30,6 +30,13 @@ internal final class SPCommunityGuidelinesView: BaseView {
         
         setup()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        titleTextView.backgroundColor = .spBackground0
+        separatorView.backgroundColor = .spSeparator2
+    }
 
     // MARK: - Internal methods
     

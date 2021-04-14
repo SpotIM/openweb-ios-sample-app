@@ -21,6 +21,13 @@ internal final class PreConversationBannerView: BaseView {
         setupBannerContainerView()
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        bannerView?.backgroundColor = .spBackground0
+    }
+    
+    
     func update(_ bannerView: UIView, height: CGFloat) {
         self.bannerView?.removeFromSuperview()
         self.bannerView = bannerView

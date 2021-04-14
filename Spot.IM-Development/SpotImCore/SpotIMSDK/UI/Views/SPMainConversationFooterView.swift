@@ -51,6 +51,17 @@ final class SPMainConversationFooterView: BaseView {
         setup()
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        labelContainer.backgroundColor = .spBackground1
+        labelContainer.layer.borderColor = UIColor.spBorder.cgColor
+        callToActionLabel.textColor = .spForeground2
+        userAvatarView.backgroundColor = .spBackground0
+        separatorView.backgroundColor = .spSeparator2
+        dropsShadow = !SPUserInterfaceStyle.isDarkMode
+    }
+    
     /// Updates user's avatar, `nil` will set default placeholder
     func updateAvatar(_ avatarUrl: URL?) {
         userAvatarView.updateAvatar(avatarUrl: avatarUrl)

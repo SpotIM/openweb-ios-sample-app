@@ -473,6 +473,15 @@ extension SPBaseConversationViewController: UITableViewDataSource {
             return commentCell
         }
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let commentCell = cell as? SPCommentCell {
+            commentCell.updateColorsAccordingToStyle()
+        }
+        if let replyCell = cell as? SPReplyCell {
+            replyCell.updateColorsAccordingToStyle()
+        }
+    }
 
 }
 
