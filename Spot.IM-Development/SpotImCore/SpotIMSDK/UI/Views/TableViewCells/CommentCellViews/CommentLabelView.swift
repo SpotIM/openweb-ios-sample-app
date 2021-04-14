@@ -131,10 +131,6 @@ private enum Theme {
     static let labelHeight: CGFloat = 28.0
     static let horizontalMargin: CGFloat = 10.0
     static let verticalMargin: CGFloat = 5.0
-    static let idleBackgroundOpacity: CGFloat = 0.1
-    
-    // Dark Mode
-    static let idleBackgroundOpacityDM: CGFloat = 0.2
 }
 
 enum LabelState {
