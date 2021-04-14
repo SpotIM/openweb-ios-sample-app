@@ -27,11 +27,11 @@ internal final class CommentLabelView: BaseView {
     
     func setLabel(commentLabelIconUrl: URL?, rgbColor: String?, labelText: String?, state: LabelState) {
         if let commentLabelIconUrl = commentLabelIconUrl, let rgbColor = rgbColor, let labelText = labelText {
-            let hexColor = UIColor.rgbToHex(with: rgbColor) ?? "blue"
+            let hexColor = UIColor.rgbToHex(with: rgbColor)
             self.commentLabelColor = UIColor.color(with: hexColor) ?? .orange
             // update UI
             DispatchQueue.main.async() {
-                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(0.1)
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(SPUserInterfaceStyle.isDarkMode ? Theme.idleBackgroundOpacityDM : Theme.idleBackgroundOpacity)
                 self.label.textColor = self.commentLabelColor
                 self.label.text = labelText
                 self.setState(state: state)
@@ -40,7 +40,7 @@ internal final class CommentLabelView: BaseView {
                         self.iconImageView.image = image
                         self.iconImageView.image = image.withRenderingMode(.alwaysTemplate)
                         self.iconImageView.tintColor = self.commentLabelColor
-                        self.iconImageViewHeightConstraint?.constant = 25
+                        self.iconImageViewHeightConstraint?.constant = Theme.iconImageHeight
                     } else {
                         self.iconImageViewHeightConstraint?.constant = 0
                     }
@@ -121,6 +121,11 @@ internal final class CommentLabelView: BaseView {
 
 private enum Theme {
     static let fontSize: CGFloat = 13.0
+    static let iconImageHeight: CGFloat = 25.0
+    static let idleBackgroundOpacity: CGFloat = 0.1
+    
+    // Dark Mode
+    static let idleBackgroundOpacityDM: CGFloat = 0.2
 }
 
 enum LabelState {
