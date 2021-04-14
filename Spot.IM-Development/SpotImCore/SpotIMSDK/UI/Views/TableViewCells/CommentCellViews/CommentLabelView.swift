@@ -26,9 +26,8 @@ internal final class CommentLabelView: BaseView {
     }
     
     func setLabel(commentLabelIconUrl: URL?, rgbColor: String?, labelText: String?, state: LabelState) {
-        if let commentLabelIconUrl = commentLabelIconUrl, let rgbColor = rgbColor, let labelText = labelText {
-            let hexColor = UIColor.rgbToHex(with: rgbColor)
-            self.commentLabelColor = UIColor.color(with: hexColor) ?? .orange
+        if let commentLabelIconUrl = commentLabelIconUrl, let color = UIColor.color(rgb: rgbColor), let labelText = labelText {
+            self.commentLabelColor = color
             // update UI
             DispatchQueue.main.async() {
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(SPUserInterfaceStyle.isDarkMode ? Theme.idleBackgroundOpacityDM : Theme.idleBackgroundOpacity)
@@ -64,12 +63,12 @@ internal final class CommentLabelView: BaseView {
             case .hidden:
                 commentLabelViewHeightConstraint?.constant = 0
                 break
-            case .idle:
+            case .notSelected:
                 break
             case .selected:
                 break
             case .readOnly:
-                commentLabelViewHeightConstraint?.constant = 28
+                commentLabelViewHeightConstraint?.constant = Theme.labelHeight
                 break
         }
         self.state = state
@@ -87,20 +86,20 @@ internal final class CommentLabelView: BaseView {
         iconImageView.backgroundColor = .clear
         iconImageView.clipsToBounds = true
         iconImageView.layout {
-            $0.width.equal(to: 14)
-            iconImageViewHeightConstraint = $0.height.equal(to: 24)
+            $0.width.equal(to: Theme.iconImageWidth)
+            iconImageViewHeightConstraint = $0.height.equal(to: Theme.iconImageHeight)
             $0.centerY.equal(to: self.label.centerYAnchor)
-            $0.leading.equal(to: self.labelContainer.leadingAnchor, offsetBy: 10)
-            $0.trailing.equal(to: self.label.leadingAnchor, offsetBy: -5)
+            $0.leading.equal(to: self.labelContainer.leadingAnchor, offsetBy: Theme.horizontalMargin)
+            $0.trailing.equal(to: self.label.leadingAnchor, offsetBy: -Theme.verticalMargin)
         }
     }
     
     private func configureLabel() {
         label.font = .preferred(style: .medium, of: Theme.fontSize)
         label.layout {
-            $0.top.equal(to: labelContainer.topAnchor, offsetBy: 5)
-            $0.bottom.equal(to: labelContainer.bottomAnchor, offsetBy: -5)
-            $0.trailing.equal(to: labelContainer.trailingAnchor, offsetBy: -10)
+            $0.top.equal(to: labelContainer.topAnchor, offsetBy: Theme.verticalMargin)
+            $0.bottom.equal(to: labelContainer.bottomAnchor, offsetBy: -Theme.verticalMargin)
+            $0.trailing.equal(to: labelContainer.trailingAnchor, offsetBy: -Theme.horizontalMargin)
         }
     }
 
@@ -109,7 +108,7 @@ internal final class CommentLabelView: BaseView {
     private func setupUI() {
         addSubviews(labelContainer)
         self.layout {
-            commentLabelViewHeightConstraint = $0.height.equal(to: 0)
+            commentLabelViewHeightConstraint = $0.height.equal(to: Theme.labelHeight)
         }
         configureLabelContainer()
         configureLabel()
@@ -121,7 +120,11 @@ internal final class CommentLabelView: BaseView {
 
 private enum Theme {
     static let fontSize: CGFloat = 13.0
-    static let iconImageHeight: CGFloat = 25.0
+    static let iconImageHeight: CGFloat = 24.0
+    static let iconImageWidth: CGFloat = 14.0
+    static let labelHeight: CGFloat = 28.0
+    static let horizontalMargin: CGFloat = 10.0
+    static let verticalMargin: CGFloat = 5.0
     static let idleBackgroundOpacity: CGFloat = 0.1
     
     // Dark Mode
@@ -129,6 +132,6 @@ private enum Theme {
 }
 
 enum LabelState {
-    case hidden, idle, selected, readOnly
+    case hidden, notSelected, selected, readOnly
 }
 

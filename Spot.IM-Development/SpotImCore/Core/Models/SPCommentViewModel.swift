@@ -69,7 +69,8 @@ internal struct CommentViewModel {
         depth = comment.depth ?? 0
         
         // cross given commentLabels to appConfig labels
-        if let labelIds = comment.additionalData?.labels?.ids, labelIds.count > 0 {
+        if let _ = SPConfigsDataSource.appConfig?.shared?.enableCommentLabels,
+           let labelIds = comment.additionalData?.labels?.ids, labelIds.count > 0 {
             if let section = comment.additionalData?.labels?.section,
                let sectionLabels = SPConfigsDataSource.appConfig?.shared?.commentLabels?[section] {
                 commentLabel = sectionLabels.getLabelById(labelId: labelIds[0])
