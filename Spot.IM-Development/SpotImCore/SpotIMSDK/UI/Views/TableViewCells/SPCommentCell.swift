@@ -37,7 +37,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private var commentId: String?
     private var replyingToId: String?
     private var repliesButtonState: RepliesButtonState = .collapsed
-    private var commentLabel: SPLabelConfiguration?
     
     private var replyActionsViewHeightConstraint: NSLayoutConstraint?
     private var moreRepliesViewHeightConstraint: NSLayoutConstraint?
@@ -207,11 +206,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
-        if let commentLabel = dataModel.commentLabel {
-            commentLabelsView.setLabel(iconName: commentLabel.iconName, iconType: commentLabel.iconType, rgbColor: commentLabel.color, labelText: commentLabel.text, state: .readOnly)
+        if let labelIconUrl = dataModel.commentLabelIconUrl, let commentLabelText = dataModel.commentLabelText, let commentLabelColor = dataModel.commentLabelColor {
+            commentLabelsView.setLabel(commentLabelIconUrl: labelIconUrl, rgbColor: commentLabelColor, labelText: commentLabelText, state: .readOnly)
         } else {
-            print("updateCommentLabelView hidden")
-            commentLabelsView.setLabel(iconName: nil, iconType: nil, rgbColor: nil, labelText: nil, state: .hidden)
+            commentLabelsView.setLabel(commentLabelIconUrl: nil, rgbColor: nil, labelText: nil, state: .hidden)
         }
     }
     

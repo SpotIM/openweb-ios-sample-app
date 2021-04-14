@@ -25,6 +25,9 @@ internal struct CommentViewModel {
     var repliesCount: String?
     var depth: Int = 0
     var commentLabel: SPLabelConfiguration?
+    var commentLabelText: String?
+    var commentLabelColor: String?
+    var commentLabelIconUrl: URL?
     
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
@@ -70,8 +73,9 @@ internal struct CommentViewModel {
             if let section = comment.additionalData?.labels?.section,
                let sectionLabels = SPConfigsDataSource.appConfig?.shared?.commentLabels?[section] {
                 commentLabel = sectionLabels.getLabelById(labelId: labelIds[0])
-            } else if let sectionLabels = SPConfigsDataSource.appConfig?.shared?.commentLabels?["default"] {
-                commentLabel = sectionLabels.getLabelById(labelId: labelIds[0])
+                commentLabelText = commentLabel?.text
+                commentLabelColor = commentLabel?.color
+                commentLabelIconUrl = commentLabel?.getIconUrl()
             }
         }
         

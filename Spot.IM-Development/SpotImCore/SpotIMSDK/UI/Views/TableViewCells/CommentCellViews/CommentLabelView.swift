@@ -25,25 +25,31 @@ internal final class CommentLabelView: BaseView {
         setupUI()
     }
     
-    func setLabel(iconName: String?, iconType: String?, rgbColor: String?, labelText: String?, state: LabelState) {
-        if let iconName = iconName, let iconType = iconType, let rgbColor = rgbColor, let labelText = labelText {
+    func setLabel(commentLabelIconUrl: URL?, rgbColor: String?, labelText: String?, state: LabelState) {
+        if let commentLabelIconUrl = commentLabelIconUrl, let rgbColor = rgbColor, let labelText = labelText {
             let hexColor = UIColor.rgbToHex(with: rgbColor) ?? "blue"
             self.commentLabelColor = UIColor.color(with: hexColor) ?? .orange
-            // TODO: change icon color withour re-fetching it
-            let iconUrl = "https://images.spot.im/image/upload/f_png/e_colorize,co_rgb:\(hexColor)/font-awesome/\(iconType)-\(iconName).png"
-            let url: URL = URL(string: iconUrl)!
             // update UI
             DispatchQueue.main.async() {
-                self.setImage(with: url)
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(0.1)
                 self.label.textColor = self.commentLabelColor
                 self.label.text = labelText
                 self.setState(state: state)
+                UIImage.load(with: commentLabelIconUrl) { image, _ in
+                    if let image = image {
+                        self.iconImageView.image = image
+                        self.iconImageView.image = image.withRenderingMode(.alwaysTemplate)
+                        self.iconImageView.tintColor = self.commentLabelColor
+                        self.iconImageViewHeightConstraint?.constant = 25
+                    } else {
+                        self.iconImageViewHeightConstraint?.constant = 0
+                    }
+                }
             }
         } else {
             // update UI
             DispatchQueue.main.async() {
-                self.setImage(with: nil)
+                self.iconImageViewHeightConstraint?.constant = 0
                 self.labelContainer.backgroundColor = .clear
                 self.label.textColor = .clear
                 self.label.text = ""
@@ -108,18 +114,6 @@ internal final class CommentLabelView: BaseView {
         configureLabelContainer()
         configureLabel()
         configureIconImageView()
-    }
-    
-    internal func setImage(with url: URL?) {
-        iconImageView.setImage(with: url) { image, error in
-            if error != nil {
-                self.iconImageViewHeightConstraint?.constant = 0
-            }
-            else if let image = image {
-                self.iconImageView.image = image
-                self.iconImageViewHeightConstraint?.constant = 25
-            }
-        }
     }
 }
 
