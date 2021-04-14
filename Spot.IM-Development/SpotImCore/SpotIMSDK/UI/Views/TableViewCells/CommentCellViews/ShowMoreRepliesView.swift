@@ -24,6 +24,14 @@ internal final class ShowMoreRepliesView: BaseView {
         clipsToBounds = true
         setupUI()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        showHideRepliesButton.backgroundColor = .spBackground0
+        showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
+    }
+    
 
     func updateView(with state: RepliesButtonState) {
         switch state {

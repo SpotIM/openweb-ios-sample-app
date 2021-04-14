@@ -41,6 +41,17 @@ final class SPConversationSummaryView: BaseView {
         configureButtonsTargets()
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        commentsCountLabel.textColor = .spForeground4
+        commentsCountLabel.backgroundColor = .spBackground0
+        sortButton.setTitleColor(.spForeground4, for: .normal)
+        newCommentsButton.setTitleColor(.white, for: .normal)
+        newCommentsButton.backgroundColor = .brandColor
+        separatorView.backgroundColor = .spSeparator2
+    }
+    
     // MARK: - Internal methods    
     func updateCommentsLabel(_ newCommentsCount: Int) {
         let commentsText: String = newCommentsCount > 1 ?
@@ -82,11 +93,10 @@ extension SPConversationSummaryView {
         configureSortButton()
         configureNewCommentsButton()
         configureSeparatorView()
+        updateColorsAccordingToStyle()
     }
     
     private func configureCommentCountLabel() {
-        commentsCountLabel.textColor = .spForeground4
-        commentsCountLabel.backgroundColor = .spBackground0
         commentsCountLabel.font = UIFont.preferred(style: .regular, of: Theme.commentsFontSize)
         commentsCountLabel.layout {
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.sideOffset)
@@ -96,7 +106,6 @@ extension SPConversationSummaryView {
     
     private func configureSortButton() {
         let sortIcon = UIImage(spNamed: "sortingIcon")?.withRenderingMode(.alwaysOriginal)
-        sortButton.setTitleColor(.spForeground4, for: .normal)
         sortButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.sortButtonFontSize)
         sortButton.setImage(sortIcon, for: .normal)
         let spacing: CGFloat = Theme.insetTiny
@@ -125,7 +134,6 @@ extension SPConversationSummaryView {
     
     private func configureNewCommentsButton() {
         newCommentsButton.isHidden = true
-        newCommentsButton.setTitleColor(.white, for: .normal)
         newCommentsButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.newCommentsFontSize)
         newCommentsButton.contentEdgeInsets = UIEdgeInsets(
             top: Theme.newCommentsButtonVerticalInset,
@@ -133,7 +141,6 @@ extension SPConversationSummaryView {
             bottom: Theme.newCommentsButtonVerticalInset,
             right: Theme.newCommentsButtonHorizontalInset
         )
-        newCommentsButton.backgroundColor = .brandColor
         newCommentsButton.addCornerRadius(Theme.newCommentsButtonRadius)
         
         newCommentsButton.layout {
@@ -143,8 +150,6 @@ extension SPConversationSummaryView {
     }
     
     private func configureSeparatorView() {
-        separatorView.backgroundColor = .spSeparator2
-        
         separatorView.layout {
             $0.leading.equal(to: leadingAnchor)
             $0.bottom.equal(to: bottomAnchor)

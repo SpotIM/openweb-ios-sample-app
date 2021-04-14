@@ -49,6 +49,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var isHeaderVisible: Bool = false
     private var wasScrolled: Bool = false
     private var displayArticleHeader: Bool = true
+    private var communityGuidelinesHtmlString: String? = nil
     
     private var isCommunityGudelinesVisible: Bool = false
     private var communityGudelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
@@ -93,6 +94,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         Logger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         sortView.updateCommentsLabel(model.dataSource.messageCount)
+        NotificationCenter.default.addObserver(
+           self,
+           selector: #selector(overrideUserInterfaceStyleDidChange),
+           name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
+           object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -109,6 +115,44 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.view.backgroundColor = .spBackground0
+        self.tableView.backgroundColor = .spBackground0
+        self.footer.updateColorsAccordingToStyle()
+        self.tableHeader.updateColorsAccordingToStyle()
+        self.sortView.updateColorsAccordingToStyle()
+        self.communityGuidelinesView.updateColorsAccordingToStyle()
+        if let htmlString = self.communityGuidelinesHtmlString {
+            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let state = UIApplication.shared.applicationState
+        if #available(iOS 12.0, *) {
+            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                // traitCollectionDidChange() is called multiple times, see: https://stackoverflow.com/a/63380259/583425
+                if state != .background {
+                    self.tableView.reloadData()
+                    self.updateColorsAccordingToStyle()
+                }
+            }
+        } else {
+            if state != .background {
+                self.tableView.reloadData()
+                self.updateColorsAccordingToStyle()
+            }
+        }
+    }
+    
+    @objc
+    private func overrideUserInterfaceStyleDidChange() {
+        self.tableView.reloadData()
+        self.updateColorsAccordingToStyle()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -270,6 +314,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.trailing.equal(to: view.trailingAnchor)
         }
         if let htmlString = getCommunityGuidelinesTextIfExists() {
+            communityGuidelinesHtmlString = htmlString
             isCommunityGudelinesVisible = true
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
             communityGuidelinesView.delegate = self
@@ -345,6 +390,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
     
     private func updateFooterView() {
+        footer.updateColorsAccordingToStyle()
         footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard
@@ -425,7 +471,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
 extension SPMainConversationViewController { // UITableViewDelegate
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         loadNextPageIfNeeded(forRowAt: indexPath)
     }
     

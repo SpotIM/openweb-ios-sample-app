@@ -87,6 +87,8 @@ public class SpotIm {
     public static var customFontFamily: String? = nil
     public static var displayArticleHeader: Bool = true
     
+    public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
+    
     /**
     Initialize the SDK
 
@@ -260,7 +262,11 @@ public class SpotIm {
 
      - Parameter SPUserInterfaceStyle: The style to set to the conversation SDK
      */
-    public static var overrideUserInterfaceStyle: SPUserInterfaceStyle?
+    public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? {
+        didSet {
+            NotificationCenter.default.post(name: Notification.Name(OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION), object: nil)
+        }
+    }
     
     /**
      Get the current user login status

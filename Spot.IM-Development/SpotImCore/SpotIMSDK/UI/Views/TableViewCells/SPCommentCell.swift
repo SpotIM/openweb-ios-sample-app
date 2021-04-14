@@ -57,6 +57,17 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         setupUI()
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        headerView.backgroundColor = .spBackground0
+        contentView.backgroundColor = .spBackground0
+        messageView.updateColorsAccordingToStyle()
+        userNameView.updateColorsAccordingToStyle()
+        replyActionsView.updateColorsAccordingToStyle()
+        avatarImageView.updateColorsAccordingToStyle()
+        moreRepliesView.updateColorsAccordingToStyle()
+    }
+    
     // MARK: - Internal methods
 
     internal func setup(

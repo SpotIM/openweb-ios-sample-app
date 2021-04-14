@@ -37,6 +37,12 @@ final class SPAvatarView: BaseView {
         setup()
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+    }
+    
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         

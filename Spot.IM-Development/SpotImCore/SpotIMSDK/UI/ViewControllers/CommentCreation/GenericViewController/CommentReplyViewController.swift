@@ -102,6 +102,19 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.view.backgroundColor = .spBackground0
+        mainContainerView.backgroundColor = .spBackground0
+        textInputViewContainer.backgroundColor = .spBackground0
+        topContainerView.backgroundColor = .spBackground0
+        topContainerStack.backgroundColor = .spBackground0
+        textInputViewContainer.updateColorsAccordingToStyle()
+        postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
+        postButton.backgroundColor = .brandColor
+        userIcon.backgroundColor = .spBackground0
+    }
+    
     @objc
     func close() {
         if (model?.commentText.count ?? 0) >= commentCacheMinCount {
@@ -231,10 +244,10 @@ extension CommentReplyViewController {
         configureUsernameView()
         configureInputContainerView()
         configurePostButton()
+        updateColorsAccordingToStyle()
     }
     
     private func configureMainContainer() {
-        mainContainerView.backgroundColor = .spBackground0
         mainContainerView.layout {
             $0.top.equal(to: scrollView.topAnchor)
             $0.bottom.equal(to: scrollView.bottomAnchor)
@@ -257,7 +270,6 @@ extension CommentReplyViewController {
     }
     
     private func configureInputContainerView() {
-        textInputViewContainer.backgroundColor = .spBackground0
         textInputViewContainer.delegate = self
 
         textInputViewContainer.layout {
@@ -270,7 +282,6 @@ extension CommentReplyViewController {
     }
     
     private func configureTopContainer() {
-        topContainerView.backgroundColor = .spBackground0
         topContainerView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         topContainerView.layout {
             $0.top.equal(to: mainContainerView.topAnchor)
@@ -308,8 +319,6 @@ extension CommentReplyViewController {
     
     private func configurePostButton() {
         postButton.setTitleColor(.white, for: .normal)
-        postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
-        postButton.backgroundColor = .brandColor
         
         postButton.isEnabled = false
         postButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.postButtonFontSize)
