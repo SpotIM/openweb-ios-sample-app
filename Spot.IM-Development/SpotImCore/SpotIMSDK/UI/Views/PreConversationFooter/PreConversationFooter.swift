@@ -37,6 +37,16 @@ internal final class SPPreConversationFooter: BaseView {
 
         setup()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        separatorView.backgroundColor = .spSeparator5
+        showMoreCommentsButton.backgroundColor = .brandColor
+        addSpotIMButton.backgroundColor = .spBackground0
+        openwebLinkView.backgroundColor = .spBackground0
+        spotIMIcon.image = UIImage(spNamed: "openwebIconSimple") // reload image for dark mode if needed
+    }
 
     func setShowMoreCommentsButtonColor(color: UIColor, withSeparator: Bool = false) {
         moreCommentsTopConstraint?.constant = withSeparator ? 20.0 : 0.0

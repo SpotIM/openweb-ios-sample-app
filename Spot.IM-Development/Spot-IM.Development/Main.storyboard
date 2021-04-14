@@ -480,7 +480,7 @@ Build: [unknown]</string>
         <!--Settings View Controller-->
         <scene sceneID="MLR-79-iDN">
             <objects>
-                <viewController storyboardIdentifier="DarkModeSettingsViewController" id="afI-iB-Nmt" customClass="SettingsViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsViewController" id="afI-iB-Nmt" customClass="SettingsViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kR-Yk-fnP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

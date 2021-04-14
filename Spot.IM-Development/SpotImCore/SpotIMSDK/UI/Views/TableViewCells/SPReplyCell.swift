@@ -70,6 +70,16 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateRepliesButtonTitle(with: data.repliesRawCount)
         moreRepliesView.updateView(with: data.repliesButtonState)
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        contentView.backgroundColor = .spBackground0
+        messageView.updateColorsAccordingToStyle()
+        userNameView.updateColorsAccordingToStyle()
+        replyActionsView.updateColorsAccordingToStyle()
+        avatarView.updateColorsAccordingToStyle()
+        moreRepliesView.updateColorsAccordingToStyle()
+    }
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
         if let repliesCount = repliesCount, repliesCount == 1 {
