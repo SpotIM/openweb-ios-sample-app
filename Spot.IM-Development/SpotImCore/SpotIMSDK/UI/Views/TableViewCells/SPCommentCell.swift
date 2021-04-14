@@ -66,6 +66,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         replyActionsView.updateColorsAccordingToStyle()
         avatarImageView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
+        commentLabelsView.updateColorsAccordingToStyle()
     }
     
     // MARK: - Internal methods
