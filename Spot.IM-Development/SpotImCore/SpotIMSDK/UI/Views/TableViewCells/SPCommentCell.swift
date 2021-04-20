@@ -28,7 +28,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     private let avatarImageView: SPAvatarView = SPAvatarView()
     private let userNameView: UserNameView = .init()
-    private let commentLabelsView: CommentLabelView = .init()
+    private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: BaseView = .init()
@@ -45,6 +45,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private var separatorHeightConstraint: NSLayoutConstraint?
     private var separatorLeadingConstraint: NSLayoutConstraint?
     private var separatorTrailingConstraint: NSLayoutConstraint?
+    private var commentLabelHeightConstraint: NSLayoutConstraint?
 
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var imageRequest: DataRequest?
@@ -66,7 +67,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         replyActionsView.updateColorsAccordingToStyle()
         avatarImageView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
-        commentLabelsView.updateColorsAccordingToStyle()
+        commentLabelView.updateColorsAccordingToStyle()
     }
     
     // MARK: - Internal methods
@@ -97,14 +98,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         contentView.addSubviews(headerView,
                                 avatarImageView,
                                 userNameView,
-                                commentLabelsView,
+                                commentLabelView,
                                 messageView,
                                 replyActionsView,
                                 moreRepliesView)
         configureHeaderView()
         configureAvatarView()
         configureUserNameView()
-        configureCommentLabelsView()
+        configureCommentLabelView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
@@ -150,16 +151,17 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func configureCommentLabelsView() {
-        commentLabelsView.layout {
+    private func configureCommentLabelView() {
+        commentLabelView.layout {
             $0.top.equal(to: userNameView.bottomAnchor, offsetBy: 10)
             $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
+            commentLabelHeightConstraint = $0.height.equal(to: Theme.commentLabelHeight)
         }
     }
     
     private func configureMessageView() {
         messageView.layout {
-            $0.top.equal(to: commentLabelsView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
+            $0.top.equal(to: commentLabelView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
             $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
@@ -218,10 +220,13 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
-        if let labelIconUrl = dataModel.commentLabelIconUrl, let commentLabelText = dataModel.commentLabelText, let commentLabelColor = dataModel.commentLabelColor {
-            commentLabelsView.setLabel(commentLabelIconUrl: labelIconUrl, rgbColor: commentLabelColor, labelText: commentLabelText, state: .readOnly)
+        if let commentLabel = dataModel.commentLabel {
+            commentLabelView.setLabel(commentLabelIconUrl: commentLabel.iconUrl, labelColor: commentLabel.color, labelText: commentLabel.text, state: .readOnly)
+            commentLabelView.isHidden = false
+            commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
         } else {
-            commentLabelsView.setLabel(commentLabelIconUrl: nil, rgbColor: nil, labelText: nil, state: .hidden)
+            commentLabelHeightConstraint?.constant = 0
+            commentLabelView.isHidden = true
         }
     }
     
@@ -414,4 +419,5 @@ private enum Theme {
     static let avatarSideSize: CGFloat = 39.0
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
+    static let commentLabelHeight: CGFloat = 28.0
 }
