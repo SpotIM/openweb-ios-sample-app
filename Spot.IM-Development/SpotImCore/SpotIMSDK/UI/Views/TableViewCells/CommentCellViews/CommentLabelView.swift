@@ -31,19 +31,40 @@ internal final class CommentLabelView: BaseView {
         self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
         self.label.textColor = self.commentLabelColor
         self.label.text = labelText
-        self.setState(state: state)
         UIImage.load(with: commentLabelIconUrl) { image, _ in
             if let image = image {
                 self.iconImageView.image = image.withRenderingMode(.alwaysTemplate)
-                self.iconImageView.tintColor = self.commentLabelColor
                 self.iconImageViewHeightConstraint?.constant = Theme.iconImageHeight
             } else {
                 self.iconImageViewHeightConstraint?.constant = 0
             }
         }
+        setState(state: state)
     }
     
     func setState(state: LabelState) {
+        // set background, border, image and text colors according to state
+        switch state {
+            case .notSelected:
+                labelContainer.backgroundColor = .clear
+                labelContainer.layer.borderWidth = 1
+                labelContainer.layer.borderColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBorderOpacity).cgColor
+                iconImageView.tintColor = commentLabelColor
+                label.textColor = self.commentLabelColor
+                break
+            case .selected:
+                labelContainer.backgroundColor = commentLabelColor
+                labelContainer.layer.borderWidth = 0
+                iconImageView.tintColor = .white
+                label.textColor = .white
+                break
+            case .readOnly:
+                labelContainer.backgroundColor = commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+                labelContainer.layer.borderWidth = 0
+                iconImageView.tintColor = commentLabelColor
+                label.textColor = commentLabelColor
+                break
+        }
         self.state = state
     }
     

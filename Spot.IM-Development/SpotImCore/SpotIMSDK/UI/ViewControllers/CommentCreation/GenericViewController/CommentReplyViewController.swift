@@ -41,6 +41,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private let mainContainerView: BaseView = .init()
     private let postButton: BaseButton = .init()
     private let scrollView: BaseScrollView = .init()
+    private let commentLabelsContainer: SPCommentLabelsContainerView = .init()
     
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
@@ -235,7 +236,7 @@ extension CommentReplyViewController {
             $0.bottom.equal(to: view.bottomAnchor)
         }
         scrollView.addSubview(mainContainerView)
-        mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton)
+        mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, commentLabelsContainer)
         topContainerView.addSubview(topContainerStack)
         
         configureMainContainer()
@@ -244,6 +245,7 @@ extension CommentReplyViewController {
         configureUsernameView()
         configureInputContainerView()
         configurePostButton()
+        configureCommentLabelsContainer()
         updateColorsAccordingToStyle()
     }
     
@@ -276,7 +278,7 @@ extension CommentReplyViewController {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.bottom.equal(to: postButton.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
+            $0.bottom.equal(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
@@ -340,6 +342,14 @@ extension CommentReplyViewController {
             }
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.postButtonTrailing)
             $0.height.equal(to: Theme.postButtonHeight)
+        }
+    }
+    
+    private func configureCommentLabelsContainer() {
+        commentLabelsContainer.layout {
+            $0.bottom.equal(to: postButton.topAnchor, offsetBy: -35.0)
+            $0.leading.equal(to: usernameView.leadingAnchor, offsetBy: 10.0)
+            $0.trailing.equal(to: usernameView.trailingAnchor, offsetBy: -10.0)
         }
     }
 }
