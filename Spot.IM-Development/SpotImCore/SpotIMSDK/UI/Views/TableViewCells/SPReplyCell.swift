@@ -17,6 +17,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
     private let avatarView: SPAvatarView = .init()
     private let userNameView: UserNameView = .init()
+    private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     
@@ -28,6 +29,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private var moreRepliesViewHeightConstraint: NSLayoutConstraint?
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var textViewLeadingConstraint: NSLayoutConstraint?
+    private var commentLabelHeightConstraint: NSLayoutConstraint?
 
     private var imageRequest: DataRequest?
 
@@ -44,6 +46,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateUserView(with: data)
         updateActionView(with: data)
         updateAvatarView(with: data)
+        updateCommentLabelView(with: data)
         messageView.delegate = self
         
         textViewLeadingConstraint?.constant = data.depthOffset()
@@ -77,6 +80,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         replyActionsView.updateColorsAccordingToStyle()
         avatarView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
+        commentLabelView.updateColorsAccordingToStyle()
     }
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
@@ -134,12 +138,24 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
     
+    private func updateCommentLabelView(with dataModel: CommentViewModel) {
+        if let commentLabel = dataModel.commentLabel {
+            commentLabelView.setLabel(commentLabelIconUrl: commentLabel.iconUrl, labelColor: commentLabel.color, labelText: commentLabel.text, state: .readOnly)
+            commentLabelView.isHidden = false
+            commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
+        } else {
+            commentLabelView.isHidden = true
+            commentLabelHeightConstraint?.constant = 0
+        }
+    }
+    
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, userNameView, messageView, replyActionsView, moreRepliesView)
+        contentView.addSubviews(avatarView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView)
         configureAvatarView()
         configureUserNameView()
+        configureCommentLabelView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
@@ -165,9 +181,17 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
     
+    private func configureCommentLabelView() {
+        commentLabelView.layout {
+            $0.top.equal(to: userNameView.bottomAnchor, offsetBy: 10)
+            $0.leading.equal(to: messageView.leadingAnchor)
+            commentLabelHeightConstraint = $0.height.equal(to: Theme.commentLabelHeight)
+        }
+    }
+    
     private func configureMessageView() {
         messageView.layout {
-            $0.top.equal(to: userNameView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
+            $0.top.equal(to: commentLabelView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
             textViewLeadingConstraint = $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
@@ -291,7 +315,7 @@ private enum Theme {
     static let bottomOffset: CGFloat = 15.0
     static let leadingOffset: CGFloat = 42.0
     static let trailingOffset: CGFloat = 16.0
-    static let messageContainerTopOffset: CGFloat = 14.0
+    static let messageContainerTopOffset: CGFloat = 5.0
     static let replyActionsViewHeight: CGFloat = 49.0
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let userViewCollapsedHeight: CGFloat = 44.0
@@ -299,4 +323,5 @@ private enum Theme {
     static let avatarSideSize: CGFloat = 39.0
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
+    static let commentLabelHeight: CGFloat = 28.0
 }
