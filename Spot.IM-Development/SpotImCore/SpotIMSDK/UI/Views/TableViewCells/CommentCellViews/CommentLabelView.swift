@@ -17,7 +17,6 @@ internal final class CommentLabelView: BaseView {
     private var commentLabelColor: UIColor = .clear
     private var state: LabelState = .readOnly
     
-    private var commentLabelViewHeightConstraint: NSLayoutConstraint?
     private var iconImageViewHeightConstraint: NSLayoutConstraint?
     
     override init(frame: CGRect) {
@@ -58,7 +57,7 @@ internal final class CommentLabelView: BaseView {
     private func setupUI() {
         addSubviews(labelContainer)
         self.layout {
-            commentLabelViewHeightConstraint = $0.height.equal(to: Theme.labelHeight)
+            $0.height.equal(to: Theme.labelHeight)
         }
         configureLabelContainer()
         configureLabel()
