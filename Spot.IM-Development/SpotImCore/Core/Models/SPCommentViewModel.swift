@@ -24,7 +24,8 @@ internal struct CommentViewModel {
     var repliesRawCount: Int?
     var repliesCount: String?
     var depth: Int = 0
-
+    var commentLabel: CommentLabel?
+    
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
 
@@ -63,7 +64,15 @@ internal struct CommentViewModel {
         hasOffset = comment.isReply
         parentCommentId = comment.parentId
         depth = comment.depth ?? 0
-
+        
+        
+        if let commentLabelConfig = getCommentLabelFromConfig(comment: comment),
+           let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
+           let commentLabelIconUrl = commentLabelConfig.getIconUrl() {
+            commentLabel = CommentLabel(text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
+        }
+        
+        
         if comment.hasNext {
             repliesButtonState = .collapsed
         } else {
@@ -141,11 +150,12 @@ internal struct CommentViewModel {
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
         let userViewHeight: CGFloat = badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
-
+        let commentLabelHeight: CGFloat = Theme.commentLabelViewHeight
+        
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
         let deletedOffset = isDeleted ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
-
+        
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
             + userViewHeight
@@ -153,6 +163,7 @@ internal struct CommentViewModel {
             + (isDeleted ? 0.0 : Theme.replyActionsViewHeight)
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
+            + (commentLabel == nil ? 0.0 : commentLabelHeight)
 
         return height
     }
@@ -182,6 +193,7 @@ internal struct CommentViewModel {
         static let moreRepliesViewHeight: CGFloat = 31.0
         static let moreRepliesTopOffset: CGFloat = 12.0
         static let lastInSectionOffset: CGFloat = 19.0
+        static let commentLabelViewHeight: CGFloat = 28.0
     }
 
     private func message() -> String {
@@ -214,7 +226,28 @@ internal struct CommentViewModel {
 
         return attributes
     }
+    
+    private func getCommentLabelFromConfig(comment: SPComment) -> SPLabelConfiguration? {
+        // cross given commentLabels to appConfig labels
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
+           sharedConfig.enableCommentLabels == true,
+           let commentLabels = comment.additionalData?.labels,
+           let labelIds = commentLabels.ids, labelIds.count > 0,
+           let section = commentLabels.section,
+           let commentLabelsConfig = sharedConfig.commentLabels,
+           let sectionLabels = commentLabelsConfig[section] {
+            // only the first comment label is shown
+            return sectionLabels.getLabelById(labelId: labelIds[0])
+        }
+        return nil
+    }
 
+}
+
+struct CommentLabel {
+    var text: String
+    var iconUrl: URL
+    var color: UIColor
 }
 
 // MARK: - Theme

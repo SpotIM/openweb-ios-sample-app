@@ -90,6 +90,10 @@ internal extension UIColor {
     static var spSeparator5: UIColor {
         SPUserInterfaceStyle.isDarkMode ? mineShaft2 : white.withAlphaComponent(0.1)
     }
+    
+    static var commentLabelBackgroundOpacity: CGFloat {
+        SPUserInterfaceStyle.isDarkMode ? 0.2 : 0.1
+    }
 
     private var darkerBy60Percent: UIColor {
         return darkerColor(by: 0.4, resultAlpha: 1)

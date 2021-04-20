@@ -33,4 +33,20 @@ extension UIColor {
             alpha: CGFloat(1.0)
         )
     }
+    
+    static func color(rgb: String?) -> UIColor? {
+        guard let rgb = rgb else {return nil}
+        
+        let seperatedRgb = rgb.components(separatedBy: ",").map({ Int($0.trimmingCharacters(in: .whitespacesAndNewlines)) })
+        
+        guard seperatedRgb.count >= 3, let rgbRedValue = seperatedRgb[0], let rgbGreenValue = seperatedRgb[1], let rgbBlueValue = seperatedRgb[2]
+        else {return nil}
+        
+        return UIColor(
+            red: CGFloat(rgbRedValue) / 255.0,
+            green: CGFloat(rgbGreenValue) / 255.0,
+            blue: CGFloat(rgbBlueValue) / 255.0,
+            alpha: 1.0
+        )
+    }
 }
