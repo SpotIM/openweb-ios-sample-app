@@ -10,20 +10,16 @@ import Foundation
 
 struct SPLabelConfiguration: Decodable {
     
-    let id: String?
-    let text: String?
-    let color: String?
-    let iconName: String?
-    let iconType: String?
+    let id: String
+    let text: String
+    let color: String
+    let iconName: String
+    let iconType: String
     
     func getIconUrl() -> URL? {
-        if let iconName = iconName, let iconType = iconType {
-            var result = Constants.cloudinaryBaseURL.appending(Constants.cloudinaryIconParamString)
-            result.append("\(Constants.iconPathComponent)\(iconType)-\(iconName).png")
-            return URL(string: result)
-        }
-        
-        return nil
+        var result = Constants.cloudinaryBaseURL.appending(Constants.cloudinaryIconParamString)
+        result.append("\(Constants.iconPathComponent)\(iconType)-\(iconName).png")
+        return URL(string: result)
     }
     
     private enum Constants {

@@ -16,7 +16,7 @@ struct SPCommentLabelsSectionConfiguration: Decodable {
     let minSelected: Int?
     
     func getLabelById(labelId: String) -> SPLabelConfiguration? {
-        if let label = labels?.filter({ $0.id == labelId })[0] {
+        if let label = labels?.first(where: { $0.id == labelId }) {
             return label
         }
         return nil

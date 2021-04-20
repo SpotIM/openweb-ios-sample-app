@@ -25,54 +25,26 @@ internal final class CommentLabelView: BaseView {
         setupUI()
     }
     
-    func setLabel(commentLabelIconUrl: URL?, rgbColor: String?, labelText: String?, state: LabelState) {
-        if let commentLabelIconUrl = commentLabelIconUrl, let color = UIColor.color(rgb: rgbColor), let labelText = labelText {
-            self.commentLabelColor = color
-            // update UI
-            DispatchQueue.main.async() {
-                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
-                self.label.textColor = self.commentLabelColor
-                self.label.text = labelText
-                self.setState(state: state)
-                UIImage.load(with: commentLabelIconUrl) { image, _ in
-                    if let image = image {
-                        self.iconImageView.image = image
-                        self.iconImageView.image = image.withRenderingMode(.alwaysTemplate)
-                        self.iconImageView.tintColor = self.commentLabelColor
-                        self.iconImageViewHeightConstraint?.constant = Theme.iconImageHeight
-                    } else {
-                        self.iconImageViewHeightConstraint?.constant = 0
-                    }
-                }
-            }
-        } else {
-            // update UI
-            DispatchQueue.main.async() {
+    func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, state: LabelState) {
+        self.commentLabelColor = labelColor
+        // update UI
+        self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+        self.label.textColor = self.commentLabelColor
+        self.label.text = labelText
+        self.setState(state: state)
+        UIImage.load(with: commentLabelIconUrl) { image, _ in
+            if let image = image {
+                self.iconImageView.image = image.withRenderingMode(.alwaysTemplate)
+                self.iconImageView.tintColor = self.commentLabelColor
+                self.iconImageViewHeightConstraint?.constant = Theme.iconImageHeight
+            } else {
                 self.iconImageViewHeightConstraint?.constant = 0
-                self.labelContainer.backgroundColor = .clear
-                self.label.textColor = .clear
-                self.label.text = ""
-                self.setState(state: state)
             }
         }
     }
     
-    // TODO
     func setState(state: LabelState) {
-        switch state {
-            case .hidden:
-                commentLabelViewHeightConstraint?.constant = 0
-                break
-            case .notSelected:
-                break
-            case .selected:
-                break
-            case .readOnly:
-                commentLabelViewHeightConstraint?.constant = Theme.labelHeight
-                break
-        }
         self.state = state
-        
     }
     
     // Handle dark mode \ light mode change
@@ -134,6 +106,6 @@ private enum Theme {
 }
 
 enum LabelState {
-    case hidden, notSelected, selected, readOnly
+    case notSelected, selected, readOnly
 }
 

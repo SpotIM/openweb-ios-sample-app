@@ -24,10 +24,7 @@ internal struct CommentViewModel {
     var repliesRawCount: Int?
     var repliesCount: String?
     var depth: Int = 0
-    var commentLabel: SPLabelConfiguration?
-    var commentLabelText: String?
-    var commentLabelColor: String?
-    var commentLabelIconUrl: URL?
+    var commentLabel: CommentLabel?
     
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
@@ -68,17 +65,13 @@ internal struct CommentViewModel {
         parentCommentId = comment.parentId
         depth = comment.depth ?? 0
         
-        // cross given commentLabels to appConfig labels
-        if let _ = SPConfigsDataSource.appConfig?.shared?.enableCommentLabels,
-           let labelIds = comment.additionalData?.labels?.ids, labelIds.count > 0 {
-            if let section = comment.additionalData?.labels?.section,
-               let sectionLabels = SPConfigsDataSource.appConfig?.shared?.commentLabels?[section] {
-                commentLabel = sectionLabels.getLabelById(labelId: labelIds[0])
-                commentLabelText = commentLabel?.text
-                commentLabelColor = commentLabel?.color
-                commentLabelIconUrl = commentLabel?.getIconUrl()
-            }
+        
+        if let commentLabelConfig = getCommentLabelFromConfig(comment: comment),
+           let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
+           let commentLabelIconUrl = commentLabelConfig.getIconUrl() {
+            commentLabel = CommentLabel(text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
         }
+        
         
         if comment.hasNext {
             repliesButtonState = .collapsed
@@ -233,7 +226,27 @@ internal struct CommentViewModel {
 
         return attributes
     }
+    
+    private func getCommentLabelFromConfig(comment: SPComment) -> SPLabelConfiguration? {
+        // cross given commentLabels to appConfig labels
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
+           sharedConfig.enableCommentLabels ?? false,
+           let commentLabels = comment.additionalData?.labels,
+           let labelIds = commentLabels.ids, labelIds.count > 0,
+           let section = commentLabels.section,
+           let commentLabelsConfig = sharedConfig.commentLabels,
+           let sectionLabels = commentLabelsConfig[section] {
+            return sectionLabels.getLabelById(labelId: labelIds[0])
+        }
+        return nil
+    }
 
+}
+
+struct CommentLabel {
+    var text: String
+    var iconUrl: URL
+    var color: UIColor
 }
 
 // MARK: - Theme
