@@ -449,7 +449,7 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
             }
         }
         
-        // check comment labels
+        // check comment labels minSelected
         if let sectionLabelsConfig = self.sectionLabels,
            sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
             postEnabled = false

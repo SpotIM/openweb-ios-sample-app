@@ -20,7 +20,7 @@ protocol CommentStateable {
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion)
 }
 
-struct SelectedLabels: Decodable {
+struct SelectedLabels {
     var section: String
     var ids: [String]
 }
@@ -69,7 +69,7 @@ final class SPCommentCreationModel: CommentStateable {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         var parameters: [String: Any] = [
             CreateCommentAPIKeys.content: [[CreateCommentAPIKeys.text: commentText]],
-            CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName],
+            CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName]
         ]
         
         if let selectedLabels = self.selectedLabels {
