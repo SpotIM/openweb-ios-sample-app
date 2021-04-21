@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-internal final class SPCommentLabelsContainerView: BaseView {
+internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizerDelegate {
     
     var container: BaseStackView = .init()
     var labels: [CommentLabelView] = .init()
@@ -44,8 +44,8 @@ internal final class SPCommentLabelsContainerView: BaseView {
         labels.append(CommentLabelView())
         labels.append(CommentLabelView())
         labels[0].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text1", state: .notSelected)
-        labels[1].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text2", state: .readOnly)
-        labels[2].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text3", state: .selected)
+        labels[1].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text2", state: .notSelected)
+        labels[2].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text3", state: .notSelected)
     }
     
     private func configureLabelsContainer() {
@@ -58,6 +58,9 @@ internal final class SPCommentLabelsContainerView: BaseView {
         container.spacing = 10
         labels.forEach { label in
             container.addArrangedSubview(label)
+            let recognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
+            recognizer.delegate = self
+            label.addGestureRecognizer(recognizer)
         }
 
         container.layout {
@@ -67,4 +70,15 @@ internal final class SPCommentLabelsContainerView: BaseView {
             $0.height.equal(to: 28.0)
         }
     }
+    
+    @objc func labelTapped(_ recognizer: UITapGestureRecognizer) {
+        if let tappedLabel = recognizer.view as? CommentLabelView {
+            if tappedLabel.getState() == .notSelected {
+                tappedLabel.setState(state: .selected)
+            } else {
+                tappedLabel.setState(state: .notSelected)
+            }
+        }
+    }
+
 }
