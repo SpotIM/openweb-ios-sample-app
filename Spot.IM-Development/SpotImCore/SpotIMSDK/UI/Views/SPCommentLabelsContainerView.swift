@@ -88,8 +88,8 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         if let tappedLabel = recognizer.view as? CommentLabelView {
             if tappedLabel.getState() == .notSelected {
                 if selectedLabelsIds.count == maxLabels {
-                    if maxLabels == 1,
-                       let prevSelectedLabel = labelsViews.first(where: {$0.id == selectedLabelsIds[0]}) {
+                    // if max labels is 1 - un-select old selected label and select tappedLabel
+                    if maxLabels == 1, let prevSelectedLabel = labelsViews.first(where: {$0.id == selectedLabelsIds[0]}) {
                         prevSelectedLabel.setState(state: .notSelected)
                         selectedLabelsIds[0] = tappedLabel.id
                         tappedLabel.setState(state: .selected)
