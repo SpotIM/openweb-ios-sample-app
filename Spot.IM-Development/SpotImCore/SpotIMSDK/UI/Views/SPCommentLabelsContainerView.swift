@@ -12,22 +12,30 @@ import UIKit
 internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizerDelegate {
     
     var container: BaseStackView = .init()
-    var labels: [CommentLabelView] = .init()
+    var labelsViews: [CommentLabelView] = .init()
     var guidelineText: BaseLabel = .init()
+    var maxLabels: Int
+    var selectedLabelsIds: [String] = .init()
 
-    override init(frame: CGRect) {
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        setupUI()
+//    }
+    
+    init(labels: [CommentLabel], guidelineText: String, maxLabels: Int) {
+        self.maxLabels = maxLabels
         super.init(frame: frame)
-        setupUI()
+        setupUI(labels: labels, guidelineText: guidelineText)
     }
     
-    private func setupUI() {
-        addSubviews(guidelineText, container)
-        configureGuidelineText()
+    private func setupUI(labels: [CommentLabel], guidelineText: String) {
+        addSubviews(self.guidelineText, container)
+        configureGuidelineText(text: guidelineText)
+        configureLabels(labels: labels)
         configureLabelsContainer()
     }
     
-    private func configureGuidelineText() {
-        let text = "How do you think the stock is performing?"
+    private func configureGuidelineText(text: String) {
         guidelineText.text = text
         guidelineText.textColor = .steelGrey
         guidelineText.font = UIFont.preferred(style: .medium, of: 13.0)
@@ -38,25 +46,20 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         }
     }
     
-    private func configureLabels() {
-        let url = URL(string: "https://images.spot.im/image/upload/f_png/font-awesome/solid-chart-line-down.png")
-        labels.append(CommentLabelView())
-        labels.append(CommentLabelView())
-        labels.append(CommentLabelView())
-        labels[0].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text1", state: .notSelected)
-        labels[1].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text2", state: .notSelected)
-        labels[2].setLabel(commentLabelIconUrl: url!, labelColor: .red, labelText: "text3", state: .notSelected)
+    private func configureLabels(labels: [CommentLabel]) {
+        labels.forEach { label in
+            let labelView = CommentLabelView()
+            labelView.setLabel(commentLabelIconUrl: label.iconUrl, labelColor: label.color, labelText: label.text, labelId: label.id, state: .notSelected)
+        }
     }
     
     private func configureLabelsContainer() {
-        configureLabels()
-
         container.axis = .horizontal
         container.alignment = .leading
         container.distribution = .fillEqually
         
         container.spacing = 10
-        labels.forEach { label in
+        labelsViews.forEach { label in
             container.addArrangedSubview(label)
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
             recognizer.delegate = self
@@ -74,9 +77,20 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     @objc func labelTapped(_ recognizer: UITapGestureRecognizer) {
         if let tappedLabel = recognizer.view as? CommentLabelView {
             if tappedLabel.getState() == .notSelected {
-                tappedLabel.setState(state: .selected)
+                if selectedLabelsIds.count == maxLabels {
+                    if maxLabels == 1,
+                       let prevSelectedLabel = labelsViews.first(where: {$0.id == selectedLabelsIds[0]}) {
+                        prevSelectedLabel.setState(state: .notSelected)
+                        selectedLabelsIds[0] = tappedLabel.id
+                        tappedLabel.setState(state: .selected)
+                    }
+                } else {
+                    selectedLabelsIds.append(tappedLabel.id)
+                    tappedLabel.setState(state: .selected)
+                }
             } else {
                 tappedLabel.setState(state: .notSelected)
+                selectedLabelsIds = selectedLabelsIds.filter { $0 != tappedLabel.id}
             }
         }
     }
