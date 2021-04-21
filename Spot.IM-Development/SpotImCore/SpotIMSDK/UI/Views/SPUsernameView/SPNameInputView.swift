@@ -41,6 +41,15 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     func makeFirstResponder() {
         usernameTextView.becomeFirstResponder()
     }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.backgroundColor = .clear
+        usernameTextView.textColor = .spForeground0
+        usernameTextView.backgroundColor = .spBackground0
+        separatorView.backgroundColor = .spSeparator2
+        avatarImageView.updateColorsAccordingToStyle()
+    }
 
     // MARK: - Internal methods
 

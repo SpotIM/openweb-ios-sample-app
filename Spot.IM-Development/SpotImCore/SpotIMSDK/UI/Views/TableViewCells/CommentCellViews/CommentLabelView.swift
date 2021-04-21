@@ -55,7 +55,7 @@ internal final class CommentLabelView: BaseView {
                 label.textColor = self.commentLabelColor
                 break
             case .selected:
-                labelContainer.backgroundColor = commentLabelColor
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = .white
                 label.textColor = .white
@@ -77,7 +77,16 @@ internal final class CommentLabelView: BaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.backgroundColor = .clear
-        self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+        switch state {
+            case .selected:
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
+                break
+            case .readOnly:
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+                break
+            case .notSelected:
+                break
+        }
     }
 
     // MARK: - Private
