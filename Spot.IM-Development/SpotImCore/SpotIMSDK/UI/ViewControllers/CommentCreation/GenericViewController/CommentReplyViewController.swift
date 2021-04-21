@@ -40,6 +40,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     private let mainContainerView: BaseView = .init()
     private let postButton: BaseButton = .init()
+    private let postButtonSeperator: BaseView = .init()
     private let scrollView: BaseScrollView = .init()
     private let commentLabelsContainer: SPCommentLabelsContainerView = .init()
     
@@ -236,7 +237,7 @@ extension CommentReplyViewController {
             $0.bottom.equal(to: view.bottomAnchor)
         }
         scrollView.addSubview(mainContainerView)
-        mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, commentLabelsContainer)
+        mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, postButtonSeperator, commentLabelsContainer)
         topContainerView.addSubview(topContainerStack)
         
         configureMainContainer()
@@ -245,6 +246,7 @@ extension CommentReplyViewController {
         configureUsernameView()
         configureInputContainerView()
         configurePostButton()
+        configurePostButtonSeperator()
         configureCommentLabelsContainer()
         updateColorsAccordingToStyle()
     }
@@ -345,11 +347,22 @@ extension CommentReplyViewController {
         }
     }
     
+    private func configurePostButtonSeperator() {
+        postButtonSeperator.backgroundColor = .spSeparator2
+        postButtonSeperator.layout {
+            $0.bottom.equal(to: postButton.topAnchor, offsetBy: -15)
+            $0.height.equal(to: 1.0)
+            $0.leading.equal(to: topContainerView.leadingAnchor)
+            $0.trailing.equal(to: topContainerView.trailingAnchor)
+        }
+    }
+    
     private func configureCommentLabelsContainer() {
         commentLabelsContainer.layout {
-            $0.bottom.equal(to: postButton.topAnchor, offsetBy: -35.0)
-            $0.leading.equal(to: usernameView.leadingAnchor, offsetBy: 10.0)
-            $0.trailing.equal(to: usernameView.trailingAnchor, offsetBy: -10.0)
+            $0.bottom.equal(to: postButtonSeperator.topAnchor, offsetBy: -15.0)
+            $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
+            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -15.0)
+            $0.height.greaterThanOrEqual(to: 56.0)
         }
     }
 }
