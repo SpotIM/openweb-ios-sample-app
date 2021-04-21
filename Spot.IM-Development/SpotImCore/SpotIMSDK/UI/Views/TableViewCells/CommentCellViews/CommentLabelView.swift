@@ -15,7 +15,7 @@ internal final class CommentLabelView: BaseView {
     private let label: BaseLabel = .init()
     
     private var commentLabelColor: UIColor = .clear
-    private var state: LabelState = .readOnly
+    private var state: LabelState = .readOnly 
     
     private var commentLabelViewHeightConstraint: NSLayoutConstraint?
     private var iconImageViewHeightConstraint: NSLayoutConstraint?
@@ -66,6 +66,10 @@ internal final class CommentLabelView: BaseView {
                 break
         }
         self.state = state
+    }
+    
+    func getState() -> LabelState {
+        return state
     }
     
     // Handle dark mode \ light mode change
