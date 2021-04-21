@@ -42,7 +42,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private let postButton: BaseButton = .init()
     private let postButtonSeperator: BaseView = .init()
     private let scrollView: BaseScrollView = .init()
-    private let commentLabelsContainer: SPCommentLabelsContainerView = .init()
+    private let commentLabelsContainer: SPCommentLabelsContainerView
     
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
@@ -69,12 +69,24 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupCommentLAbelsContainer()
+        
         setupUI()
         setupUserIconHandler()
         registerForKeyboardNotifications()
         inputViews.append(textInputViewContainer)
         if showsUsernameInput {
             inputViews.append(usernameView)
+        }
+    }
+    
+    private func setupCommentLAbelsContainer() {
+        // TODO: add logic for searching article section
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
+           sharedConfig.enableCommentLabels == true,
+           let commentLabelsConfig = sharedConfig.commentLabels,
+           let sectionLabels = commentLabelsConfig["default"] {
+//            commentLabelsContainer = SPCommentLabelsContainerView(labels: [], guidelineText: sectionLabels.guidelineText, maxLabels: <#T##Int#>)
         }
     }
     

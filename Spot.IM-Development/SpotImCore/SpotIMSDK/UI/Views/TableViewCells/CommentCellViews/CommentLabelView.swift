@@ -20,12 +20,15 @@ internal final class CommentLabelView: BaseView {
     private var commentLabelViewHeightConstraint: NSLayoutConstraint?
     private var iconImageViewHeightConstraint: NSLayoutConstraint?
     
+    var id: String = .init()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
     }
     
-    func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, state: LabelState) {
+    func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, labelId: String, state: LabelState) {
+        self.id = labelId
         self.commentLabelColor = labelColor
         // update UI
         self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
