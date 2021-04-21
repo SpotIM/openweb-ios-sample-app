@@ -98,6 +98,10 @@ final class SPCommentCreationModel: CommentStateable {
                     let user = SPComment.CommentUser(id: userId)
                     comment.users = [userId: user]
                 }
+                if let labels = self.selectedLabels {
+                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
+                    comment.additionalData = SPComment.AdditionalData(labels: commentLabels)
+                }
                 self.cacheService.remove(for: self.dataModel.converstionId)
                 self.postCompletionHandler?(comment)
             },

@@ -69,6 +69,10 @@ final class SPReplyCreationModel: CommentStateable {
                     let user = SPComment.CommentUser(id: userId)
                     reply.users = [userId: user]
                 }
+                if let labels = self.selectedLabels {
+                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
+                    reply.additionalData = SPComment.AdditionalData(labels: commentLabels)
+                }
                 self.cacheService.remove(for: self.dataModel.commentId)
                 self.postCompletionHandler?(reply)
             },
