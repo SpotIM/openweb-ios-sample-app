@@ -42,7 +42,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private let postButton: BaseButton = .init()
     private let postButtonSeperator: BaseView = .init()
     private let scrollView: BaseScrollView = .init()
-    private let commentLabelsContainer: SPCommentLabelsContainerView
+    private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
     
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
@@ -69,7 +69,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupCommentLAbelsContainer()
+        setupCommentLabelsContainer()
         
         setupUI()
         setupUserIconHandler()
@@ -80,13 +80,20 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
-    private func setupCommentLAbelsContainer() {
+    private func setupCommentLabelsContainer() {
         // TODO: add logic for searching article section
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
            sharedConfig.enableCommentLabels == true,
            let commentLabelsConfig = sharedConfig.commentLabels,
            let sectionLabels = commentLabelsConfig["default"] {
-//            commentLabelsContainer = SPCommentLabelsContainerView(labels: [], guidelineText: sectionLabels.guidelineText, maxLabels: <#T##Int#>)
+                // set relevant comment labels to container
+                var commentLabels: [CommentLabel] = []
+                sectionLabels.labels?.forEach { labelConfig in
+                    if let url = labelConfig.getIconUrl(), let color = UIColor.color(rgb: labelConfig.color) {
+                        commentLabels.append(CommentLabel(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
+                    }
+                }
+            commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabels.guidelineText!, maxLabels: sectionLabels.maxSelected!)
         }
     }
     
