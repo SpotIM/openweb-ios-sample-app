@@ -230,12 +230,13 @@ internal struct CommentViewModel {
     private func getCommentLabelFromConfig(comment: SPComment) -> SPLabelConfiguration? {
         // cross given commentLabels to appConfig labels
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
-           sharedConfig.enableCommentLabels ?? false,
+           sharedConfig.enableCommentLabels == true,
            let commentLabels = comment.additionalData?.labels,
            let labelIds = commentLabels.ids, labelIds.count > 0,
            let section = commentLabels.section,
            let commentLabelsConfig = sharedConfig.commentLabels,
            let sectionLabels = commentLabelsConfig[section] {
+            // only the first comment label is shown
             return sectionLabels.getLabelById(labelId: labelIds[0])
         }
         return nil
