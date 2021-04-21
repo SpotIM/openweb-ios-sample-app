@@ -95,6 +95,10 @@ internal extension UIColor {
         SPUserInterfaceStyle.isDarkMode ? 0.2 : 0.1
     }
     
+    static var commentLabelSelectedBackgroundOpacity: CGFloat {
+        SPUserInterfaceStyle.isDarkMode ? 0.7 : 1
+    }
+    
     static var commentLabelBorderOpacity: CGFloat {
         SPUserInterfaceStyle.isDarkMode ? 0.7 : 0.4
     }

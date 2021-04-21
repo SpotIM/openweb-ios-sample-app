@@ -136,6 +136,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
         postButton.backgroundColor = .brandColor
         userIcon.backgroundColor = .spBackground0
+        postButtonSeperator.backgroundColor = .spSeparator2
+        commentLabelsContainer.updateColorsAccordingToStyle()
+        usernameView.updateColorsAccordingToStyle()
     }
     
     @objc
@@ -233,7 +236,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         view.endEditing(true)
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
-        model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds, section: "default") // TODO: section
+        if commentLabelsContainer.selectedLabelsIds.count > 0 {
+            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds, section: "default") // TODO: section
+        }
         model?.post()
     }
 

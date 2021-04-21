@@ -25,7 +25,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     func setLabelsContainer(labels: [CommentLabel], guidelineText: String, maxLabels: Int) {
         self.maxLabels = maxLabels
         guidelineTextLabel.text = guidelineText
-        
+        guidelineTextLabel.numberOfLines = 0
         setLabels(labels: labels)
         
         labelsViews.forEach { label in
@@ -43,7 +43,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     }
     
     private func configureGuidelineText() {
-        guidelineTextLabel.textColor = .steelGrey
+        guidelineTextLabel.textColor = .spForeground4
         guidelineTextLabel.font = UIFont.preferred(style: .medium, of: 13.0)
         guidelineTextLabel.layout {
             $0.top.equal(to: topAnchor)
@@ -65,12 +65,22 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         container.alignment = .leading
         container.distribution = .equalSpacing
         container.spacing = 10
-
+        container.backgroundColor = .clear
+        
         container.layout {
             $0.top.equal(to: guidelineTextLabel.bottomAnchor, offsetBy: 10.0)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.lessThanOrEqual(to: trailingAnchor)
             $0.height.equal(to: 28.0)
+        }
+    }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.backgroundColor = .clear
+        guidelineTextLabel.textColor = .spForeground4
+        labelsViews.forEach { label in
+            label.updateColorsAccordingToStyle()
         }
     }
     
