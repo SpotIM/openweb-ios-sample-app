@@ -43,6 +43,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private let postButtonSeperator: BaseView = .init()
     private let scrollView: BaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
+    private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
@@ -85,15 +86,16 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
            sharedConfig.enableCommentLabels == true,
            let commentLabelsConfig = sharedConfig.commentLabels,
-           let sectionLabels = commentLabelsConfig["default"] {
+           let sectionLabelsConfig = commentLabelsConfig["default"] {
+                sectionLabels = sectionLabelsConfig
                 // set relevant comment labels to container
                 var commentLabels: [CommentLabel] = []
-                sectionLabels.labels?.forEach { labelConfig in
+                sectionLabelsConfig.labels.forEach { labelConfig in
                     if let url = labelConfig.getIconUrl(), let color = UIColor.color(rgb: labelConfig.color) {
                         commentLabels.append(CommentLabel(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
                     }
                 }
-            commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabels.guidelineText!, maxLabels: sectionLabels.maxSelected!)
+                commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
         }
     }
     
@@ -231,6 +233,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         view.endEditing(true)
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
+        model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds, section: "default") // TODO: section
         model?.post()
     }
 
@@ -439,6 +442,12 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
                 postEnabled = false
                 break
             }
+        }
+        
+        // check comment labels
+        if let sectionLabelsConfig = self.sectionLabels,
+           sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
+            postEnabled = false
         }
 
         postButton.isEnabled = postEnabled

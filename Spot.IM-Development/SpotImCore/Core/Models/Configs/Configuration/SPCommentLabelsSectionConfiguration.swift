@@ -10,13 +10,13 @@ import Foundation
 
 struct SPCommentLabelsSectionConfiguration: Decodable {
     
-    let labels: [SPLabelConfiguration]?
-    let guidelineText: String?
-    let maxSelected: Int?
-    let minSelected: Int?
+    let labels: [SPLabelConfiguration]
+    let guidelineText: String
+    let maxSelected: Int
+    let minSelected: Int
     
     func getLabelById(labelId: String) -> SPLabelConfiguration? {
-        if let label = labels?.first(where: { $0.id == labelId }) {
+        if let label = labels.first(where: { $0.id == labelId }) {
             return label
         }
         return nil
