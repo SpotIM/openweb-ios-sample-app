@@ -12,15 +12,23 @@ protocol CommentStateable {
     
     var postCompletionHandler: ((SPComment) -> Void)? { get set }
     var commentText: String { get }
+    var selectedLabels: SelectedLabels? { get set }
     
     func post()
     func updateCommentText(_ text: String)
+    func updateCommentLabels(labelsIds: [String], section: String)
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion)
+}
+
+struct SelectedLabels: Decodable {
+    var section: String
+    var ids: [String]
 }
 
 final class SPCommentCreationModel: CommentStateable {
     
     private(set) var commentText: String = ""
+    var selectedLabels: SelectedLabels?
     var postCompletionHandler: ((SPComment) -> Void)?
     var postErrorHandler: ((Error) -> Void)?
     
@@ -53,12 +61,25 @@ final class SPCommentCreationModel: CommentStateable {
         cacheService.update(comment: text, with: dataModel.converstionId)
     }
     
+    func updateCommentLabels(labelsIds: [String], section: String) {
+        selectedLabels = SelectedLabels(section: section, ids: labelsIds)
+    }
+    
     func post() {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             CreateCommentAPIKeys.content: [[CreateCommentAPIKeys.text: commentText]],
-            CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName]
+            CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName],
         ]
+        
+        if let selectedLabels = self.selectedLabels {
+            parameters[CreateCommentAPIKeys.additionalData] = [
+                CreateCommentAPIKeys.labels: [
+                    CreateCommentAPIKeys.labelsSection: selectedLabels.section,
+                    CreateCommentAPIKeys.labelsIds: selectedLabels.ids,
+                ]
+            ]
+        }
         
         commentService.createComment(
             parameters: parameters,
@@ -91,6 +112,10 @@ final class SPCommentCreationModel: CommentStateable {
         static let text = "text"
         static let metadata = "metadata"
         static let displayName = "display_name"
+        static let additionalData = "additional_data"
+        static let labels = "labels"
+        static let labelsSection = "section"
+        static let labelsIds = "ids"
     }
     
 }

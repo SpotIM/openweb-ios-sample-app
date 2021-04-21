@@ -90,7 +90,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
                 }
             } else {
                 tappedLabel.setState(state: .notSelected)
-                selectedLabelsIds = selectedLabelsIds.filter { $0 != tappedLabel.id}
+                selectedLabelsIds = selectedLabelsIds.filter { $0 != tappedLabel.id }
             }
         }
     }

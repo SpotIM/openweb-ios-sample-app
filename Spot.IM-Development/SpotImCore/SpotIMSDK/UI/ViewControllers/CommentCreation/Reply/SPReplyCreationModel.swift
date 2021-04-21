@@ -11,6 +11,7 @@ import Foundation
 final class SPReplyCreationModel: CommentStateable {
     
     private(set) var commentText: String = ""
+    var selectedLabels: SelectedLabels?
     var postCompletionHandler: ((SPComment) -> Void)?
     var postErrorHandler: ((Error) -> Void)?
     
@@ -41,6 +42,10 @@ final class SPReplyCreationModel: CommentStateable {
     func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.commentId)
+    }
+    
+    func updateCommentLabels(labelsIds: [String], section: String) {
+        selectedLabels = SelectedLabels(section: section, ids: labelsIds)
     }
     
     func post() {
@@ -86,14 +91,25 @@ final class SPReplyCreationModel: CommentStateable {
             metadata[CreateReplyAPIKeys.replyTo] = [CreateReplyAPIKeys.replyId: dataModel.commentId]
         }
         
-        return [
+        var parameters = [
             CreateReplyAPIKeys.parentId: dataModel.rootCommentId ?? dataModel.commentId,
             CreateReplyAPIKeys.conversationId: dataModel.postId,
             CreateReplyAPIKeys.content: [
                 [CreateReplyAPIKeys.text: commentText]
             ],
             CreateReplyAPIKeys.metadata: metadata
-        ]
+        ] as [String : Any]
+        
+        if let selectedLabels = self.selectedLabels {
+            parameters[CreateReplyAPIKeys.additionalData] = [
+                CreateReplyAPIKeys.labels: [
+                    CreateReplyAPIKeys.labelsSection: selectedLabels.section,
+                    CreateReplyAPIKeys.labelsIds: selectedLabels.ids,
+                ]
+            ]
+        }
+        
+        return parameters
     }
     
     private enum CreateReplyAPIKeys {
@@ -105,6 +121,10 @@ final class SPReplyCreationModel: CommentStateable {
         static let conversationId = "conversation_id"
         static let replyTo = "reply_to"
         static let replyId = "reply_id"
+        static let additionalData = "additional_data"
+        static let labels = "labels"
+        static let labelsSection = "section"
+        static let labelsIds = "ids"
     }
     
 }
