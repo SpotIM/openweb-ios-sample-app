@@ -10,8 +10,10 @@ import Foundation
 import UIKit
 
 internal final class SPCommentLabelsContainerView: BaseView {
-    var labels: [CommentLabelView] = .init()
+    
     var container: BaseStackView = .init()
+    var labels: [CommentLabelView] = .init()
+    var guidelineText: BaseLabel = .init()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,9 +21,21 @@ internal final class SPCommentLabelsContainerView: BaseView {
     }
     
     private func setupUI() {
-        addSubviews(container)
-        configureLabels()
+        addSubviews(guidelineText, container)
+        configureGuidelineText()
         configureLabelsContainer()
+    }
+    
+    private func configureGuidelineText() {
+        let text = "How do you think the stock is performing?"
+        guidelineText.text = text
+        guidelineText.textColor = .steelGrey
+        guidelineText.font = UIFont.preferred(style: .medium, of: 13.0)
+        guidelineText.layout {
+            $0.top.equal(to: topAnchor)
+            $0.leading.equal(to: leadingAnchor)
+            $0.trailing.equal(to: trailingAnchor)
+        }
     }
     
     private func configureLabels() {
@@ -35,6 +49,8 @@ internal final class SPCommentLabelsContainerView: BaseView {
     }
     
     private func configureLabelsContainer() {
+        configureLabels()
+
         container.axis = .horizontal
         container.alignment = .leading
         container.distribution = .fillEqually
@@ -45,7 +61,10 @@ internal final class SPCommentLabelsContainerView: BaseView {
         }
 
         container.layout {
-            $0.width.equal(to: 350)
+            $0.top.equal(to: guidelineText.bottomAnchor, offsetBy: 10.0)
+            $0.leading.equal(to: leadingAnchor)
+            $0.trailing.equal(to: trailingAnchor)
+            $0.height.equal(to: 28.0)
         }
     }
 }
