@@ -52,10 +52,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var displayArticleHeader: Bool = true
     private var communityGuidelinesHtmlString: String? = nil
     
-    private var isCommunityGudelinesVisible: Bool = false
-    private var communityGudelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
-    private var communityGudelinesMinHeight: CGFloat = 0.0
-    private var communityGudelinesHeightConstraint: NSLayoutConstraint?
+    private var isCommunityGuidelinesVisible: Bool = false
+    private var communityGuidelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
+    private var communityGuidelinesMinHeight: CGFloat = 0.0
+    private var communityGuidelinesHeightConstraint: NSLayoutConstraint?
 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
@@ -104,10 +104,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if isCommunityGudelinesVisible && communityGudelinesHeightConstraint == nil {
-            communityGudelinesMaxHeight = communityGuidelinesView.frame.height
+        if isCommunityGuidelinesVisible && communityGuidelinesHeightConstraint == nil {
+            communityGuidelinesMaxHeight = communityGuidelinesView.frame.height
             communityGuidelinesView.layout {
-                communityGudelinesHeightConstraint = $0.height.equal(to: communityGuidelinesView.frame.height)
+                communityGuidelinesHeightConstraint = $0.height.equal(to: communityGuidelinesView.frame.height)
             }
         }
     }
@@ -316,7 +316,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
         if let htmlString = getCommunityGuidelinesTextIfExists() {
             communityGuidelinesHtmlString = htmlString
-            isCommunityGudelinesVisible = true
+            isCommunityGuidelinesVisible = true
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
             communityGuidelinesView.delegate = self
             view.bringSubviewToFront(communityGuidelinesView)
@@ -578,21 +578,21 @@ extension SPMainConversationViewController { // Article header scrolling logic
     
     /// Instantly updates article header height when scrollView is scrolling
     private func updateCommunityGuidelinedHeightInstantly() {
-        guard isCommunityGudelinesVisible else { return }
-        if scrollingDirection == .down && communityGudelinesHeightConstraint?.constant == communityGudelinesMaxHeight {
+        guard isCommunityGuidelinesVisible else { return }
+        if scrollingDirection == .down && communityGuidelinesHeightConstraint?.constant == communityGuidelinesMaxHeight {
             return
         }
         if lastOffsetY > 0 {
-            if (scrollingDirection == .down && lastOffsetY > communityGudelinesMaxHeight) {
+            if (scrollingDirection == .down && lastOffsetY > communityGuidelinesMaxHeight) {
                 return
             }
             
-            let calculatedHeight = communityGudelinesMaxHeight - lastOffsetY
+            let calculatedHeight = communityGuidelinesMaxHeight - lastOffsetY
             let newHeight: CGFloat = max(calculatedHeight, 0)
             
-            communityGudelinesHeightConstraint?.constant = newHeight
+            communityGuidelinesHeightConstraint?.constant = newHeight
         } else {
-            communityGudelinesHeightConstraint?.constant = communityGudelinesMaxHeight
+            communityGuidelinesHeightConstraint?.constant = communityGuidelinesMaxHeight
         }
     }
     
@@ -600,12 +600,12 @@ extension SPMainConversationViewController { // Article header scrolling logic
     private func updateHeaderHeightInstantly() {
         guard isHeaderVisible else { return }
         
-        guard !isCommunityGudelinesVisible || communityGudelinesHeightConstraint?.constant == communityGudelinesMinHeight else { return }
+        guard !isCommunityGuidelinesVisible || communityGuidelinesHeightConstraint?.constant == communityGuidelinesMinHeight else { return }
         
         if lastOffsetY > 0 {
             var calculatedHeight = currentHeightConstant - (lastOffsetY - initialOffsetY)
-            if isCommunityGudelinesVisible {
-                calculatedHeight += (lastOffsetY < communityGudelinesMaxHeight + communityGudelinesMaxHeight) ? communityGudelinesMaxHeight : 0
+            if isCommunityGuidelinesVisible {
+                calculatedHeight += (lastOffsetY < communityGuidelinesMaxHeight + communityGuidelinesMaxHeight) ? communityGuidelinesMaxHeight : 0
             }
             
             let newHeight: CGFloat = max(min(calculatedHeight, articleHeaderMaxHeight), articleHeaderMinHeight)
@@ -620,15 +620,15 @@ extension SPMainConversationViewController { // Article header scrolling logic
     private func handleFinalHeaderHeightUpdate(with scrollViewContentOffset: CGPoint) {
         guard scrollingDirection != .static else { return }
         
-        if (isCommunityGudelinesVisible) {
+        if (isCommunityGuidelinesVisible) {
             let finaleHeightCommunityGuidelines: CGFloat
-            if (scrollViewContentOffset.y <= communityGudelinesMaxHeight * 0.8) {
-                finaleHeightCommunityGuidelines = communityGudelinesMaxHeight
+            if (scrollViewContentOffset.y <= communityGuidelinesMaxHeight * 0.8) {
+                finaleHeightCommunityGuidelines = communityGuidelinesMaxHeight
             } else {
-                finaleHeightCommunityGuidelines = (communityGudelinesHeightConstraint?.constant ?? 0) < communityGudelinesMaxHeight * 0.5 ? communityGudelinesMinHeight : communityGudelinesMaxHeight
+                finaleHeightCommunityGuidelines = (communityGuidelinesHeightConstraint?.constant ?? 0) < communityGuidelinesMaxHeight * 0.5 ? communityGuidelinesMinHeight : communityGuidelinesMaxHeight
             }
                 
-            communityGudelinesHeightConstraint?.constant = finaleHeightCommunityGuidelines
+            communityGuidelinesHeightConstraint?.constant = finaleHeightCommunityGuidelines
         }
         
         if (isHeaderVisible) {
