@@ -56,6 +56,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var communityGuidelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
     private var communityGuidelinesMinHeight: CGFloat = 0.0
     private var communityGuidelinesHeightConstraint: NSLayoutConstraint?
+    
+    private var shouldDisplayLoginPrompt: Bool = false
+    private var isLoginPromtVisible: Bool = false
+    private var loginPromptMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
+    private var loginPromptMinHeight: CGFloat = 0.0
+    private var loginPromptHeightConstraint: NSLayoutConstraint?
 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
@@ -108,6 +114,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             communityGuidelinesMaxHeight = communityGuidelinesView.frame.height
             communityGuidelinesView.layout {
                 communityGuidelinesHeightConstraint = $0.height.equal(to: communityGuidelinesView.frame.height)
+            }
+        }
+        if isLoginPromtVisible && loginPromptHeightConstraint == nil {
+            loginPromptMaxHeight = loginPromptView.frame.height
+            loginPromptView.layout {
+                loginPromptHeightConstraint = $0.height.equal(to: loginPromptView.frame.height)
             }
         }
     }
@@ -284,11 +296,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupUI() {
-        view.addSubviews(footer, sortView, tableHeader, communityGuidelinesView)
+        view.addSubviews(footer, sortView, tableHeader, loginPromptView, communityGuidelinesView)
 
         super.setupUI()
     
         setupSortView()
+        configureLoginPromptView()
         configureCommunityGuidelinesView()
         configureTableHeaderView()
         setupFooterView()
@@ -308,9 +321,28 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
     
+    private func configureLoginPromptView() {
+        loginPromptView.layout {
+            $0.top.equal(to: sortView.bottomAnchor)
+            $0.leading.equal(to: view.leadingAnchor)
+            $0.trailing.equal(to: view.trailingAnchor)
+        }
+        if self.shouldDisplayLoginPrompt {
+            isLoginPromtVisible = true
+            loginPromptView.delegate = self
+            view.bringSubviewToFront(loginPromptView)
+            loginPromptView.clipsToBounds = true
+        } else {
+            loginPromptView.isHidden = true
+            loginPromptView.layout {
+                $0.height.equal(to: 0.0)
+            }
+        }
+    }
+    
     private func configureCommunityGuidelinesView() {
         communityGuidelinesView.layout {
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: loginPromptView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
@@ -619,6 +651,17 @@ extension SPMainConversationViewController { // Article header scrolling logic
     /// Updates article header height after scroll view did end actions using `scrollingDirection` property
     private func handleFinalHeaderHeightUpdate(with scrollViewContentOffset: CGPoint) {
         guard scrollingDirection != .static else { return }
+        
+        if (isLoginPromtVisible) {
+            let finalHeightLoginPrompt: CGFloat
+            if (scrollViewContentOffset.y <= loginPromptMaxHeight * 0.8) {
+                finalHeightLoginPrompt = loginPromptMaxHeight
+            } else {
+                finalHeightLoginPrompt = (loginPromptHeightConstraint?.constant ?? 0) < loginPromptMaxHeight * 0.5 ? loginPromptMinHeight : loginPromptMaxHeight
+            }
+                
+            loginPromptHeightConstraint?.constant = finalHeightLoginPrompt
+        }
         
         if (isCommunityGuidelinesVisible) {
             let finaleHeightCommunityGuidelines: CGFloat
