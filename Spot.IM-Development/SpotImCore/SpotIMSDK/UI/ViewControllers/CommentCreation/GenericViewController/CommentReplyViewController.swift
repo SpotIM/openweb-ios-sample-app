@@ -45,6 +45,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
+    private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
     
@@ -80,6 +81,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func setupCommentLabelsContainer() {
+        var shouldHideCommentLabels = false
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
            sharedConfig.enableCommentLabels == true,
            let commentLabelsConfig = sharedConfig.commentLabels,
@@ -101,7 +103,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
                     }
                 }
                 commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
+            } else {
+                shouldHideCommentLabels = true
             }
+        } else {
+            shouldHideCommentLabels = true
+        }
+        if shouldHideCommentLabels {
+            commentLabelsContainer.isHidden = true
+            commentLabelsContainerHeightConstraint?.constant = 0
         }
     }
     
@@ -415,7 +425,7 @@ extension CommentReplyViewController {
             $0.bottom.equal(to: postButtonSeperator.topAnchor, offsetBy: -15.0)
             $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
             $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -15.0)
-            $0.height.greaterThanOrEqual(to: 56.0)
+            commentLabelsContainerHeightConstraint = $0.height.greaterThanOrEqual(to: 56.0)
         }
     }
 }
