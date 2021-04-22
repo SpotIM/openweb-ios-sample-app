@@ -61,11 +61,21 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         }
     }
     
+    private func shouldDisplayArticleHeader() -> Bool {
+        if shouldShowArticleView(for: model?.dataModel),
+           UIDevice.current.screenType != .iPhones_5_5s_5c_SE,
+           SpotIm.displayArticleHeader,
+           !(showLabelsSection && showsUsernameInput) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     internal override func updateModelData() {
         setupHeaderComponentsIfNeeded()
         configureModelHandlers()
-        if shouldShowArticleView(for: model?.dataModel), #available(iOS 11.0, *), UIDevice.current.screenType != .iPhones_5_5s_5c_SE, SpotIm.displayArticleHeader {
-            
+        if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
             topContainerStack.insertArrangedSubview(articleView, at: 1)
             articleView.setTitle(model?.dataModel.articleMetadata.title)
             articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))

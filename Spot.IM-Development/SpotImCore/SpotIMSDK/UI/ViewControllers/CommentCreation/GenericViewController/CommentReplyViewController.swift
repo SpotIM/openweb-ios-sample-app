@@ -50,8 +50,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var topContainerTopConstraint: NSLayoutConstraint?
     
     private var shouldBeAutoPosted: Bool = true
-    private var showsUsernameInput: Bool {
-
+    var showsUsernameInput: Bool {
         guard let config = SPConfigsDataSource.appConfig else { return true }
         let session = SPUserSessionHolder.session
 
@@ -59,7 +58,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         let didEnterName = session.displayNameFrozen
 
         return shoudEnterName && !didEnterName
-
+    }
+    var showLabelsSection: Bool {
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
+           sharedConfig.enableCommentLabels == true,
+           let commentLabels = sharedConfig.commentLabels,
+           !commentLabels.isEmpty {
+            return true
+        }
+        return false
     }
     
     private var inputViews = [SPTextInputView]()
@@ -337,7 +344,6 @@ extension CommentReplyViewController {
     
     private func configureInputContainerView() {
         textInputViewContainer.delegate = self
-
         textInputViewContainer.layout {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
