@@ -27,6 +27,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
+    private lazy var loginPromptView = SPLoginPromptView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
     private var typingIndicationView: TotalTypingIndicationView?
