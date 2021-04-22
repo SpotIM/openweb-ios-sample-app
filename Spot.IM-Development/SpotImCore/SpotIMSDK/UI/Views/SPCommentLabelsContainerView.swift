@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+protocol SPCommentLabelsContainerViewDelegate {
+    func didSelectionChanged()
+}
+
 internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizerDelegate {
     
     var container: BaseStackView = .init()
@@ -16,6 +20,8 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     var guidelineTextLabel: BaseLabel = .init()
     var maxLabels: Int = 0
     var selectedLabelsIds: [String] = .init()
+    
+    var delegate: SPCommentLabelsContainerViewDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -102,6 +108,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
                 tappedLabel.setState(state: .notSelected)
                 selectedLabelsIds = selectedLabelsIds.filter { $0 != tappedLabel.id }
             }
+            delegate?.didSelectionChanged()
         }
     }
 
