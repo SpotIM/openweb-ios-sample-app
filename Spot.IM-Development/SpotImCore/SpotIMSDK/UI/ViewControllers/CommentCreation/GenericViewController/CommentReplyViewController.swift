@@ -258,6 +258,24 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
 
         SPAnalyticsHolder.default.log(event: .loginClicked(.commentSignUp), source: .conversation)
     }
+    
+    private func validateInput() {
+        var postEnabled = true
+        for aView in inputViews {
+            if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
+                postEnabled = false
+                break
+            }
+        }
+        
+        // check comment labels minSelected
+        if let sectionLabelsConfig = self.sectionLabels,
+           sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
+            postEnabled = false
+        }
+
+        postButton.isEnabled = postEnabled
+    }
 }
 
 extension CommentReplyViewController {
@@ -392,6 +410,7 @@ extension CommentReplyViewController {
     }
     
     private func configureCommentLabelsContainer() {
+        commentLabelsContainer.delegate = self
         commentLabelsContainer.layout {
             $0.bottom.equal(to: postButtonSeperator.topAnchor, offsetBy: -15.0)
             $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
@@ -440,35 +459,25 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
     }
     
     func input(_ view: SPTextInputView, didChange text: String) {
-        print(text)
-
         if view === textInputViewContainer {
             model?.updateCommentText(text)
         } else if showsUsernameInput, view === usernameView {
             SPUserSessionHolder.update(displayName: text)
         }
 
-        var postEnabled = true
-        for aView in inputViews {
-            if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
-                postEnabled = false
-                break
-            }
-        }
-        
-        // check comment labels minSelected
-        if let sectionLabelsConfig = self.sectionLabels,
-           sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
-            postEnabled = false
-        }
-
-        postButton.isEnabled = postEnabled
+        self.validateInput()
     }
 }
 
 extension CommentReplyViewController: AuthenticationViewDelegate {
     func authenticationStarted() {
         showLoader()
+    }
+}
+
+extension CommentReplyViewController: SPCommentLabelsContainerViewDelegate {
+    func didSelectionChanged() {
+        self.validateInput()
     }
 }
 

@@ -128,6 +128,10 @@ extension SPNameInputView: UITextViewDelegate {
         notifyDelegateAboutChange()
     }
     
+    func textViewDidChange(_ textView: UITextView) {
+        notifyDelegateAboutChange()
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         return text.rangeOfCharacter(from: .newlines) == nil && (textView.text.length + text.length) <= 12
     }
