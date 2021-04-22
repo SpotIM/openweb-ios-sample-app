@@ -52,12 +52,14 @@ public struct SpotImArticleMetadata {
     let title: String
     let subtitle: String
     let thumbnailUrl: String
+    let section: String
 
-    public init(url: String, title: String, subtitle: String, thumbnailUrl: String) {
+    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default") {
         self.url = url
         self.title = title
         self.subtitle = subtitle
         self.thumbnailUrl = thumbnailUrl
+        self.section = section
     }
 }
 

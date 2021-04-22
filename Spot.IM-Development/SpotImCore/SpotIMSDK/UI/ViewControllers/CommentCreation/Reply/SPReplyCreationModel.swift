@@ -14,6 +14,7 @@ final class SPReplyCreationModel: CommentStateable {
     var selectedLabels: SelectedLabels?
     var postCompletionHandler: ((SPComment) -> Void)?
     var postErrorHandler: ((Error) -> Void)?
+    var articleMetadate: SpotImArticleMetadata
     
     let dataModel: SPReplyCreationDTO
     
@@ -24,13 +25,15 @@ final class SPReplyCreationModel: CommentStateable {
     init(replyCreationDTO: SPReplyCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider
+         imageProvider: SPImageURLProvider,
+         articleMetadate: SpotImArticleMetadata
         ) {
         self.imageProvider = imageProvider
         self.cacheService = cacheService
         commentText = cacheService.comment(for: replyCreationDTO.commentId)
         dataModel = replyCreationDTO
         commentService = updater
+        self.articleMetadate = articleMetadate
     }
     
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
