@@ -66,8 +66,8 @@ internal final class SPLoginPromptView: BaseView {
         titleTextView.backgroundColor = .spBackground0
 
         titleTextView.layout {
-            $0.top.equal(to: self.topAnchor)
-            titleBottomConstraint = $0.bottom.equal(to: self.bottomAnchor)
+            $0.top.equal(to: self.topAnchor, offsetBy: 4.0)
+            titleBottomConstraint = $0.bottom.equal(to: self.bottomAnchor, offsetBy: -4.0)
             $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
             $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
         }
