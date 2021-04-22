@@ -847,7 +847,7 @@ extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
 }
 
 extension SPBaseConversationViewController: SPLoginPromptViewDelegate {
-    func clickOnLoginPrompt() {
+    func userTapOnLoginPrompt() {
         if let userAuthFlowDelegate = self.userAuthFlowDelegate {
             userAuthFlowDelegate.presentAuth()
         }
