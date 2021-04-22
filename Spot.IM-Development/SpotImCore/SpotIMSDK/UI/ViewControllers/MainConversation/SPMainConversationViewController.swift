@@ -57,7 +57,20 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var communityGuidelinesMinHeight: CGFloat = 0.0
     private var communityGuidelinesHeightConstraint: NSLayoutConstraint?
     
-    private var shouldDisplayLoginPrompt: Bool = false
+    var shouldDisplayLoginPrompt: Bool = false {
+        didSet {
+            if shouldDisplayLoginPrompt {
+                // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
+                self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+            }
+            else {
+                loginPromptView.isHidden = true
+                loginPromptView.layout {
+                    $0.height.equal(to: 0.0)
+                }
+            }
+        }
+    }
 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
@@ -318,18 +331,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
-        if self.shouldDisplayLoginPrompt {
-            loginPromptView.delegate = self
-            view.bringSubviewToFront(loginPromptView)
-            loginPromptView.clipsToBounds = true
-            // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-            self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
-        } else {
-            loginPromptView.isHidden = true
-            loginPromptView.layout {
-                $0.height.equal(to: 0.0)
-            }
-        }
+        loginPromptView.delegate = self
+        view.bringSubviewToFront(loginPromptView)
+        loginPromptView.clipsToBounds = true
     }
     
     private func configureCommunityGuidelinesView() {
