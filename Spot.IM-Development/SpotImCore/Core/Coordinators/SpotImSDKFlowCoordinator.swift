@@ -472,6 +472,19 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
             navigationController?.present(container, animated: true, completion: nil)
         }
     }
+    
+    func shouldDisplayLoginPromptForGuests() -> Bool {
+        if let loginDelegate = self.loginDelegate {
+            return loginDelegate.shouldDisplayLoginPromptForGuests()
+        }
+        return false
+    }
+    
+    func customizeLoginPromptTextView(textView: UITextView) {
+        if let loginDelegate = self.loginDelegate {
+            loginDelegate.customizeLoginPromptTextView(textView: textView)
+        }
+    }
 }
 
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
