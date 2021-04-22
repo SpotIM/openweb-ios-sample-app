@@ -9,7 +9,7 @@
 import UIKit
 
 internal protocol SPLoginPromptViewDelegate {
-    func clickOnLoginPrompt()
+    func userTapOnLoginPrompt()
 }
 
 internal final class SPLoginPromptView: BaseView {
@@ -58,9 +58,11 @@ internal final class SPLoginPromptView: BaseView {
     }
     
     private func setupTitleTextView() {
-        titleTextView.delegate = self
+        let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.userPressedLoginText))
+        titleTextView.addGestureRecognizer(gesture)
+        
         titleTextView.isEditable = false
-        titleTextView.isSelectable = true
+        titleTextView.isSelectable = false
         titleTextView.isScrollEnabled = false
         titleTextView.dataDetectorTypes = [.link]
         titleTextView.backgroundColor = .spBackground0
@@ -70,6 +72,12 @@ internal final class SPLoginPromptView: BaseView {
             titleBottomConstraint = $0.bottom.equal(to: self.bottomAnchor, offsetBy: -4.0)
             $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
             $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
+        }
+    }
+    
+    @objc func userPressedLoginText(sender : UITapGestureRecognizer) {
+        if let delegate = self.delegate {
+            delegate.userTapOnLoginPrompt()
         }
     }
     
@@ -91,16 +99,4 @@ private enum Theme {
     static let separatorHeight: CGFloat = 1.0
     static let separatorHorizontalOffsetPreConversation: CGFloat = 16.0
     static let titleBottomOffsetPreConversation: CGFloat = 8.0
-}
-
-extension SPLoginPromptView: UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-        delegate?.clickOnLoginPrompt()
-        return false
-    }
-    
-    // disable selecting text - we need it to allow click on links
-    func textViewDidChangeSelection(_ textView: UITextView) {
-        textView.selectedTextRange = nil
-    }
 }
