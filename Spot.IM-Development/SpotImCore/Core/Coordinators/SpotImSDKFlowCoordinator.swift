@@ -25,6 +25,8 @@ public protocol AuthenticationViewDelegate: AnyObject {
 public protocol SpotImLoginDelegate: AnyObject {
     func startLoginFlow()
     func presentControllerForSSOFlow(with spotNavController: UIViewController)
+    func shouldDisplayLoginPromptForGuests() -> Bool
+    func customizeLoginPromptTextView(textView: UITextView)
 }
 
 internal protocol SPSafariWebPageDelegate: class {
@@ -39,6 +41,12 @@ public extension SpotImLoginDelegate {
     
     func startLoginFlow() {
         assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginFlow()")
+    }
+    func customizeLoginPromptTextView(textView: UITextView) {
+        // emptry impl by default
+    }
+    func shouldDisplayLoginPromptForGuests() -> Bool {
+        return false //default
     }
 }
 
