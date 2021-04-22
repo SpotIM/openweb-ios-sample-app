@@ -845,3 +845,11 @@ extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
         webPageDelegate?.openWebPage(with: url.absoluteString)
     }
 }
+
+extension SPBaseConversationViewController: SPLoginPromptViewDelegate {
+    func clickOnLoginPrompt() {
+        if let userAuthFlowDelegate = self.userAuthFlowDelegate {
+            userAuthFlowDelegate.presentAuth()
+        }
+    }
+}
