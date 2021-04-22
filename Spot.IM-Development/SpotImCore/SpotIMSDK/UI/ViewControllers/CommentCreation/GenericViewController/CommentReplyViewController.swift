@@ -70,8 +70,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupCommentLabelsContainer()
-        
         setupUI()
         setupUserIconHandler()
         registerForKeyboardNotifications()
@@ -82,20 +80,28 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func setupCommentLabelsContainer() {
-        // TODO: add logic for searching article section
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
            sharedConfig.enableCommentLabels == true,
            let commentLabelsConfig = sharedConfig.commentLabels,
-           let sectionLabelsConfig = commentLabelsConfig["default"] {
+           let model = model {
+            var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
+            if commentLabelsConfig[model.articleMetadate.section] != nil {
+                sectionLabelsConfig = commentLabelsConfig[model.articleMetadate.section]
+            } else if commentLabelsConfig["default"] != nil {
+                sectionLabelsConfig = commentLabelsConfig["default"]
+            }
+            if let sectionLabelsConfig = sectionLabelsConfig {
                 sectionLabels = sectionLabelsConfig
                 // set relevant comment labels to container
                 var commentLabels: [CommentLabel] = []
                 sectionLabelsConfig.labels.forEach { labelConfig in
-                    if let url = labelConfig.getIconUrl(), let color = UIColor.color(rgb: labelConfig.color) {
+                    if let url = labelConfig.getIconUrl(),
+                       let color = UIColor.color(rgb: labelConfig.color) {
                         commentLabels.append(CommentLabel(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
                     }
                 }
                 commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
+            }
         }
     }
     
@@ -104,6 +110,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         
         navigationController?.setNavigationBarHidden(true, animated: animated)
         updatePostButton()
+        setupCommentLabelsContainer()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

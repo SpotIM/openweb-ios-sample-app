@@ -13,6 +13,7 @@ protocol CommentStateable {
     var postCompletionHandler: ((SPComment) -> Void)? { get set }
     var commentText: String { get }
     var selectedLabels: SelectedLabels? { get set }
+    var articleMetadate: SpotImArticleMetadata { get set }
     
     func post()
     func updateCommentText(_ text: String)
@@ -26,11 +27,11 @@ struct SelectedLabels {
 }
 
 final class SPCommentCreationModel: CommentStateable {
-    
     private(set) var commentText: String = ""
     var selectedLabels: SelectedLabels?
     var postCompletionHandler: ((SPComment) -> Void)?
     var postErrorHandler: ((Error) -> Void)?
+    var articleMetadate: SpotImArticleMetadata
     
     let dataModel: SPCommentCreationDTO
     
@@ -41,13 +42,15 @@ final class SPCommentCreationModel: CommentStateable {
     init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider
+         imageProvider: SPImageURLProvider,
+         articleMetadate: SpotImArticleMetadata
         ) {
         self.imageProvider = imageProvider
         self.cacheService = cacheService
         commentText = cacheService.comment(for: commentCreationDTO.converstionId)
         dataModel = commentCreationDTO
         commentService = updater
+        self.articleMetadate = articleMetadate
     }
     
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
