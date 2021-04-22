@@ -37,14 +37,11 @@ internal final class SPLoginPromptView: BaseView {
         titleTextView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
     }
-
-    // MARK: - Internal methods
     
-    internal func setHtmlText(htmlString: String) {
-        if let titleTextViewAttributedText = getTitleTextViewAttributedText(htmlString: htmlString) {
-            titleTextView.attributedText = titleTextViewAttributedText
-        }
+    func getTextView() -> BaseTextView {
+        return self.titleTextView
     }
+
     
     internal func setupPreConversationConstraints() {
         separatorLeadingConstraint?.constant = Theme.separatorHorizontalOffsetPreConversation
@@ -53,29 +50,6 @@ internal final class SPLoginPromptView: BaseView {
     }
     
     // MARK: - Private Methods
-    
-    private func getTitleTextViewAttributedText(htmlString: String) -> NSMutableAttributedString? {
-        if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
-            htmlMutableAttributedString.addAttribute(
-                .font,
-                value: UIFont.preferred(style: .medium, of: Theme.titleFontSize),
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
-            )
-            htmlMutableAttributedString.addAttribute(
-                .underlineStyle,
-                value: NSNumber(value: false),
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
-            )
-            htmlMutableAttributedString.addAttribute(
-                .foregroundColor,
-                value: UIColor.spForeground0,
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
-            )
-            return htmlMutableAttributedString
-        } else {
-            return nil
-        }
-    }
 
     private func setup() {
         addSubviews(titleTextView, separatorView)
