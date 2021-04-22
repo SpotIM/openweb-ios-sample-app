@@ -52,6 +52,7 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
         backgroundColor = .spBackground0
         textInputView.backgroundColor = .spBackground0
         textInputView.textColor = .spForeground1
+        textInputView.autocorrectionType = UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
         avatarImageView.updateColorsAccordingToStyle()
     }
 

@@ -31,7 +31,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     func setLabelsContainer(labels: [CommentLabel], guidelineText: String, maxLabels: Int) {
         self.maxLabels = maxLabels
         guidelineTextLabel.text = guidelineText
-        guidelineTextLabel.numberOfLines = 0
+        guidelineTextLabel.numberOfLines = 1
         setLabels(labels: labels)
         
         labelsViews.forEach { label in
