@@ -53,6 +53,7 @@ public extension SpotImLoginDelegate {
 final public class SpotImSDKFlowCoordinator: Coordinator {
     
     weak var containerViewController: UIViewController?
+    weak var fullConversationVC: SPMainConversationViewController?
     
     // MARK: - Services
     
@@ -313,7 +314,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
         let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider())
-    
+        self.fullConversationVC = controller // weak reference
+        
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
@@ -519,6 +521,9 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     public func ssoFlowDidSucceed() {
         hidePresentedViewController()
         authHandlers.forEach { $0.value?.authHandler?(true) }
+        if let fullConversationVC = self.fullConversationVC {
+            fullConversationVC.shouldDisplayLoginPrompt = false
+        }
     }
     
     public func ssoFlowDidFail(with error: Error?) {
