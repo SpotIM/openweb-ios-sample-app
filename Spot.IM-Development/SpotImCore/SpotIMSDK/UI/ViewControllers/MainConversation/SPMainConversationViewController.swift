@@ -59,7 +59,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     var shouldDisplayLoginPrompt: Bool = false {
         didSet {
-            if shouldDisplayLoginPrompt {
+            if shouldDisplayLoginPrompt && SpotIm.getRegisteredUserId() == nil {
                 // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
                 self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
             }
