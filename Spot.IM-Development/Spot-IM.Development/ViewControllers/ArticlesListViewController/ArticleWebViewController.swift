@@ -216,6 +216,24 @@ extension ArticleWebViewController: SpotImLoginDelegate {
         let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
         spotNavController.present(authViewController, animated: true, completion: nil)
     }
+    
+    func shouldDisplayLoginPromptForGuests() -> Bool {
+        return true
+    }
+    
+    func customizeLoginPromptTextView(textView: UITextView) {
+        var multipleAttributes = [NSAttributedString.Key : Any]()
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.alignment = .center
+        
+        multipleAttributes[.underlineStyle] =       NSUnderlineStyle.single.rawValue
+        multipleAttributes[.foregroundColor] =      UIColor.red
+        multipleAttributes[.font] =                 UIFont.systemFont(ofSize: 18)
+        multipleAttributes[.paragraphStyle] =       paragraph
+
+        let attributedString = NSMutableAttributedString(string: "Register or Login to comment.", attributes: multipleAttributes)
+        textView.attributedText = attributedString
+    }
 }
 
 extension ArticleWebViewController: SpotImLayoutDelegate {
