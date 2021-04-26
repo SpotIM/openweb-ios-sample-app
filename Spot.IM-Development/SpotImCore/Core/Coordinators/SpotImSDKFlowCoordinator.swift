@@ -53,10 +53,10 @@ public extension SpotImLoginDelegate {
 final public class SpotImSDKFlowCoordinator: Coordinator {
     
     weak var containerViewController: UIViewController?
-    weak var fullConversationVC: SPMainConversationViewController?
+    
+    static let USER_LOGIN_SUCCESS_NOTIFICATION = "USER_LOGIN_SUCCESS_NOTIFICATION"
     
     // MARK: - Services
-    
     private lazy var commentsCacheService: SPCommentsInMemoryCacheService = .init()
     
     private let conversationUpdater: SPCommentUpdater
@@ -314,7 +314,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
         let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider())
-        self.fullConversationVC = controller // weak reference
         
         controller.delegate = self
         controller.userAuthFlowDelegate = self
@@ -521,9 +520,7 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     public func ssoFlowDidSucceed() {
         hidePresentedViewController()
         authHandlers.forEach { $0.value?.authHandler?(true) }
-        if let fullConversationVC = self.fullConversationVC {
-            fullConversationVC.shouldDisplayLoginPrompt = false
-        }
+        NotificationCenter.default.post(name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION), object: nil)
     }
     
     public func ssoFlowDidFail(with error: Error?) {
