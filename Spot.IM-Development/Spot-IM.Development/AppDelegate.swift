@@ -23,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         // Custom fonts example
         // SpotIm.customFontFamiliy = "BigShouldersDisplay"
+        
+        UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
+        UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
+        
         return true
     }
 }
