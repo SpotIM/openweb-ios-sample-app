@@ -88,38 +88,50 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func setupCommentLabelsContainer() {
-        var shouldHideCommentLabels = false
-        if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
-           sharedConfig.enableCommentLabels == true,
-           let commentLabelsConfig = sharedConfig.commentLabels,
-           let model = model {
-            var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
-            if commentLabelsConfig[model.articleMetadate.section] != nil {
-                sectionLabelsConfig = commentLabelsConfig[model.articleMetadate.section]
-            } else if commentLabelsConfig["default"] != nil {
-                sectionLabelsConfig = commentLabelsConfig["default"]
-            }
-            if let sectionLabelsConfig = sectionLabelsConfig {
-                sectionLabels = sectionLabelsConfig
-                // set relevant comment labels to container
-                var commentLabels: [CommentLabel] = []
-                sectionLabelsConfig.labels.forEach { labelConfig in
-                    if let url = labelConfig.getIconUrl(),
-                       let color = UIColor.color(rgb: labelConfig.color) {
-                        commentLabels.append(CommentLabel(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
-                    }
-                }
-                commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
-            } else {
-                shouldHideCommentLabels = true
-            }
+        guard let sharedConfig = SPConfigsDataSource.appConfig?.shared,
+              sharedConfig.enableCommentLabels == true,
+              let commentLabelsConfig = sharedConfig.commentLabels else {
+            hideCommentLabelsContainer()
+            return
+        }
+        let sectionLabelsConfig = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
+        if let sectionLabelsConfig = sectionLabelsConfig {
+            sectionLabels = sectionLabelsConfig
+            // set relevant comment labels to container
+            let commentLabels = getCommentLabelsFromSectionConfig(sectionConfig: sectionLabelsConfig)
+            commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
         } else {
-            shouldHideCommentLabels = true
+            hideCommentLabelsContainer()
         }
-        if shouldHideCommentLabels {
-            commentLabelsContainer.isHidden = true
-            commentLabelsContainerHeightConstraint?.constant = 0
+    }
+    
+    private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> SPCommentLabelsSectionConfiguration? {
+        guard let model = model else {
+            return nil
         }
+        var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
+        if commentLabelsConfig[model.articleMetadate.section] != nil {
+            sectionLabelsConfig = commentLabelsConfig[model.articleMetadate.section]
+        } else if commentLabelsConfig["default"] != nil {
+            sectionLabelsConfig = commentLabelsConfig["default"]
+        }
+        return sectionLabelsConfig
+    }
+    
+    private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [CommentLabel] {
+        var commentLabels: [CommentLabel] = []
+        sectionConfig.labels.forEach { labelConfig in
+            if let url = labelConfig.getIconUrl(),
+               let color = UIColor.color(rgb: labelConfig.color) {
+                commentLabels.append(CommentLabel(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
+            }
+        }
+        return commentLabels
+    }
+    
+    private func hideCommentLabelsContainer() {
+        commentLabelsContainer.isHidden = true
+        commentLabelsContainerHeightConstraint?.constant = 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
