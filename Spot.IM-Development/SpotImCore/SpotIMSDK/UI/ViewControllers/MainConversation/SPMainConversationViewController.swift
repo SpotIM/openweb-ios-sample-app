@@ -151,7 +151,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     @objc func userLoginSuccessNotification(notification: Notification) {
         self.shouldDisplayLoginPrompt = false
-        self.updateLoginPromptVisibily()
     }
 
     
