@@ -966,6 +966,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		1656EEFC2636AE0C000043A2 /* CommentLabelsContainerView */ = {
+			isa = PBXGroup;
+			children = (
+				246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */,
+			);
+			path = CommentLabelsContainerView;
+			sourceTree = "<group>";
+		};
 		16A12A6B2608DCB100A7B3F6 /* CommunityGuidelinesView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1193,7 +1201,7 @@
 		445417DA23685144001D0ED0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */,
+				1656EEFC2636AE0C000043A2 /* CommentLabelsContainerView */,
 				16A12A6B2608DCB100A7B3F6 /* CommunityGuidelinesView */,
 				6D85E4B72418E766000265D3 /* PreConversationBanner */,
 				5DB97790236B257000E9D547 /* SPUsernameView */,
