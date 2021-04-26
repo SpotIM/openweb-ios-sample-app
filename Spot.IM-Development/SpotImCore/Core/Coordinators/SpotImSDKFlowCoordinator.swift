@@ -25,6 +25,8 @@ public protocol AuthenticationViewDelegate: AnyObject {
 public protocol SpotImLoginDelegate: AnyObject {
     func startLoginFlow()
     func presentControllerForSSOFlow(with spotNavController: UIViewController)
+    func shouldDisplayLoginPromptForGuests() -> Bool
+    func customizeLoginPromptTextView(textView: UITextView)
 }
 
 internal protocol SPSafariWebPageDelegate: class {
@@ -40,14 +42,21 @@ public extension SpotImLoginDelegate {
     func startLoginFlow() {
         assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginFlow()")
     }
+    func customizeLoginPromptTextView(textView: UITextView) {
+        // emptry impl by default
+    }
+    func shouldDisplayLoginPromptForGuests() -> Bool {
+        return false //default
+    }
 }
 
 final public class SpotImSDKFlowCoordinator: Coordinator {
     
     weak var containerViewController: UIViewController?
     
-    // MARK: - Services
+    static let USER_LOGIN_SUCCESS_NOTIFICATION = "USER_LOGIN_SUCCESS_NOTIFICATION"
     
+    // MARK: - Services
     private lazy var commentsCacheService: SPCommentsInMemoryCacheService = .init()
     
     private let conversationUpdater: SPCommentUpdater
@@ -305,7 +314,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
         let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider())
-    
+        
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
@@ -470,6 +479,19 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
             navigationController?.present(container, animated: true, completion: nil)
         }
     }
+    
+    func shouldDisplayLoginPromptForGuests() -> Bool {
+        if let loginDelegate = self.loginDelegate {
+            return loginDelegate.shouldDisplayLoginPromptForGuests()
+        }
+        return false
+    }
+    
+    func customizeLoginPromptTextView(textView: UITextView) {
+        if let loginDelegate = self.loginDelegate {
+            loginDelegate.customizeLoginPromptTextView(textView: textView)
+        }
+    }
 }
 
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
@@ -503,6 +525,7 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     public func ssoFlowDidSucceed() {
         hidePresentedViewController()
         authHandlers.forEach { $0.value?.authHandler?(true) }
+        NotificationCenter.default.post(name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION), object: nil)
     }
     
     public func ssoFlowDidFail(with error: Error?) {
