@@ -59,16 +59,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     var shouldDisplayLoginPrompt: Bool = false {
         didSet {
-            if shouldDisplayLoginPrompt && SpotIm.getRegisteredUserId() == nil {
-                // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-                self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
-            }
-            else {
-                loginPromptView.isHidden = true
-                loginPromptView.layout {
-                    $0.height.equal(to: 0.0)
-                }
-            }
+            updateLoginPromptVisibily()
         }
     }
 
@@ -116,6 +107,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
            selector: #selector(overrideUserInterfaceStyleDidChange),
            name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.userLoginSuccessNotification(notification:)),
+            name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION),
+            object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -134,6 +130,25 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
+    func updateLoginPromptVisibily() {
+        if self.shouldDisplayLoginPrompt && SpotIm.getRegisteredUserId() == nil {
+            // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
+            self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+        }
+        else {
+            loginPromptView.isHidden = true
+            loginPromptView.layout {
+                $0.height.equal(to: 0.0)
+            }
+        }
+    }
+    
+    @objc func userLoginSuccessNotification(notification: Notification) {
+        self.shouldDisplayLoginPrompt = false
+        self.updateLoginPromptVisibily()
+    }
+
+    
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.view.backgroundColor = .spBackground0
@@ -146,6 +161,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
+        // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
+        self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
