@@ -18,7 +18,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     var container: BaseStackView = .init()
     var labelsViews: [CommentLabelView] = .init()
     var guidelineTextLabel: BaseLabel = .init()
-    var maxLabels: Int = 0
+    var maxLabels: Int = 1
     var selectedLabelsIds: [String] = .init()
     
     var delegate: SPCommentLabelsContainerViewDelegate?
@@ -50,7 +50,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     
     private func configureGuidelineText() {
         guidelineTextLabel.textColor = .spForeground4
-        guidelineTextLabel.font = UIFont.preferred(style: .medium, of: 13.0)
+        guidelineTextLabel.font = UIFont.preferred(style: .medium, of: Theme.guidelineTextFontSize)
         guidelineTextLabel.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
@@ -70,14 +70,14 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         container.axis = .horizontal
         container.alignment = .leading
         container.distribution = .equalSpacing
-        container.spacing = 10
+        container.spacing = Theme.labelsContainerStackViewSpacing
         container.backgroundColor = .clear
         
         container.layout {
-            $0.top.equal(to: guidelineTextLabel.bottomAnchor, offsetBy: 10.0)
+            $0.top.equal(to: guidelineTextLabel.bottomAnchor, offsetBy: Theme.labelsContainerStackViewTopOffset)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.lessThanOrEqual(to: trailingAnchor)
-            $0.height.equal(to: 28.0)
+            $0.height.equal(to: Theme.labelsContainerStackViewHeight)
         }
     }
     
@@ -91,25 +91,28 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     }
     
     @objc func labelTapped(_ recognizer: UITapGestureRecognizer) {
-        if let tappedLabel = recognizer.view as? CommentLabelView {
-            if tappedLabel.getState() == .notSelected {
-                if selectedLabelsIds.count == maxLabels {
-                    // if max labels is 1 - un-select old selected label and select tappedLabel
-                    if maxLabels == 1, let prevSelectedLabel = labelsViews.first(where: {$0.id == selectedLabelsIds[0]}) {
-                        prevSelectedLabel.setState(state: .notSelected)
-                        selectedLabelsIds[0] = tappedLabel.id
-                        tappedLabel.setState(state: .selected)
-                    }
-                } else {
-                    selectedLabelsIds.append(tappedLabel.id)
-                    tappedLabel.setState(state: .selected)
-                }
-            } else {
-                tappedLabel.setState(state: .notSelected)
-                selectedLabelsIds = selectedLabelsIds.filter { $0 != tappedLabel.id }
+        guard let tappedLabel = recognizer.view as? CommentLabelView else { return }
+        if tappedLabel.getState() == .notSelected {
+            if selectedLabelsIds.count != maxLabels {
+                selectedLabelsIds.append(tappedLabel.id)
+                tappedLabel.setState(state: .selected)
+            } else if maxLabels == 1, let prevSelectedLabel = labelsViews.first(where: {$0.id == selectedLabelsIds[0]}) {
+                // if max labels is 1 - un-select old selected label and select tappedLabel
+                prevSelectedLabel.setState(state: .notSelected)
+                selectedLabelsIds[0] = tappedLabel.id
+                tappedLabel.setState(state: .selected)
             }
-            delegate?.didSelectionChanged()
+        } else {
+            tappedLabel.setState(state: .notSelected)
+            selectedLabelsIds = selectedLabelsIds.filter { $0 != tappedLabel.id }
         }
+        delegate?.didSelectionChanged()
     }
+}
 
+private enum Theme {
+    static let guidelineTextFontSize: CGFloat = 13.0
+    static let labelsContainerStackViewSpacing: CGFloat = 10.0
+    static let labelsContainerStackViewHeight: CGFloat = 28.0
+    static let labelsContainerStackViewTopOffset: CGFloat = 10.0
 }
