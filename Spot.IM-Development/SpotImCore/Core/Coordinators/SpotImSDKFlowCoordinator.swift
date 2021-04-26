@@ -319,7 +319,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
         
-        controller.shouldDisplayLoginPrompt = controller.userAuthFlowDelegate!.shouldDisplayLoginPromptForGuests()
         controller.title = LocalizationManager.localizedString(key: "Conversation")
         
         Logger.verbose("FirstComment: localCommentReplayDidCreate SET")
