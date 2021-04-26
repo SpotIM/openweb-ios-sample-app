@@ -57,6 +57,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var communityGuidelinesMinHeight: CGFloat = 0.0
     private var communityGuidelinesHeightConstraint: NSLayoutConstraint?
     
+    weak override var userAuthFlowDelegate: UserAuthFlowDelegate? {
+        didSet {
+            self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
+        }
+    }
+    
     var shouldDisplayLoginPrompt: Bool = false {
         didSet {
             updateLoginPromptVisibily()
