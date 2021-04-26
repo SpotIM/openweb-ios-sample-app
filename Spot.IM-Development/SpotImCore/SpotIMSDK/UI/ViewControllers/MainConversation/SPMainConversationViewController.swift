@@ -141,6 +141,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.footer.updateColorsAccordingToStyle()
         self.tableHeader.updateColorsAccordingToStyle()
         self.sortView.updateColorsAccordingToStyle()
+        self.loginPromptView.updateColorsAccordingToStyle()
         self.communityGuidelinesView.updateColorsAccordingToStyle()
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
