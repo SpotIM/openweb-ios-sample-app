@@ -47,8 +47,8 @@ final class SPReplyCreationModel: CommentStateable {
         cacheService.update(comment: text, with: dataModel.commentId)
     }
     
-    func updateCommentLabels(labelsIds: [String]) {
-        selectedLabels = SelectedLabels(section: articleMetadate.section, ids: labelsIds)
+    func updateCommentLabels(section: String, labelsIds: [String]) {
+        selectedLabels = SelectedLabels(section: section, ids: labelsIds)
     }
     
     func post() {
