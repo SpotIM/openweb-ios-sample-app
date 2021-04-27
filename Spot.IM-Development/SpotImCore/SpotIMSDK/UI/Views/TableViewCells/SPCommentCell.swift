@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import WebKit
 
 protocol MessageItemContainable: class {
     var messageView: MessageContainerView { get }
@@ -20,7 +21,7 @@ extension MessageItemContainable {
     }
 }
 
-internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable {
+internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelegate {
     
     weak var delegate: SPCommentCellDelegate?
 
@@ -33,6 +34,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: BaseView = .init()
     private let separatorView: BaseView = .init()
+    private let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
     
     private var commentId: String?
     private var replyingToId: String?
@@ -89,6 +91,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit)
+        updateGifWebView(with: data)
         updateCommentLabelView(with: data)
     }
 
@@ -100,6 +103,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
                                 userNameView,
                                 commentLabelView,
                                 messageView,
+                                gifWebView,
                                 replyActionsView,
                                 moreRepliesView)
         configureHeaderView()
@@ -107,6 +111,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         configureUserNameView()
         configureCommentLabelView()
         configureMessageView()
+        configureGifWebView()
         configureReplyActionsView()
         configureMoreRepliesView()
     }
@@ -167,11 +172,20 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
+    private func configureGifWebView() {
+        gifWebView.layout {
+            $0.height.equal(to: 226.0)
+            $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
+            $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
+            $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
+        }
+    }
+    
     private func configureReplyActionsView() {
         replyActionsView.delegate = self
         
         replyActionsView.layout {
-            $0.top.equal(to: messageView.bottomAnchor)
+            $0.top.equal(to: gifWebView.bottomAnchor)
             $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
             replyActionsViewHeightConstraint = $0.height.equal(to: Theme.replyActionsViewHeight)
@@ -289,6 +303,15 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
                                    width: dataModel.textWidth(),
                                    isCollapsed: dataModel.commentTextCollapsed)
         }
+    }
+    
+    private func updateGifWebView(with dataModel: CommentViewModel) {
+        // gif
+        gifWebView.uiDelegate = self
+        let myURL = URL(string:"https://www.apple.com")
+        let myRequest = URLRequest(url: myURL!)
+        gifWebView.load(myRequest)
+        messageView.addSubview(gifWebView)
     }
     
     private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {

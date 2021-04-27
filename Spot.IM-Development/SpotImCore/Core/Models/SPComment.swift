@@ -107,9 +107,16 @@ extension SPComment {
     }
 
     struct Content: Decodable, Equatable {
+        // text content
         var id: String?
         var text: String?
         var type: String?
+        // gif content
+        var previewWidth: Int?
+        var previewHeight: Int?
+        var originalWidth: Int?
+        var originalHeight: Int?
+        var originalUrl: String?
     }
 
     struct CommentUser: Decodable, Equatable {
