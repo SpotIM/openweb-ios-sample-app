@@ -39,6 +39,7 @@
 		16A12A8A2608E49500A7B3F6 /* String+SPExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */; };
 		16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */; };
 		182BE3B9B67AB394B8892E1C /* libPods-Shared-SpotImCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */; };
+		2459B8772637FA3F006A0CF0 /* gifWebView.html in Resources */ = {isa = PBXBuildFile; fileRef = 2459B8762637FA3F006A0CF0 /* gifWebView.html */; };
 		24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88434261C922900EB7BCB /* CommentLabelView.swift */; };
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
@@ -602,6 +603,7 @@
 		16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SPExtentions.swift"; sourceTree = "<group>"; };
 		16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityGuidelinesTitle.swift; sourceTree = "<group>"; };
 		1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-Focus.de.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2459B8762637FA3F006A0CF0 /* gifWebView.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = gifWebView.html; sourceTree = "<group>"; };
 		24B88434261C922900EB7BCB /* CommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLabelView.swift; sourceTree = "<group>"; };
 		24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationShared.swift; sourceTree = "<group>"; };
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
@@ -1048,6 +1050,7 @@
 				445417BA23685144001D0ED0 /* Controllers */,
 				445417BC23685144001D0ED0 /* Views */,
 				445417C223685144001D0ED0 /* Protocols */,
+				2459B8762637FA3F006A0CF0 /* gifWebView.html */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2082,6 +2085,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */,
+				2459B8772637FA3F006A0CF0 /* gifWebView.html in Resources */,
 				6D4E56AA239F9D5C005B79B6 /* OpenSansHebrew-ExtraBold.ttf in Resources */,
 				4416C658237ABE3D00D3F7B9 /* Localizable.strings in Resources */,
 				445417AA236850C0001D0ED0 /* OpenSans-RegularItalic.ttf in Resources */,
