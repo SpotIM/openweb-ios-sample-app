@@ -17,7 +17,7 @@ protocol CommentStateable {
     
     func post()
     func updateCommentText(_ text: String)
-    func updateCommentLabels(labelsIds: [String], section: String)
+    func updateCommentLabels(labelsIds: [String])
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion)
 }
 
@@ -64,8 +64,8 @@ final class SPCommentCreationModel: CommentStateable {
         cacheService.update(comment: text, with: dataModel.converstionId)
     }
     
-    func updateCommentLabels(labelsIds: [String], section: String) {
-        selectedLabels = SelectedLabels(section: section, ids: labelsIds)
+    func updateCommentLabels(labelsIds: [String]) {
+        selectedLabels = labelsIds.isEmpty ? nil : SelectedLabels(section: articleMetadate.section, ids: labelsIds)
     }
     
     func post() {
@@ -75,7 +75,7 @@ final class SPCommentCreationModel: CommentStateable {
             CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName]
         ]
         
-        if let selectedLabels = self.selectedLabels {
+        if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
             parameters[CreateCommentAPIKeys.additionalData] = [
                 CreateCommentAPIKeys.labels: [
                     CreateCommentAPIKeys.labelsSection: selectedLabels.section,

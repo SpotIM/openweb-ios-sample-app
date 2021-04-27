@@ -273,7 +273,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
         if commentLabelsContainer.selectedLabelsIds.count > 0 {
-            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds, section: "default") // TODO: section
+            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
         }
         model?.post()
     }
