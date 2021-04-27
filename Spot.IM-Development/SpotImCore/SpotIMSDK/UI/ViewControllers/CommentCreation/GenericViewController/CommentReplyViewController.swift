@@ -43,6 +43,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private let postButtonSeperator: BaseView = .init()
     private let scrollView: BaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
+    private var commentLabelsSection: String?
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
     private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
@@ -112,8 +113,10 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
         if commentLabelsConfig[model.articleMetadate.section] != nil {
             sectionLabelsConfig = commentLabelsConfig[model.articleMetadate.section]
+            commentLabelsSection = model.articleMetadate.section
         } else if commentLabelsConfig["default"] != nil {
             sectionLabelsConfig = commentLabelsConfig["default"]
+            commentLabelsSection = "default"
         }
         return sectionLabelsConfig
     }
@@ -272,8 +275,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         view.endEditing(true)
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
-        if commentLabelsContainer.selectedLabelsIds.count > 0 {
-            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
+        if commentLabelsContainer.selectedLabelsIds.count > 0,
+           let section = commentLabelsSection {
+            model?.updateCommentLabels(section: section, labelsIds: commentLabelsContainer.selectedLabelsIds)
         }
         model?.post()
     }
