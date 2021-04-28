@@ -15,7 +15,7 @@ protocol CommentReplyViewControllerDelegate: class {
     
 }
 
-class CommentReplyViewController<T: CommentStateable>: BaseViewController, AlertPresentable,
+class CommentReplyViewController<T: SPBaseCommentCreationModel>: BaseViewController, AlertPresentable,
 LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
@@ -92,33 +92,16 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         guard let sharedConfig = SPConfigsDataSource.appConfig?.shared,
               sharedConfig.enableCommentLabels == true,
               let commentLabelsConfig = sharedConfig.commentLabels else {
-            hideCommentLabelsContainer()
-            return
+                hideCommentLabelsContainer()
+                return
         }
-        let sectionLabelsConfig = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
-        if let sectionLabelsConfig = sectionLabelsConfig {
-            sectionLabels = sectionLabelsConfig
+        if let sectionLabelsConfig = model?.sectionCommentLabelsConfig {
             // set relevant comment labels to container
             let commentLabels = getCommentLabelsFromSectionConfig(sectionConfig: sectionLabelsConfig)
             commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
         } else {
             hideCommentLabelsContainer()
         }
-    }
-    
-    private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> SPCommentLabelsSectionConfiguration? {
-        guard let model = model else {
-            return nil
-        }
-        var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
-        if commentLabelsConfig[model.articleMetadate.section] != nil {
-            sectionLabelsConfig = commentLabelsConfig[model.articleMetadate.section]
-            commentLabelsSection = model.articleMetadate.section
-        } else if commentLabelsConfig["default"] != nil {
-            sectionLabelsConfig = commentLabelsConfig["default"]
-            commentLabelsSection = "default"
-        }
-        return sectionLabelsConfig
     }
     
     private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [CommentLabel] {
@@ -275,9 +258,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         view.endEditing(true)
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
-        if commentLabelsContainer.selectedLabelsIds.count > 0,
-           let section = commentLabelsSection {
-            model?.updateCommentLabels(section: section, labelsIds: commentLabelsContainer.selectedLabelsIds)
+        if commentLabelsContainer.selectedLabelsIds.count > 0 {
+            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
         }
         model?.post()
     }
