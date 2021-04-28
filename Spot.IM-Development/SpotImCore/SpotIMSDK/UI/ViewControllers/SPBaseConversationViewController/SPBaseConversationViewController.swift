@@ -689,6 +689,10 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         tableView.reloadData()
         handleCommentSizeChange()
     }
+    
+    func clickOnUrlInComment(url: URL) {
+        webPageDelegate?.openWebPage(with: url.absoluteString)
+    }
 }
 
 extension SPBaseConversationViewController: MainConversationModelDelegate {
