@@ -35,7 +35,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     private let headerView: BaseView = .init()
     private let separatorView: BaseView = .init()
 //    private let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-    private let commentImageView: UIImageView = .init()
+    private var commentImageView: UIImageView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -177,6 +177,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     }
     
     private func configureCommentImageView() {
+        let gifURL : String = "http://www.gifbin.com/bin/4802swswsw04.gif"
+        let imageURL = UIImage.gifImageWithURL(gifURL)
+        commentImageView.image = imageURL
+        commentImageView.backgroundColor = .green
         commentImageView.layout {
             $0.height.equal(to: 226.0)
             $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
@@ -319,11 +323,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
 //    }
     
     private func updateCommentImageView(with dataModel: CommentViewModel) {
+//            imageView3.frame = CGRect(x: 20.0, y: 390.0, width: self.view.frame.size.width - 40, height: 150.0)
+//            view.addSubview(imageView3)
         
-        let gifURL : String = "http://www.gifbin.com/bin/4802swswsw04.gif"
-        let imageURL = UIImage.gifImageWithURL(gifURL)
-        commentImageView.image = imageURL
-//        commentImageView.frame = CGRect(x: 20.0, y: 390.0, width: 200, height: 150.0)
+        
         
 //        let myURL = URL(string:"https://www.apple.com")
 //        let myRequest = URLRequest(url: myURL!)
