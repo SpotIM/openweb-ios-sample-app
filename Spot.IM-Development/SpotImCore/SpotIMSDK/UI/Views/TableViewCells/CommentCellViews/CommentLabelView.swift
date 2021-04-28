@@ -15,41 +15,78 @@ internal final class CommentLabelView: BaseView {
     private let label: BaseLabel = .init()
     
     private var commentLabelColor: UIColor = .clear
-    private var state: LabelState = .readOnly
+    private var state: LabelState = .readOnly 
     
     private var iconImageViewHeightConstraint: NSLayoutConstraint?
+    
+    var id: String = .init()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
     }
     
-    func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, state: LabelState) {
+    func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, labelId: String, state: LabelState) {
+        self.id = labelId
         self.commentLabelColor = labelColor
         // update UI
         self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
         self.label.textColor = self.commentLabelColor
         self.label.text = labelText
-        self.setState(state: state)
         UIImage.load(with: commentLabelIconUrl) { image, _ in
             if let image = image {
                 self.iconImageView.image = image.withRenderingMode(.alwaysTemplate)
-                self.iconImageView.tintColor = self.commentLabelColor
                 self.iconImageViewHeightConstraint?.constant = Theme.iconImageHeight
             } else {
                 self.iconImageViewHeightConstraint?.constant = 0
             }
         }
+        setState(state: state)
     }
     
     func setState(state: LabelState) {
+        // set background, border, image and text colors according to state
+        switch state {
+            case .notSelected:
+                labelContainer.backgroundColor = .clear
+                labelContainer.layer.borderWidth = 1
+                labelContainer.layer.borderColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBorderOpacity).cgColor
+                iconImageView.tintColor = commentLabelColor
+                label.textColor = self.commentLabelColor
+                break
+            case .selected:
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
+                labelContainer.layer.borderWidth = 0
+                iconImageView.tintColor = .white
+                label.textColor = .white
+                break
+            case .readOnly:
+                labelContainer.backgroundColor = commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+                labelContainer.layer.borderWidth = 0
+                iconImageView.tintColor = commentLabelColor
+                label.textColor = commentLabelColor
+                break
+        }
         self.state = state
+    }
+    
+    func getState() -> LabelState {
+        return state
     }
     
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.backgroundColor = .clear
-        self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+        switch state {
+            case .selected:
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
+                break
+            case .readOnly:
+                self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+                break
+            case .notSelected:
+                break
+        }
     }
 
     // MARK: - Private

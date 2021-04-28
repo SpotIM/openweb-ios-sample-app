@@ -15,7 +15,7 @@ protocol CommentReplyViewControllerDelegate: class {
     
 }
 
-class CommentReplyViewController<T: CommentStateable>: BaseViewController, AlertPresentable,
+class CommentReplyViewController<T: SPBaseCommentCreationModel>: BaseViewController, AlertPresentable,
 LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
@@ -40,14 +40,18 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     private let mainContainerView: BaseView = .init()
     private let postButton: BaseButton = .init()
+    private let postButtonSeperator: BaseView = .init()
     private let scrollView: BaseScrollView = .init()
+    private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
+    private var commentLabelsSection: String?
+    private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
+    private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
     
     private var shouldBeAutoPosted: Bool = true
-    private var showsUsernameInput: Bool {
-
+    var showsUsernameInput: Bool {
         guard let config = SPConfigsDataSource.appConfig else { return true }
         let session = SPUserSessionHolder.session
 
@@ -55,7 +59,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         let didEnterName = session.displayNameFrozen
 
         return shoudEnterName && !didEnterName
-
+    }
+    var showCommentLabels: Bool {
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
+           sharedConfig.enableCommentLabels == true,
+           let commentLabels = sharedConfig.commentLabels,
+           !commentLabels.isEmpty {
+            return true
+        }
+        return false
     }
     
     private var inputViews = [SPTextInputView]()
@@ -76,11 +88,38 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
+    private func setupCommentLabelsContainer() {
+        guard showCommentLabels == true, let sectionLabelsConfig = model?.sectionCommentLabelsConfig else {
+            hideCommentLabelsContainer()
+            return
+        }
+        // set relevant comment labels to container
+        let commentLabels = getCommentLabelsFromSectionConfig(sectionConfig: sectionLabelsConfig)
+        commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
+    }
+    
+    private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [CommentLabel] {
+        var commentLabels: [CommentLabel] = []
+        sectionConfig.labels.forEach { labelConfig in
+            if let url = labelConfig.getIconUrl(),
+               let color = UIColor.color(rgb: labelConfig.color) {
+                commentLabels.append(CommentLabel(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
+            }
+        }
+        return commentLabels
+    }
+    
+    private func hideCommentLabelsContainer() {
+        commentLabelsContainer.isHidden = true
+        commentLabelsContainerHeightConstraint?.constant = 0
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(true, animated: animated)
         updatePostButton()
+        setupCommentLabelsContainer()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -113,6 +152,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
         postButton.backgroundColor = .brandColor
         userIcon.backgroundColor = .spBackground0
+        postButtonSeperator.backgroundColor = .spSeparator2
+        commentLabelsContainer.updateColorsAccordingToStyle()
+        usernameView.updateColorsAccordingToStyle()
     }
     
     @objc
@@ -210,6 +252,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         view.endEditing(true)
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
+        if commentLabelsContainer.selectedLabelsIds.count > 0 {
+            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
+        }
         model?.post()
     }
 
@@ -221,6 +266,24 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         userAuthFlowDelegate?.presentAuth()
 
         SPAnalyticsHolder.default.log(event: .loginClicked(.commentSignUp), source: .conversation)
+    }
+    
+    private func validateInput() {
+        var postEnabled = true
+        for aView in inputViews {
+            if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
+                postEnabled = false
+                break
+            }
+        }
+        
+        // check comment labels minSelected
+        if let sectionLabelsConfig = self.sectionLabels,
+           sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
+            postEnabled = false
+        }
+
+        postButton.isEnabled = postEnabled
     }
 }
 
@@ -235,7 +298,7 @@ extension CommentReplyViewController {
             $0.bottom.equal(to: view.bottomAnchor)
         }
         scrollView.addSubview(mainContainerView)
-        mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton)
+        mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, postButtonSeperator, commentLabelsContainer)
         topContainerView.addSubview(topContainerStack)
         
         configureMainContainer()
@@ -244,6 +307,8 @@ extension CommentReplyViewController {
         configureUsernameView()
         configureInputContainerView()
         configurePostButton()
+        configurePostButtonSeperator()
+        configureCommentLabelsContainer()
         updateColorsAccordingToStyle()
     }
     
@@ -271,12 +336,11 @@ extension CommentReplyViewController {
     
     private func configureInputContainerView() {
         textInputViewContainer.delegate = self
-
         textInputViewContainer.layout {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.bottom.equal(to: postButton.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
+            $0.bottom.equal(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
@@ -342,6 +406,26 @@ extension CommentReplyViewController {
             $0.height.equal(to: Theme.postButtonHeight)
         }
     }
+    
+    private func configurePostButtonSeperator() {
+        postButtonSeperator.backgroundColor = .spSeparator2
+        postButtonSeperator.layout {
+            $0.bottom.equal(to: postButton.topAnchor, offsetBy: -15)
+            $0.height.equal(to: 1.0)
+            $0.leading.equal(to: topContainerView.leadingAnchor)
+            $0.trailing.equal(to: topContainerView.trailingAnchor)
+        }
+    }
+    
+    private func configureCommentLabelsContainer() {
+        commentLabelsContainer.delegate = self
+        commentLabelsContainer.layout {
+            $0.bottom.equal(to: postButtonSeperator.topAnchor, offsetBy: -15.0)
+            $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
+            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -15.0)
+            commentLabelsContainerHeightConstraint = $0.height.greaterThanOrEqual(to: 56.0)
+        }
+    }
 }
 
 // MARK: - Extensions
@@ -383,29 +467,25 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
     }
     
     func input(_ view: SPTextInputView, didChange text: String) {
-        print(text)
-
         if view === textInputViewContainer {
             model?.updateCommentText(text)
         } else if showsUsernameInput, view === usernameView {
             SPUserSessionHolder.update(displayName: text)
         }
 
-        var postEnabled = true
-        for aView in inputViews {
-            if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
-                postEnabled = false
-                break
-            }
-        }
-
-        postButton.isEnabled = postEnabled
+        self.validateInput()
     }
 }
 
 extension CommentReplyViewController: AuthenticationViewDelegate {
     func authenticationStarted() {
         showLoader()
+    }
+}
+
+extension CommentReplyViewController: SPCommentLabelsContainerViewDelegate {
+    func didSelectionChanged() {
+        self.validateInput()
     }
 }
 
