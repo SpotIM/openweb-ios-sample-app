@@ -89,17 +89,13 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func setupCommentLabelsContainer() {
-        guard showCommentLabels == true else {
+        guard showCommentLabels == true, let sectionLabelsConfig = model?.sectionCommentLabelsConfig else {
             hideCommentLabelsContainer()
             return
         }
-        if let sectionLabelsConfig = model?.sectionCommentLabelsConfig {
-            // set relevant comment labels to container
-            let commentLabels = getCommentLabelsFromSectionConfig(sectionConfig: sectionLabelsConfig)
-            commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
-        } else {
-            hideCommentLabelsContainer()
-        }
+        // set relevant comment labels to container
+        let commentLabels = getCommentLabelsFromSectionConfig(sectionConfig: sectionLabelsConfig)
+        commentLabelsContainer.setLabelsContainer(labels: commentLabels, guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
     }
     
     private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [CommentLabel] {
