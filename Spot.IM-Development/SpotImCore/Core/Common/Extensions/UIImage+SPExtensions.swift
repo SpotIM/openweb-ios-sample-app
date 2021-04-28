@@ -24,7 +24,8 @@ internal extension UIImage {
 
         self.init(named: imageName, in: Bundle.spot, compatibleWith: nil)
     }
-
+    
+    
 }
 
 fileprivate extension String {
