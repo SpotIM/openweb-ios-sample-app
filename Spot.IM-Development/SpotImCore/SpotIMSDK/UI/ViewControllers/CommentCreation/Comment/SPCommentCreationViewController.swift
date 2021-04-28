@@ -65,7 +65,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         if shouldShowArticleView(for: model?.dataModel),
            UIDevice.current.screenType != .iPhones_5_5s_5c_SE,
            SpotIm.displayArticleHeader,
-           !(showLabelsSection && showsUsernameInput) {
+           !(showCommentLabels && showsUsernameInput) {
             return true
         } else {
             return false
