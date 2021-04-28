@@ -8,50 +8,33 @@
 
 import Foundation
 
-final class SPReplyCreationModel: CommentStateable {
+final class SPReplyCreationModel: SPBaseCommentCreationModel {
     
-    private(set) var commentText: String = ""
-    var selectedLabels: SelectedLabels?
-    var postCompletionHandler: ((SPComment) -> Void)?
-    var postErrorHandler: ((Error) -> Void)?
-    var articleMetadate: SpotImArticleMetadata
-    
-    let dataModel: SPReplyCreationDTO
-    
-    private let cacheService: SPCommentsInMemoryCacheService
-    private let commentService: SPCommentUpdater
-    private let imageProvider: SPImageURLProvider
+    var dataModel: SPReplyCreationDTO
     
     init(replyCreationDTO: SPReplyCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageURLProvider,
-         articleMetadate: SpotImArticleMetadata
+         articleMetadata: SpotImArticleMetadata
         ) {
-        self.imageProvider = imageProvider
-        self.cacheService = cacheService
+        self.dataModel = replyCreationDTO
+        super.init(cacheService: cacheService, updater: updater, imageProvider: imageProvider, articleMetadate: articleMetadata)
         commentText = cacheService.comment(for: replyCreationDTO.commentId)
-        dataModel = replyCreationDTO
-        commentService = updater
-        self.articleMetadate = articleMetadate
     }
     
-    func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
+    override func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
         imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
     }
     
-    func updateCommentText(_ text: String) {
+    override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.commentId)
     }
     
-    func updateCommentLabels(section: String, labelsIds: [String]) {
-        selectedLabels = SelectedLabels(section: section, ids: labelsIds)
-    }
-    
-    func post() {
+    override func post() {
        
         let parameters = postParameters()
         

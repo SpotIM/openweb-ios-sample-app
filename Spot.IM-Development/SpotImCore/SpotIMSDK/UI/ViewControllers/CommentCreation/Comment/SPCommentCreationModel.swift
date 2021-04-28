@@ -10,14 +10,9 @@ import Foundation
 
 protocol CommentStateable {
     
-    var postCompletionHandler: ((SPComment) -> Void)? { get set }
-    var commentText: String { get }
-    var selectedLabels: SelectedLabels? { get set }
-    var articleMetadate: SpotImArticleMetadata { get set }
-    
     func post()
     func updateCommentText(_ text: String)
-    func updateCommentLabels(section: String, labelsIds: [String])
+    func updateCommentLabels(labelsIds: [String])
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion)
 }
 
@@ -26,18 +21,9 @@ struct SelectedLabels {
     var ids: [String]
 }
 
-final class SPCommentCreationModel: CommentStateable {
-    private(set) var commentText: String = ""
-    var selectedLabels: SelectedLabels?
-    var postCompletionHandler: ((SPComment) -> Void)?
-    var postErrorHandler: ((Error) -> Void)?
-    var articleMetadate: SpotImArticleMetadata
+final class SPCommentCreationModel: SPBaseCommentCreationModel {
     
-    let dataModel: SPCommentCreationDTO
-    
-    private let cacheService: SPCommentsInMemoryCacheService
-    private let commentService: SPCommentUpdater
-    private let imageProvider: SPImageURLProvider
+    var dataModel: SPCommentCreationDTO
     
     init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
@@ -45,30 +31,23 @@ final class SPCommentCreationModel: CommentStateable {
          imageProvider: SPImageURLProvider,
          articleMetadate: SpotImArticleMetadata
         ) {
-        self.imageProvider = imageProvider
-        self.cacheService = cacheService
+        self.dataModel = commentCreationDTO
+        super.init(cacheService: cacheService, updater: updater, imageProvider: imageProvider, articleMetadate: articleMetadate)
         commentText = cacheService.comment(for: commentCreationDTO.converstionId)
-        dataModel = commentCreationDTO
-        commentService = updater
-        self.articleMetadate = articleMetadate
     }
     
-    func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
+    override func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
         imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
     }
     
-    func updateCommentText(_ text: String) {
+    override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.converstionId)
     }
     
-    func updateCommentLabels(section: String, labelsIds: [String]) {
-        selectedLabels = labelsIds.isEmpty ? nil : SelectedLabels(section: section, ids: labelsIds)
-    }
-    
-    func post() {
+    override func post() {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         var parameters: [String: Any] = [
             CreateCommentAPIKeys.content: [[CreateCommentAPIKeys.text: commentText]],

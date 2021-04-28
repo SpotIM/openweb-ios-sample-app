@@ -335,7 +335,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         return controller
     }
 
-    private func presentContentCreationViewController<T: CommentStateable>(controller: CommentReplyViewController<T>,
+    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: CommentReplyViewController<T>,
                                                                            _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
@@ -419,7 +419,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
-            articleMetadate: dataModel.dataSource.articleMetadata
+            articleMetadata: dataModel.dataSource.articleMetadata
         )
         controller.model = model
         dataModel.dataSource.showReplies = true
