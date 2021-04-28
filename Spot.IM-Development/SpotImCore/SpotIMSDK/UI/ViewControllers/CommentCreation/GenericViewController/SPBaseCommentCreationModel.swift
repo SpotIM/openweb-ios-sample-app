@@ -42,11 +42,12 @@ class SPBaseCommentCreationModel: CommentStateable {
         guard let sharedConfig = SPConfigsDataSource.appConfig?.shared,
               sharedConfig.enableCommentLabels == true,
               let commentLabelsConfig = sharedConfig.commentLabels else { return }
-        sectionCommentLabelsConfig = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
+        (sectionCommentLabelsConfig, commentLabelsSection) = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
     }
     
-    private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> SPCommentLabelsSectionConfiguration? {
+    private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> (SPCommentLabelsSectionConfiguration?, String?) {
         var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
+        var commentLabelsSection: String? = nil
         if commentLabelsConfig[articleMetadate.section] != nil {
             sectionLabelsConfig = commentLabelsConfig[articleMetadate.section]
             commentLabelsSection = articleMetadate.section
@@ -54,7 +55,7 @@ class SPBaseCommentCreationModel: CommentStateable {
             sectionLabelsConfig = commentLabelsConfig["default"]
             commentLabelsSection = "default"
         }
-        return sectionLabelsConfig
+        return (sectionLabelsConfig, commentLabelsSection)
     }
     
     func updateCommentLabels(labelsIds: [String]) {
