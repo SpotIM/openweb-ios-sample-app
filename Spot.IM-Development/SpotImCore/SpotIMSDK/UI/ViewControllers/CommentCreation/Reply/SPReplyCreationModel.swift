@@ -23,12 +23,6 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
         commentText = cacheService.comment(for: replyCreationDTO.commentId)
     }
     
-    override func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
-        imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
-                            size: navigationAvatarSize,
-                            completion: completion)
-    }
-    
     override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.commentId)

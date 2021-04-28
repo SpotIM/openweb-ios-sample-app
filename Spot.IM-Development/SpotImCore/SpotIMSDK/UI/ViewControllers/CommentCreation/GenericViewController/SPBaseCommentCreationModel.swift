@@ -36,7 +36,6 @@ class SPBaseCommentCreationModel: CommentStateable {
     
     func post() {}
     func updateCommentText(_ text: String) {}
-    func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {}
 
     private func setupCommentLabels() {
         guard let sharedConfig = SPConfigsDataSource.appConfig?.shared,
@@ -48,6 +47,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> (SPCommentLabelsSectionConfiguration?, String?) {
         var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
         var commentLabelsSection: String? = nil
+        // here we want to match the article section to the commentLabelsConfig section (if exists) - if not, we will take the default.
         if commentLabelsConfig[articleMetadate.section] != nil {
             sectionLabelsConfig = commentLabelsConfig[articleMetadate.section]
             commentLabelsSection = articleMetadate.section
@@ -64,5 +64,11 @@ class SPBaseCommentCreationModel: CommentStateable {
         } else {
             selectedLabels = nil
         }
+    }
+    
+    func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
+        imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
+                            size: navigationAvatarSize,
+                            completion: completion)
     }
 }
