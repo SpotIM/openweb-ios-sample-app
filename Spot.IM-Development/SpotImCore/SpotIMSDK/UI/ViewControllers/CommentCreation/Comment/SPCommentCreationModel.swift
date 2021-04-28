@@ -10,55 +10,52 @@ import Foundation
 
 protocol CommentStateable {
     
-    var postCompletionHandler: ((SPComment) -> Void)? { get set }
-    var commentText: String { get }
-    
     func post()
     func updateCommentText(_ text: String)
+    func updateCommentLabels(labelsIds: [String])
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion)
 }
 
-final class SPCommentCreationModel: CommentStateable {
+struct SelectedLabels {
+    var section: String
+    var ids: [String]
+}
+
+final class SPCommentCreationModel: SPBaseCommentCreationModel {
     
-    private(set) var commentText: String = ""
-    var postCompletionHandler: ((SPComment) -> Void)?
-    var postErrorHandler: ((Error) -> Void)?
-    
-    let dataModel: SPCommentCreationDTO
-    
-    private let cacheService: SPCommentsInMemoryCacheService
-    private let commentService: SPCommentUpdater
-    private let imageProvider: SPImageURLProvider
+    var dataModel: SPCommentCreationDTO
     
     init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider
+         imageProvider: SPImageURLProvider,
+         articleMetadate: SpotImArticleMetadata
         ) {
-        self.imageProvider = imageProvider
-        self.cacheService = cacheService
+        self.dataModel = commentCreationDTO
+        super.init(cacheService: cacheService, updater: updater, imageProvider: imageProvider, articleMetadate: articleMetadate)
         commentText = cacheService.comment(for: commentCreationDTO.converstionId)
-        dataModel = commentCreationDTO
-        commentService = updater
     }
     
-    func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
-        imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
-                            size: navigationAvatarSize,
-                            completion: completion)
-    }
-    
-    func updateCommentText(_ text: String) {
+    override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.converstionId)
     }
     
-    func post() {
+    override func post() {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             CreateCommentAPIKeys.content: [[CreateCommentAPIKeys.text: commentText]],
             CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName]
         ]
+        
+        if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
+            parameters[CreateCommentAPIKeys.additionalData] = [
+                CreateCommentAPIKeys.labels: [
+                    CreateCommentAPIKeys.labelsSection: selectedLabels.section,
+                    CreateCommentAPIKeys.labelsIds: selectedLabels.ids,
+                ]
+            ]
+        }
         
         commentService.createComment(
             parameters: parameters,
@@ -77,6 +74,10 @@ final class SPCommentCreationModel: CommentStateable {
                     let user = SPComment.CommentUser(id: userId)
                     comment.users = [userId: user]
                 }
+                if let labels = self.selectedLabels {
+                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
+                    comment.additionalData = SPComment.AdditionalData(labels: commentLabels)
+                }
                 self.cacheService.remove(for: self.dataModel.converstionId)
                 self.postCompletionHandler?(comment)
             },
@@ -91,6 +92,10 @@ final class SPCommentCreationModel: CommentStateable {
         static let text = "text"
         static let metadata = "metadata"
         static let displayName = "display_name"
+        static let additionalData = "additional_data"
+        static let labels = "labels"
+        static let labelsSection = "section"
+        static let labelsIds = "ids"
     }
     
 }

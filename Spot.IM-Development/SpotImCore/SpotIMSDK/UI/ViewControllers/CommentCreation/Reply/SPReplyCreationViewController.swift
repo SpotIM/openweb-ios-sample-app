@@ -10,7 +10,7 @@ import UIKit
 
 final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCreationModel> {
     
-    private lazy var commentHeaderView = SPCommentHeaderView()
+    private lazy var commentHeaderView = SPCommentReplyHeaderView()
     
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
@@ -59,10 +59,17 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
                 author: model?.dataModel.authorName,
                 comment: model?.dataModel.comment)
         )
+        
+        let shouldHideCommentText = showCommentLabels && showsUsernameInput
 
         commentHeaderView.layout {
-            $0.height.equal(to: 111)
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.height.equal(to: shouldHideCommentText ? 68 : 111)
             $0.width.equal(to: topContainerStack.widthAnchor)
+        }
+        
+        if shouldHideCommentText {
+            commentHeaderView.hideCommentText()
         }
 
         updateTextInputContainer(with: .reply)
