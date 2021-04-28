@@ -36,12 +36,6 @@ final class SPCommentCreationModel: SPBaseCommentCreationModel {
         commentText = cacheService.comment(for: commentCreationDTO.converstionId)
     }
     
-    override func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
-        imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
-                            size: navigationAvatarSize,
-                            completion: completion)
-    }
-    
     override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.converstionId)
