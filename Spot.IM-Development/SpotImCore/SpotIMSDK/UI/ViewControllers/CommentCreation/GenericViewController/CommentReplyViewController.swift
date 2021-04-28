@@ -89,11 +89,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func setupCommentLabelsContainer() {
-        guard let sharedConfig = SPConfigsDataSource.appConfig?.shared,
-              sharedConfig.enableCommentLabels == true,
-              let commentLabelsConfig = sharedConfig.commentLabels else {
-                hideCommentLabelsContainer()
-                return
+        guard showLabelsSection == true else {
+            hideCommentLabelsContainer()
+            return
         }
         if let sectionLabelsConfig = model?.sectionCommentLabelsConfig {
             // set relevant comment labels to container
