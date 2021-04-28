@@ -60,7 +60,7 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
                 comment: model?.dataModel.comment)
         )
         
-        let shouldHideCommentText = showLabelsSection && showsUsernameInput
+        let shouldHideCommentText = showCommentLabels && showsUsernameInput
 
         commentHeaderView.layout {
             $0.top.equal(to: topContainerStack.topAnchor)

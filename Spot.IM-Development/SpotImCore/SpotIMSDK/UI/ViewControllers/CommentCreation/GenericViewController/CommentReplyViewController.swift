@@ -60,7 +60,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
 
         return shoudEnterName && !didEnterName
     }
-    var showLabelsSection: Bool {
+    var showCommentLabels: Bool {
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
            sharedConfig.enableCommentLabels == true,
            let commentLabels = sharedConfig.commentLabels,
@@ -89,7 +89,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func setupCommentLabelsContainer() {
-        guard showLabelsSection == true else {
+        guard showCommentLabels == true else {
             hideCommentLabelsContainer()
             return
         }
