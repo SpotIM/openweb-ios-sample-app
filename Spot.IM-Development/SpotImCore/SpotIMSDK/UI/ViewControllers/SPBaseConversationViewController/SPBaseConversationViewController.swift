@@ -65,7 +65,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         
     }
     
-    func didStartSignInFlowForChangeRank() {
+    func didStartSignInFlow() {
         // Override this method in your VC to handle
     }
     
@@ -124,10 +124,17 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     }
     
     private func openMyProfileWebScreen() {
-        guard let userId = SPUserSessionHolder.session.user?.id else {
+        guard let user = SPUserSessionHolder.session.user,
+              let userId = user.id,
+              let policyForceRegister = SPConfigsDataSource.appConfig?.initialization?.policyForceRegister else {
             return
         }
-        openProfileWebScreen(userId: userId, isMyProfile: true)
+        if (user.registered || !policyForceRegister) {
+            openProfileWebScreen(userId: userId, isMyProfile: true)
+        } else {
+            userAuthFlowDelegate?.presentAuth()
+            self.didStartSignInFlow()
+        }
     }
     
     private func openProfileWebScreen(userId: String, isMyProfile: Bool) {
@@ -615,7 +622,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         guard let config = SPConfigsDataSource.appConfig,
            config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
             userAuthFlowDelegate?.presentAuth()
-            self.didStartSignInFlowForChangeRank()
+            self.didStartSignInFlow()
             return
         }
         
