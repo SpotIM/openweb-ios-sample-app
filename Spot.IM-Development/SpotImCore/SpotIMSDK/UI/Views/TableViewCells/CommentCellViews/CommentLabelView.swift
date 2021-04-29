@@ -111,6 +111,7 @@ internal final class CommentLabelView: BaseView {
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.backgroundColor = .clear
         iconImageView.clipsToBounds = true
+        iconImageView.tintAdjustmentMode = .normal
         iconImageView.layout {
             $0.width.equal(to: Theme.iconImageWidth)
             iconImageViewHeightConstraint = $0.height.equal(to: Theme.iconImageHeight)
