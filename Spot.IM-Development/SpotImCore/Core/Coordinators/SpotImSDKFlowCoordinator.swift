@@ -50,6 +50,8 @@ public extension SpotImLoginDelegate {
     }
 }
 
+public let SPOTIM_NAV_CONTROL_TAG = 11223344;
+
 final public class SpotImSDKFlowCoordinator: Coordinator {
     
     weak var containerViewController: UIViewController?
@@ -78,7 +80,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
     private var isLoadingConversation: Bool = false
-    private let SPOTIM_NAV_CONTROL_TAG = 11223344;
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
