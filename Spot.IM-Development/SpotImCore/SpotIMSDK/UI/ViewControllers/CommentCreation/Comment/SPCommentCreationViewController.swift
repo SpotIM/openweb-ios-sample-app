@@ -41,6 +41,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         commentingOnLabel.textColor = .spForeground4
         commentingOnLabel.backgroundColor = .spBackground0
         closeButton.backgroundColor = .spBackground0
+        closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
         updateAvatar() // placeholder is adjusted to theme
     }
     
