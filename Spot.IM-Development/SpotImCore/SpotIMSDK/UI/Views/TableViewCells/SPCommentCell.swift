@@ -220,7 +220,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
-        if let commentLabel = dataModel.commentLabel {
+        if let commentLabel = dataModel.commentLabel,
+           dataModel.isDeleted == false {
             commentLabelView.setLabel(commentLabelIconUrl: commentLabel.iconUrl, labelColor: commentLabel.color, labelText: commentLabel.text, labelId: commentLabel.id, state: .readOnly)
             commentLabelView.isHidden = false
             commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
