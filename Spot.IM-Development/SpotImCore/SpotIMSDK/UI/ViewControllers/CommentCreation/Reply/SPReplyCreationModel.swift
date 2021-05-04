@@ -8,42 +8,27 @@
 
 import Foundation
 
-final class SPReplyCreationModel: CommentStateable {
+final class SPReplyCreationModel: SPBaseCommentCreationModel {
     
-    private(set) var commentText: String = ""
-    var postCompletionHandler: ((SPComment) -> Void)?
-    var postErrorHandler: ((Error) -> Void)?
-    
-    let dataModel: SPReplyCreationDTO
-    
-    private let cacheService: SPCommentsInMemoryCacheService
-    private let commentService: SPCommentUpdater
-    private let imageProvider: SPImageURLProvider
+    var dataModel: SPReplyCreationDTO
     
     init(replyCreationDTO: SPReplyCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider
+         imageProvider: SPImageURLProvider,
+         articleMetadata: SpotImArticleMetadata
         ) {
-        self.imageProvider = imageProvider
-        self.cacheService = cacheService
+        self.dataModel = replyCreationDTO
+        super.init(cacheService: cacheService, updater: updater, imageProvider: imageProvider, articleMetadate: articleMetadata)
         commentText = cacheService.comment(for: replyCreationDTO.commentId)
-        dataModel = replyCreationDTO
-        commentService = updater
     }
     
-    func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
-        imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
-                            size: navigationAvatarSize,
-                            completion: completion)
-    }
-    
-    func updateCommentText(_ text: String) {
+    override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.commentId)
     }
     
-    func post() {
+    override func post() {
        
         let parameters = postParameters()
         
@@ -63,6 +48,10 @@ final class SPReplyCreationModel: CommentStateable {
                 if let userId = reply.userId {
                     let user = SPComment.CommentUser(id: userId)
                     reply.users = [userId: user]
+                }
+                if let labels = self.selectedLabels {
+                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
+                    reply.additionalData = SPComment.AdditionalData(labels: commentLabels)
                 }
                 self.cacheService.remove(for: self.dataModel.commentId)
                 self.postCompletionHandler?(reply)
@@ -86,14 +75,25 @@ final class SPReplyCreationModel: CommentStateable {
             metadata[CreateReplyAPIKeys.replyTo] = [CreateReplyAPIKeys.replyId: dataModel.commentId]
         }
         
-        return [
+        var parameters = [
             CreateReplyAPIKeys.parentId: dataModel.rootCommentId ?? dataModel.commentId,
             CreateReplyAPIKeys.conversationId: dataModel.postId,
             CreateReplyAPIKeys.content: [
                 [CreateReplyAPIKeys.text: commentText]
             ],
             CreateReplyAPIKeys.metadata: metadata
-        ]
+        ] as [String : Any]
+        
+        if let selectedLabels = self.selectedLabels {
+            parameters[CreateReplyAPIKeys.additionalData] = [
+                CreateReplyAPIKeys.labels: [
+                    CreateReplyAPIKeys.labelsSection: selectedLabels.section,
+                    CreateReplyAPIKeys.labelsIds: selectedLabels.ids,
+                ]
+            ]
+        }
+        
+        return parameters
     }
     
     private enum CreateReplyAPIKeys {
@@ -105,6 +105,10 @@ final class SPReplyCreationModel: CommentStateable {
         static let conversationId = "conversation_id"
         static let replyTo = "reply_to"
         static let replyId = "reply_id"
+        static let additionalData = "additional_data"
+        static let labels = "labels"
+        static let labelsSection = "section"
+        static let labelsIds = "ids"
     }
     
 }

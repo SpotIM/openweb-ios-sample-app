@@ -72,7 +72,7 @@ internal struct CommentViewModel {
         if let commentLabelConfig = getCommentLabelFromConfig(comment: comment),
            let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
            let commentLabelIconUrl = commentLabelConfig.getIconUrl() {
-            commentLabel = CommentLabel(text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
+            commentLabel = CommentLabel(id: commentLabelConfig.id ,text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
         }
         
         if let gif = comment.gif, var url = gif.originalUrl {
@@ -260,6 +260,7 @@ internal struct CommentViewModel {
 }
 
 struct CommentLabel {
+    var id: String
     var text: String
     var iconUrl: URL
     var color: UIColor

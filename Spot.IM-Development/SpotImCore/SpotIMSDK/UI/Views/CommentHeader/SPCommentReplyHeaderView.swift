@@ -1,5 +1,5 @@
 //
-//  SPCommentHeaderView.swift
+//  SPCommentReplyHeaderView.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 8/5/19.
@@ -13,7 +13,7 @@ struct CommentDataModel {
     let comment: String?
 }
 
-final class SPCommentHeaderView: BaseView {
+final class SPCommentReplyHeaderView: BaseView {
     
     let closeButton: BaseButton = .init()
 
@@ -21,6 +21,8 @@ final class SPCommentHeaderView: BaseView {
     private let commentAuthorLabel: BaseLabel = .init()
     private let commentLabel: BaseLabel = .init()
     private let separatorView: BaseView = .init()
+    
+    private var commentLabelTopConstraint: NSLayoutConstraint? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,6 +41,12 @@ final class SPCommentHeaderView: BaseView {
         commentLabel.backgroundColor = .spBackground0
         commentLabel.textColor = .spForeground1
         separatorView.backgroundColor = .spSeparator2
+    }
+    
+    func hideCommentText() {
+        commentLabel.text = ""
+        commentLabelTopConstraint?.constant = 0
+        commentLabel.isHidden = true
     }
     
     // MARK: - Internal methods
@@ -95,7 +103,7 @@ final class SPCommentHeaderView: BaseView {
         commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
         
         commentLabel.layout {
-            $0.top.equal(to: replyingLabel.bottomAnchor, offsetBy: Theme.commentTopOffset)
+            commentLabelTopConstraint = $0.top.equal(to: replyingLabel.bottomAnchor, offsetBy: Theme.commentTopOffset)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.trailingOffset)
             $0.bottom.equal(to: separatorView.topAnchor, offsetBy: -Theme.commentBottomOffset)
