@@ -8,8 +8,9 @@
 
 import UIKit
 import Alamofire
+import WebKit
 
-final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
+final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelegate {
 
     weak var delegate: SPCommentCellDelegate?
     
@@ -20,6 +21,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
+    private let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
     
     private var commentId: String?
     private var replyingToId: String?
@@ -30,7 +32,10 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var textViewLeadingConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
-
+    private var gifWebViewHeightConstraint: NSLayoutConstraint?
+    private var gifWebViewWidthConstraint: NSLayoutConstraint?
+    private var gifWebViewTopConstraint: NSLayoutConstraint?
+    
     private var imageRequest: DataRequest?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -70,6 +75,22 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             Theme.moreRepliesViewHeight
         updateRepliesButtonTitle(with: data.repliesRawCount)
         moreRepliesView.updateView(with: data.repliesButtonState)
+        updateGifWebView(with: data)
+    }
+    
+    private func updateGifWebView(with dataModel: CommentViewModel) {
+        // gif
+        gifWebView.uiDelegate = self
+        if let url = dataModel.commentGifUrl {
+            let myRequest = URLRequest(url: url)
+            gifWebView.load(myRequest)
+            gifWebViewHeightConstraint?.constant = CGFloat(dataModel.commentGifHeight ?? 0)
+            gifWebViewWidthConstraint?.constant = CGFloat(dataModel.commentGifWidth ?? 0)
+            gifWebViewTopConstraint?.constant = 19
+        } else {
+            gifWebViewHeightConstraint?.constant = 0
+            gifWebViewTopConstraint?.constant = 12
+        }
     }
     
     // Handle dark mode \ light mode change
@@ -153,13 +174,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView)
+        contentView.addSubviews(avatarView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, gifWebView)
         configureAvatarView()
         configureUserNameView()
         configureCommentLabelView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
+        configureGifWebView()
     }
     
     private func configureAvatarView() {
@@ -170,6 +192,20 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             $0.centerY.equal(to: userNameView.centerYAnchor)
             $0.height.equal(to: Theme.avatarSideSize)
             $0.width.equal(to: Theme.avatarSideSize)
+        }
+    }
+    
+    private func configureGifWebView() {
+        gifWebView.layer.cornerRadius = 6
+        gifWebView.layer.masksToBounds = true
+        gifWebView.scrollView.isScrollEnabled = false
+        gifWebView.isUserInteractionEnabled = false
+        gifWebView.layout {
+            gifWebViewHeightConstraint = $0.height.equal(to: 0)
+            gifWebViewWidthConstraint = $0.width.equal(to: 0)
+            gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
+            $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
+            $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
     }
     
@@ -202,7 +238,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         replyActionsView.delegate = self
         
         replyActionsView.layout {
-            $0.top.equal(to: messageView.bottomAnchor)
+            $0.top.equal(to: gifWebView.bottomAnchor)
             $0.leading.equal(to: messageView.leadingAnchor)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
             replyActionsViewHeightConstraint = $0.height.equal(to: Theme.replyActionsViewHeight)
