@@ -49,9 +49,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     private var separatorLeadingConstraint: NSLayoutConstraint?
     private var separatorTrailingConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
-    private var gitWebViewHeightConstraint: NSLayoutConstraint?
-    private var gitWebViewWidthConstraint: NSLayoutConstraint?
-    private var gitWebViewTopConstraint: NSLayoutConstraint?
+    private var gifWebViewHeightConstraint: NSLayoutConstraint?
+    private var gifWebViewWidthConstraint: NSLayoutConstraint?
+    private var gifWebViewTopConstraint: NSLayoutConstraint?
 
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var imageRequest: DataRequest?
@@ -108,7 +108,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
                                 userNameView,
                                 commentLabelView,
                                 messageView,
-//                                commentImageView,
                                 gifWebView,
                                 replyActionsView,
                                 moreRepliesView)
@@ -118,7 +117,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
         configureCommentLabelView()
         configureMessageView()
         configureGifWebView()
-//        configureCommentImageView()
         configureReplyActionsView()
         configureMoreRepliesView()
     }
@@ -183,11 +181,11 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
         gifWebView.layer.cornerRadius = 6
         gifWebView.layer.masksToBounds = true
         gifWebView.scrollView.isScrollEnabled = false
-        gifWebView.scrollView.bounces = false
+        gifWebView.isUserInteractionEnabled = false
         gifWebView.layout {
-            gitWebViewHeightConstraint = $0.height.equal(to: 0)
-            gitWebViewWidthConstraint = $0.width.equal(to: 0)
-            gitWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
+            gifWebViewHeightConstraint = $0.height.equal(to: 0)
+            gifWebViewWidthConstraint = $0.width.equal(to: 0)
+            gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
             $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
@@ -324,12 +322,12 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
         if let url = dataModel.commentGifUrl {
             let myRequest = URLRequest(url: url)
             gifWebView.load(myRequest)
-            gitWebViewHeightConstraint?.constant = CGFloat(dataModel.commentGifHeight ?? 0)
-            gitWebViewWidthConstraint?.constant = CGFloat(dataModel.commentGifWidth ?? 0)
-            gitWebViewTopConstraint?.constant = 19
+            gifWebViewHeightConstraint?.constant = CGFloat(dataModel.commentGifHeight ?? 0)
+            gifWebViewWidthConstraint?.constant = CGFloat(dataModel.commentGifWidth ?? 0)
+            gifWebViewTopConstraint?.constant = 19
         } else {
-            gitWebViewHeightConstraint?.constant = 0
-            gitWebViewTopConstraint?.constant = 12
+            gifWebViewHeightConstraint?.constant = 0
+            gifWebViewTopConstraint?.constant = 12
         }
     }
     

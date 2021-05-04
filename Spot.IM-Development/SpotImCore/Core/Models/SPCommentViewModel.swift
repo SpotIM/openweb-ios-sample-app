@@ -79,6 +79,12 @@ internal struct CommentViewModel {
             if let range = url.range(of: "media1") {
                 url = url.replacingCharacters(in: range, with: "i")
             }
+            if let range = url.range(of: "media0") {
+                url = url.replacingCharacters(in: range, with: "i")
+            }
+            if let range = url.range(of: "media3") {
+                url = url.replacingCharacters(in: range, with: "i")
+            }
             commentGifUrl = URL(string: url)
             commentGifHeight = comment.gif?.previewHeight
             commentGifWidth = comment.gif?.previewWidth
