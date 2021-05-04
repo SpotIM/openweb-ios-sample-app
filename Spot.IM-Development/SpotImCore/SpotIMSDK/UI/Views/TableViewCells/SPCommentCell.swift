@@ -50,6 +50,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     private var separatorTrailingConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
     private var gitWebViewHeightConstraint: NSLayoutConstraint?
+    private var gitWebViewWidthConstraint: NSLayoutConstraint?
     private var gitWebViewTopConstraint: NSLayoutConstraint?
 
     private var userViewHeightConstraint: NSLayoutConstraint?
@@ -181,11 +182,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     private func configureGifWebView() {
         gifWebView.layer.cornerRadius = 6
         gifWebView.layer.masksToBounds = true
+        gifWebView.scrollView.isScrollEnabled = false
+        gifWebView.scrollView.bounces = false
         gifWebView.layout {
-            gitWebViewHeightConstraint = $0.height.equal(to: 226.0)
+            gitWebViewHeightConstraint = $0.height.equal(to: 0)
+            gitWebViewWidthConstraint = $0.width.equal(to: 0)
             gitWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
-            $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
-            $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
+            $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
+            $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
     }
     
@@ -319,7 +323,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
         if let url = dataModel.commentGifUrl {
             let myRequest = URLRequest(url: url)
             gifWebView.load(myRequest)
-            gitWebViewHeightConstraint?.constant = 226
+            gitWebViewHeightConstraint?.constant = CGFloat(dataModel.commentGifHeight ?? 0)
+            gitWebViewWidthConstraint?.constant = CGFloat(dataModel.commentGifWidth ?? 0)
             gitWebViewTopConstraint?.constant = 19
         } else {
             gitWebViewHeightConstraint?.constant = 0
