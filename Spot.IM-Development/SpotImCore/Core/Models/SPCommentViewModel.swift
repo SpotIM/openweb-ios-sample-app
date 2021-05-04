@@ -25,6 +25,7 @@ internal struct CommentViewModel {
     var repliesCount: String?
     var depth: Int = 0
     var commentLabel: CommentLabel?
+    var commentGifUrl: URL?
     
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
@@ -70,6 +71,13 @@ internal struct CommentViewModel {
            let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
            let commentLabelIconUrl = commentLabelConfig.getIconUrl() {
             commentLabel = CommentLabel(text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
+        }
+        
+        if let gif = comment.gif, var url = gif.originalUrl {
+            if let range = url.range(of: "media1") {
+                url = url.replacingCharacters(in: range, with: "i")
+            }
+            commentGifUrl = URL(string: url)
         }
         
         
@@ -145,6 +153,8 @@ internal struct CommentViewModel {
         )
         let textHeight: CGFloat = clippedMessage.string.isEmpty ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
+        
+        let mediaHeight: CGFloat = (commentGifUrl != nil) ? 226.0 : 0
 
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
@@ -164,7 +174,7 @@ internal struct CommentViewModel {
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + (commentLabel == nil ? 0.0 : commentLabelHeight)
-            + 226.0
+            + mediaHeight
 
         return height
     }

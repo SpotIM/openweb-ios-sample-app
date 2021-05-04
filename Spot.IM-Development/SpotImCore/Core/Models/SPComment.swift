@@ -48,6 +48,16 @@ internal struct SPComment: Decodable, Equatable {
         let status = Status(rawValue: rawStatus)
         return status == .unknown ? nil : status
     }
+    
+    var gif: Content? {
+        guard let content = content else { return nil }
+        for contentItem in content {
+            if contentItem.type == "animation" {
+                return contentItem
+            }
+        }
+        return nil
+    }
         
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
