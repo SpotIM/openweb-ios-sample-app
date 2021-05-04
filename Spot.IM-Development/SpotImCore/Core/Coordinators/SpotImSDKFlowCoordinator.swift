@@ -50,6 +50,8 @@ public extension SpotImLoginDelegate {
     }
 }
 
+public let SPOTIM_NAV_CONTROL_TAG = 11223344;
+
 final public class SpotImSDKFlowCoordinator: Coordinator {
     
     weak var containerViewController: UIViewController?
@@ -78,7 +80,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
     private var isLoadingConversation: Bool = false
-    private let SPOTIM_NAV_CONTROL_TAG = 11223344;
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
@@ -335,7 +336,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         return controller
     }
 
-    private func presentContentCreationViewController<T: CommentStateable>(controller: CommentReplyViewController<T>,
+    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: CommentReplyViewController<T>,
                                                                            _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
@@ -397,10 +398,13 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         
-        let model = SPCommentCreationModel(commentCreationDTO: dataModel.dataSource.commentCreationModel(),
-                                           cacheService: commentsCacheService,
-                                           updater: conversationUpdater,
-                                           imageProvider: imageProvider)
+        let model = SPCommentCreationModel(
+            commentCreationDTO: dataModel.dataSource.commentCreationModel(),
+            cacheService: commentsCacheService,
+            updater: conversationUpdater,
+            imageProvider: imageProvider,
+            articleMetadate: dataModel.dataSource.articleMetadata
+        )
         controller.model = model
         dataModel.dataSource.showReplies = true
         presentContentCreationViewController(controller: controller, dataModel)
@@ -411,10 +415,13 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         
-        let model = SPReplyCreationModel(replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
-                                         cacheService: commentsCacheService,
-                                         updater: conversationUpdater,
-                                         imageProvider: imageProvider)
+        let model = SPReplyCreationModel(
+            replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
+            cacheService: commentsCacheService,
+            updater: conversationUpdater,
+            imageProvider: imageProvider,
+            articleMetadata: dataModel.dataSource.articleMetadata
+        )
         controller.model = model
         dataModel.dataSource.showReplies = true
         

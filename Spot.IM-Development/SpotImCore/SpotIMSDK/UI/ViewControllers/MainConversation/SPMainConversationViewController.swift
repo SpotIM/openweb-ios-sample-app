@@ -132,8 +132,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         navigationController?.setNavigationBarHidden(false, animated: false)
+        self.updateColorsAccordingToStyle()
     }
     
     func updateLoginPromptVisibily() {
@@ -168,6 +168,24 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
         self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+        
+        if #available(iOS 13.0, *) {
+            if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
+                // back button
+                if let backButton = self.navigationItem.leftBarButtonItem?.customView as? UIButton {
+                    backButton.setImage(UIImage(spNamed: "backButton"), for: .normal)
+                }
+                
+                // nav bar
+                let navBarAppearance = UINavigationBarAppearance()
+                navBarAppearance.configureWithOpaqueBackground()
+                navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.spForeground0]
+                navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.spForeground0]
+                navBarAppearance.backgroundColor = .spBackground0
+                self.navigationController?.navigationBar.standardAppearance = navBarAppearance
+                self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+            }
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -441,7 +441,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
     }
     
-    override func didStartSignInFlowForChangeRank() {
+    override func didStartSignInFlow() {
         self.isWaitingForSignIn = true
     }
     
