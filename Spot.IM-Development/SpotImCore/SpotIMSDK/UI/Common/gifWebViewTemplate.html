@@ -1,0 +1,33 @@
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .imgbox {
+            display: grid;
+            height: 100%;
+        }
+        .center-fit {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+<script type="text/javascript">
+    function imageLoaded() {
+        document.getElementById("placeholder").hidden = true
+        document.getElementById("gif").hidden = false
+    }
+</script>
+<body>
+<div class="imgbox">
+    <img class="center-fit" src='IMAGE' onload='imageLoaded()' alt="animation entity" id="gif" hidden>
+<!--    TODO    -->
+    <img class="center-fit" src='PLACEHOLDER' id="placeholder">
+</div>
+</body>
+</html>
