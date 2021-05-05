@@ -84,8 +84,20 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelega
         if let url = dataModel.commentGifUrl {
             let myRequest = URLRequest(url: url)
             gifWebView.load(myRequest)
-            gifWebViewHeightConstraint?.constant = CGFloat(dataModel.commentGifHeight ?? 0)
-            gifWebViewWidthConstraint?.constant = CGFloat(dataModel.commentGifWidth ?? 0)
+            gifWebViewHeightConstraint?.constant = CGFloat(Theme.commentMediaHeight)
+            // calculate GIF width according to height ratio
+            var height = Float(Theme.commentMediaHeight)
+            var ratio: Float = Float(Float(Theme.commentMediaHeight) / Float(dataModel.commentGifHeight ?? 1))
+            var width = (ratio * Float(dataModel.commentGifWidth ?? 0))
+            // if width > cell - recalculate size
+            let commentWidth = self.messageView.frame.width
+            if width > Float(commentWidth) {
+                width = (Float)(commentWidth)
+                ratio = Float(width / Float(dataModel.commentGifWidth ?? 1))
+                height = (ratio * Float(dataModel.commentGifHeight ?? 0))
+            }
+            gifWebViewHeightConstraint?.constant = CGFloat(height)
+            gifWebViewWidthConstraint?.constant = CGFloat(width)
             gifWebViewTopConstraint?.constant = 19
         } else {
             gifWebViewHeightConstraint?.constant = 0
@@ -361,4 +373,5 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
+    static let commentMediaHeight: CGFloat = 226.0
 }
