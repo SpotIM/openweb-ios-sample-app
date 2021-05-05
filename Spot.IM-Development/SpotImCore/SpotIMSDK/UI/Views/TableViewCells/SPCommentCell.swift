@@ -184,7 +184,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
         gifWebView.isUserInteractionEnabled = false
         gifWebView.layout {
             gifWebViewHeightConstraint = $0.height.equal(to: 0)
-            gifWebViewWidthConstraint = $0.width.equal(to: 0)
+            gifWebViewWidthConstraint = $0.width.greaterThanOrEqual(to: 0)
             gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
             $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
@@ -322,11 +322,24 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
         if let url = dataModel.commentGifUrl {
             let myRequest = URLRequest(url: url)
             gifWebView.load(myRequest)
-            gifWebViewHeightConstraint?.constant = CGFloat(dataModel.commentGifHeight ?? 0)
-            gifWebViewWidthConstraint?.constant = CGFloat(dataModel.commentGifWidth ?? 0)
+            gifWebViewHeightConstraint?.constant = Theme.commentMediaHeight
+            // calculate GIF width according to height ratio
+            var height = Float(Theme.commentMediaHeight)
+            var ratio: Float = Float(Float(Theme.commentMediaHeight) / Float(dataModel.commentGifHeight ?? 1))
+            var width = (ratio * Float(dataModel.commentGifWidth ?? 0))
+            // if width > cell - recalculate size
+            let commentWidth = self.messageView.frame.width
+            if width > Float(commentWidth) {
+                width = (Float)(commentWidth)
+                ratio = Float(width / Float(dataModel.commentGifWidth ?? 1))
+                height = (ratio * Float(dataModel.commentGifHeight ?? 0))
+            }
+            gifWebViewHeightConstraint?.constant = CGFloat(height)
+            gifWebViewWidthConstraint?.constant = CGFloat(width)
             gifWebViewTopConstraint?.constant = 19
         } else {
             gifWebViewHeightConstraint?.constant = 0
+            gifWebViewWidthConstraint?.constant = 0
             gifWebViewTopConstraint?.constant = 12
         }
     }
@@ -461,4 +474,5 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
+    static let commentMediaHeight: CGFloat = 226.0
 }
