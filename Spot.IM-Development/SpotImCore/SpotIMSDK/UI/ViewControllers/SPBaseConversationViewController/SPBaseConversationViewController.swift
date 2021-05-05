@@ -194,6 +194,23 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
                 action: errorAction)
         )
     }
+    
+    internal func presentEmptyCommentsStateView() {
+        configureEmptyStateView()
+        let createCommentAction = { [weak self] in
+            guard let self = self, let delegate = self.delegate else { return }
+            self.logCreationOpen(with: .comment)
+            delegate.createComment(with: self.model)
+        }
+        stateActionView?.configure(
+            actionModel: EmptyActionDataModel(
+                actionMessage: LocalizationManager.localizedString(key: "Be the first to comment on this article."),
+                actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
+                actionButtonTitle: LocalizationManager.localizedString(key: "Write a Comment"),
+                action: createCommentAction
+            )
+        )
+    }
 
     func configureErrorAction() -> ConversationStateAction {
         fatalError("Implement in subclass")
