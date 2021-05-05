@@ -153,6 +153,25 @@ internal struct CommentViewModel {
         return textWidth
     }
     
+    func calculateGifSize() -> (CGFloat, CGFloat) {
+        guard let commentGifHeight = commentGifHeight, let commentGifWidth = commentGifWidth else { return (CGFloat(0), CGFloat(0)) }
+        let leadingOffset: CGFloat = depthOffset()
+        let maxWidth = UIScreen.main.bounds.width - leadingOffset - Theme.trailingOffset
+        
+        // calculate GIF width according to height ratio
+        var height = Float(226)
+        var ratio: Float = Float(height / Float(commentGifHeight))
+        var width = ratio * Float(commentGifWidth)
+        // if width > cell - recalculate size
+        if width > Float(maxWidth) {
+            width = (Float)(maxWidth)
+            ratio = Float(width / Float(commentGifWidth))
+            height = (ratio * Float(commentGifHeight))
+        }
+        
+        return (CGFloat(height), CGFloat(width))
+    }
+    
     func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
         let width = textWidth()
         let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isDeleted))
@@ -164,7 +183,7 @@ internal struct CommentViewModel {
         let textHeight: CGFloat = clippedMessage.string.isEmpty ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
-        let gifHeight: CGFloat = CGFloat((commentGifHeight != nil) ? 226 : 0)
+        let (gifHeight, gifWidth) = calculateGifSize()
 
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
@@ -184,7 +203,7 @@ internal struct CommentViewModel {
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + (commentLabel == nil ? 0.0 : commentLabelHeight)
-            + gifHeight
+            + (gifHeight + 7.0)
 
         return height
     }

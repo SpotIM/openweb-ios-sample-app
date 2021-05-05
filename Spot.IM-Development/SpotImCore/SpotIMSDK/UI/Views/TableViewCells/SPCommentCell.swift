@@ -324,16 +324,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
             gifWebView.load(myRequest)
             gifWebViewHeightConstraint?.constant = Theme.commentMediaHeight
             // calculate GIF width according to height ratio
-            var height = Float(Theme.commentMediaHeight)
-            var ratio: Float = Float(Float(Theme.commentMediaHeight) / Float(dataModel.commentGifHeight ?? 1))
-            var width = (ratio * Float(dataModel.commentGifWidth ?? 0))
-            // if width > cell - recalculate size
-            let commentWidth = self.messageView.frame.width
-            if width > Float(commentWidth) {
-                width = (Float)(commentWidth)
-                ratio = Float(width / Float(dataModel.commentGifWidth ?? 1))
-                height = (ratio * Float(dataModel.commentGifHeight ?? 0))
-            }
+            let (height, width) = dataModel.calculateGifSize()
             gifWebViewHeightConstraint?.constant = CGFloat(height)
             gifWebViewWidthConstraint?.constant = CGFloat(width)
             gifWebViewTopConstraint?.constant = 19
