@@ -324,9 +324,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
             let htmlFile = Bundle.main.path(forResource: "gifWebViewTemplate", ofType: "html")
             var htmlString = try? String(contentsOfFile: htmlFile!, encoding: String.Encoding.utf8)
             htmlString = htmlString?.replacingOccurrences(of: "IMAGE", with: url)
-            // set placeholder image
-            let placeholderPath = Bundle.main.resourcePath ?? "" + "image_placeholder/image_placeholder.png"
-            htmlString = htmlString?.replacingOccurrences(of: "PLACEHOLDER", with: placeholderPath )
+            // set placeholder image - TODO
+            let placeholderPath = (Bundle.main.resourcePath ?? "") + "/image_placeholder.png"
+            htmlString = htmlString?.replacingOccurrences(of: "PLACEHOLDER", with: "https://media.sproutsocial.com/uploads/2017/02/10x-featured-social-media-image-size.png" )
             gifWebView.loadHTMLString(htmlString!, baseURL: nil)
             // calculate GIF width according to height ratio
             let (height, width) = dataModel.calculateGifSize()
