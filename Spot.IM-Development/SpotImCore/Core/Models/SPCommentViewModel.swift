@@ -25,7 +25,7 @@ internal struct CommentViewModel {
     var repliesCount: String?
     var depth: Int = 0
     var commentLabel: CommentLabel?
-    var commentGifUrl: URL?
+    var commentGifUrl: String?
     var commentGifHeight: Int?
     var commentGifWidth: Int?
     
@@ -76,16 +76,7 @@ internal struct CommentViewModel {
         }
         
         if let gif = comment.gif, var url = gif.originalUrl {
-            if let range = url.range(of: "media1") {
-                url = url.replacingCharacters(in: range, with: "i")
-            }
-            if let range = url.range(of: "media0") {
-                url = url.replacingCharacters(in: range, with: "i")
-            }
-            if let range = url.range(of: "media3") {
-                url = url.replacingCharacters(in: range, with: "i")
-            }
-            commentGifUrl = URL(string: url)
+            commentGifUrl = url
             commentGifHeight = comment.gif?.previewHeight
             commentGifWidth = comment.gif?.previewWidth
         }
