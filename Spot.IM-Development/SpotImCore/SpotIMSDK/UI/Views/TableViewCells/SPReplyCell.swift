@@ -83,10 +83,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelega
         gifWebView.uiDelegate = self
         if let url = dataModel.commentGifUrl {
             // set url into html template
-            let htmlFile = Bundle.main.path(forResource: "gifWebViewTemplate", ofType: "html")
+            let htmlFile = Bundle(for: type(of: self)).path(forResource: "gifWebViewTemplate", ofType: "html")
             var htmlString = try? String(contentsOfFile: htmlFile!, encoding: String.Encoding.utf8)
             htmlString = htmlString?.replacingOccurrences(of: "IMAGE", with: url)
-            gifWebView.loadHTMLString(htmlString!, baseURL: nil)
+            // set placeholder image - TODO
+            let path = Bundle(for: type(of: self)).bundlePath
+            let baseUrl = URL(fileURLWithPath: path)
+            gifWebView.loadHTMLString(htmlString!, baseURL: baseUrl)
             // calculate GIF width according to height ratio
             let (height, width) = dataModel.calculateGifSize()
             gifWebViewHeightConstraint?.constant = CGFloat(height)
@@ -94,6 +97,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelega
             gifWebViewTopConstraint?.constant = 19
         } else {
             gifWebViewHeightConstraint?.constant = 0
+            gifWebViewWidthConstraint?.constant = 0
             gifWebViewTopConstraint?.constant = 12
         }
     }
