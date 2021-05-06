@@ -70,7 +70,6 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         var itemId: String?
         var reading: Int?
         var engineStatusType: String?
-        let idfa: String = ASIdentifierManager.shared().advertisingIdentifier.uuidString
 
         switch event {
         case .loginClicked(let newTargetType):
@@ -125,8 +124,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
                                   readingSeconds: reading,
                                   itemId: itemId,
                                   totalComments: totalComments,
-                                  engineStatusType: engineStatusType,
-                                  idfa: idfa)
+                                  engineStatusType: engineStatusType)
         return info
     }
 
