@@ -39,7 +39,7 @@
 		16A12A8A2608E49500A7B3F6 /* String+SPExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */; };
 		16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */; };
 		182BE3B9B67AB394B8892E1C /* libPods-Shared-SpotImCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */; };
-		241B06CC26427C9A00253944 /* gifWebViewTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */; };
+		241B07572643CCA000253944 /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 241B07562643CCA000253944 /* image_placeholder.png */; };
 		2459B8772637FA3F006A0CF0 /* gifWebViewTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */; };
 		2459B87F263823A8006A0CF0 /* SPBaseCommentCreationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2459B87E263823A8006A0CF0 /* SPBaseCommentCreationModel.swift */; };
 		246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */; };
@@ -606,6 +606,7 @@
 		16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SPExtentions.swift"; sourceTree = "<group>"; };
 		16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityGuidelinesTitle.swift; sourceTree = "<group>"; };
 		1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-Focus.de.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		241B07562643CCA000253944 /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = image_placeholder.png; path = SPAssets.xcassets/image_placeholder.imageset/image_placeholder.png; sourceTree = "<group>"; };
 		2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = gifWebViewTemplate.html; sourceTree = "<group>"; };
 		2459B87E263823A8006A0CF0 /* SPBaseCommentCreationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPBaseCommentCreationModel.swift; sourceTree = "<group>"; };
 		246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsContainerView.swift; sourceTree = "<group>"; };
@@ -1000,6 +1001,8 @@
 		4454179D236850C0001D0ED0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
+				241B07562643CCA000253944 /* image_placeholder.png */,
 				4454179E236850C0001D0ED0 /* SPAssets.xcassets */,
 				4454179F236850C0001D0ED0 /* Fonts */,
 				4416C65A237ABE3D00D3F7B9 /* Localizable.strings */,
@@ -1058,7 +1061,6 @@
 		445417AD23685144001D0ED0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
 				445417AE23685144001D0ED0 /* Autolayout.swift */,
 				445417AF23685144001D0ED0 /* Extensions */,
 				445417BA23685144001D0ED0 /* Controllers */,
@@ -2115,6 +2117,7 @@
 				5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */,
 				4411659F2375822900B781F3 /* Arial.ttf in Resources */,
 				445417A6236850C0001D0ED0 /* SPAssets.xcassets in Resources */,
+				241B07572643CCA000253944 /* image_placeholder.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2122,7 +2125,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				241B06CC26427C9A00253944 /* gifWebViewTemplate.html in Resources */,
 				E666D02625E39F0C009F04D4 /* BigShouldersDisplay-SemiBold.ttf in Resources */,
 				5D697A4622B65108001AD556 /* Assets.xcassets in Resources */,
 				5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */,

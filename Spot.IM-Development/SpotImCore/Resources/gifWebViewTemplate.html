@@ -14,6 +14,13 @@
             height: 100%;
             margin: 0;
         }
+        .placeholder-fit {
+            object-fit: cover;
+            overflow: hidden;
+            alignment-baseline: center;
+            width: 100%;
+            height: 100%;
+        }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
@@ -26,7 +33,7 @@
 <body>
 <div class="imgbox">
     <img class="center-fit" src='IMAGE' onload='imageLoaded()' alt="animation entity" id="gif" hidden>
-    <img class="center-fit" src='PLACEHOLDER' id="placeholder">
+    <img class="placeholder-fit" src="image_placeholder.png" id="placeholder">
 </div>
 </body>
 </html>
