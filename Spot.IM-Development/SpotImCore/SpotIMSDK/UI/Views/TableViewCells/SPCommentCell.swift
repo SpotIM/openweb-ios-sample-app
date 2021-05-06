@@ -21,7 +21,7 @@ extension MessageItemContainable {
     }
 }
 
-internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelegate {
+internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable {
     
     weak var delegate: SPCommentCellDelegate?
 
@@ -34,8 +34,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: BaseView = .init()
     private let separatorView: BaseView = .init()
-    private let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-//    private var commentImageView: UIImageView = .init()
+    private let gifWebView: GifWebView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -49,8 +48,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     private var separatorLeadingConstraint: NSLayoutConstraint?
     private var separatorTrailingConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
-    private var gifWebViewHeightConstraint: NSLayoutConstraint?
-    private var gifWebViewWidthConstraint: NSLayoutConstraint?
     private var gifWebViewTopConstraint: NSLayoutConstraint?
 
     private var userViewHeightConstraint: NSLayoutConstraint?
@@ -93,10 +90,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
         updateActionView(with: data)
         updateAvatarView(with: data)
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
+        updateGifWebView(with: data)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit)
-        updateGifWebView(with: data)
-//        updateCommentImageView(with: data)
         updateCommentLabelView(with: data)
     }
 
@@ -178,13 +174,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     }
     
     private func configureGifWebView() {
-        gifWebView.layer.cornerRadius = 6
-        gifWebView.layer.masksToBounds = true
-        gifWebView.scrollView.isScrollEnabled = false
-        gifWebView.isUserInteractionEnabled = false
         gifWebView.layout {
-            gifWebViewHeightConstraint = $0.height.equal(to: 0)
-            gifWebViewWidthConstraint = $0.width.greaterThanOrEqual(to: 0)
             gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
             $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
@@ -317,25 +307,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable,
     }
     
     private func updateGifWebView(with dataModel: CommentViewModel) {
-        // gif
-        gifWebView.uiDelegate = self
-        if let url = dataModel.commentGifUrl {
-            // set url into html template
-            let htmlFile = Bundle(for: type(of: self)).path(forResource: "gifWebViewTemplate", ofType: "html")
-            var htmlString = try? String(contentsOfFile: htmlFile!, encoding: String.Encoding.utf8)
-            htmlString = htmlString?.replacingOccurrences(of: "IMAGE", with: url)
-            // set placeholder image - TODO
-            let path = Bundle(for: type(of: self)).bundlePath
-            let baseUrl = URL(fileURLWithPath: path)
-            gifWebView.loadHTMLString(htmlString!, baseURL: baseUrl)
-            // calculate GIF width according to height ratio
-            let (height, width) = dataModel.calculateGifSize()
-            gifWebViewHeightConstraint?.constant = CGFloat(height)
-            gifWebViewWidthConstraint?.constant = CGFloat(width)
+        gifWebView.configure(with: dataModel)
+        if let _ = dataModel.commentGifUrl {
             gifWebViewTopConstraint?.constant = 19
         } else {
-            gifWebViewHeightConstraint?.constant = 0
-            gifWebViewWidthConstraint?.constant = 0
             gifWebViewTopConstraint?.constant = 12
         }
     }
