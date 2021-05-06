@@ -42,7 +42,6 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.isRegistered] = info.isRegistered
         parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
         parameters[AnalyticsAPIKeys.engineStatusType] = info.engineStatusType
-        parameters[AnalyticsAPIKeys.idfa] = info.idfa
         parameters[AnalyticsAPIKeys.splitName] = info.splitName
         
         var headers = HTTPHeaders.basic(with: spotKey)
@@ -77,7 +76,6 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         static let isRegistered = "is_registered"
         static let totalComments = "total_comments"
         static let engineStatusType = "engine_status"
-        static let idfa = "idfa"
         static let splitName = "split_name"
     }
 }
@@ -100,5 +98,4 @@ internal struct SPAnalyticsDTO {
     let itemId: String?
     let totalComments: Int?
     let engineStatusType: String?
-    let idfa: String
 }
