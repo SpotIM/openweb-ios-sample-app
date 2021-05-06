@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import WebKit
 
-final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelegate {
+final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
     weak var delegate: SPCommentCellDelegate?
     
@@ -21,7 +21,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelega
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+    private let gifWebView: GifWebView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -32,8 +32,6 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelega
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var textViewLeadingConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
-    private var gifWebViewHeightConstraint: NSLayoutConstraint?
-    private var gifWebViewWidthConstraint: NSLayoutConstraint?
     private var gifWebViewTopConstraint: NSLayoutConstraint?
     
     private var imageRequest: DataRequest?
@@ -79,25 +77,10 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelega
     }
     
     private func updateGifWebView(with dataModel: CommentViewModel) {
-        // gif
-        gifWebView.uiDelegate = self
+        gifWebView.configure(with: dataModel)
         if let url = dataModel.commentGifUrl {
-            // set url into html template
-            let htmlFile = Bundle(for: type(of: self)).path(forResource: "gifWebViewTemplate", ofType: "html")
-            var htmlString = try? String(contentsOfFile: htmlFile!, encoding: String.Encoding.utf8)
-            htmlString = htmlString?.replacingOccurrences(of: "IMAGE", with: url)
-            // set placeholder image - TODO
-            let path = Bundle(for: type(of: self)).bundlePath
-            let baseUrl = URL(fileURLWithPath: path)
-            gifWebView.loadHTMLString(htmlString!, baseURL: baseUrl)
-            // calculate GIF width according to height ratio
-            let (height, width) = dataModel.calculateGifSize()
-            gifWebViewHeightConstraint?.constant = CGFloat(height)
-            gifWebViewWidthConstraint?.constant = CGFloat(width)
             gifWebViewTopConstraint?.constant = 19
         } else {
-            gifWebViewHeightConstraint?.constant = 0
-            gifWebViewWidthConstraint?.constant = 0
             gifWebViewTopConstraint?.constant = 12
         }
     }
@@ -205,13 +188,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable, WKUIDelega
     }
     
     private func configureGifWebView() {
-        gifWebView.layer.cornerRadius = 6
-        gifWebView.layer.masksToBounds = true
-        gifWebView.scrollView.isScrollEnabled = false
-        gifWebView.isUserInteractionEnabled = false
         gifWebView.layout {
-            gifWebViewHeightConstraint = $0.height.equal(to: 0)
-            gifWebViewWidthConstraint = $0.width.equal(to: 0)
             gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
             $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
