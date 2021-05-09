@@ -8,7 +8,6 @@
 
 import UIKit
 import Alamofire
-import WebKit
 
 protocol MessageItemContainable: class {
     var messageView: MessageContainerView { get }
@@ -308,7 +307,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateGifWebView(with dataModel: CommentViewModel) {
         gifWebView.configure(with: dataModel)
-        if let _ = dataModel.commentGifUrl {
+        // set margin
+        if dataModel.commentGifUrl != nil {
             gifWebViewTopConstraint?.constant = 19
         } else {
             gifWebViewTopConstraint?.constant = 12
