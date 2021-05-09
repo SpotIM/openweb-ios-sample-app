@@ -75,10 +75,10 @@ internal struct CommentViewModel {
             commentLabel = CommentLabel(id: commentLabelConfig.id ,text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
         }
         
-        if let gif = comment.gif, var url = gif.originalUrl {
-            commentGifUrl = url
-            commentGifHeight = comment.gif?.previewHeight
-            commentGifWidth = comment.gif?.previewWidth
+        if let gif = comment.gif {
+            commentGifUrl = gif.originalUrl
+            commentGifHeight = gif.previewHeight
+            commentGifWidth = gif.previewWidth
         }
         
         
@@ -87,12 +87,15 @@ internal struct CommentViewModel {
         } else {
             repliesButtonState = .hidden
         }
-
-        if let htmlText = comment.content?.first?.text,
-            let data = htmlText.data(using: String.Encoding.unicode, allowLossyConversion: false),
-            let attributedHtmlString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
-            commentText = attributedHtmlString.string
-        } else {
+        
+        switch comment.content?.first {
+        case .text(let htmlText):
+            if let data = htmlText.text.data(using: String.Encoding.unicode, allowLossyConversion: false),
+               let attributedHtmlString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
+                commentText = attributedHtmlString.string
+                break
+            }
+        default:
             commentText = "no text"
         }
 
