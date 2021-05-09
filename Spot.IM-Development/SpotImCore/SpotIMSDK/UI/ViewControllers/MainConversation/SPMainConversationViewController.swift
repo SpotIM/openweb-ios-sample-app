@@ -108,6 +108,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         Logger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         sortView.updateCommentsLabel(model.dataSource.messageCount)
+        
+        if model.areCommentsEmpty() {
+            presentEmptyCommentsStateView()
+        }
+        
         NotificationCenter.default.addObserver(
            self,
            selector: #selector(overrideUserInterfaceStyleDidChange),
@@ -516,7 +521,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: tableHeader.bottomAnchor)
         }
     }
 
