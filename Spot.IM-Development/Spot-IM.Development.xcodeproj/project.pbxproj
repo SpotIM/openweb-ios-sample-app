@@ -423,6 +423,7 @@
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
 		E685ACD125CAEE84008FECDB /* sp_config_response_google_true.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */; };
 		E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A1EC75263169C4006E1517 /* SPLoginPromptView.swift */; };
+		E6C8329D26496F6F0084521D /* URL+QueryParam.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C8329C26496F6F0084521D /* URL+QueryParam.swift */; };
 		F363BC5F7DF4399171E348F1 /* libPods-Shared-DemoApps-DailyCaller.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AC2BCC7463D11A8C4413B3 /* libPods-Shared-DemoApps-DailyCaller.a */; };
 /* End PBXBuildFile section */
 
@@ -857,6 +858,7 @@
 		E68C240025B85612005307CC /* SkySports.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SkySports.plist; sourceTree = "<group>"; };
 		E68C240125B85633005307CC /* AOL.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AOL.plist; sourceTree = "<group>"; };
 		E6A1EC75263169C4006E1517 /* SPLoginPromptView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLoginPromptView.swift; sourceTree = "<group>"; };
+		E6C8329C26496F6F0084521D /* URL+QueryParam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+QueryParam.swift"; sourceTree = "<group>"; };
 		ECA186D6993CFFBF521D9FB1 /* Pods-Shared-SpotImCore.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		F47FEEF0E3AC88BAF89C7D65 /* Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		FA6BF31548693DB019E7E2E6 /* Pods_Shared_SpotImNoAds.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImNoAds.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1079,6 +1081,7 @@
 				445417B923685144001D0ED0 /* Int+Formatting.swift */,
 				440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */,
 				6D4E56B023A178DF005B79B6 /* UIView+Animations.swift */,
+				E6C8329C26496F6F0084521D /* URL+QueryParam.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2559,6 +2562,7 @@
 				4454180023685144001D0ED0 /* BaseViewController.swift in Sources */,
 				4454188A23685154001D0ED0 /* SPConversationRequests.swift in Sources */,
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
+				E6C8329D26496F6F0084521D /* URL+QueryParam.swift in Sources */,
 				445418B123685154001D0ED0 /* Date+SPExtensions.swift in Sources */,
 				5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */,
 				4454189523685154001D0ED0 /* SPConfigurationSDKStatus.swift in Sources */,
