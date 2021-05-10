@@ -76,8 +76,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateGifWebView(with dataModel: CommentViewModel) {
-        gifWebView.configure(with: dataModel)
-        if let url = dataModel.commentGifUrl {
+        gifWebView.configure(gifUrl: dataModel.commentGifUrl, gifWidth: dataModel.commentGifWidth, gifHeight: dataModel.commentGifHeight)
+        if dataModel.commentGifUrl != nil {
             gifWebViewTopConstraint?.constant = 19
         } else {
             gifWebViewTopConstraint?.constant = 12
@@ -346,5 +346,4 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
-    static let commentMediaHeight: CGFloat = 226.0
 }
