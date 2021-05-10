@@ -27,12 +27,12 @@ internal final class GifWebView: BaseView, WKUIDelegate {
         configureGifWebView()
     }
     
-    func configure(with data: CommentViewModel) {
-        updateGifWebView(with: data)
+    func configure(gifUrl: String?, gifWidth: Float?, gifHeight: Float?) {
+        updateGifWebView(gifUrl: gifUrl, gifWidth: gifWidth, gifHeight: gifHeight)
     }
     
-    private func updateGifWebView(with dataModel: CommentViewModel) {
-        if let url = dataModel.commentGifUrl {
+    private func updateGifWebView(gifUrl: String?, gifWidth: Float?, gifHeight: Float?) {
+        if let url = gifUrl, let gifWidth = gifWidth, let gifHeight = gifHeight {
             // set url into html template
             let htmlFile = Bundle(for: type(of: self)).path(forResource: "gifWebViewTemplate", ofType: "html")
             var htmlString = try? String(contentsOfFile: htmlFile!, encoding: String.Encoding.utf8)
@@ -42,9 +42,8 @@ internal final class GifWebView: BaseView, WKUIDelegate {
             let baseUrl = URL(fileURLWithPath: path)
             gifWebView.loadHTMLString(htmlString!, baseURL: baseUrl)
             // calculate GIF width according to height ratio
-            let (height, width) = dataModel.calculateGifSize()
-            gifWebViewHeightConstraint?.constant = CGFloat(height)
-            gifWebViewWidthConstraint?.constant = CGFloat(width)
+            gifWebViewHeightConstraint?.constant = CGFloat(gifHeight)
+            gifWebViewWidthConstraint?.constant = CGFloat(gifWidth)
         } else {
             gifWebViewHeightConstraint?.constant = 0
             gifWebViewWidthConstraint?.constant = 0

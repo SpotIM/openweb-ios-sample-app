@@ -306,7 +306,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateGifWebView(with dataModel: CommentViewModel) {
-        gifWebView.configure(with: dataModel)
+        gifWebView.configure(gifUrl: dataModel.commentGifUrl, gifWidth: dataModel.commentGifWidth, gifHeight: dataModel.commentGifHeight)
         // set margin
         if dataModel.commentGifUrl != nil {
             gifWebViewTopConstraint?.constant = 19
@@ -445,5 +445,4 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
-    static let commentMediaHeight: CGFloat = 226.0
 }

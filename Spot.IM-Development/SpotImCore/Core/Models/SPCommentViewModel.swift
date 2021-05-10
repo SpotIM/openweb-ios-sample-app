@@ -26,8 +26,8 @@ internal struct CommentViewModel {
     var depth: Int = 0
     var commentLabel: CommentLabel?
     var commentGifUrl: String?
-    var commentGifHeight: Int?
-    var commentGifWidth: Int?
+    var commentGifHeight: Float?
+    var commentGifWidth: Float?
     
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
@@ -77,8 +77,7 @@ internal struct CommentViewModel {
         
         if let gif = comment.gif {
             commentGifUrl = gif.originalUrl
-            commentGifHeight = gif.previewHeight
-            commentGifWidth = gif.previewWidth
+            (self.commentGifHeight, self.commentGifWidth) = self.calculateGifSize(gifHeight: gif.previewHeight, gifWidth: gif.previewWidth)
         }
         
         
@@ -147,23 +146,22 @@ internal struct CommentViewModel {
         return textWidth
     }
     
-    func calculateGifSize() -> (CGFloat, CGFloat) {
-        guard let commentGifHeight = commentGifHeight, let commentGifWidth = commentGifWidth else { return (CGFloat(0), CGFloat(0)) }
+    func calculateGifSize(gifHeight: Int, gifWidth: Int) -> (Float, Float) {
         let leadingOffset: CGFloat = depthOffset()
         let maxWidth = UIScreen.main.bounds.width - leadingOffset - Theme.trailingOffset
         
         // calculate GIF width according to height ratio
-        var height = Float(226)
-        var ratio: Float = Float(height / Float(commentGifHeight))
-        var width = ratio * Float(commentGifWidth)
+        var height = Theme.commentMediaMaxHeight
+        var ratio: Float = Float(height / Float(gifHeight))
+        var width = ratio * Float(gifWidth)
         // if width > cell - recalculate size
         if width > Float(maxWidth) {
             width = (Float)(maxWidth)
-            ratio = Float(width / Float(commentGifWidth))
-            height = (ratio * Float(commentGifHeight))
+            ratio = Float(width / Float(gifWidth))
+            height = (ratio * Float(gifHeight))
         }
         
-        return (CGFloat(height), CGFloat(width))
+        return (height, width)
     }
     
     func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
@@ -177,8 +175,8 @@ internal struct CommentViewModel {
         let textHeight: CGFloat = clippedMessage.string.isEmpty ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
-        let (gifHeight, gifWidth) = calculateGifSize()
-
+        let gifHeight: CGFloat = commentGifHeight == nil ? 0.0 : CGFloat(commentGifHeight! + 7.0)
+        
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
@@ -197,7 +195,7 @@ internal struct CommentViewModel {
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + (commentLabel == nil ? 0.0 : commentLabelHeight)
-            + (gifHeight + 7.0)
+            + gifHeight
 
         return height
     }
@@ -228,6 +226,7 @@ internal struct CommentViewModel {
         static let moreRepliesTopOffset: CGFloat = 12.0
         static let lastInSectionOffset: CGFloat = 19.0
         static let commentLabelViewHeight: CGFloat = 28.0
+        static let commentMediaMaxHeight: Float = 226.0
     }
 
     private func message() -> String {
