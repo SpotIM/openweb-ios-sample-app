@@ -175,7 +175,8 @@ internal struct CommentViewModel {
         let textHeight: CGFloat = clippedMessage.string.isEmpty ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
-        let gifHeight: CGFloat = commentGifHeight == nil ? 0.0 : CGFloat(commentGifHeight! + 9.0)
+        // git extra height includes - gif acual heigh + gif extra padding
+        let gifHeight: CGFloat = commentGifHeight == nil ? 0.0 : CGFloat(commentGifHeight! + (SPCommonConstants.gifViewTopPadding - SPCommonConstants.emptyGifViewTopPadding))
         
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
