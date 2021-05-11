@@ -29,4 +29,8 @@ extension URL {
         // Returns the url from new url components
         self = urlComponents.url!
     }
+    
+    mutating func withDarkModeParam() {
+        return self.appendQueryParam(name: "theme", value: SPUserInterfaceStyle.isDarkMode ? "dark" : "light")
+    }
 }
