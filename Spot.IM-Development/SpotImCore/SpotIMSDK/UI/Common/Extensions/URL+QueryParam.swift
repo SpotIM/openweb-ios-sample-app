@@ -31,6 +31,6 @@ extension URL {
     }
     
     func withDarkModeParam() -> URL {
-        return self.appending("dark_mode", value: SPUserInterfaceStyle.isDarkMode ? "true" : "false")
+        return self.appending("theme", value: SPUserInterfaceStyle.isDarkMode ? "dark" : "light")
     }
 }
