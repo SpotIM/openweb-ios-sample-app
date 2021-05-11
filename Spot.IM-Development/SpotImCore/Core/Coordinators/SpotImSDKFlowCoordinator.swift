@@ -368,7 +368,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         guard let url = URL(string: urlString) else {
             return
         }
-        let safariController = SFSafariViewController(url: url)
+        let safariController = SFSafariViewController(url: url.withDarkModeParam())
         navigationController?.present(safariController, animated: true)
     }
     
