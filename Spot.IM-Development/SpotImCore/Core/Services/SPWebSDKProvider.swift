@@ -35,7 +35,7 @@ internal final class SPWebSDKProvider {
         if let userOwToken = params.userOwToken {
             url.appendQueryParam(name: "user_ow_token", value: userOwToken)
         }
-        return url.absoluteString
+        return url.withDarkModeParam().absoluteString
     }
     
     private static func getCleanToken(token: String) -> String {
