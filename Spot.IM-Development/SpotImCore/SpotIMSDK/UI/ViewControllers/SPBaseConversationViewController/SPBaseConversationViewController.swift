@@ -870,7 +870,9 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
 
 extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
     func clickOnUrl(url: URL) {
-        webPageDelegate?.openWebPage(with: url.withDarkModeParam().absoluteString)
+        var urlWithThemeParam = url
+        urlWithThemeParam.appendQueryParam(name: "theme", value: SPUserInterfaceStyle.isDarkMode ? "dark" : "light")
+        webPageDelegate?.openWebPage(with: urlWithThemeParam.absoluteString)
     }
 }
 
