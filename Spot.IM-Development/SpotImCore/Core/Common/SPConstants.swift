@@ -11,6 +11,8 @@ import Foundation
 internal enum SPCommonConstants {
     static let commentTextLineLimitMainConv: Int = 16
     static let commentTextLineLimitPreConv: Int = 4
+    static let gifViewTopPadding: Float = 19.0
+    static let emptyGifViewTopPadding: Float = 10.0
 }
 
 internal enum SPAnimationDuration {

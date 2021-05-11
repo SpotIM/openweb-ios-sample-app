@@ -25,6 +25,9 @@ internal struct CommentViewModel {
     var repliesCount: String?
     var depth: Int = 0
     var commentLabel: CommentLabel?
+    var commentGifUrl: String?
+    var commentGifHeight: Float?
+    var commentGifWidth: Float?
     
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
@@ -72,18 +75,26 @@ internal struct CommentViewModel {
             commentLabel = CommentLabel(id: commentLabelConfig.id ,text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
         }
         
+        if let gif = comment.gif {
+            commentGifUrl = gif.originalUrl
+            (self.commentGifHeight, self.commentGifWidth) = self.calculateGifSize(gifHeight: gif.previewHeight, gifWidth: gif.previewWidth)
+        }
+        
         
         if comment.hasNext {
             repliesButtonState = .collapsed
         } else {
             repliesButtonState = .hidden
         }
-
-        if let htmlText = comment.content?.first?.text,
-            let data = htmlText.data(using: String.Encoding.unicode, allowLossyConversion: false),
-            let attributedHtmlString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
-            commentText = attributedHtmlString.string
-        } else {
+        
+        switch comment.content?.first {
+        case .text(let htmlText):
+            if let data = htmlText.text.data(using: String.Encoding.unicode, allowLossyConversion: false),
+               let attributedHtmlString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
+                commentText = attributedHtmlString.string
+                break
+            }
+        default:
             commentText = "no text"
         }
 
@@ -135,6 +146,24 @@ internal struct CommentViewModel {
         return textWidth
     }
     
+    func calculateGifSize(gifHeight: Int, gifWidth: Int) -> (Float, Float) {
+        let leadingOffset: CGFloat = depthOffset()
+        let maxWidth = UIScreen.main.bounds.width - leadingOffset - Theme.trailingOffset
+        
+        // calculate GIF width according to height ratio
+        var height = Theme.commentMediaMaxHeight
+        var ratio: Float = Float(height / Float(gifHeight))
+        var width = ratio * Float(gifWidth)
+        // if width > cell - recalculate size
+        if width > Float(maxWidth) {
+            width = (Float)(maxWidth)
+            ratio = Float(width / Float(gifWidth))
+            height = (ratio * Float(gifHeight))
+        }
+        
+        return (height, width)
+    }
+    
     func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
         let width = textWidth()
         let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isDeleted))
@@ -145,7 +174,10 @@ internal struct CommentViewModel {
         )
         let textHeight: CGFloat = clippedMessage.string.isEmpty ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
-
+        
+        // git extra height includes - gif acual heigh + gif extra padding
+        let gifHeight: CGFloat = commentGifHeight == nil ? 0.0 : CGFloat(commentGifHeight! + (SPCommonConstants.gifViewTopPadding - SPCommonConstants.emptyGifViewTopPadding))
+        
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
@@ -164,6 +196,7 @@ internal struct CommentViewModel {
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + (commentLabel == nil ? 0.0 : commentLabelHeight)
+            + gifHeight
 
         return height
     }
@@ -194,6 +227,7 @@ internal struct CommentViewModel {
         static let moreRepliesTopOffset: CGFloat = 12.0
         static let lastInSectionOffset: CGFloat = 19.0
         static let commentLabelViewHeight: CGFloat = 28.0
+        static let commentMediaMaxHeight: Float = 226.0
     }
 
     private func message() -> String {

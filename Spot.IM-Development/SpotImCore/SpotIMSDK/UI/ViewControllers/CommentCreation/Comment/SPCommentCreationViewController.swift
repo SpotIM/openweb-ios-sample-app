@@ -145,7 +145,12 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
             guard let self = self else { return }
 
             if comment.status == .block || !comment.published {
-                self.delegate?.commentReplyDidBlock(with: comment.content?.first?.text)
+                switch comment.content?.first {
+                case .text(let text):
+                    self.delegate?.commentReplyDidBlock(with: text.text)
+                default:
+                    break
+                }
             } else {
                 self.delegate?.commentReplyDidCreate(comment)
             }

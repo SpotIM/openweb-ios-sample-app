@@ -48,6 +48,20 @@ internal struct SPComment: Decodable, Equatable {
         let status = Status(rawValue: rawStatus)
         return status == .unknown ? nil : status
     }
+    
+    var gif: Content.Animation? {
+        guard let content = content else { return nil }
+        for contentItem in content {
+            switch contentItem {
+            case .animation(let animation):
+                return animation
+            default:
+                break
+            }
+        }
+        
+        return nil
+    }
         
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -106,10 +120,49 @@ extension SPComment {
         var rankedByCurrentUser: Int?
     }
 
-    struct Content: Decodable, Equatable {
-        var id: String?
-        var text: String?
-        var type: String?
+    enum Content: Decodable, Equatable {
+        
+        enum CodingKeys: CodingKey {
+            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl
+        }
+
+        struct Text: Decodable, Equatable {
+            var id: String
+            var text: String
+        }
+        
+        struct Animation: Decodable, Equatable {
+            var previewWidth: Int
+            var previewHeight: Int
+            var originalWidth: Int
+            var originalHeight: Int
+            var originalUrl: String
+        }
+        
+        
+        case text(Text)
+        case animation(Animation)
+        case none
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let type = try? container.decode(String.self, forKey: .type)
+            switch type {
+            case "text":
+                let id = try container.decode(String.self, forKey: .id)
+                let text = try container.decode(String.self, forKey: .text)
+                self = .text(Text(id: id, text: text))
+            case "animation":
+                let previewWidth = try container.decode(Int.self, forKey: .previewWidth)
+                let previewHeight = try container.decode(Int.self, forKey: .previewHeight)
+                let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
+                let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
+                let originalUrl = try container.decode(String.self, forKey: .originalUrl)
+                self = .animation(Animation( previewWidth: previewWidth, previewHeight: previewHeight, originalWidth: originalWidth, originalHeight: originalHeight, originalUrl: originalUrl))
+            default:
+                self = .none
+            }
+        }
     }
 
     struct CommentUser: Decodable, Equatable {
