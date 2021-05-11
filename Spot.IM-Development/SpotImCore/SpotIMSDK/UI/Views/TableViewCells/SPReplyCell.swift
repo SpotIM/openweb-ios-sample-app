@@ -78,9 +78,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func updateGifWebView(with dataModel: CommentViewModel) {
         gifWebView.configure(gifUrl: dataModel.commentGifUrl, gifWidth: dataModel.commentGifWidth, gifHeight: dataModel.commentGifHeight)
         if dataModel.commentGifUrl != nil {
-            gifWebViewTopConstraint?.constant = 19
+            gifWebViewTopConstraint?.constant = Theme.gifViewTopPadding
         } else {
-            gifWebViewTopConstraint?.constant = 12
+            gifWebViewTopConstraint?.constant = Theme.emptyGifViewTopPadding
         }
     }
     
@@ -188,7 +188,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func configureGifWebView() {
         gifWebView.layout {
-            gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: 19.0)
+            gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: Theme.emptyGifViewTopPadding)
             $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
         }
@@ -346,4 +346,6 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
+    static let gifViewTopPadding: CGFloat = 19.0
+    static let emptyGifViewTopPadding: CGFloat = 10.0
 }
