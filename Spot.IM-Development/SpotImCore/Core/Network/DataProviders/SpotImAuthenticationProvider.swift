@@ -55,7 +55,8 @@ internal class SpotImAuthenticationProvider {
             SpotIm.getUserLoginStatus { (loginStatus) in
                 switch loginStatus {
                 case .success(.loggedIn):
-                    completion(nil, SpotImError.internalError("User is already logged in."))
+                    let message = LocalizationManager.localizedString(key: "User is already logged in.")
+                    completion(nil, SpotImError.internalError(message))
                     return
                 default:
                     break
@@ -147,7 +148,8 @@ internal class SpotImAuthenticationProvider {
         SpotIm.getUserLoginStatus { (loginStatus) in
             switch loginStatus {
             case .success(.loggedIn):
-                completion(false, SpotImError.internalError("User is already logged in."))
+                let message = LocalizationManager.localizedString(key: "User is already logged in.")
+                completion(false, SpotImError.internalError(message))
                 return
             default:
                 break
