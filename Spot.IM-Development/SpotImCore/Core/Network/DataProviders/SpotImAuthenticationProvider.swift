@@ -159,7 +159,7 @@ internal class SpotImAuthenticationProvider {
             switch loginStatus {
             case .success(.loggedIn):
                 completion(false, UserAlreadyLoggedInError.userAlreadyLoggedIn)
-                break
+                return
             default:
                 break
             }
