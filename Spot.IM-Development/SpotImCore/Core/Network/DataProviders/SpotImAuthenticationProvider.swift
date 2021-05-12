@@ -27,6 +27,17 @@ public struct SSOStartResponse: Codable {
     public var success: Bool = false
 }
 
+public enum UserAlreadyLoggedInError: Error, LocalizedError {
+    case userAlreadyLoggedIn
+    
+    public var errorDescription: String? {
+        switch self {
+        case .userAlreadyLoggedIn:
+            return LocalizationManager.localizedString(key: "User is already logged in.")
+        }
+    }
+}
+
 internal struct SSOStartResponseInternal: Codable {
     public var codeA: String?
     public var autoComplete: Bool = false
@@ -52,17 +63,28 @@ internal class SpotImAuthenticationProvider {
         }
 
         public func startSSO(completion: @escaping AuthStratCompleteionHandler) {
-            ssoAuthDelegate?.ssoFlowStarted()
-            SPUserSessionHolder.resetUserSession()
-            internalAuthProvider.login { (token, error) in
-                if let error = error {
-                    self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                    completion(nil, error)
-                } else {
-                    let newParams = SPCodeAParameters(token: token, secret: nil)
-                    self.getCodeA(withGuest: newParams, completion: completion)
+            SpotIm.getUserLoginStatus { (loginStatus) in
+                switch loginStatus {
+                case .success(.loggedIn):
+                    completion(nil, UserAlreadyLoggedInError.userAlreadyLoggedIn)
+                    return
+                default:
+                    break
+                }
+                
+                self.ssoAuthDelegate?.ssoFlowStarted()
+                SPUserSessionHolder.resetUserSession()
+                self.internalAuthProvider.login { (token, error) in
+                    if let error = error {
+                        self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
+                        completion(nil, error)
+                    } else {
+                        let newParams = SPCodeAParameters(token: token, secret: nil)
+                        self.getCodeA(withGuest: newParams, completion: completion)
+                    }
                 }
             }
+            
         }
 
         public func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
@@ -133,65 +155,74 @@ internal class SpotImAuthenticationProvider {
 
     public func completeSSO(with codeB: String?,
                             completion: @escaping AuthCompletionHandler) {
-        guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-            completion(false, SPNetworkError.custom(message))
-            return
-        }
-        guard let codeB = codeB else {
-            let message = LocalizationManager.localizedString(key: "Please provide Code B")
-            completion(false, SPNetworkError.custom(message))
-            return
-        }
-        let spRequest = SPInternalAuthRequests.ssoComplete
-        let params = [APIParamKeysContants.CODE_B: codeB]
-        var headers = HTTPHeaders.basic(with: spotKey)
-        if let token = SPUserSessionHolder.session.token {
-            headers[APIHeadersConstants.AUTHORIZATION] = token
-        }
+        SpotIm.getUserLoginStatus { (loginStatus) in
+            switch loginStatus {
+            case .success(.loggedIn):
+                completion(false, UserAlreadyLoggedInError.userAlreadyLoggedIn)
+                break
+            default:
+                break
+            }
+            guard let spotKey = SPClientSettings.main.spotKey else {
+                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+                completion(false, SPNetworkError.custom(message))
+                return
+            }
+            guard let codeB = codeB else {
+                let message = LocalizationManager.localizedString(key: "Please provide Code B")
+                completion(false, SPNetworkError.custom(message))
+                return
+            }
+            let spRequest = SPInternalAuthRequests.ssoComplete
+            let params = [APIParamKeysContants.CODE_B: codeB]
+            var headers = HTTPHeaders.basic(with: spotKey)
+            if let token = SPUserSessionHolder.session.token {
+                headers[APIHeadersConstants.AUTHORIZATION] = token
+            }
 
-        manager.execute(
-            request: spRequest,
-            parameters: params,
-            parser: DecodableParser<SSOCompleteResponseInternal>(),
-            headers: headers
-        ) { (result, response) in
-            switch result {
-            case .success(let ssoResponse):
-                if ssoResponse.success {
-                    let token = response.response?.allHeaderFields.authorizationHeader
-                    SPUserSessionHolder.session.token = token ?? SPUserSessionHolder.session.token
-                    if let user = ssoResponse.user {
-                        SPUserSessionHolder.updateSessionUser(user: user)
+            self.manager.execute(
+                request: spRequest,
+                parameters: params,
+                parser: DecodableParser<SSOCompleteResponseInternal>(),
+                headers: headers
+            ) { (result, response) in
+                switch result {
+                case .success(let ssoResponse):
+                    if ssoResponse.success {
+                        let token = response.response?.allHeaderFields.authorizationHeader
+                        SPUserSessionHolder.session.token = token ?? SPUserSessionHolder.session.token
+                        if let user = ssoResponse.user {
+                            SPUserSessionHolder.updateSessionUser(user: user)
+                        }
+                                           
+                        self.ssoAuthDelegate?.ssoFlowDidSucceed()
+                        completion(token != nil && !token!.isEmpty, nil)
+                    } else {
+                        let errorMessage = LocalizationManager.localizedString(key: "Authentication error")
+                        let error = SPNetworkError.custom(errorMessage)
+                        let rawReport = RawReportModel(
+                            url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                            parameters: params,
+                            errorData: response.data,
+                            errorMessage: error.localizedDescription
+                        )
+                        SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+
+                        self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
+                        completion(false, error)
                     }
-                                       
-                    self.ssoAuthDelegate?.ssoFlowDidSucceed()
-                    completion(token != nil && !token!.isEmpty, nil)
-                } else {
-                    let errorMessage = LocalizationManager.localizedString(key: "Authentication error")
-                    let error = SPNetworkError.custom(errorMessage)
+                case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: params,
+                        parameters: nil,
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
 
-                    self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                    completion(false, error)
+                    self.ssoAuthDelegate?.ssoFlowDidFail(with: SPNetworkError.default)
+                    completion(false, SPNetworkError.default)
                 }
-            case .failure(let error):
-                let rawReport = RawReportModel(
-                    url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                    parameters: nil,
-                    errorData: response.data,
-                    errorMessage: error.localizedDescription
-                )
-                SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
-
-                self.ssoAuthDelegate?.ssoFlowDidFail(with: SPNetworkError.default)
-                completion(false, SPNetworkError.default)
             }
         }
     }
