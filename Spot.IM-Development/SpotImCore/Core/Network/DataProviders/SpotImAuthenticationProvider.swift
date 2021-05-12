@@ -27,17 +27,6 @@ public struct SSOStartResponse: Codable {
     public var success: Bool = false
 }
 
-public enum UserAlreadyLoggedInError: Error, LocalizedError {
-    case userAlreadyLoggedIn
-    
-    public var errorDescription: String? {
-        switch self {
-        case .userAlreadyLoggedIn:
-            return LocalizationManager.localizedString(key: "User is already logged in.")
-        }
-    }
-}
-
 internal struct SSOStartResponseInternal: Codable {
     public var codeA: String?
     public var autoComplete: Bool = false
@@ -66,7 +55,7 @@ internal class SpotImAuthenticationProvider {
             SpotIm.getUserLoginStatus { (loginStatus) in
                 switch loginStatus {
                 case .success(.loggedIn):
-                    completion(nil, UserAlreadyLoggedInError.userAlreadyLoggedIn)
+                    completion(nil, SpotImError.internalError("User is already logged in."))
                     return
                 default:
                     break
@@ -158,7 +147,7 @@ internal class SpotImAuthenticationProvider {
         SpotIm.getUserLoginStatus { (loginStatus) in
             switch loginStatus {
             case .success(.loggedIn):
-                completion(false, UserAlreadyLoggedInError.userAlreadyLoggedIn)
+                completion(false, SpotImError.internalError("User is already logged in."))
                 return
             default:
                 break
