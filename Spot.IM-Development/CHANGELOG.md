@@ -5,8 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.1] - 2021-05-5
+## [1.5.3] - 2021-05-13
 
+### Added
+- Support dark mode in websdk
+- Display Gif in comment
+- Placeholder for empty full conversation
+
+### Changed
+- Block start/complete SSO if user is already logged-in
+- Remove idfa usages from SDK
+
+
+## [1.5.2] - 2021-05-5
 ### Infra
 
 - Build SDK with Xcode v12.5 (iOS 14.5)
