@@ -52,9 +52,14 @@ internal class SpotImAuthenticationProvider {
         }
 
         public func startSSO(completion: @escaping AuthStratCompleteionHandler) {
-            ssoAuthDelegate?.ssoFlowStarted()
+            guard SPUserSessionHolder.isRegister() == false else {
+                let message = LocalizationManager.localizedString(key: "User is already logged in.")
+                completion(nil, SpotImError.internalError(message))
+                return
+            }
+            self.ssoAuthDelegate?.ssoFlowStarted()
             SPUserSessionHolder.resetUserSession()
-            internalAuthProvider.login { (token, error) in
+            self.internalAuthProvider.login { (token, error) in
                 if let error = error {
                     self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
                     completion(nil, error)
@@ -133,6 +138,11 @@ internal class SpotImAuthenticationProvider {
 
     public func completeSSO(with codeB: String?,
                             completion: @escaping AuthCompletionHandler) {
+        guard SPUserSessionHolder.isRegister() == false else {
+            let message = LocalizationManager.localizedString(key: "User is already logged in.")
+            completion(false, SpotImError.internalError(message))
+            return
+        }
         guard let spotKey = SPClientSettings.main.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             completion(false, SPNetworkError.custom(message))
@@ -150,7 +160,7 @@ internal class SpotImAuthenticationProvider {
             headers[APIHeadersConstants.AUTHORIZATION] = token
         }
 
-        manager.execute(
+        self.manager.execute(
             request: spRequest,
             parameters: params,
             parser: DecodableParser<SSOCompleteResponseInternal>(),
@@ -194,6 +204,7 @@ internal class SpotImAuthenticationProvider {
                 completion(false, SPNetworkError.default)
             }
         }
+    
     }
 
     public func getUser() -> Promise<SPUser> {
