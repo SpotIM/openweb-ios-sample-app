@@ -110,6 +110,13 @@ internal class SPUserSessionHolder {
 
         return session
     }
+    
+    static func isRegister() -> Bool {
+        if let user = session.user, user.registered {
+            return true
+        }
+        return false
+    }
 }
 
 private extension String {
