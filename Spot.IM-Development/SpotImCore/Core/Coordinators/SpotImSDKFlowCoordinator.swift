@@ -174,8 +174,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 
                 // back button
                 let backButton = UIButton(type: .custom)
+                backButton.frame.size = CGSize(width: 44,height: 44) // set button size to enlarge hit area
                 backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
                 backButton.setImage(UIImage(spNamed: "backButton"), for: .normal) // Image can be downloaded from here below link
+                backButton.contentHorizontalAlignment = .left
                 backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
                 conversationController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
                 
