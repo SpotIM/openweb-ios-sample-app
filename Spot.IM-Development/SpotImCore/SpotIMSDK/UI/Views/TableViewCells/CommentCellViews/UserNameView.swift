@@ -31,6 +31,7 @@ internal final class UserNameView: BaseView {
         super.init(frame: frame)
 
         setupUI()
+        applyAccessibility()
     }
     
     // Handle dark mode \ light mode change
@@ -223,6 +224,15 @@ internal final class UserNameView: BaseView {
         delegate?.userNameDidTapped()
     }
 
+}
+
+// MARK: Accessibility
+
+extension UserNameView {
+  func applyAccessibility() {
+    moreButton.accessibilityTraits = .button
+    moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+  }
 }
 
 // MARK: - Delegate
