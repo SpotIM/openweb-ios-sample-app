@@ -521,7 +521,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            $0.top.equal(to: tableHeader.bottomAnchor)
+            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : communityGuidelinesView.bottomAnchor)
         }
     }
 
