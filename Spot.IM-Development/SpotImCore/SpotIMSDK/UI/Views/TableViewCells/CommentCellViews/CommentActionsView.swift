@@ -36,6 +36,7 @@ final class CommentActionsView: BaseView {
 
         clipsToBounds = true
         setupUI()
+        applyAccessibility()
     }
     
     // Handle dark mode \ light mode change
@@ -249,6 +250,18 @@ final class CommentActionsView: BaseView {
 
         delegate?.rankDown(SPRankChange(from: from, to: to))
     }
+}
+
+// MARK: Accessibility
+
+extension CommentActionsView {
+  func applyAccessibility() {
+    rankUpButton.accessibilityTraits = .button
+    rankUpButton.accessibilityLabel = LocalizationManager.localizedString(key: "Up vote button")
+    
+    rankDownButton.accessibilityTraits = .button
+    rankDownButton.accessibilityLabel = LocalizationManager.localizedString(key: "Down vote button")
+  }
 }
 
 // MARK: - Delegate
