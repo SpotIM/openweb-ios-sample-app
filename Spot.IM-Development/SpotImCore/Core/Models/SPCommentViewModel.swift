@@ -28,6 +28,7 @@ internal struct CommentViewModel {
     var commentGifUrl: String?
     var commentGifHeight: Float?
     var commentGifWidth: Float?
+    var commentImage: CommentImage?
     
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
@@ -58,7 +59,8 @@ internal struct CommentViewModel {
         replyingToDisplayName: String? = nil,
         color: UIColor? = nil,
         user: SPUser? = nil,
-        userImageURL: URL? = nil) {
+        userImageURL: URL? = nil,
+        commentImageURL: URL? = nil) {
 
         isDeleted = comment.deleted
         authorId = comment.userId
@@ -78,6 +80,10 @@ internal struct CommentViewModel {
         if let gif = comment.gif {
             commentGifUrl = gif.originalUrl
             (self.commentGifHeight, self.commentGifWidth) = self.calculateGifSize(gifHeight: gif.previewHeight, gifWidth: gif.previewWidth)
+        }
+        
+        if let image = comment.image {
+            commentImage = CommentImage(id: image.imageId, height: image.originalHeight, width: image.originalWidth, imageUrl: commentImageURL)
         }
         
         
@@ -283,6 +289,13 @@ struct CommentLabel {
     var text: String
     var iconUrl: URL
     var color: UIColor
+}
+
+struct CommentImage {
+    var id: String
+    var height: Int
+    var width: Int
+    var imageUrl: URL?
 }
 
 // MARK: - Theme

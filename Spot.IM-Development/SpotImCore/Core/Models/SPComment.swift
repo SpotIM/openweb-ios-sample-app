@@ -59,7 +59,19 @@ internal struct SPComment: Decodable, Equatable {
                 break
             }
         }
-        
+        return nil
+    }
+    
+    var image: Content.Image? {
+        guard let content = content else { return nil }
+        for contentItem in content {
+            switch contentItem {
+            case .image(let image):
+                return image
+            default:
+                break
+            }
+        }
         return nil
     }
         
@@ -123,7 +135,7 @@ extension SPComment {
     enum Content: Decodable, Equatable {
         
         enum CodingKeys: CodingKey {
-            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl
+            case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId
         }
 
         struct Text: Decodable, Equatable {
@@ -139,9 +151,16 @@ extension SPComment {
             var originalUrl: String
         }
         
+        struct Image: Decodable, Equatable {
+            var originalWidth: Int
+            var originalHeight: Int
+            var imageId: String
+        }
+        
         
         case text(Text)
         case animation(Animation)
+        case image(Image)
         case none
         
         init(from decoder: Decoder) throws {
@@ -159,6 +178,11 @@ extension SPComment {
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
                 let originalUrl = try container.decode(String.self, forKey: .originalUrl)
                 self = .animation(Animation( previewWidth: previewWidth, previewHeight: previewHeight, originalWidth: originalWidth, originalHeight: originalHeight, originalUrl: originalUrl))
+            case "image":
+                let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
+                let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
+                let imageId = try container.decode(String.self, forKey: .imageId)
+                self = .image(Image(originalWidth: originalWidth, originalHeight: originalHeight, imageId: imageId))
             default:
                 self = .none
             }
