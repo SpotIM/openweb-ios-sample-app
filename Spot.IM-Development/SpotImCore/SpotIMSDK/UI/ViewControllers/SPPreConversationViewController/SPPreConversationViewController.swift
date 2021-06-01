@@ -16,6 +16,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
     private lazy var bannerView: PreConversationBannerView = .init()
+    private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
     private lazy var header: SPPreConversationHeaderView = .init()
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
@@ -141,6 +142,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.tableView.backgroundColor = .spBackground0
         self.bannerView.updateColorsAccordingToStyle()
         self.whatYouThinkView.updateColorsAccordingToStyle()
+        self.communityQuestionView.updateColorsAccordingToStyle()
         self.communityGuidelinesView.updateColorsAccordingToStyle()
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
@@ -181,12 +183,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     // MARK: - Private methods
 
     override func setupUI() {
-        view.addSubviews(bannerView, header, communityGuidelinesView, whatYouThinkView, footerView)
+        view.addSubviews(bannerView, header, communityGuidelinesView, communityQuestionView, whatYouThinkView, footerView)
 
         super.setupUI()
 
         setupBannerView()
         setupHeader()
+        configureCommunityQuestionView()
         setupCommunityGuidelinesView()
         setupWhatYouThinkView()
         setupFooterView()
@@ -210,6 +213,19 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.headerHeight)
+        }
+    }
+    
+    private func configureCommunityQuestionView() {
+//        if (self.displayArticleHeader == false) {
+//            tableHeader.removeFromSuperview()
+//            return
+//        }
+        communityQuestionView.clipsToBounds = true
+        communityQuestionView.layout {
+            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
+            $0.leading.equal(to: view.leadingAnchor, offsetBy: 16.0)
+            $0.trailing.equal(to: view.trailingAnchor, offsetBy: -16.0)
         }
     }
     
@@ -239,7 +255,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         whatYouThinkView.showsSeparator = false
         whatYouThinkView.delegate = self
         whatYouThinkView.layout {
-            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
+            $0.top.equal(to: communityQuestionView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.whatYouThinkHeight)
