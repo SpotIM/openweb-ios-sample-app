@@ -283,7 +283,18 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             postEnabled = false
         }
 
-        postButton.isEnabled = postEnabled
+        postButton.isEnabled = postEnabled || self.signupToPostButtonIsActive()
+    }
+    
+    private func signupToPostButtonIsActive() -> Bool {
+        if let config = SPConfigsDataSource.appConfig,
+           config.initialization?.policyForceRegister == true,
+           SPUserSessionHolder.session.user?.registered == false {
+            return true
+        }
+        else {
+            return false
+        }
     }
 }
 
@@ -370,9 +381,7 @@ extension CommentReplyViewController {
 
     private func updatePostButton() {
         var postButtonTitle: String = LocalizationManager.localizedString(key: "Post")
-        if let config = SPConfigsDataSource.appConfig,
-            config.initialization?.policyForceRegister == true,
-            SPUserSessionHolder.session.user?.registered == false {
+        if self.signupToPostButtonIsActive() {
             postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
             postButton.addTarget(self, action: #selector(presentAuth), for: .touchUpInside)
         } else {
@@ -383,7 +392,6 @@ extension CommentReplyViewController {
     
     private func configurePostButton() {
         postButton.setTitleColor(.white, for: .normal)
-        
         postButton.isEnabled = false
         postButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.postButtonFontSize)
         postButton.contentEdgeInsets = UIEdgeInsets(
