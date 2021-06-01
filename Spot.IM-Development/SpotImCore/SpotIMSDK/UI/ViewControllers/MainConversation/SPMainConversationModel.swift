@@ -71,7 +71,6 @@ final class SPMainConversationModel {
     }
     
     var sortingUpdateHandler: ((Bool) -> Void)?
-    var communityQuestion: String = ""
     
     init(commentUpdater: SPCommentUpdater,
          conversationDataSource: SPMainConversationDataSource,
@@ -83,7 +82,6 @@ final class SPMainConversationModel {
         self.imageProvider = imageProvider
         self.abTestsData = abTestData
         dataSource = conversationDataSource
-        self.communityQuestion = conversationDataSource.communityQuestion
         
         dataSource.messageCounterUpdated = { [weak self] count in
             self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }

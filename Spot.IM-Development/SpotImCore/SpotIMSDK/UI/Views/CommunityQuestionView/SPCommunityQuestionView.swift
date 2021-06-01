@@ -12,9 +12,7 @@ import UIKit
 internal final class SPCommunityQuestionView: BaseView {
     
     private lazy var questionLabel: BaseLabel = .init()
-    
-    private var questionBottomConstraint: NSLayoutConstraint?
-    
+        
     // MARK: - Overrides
     
     override init(frame: CGRect) {
@@ -44,8 +42,8 @@ internal final class SPCommunityQuestionView: BaseView {
         questionLabel.backgroundColor = .spBackground0
         questionLabel.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
         questionLabel.layout {
-            $0.top.equal(to: self.topAnchor, offsetBy: 4.0)
-            questionBottomConstraint = $0.bottom.equal(to: self.bottomAnchor)
+            $0.top.equal(to: self.topAnchor, offsetBy: Theme.verticalMargin)
+            $0.bottom.equal(to: self.bottomAnchor, offsetBy: -Theme.verticalMargin)
             $0.leading.equal(to: self.leadingAnchor)
             $0.trailing.equal(to: self.trailingAnchor)
         }
@@ -55,4 +53,5 @@ internal final class SPCommunityQuestionView: BaseView {
 
 private enum Theme {
     static let questionFontSize: CGFloat = 24.0
+    static let verticalMargin: CGFloat = 15.0
 }
