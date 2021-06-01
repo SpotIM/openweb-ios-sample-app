@@ -227,10 +227,10 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.leading.equal(to: view.leadingAnchor, offsetBy: 16.0)
             $0.trailing.equal(to: view.trailingAnchor, offsetBy: -16.0)
         }
-        
-        let communityQuestionText = getCommunityQuestion()
+    }
+    
+    private func updateCommunityQuestion(communityQuestionText: String) {
         if communityQuestionText.length > 0 {
-            
 //            isCommunityGuidelinesVisible = true
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
 //            view.bringSubviewToFront(communityGuidelinesView)
@@ -333,6 +333,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.header.set(commentCount: messageCount.decimalFormatted)
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
+                        self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
                     }
                 }
                 
