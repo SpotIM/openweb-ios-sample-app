@@ -33,6 +33,7 @@ internal final class SPMainConversationDataSource {
     var messageCounterUpdated: ((Int) -> Void)?
     var messageCount: Int = 0
     var minVisibleReplies: Int = 2
+    var communityQuestion: String = ""
 
     private(set) var sortMode: SPCommentSortMode?
     private(set) var postId: String
@@ -147,7 +148,8 @@ internal final class SPMainConversationDataSource {
                 self.messageCounterUpdated?(self.messageCount)
                 
                 self.cellData = self.processed(response?.conversation?.comments)
-            
+                
+                self.communityQuestion = response?.conversation?.communityQuestion ?? ""
                 completion(true, nil)
             }
         }

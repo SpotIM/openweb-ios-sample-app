@@ -227,6 +227,20 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.leading.equal(to: view.leadingAnchor, offsetBy: 16.0)
             $0.trailing.equal(to: view.trailingAnchor, offsetBy: -16.0)
         }
+        
+        let communityQuestionText = getCommunityQuestion()
+        if communityQuestionText.length > 0 {
+            
+//            isCommunityGuidelinesVisible = true
+            communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
+//            view.bringSubviewToFront(communityGuidelinesView)
+            communityQuestionView.clipsToBounds = true
+        } else {
+            communityQuestionView.isHidden = true
+            communityQuestionView.layout {
+                $0.height.equal(to: 0.0)
+            }
+        }
     }
     
     private func setupCommunityGuidelinesView() {
