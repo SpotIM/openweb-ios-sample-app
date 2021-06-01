@@ -34,6 +34,10 @@ internal final class SPCommunityQuestionView: BaseView {
         setupQuestionLabel()
     }
     
+    func setCommunityQuestionText(question: String) {
+        questionLabel.text = question
+    }
+    
     private func setupQuestionLabel() {
         questionLabel.text = "community question text, very long one .."
         questionLabel.numberOfLines = 0
