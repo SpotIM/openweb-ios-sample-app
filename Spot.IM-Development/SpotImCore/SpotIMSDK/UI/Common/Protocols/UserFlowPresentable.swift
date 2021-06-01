@@ -17,7 +17,6 @@ protocol UserAuthFlowDelegateContainable: class {
 protocol UserAuthFlowDelegate: class {
     func presentAuth()
     func shouldDisplayLoginPromptForGuests() -> Bool
-    func customizeLoginPromptTextView(textView: UITextView)
 }
 
 protocol UserPresentable: class {
