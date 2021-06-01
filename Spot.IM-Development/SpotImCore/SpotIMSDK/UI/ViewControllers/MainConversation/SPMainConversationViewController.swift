@@ -28,6 +28,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
     private lazy var loginPromptView = SPLoginPromptView()
+    private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
     private var typingIndicationView: TotalTypingIndicationView?
@@ -167,6 +168,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.tableHeader.updateColorsAccordingToStyle()
         self.sortView.updateColorsAccordingToStyle()
         self.loginPromptView.updateColorsAccordingToStyle()
+        self.communityQuestionView.updateColorsAccordingToStyle()
         self.communityGuidelinesView.updateColorsAccordingToStyle()
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
@@ -346,12 +348,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupUI() {
-        view.addSubviews(footer, sortView, tableHeader, loginPromptView, communityGuidelinesView)
+        view.addSubviews(footer, sortView, tableHeader, loginPromptView, communityGuidelinesView, communityQuestionView)
 
         super.setupUI()
     
         setupSortView()
         configureLoginPromptView()
+        configureCommunityQuestionView()
         configureCommunityGuidelinesView()
         configureTableHeaderView()
         setupFooterView()
@@ -403,6 +406,19 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
     
+    private func configureCommunityQuestionView() {
+//        if (self.displayArticleHeader == false) {
+//            tableHeader.removeFromSuperview()
+//            return
+//        }
+        communityQuestionView.clipsToBounds = true
+        communityQuestionView.layout {
+            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
+            $0.leading.equal(to: view.leadingAnchor, offsetBy: 16.0)
+            $0.trailing.equal(to: view.trailingAnchor, offsetBy: -16.0)
+        }
+    }
+    
     private func configureTableHeaderView() {
         if (self.displayArticleHeader == false) {
             tableHeader.removeFromSuperview()
@@ -411,7 +427,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         view.bringSubviewToFront(tableHeader)
         tableHeader.clipsToBounds = true
         tableHeader.layout {
-            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
+            $0.top.equal(to: communityQuestionView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             headerHeightConstraint = $0.height.equal(to: 0.0)
@@ -422,7 +438,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.setupTableView()
 
         tableView.layout {
-            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : communityGuidelinesView.bottomAnchor)
+            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : communityQuestionView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.bottom.equal(to: footer.topAnchor)
@@ -521,7 +537,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : communityGuidelinesView.bottomAnchor)
+            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : communityQuestionView.bottomAnchor)
         }
     }
 
