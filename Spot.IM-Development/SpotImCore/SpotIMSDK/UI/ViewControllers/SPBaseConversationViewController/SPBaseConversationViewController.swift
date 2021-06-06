@@ -735,6 +735,10 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
     func labelContainerDidTap(_ foorterView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
         logCreationOpen(with: .comment)
+        if SpotIm.reactNativeNotifyOnCreateComment && SpotIm.getRegisteredUserId() == nil {
+            NotificationCenter.default.post(name: Notification.Name("OpenWebCreateComment"), object: nil)
+            return
+        }
         delegate.createComment(with: model)
     }
     

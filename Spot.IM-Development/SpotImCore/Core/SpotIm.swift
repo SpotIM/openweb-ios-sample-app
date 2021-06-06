@@ -88,6 +88,7 @@ public class SpotIm {
     
     public static var customFontFamily: String? = nil
     public static var displayArticleHeader: Bool = true
+    public static var reactNativeNotifyOnCreateComment: Bool = false
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
