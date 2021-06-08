@@ -63,13 +63,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate) {
         
         self.adsProvider = adsProvider
+        
         self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
         
-        super.init(model: model)
-        
+        super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
     }
@@ -141,12 +141,17 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.tableView.backgroundColor = .spBackground0
         self.bannerView.updateColorsAccordingToStyle()
         self.whatYouThinkView.updateColorsAccordingToStyle()
+        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
         self.communityGuidelinesView.updateColorsAccordingToStyle()
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
         self.header.updateColorsAccordingToStyle()
         self.footerView.updateColorsAccordingToStyle()
+    }
+    
+    override func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
+        super.updateFooterViewCustomUI(footerView: footerView, isPreConversation: true)
     }
     
     
@@ -244,6 +249,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.whatYouThinkHeight)
         }
+        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
     }
     
     override func setupTableView() {

@@ -10,4 +10,5 @@ import UIKit
 
 protocol CustomUIDelegate: class {
     func customizeLoginPromptTextView(textView: UITextView)
+    func customizeSayControl(labelContainer: BaseView, label: BaseLabel, isPreConversation: Bool)
 }
