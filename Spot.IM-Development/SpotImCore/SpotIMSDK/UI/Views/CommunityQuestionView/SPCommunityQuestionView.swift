@@ -11,7 +11,7 @@ import UIKit
 
 internal final class SPCommunityQuestionView: BaseView {
     
-    private lazy var questionLabel: BaseLabel = .init()
+    private lazy var questionTextView: BaseTextView = .init()
     private lazy var separatorView: BaseView = .init()
     
     private var questionBottomConstraint: NSLayoutConstraint?
@@ -29,12 +29,12 @@ internal final class SPCommunityQuestionView: BaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
-        questionLabel.backgroundColor = .spBackground0
+        questionTextView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
     }
     
     func setCommunityQuestionText(question: String) {
-        questionLabel.text = question
+        questionTextView.text = question
     }
     
     // MARK: - Internal methods
@@ -48,17 +48,18 @@ internal final class SPCommunityQuestionView: BaseView {
     // MARK: - Private Methods
 
     private func setup() {
-        addSubviews(questionLabel, separatorView)
+        addSubviews(questionTextView, separatorView)
         setupQuestionLabel()
         configureSeparatorView()
     }
     
     private func setupQuestionLabel() {
-        questionLabel.text = "community question text, very long one .."
-        questionLabel.numberOfLines = 0
-        questionLabel.backgroundColor = .spBackground0
-        questionLabel.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
-        questionLabel.layout {
+        questionTextView.text = "community question text, very long one .."
+        questionTextView.isEditable = false
+        questionTextView.isScrollEnabled = false
+        questionTextView.backgroundColor = .spBackground0
+        questionTextView.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
+        questionTextView.layout {
             $0.top.equal(to: self.topAnchor)
             questionBottomConstraint = $0.bottom.equal(to: separatorView.topAnchor, offsetBy: -Theme.QuestionBottomOffsetFullConversation)
             $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.questionHorizontalOffset)

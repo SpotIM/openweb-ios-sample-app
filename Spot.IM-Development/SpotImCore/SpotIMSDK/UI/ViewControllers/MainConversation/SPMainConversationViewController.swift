@@ -28,6 +28,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
     private lazy var loginPromptView = SPLoginPromptView()
+    private lazy var collapsableContainer = BaseView()
     private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
@@ -54,9 +55,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var communityGuidelinesHtmlString: String? = nil
     
     private var isCommunityGuidelinesVisible: Bool = false
-    private var communityGuidelinesMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
-    private var communityGuidelinesMinHeight: CGFloat = 0.0
-    private var communityGuidelinesHeightConstraint: NSLayoutConstraint?
+    private var isCommunityQuestionVisible: Bool = false
+    private var isCollapsableContainerVisible: Bool {
+        isCommunityGuidelinesVisible || isCommunityQuestionVisible
+    }
+    
+    private var collapsableContainerMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
+    private var collapsableContainerMinHeight: CGFloat = 0.0
+    private var collapsableContainerHeightConstraint: NSLayoutConstraint?
     
     weak override var userAuthFlowDelegate: UserAuthFlowDelegate? {
         didSet {
@@ -128,10 +134,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if isCommunityGuidelinesVisible && communityGuidelinesHeightConstraint == nil {
-            communityGuidelinesMaxHeight = communityGuidelinesView.frame.height
-            communityGuidelinesView.layout {
-                communityGuidelinesHeightConstraint = $0.height.equal(to: communityGuidelinesView.frame.height)
+        if isCollapsableContainerVisible && collapsableContainerHeightConstraint == nil {
+//            communityGuidelinesMaxHeight = communityGuidelinesView.frame.height
+//            communityGuidelinesView.layout {
+//                communityGuidelinesHeightConstraint = $0.height.equal(to: communityGuidelinesView.frame.height)
+//            }
+            collapsableContainerMaxHeight = collapsableContainer.frame.height
+            collapsableContainer.layout {
+                collapsableContainerHeightConstraint = $0.height.equal(to: collapsableContainer.frame.height)
             }
         }
     }
@@ -348,14 +358,15 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupUI() {
-        view.addSubviews(footer, sortView, tableHeader, loginPromptView, communityGuidelinesView, communityQuestionView)
-
+        view.addSubviews(footer, sortView, tableHeader, loginPromptView, collapsableContainer/*communityGuidelinesView, communityQuestionView*/)
+//        collapsableContainer.addSubviews(communityGuidelinesView, communityQuestionView)
         super.setupUI()
     
         setupSortView()
         configureLoginPromptView()
-        configureCommunityQuestionView()
+        configureCollapsableContainer()
         configureCommunityGuidelinesView()
+        configureCommunityQuestionView()
         configureTableHeaderView()
         setupFooterView()
         setupRefreshControl()
@@ -385,21 +396,36 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         loginPromptView.clipsToBounds = true
     }
     
-    private func configureCommunityGuidelinesView() {
-        communityGuidelinesView.layout {
+    private func configureCollapsableContainer() {
+        collapsableContainer.addSubviews(communityGuidelinesView, communityQuestionView)
+//        collapsableContainer.backgroundColor = .green
+        collapsableContainer.clipsToBounds = true
+        collapsableContainer.layout {
             $0.top.equal(to: loginPromptView.bottomAnchor)
+//            $0.bottom.equal(to: loginPromptView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
+        }
+    }
+    
+    private func configureCommunityGuidelinesView() {
+        communityGuidelinesView.backgroundColor = .red
+        communityGuidelinesView.layout {
+//            $0.top.equal(to: loginPromptView.bottomAnchor)
+            $0.top.equal(to: collapsableContainer.topAnchor)
+            $0.leading.equal(to: collapsableContainer.leadingAnchor)
+            $0.trailing.equal(to: collapsableContainer.trailingAnchor)
         }
         if let htmlString = getCommunityGuidelinesTextIfExists() {
             communityGuidelinesHtmlString = htmlString
             isCommunityGuidelinesVisible = true
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
             communityGuidelinesView.delegate = self
-            view.bringSubviewToFront(communityGuidelinesView)
+            collapsableContainer.bringSubviewToFront(communityGuidelinesView)
             communityGuidelinesView.clipsToBounds = true
         } else {
             communityGuidelinesView.isHidden = true
+            isCommunityGuidelinesVisible = true
             communityGuidelinesView.layout {
                 $0.height.equal(to: 0.0)
             }
@@ -410,19 +436,22 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         communityQuestionView.clipsToBounds = true
         communityQuestionView.layout {
             $0.top.equal(to: communityGuidelinesView.bottomAnchor, offsetBy: 5.0)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
+            $0.bottom.equal(to: collapsableContainer.bottomAnchor)
+            $0.leading.equal(to: collapsableContainer.leadingAnchor)
+            $0.trailing.equal(to: collapsableContainer.trailingAnchor)
         }
         
         let communityQuestionText = getCommunityQuestion()
         if communityQuestionText.length > 0 {
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
             communityQuestionView.clipsToBounds = true
+            isCommunityQuestionVisible = true
         } else {
             communityQuestionView.isHidden = true
             communityQuestionView.layout {
                 $0.height.equal(to: 0.0)
             }
+            isCommunityQuestionVisible = false
         }
     }
     
@@ -434,7 +463,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         view.bringSubviewToFront(tableHeader)
         tableHeader.clipsToBounds = true
         tableHeader.layout {
-            $0.top.equal(to: communityQuestionView.bottomAnchor)
+            $0.top.equal(to: collapsableContainer.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             headerHeightConstraint = $0.height.equal(to: 0.0)
@@ -445,7 +474,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.setupTableView()
 
         tableView.layout {
-            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : communityQuestionView.bottomAnchor)
+            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : collapsableContainer.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.bottom.equal(to: footer.topAnchor)
@@ -669,27 +698,27 @@ extension SPMainConversationViewController { // Article header scrolling logic
         }
         lastOffsetY = currentOffsetY
 
-        updateCommunityGuidelinedHeightInstantly()
+        updateCollapsableContainerHeightInstantly()
         updateHeaderHeightInstantly()
     }
     
     /// Instantly updates article header height when scrollView is scrolling
-    private func updateCommunityGuidelinedHeightInstantly() {
-        guard isCommunityGuidelinesVisible else { return }
-        if scrollingDirection == .down && communityGuidelinesHeightConstraint?.constant == communityGuidelinesMaxHeight {
+    private func updateCollapsableContainerHeightInstantly() {
+        guard isCollapsableContainerVisible else { return }
+        if scrollingDirection == .down && collapsableContainerHeightConstraint?.constant == collapsableContainerMaxHeight {
             return
         }
         if lastOffsetY > 0 {
-            if (scrollingDirection == .down && lastOffsetY > communityGuidelinesMaxHeight) {
+            if (scrollingDirection == .down && lastOffsetY > collapsableContainerMaxHeight) {
                 return
             }
             
-            let calculatedHeight = communityGuidelinesMaxHeight - lastOffsetY
+            let calculatedHeight = collapsableContainerMaxHeight - lastOffsetY
             let newHeight: CGFloat = max(calculatedHeight, 0)
             
-            communityGuidelinesHeightConstraint?.constant = newHeight
+            collapsableContainerHeightConstraint?.constant = newHeight
         } else {
-            communityGuidelinesHeightConstraint?.constant = communityGuidelinesMaxHeight
+            collapsableContainerHeightConstraint?.constant = collapsableContainerMaxHeight
         }
     }
     
@@ -697,12 +726,12 @@ extension SPMainConversationViewController { // Article header scrolling logic
     private func updateHeaderHeightInstantly() {
         guard isHeaderVisible else { return }
         
-        guard !isCommunityGuidelinesVisible || communityGuidelinesHeightConstraint?.constant == communityGuidelinesMinHeight else { return }
+        guard !isCollapsableContainerVisible || collapsableContainerHeightConstraint?.constant == collapsableContainerMinHeight else { return }
         
         if lastOffsetY > 0 {
             var calculatedHeight = currentHeightConstant - (lastOffsetY - initialOffsetY)
-            if isCommunityGuidelinesVisible {
-                calculatedHeight += (lastOffsetY < communityGuidelinesMaxHeight + communityGuidelinesMaxHeight) ? communityGuidelinesMaxHeight : 0
+            if isCollapsableContainerVisible {
+                calculatedHeight += (lastOffsetY < collapsableContainerMaxHeight + collapsableContainerMaxHeight) ? collapsableContainerMaxHeight : 0
             }
             
             let newHeight: CGFloat = max(min(calculatedHeight, articleHeaderMaxHeight), articleHeaderMinHeight)
@@ -717,15 +746,15 @@ extension SPMainConversationViewController { // Article header scrolling logic
     private func handleFinalHeaderHeightUpdate(with scrollViewContentOffset: CGPoint) {
         guard scrollingDirection != .static else { return }
         
-        if (isCommunityGuidelinesVisible) {
+        if (isCollapsableContainerVisible) {
             let finaleHeightCommunityGuidelines: CGFloat
-            if (scrollViewContentOffset.y <= communityGuidelinesMaxHeight * 0.8) {
-                finaleHeightCommunityGuidelines = communityGuidelinesMaxHeight
+            if (scrollViewContentOffset.y <= collapsableContainerMaxHeight * 0.8) {
+                finaleHeightCommunityGuidelines = collapsableContainerMaxHeight
             } else {
-                finaleHeightCommunityGuidelines = (communityGuidelinesHeightConstraint?.constant ?? 0) < communityGuidelinesMaxHeight * 0.5 ? communityGuidelinesMinHeight : communityGuidelinesMaxHeight
+                finaleHeightCommunityGuidelines = (collapsableContainerHeightConstraint?.constant ?? 0) < collapsableContainerMaxHeight * 0.5 ? collapsableContainerMinHeight : collapsableContainerMaxHeight
             }
                 
-            communityGuidelinesHeightConstraint?.constant = finaleHeightCommunityGuidelines
+            collapsableContainerHeightConstraint?.constant = finaleHeightCommunityGuidelines
         }
         
         if (isHeaderVisible) {
