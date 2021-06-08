@@ -78,7 +78,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate) {
+    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
         Logger.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader

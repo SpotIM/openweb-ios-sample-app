@@ -63,7 +63,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
         
         self.adsProvider = adsProvider
         
