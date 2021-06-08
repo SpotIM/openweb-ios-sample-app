@@ -38,7 +38,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     
     // MARK: - Internal methods
 
-    internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate) {
+    internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate? = nil) {
         self.model = model
         self.customUIDelegate = customUIDelegate
 
