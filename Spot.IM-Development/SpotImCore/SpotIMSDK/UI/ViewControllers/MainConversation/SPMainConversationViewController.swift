@@ -144,7 +144,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     func updateLoginPromptVisibily() {
         if self.shouldDisplayLoginPrompt && SpotIm.getRegisteredUserId() == nil {
             // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-            self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+            self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
         }
         else {
             loginPromptView.isHidden = true
@@ -172,7 +172,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-        self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+        self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
         
         if #available(iOS 13.0, *) {
             if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
