@@ -8,6 +8,7 @@
 
 import UIKit
 
-protocol CustomUIDelegate: class {
+protocol CustomUIDelegate: AnyObject {
     func customizeLoginPromptTextView(textView: UITextView)
+    func customizeCommunityQuestionTextView(textView: UITextView)
 }

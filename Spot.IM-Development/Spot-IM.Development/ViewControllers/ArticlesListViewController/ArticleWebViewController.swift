@@ -229,6 +229,9 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .loginPrompt(let textView):
             customizeLoginPromptTextView(textView: textView)
             break
+        case .communityQuestion(let textView):
+            customizeCommunityQuestionTextView(textView: textView, isDarkMode: isDarkMode)
+            break
         default:
             break
         }
@@ -246,6 +249,21 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
 
         let attributedString = NSMutableAttributedString(string: "Register or Login to comment.", attributes: multipleAttributes)
         textView.attributedText = attributedString
+    }
+    
+    private func customizeCommunityQuestionTextView(textView: UITextView, isDarkMode: Bool) {
+        var multipleAttributes = [NSAttributedString.Key : Any]()
+        
+        multipleAttributes[.underlineStyle] =       NSUnderlineStyle.single.rawValue
+        multipleAttributes[.foregroundColor] =      UIColor.red
+        multipleAttributes[.font] =                 UIFont.systemFont(ofSize: 35)
+
+        let attributedString = NSMutableAttributedString(string: "Custom community question with very very long text", attributes: multipleAttributes)
+        textView.attributedText = attributedString
+        
+        if (isDarkMode) {
+            textView.textColor = .green
+        }
     }
 }
 

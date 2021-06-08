@@ -30,6 +30,7 @@ public protocol SpotImLoginDelegate: AnyObject {
 
 public enum CustomizableView {
     case loginPrompt(textView: UITextView)
+    case communityQuestion(textView: UITextView)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -302,14 +303,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
     private func buildPreConversationController(with conversationModel: SPMainConversationModel, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
         
-        let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages, adsProvider: adsManager.adsProvider())
+        let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages, adsProvider: adsManager.adsProvider(), customUIDelegate: self)
         
         conversationModel.delegates.add(delegate: preConversationViewController)
         conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
         
         preConversationViewController.delegate = self
         preConversationViewController.userAuthFlowDelegate = self
-        preConversationViewController.customUIDelegate = self
         
         preConversationViewController.preConversationDelegate = self
         preConversationViewController.webPageDelegate = self
@@ -326,11 +326,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
 
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
-        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider())
+        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self)
         
         controller.delegate = self
         controller.userAuthFlowDelegate = self
-        controller.customUIDelegate = self
         controller.webPageDelegate = self
         
         controller.title = LocalizationManager.localizedString(key: "Conversation")
@@ -548,5 +547,8 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
 extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     func customizeLoginPromptTextView(textView: UITextView) {
         customUIDelegate?.customizeView(view: .loginPrompt(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    func customizeCommunityQuestionTextView(textView: UITextView) {
+        customUIDelegate?.customizeView(view: .communityQuestion(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
 }

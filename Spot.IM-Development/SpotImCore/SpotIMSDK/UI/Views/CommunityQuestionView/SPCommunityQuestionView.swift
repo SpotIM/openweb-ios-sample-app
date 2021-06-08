@@ -26,6 +26,10 @@ internal final class SPCommunityQuestionView: BaseView {
         setup()
     }
     
+    func customizeCommunityQuestion(customUIDelegate: CustomUIDelegate) {
+        customUIDelegate.customizeCommunityQuestionTextView(textView: questionTextView)
+    }
+    
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
