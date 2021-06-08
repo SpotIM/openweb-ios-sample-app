@@ -734,16 +734,33 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
 extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate {
     func labelContainerDidTap(_ foorterView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
-        logCreationOpen(with: .comment)
+        
         if SpotIm.reactNativeNotifyOnCreateComment && SpotIm.getRegisteredUserId() == nil {
-            NotificationCenter.default.post(name: Notification.Name("OpenWebCreateComment"), object: nil)
+            if self.isInFullConversationVC(foorterView) {
+                NotificationCenter.default.post(name: Notification.Name("OWCreateCommentFullConversation"), object: nil)
+                self.dismiss(animated: true, completion: nil)
+            }
+            else {
+                NotificationCenter.default.post(name: Notification.Name("OWCreateCommentPreConversation"), object: nil)
+            }
+            
             return
         }
+        logCreationOpen(with: .comment)
         delegate.createComment(with: model)
     }
     
     func userAvatarDidTap(_ foorterView: SPMainConversationFooterView) {
         openMyProfileWebScreen()
+    }
+    
+    private func isInFullConversationVC(_ foorterView: SPMainConversationFooterView) -> Bool {
+        if self is SPPreConversationViewController {
+            return false
+        }
+        else {
+            return true
+        }
     }
 }
 

@@ -135,6 +135,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
     
+    @objc
+    public func reactNativeShowMoreComments() {
+        SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
+        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
+    }
+    
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.view.backgroundColor = .spBackground0
