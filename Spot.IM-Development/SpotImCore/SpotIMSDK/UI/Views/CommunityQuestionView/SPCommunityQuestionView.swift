@@ -12,7 +12,10 @@ import UIKit
 internal final class SPCommunityQuestionView: BaseView {
     
     private lazy var questionLabel: BaseLabel = .init()
-        
+    private lazy var separatorView: BaseView = .init()
+    
+    private var questionBottomConstraint: NSLayoutConstraint?
+    
     // MARK: - Overrides
     
     override init(frame: CGRect) {
@@ -23,17 +26,27 @@ internal final class SPCommunityQuestionView: BaseView {
     
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        questionLabel.backgroundColor = .spBackground0
+        separatorView.backgroundColor = .spSeparator2
+    }
+    
+    func setCommunityQuestionText(question: String) {
+        questionLabel.text = question
+    }
+    
+    // MARK: - Internal methods
+    
+    internal func setupPreConversationConstraints() {
+        questionBottomConstraint?.constant = -Theme.separatorVerticalOffsetPreConversation
     }
     
     // MARK: - Private Methods
 
     private func setup() {
-        addSubviews(questionLabel)
+        addSubviews(questionLabel, separatorView)
         setupQuestionLabel()
-    }
-    
-    func setCommunityQuestionText(question: String) {
-        questionLabel.text = question
+        configureSeparatorView()
     }
     
     private func setupQuestionLabel() {
@@ -42,16 +55,27 @@ internal final class SPCommunityQuestionView: BaseView {
         questionLabel.backgroundColor = .spBackground0
         questionLabel.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
         questionLabel.layout {
-            $0.top.equal(to: self.topAnchor, offsetBy: Theme.verticalMargin)
-            $0.bottom.equal(to: self.bottomAnchor, offsetBy: -Theme.verticalMargin)
+            $0.top.equal(to: self.topAnchor)
+            questionBottomConstraint = $0.bottom.equal(to: separatorView.topAnchor)
             $0.leading.equal(to: self.leadingAnchor)
             $0.trailing.equal(to: self.trailingAnchor)
+        }
+    }
+    
+    private func configureSeparatorView() {
+        separatorView.backgroundColor = .spSeparator2
+        separatorView.layout {
+            $0.leading.equal(to: leadingAnchor)
+            $0.trailing.equal(to: trailingAnchor)
+            $0.bottom.equal(to: bottomAnchor)
+            $0.height.equal(to: Theme.separatorHeight)
         }
     }
 
 }
 
 private enum Theme {
-    static let questionFontSize: CGFloat = 24.0
-    static let verticalMargin: CGFloat = 15.0
+    static let questionFontSize: CGFloat = 20.0
+    static let separatorHeight: CGFloat = 1.0
+    static let separatorVerticalOffsetPreConversation: CGFloat = 16.0
 }

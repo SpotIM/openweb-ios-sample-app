@@ -231,15 +231,16 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     private func updateCommunityQuestion(communityQuestionText: String) {
         if communityQuestionText.length > 0 {
-//            isCommunityGuidelinesVisible = true
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
-//            view.bringSubviewToFront(communityGuidelinesView)
             communityQuestionView.clipsToBounds = true
+            communityQuestionView.setupPreConversationConstraints()
+            communityGuidelinesView.setSeperatorVisible(isVisible: false)
         } else {
             communityQuestionView.isHidden = true
             communityQuestionView.layout {
                 $0.height.equal(to: 0.0)
             }
+            communityGuidelinesView.setSeperatorVisible(isVisible: true)
         }
     }
     
