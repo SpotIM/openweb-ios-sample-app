@@ -364,7 +364,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         sortView.delegate = self
         sortView.updateSortOption(model.sortOption.title)
         sortView.layout {
-            $0.top.equal(to: topLayoutGuide.bottomAnchor)
+            $0.top.equal(to: loginPromptView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.height.equal(to: 44.0)
@@ -373,7 +373,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     private func configureLoginPromptView() {
         loginPromptView.layout {
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: topLayoutGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
@@ -384,7 +384,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     private func configureCommunityGuidelinesView() {
         communityGuidelinesView.layout {
-            $0.top.equal(to: loginPromptView.bottomAnchor)
+            $0.top.equal(to: sortView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
