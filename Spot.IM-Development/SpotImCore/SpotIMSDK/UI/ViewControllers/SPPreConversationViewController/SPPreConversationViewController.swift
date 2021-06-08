@@ -49,11 +49,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         let result = bannerView.frame.height +
             actualBannerMargin +
             header.frame.height +
-            //TODO LoginPrompt height
             communityGuidelinesView.frame.height +
             whatYouThinkView.frame.height +
             tableView.frame.height +
-            footerView.frame.height
+            footerView.frame.height +
+            communityQuestionView.frame.height
         
         return result
     }
