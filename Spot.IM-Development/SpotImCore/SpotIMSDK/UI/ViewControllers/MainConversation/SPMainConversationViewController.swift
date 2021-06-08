@@ -85,11 +85,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    init(model: SPMainConversationModel, adsProvider: AdsProvider) {
+    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
         Logger.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
-        super.init(model: model)
+        super.init(model: model, customUIDelegate: customUIDelegate)
 
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
@@ -175,6 +175,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.sortView.updateColorsAccordingToStyle()
         self.loginPromptView.updateColorsAccordingToStyle()
         self.communityQuestionView.updateColorsAccordingToStyle()
+        self.updateCommunityQuestionCustomUI(communityQuestionView: self.communityQuestionView)
         self.communityGuidelinesView.updateColorsAccordingToStyle()
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
@@ -427,6 +428,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func configureCommunityQuestionView() {
         communityQuestionView.clipsToBounds = true
+        updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
         // set constratings with priority for the community question to collaps properly when scrolling
         communityQuestionView.layout {
             $0.top.equal(to: communityGuidelinesView.bottomAnchor, priority: UILayoutPriority(500))

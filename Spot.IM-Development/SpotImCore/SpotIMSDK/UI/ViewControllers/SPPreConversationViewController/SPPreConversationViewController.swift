@@ -64,12 +64,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
         
         self.adsProvider = adsProvider
         self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
         
-        super.init(model: model)
+        super.init(model: model, customUIDelegate: customUIDelegate)
         
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
@@ -143,6 +143,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.bannerView.updateColorsAccordingToStyle()
         self.whatYouThinkView.updateColorsAccordingToStyle()
         self.communityQuestionView.updateColorsAccordingToStyle()
+        self.updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
         self.communityGuidelinesView.updateColorsAccordingToStyle()
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
@@ -218,6 +219,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     private func configureCommunityQuestionView() {
         communityQuestionView.clipsToBounds = true
+        updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
         communityQuestionView.layout {
             $0.top.equal(to: communityGuidelinesView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
@@ -238,6 +240,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             }
             communityGuidelinesView.setSeperatorVisible(isVisible: true)
         }
+        updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
     }
     
     private func setupCommunityGuidelinesView() {
