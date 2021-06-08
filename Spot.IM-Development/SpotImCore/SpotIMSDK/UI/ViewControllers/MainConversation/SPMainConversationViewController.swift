@@ -78,11 +78,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    init(model: SPMainConversationModel, adsProvider: AdsProvider) {
+    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate) {
         Logger.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
-        super.init(model: model)
+        super.init(model: model, customUIDelegate: customUIDelegate)
         
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
@@ -164,6 +164,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.view.backgroundColor = .spBackground0
         self.tableView.backgroundColor = .spBackground0
         self.footer.updateColorsAccordingToStyle()
+        self.updateFooterViewCustomUI(footerView: self.footer)
         self.tableHeader.updateColorsAccordingToStyle()
         self.sortView.updateColorsAccordingToStyle()
         self.loginPromptView.updateColorsAccordingToStyle()
@@ -456,6 +457,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         footer.updateOnlineStatus(.online)
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
+        updateFooterViewCustomUI(footerView: footer)
         footer.layout {
             footerHeightConstraint = $0.height.equal(to: 80.0)
             $0.trailing.equal(to: view.trailingAnchor)
@@ -466,6 +468,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
+        updateFooterViewCustomUI(footerView: footer)
         footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard

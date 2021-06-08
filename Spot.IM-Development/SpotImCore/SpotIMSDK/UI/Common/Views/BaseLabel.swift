@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BaseLabel: UILabel {
+public class BaseLabel: UILabel {
     
     override init(frame: CGRect) {
         super.init(frame: frame)

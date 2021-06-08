@@ -38,8 +38,9 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     
     // MARK: - Internal methods
 
-    internal init(model: SPMainConversationModel) {
+    internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate) {
         self.model = model
+        self.customUIDelegate = customUIDelegate
 
         super.init()
     }
@@ -103,6 +104,11 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     
     func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         // Override this method in your VC to handle
+    }
+    
+    internal func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
+        guard let customUIDelegate = self.customUIDelegate else { return }
+        footerView.customizeSayControl(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
     }
     
     internal func getCommunityGuidelinesTextIfExists() -> String? {
