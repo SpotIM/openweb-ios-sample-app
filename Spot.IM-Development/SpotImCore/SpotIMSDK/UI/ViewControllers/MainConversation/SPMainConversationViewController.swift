@@ -14,15 +14,15 @@ internal protocol SPCommentsCreationDelegate: class {
 }
 
 final class SPMainConversationViewController: SPBaseConversationViewController, UserPresentable {
-    
+
     enum ScrollingDirection {
         case up, down, `static`
     }
-    
+
     var commentIdToShowOnOpen: String?
-    
+
     let adsProvider: AdsProvider
-        
+
     private let sortView = SPConversationSummaryView()
 
     private lazy var refreshControl = UIRefreshControl()
@@ -39,10 +39,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     // MARK: - Header scrolling properties
-    
+
     private let articleHeaderMaxHeight: CGFloat = 85.0
     private let articleHeaderMinHeight: CGFloat = 0.0
-    
+
     private var footerHeightConstraint: NSLayoutConstraint?
     private var headerHeightConstraint: NSLayoutConstraint?
     private var currentHeightConstant: CGFloat = 0.0
@@ -53,23 +53,23 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var wasScrolled: Bool = false
     private var displayArticleHeader: Bool = true
     private var communityGuidelinesHtmlString: String? = nil
-    
+
     private var isCommunityGuidelinesVisible: Bool = false
     private var isCommunityQuestionVisible: Bool = false
     private var isCollapsableContainerVisible: Bool {
         isCommunityGuidelinesVisible || isCommunityQuestionVisible
     }
-    
+
     private var collapsableContainerMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
     private var collapsableContainerMinHeight: CGFloat = 0.0
     private var collapsableContainerHeightConstraint: NSLayoutConstraint?
-    
+
     weak override var userAuthFlowDelegate: UserAuthFlowDelegate? {
         didSet {
             self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
         }
     }
-    
+
     var shouldDisplayLoginPrompt: Bool = false {
         didSet {
             updateLoginPromptVisibily()
@@ -90,15 +90,15 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
         super.init(model: model)
-        
+
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
     }
     // MARK: - Overrides
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         Logger.verbose("FirstComment: Main view did load")
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
             SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
@@ -107,7 +107,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         checkAdsAvailability()
         updateHeaderUI()
         configureModelHandlers()
-        
+
         if let loginUIEnabled = SPConfigsDataSource.appConfig?.mobileSdk.loginUiEnabled, loginUIEnabled {
             setupUserIconHandler()
         }
@@ -115,11 +115,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         Logger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         sortView.updateCommentsLabel(model.dataSource.messageCount)
-        
+
         if model.areCommentsEmpty() {
             presentEmptyCommentsStateView()
         }
-        
+
         NotificationCenter.default.addObserver(
            self,
            selector: #selector(overrideUserInterfaceStyleDidChange),
@@ -131,7 +131,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION),
             object: nil)
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if isCollapsableContainerVisible && collapsableContainerHeightConstraint == nil {
@@ -147,11 +147,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.updateColorsAccordingToStyle()
     }
-    
+
     func updateLoginPromptVisibily() {
         if self.shouldDisplayLoginPrompt && SpotIm.getRegisteredUserId() == nil {
             // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-            self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+            self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
         }
         else {
             loginPromptView.isHidden = true
@@ -160,12 +160,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
-    
+
     @objc func userLoginSuccessNotification(notification: Notification) {
         self.shouldDisplayLoginPrompt = false
     }
 
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.view.backgroundColor = .spBackground0
@@ -180,15 +180,15 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-        self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
-        
+        self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+
         if #available(iOS 13.0, *) {
             if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
                 // back button
                 if let backButton = self.navigationItem.leftBarButtonItem?.customView as? UIButton {
                     backButton.setImage(UIImage(spNamed: "backButton"), for: .normal)
                 }
-                
+
                 // nav bar
                 let navBarAppearance = UINavigationBarAppearance()
                 navBarAppearance.configureWithOpaqueBackground()
@@ -200,7 +200,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         let state = UIApplication.shared.applicationState
@@ -219,7 +219,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
-    
+
     @objc
     private func overrideUserInterfaceStyleDidChange() {
         self.tableView.reloadData()
@@ -229,10 +229,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        
+
         model.delegates.add(delegate: self)
         model.commentsCounterDelegates.add(delegate: self)
-        
+
         do {
             let typingCount = try model.typingCount()
             totalTypingCountDidUpdate(count: typingCount)
@@ -243,11 +243,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 SPDefaultFailureReporter.shared.sendRealTimeFailureReport(realtimeFailureReport)
             }
         }
-        
+
         if model.dataSource.messageCount > 0 {
             sortView.updateCommentsLabel(model.dataSource.messageCount)
         }
-        
+
         // scroll to pre-selected comment (tapped on the Pre-Conversation)
         if let indexPath = model.dataSource.indexPathOfComment(with: commentIdToShowOnOpen) {
             wasScrolled = true
@@ -258,7 +258,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
         commentIdToShowOnOpen = nil
     }
-    
+
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         Logger.verbose("FirstComment: API did finish with \(success)")
         self.hideLoader()
@@ -280,7 +280,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
             self.sortView.updateCommentsLabel(messageCount)
-            
+
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
             self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
@@ -290,12 +290,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.updateHeaderUI()
         self.updateFooterView()
     }
-    
+
     @objc
     private func showProfile() {
         showProfileActions(sender: userIcon)
     }
-    
+
     func setupUserIconHandler() {
         userRightBarItem = UIBarButtonItem(customView: userIcon)
         userIcon.addTarget(self, action: #selector(showProfile), for: .touchUpInside)
@@ -303,13 +303,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     // MARK: - Private Methods
-    
+
     private func configureModelHandlers() {
         model.sortingUpdateHandler = { [weak self] shoudBeUpdated in
             guard let self = self else { return }
 
             let sortOption = self.model.sortOption
-            
+
             self.sortView.updateSortOption(sortOption.title)
             if shoudBeUpdated {
                 self.reloadConversation()
@@ -319,7 +319,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func loadCommentsNextPage() {
         guard !model.dataSource.isLoading else { return }
-        
+
         Logger.warn("DEBUG: Loading next page")
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         let mode = model.sortOption
@@ -347,7 +347,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 } else {
                     self.sortView.updateCommentsLabel(self.model.dataSource.messageCount)
                 }
-                
+
                 self.tableView.reloadData()
             }
         )
@@ -356,7 +356,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     override func setupUI() {
         view.addSubviews(footer, sortView, tableHeader, loginPromptView, collapsableContainer)
         super.setupUI()
-    
+
         setupSortView()
         configureLoginPromptView()
         configureCollapsableContainer()
@@ -373,16 +373,16 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         sortView.delegate = self
         sortView.updateSortOption(model.sortOption.title)
         sortView.layout {
-            $0.top.equal(to: topLayoutGuide.bottomAnchor)
+            $0.top.equal(to: loginPromptView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.height.equal(to: 44.0)
         }
     }
-    
+
     private func configureLoginPromptView() {
         loginPromptView.layout {
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: topLayoutGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
@@ -390,7 +390,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         view.bringSubviewToFront(loginPromptView)
         loginPromptView.clipsToBounds = true
     }
-    
+
     private func configureCollapsableContainer() {
         collapsableContainer.addSubviews(communityGuidelinesView, communityQuestionView)
         collapsableContainer.layout {
@@ -399,7 +399,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.trailing.equal(to: view.trailingAnchor)
         }
     }
-    
+
     private func configureCommunityGuidelinesView() {
         communityGuidelinesView.backgroundColor = .red
         // set constratings with priority for the community guideline to collaps properly when scrolling
@@ -424,7 +424,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
-    
+
     private func configureCommunityQuestionView() {
         communityQuestionView.clipsToBounds = true
         // set constratings with priority for the community question to collaps properly when scrolling
@@ -434,7 +434,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.leading.equal(to: collapsableContainer.leadingAnchor)
             $0.trailing.equal(to: collapsableContainer.trailingAnchor)
         }
-        
+
         let communityQuestionText = getCommunityQuestion()
         if communityQuestionText.length > 0 {
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
@@ -448,7 +448,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             isCommunityQuestionVisible = false
         }
     }
-    
+
     private func configureTableHeaderView() {
         if (self.displayArticleHeader == false) {
             tableHeader.removeFromSuperview()
@@ -463,7 +463,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             headerHeightConstraint = $0.height.equal(to: 0.0)
         }
     }
-    
+
     override func setupTableView() {
         super.setupTableView()
 
@@ -481,7 +481,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             let adsConfig = SPConfigsDataSource.adsConfig,
             let tags = adsConfig.tags
             else { return }
-        
+
         for tag in tags {
             guard let adsId = tag.code else { break }
             switch tag.adType {
@@ -496,7 +496,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
-    
+
     private func setupFooterView() {
         view.bringSubviewToFront(footer)
         footer.updateOnlineStatus(.online)
@@ -509,7 +509,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
         }
     }
-    
+
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
         footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
@@ -521,7 +521,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             self.updateUserIcon(image: image)
         }
     }
-    
+
     private func setupRefreshControl() {
         if #available(iOS 10.0, *) {
             tableView.refreshControl = refreshControl
@@ -561,7 +561,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     override func configureEmptyStateView() {
         super.configureEmptyStateView()
-        
+
         view.bringSubviewToFront(sortView)
         stateActionView?.layout {
             $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
@@ -584,40 +584,40 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             self?.reloadConversation()
         }
     }
-    
+
     override func isLastSection(with section: Int) -> Bool {
         return model.dataSource.numberOfSections() == section + 1
     }
 }
 
 extension SPMainConversationViewController { // UITableViewDelegate
-    
+
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         loadNextPageIfNeeded(forRowAt: indexPath)
     }
-    
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard canAnimateHeader(scrollView) else { return }
-        
+
         handleArticleHeight(with: scrollView.contentOffset)
     }
-    
+
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         guard canAnimateHeader(scrollView) else { return }
-        
+
         isDragging = true
     }
-    
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         guard canAnimateHeader(scrollView) else { return }
-        
+
         handleFinalHeaderHeightUpdate(with: scrollView.contentOffset)
     }
-    
+
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         guard canAnimateHeader(scrollView) else { return }
-        
+
         isDragging = false
         if !decelerate {
             handleFinalHeaderHeightUpdate(with: scrollView.contentOffset)
@@ -626,23 +626,23 @@ extension SPMainConversationViewController { // UITableViewDelegate
 }
 
 extension SPMainConversationViewController { // SPMainConversationDataSourceDelegate
-    
+
     override func reload(shouldBeScrolledToTop: Bool) {
         stateActionView?.removeFromSuperview()
         stateActionView = nil
-        
+
         if shouldBeScrolledToTop {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
         sortView.updateCommentsLabel(model.dataSource.messageCount)
         tableView.reloadData()
     }
-    
+
     override func reload(scrollToIndexPath: IndexPath?) {
         tableView.reloadData()
 
         guard let indexPath = scrollToIndexPath else { return }
-        
+
         let scrollPosition: UITableView.ScrollPosition = tableView.cellForRow(at: indexPath) == nil
             ? .bottom
             : .none
@@ -666,11 +666,11 @@ extension SPMainConversationViewController { // SPCommentCellDelegate
 }
 
 extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
-    
+
     func newCommentsDidTap(_ summaryView: SPConversationSummaryView) {
-        
+
     }
-    
+
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView) {
         SPAnalyticsHolder.default.log(event: .sortByOpened, source: .conversation)
         showActionSheet(
@@ -679,11 +679,11 @@ extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
             actions: model.sortActions(),
             sender: sender)
     }
-    
+
 }
 
 extension SPMainConversationViewController { // Article header scrolling logic
-    
+
     /// Takes care of article header height updates using scrollView contentOffset vaule
     private func handleArticleHeight(with scrollViewContentOffset: CGPoint) {
         let currentOffsetY = scrollViewContentOffset.y
@@ -695,7 +695,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
         updateCollapsableContainerHeightInstantly()
         updateHeaderHeightInstantly()
     }
-    
+
     /// Instantly updates article header height when scrollView is scrolling
     private func updateCollapsableContainerHeightInstantly() {
         guard isCollapsableContainerVisible else { return }
@@ -706,40 +706,40 @@ extension SPMainConversationViewController { // Article header scrolling logic
             if (scrollingDirection == .down && lastOffsetY > collapsableContainerMaxHeight) {
                 return
             }
-            
+
             let calculatedHeight = collapsableContainerMaxHeight - lastOffsetY
             let newHeight: CGFloat = max(calculatedHeight, 0)
-            
+
             collapsableContainerHeightConstraint?.constant = newHeight
         } else {
             collapsableContainerHeightConstraint?.constant = collapsableContainerMaxHeight
         }
     }
-    
+
     /// Instantly updates article header height when scrollView is scrolling
     private func updateHeaderHeightInstantly() {
         guard isHeaderVisible else { return }
-        
+
         guard !isCollapsableContainerVisible || collapsableContainerHeightConstraint?.constant == collapsableContainerMinHeight else { return }
-        
+
         if lastOffsetY > 0 {
             var calculatedHeight = currentHeightConstant - (lastOffsetY - initialOffsetY)
             if isCollapsableContainerVisible {
                 calculatedHeight += (lastOffsetY < collapsableContainerMaxHeight + articleHeaderMaxHeight) ? collapsableContainerMaxHeight : 0
             }
-            
+
             let newHeight: CGFloat = max(min(calculatedHeight, articleHeaderMaxHeight), articleHeaderMinHeight)
-            
+
             headerHeightConstraint?.constant = newHeight
         } else {
             headerHeightConstraint?.constant = articleHeaderMaxHeight
         }
     }
-    
+
     /// Updates article header height after scroll view did end actions using `scrollingDirection` property
     private func handleFinalHeaderHeightUpdate(with scrollViewContentOffset: CGPoint) {
         guard scrollingDirection != .static else { return }
-        
+
         if (isCollapsableContainerVisible) {
             let finaleHeightCommunityGuidelines: CGFloat
             if (scrollViewContentOffset.y <= collapsableContainerMaxHeight * 0.8) {
@@ -747,21 +747,21 @@ extension SPMainConversationViewController { // Article header scrolling logic
             } else {
                 finaleHeightCommunityGuidelines = (collapsableContainerHeightConstraint?.constant ?? 0) < collapsableContainerMaxHeight * 0.5 ? collapsableContainerMinHeight : collapsableContainerMaxHeight
             }
-                
+
             collapsableContainerHeightConstraint?.constant = finaleHeightCommunityGuidelines
         }
-        
+
         if (isHeaderVisible) {
             let finaleHeight: CGFloat = (headerHeightConstraint?.constant ?? 0) < articleHeaderMaxHeight * 0.5 ? articleHeaderMinHeight: articleHeaderMaxHeight
             headerHeightConstraint?.constant = finaleHeight
         }
-        
+
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
         scrollingDirection = .static
     }
-    
+
     private func canAnimateHeader(_ scrollView: UIScrollView) -> Bool {
         let scrollViewMaxHeight = scrollView.frame.height + (self.headerHeightConstraint?.constant ?? 0) + articleHeaderMaxHeight
         return scrollView.contentSize.height > scrollViewMaxHeight
@@ -772,13 +772,13 @@ extension SPMainConversationViewController { // Article header scrolling logic
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(adBannerSize: CGSize) {
         let bannerView = adsProvider.bannerView
-        
+
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
         footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
         footer.updateBannerView(bannerView, height: adBannerSize.height)
     }
-    
+
     func bannerFailedToLoad(error: Error) {
         Logger.error("error bannerFailedToLoad - \(error)")
         let monetizationFailureData = MonetizationFailureModel(source: .mainConversation, reason: error.localizedDescription, bannerType: .banner)

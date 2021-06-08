@@ -61,6 +61,7 @@ internal final class ArticleWebViewController: UIViewController {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
                 coordinator.setLayoutDelegate(delegate: self)
+                coordinator.setCustomUIDelegate(delegate: self)
                 if self.shouldShowOpenFullConversationButton {
                     self.showOpenFullConversationButton()
                 }
@@ -220,8 +221,20 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     func shouldDisplayLoginPromptForGuests() -> Bool {
         return true
     }
+}
+
+extension ArticleWebViewController: SpotImCustomUIDelegate {    
+    func customizeView(view: CustomizableView, isDarkMode: Bool) {
+        switch view {
+        case .loginPrompt(let textView):
+            customizeLoginPromptTextView(textView: textView)
+            break
+        default:
+            break
+        }
+    }
     
-    func customizeLoginPromptTextView(textView: UITextView) {
+    private func customizeLoginPromptTextView(textView: UITextView) {
         var multipleAttributes = [NSAttributedString.Key : Any]()
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
