@@ -738,7 +738,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
         if SpotIm.reactNativeNotifyOnCreateComment && SpotIm.getRegisteredUserId() == nil {
             if self.isInFullConversationVC(foorterView) {
                 NotificationCenter.default.post(name: Notification.Name("OWCreateCommentFullConversation"), object: nil)
-                self.dismiss(animated: true, completion: nil)
+                self.navigationController?.popViewController(animated: true)
             }
             else {
                 NotificationCenter.default.post(name: Notification.Name("OWCreateCommentPreConversation"), object: nil)
