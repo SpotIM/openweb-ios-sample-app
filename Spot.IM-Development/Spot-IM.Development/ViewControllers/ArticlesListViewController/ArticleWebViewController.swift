@@ -223,8 +223,8 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     }
 }
 
-extension ArticleWebViewController: SpotImCustomUIDelegate {
-    func customizeView(view: CustomizableView) {
+extension ArticleWebViewController: SpotImCustomUIDelegate {    
+    func customizeView(view: CustomizableView, isDarkMode: Bool) {
         switch view {
         case .loginPrompt(let textView):
             customizeLoginPromptTextView(textView: textView)
