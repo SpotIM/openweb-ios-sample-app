@@ -394,7 +394,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private func configureCollapsableContainer() {
         collapsableContainer.addSubviews(communityGuidelinesView, communityQuestionView)
         collapsableContainer.layout {
-            $0.top.equal(to: loginPromptView.bottomAnchor)
+            $0.top.equal(to: sortView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
