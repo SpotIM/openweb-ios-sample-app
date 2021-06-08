@@ -211,6 +211,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
             )
         )
     }
+    
+    internal func updateEmptyStateViewAccordingToStyle() {
+        stateActionView?.updateColorsAccordingToStyle()
+    }
 
     func configureErrorAction() -> ConversationStateAction {
         fatalError("Implement in subclass")
