@@ -26,7 +26,14 @@ public protocol SpotImLoginDelegate: AnyObject {
     func startLoginFlow()
     func presentControllerForSSOFlow(with spotNavController: UIViewController)
     func shouldDisplayLoginPromptForGuests() -> Bool
-    func customizeLoginPromptTextView(textView: UITextView)
+}
+
+public enum CustomizableView {
+    case loginPrompt(textView: UITextView)
+}
+
+public protocol SpotImCustomUIDelegate: AnyObject {
+    func customizeView(view: CustomizableView, isDarkMode: Bool)
 }
 
 internal protocol SPSafariWebPageDelegate: class {
@@ -41,9 +48,6 @@ public extension SpotImLoginDelegate {
     
     func startLoginFlow() {
         assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginFlow()")
-    }
-    func customizeLoginPromptTextView(textView: UITextView) {
-        // emptry impl by default
     }
     func shouldDisplayLoginPromptForGuests() -> Bool {
         return false //default
@@ -66,6 +70,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
     private weak var spotLayoutDelegate: SpotImLayoutDelegate?
     private weak var loginDelegate: SpotImLoginDelegate?
+    private weak var customUIDelegate: SpotImCustomUIDelegate?
     
     private var localCommentReplyDidCreate: ((SPComment) -> Void)?
     private var commentReplyCreationBlocked: ((String?) -> Void)?
@@ -116,6 +121,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
         self.spotLayoutDelegate = delegate
+    }
+    
+    public func setCustomUIDelegate(delegate: SpotImCustomUIDelegate) {
+        self.customUIDelegate = delegate
     }
 
     /// Please, provide container (UINavigationViewController) for sdk flows
@@ -300,6 +309,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         
         preConversationViewController.delegate = self
         preConversationViewController.userAuthFlowDelegate = self
+        preConversationViewController.customUIDelegate = self
         
         preConversationViewController.preConversationDelegate = self
         preConversationViewController.webPageDelegate = self
@@ -320,6 +330,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         
         controller.delegate = self
         controller.userAuthFlowDelegate = self
+        controller.customUIDelegate = self
         controller.webPageDelegate = self
         
         controller.title = LocalizationManager.localizedString(key: "Conversation")
@@ -489,12 +500,6 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
         }
         return false
     }
-    
-    func customizeLoginPromptTextView(textView: UITextView) {
-        if let loginDelegate = self.loginDelegate {
-            loginDelegate.customizeLoginPromptTextView(textView: textView)
-        }
-    }
 }
 
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
@@ -537,5 +542,11 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     
     public func userLogout() {
         authHandlers.forEach { $0.value?.authHandler?(false) }
+    }
+}
+
+extension SpotImSDKFlowCoordinator: CustomUIDelegate {
+    func customizeLoginPromptTextView(textView: UITextView) {
+        customUIDelegate?.customizeView(view: .loginPrompt(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
 }
