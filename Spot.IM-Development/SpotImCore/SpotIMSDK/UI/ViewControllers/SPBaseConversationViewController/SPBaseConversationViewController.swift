@@ -11,6 +11,7 @@ import UIKit
 internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
+    weak var customUIDelegate: CustomUIDelegate?
     private var authHandler: AuthenticationHandler?
     
     weak var webPageDelegate: SPSafariWebPageDelegate?
