@@ -171,6 +171,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
+        self.updateEmptyStateViewAccordingToStyle()
+        
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
         self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
         

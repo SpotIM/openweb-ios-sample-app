@@ -48,6 +48,17 @@ final class SPEmptyConversationActionView: BaseView {
         iconView.image = actionModel.actionIcon
         messageLabel.text = actionModel.actionMessage
         actionButton.setTitle(actionModel.actionButtonTitle, for: .normal)
+        updateColorsAccordingToStyle()
+    }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        self.backgroundColor = .spBackground0
+        containerView.backgroundColor = .spBackground0
+        iconView.backgroundColor = .spBackground0
+        messageLabel.backgroundColor = .spBackground0
+        messageLabel.textColor = .spForeground3
+        actionButton.backgroundColor = .brandColor
     }
     
     private func setupUI(showingIcon: Bool) {
@@ -62,7 +73,6 @@ final class SPEmptyConversationActionView: BaseView {
     
     private func configureContainerView() {
         containerView.addSubviews(iconView, messageLabel, actionButton)
-        containerView.backgroundColor = .spBackground0
         containerView.layout {
             $0.leading.greaterThanOrEqual(to: leadingAnchor, offsetBy: Theme.containerLeadingTrailingOffset)
             $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -Theme.containerLeadingTrailingOffset)
@@ -74,7 +84,6 @@ final class SPEmptyConversationActionView: BaseView {
     }
     
     private func configureImageView() {
-        iconView.backgroundColor = .spBackground0
         iconView.layout {
             $0.centerX.equal(to: containerView.centerXAnchor)
             $0.top.equal(to: containerView.topAnchor)
@@ -83,9 +92,7 @@ final class SPEmptyConversationActionView: BaseView {
     
     private func configureMessageLabel(relativeToIcon: Bool) {
         messageLabel.numberOfLines = 0
-        messageLabel.backgroundColor = .spBackground0
         messageLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
-        messageLabel.textColor = .spForeground3
         messageLabel.textAlignment = .center
         messageLabel.layout {
             $0.leading.equal(to: containerView.leadingAnchor)
@@ -103,7 +110,6 @@ final class SPEmptyConversationActionView: BaseView {
     private func configureActionButton() {
         actionButton.addTarget(self, action: #selector(handleAction), for: .touchUpInside)
         actionButton.setTitleColor(.white, for: .normal)
-        actionButton.backgroundColor = .brandColor
         actionButton.titleLabel?.font = UIFont.preferred(style: .medium, of: Theme.actionButtonTitleFontSize)
         
         actionButton.layout {
