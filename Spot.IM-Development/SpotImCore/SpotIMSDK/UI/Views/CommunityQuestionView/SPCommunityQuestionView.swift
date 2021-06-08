@@ -15,6 +15,8 @@ internal final class SPCommunityQuestionView: BaseView {
     private lazy var separatorView: BaseView = .init()
     
     private var questionBottomConstraint: NSLayoutConstraint?
+    private var separatorLeadingConstraint: NSLayoutConstraint?
+    private var separatorTrailingConstraint: NSLayoutConstraint?
     
     // MARK: - Overrides
     
@@ -38,7 +40,9 @@ internal final class SPCommunityQuestionView: BaseView {
     // MARK: - Internal methods
     
     internal func setupPreConversationConstraints() {
-        questionBottomConstraint?.constant = -Theme.separatorVerticalOffsetPreConversation
+        questionBottomConstraint?.constant = -Theme.QuestionBottomOffsetPreConversation
+        separatorLeadingConstraint?.constant = Theme.separatorHorizontalOffsetPreConversation
+        separatorTrailingConstraint?.constant = -Theme.separatorHorizontalOffsetPreConversation
     }
     
     // MARK: - Private Methods
@@ -56,17 +60,17 @@ internal final class SPCommunityQuestionView: BaseView {
         questionLabel.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
         questionLabel.layout {
             $0.top.equal(to: self.topAnchor)
-            questionBottomConstraint = $0.bottom.equal(to: separatorView.topAnchor)
-            $0.leading.equal(to: self.leadingAnchor)
-            $0.trailing.equal(to: self.trailingAnchor)
+            questionBottomConstraint = $0.bottom.equal(to: separatorView.topAnchor, offsetBy: -Theme.QuestionBottomOffsetFullConversation)
+            $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.questionHorizontalOffset)
+            $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.questionHorizontalOffset)
         }
     }
     
     private func configureSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+            separatorLeadingConstraint = $0.leading.equal(to: leadingAnchor)
+            separatorTrailingConstraint = $0.trailing.equal(to: trailingAnchor)
             $0.bottom.equal(to: bottomAnchor)
             $0.height.equal(to: Theme.separatorHeight)
         }
@@ -77,5 +81,8 @@ internal final class SPCommunityQuestionView: BaseView {
 private enum Theme {
     static let questionFontSize: CGFloat = 20.0
     static let separatorHeight: CGFloat = 1.0
-    static let separatorVerticalOffsetPreConversation: CGFloat = 16.0
+    static let questionHorizontalOffset: CGFloat = 16.0
+    static let QuestionBottomOffsetPreConversation: CGFloat = 16.0
+    static let QuestionBottomOffsetFullConversation: CGFloat = 5.0
+    static let separatorHorizontalOffsetPreConversation: CGFloat = 16.0
 }

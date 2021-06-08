@@ -407,23 +407,16 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
     
     private func configureCommunityQuestionView() {
-//        if (self.displayArticleHeader == false) {
-//            tableHeader.removeFromSuperview()
-//            return
-//        }
         communityQuestionView.clipsToBounds = true
         communityQuestionView.layout {
-            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor, offsetBy: 16.0)
-            $0.trailing.equal(to: view.trailingAnchor, offsetBy: -16.0)
+            $0.top.equal(to: communityGuidelinesView.bottomAnchor, offsetBy: 5.0)
+            $0.leading.equal(to: view.leadingAnchor)
+            $0.trailing.equal(to: view.trailingAnchor)
         }
         
         let communityQuestionText = getCommunityQuestion()
         if communityQuestionText.length > 0 {
-            
-//            isCommunityGuidelinesVisible = true
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
-//            view.bringSubviewToFront(communityGuidelinesView)
             communityQuestionView.clipsToBounds = true
         } else {
             communityQuestionView.isHidden = true
