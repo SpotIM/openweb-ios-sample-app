@@ -260,9 +260,9 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
 
         let attributedString = NSMutableAttributedString(string: "Custom community question with very very long text", attributes: multipleAttributes)
         textView.attributedText = attributedString
-        
+//        textView.backgroundColor = .green
         if (isDarkMode) {
-            textView.textColor = .green
+            textView.textColor = .white
         }
     }
 }
