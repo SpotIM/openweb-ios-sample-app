@@ -33,7 +33,7 @@ public enum CustomizableView {
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
-    func customizeView(view: CustomizableView)
+    func customizeView(view: CustomizableView, isDarkMode: Bool)
 }
 
 internal protocol SPSafariWebPageDelegate: class {
@@ -547,6 +547,6 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
 
 extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     func customizeLoginPromptTextView(textView: UITextView) {
-        customUIDelegate?.customizeView(view: .loginPrompt(textView: textView))
+        customUIDelegate?.customizeView(view: .loginPrompt(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
 }
