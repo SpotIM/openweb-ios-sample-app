@@ -51,6 +51,10 @@ final class SPMainConversationFooterView: BaseView {
         setup()
     }
     
+    func customizeSayControl(customUIDelegate: CustomUIDelegate, isPreConversation: Bool) {
+        customUIDelegate.customizeSayControl(labelContainer: labelContainer, label: callToActionLabel, isPreConversation: isPreConversation)
+    }
+    
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
