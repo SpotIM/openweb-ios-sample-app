@@ -78,11 +78,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    init(model: SPMainConversationModel, adsProvider: AdsProvider) {
+    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
         Logger.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
-        super.init(model: model)
+        super.init(model: model, customUIDelegate: customUIDelegate)
         
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
@@ -144,7 +144,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     func updateLoginPromptVisibily() {
         if self.shouldDisplayLoginPrompt && SpotIm.getRegisteredUserId() == nil {
             // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-            self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+            self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
         }
         else {
             loginPromptView.isHidden = true
@@ -164,6 +164,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.view.backgroundColor = .spBackground0
         self.tableView.backgroundColor = .spBackground0
         self.footer.updateColorsAccordingToStyle()
+        self.updateFooterViewCustomUI(footerView: self.footer)
         self.tableHeader.updateColorsAccordingToStyle()
         self.sortView.updateColorsAccordingToStyle()
         self.loginPromptView.updateColorsAccordingToStyle()
@@ -171,8 +172,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
+        self.updateEmptyStateViewAccordingToStyle()
+        
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-        self.userAuthFlowDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+        self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
         
         if #available(iOS 13.0, *) {
             if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
@@ -364,7 +367,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         sortView.delegate = self
         sortView.updateSortOption(model.sortOption.title)
         sortView.layout {
-            $0.top.equal(to: topLayoutGuide.bottomAnchor)
+            $0.top.equal(to: loginPromptView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.height.equal(to: 44.0)
@@ -373,7 +376,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     private func configureLoginPromptView() {
         loginPromptView.layout {
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: topLayoutGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
@@ -384,7 +387,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     private func configureCommunityGuidelinesView() {
         communityGuidelinesView.layout {
-            $0.top.equal(to: loginPromptView.bottomAnchor)
+            $0.top.equal(to: sortView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
@@ -456,6 +459,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         footer.updateOnlineStatus(.online)
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
+        updateFooterViewCustomUI(footerView: footer)
         footer.layout {
             footerHeightConstraint = $0.height.equal(to: 80.0)
             $0.trailing.equal(to: view.trailingAnchor)
@@ -466,6 +470,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
+        updateFooterViewCustomUI(footerView: footer)
         footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard
