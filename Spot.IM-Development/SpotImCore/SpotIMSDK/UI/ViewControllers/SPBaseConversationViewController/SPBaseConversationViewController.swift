@@ -124,7 +124,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         return getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesTitle)
     }
     
-    internal func getCommunityQuestion() -> String {
+    internal func getCommunityQuestion() -> String? {
         return model.dataSource.communityQuestion
     }
     

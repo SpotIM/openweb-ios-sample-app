@@ -55,13 +55,13 @@ internal final class SPCommunityQuestionView: BaseView {
         addSubviews(questionTextView, separatorView)
         setupQuestionLabel()
         configureSeparatorView()
+        updateColorsAccordingToStyle()
     }
     
     private func setupQuestionLabel() {
         questionTextView.text = ""
         questionTextView.isEditable = false
         questionTextView.isScrollEnabled = false
-        questionTextView.backgroundColor = .spBackground0
         questionTextView.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
         questionTextView.layout {
             $0.top.equal(to: self.topAnchor)
@@ -72,7 +72,6 @@ internal final class SPCommunityQuestionView: BaseView {
     }
     
     private func configureSeparatorView() {
-        separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
             separatorLeadingConstraint = $0.leading.equal(to: leadingAnchor)
             separatorTrailingConstraint = $0.trailing.equal(to: trailingAnchor)

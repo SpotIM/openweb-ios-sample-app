@@ -231,8 +231,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
     
-    private func updateCommunityQuestion(communityQuestionText: String) {
-        if communityQuestionText.length > 0 {
+    private func updateCommunityQuestion(communityQuestionText: String?) {
+        if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0 {
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
             communityQuestionView.clipsToBounds = true
             communityQuestionView.setupPreConversationConstraints()
