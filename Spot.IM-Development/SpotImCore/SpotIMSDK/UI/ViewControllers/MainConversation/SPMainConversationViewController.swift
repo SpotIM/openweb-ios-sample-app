@@ -90,7 +90,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
         super.init(model: model, customUIDelegate: customUIDelegate)
-
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
     }
@@ -171,6 +170,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.view.backgroundColor = .spBackground0
         self.tableView.backgroundColor = .spBackground0
         self.footer.updateColorsAccordingToStyle()
+        self.updateFooterViewCustomUI(footerView: self.footer)
         self.tableHeader.updateColorsAccordingToStyle()
         self.sortView.updateColorsAccordingToStyle()
         self.loginPromptView.updateColorsAccordingToStyle()
@@ -180,6 +180,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
+        self.updateEmptyStateViewAccordingToStyle()
+        
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
         self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
 
@@ -504,6 +506,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         footer.updateOnlineStatus(.online)
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
+        updateFooterViewCustomUI(footerView: footer)
         footer.layout {
             footerHeightConstraint = $0.height.equal(to: 80.0)
             $0.trailing.equal(to: view.trailingAnchor)
@@ -514,6 +517,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
+        updateFooterViewCustomUI(footerView: footer)
         footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard

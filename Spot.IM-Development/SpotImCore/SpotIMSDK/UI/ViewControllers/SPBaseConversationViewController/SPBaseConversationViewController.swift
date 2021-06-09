@@ -110,6 +110,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         guard let customUIDelegate = self.customUIDelegate else { return }
         communityQuestionView.customizeCommunityQuestion(customUIDelegate: customUIDelegate)
     }
+    internal func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
+        guard let customUIDelegate = self.customUIDelegate else { return }
+        footerView.customizeSayControl(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
+    }
     
     internal func getCommunityGuidelinesTextIfExists() -> String? {
         guard let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
@@ -221,6 +225,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
                 action: createCommentAction
             )
         )
+    }
+    
+    internal func updateEmptyStateViewAccordingToStyle() {
+        stateActionView?.updateColorsAccordingToStyle()
     }
 
     func configureErrorAction() -> ConversationStateAction {
