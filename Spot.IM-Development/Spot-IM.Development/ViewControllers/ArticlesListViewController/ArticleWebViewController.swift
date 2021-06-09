@@ -231,6 +231,9 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
             break
 //        case .communityQuestion(let textView):
 //            customizeCommunityQuestionTextView(textView: textView, isDarkMode: isDarkMode)
+//        case .sayControlInPreConversation(let labelContainer, let label):
+//            break
+//        case .sayControlInMainConversation(let labelContainer, let label):
 //            break
         default:
             break

@@ -70,7 +70,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
         
         super.init(model: model, customUIDelegate: customUIDelegate)
-        
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
     }
@@ -142,6 +141,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.tableView.backgroundColor = .spBackground0
         self.bannerView.updateColorsAccordingToStyle()
         self.whatYouThinkView.updateColorsAccordingToStyle()
+        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
         self.communityQuestionView.updateColorsAccordingToStyle()
         self.updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
         self.communityGuidelinesView.updateColorsAccordingToStyle()
@@ -150,6 +150,10 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
         self.header.updateColorsAccordingToStyle()
         self.footerView.updateColorsAccordingToStyle()
+    }
+    
+    override func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
+        super.updateFooterViewCustomUI(footerView: footerView, isPreConversation: true)
     }
     
     
@@ -274,6 +278,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.whatYouThinkHeight)
         }
+        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
     }
     
     override func setupTableView() {
