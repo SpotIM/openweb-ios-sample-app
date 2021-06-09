@@ -229,9 +229,9 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .loginPrompt(let textView):
             customizeLoginPromptTextView(textView: textView)
             break
-        case .communityQuestion(let textView):
-            customizeCommunityQuestionTextView(textView: textView, isDarkMode: isDarkMode)
-            break
+//        case .communityQuestion(let textView):
+//            customizeCommunityQuestionTextView(textView: textView, isDarkMode: isDarkMode)
+//            break
         default:
             break
         }
@@ -260,7 +260,6 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
 
         let attributedString = NSMutableAttributedString(string: "Custom community question with very very long text", attributes: multipleAttributes)
         textView.attributedText = attributedString
-//        textView.backgroundColor = .green
         if (isDarkMode) {
             textView.textColor = .white
         }

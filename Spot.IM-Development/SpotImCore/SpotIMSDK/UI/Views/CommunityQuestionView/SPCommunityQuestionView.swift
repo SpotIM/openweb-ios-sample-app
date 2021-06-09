@@ -58,7 +58,7 @@ internal final class SPCommunityQuestionView: BaseView {
     }
     
     private func setupQuestionLabel() {
-        questionTextView.text = "community question text, very long one .."
+        questionTextView.text = ""
         questionTextView.isEditable = false
         questionTextView.isScrollEnabled = false
         questionTextView.backgroundColor = .spBackground0
