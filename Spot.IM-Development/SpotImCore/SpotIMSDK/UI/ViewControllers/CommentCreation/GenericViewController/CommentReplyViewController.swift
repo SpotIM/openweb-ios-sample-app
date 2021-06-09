@@ -198,10 +198,13 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             }
             
             self.updatePostButton()
+            self.updatePostButtonEnabledState()
             self.updateAvatar()
             
             if isAuthenticated && !self.shouldBeAutoPosted {
-                self.post()
+                if (self.isValidInput()) {
+                    self.post()
+                }
                 self.shouldBeAutoPosted = true
             }
         }
@@ -268,11 +271,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         SPAnalyticsHolder.default.log(event: .loginClicked(.commentSignUp), source: .conversation)
     }
     
-    private func validateInput() {
-        var postEnabled = true
+    private func updatePostButtonEnabledState() {
+        postButton.isEnabled = isValidInput() || self.signupToPostButtonIsActive()
+    }
+    
+    private func isValidInput() -> Bool {
+        var isValidInput = true
         for aView in inputViews {
             if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
-                postEnabled = false
+                isValidInput = false
                 break
             }
         }
@@ -280,10 +287,10 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         // check comment labels minSelected
         if let sectionLabelsConfig = self.sectionLabels,
            sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
-            postEnabled = false
+            isValidInput = false
         }
-
-        postButton.isEnabled = postEnabled || self.signupToPostButtonIsActive()
+        
+        return isValidInput
     }
     
     private func signupToPostButtonIsActive() -> Bool {
@@ -481,19 +488,21 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
             SPUserSessionHolder.update(displayName: text)
         }
 
-        self.validateInput()
+        self.updatePostButtonEnabledState()
     }
 }
 
 extension CommentReplyViewController: AuthenticationViewDelegate {
     func authenticationStarted() {
-        showLoader()
+        if (isValidInput()) {
+            showLoader()
+        }
     }
 }
 
 extension CommentReplyViewController: SPCommentLabelsContainerViewDelegate {
     func didSelectionChanged() {
-        self.validateInput()
+        self.updatePostButtonEnabledState()
     }
 }
 
