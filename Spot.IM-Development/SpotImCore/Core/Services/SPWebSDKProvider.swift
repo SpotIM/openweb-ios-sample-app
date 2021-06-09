@@ -18,6 +18,8 @@ internal final class SPWebSDKProvider {
         
         SpotIm.profileProvider.getSingleUseToken().done { singleUseToken in
             params.singleUseTicket = singleUseToken
+        }
+        .ensure {
             if let urlString = getUrlString(params: params) {
                 delegate?.openWebPage(with: urlString)
             }
