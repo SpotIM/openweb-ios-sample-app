@@ -171,6 +171,9 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
             .ensure {
                 SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
             }
+            .catch { error in
+                Logger.verbose("Failed to get single use token: \(error)")
+            }
         } else {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
