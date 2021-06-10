@@ -37,6 +37,10 @@ internal final class SPCommunityGuidelinesView: BaseView {
         titleTextView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
     }
+    
+    func setSeperatorVisible(isVisible: Bool) {
+        separatorView.isHidden = !isVisible
+    }
 
     // MARK: - Internal methods
     
