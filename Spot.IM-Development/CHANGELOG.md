@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.5] - 2021-06-10
+
+### Added
+- Community question
+- Community question - support TextView customization
+- SayCtrl - support TextView customization
+- Success callback on SDK initialization
+
+### Fixed
+- Back icon for dark-mode
+- Signup To Post button state fix when not forced registered
+- Login prompt above sticky header
+- Empty view update when switching dark/light mode
+
+### Changed
+- Use one time token for the websdk
+- Login prompt customization via SpotImCustomUIDelegate
+
 ## [1.5.4] - 2021-05-25
 
 ### Fixed
