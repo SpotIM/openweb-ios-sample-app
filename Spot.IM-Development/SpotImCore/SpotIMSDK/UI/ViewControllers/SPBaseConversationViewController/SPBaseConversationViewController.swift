@@ -164,11 +164,19 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         )
         
         if isMyProfile {
-            params.userAccessToken =  SPUserSessionHolder.session.token
-            params.userOwToken = SPUserSessionHolder.session.openwebToken
+            // add singleUseTicket to params when navigating to profile screen
+            SpotIm.profileProvider.getSingleUseToken().done { singleUseToken in
+                params.singleUseTicket = singleUseToken
+            }
+            .ensure {
+                SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
+            }
+            .catch { error in
+                Logger.verbose("Failed to get single use token: \(error)")
+            }
+        } else {
+            SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
-        
-        SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
     }
 
     internal func setupUI() {
