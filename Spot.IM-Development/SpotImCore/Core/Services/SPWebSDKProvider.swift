@@ -15,14 +15,8 @@ internal final class SPWebSDKProvider {
     }
     
     internal static func openWebModule(delegate: SPSafariWebPageDelegate?, params: Params) {
-        
-        SpotIm.profileProvider.getSingleUseToken().done { singleUseToken in
-            params.singleUseTicket = singleUseToken
-        }
-        .ensure {
-            if let urlString = getUrlString(params: params) {
-                delegate?.openWebPage(with: urlString)
-            }
+        if let urlString = getUrlString(params: params) {
+            delegate?.openWebPage(with: urlString)
         }
     }
     
@@ -41,10 +35,6 @@ internal final class SPWebSDKProvider {
         return url.absoluteString
     }
     
-    private static func getCleanToken(token: String) -> String {
-        return token.replacingOccurrences(of: "Bearer ", with: "")
-    }
-    
     public static func urlWithDarkModeParam(url: URL) -> URL {
         var urlWithDarkModeParam = url
         urlWithDarkModeParam.appendQueryParam(name: "theme", value: SPUserInterfaceStyle.isDarkMode ? "dark" : "light")
@@ -59,8 +49,6 @@ extension SPWebSDKProvider {
         var postId: String = "default"
         var userId: String?
         var singleUseTicket: String?
-        var userAccessToken: String?
-        var userOwToken: String?
         
         init(module: WebModule, spotId: String, postId: String) {
             self.module = module
@@ -68,11 +56,9 @@ extension SPWebSDKProvider {
             self.postId = postId
         }
         
-        convenience init(module: WebModule, spotId: String, postId: String, userId: String, userAccessToken: String? = nil, userOwToken: String? = nil) {
+        convenience init(module: WebModule, spotId: String, postId: String, userId: String) {
             self.init(module: module, spotId: spotId, postId: postId)
             self.userId = userId
-            self.userAccessToken = userAccessToken
-            self.userOwToken = userOwToken
         }
     }
 }
