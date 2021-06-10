@@ -41,7 +41,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate? = nil) {
         self.model = model
         self.customUIDelegate = customUIDelegate
-
+        
         super.init()
     }
 
@@ -106,6 +106,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         // Override this method in your VC to handle
     }
     
+    internal func updateCommunityQuestionCustomUI(communityQuestionView: SPCommunityQuestionView) {
+        guard let customUIDelegate = self.customUIDelegate else { return }
+        communityQuestionView.customizeCommunityQuestion(customUIDelegate: customUIDelegate)
+    }
     internal func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
         guard let customUIDelegate = self.customUIDelegate else { return }
         footerView.customizeSayControl(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
@@ -118,6 +122,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
             return nil
         }
         return getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesTitle)
+    }
+    
+    internal func getCommunityQuestion() -> String? {
+        return model.dataSource.communityQuestion
     }
     
     private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
