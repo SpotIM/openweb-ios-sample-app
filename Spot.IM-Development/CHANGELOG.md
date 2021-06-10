@@ -9,19 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Community question
-- Community question - support TextView customization
-- SayCtrl - support TextView customization
+- Community question - support customization
+- SayCtrl - support customization
 - Success callback on SDK initialization
 
 ### Fixed
 - Back icon for dark-mode
-- Signup To Post button state fix when not forced registered
 - Login prompt above sticky header
 - Empty view update when switching dark/light mode
 
 ### Changed
 - Use one time token for the websdk
 - Login prompt customization via SpotImCustomUIDelegate
+- Signup To Post button (Comment Create) always enabled
 
 ## [1.5.4] - 2021-05-25
 
