@@ -12,6 +12,8 @@ import PromiseKit
 public enum SpotImError: Error {
     /// SDK was not initilized, please call SpotIm.initialize(spotId: String) with your spotId before calling any other SDK APIs
     case notInitialized
+    /// SDK is already initialized, set reinit to true if you want to initialize it again
+    case alreadyInitialized
     /// SDK is disabled for the provided spotId, please contact Spot.IM to obtain your spotId before trying to use this SDK
     case configurationSdkDisabled
     /// Internal Error in Spot.IM SDK, please contact Spot.IM for more information
@@ -76,6 +78,8 @@ private struct InitResult {
     let user: SPUser
 }
 
+public typealias InitizlizeCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
+
 public class SpotIm {
     private static var configurationPromise: Promise<SpotConfig>?
     private static var userPromise: Promise<SPUser>?
@@ -98,8 +102,9 @@ public class SpotIm {
      This method should be called from your application AppDelegate
 
      - Parameter spotId: The SpotId you got from Spot.IM, if you don't have one contact Spot.IM
+     - Parameter completion: Initialize success callback
      */
-    public static func initialize(spotId: String) {
+    public static func initialize(spotId: String, completion: InitizlizeCompletionHandler? = nil) {
         if SpotIm.reinit {
             SpotIm.reinit = false
             SpotIm.spotId = nil
@@ -114,9 +119,13 @@ public class SpotIm {
             SpotIm.spotId = spotId
             getConfigPromise(spotId: spotId).ensure {
                 SPClientSettings.main.sendAppInitEvent()
+                completion?(true, nil)
             }.catch { error in
                 Logger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
+                completion?(false, SpotImError.internalError(error.localizedDescription))
             }
+        } else {
+            completion?(false, SpotImError.alreadyInitialized)
         }
     }
     
