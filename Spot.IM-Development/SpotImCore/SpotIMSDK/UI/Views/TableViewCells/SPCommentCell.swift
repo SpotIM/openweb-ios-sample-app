@@ -44,8 +44,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private var headerViewHeightConstraint: NSLayoutConstraint?
     private var userNameViewTopConstraint: NSLayoutConstraint?
     private var separatorHeightConstraint: NSLayoutConstraint?
-    private var separatorLeadingConstraint: NSLayoutConstraint?
-    private var separatorTrailingConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
     private var gifWebViewTopConstraint: NSLayoutConstraint?
 
@@ -122,8 +120,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         separatorView.layout {
             $0.centerX.equal(to: headerView.centerXAnchor)
             $0.centerY.equal(to: headerView.centerYAnchor)
-            separatorLeadingConstraint = $0.leading.equal(to: headerView.leadingAnchor, offsetBy: 0.0)
-            separatorTrailingConstraint = $0.trailing.equal(to: headerView.trailingAnchor, offsetBy: 0.0)
+            $0.leading.equal(to: headerView.leadingAnchor, offsetBy: Theme.leadingOffset)
+            $0.trailing.equal(to: headerView.trailingAnchor, offsetBy: -Theme.leadingOffset)
             separatorHeightConstraint = $0.height.equal(to: 1.0)
         }
         
@@ -255,11 +253,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateHeaderView(with dataModel: CommentViewModel, shouldShowHeader: Bool) {
         headerViewHeightConstraint?.constant = shouldShowHeader ? 7.0 : 0.0
-        separatorHeightConstraint?.constant = shouldShowHeader ? (dataModel.isCollapsed ? 1.0 : 7.0) : 0.0
-        separatorLeadingConstraint?.constant = dataModel.isCollapsed ? Theme.leadingOffset : 0.0
-        separatorTrailingConstraint?.constant = dataModel.isCollapsed ? -Theme.leadingOffset : 0.0
+        separatorHeightConstraint?.constant = shouldShowHeader ? 1.0 : 0.0
 
-        separatorView.backgroundColor = dataModel.isCollapsed ? .spSeparator : .spSeparator4
+        separatorView.backgroundColor = .spSeparator4
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
