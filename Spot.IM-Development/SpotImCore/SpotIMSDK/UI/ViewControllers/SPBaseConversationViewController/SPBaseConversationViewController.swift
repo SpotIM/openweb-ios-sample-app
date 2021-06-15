@@ -899,6 +899,9 @@ extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
     func clickOnUrl(url: URL) {
         webPageDelegate?.openWebPage(with: SPWebSDKProvider.urlWithDarkModeParam(url: url).absoluteString)
     }
+    func customizeTextView(textView: UITextView) {
+        customUIDelegate?.customizeCommunityGuidelines(textView: textView)
+    }
 }
 
 extension SPBaseConversationViewController: SPLoginPromptViewDelegate {
