@@ -33,6 +33,7 @@ public enum CustomizableView {
     case communityQuestion(textView: UITextView)
     case sayControlInPreConversation(labelContainer: BaseView, label: BaseLabel)
     case sayControlInMainConversation(labelContainer: BaseView, label: BaseLabel)
+    case communityGuidelines(textView: UITextView)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -556,5 +557,8 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     func customizeSayControl(labelContainer: BaseView, label: BaseLabel, isPreConversation: Bool) {
         let view: CustomizableView = isPreConversation ? .sayControlInPreConversation(labelContainer: labelContainer, label: label) : .sayControlInMainConversation(labelContainer: labelContainer, label: label)
         customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    func customizeCommunityGuidelines(textView: UITextView) {
+        customUIDelegate?.customizeView(view: .communityGuidelines(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
 }
