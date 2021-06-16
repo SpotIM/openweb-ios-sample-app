@@ -10,6 +10,7 @@ import UIKit
 
 internal protocol SPCommunityGuidelinesViewDelegate {
     func clickOnUrl(url: URL)
+    func customizeTextView(textView: UITextView)
 }
 
 internal final class SPCommunityGuidelinesView: BaseView {
@@ -36,6 +37,7 @@ internal final class SPCommunityGuidelinesView: BaseView {
         backgroundColor = .spBackground0
         titleTextView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
+        delegate?.customizeTextView(textView: titleTextView)
     }
     
     func setSeperatorVisible(isVisible: Bool) {
@@ -48,6 +50,7 @@ internal final class SPCommunityGuidelinesView: BaseView {
         if let titleTextViewAttributedText = getTitleTextViewAttributedText(htmlString: htmlString) {
             titleTextView.attributedText = titleTextViewAttributedText
         }
+        delegate?.customizeTextView(textView: titleTextView)
     }
     
     internal func setupPreConversationConstraints() {
