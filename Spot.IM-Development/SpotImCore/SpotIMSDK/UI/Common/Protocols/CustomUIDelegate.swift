@@ -13,4 +13,5 @@ protocol CustomUIDelegate: AnyObject {
     func customizeCommunityQuestionTextView(textView: UITextView)
     func customizeSayControl(labelContainer: BaseView, label: BaseLabel, isPreConversation: Bool)
     func customizeCommunityGuidelines(textView: UITextView)
+    func customizeNavigationItemTitle(textView: UITextView)
 }
