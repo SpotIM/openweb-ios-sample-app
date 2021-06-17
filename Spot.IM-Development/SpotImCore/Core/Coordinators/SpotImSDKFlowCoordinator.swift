@@ -34,6 +34,7 @@ public enum CustomizableView {
     case sayControlInPreConversation(labelContainer: BaseView, label: BaseLabel)
     case sayControlInMainConversation(labelContainer: BaseView, label: BaseLabel)
     case communityGuidelines(textView: UITextView)
+    case navigationItemTitle(textView: UITextView)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -335,7 +336,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
         
-        controller.title = LocalizationManager.localizedString(key: "Conversation")
+        let navigationItemTextView = getNavigationItemTitleTextView(with: LocalizationManager.localizedString(key: "Conversation"))
+        controller.navigationItem.titleView = navigationItemTextView
         
         Logger.verbose("FirstComment: localCommentReplayDidCreate SET")
         localCommentReplyDidCreate = { comment in
@@ -349,6 +351,16 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
 
         authHandlers.append(WeakRef(value: controller.userDidSignInHandler()))
         return controller
+    }
+    
+    private func getNavigationItemTitleTextView(with text: String) -> UITextView {
+        let navigationItemTextView = UITextView()
+        navigationItemTextView.backgroundColor = UIColor.clear
+        let attributedTitleText = NSMutableAttributedString(string: text)
+        attributedTitleText.addAttribute(.font, value: UIFont.systemFont(ofSize: 20, weight: .regular), range: NSMakeRange(0, attributedTitleText.length))
+        navigationItemTextView.attributedText = attributedTitleText
+        customizeNavigationItemTitle(textView: navigationItemTextView)
+        return navigationItemTextView
     }
 
     private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: CommentReplyViewController<T>,
@@ -560,5 +572,8 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     }
     func customizeCommunityGuidelines(textView: UITextView) {
         customUIDelegate?.customizeView(view: .communityGuidelines(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    func customizeNavigationItemTitle(textView: UITextView) {
+        customUIDelegate?.customizeView(view: .navigationItemTitle(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
 }
