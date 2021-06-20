@@ -20,6 +20,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
+    weak var customUIDelegate: CustomUIDelegate?
     private var authHandler: AuthenticationHandler?
     
     var model: T? {
@@ -503,6 +504,12 @@ extension CommentReplyViewController: AuthenticationViewDelegate {
 extension CommentReplyViewController: SPCommentLabelsContainerViewDelegate {
     func didSelectionChanged() {
         self.updatePostButtonEnabledState()
+    }
+}
+
+extension CommentReplyViewController: SPCommentCreationHeaderViewDelegate {
+    func customizeHeaderTitle(textView: UITextView) {
+        customUIDelegate?.customizeNavigationItemTitle(textView: textView)
     }
 }
 

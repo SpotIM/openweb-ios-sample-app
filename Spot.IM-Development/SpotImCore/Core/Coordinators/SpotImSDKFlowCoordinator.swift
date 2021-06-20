@@ -422,6 +422,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
 
     internal func createComment(with dataModel: SPMainConversationModel) {
         let controller = SPCommentCreationViewController()
+        controller.customUIDelegate = self
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         
@@ -439,6 +440,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
         let controller = SPReplyCreationViewController()
+        controller.customUIDelegate = self
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         
