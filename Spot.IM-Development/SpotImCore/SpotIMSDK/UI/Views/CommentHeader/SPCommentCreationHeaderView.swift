@@ -49,6 +49,7 @@ final class SPCommentCreationHeaderView: BaseView {
         commentLabel.backgroundColor = .spBackground0
         commentLabel.textColor = .spForeground1
         separatorView.backgroundColor = .spSeparator2
+        closeButton.setImage(UIImage(spNamed: "closeCrossIconNew"), for: .normal)
         
         delegate?.customizeHeaderTitle(textView: headerTitleLabel)
     }
@@ -113,12 +114,12 @@ final class SPCommentCreationHeaderView: BaseView {
     }
     
     private func setupCloseButton() {
-        closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+        closeButton.setImage(UIImage(spNamed: "closeCrossIconNew"), for: .normal)
         closeButton.layout {
             $0.centerY.equal(to: headerTitleLabel.centerYAnchor)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -6.0)
-            $0.width.equal(to: 40.0)
-            $0.height.equal(to: 40.0)
+            $0.width.equal(to: 45.0)
+            $0.height.equal(to: 45.0)
         }
     }
     

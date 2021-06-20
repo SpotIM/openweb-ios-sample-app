@@ -40,13 +40,14 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
         super.updateColorsAccordingToStyle()
         if SpotIm.enableCreatCommentNewDesign {
             commentNewHeaderView.updateColorsAccordingToStyle()
+        } else {
+            commentingContainer.backgroundColor = .spBackground0
+            commentingOnLabel.textColor = .spForeground4
+            commentingOnLabel.backgroundColor = .spBackground0
+            closeButton.backgroundColor = .spBackground0
+            closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
         }
         articleView.updateColorsAccordingToStyle()
-        commentingContainer.backgroundColor = .spBackground0
-        commentingOnLabel.textColor = .spForeground4
-        commentingOnLabel.backgroundColor = .spBackground0
-        closeButton.backgroundColor = .spBackground0
-        closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
         updateAvatar() // placeholder is adjusted to theme
     }
     

@@ -36,6 +36,7 @@ final class SPCommentReplyHeaderView: BaseView {
         commentLabel.backgroundColor = .spBackground0
         commentLabel.textColor = .spForeground1
         separatorView.backgroundColor = .spSeparator2
+        closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
     }
     
     func hideCommentText() {
