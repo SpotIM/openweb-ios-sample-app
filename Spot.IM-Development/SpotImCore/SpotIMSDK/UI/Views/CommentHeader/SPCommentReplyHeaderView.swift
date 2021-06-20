@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct CommentDataModel {
-    let author: String?
-    let comment: String?
-}
-
 final class SPCommentReplyHeaderView: BaseView {
     
     let closeButton: BaseButton = .init()
@@ -51,7 +46,7 @@ final class SPCommentReplyHeaderView: BaseView {
     
     // MARK: - Internal methods
     
-    internal func configure(with commentModel: CommentDataModel) {
+    internal func configure(with commentModel: CommentReplyDataModel) {
         commentAuthorLabel.text = commentModel.author
         commentLabel.text = commentModel.comment
     }

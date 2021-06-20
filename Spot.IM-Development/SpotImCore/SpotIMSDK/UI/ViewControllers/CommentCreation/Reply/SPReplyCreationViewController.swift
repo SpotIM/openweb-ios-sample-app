@@ -11,11 +11,16 @@ import UIKit
 final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCreationModel> {
     
     private lazy var commentHeaderView = SPCommentReplyHeaderView()
+    private lazy var commentNewHeaderView = SPCommentCreationHeaderView()
     
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
         super.updateColorsAccordingToStyle()
-        commentHeaderView.updateColorsAccordingToStyle()
+        if SpotIm.enableCreatCommentNewDesign {
+            commentNewHeaderView.updateColorsAccordingToStyle()
+        } else {
+            commentHeaderView.updateColorsAccordingToStyle()
+        }
         updateAvatar() // placeholder is adjusted to theme
     }
     
@@ -52,24 +57,40 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
     
     internal override func updateModelData() {
         configureModelHandlers()
-        topContainerStack.insertArrangedSubview(commentHeaderView, at: 0)
-        commentHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-        commentHeaderView.configure(
-            with: CommentDataModel(
-                author: model?.dataModel.authorName,
-                comment: model?.dataModel.comment)
-        )
         
         let shouldHideCommentText = showCommentLabels && showsUsernameInput
-
-        commentHeaderView.layout {
-            $0.top.equal(to: topContainerStack.topAnchor)
-            $0.height.equal(to: shouldHideCommentText ? 68 : 111)
-            $0.width.equal(to: topContainerStack.widthAnchor)
+        let commentReplyDataModel = CommentReplyDataModel(
+            author: model?.dataModel.authorName,
+            comment: model?.dataModel.comment
+        )
+        
+        let headerView: UIView
+        if SpotIm.enableCreatCommentNewDesign {
+            commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+            commentNewHeaderView.delegate = self
+            commentNewHeaderView.configure(with: commentReplyDataModel)
+            if shouldHideCommentText {
+                commentNewHeaderView.hideCommentText()
+            }
+            headerView = commentNewHeaderView
+        } else {
+            commentHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+            commentHeaderView.configure(with: commentReplyDataModel)
+            if shouldHideCommentText {
+                commentHeaderView.hideCommentText()
+            }
+            headerView = commentHeaderView
         }
         
-        if shouldHideCommentText {
-            commentHeaderView.hideCommentText()
+        topContainerStack.insertArrangedSubview(headerView, at: 0)
+        
+        let heightWithCommentText: CGFloat = SpotIm.enableCreatCommentNewDesign ? 135 : 111
+        let heightWithoutCommentText: CGFloat = SpotIm.enableCreatCommentNewDesign ? 115 : 68
+
+        headerView.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.height.equal(to: shouldHideCommentText ? heightWithoutCommentText : heightWithCommentText)
+            $0.width.equal(to: topContainerStack.widthAnchor)
         }
 
         updateTextInputContainer(with: .reply)

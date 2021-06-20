@@ -10,6 +10,8 @@ import UIKit
 
 final class SPCommentCreationViewController: CommentReplyViewController<SPCommentCreationModel> {
     
+    private lazy var commentNewHeaderView = SPCommentCreationHeaderView()
+    
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
     private let commentingOnLabel: BaseLabel = .init()
     private let commentingContainer: UIView = .init()
@@ -36,6 +38,9 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
         super.updateColorsAccordingToStyle()
+        if SpotIm.enableCreatCommentNewDesign {
+            commentNewHeaderView.updateColorsAccordingToStyle()
+        }
         articleView.updateColorsAccordingToStyle()
         commentingContainer.backgroundColor = .spBackground0
         commentingOnLabel.textColor = .spForeground4
@@ -74,8 +79,38 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     }
     
     internal override func updateModelData() {
-        setupHeaderComponentsIfNeeded()
         configureModelHandlers()
+        
+        if SpotIm.enableCreatCommentNewDesign {
+            setupNewHeader()
+        } else {
+            setupHeader()
+        }
+
+        updateTextInputContainer(with: .comment)
+        updateAvatar()
+    }
+    
+    private func setupNewHeader() {
+        guard commentNewHeaderView.superview == nil else {
+            return
+        }
+        topContainerStack.insertArrangedSubview(commentNewHeaderView, at: 0)
+        
+        commentNewHeaderView.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.leading.equal(to: topContainerStack.leadingAnchor)
+            $0.trailing.equal(to: topContainerStack.trailingAnchor)
+            $0.height.equal(to: 60)
+        }
+        
+        commentNewHeaderView.delegate = self
+        commentNewHeaderView.configure()
+        commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+    }
+    
+    private func setupHeader() {
+        setupHeaderComponentsIfNeeded()
         if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
             topContainerStack.insertArrangedSubview(articleView, at: 1)
             articleView.setTitle(model?.dataModel.articleMetadata.title)
@@ -93,9 +128,6 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
             emptyArticleBottomConstarint?.isActive = true
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
         }
-
-        updateTextInputContainer(with: .comment)
-        updateAvatar()
     }
     
     private func setupHeaderComponentsIfNeeded() {
