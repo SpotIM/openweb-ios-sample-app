@@ -229,6 +229,8 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .loginPrompt(let textView):
             customizeLoginPromptTextView(textView: textView)
             break
+//        case .conversationFooter(let view):
+//            break
 //        case .navigationItemTitle(let textView):
 //            break
 //        case .communityGuidelines(let textView):

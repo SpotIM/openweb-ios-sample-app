@@ -514,11 +514,17 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         updateFooterViewCustomUI(footerView: footer)
+        let bottomPadding: CGFloat
+        if #available(iOS 11.0, *) {
+            bottomPadding = UIApplication.shared.windows[0].safeAreaInsets.bottom
+        } else {
+            bottomPadding = 0
+        }
         footer.layout {
-            footerHeightConstraint = $0.height.equal(to: 80.0)
+            footerHeightConstraint = $0.height.equal(to: 80.0 + bottomPadding)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
-            $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
+            $0.bottom.equal(to: view.bottomAnchor)
         }
     }
 
