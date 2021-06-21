@@ -363,7 +363,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         return navigationItemTextView
     }
 
-    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: CommentReplyViewController<T>,
+    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: SPBaseCommentCreationViewController<T>,
                                                                            _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)

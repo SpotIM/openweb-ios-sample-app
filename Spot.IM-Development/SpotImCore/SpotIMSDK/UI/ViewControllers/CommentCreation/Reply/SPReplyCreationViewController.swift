@@ -8,15 +8,15 @@
 
 import UIKit
 
-final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCreationModel> {
+final class SPReplyCreationViewController: SPBaseCommentCreationViewController<SPReplyCreationModel> {
     
     private lazy var commentHeaderView = SPCommentReplyHeaderView()
-    private lazy var commentNewHeaderView = SPCommentCreationHeaderView()
+    private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
     
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
         super.updateColorsAccordingToStyle()
-        if SpotIm.enableCreatCommentNewDesign {
+        if SpotIm.enableCreateCommentNewDesign {
             commentNewHeaderView.updateColorsAccordingToStyle()
         } else {
             commentHeaderView.updateColorsAccordingToStyle()
@@ -65,7 +65,7 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
         )
         
         let headerView: UIView
-        if SpotIm.enableCreatCommentNewDesign {
+        if SpotIm.enableCreateCommentNewDesign {
             commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
             commentNewHeaderView.delegate = self
             commentNewHeaderView.configure(with: commentReplyDataModel)
@@ -84,8 +84,8 @@ final class SPReplyCreationViewController: CommentReplyViewController<SPReplyCre
         
         topContainerStack.insertArrangedSubview(headerView, at: 0)
         
-        let heightWithCommentText: CGFloat = SpotIm.enableCreatCommentNewDesign ? 135 : 111
-        let heightWithoutCommentText: CGFloat = SpotIm.enableCreatCommentNewDesign ? 115 : 68
+        let heightWithCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 135 : 111
+        let heightWithoutCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 115 : 68
 
         headerView.layout {
             $0.top.equal(to: topContainerStack.topAnchor)

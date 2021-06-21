@@ -8,9 +8,9 @@
 
 import UIKit
 
-final class SPCommentCreationViewController: CommentReplyViewController<SPCommentCreationModel> {
+final class SPCommentCreationViewController: SPBaseCommentCreationViewController<SPCommentCreationModel> {
     
-    private lazy var commentNewHeaderView = SPCommentCreationHeaderView()
+    private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
     
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
     private let commentingOnLabel: BaseLabel = .init()
@@ -38,7 +38,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
         super.updateColorsAccordingToStyle()
-        if SpotIm.enableCreatCommentNewDesign {
+        if SpotIm.enableCreateCommentNewDesign {
             commentNewHeaderView.updateColorsAccordingToStyle()
         } else {
             commentingContainer.backgroundColor = .spBackground0
@@ -82,7 +82,7 @@ final class SPCommentCreationViewController: CommentReplyViewController<SPCommen
     internal override func updateModelData() {
         configureModelHandlers()
         
-        if SpotIm.enableCreatCommentNewDesign {
+        if SpotIm.enableCreateCommentNewDesign {
             setupNewHeader()
         } else {
             setupHeader()

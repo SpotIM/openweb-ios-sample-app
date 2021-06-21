@@ -13,13 +13,13 @@ struct CommentReplyDataModel {
     let comment: String?
 }
 
-protocol SPCommentCreationHeaderViewDelegate: AnyObject {
+protocol SPCommentCreationNewHeaderViewDelegate: AnyObject {
     func customizeHeaderTitle(textView: UITextView)
 }
 
-final class SPCommentCreationHeaderView: BaseView {
+final class SPCommentCreationNewHeaderView: BaseView {
     
-    weak var delegate: SPCommentCreationHeaderViewDelegate?
+    weak var delegate: SPCommentCreationNewHeaderViewDelegate?
     
     let closeButton: BaseButton = .init()
 
@@ -76,10 +76,10 @@ final class SPCommentCreationHeaderView: BaseView {
     
     private func hideReplyingViews() {
         hideCommentText()
-        hideReplyingLable()
+        hideReplyingLabel()
     }
     
-    private func hideReplyingLable() {
+    private func hideReplyingLabel() {
         replyingLabelTopConstraint?.constant = 0
         replyingLabel.text = ""
         replyingLabel.isHidden = true
@@ -104,7 +104,7 @@ final class SPCommentCreationHeaderView: BaseView {
     private func setupHeaderTitle() {
         headerTitleLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
         headerTitleLabel.textAlignment = .center
-        headerTitleLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
+        headerTitleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         headerTitleLabel.layout {
             $0.height.equal(to: Theme.headerTitleHeight)
             $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
@@ -134,7 +134,7 @@ final class SPCommentCreationHeaderView: BaseView {
     
     private func setupReplyingLabel() {
         replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
-        replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
+        replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.replyingToFontSize)
         replyingLabel.layout {
             replyingLabelTopConstraint = $0.top.equal(to: separatorView.bottomAnchor, offsetBy: Theme.replyingTopOffset)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
@@ -142,7 +142,7 @@ final class SPCommentCreationHeaderView: BaseView {
     }
     
     private func setupCommentAuthorLabel() {
-        commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
+        commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.replyingToFontSize)
         commentAuthorLabel.layout {
             $0.firstBaseline.equal(to: replyingLabel.firstBaselineAnchor)
             $0.lastBaseline.equal(to: replyingLabel.lastBaselineAnchor)
@@ -173,7 +173,8 @@ private enum Theme {
     static let trailingOffset: CGFloat = 24.0
     static let leadingOffset: CGFloat = 15.0
     static let separatorHeight: CGFloat = 1.0
-    static let titleFontSize: CGFloat = 16.0
+    static let titleFontSize: CGFloat = 18.0
+    static let replyingToFontSize: CGFloat = 16.0
     static let commentFontSize: CGFloat = 16.0
     
 }
