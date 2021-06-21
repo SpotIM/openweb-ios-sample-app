@@ -112,7 +112,7 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     }
     internal func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
         guard let customUIDelegate = self.customUIDelegate else { return }
-        footerView.customizeSayControl(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
+        footerView.handleUICustomizations(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
     }
     
     internal func getCommunityGuidelinesTextIfExists() -> String? {
