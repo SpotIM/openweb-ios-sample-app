@@ -1,5 +1,5 @@
 //
-//  CommentReplyViewController.swift
+//  SPBaseCommentCreationViewController.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 8/1/19.
@@ -15,7 +15,7 @@ protocol CommentReplyViewControllerDelegate: class {
     
 }
 
-class CommentReplyViewController<T: SPBaseCommentCreationModel>: BaseViewController, AlertPresentable,
+class SPBaseCommentCreationViewController<T: SPBaseCommentCreationModel>: BaseViewController, AlertPresentable,
 LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
@@ -306,7 +306,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
 }
 
-extension CommentReplyViewController {
+extension SPBaseCommentCreationViewController {
     
     private func setupUI() {
         view.addSubview(scrollView)
@@ -446,7 +446,7 @@ extension CommentReplyViewController {
 
 // MARK: - Extensions
 
-extension CommentReplyViewController: KeyboardHandable {
+extension SPBaseCommentCreationViewController: KeyboardHandable {
     
     func keyboardWillShow(_ notification: Notification) {
         guard
@@ -476,7 +476,7 @@ extension CommentReplyViewController: KeyboardHandable {
     }
 }
 
-extension CommentReplyViewController: SPTextInputViewDelegate {
+extension SPBaseCommentCreationViewController: SPTextInputViewDelegate {
 
     func tooLongTextWasPassed() {
         // handle too long text passing
@@ -493,7 +493,7 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
     }
 }
 
-extension CommentReplyViewController: AuthenticationViewDelegate {
+extension SPBaseCommentCreationViewController: AuthenticationViewDelegate {
     func authenticationStarted() {
         if (isValidInput()) {
             showLoader()
@@ -501,13 +501,13 @@ extension CommentReplyViewController: AuthenticationViewDelegate {
     }
 }
 
-extension CommentReplyViewController: SPCommentLabelsContainerViewDelegate {
+extension SPBaseCommentCreationViewController: SPCommentLabelsContainerViewDelegate {
     func didSelectionChanged() {
         self.updatePostButtonEnabledState()
     }
 }
 
-extension CommentReplyViewController: SPCommentCreationHeaderViewDelegate {
+extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDelegate {
     func customizeHeaderTitle(textView: UITextView) {
         customUIDelegate?.customizeNavigationItemTitle(textView: textView)
     }
