@@ -693,7 +693,7 @@ extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView) {
         SPAnalyticsHolder.default.log(event: .sortByOpened, source: .conversation)
         showActionSheet(
-            title: LocalizationManager.localizedString(key: "Sort By"),
+            title: LocalizationManager.localizedString(key: "Sort by").uppercased(),
             message: nil,
             actions: model.sortActions(),
             sender: sender)
