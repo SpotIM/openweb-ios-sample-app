@@ -55,7 +55,7 @@ internal final class ArticleWebViewController: UIViewController {
         view.backgroundColor = .groupTableViewBackground
         title = "Article"
         setup()
-        
+//        SpotIm.setCustomSortByOptionText(option: .best, text: "Top")
         SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { result in
             switch result {
             case .success(let coordinator):

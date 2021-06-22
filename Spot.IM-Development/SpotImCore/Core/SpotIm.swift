@@ -65,6 +65,12 @@ public struct SpotImArticleMetadata {
     }
 }
 
+public enum SpotImSortByOption {
+    case best
+    case newest
+    case oldest
+}
+
 extension SpotImResult where T == Void {
     static var success: SpotImResult {
         return .success(())
@@ -94,6 +100,8 @@ public class SpotIm {
     public static var customFontFamily: String? = nil
     public static var displayArticleHeader: Bool = true
     public static var enableCreateCommentNewDesign: Bool = false
+    
+    internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
@@ -334,6 +342,10 @@ public class SpotIm {
         } else {
             return nil
         }
+    }
+    
+    public static func setCustomSortByOptionText(option: SpotImSortByOption, text: String) {
+        customSortByOptionText[option] = text
     }
     
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
