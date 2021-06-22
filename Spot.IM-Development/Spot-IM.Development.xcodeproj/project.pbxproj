@@ -32,6 +32,7 @@
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
 		1234E50D6291AF3A3A6DF3E1 /* libPods-Shared-DemoApps-MarketWatch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C527BA33409DF386F0374AA /* libPods-Shared-DemoApps-MarketWatch.a */; };
+		16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */; };
 		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
 		16A12A60260115BE00A7B3F6 /* SPWebSDKProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A5F260115BE00A7B3F6 /* SPWebSDKProvider.swift */; };
 		16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A642601188100A7B3F6 /* URL+QueryParams.swift */; };
@@ -99,7 +100,7 @@
 		4454180A23685144001D0ED0 /* SPCommentCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CA23685144001D0ED0 /* SPCommentCreationViewController.swift */; };
 		4454180B23685144001D0ED0 /* SPReplyCreationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CC23685144001D0ED0 /* SPReplyCreationModel.swift */; };
 		4454180C23685144001D0ED0 /* SPReplyCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CD23685144001D0ED0 /* SPReplyCreationViewController.swift */; };
-		4454180D23685144001D0ED0 /* CommentReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CF23685144001D0ED0 /* CommentReplyViewController.swift */; };
+		4454180D23685144001D0ED0 /* SPBaseCommentCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417CF23685144001D0ED0 /* SPBaseCommentCreationViewController.swift */; };
 		4454180E23685144001D0ED0 /* LoaderPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D123685144001D0ED0 /* LoaderPresentable.swift */; };
 		4454180F23685144001D0ED0 /* SPBaseConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D223685144001D0ED0 /* SPBaseConversationViewController.swift */; };
 		4454181023685144001D0ED0 /* SPPreConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D423685144001D0ED0 /* SPPreConversationViewController.swift */; };
@@ -604,6 +605,7 @@
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		14539DD1C64F6F1AF9F9ECA8 /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationNewHeaderView.swift; sourceTree = "<group>"; };
 		16670C6F25E68EEE00822D2D /* SPSSOData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPSSOData.swift; sourceTree = "<group>"; };
 		16A12A5F260115BE00A7B3F6 /* SPWebSDKProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPWebSDKProvider.swift; sourceTree = "<group>"; };
 		16A12A642601188100A7B3F6 /* URL+QueryParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+QueryParams.swift"; sourceTree = "<group>"; };
@@ -675,7 +677,7 @@
 		445417CA23685144001D0ED0 /* SPCommentCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentCreationViewController.swift; sourceTree = "<group>"; };
 		445417CC23685144001D0ED0 /* SPReplyCreationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReplyCreationModel.swift; sourceTree = "<group>"; };
 		445417CD23685144001D0ED0 /* SPReplyCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReplyCreationViewController.swift; sourceTree = "<group>"; };
-		445417CF23685144001D0ED0 /* CommentReplyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentReplyViewController.swift; sourceTree = "<group>"; };
+		445417CF23685144001D0ED0 /* SPBaseCommentCreationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPBaseCommentCreationViewController.swift; sourceTree = "<group>"; };
 		445417D123685144001D0ED0 /* LoaderPresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoaderPresentable.swift; sourceTree = "<group>"; };
 		445417D223685144001D0ED0 /* SPBaseConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPBaseConversationViewController.swift; sourceTree = "<group>"; };
 		445417D423685144001D0ED0 /* SPPreConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPPreConversationViewController.swift; sourceTree = "<group>"; };
@@ -1187,7 +1189,7 @@
 		445417CE23685144001D0ED0 /* GenericViewController */ = {
 			isa = PBXGroup;
 			children = (
-				445417CF23685144001D0ED0 /* CommentReplyViewController.swift */,
+				445417CF23685144001D0ED0 /* SPBaseCommentCreationViewController.swift */,
 				2459B87E263823A8006A0CF0 /* SPBaseCommentCreationModel.swift */,
 			);
 			path = GenericViewController;
@@ -1313,6 +1315,7 @@
 			isa = PBXGroup;
 			children = (
 				445417F023685144001D0ED0 /* SPCommentReplyHeaderView.swift */,
+				16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */,
 			);
 			path = CommentHeader;
 			sourceTree = "<group>";
@@ -2620,8 +2623,9 @@
 				4454189823685154001D0ED0 /* SPSpotConfiguration.swift in Sources */,
 				4454188B23685154001D0ED0 /* SPInternalAuthenticationRequests.swift in Sources */,
 				445418B523685154001D0ED0 /* SPConstants.swift in Sources */,
+				16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */,
 				4454181123685144001D0ED0 /* SPMainConversationViewController.swift in Sources */,
-				4454180D23685144001D0ED0 /* CommentReplyViewController.swift in Sources */,
+				4454180D23685144001D0ED0 /* SPBaseCommentCreationViewController.swift in Sources */,
 				5DB97792236B25A400E9D547 /* SPNameInputView.swift in Sources */,
 				4454181A23685144001D0ED0 /* SPConversationSectionHeaderFooterView.swift in Sources */,
 				4454180A23685144001D0ED0 /* SPCommentCreationViewController.swift in Sources */,
