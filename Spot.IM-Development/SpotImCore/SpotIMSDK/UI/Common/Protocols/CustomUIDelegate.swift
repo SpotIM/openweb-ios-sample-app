@@ -12,6 +12,7 @@ protocol CustomUIDelegate: AnyObject {
     func customizeLoginPromptTextView(textView: UITextView)
     func customizeCommunityQuestionTextView(textView: UITextView)
     func customizeSayControl(labelContainer: BaseView, label: BaseLabel, isPreConversation: Bool)
+    func customizeConversationFooter(view: UIView)
     func customizeCommunityGuidelines(textView: UITextView)
     func customizeNavigationItemTitle(textView: UITextView)
 }
