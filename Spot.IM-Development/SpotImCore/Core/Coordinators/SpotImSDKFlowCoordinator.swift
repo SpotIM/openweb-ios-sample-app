@@ -363,7 +363,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         return navigationItemTextView
     }
 
-    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: CommentReplyViewController<T>,
+    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: SPBaseCommentCreationViewController<T>,
                                                                            _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
@@ -422,6 +422,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
 
     internal func createComment(with dataModel: SPMainConversationModel) {
         let controller = SPCommentCreationViewController()
+        controller.customUIDelegate = self
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         
@@ -439,6 +440,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
         let controller = SPReplyCreationViewController()
+        controller.customUIDelegate = self
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         
