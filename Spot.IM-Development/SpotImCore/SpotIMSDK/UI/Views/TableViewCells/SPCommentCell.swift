@@ -115,7 +115,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
 
     private func configureHeaderView() {
-        separatorView.backgroundColor = .spSeparator
+        separatorView.backgroundColor = .spSeparator2
         headerView.addSubview(separatorView)
         separatorView.layout {
             $0.centerX.equal(to: headerView.centerXAnchor)
@@ -255,7 +255,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         headerViewHeightConstraint?.constant = shouldShowHeader ? 7.0 : 0.0
         separatorHeightConstraint?.constant = shouldShowHeader ? 1.0 : 0.0
 
-        separatorView.backgroundColor = .spSeparator4
+        separatorView.backgroundColor = .spSeparator2
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
