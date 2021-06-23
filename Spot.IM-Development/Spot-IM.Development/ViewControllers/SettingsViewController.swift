@@ -13,6 +13,7 @@ import SpotImCore
 class SettingsViewController: UIViewController {
     
     @IBOutlet weak var hideArtcleHeaderSwitch: UISwitch!
+    @IBOutlet weak var createCommentNewDesignSwitch: UISwitch!
     @IBOutlet weak var darkModeSwitch: UISwitch!
     @IBOutlet weak var modeControl: UISegmentedControl!
     
@@ -25,6 +26,11 @@ class SettingsViewController: UIViewController {
     var isHideArticleHeaderEnabled: Bool {
         get { !SpotIm.displayArticleHeader }
         set { SpotIm.displayArticleHeader = !newValue }
+    }
+    
+    var isCreateCommentNewDesignEnabled: Bool {
+        get { SpotIm.enableCreateCommentNewDesign }
+        set { SpotIm.enableCreateCommentNewDesign = newValue }
     }
     
     var interfaceStyle: Int {
@@ -41,6 +47,7 @@ class SettingsViewController: UIViewController {
         
         darkModeSwitch.isOn = isCustomDarkModeEnabled
         hideArtcleHeaderSwitch.isOn = isHideArticleHeaderEnabled
+        createCommentNewDesignSwitch.isOn = isCreateCommentNewDesignEnabled
         
         modeControl.isHidden = !isCustomDarkModeEnabled
         modeControl.selectedSegmentIndex = interfaceStyle
@@ -53,6 +60,11 @@ class SettingsViewController: UIViewController {
     @IBAction func switchHideArticleHeader(_ sender: UISwitch) {
         isHideArticleHeaderEnabled = sender.isOn
     }
+    
+    @IBAction func switchCreateCommentNewDesign(_ sender: UISwitch) {
+        isCreateCommentNewDesignEnabled = sender.isOn
+    }
+    
     
 
     @IBAction func switchDarkMode(_ sender: UISwitch) {

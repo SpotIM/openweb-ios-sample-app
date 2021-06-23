@@ -491,7 +491,12 @@ Build: [unknown]</string>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hide article header" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fki-wM-TQv">
-                                <rect key="frame" x="60" y="121" width="123" height="17"/>
+                                <rect key="frame" x="30" y="121" width="123" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create comment new design" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bvT-bO-ucE">
+                                <rect key="frame" x="30" y="169" width="185" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
@@ -528,20 +533,30 @@ Build: [unknown]</string>
                                     <action selector="switchHideArticleHeader:" destination="afI-iB-Nmt" eventType="valueChanged" id="Ru8-2g-Gws"/>
                                 </connections>
                             </switch>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oFl-re-kEH">
+                                <rect key="frame" x="266" y="162" width="51" height="31"/>
+                                <connections>
+                                    <action selector="switchCreateCommentNewDesign:" destination="afI-iB-Nmt" eventType="valueChanged" id="WDD-tT-uMV"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pIh-k2-j8N"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Fki-wM-TQv" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="1QX-Pv-Y6q"/>
+                            <constraint firstItem="Fki-wM-TQv" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="30" id="1QX-Pv-Y6q"/>
                             <constraint firstItem="bTW-Wt-zDR" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="8cf-uB-SEj"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="bottom" secondItem="aKr-SD-OJK" secondAttribute="bottom" constant="21" id="8mJ-Rf-Yvc"/>
+                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="oFl-re-kEH" secondAttribute="trailing" constant="60" id="9Jm-D1-Okx"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="aKr-SD-OJK" secondAttribute="trailing" constant="60" id="ABi-XR-SpD"/>
+                            <constraint firstItem="bvT-bO-ucE" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="30" id="E62-wv-6KY"/>
                             <constraint firstItem="kMe-b0-d39" firstAttribute="top" secondItem="bTW-Wt-zDR" secondAttribute="bottom" constant="30" id="Guk-xR-Fik"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="COa-ig-fWj" secondAttribute="trailing" constant="60" id="IIP-D6-Bgg"/>
                             <constraint firstItem="Fki-wM-TQv" firstAttribute="top" secondItem="mTs-Sn-XWm" secondAttribute="bottom" constant="30" id="Iyl-MM-LJX"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="JID-vg-Zmg"/>
+                            <constraint firstItem="oFl-re-kEH" firstAttribute="top" secondItem="COa-ig-fWj" secondAttribute="bottom" constant="17" id="Sa9-zq-5FF"/>
                             <constraint firstItem="mTs-Sn-XWm" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="WKT-FA-Ssj"/>
                             <constraint firstItem="COa-ig-fWj" firstAttribute="centerY" secondItem="Fki-wM-TQv" secondAttribute="centerY" id="XW5-xw-L7s"/>
+                            <constraint firstItem="bvT-bO-ucE" firstAttribute="top" secondItem="Fki-wM-TQv" secondAttribute="bottom" constant="31" id="Xlc-t3-iwr"/>
                             <constraint firstItem="mTs-Sn-XWm" firstAttribute="top" secondItem="pIh-k2-j8N" secondAttribute="top" constant="21" id="ckz-A8-QEs"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="kMe-b0-d39" secondAttribute="bottom" constant="16" id="lPA-MJ-6K0"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="RrX-Ol-vho" secondAttribute="bottom" constant="8" id="ukZ-kp-Elp"/>
@@ -551,6 +566,7 @@ Build: [unknown]</string>
                     </view>
                     <navigationItem key="navigationItem" id="zdw-3c-jGR"/>
                     <connections>
+                        <outlet property="createCommentNewDesignSwitch" destination="oFl-re-kEH" id="9LE-GL-k10"/>
                         <outlet property="darkModeSwitch" destination="RrX-Ol-vho" id="dF2-iX-Gco"/>
                         <outlet property="hideArtcleHeaderSwitch" destination="COa-ig-fWj" id="X8E-u4-OcZ"/>
                         <outlet property="modeControl" destination="aKr-SD-OJK" id="DcC-wq-pGd"/>
