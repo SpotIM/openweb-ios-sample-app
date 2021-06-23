@@ -38,12 +38,7 @@ class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
-
+        
         darkModeSwitch.isOn = isCustomDarkModeEnabled
         hideArtcleHeaderSwitch.isOn = isHideArticleHeaderEnabled
         
