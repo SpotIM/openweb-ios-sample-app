@@ -55,7 +55,9 @@ internal final class ArticleWebViewController: UIViewController {
         view.backgroundColor = .groupTableViewBackground
         title = "Article"
         setup()
-//        SpotIm.setCustomSortByOptionText(option: .best, text: "Top")
+        if (spotId == "sp_mobileGuest") {
+            SpotIm.setCustomSortByOptionText(option: .best, text: "Top")
+        }
         SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { result in
             switch result {
             case .success(let coordinator):
@@ -225,24 +227,51 @@ extension ArticleWebViewController: SpotImLoginDelegate {
 
 extension ArticleWebViewController: SpotImCustomUIDelegate {    
     func customizeView(view: CustomizableView, isDarkMode: Bool) {
+        guard spotId == "sp_mobileGuest" else { return }
         switch view {
         case .loginPrompt(let textView):
             customizeLoginPromptTextView(textView: textView)
             break
-//        case .conversationFooter(let view):
-//            break
-//        case .navigationItemTitle(let textView):
-//            break
-//        case .communityGuidelines(let textView):
-//            break
-//        case .communityQuestion(let textView):
-//            customizeCommunityQuestionTextView(textView: textView, isDarkMode: isDarkMode)
-//        case .sayControlInPreConversation(let labelContainer, let label):
-//            break
-//        case .sayControlInMainConversation(let labelContainer, let label):
-//            break
+        case .conversationFooter(let view):
+            view.backgroundColor = isDarkMode ? #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1) : #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+            break
+        case .navigationItemTitle(let textView):
+            customizeNavigationItemTitle(textView: textView)
+            break
+        case .communityGuidelines(let textView):
+            customizeComunityGuidelines(textView: textView, isDarkMode: isDarkMode)
+            break
+        case .communityQuestion(let textView):
+            customizeCommunityQuestionTextView(textView: textView, isDarkMode: isDarkMode)
+            break
+        case .sayControlInPreConversation(let labelContainer, let label):
+            label.textColor = isDarkMode ? UIColor.blue : UIColor.red
+            break
+        case .sayControlInMainConversation(let labelContainer, let label):
+            label.textColor = isDarkMode ? UIColor.blue : UIColor.red
+            break
         default:
             break
+        }
+    }
+    
+    private func customizeNavigationItemTitle(textView: UITextView) {
+        if let attributedString = textView.attributedText.mutableCopy() as? NSMutableAttributedString {
+            attributedString.addAttribute(
+                .font,
+                value: UIFont.systemFont(ofSize: 18, weight: .bold),
+                range: NSMakeRange(0,attributedString.length)
+            )
+            textView.attributedText = attributedString
+        }
+    }
+    
+    private func customizeComunityGuidelines(textView: UITextView, isDarkMode: Bool) {
+        textView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: isDarkMode ? UIColor.red : UIColor.green]
+        if let textViewAttributedString = textView.attributedText.mutableCopy() as? NSMutableAttributedString {
+            textViewAttributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 22, weight: .heavy), range: NSMakeRange(0,
+            textViewAttributedString.length))
+            textView.attributedText = textViewAttributedString
         }
     }
     
@@ -267,7 +296,7 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         multipleAttributes[.foregroundColor] =      UIColor.red
         multipleAttributes[.font] =                 UIFont.systemFont(ofSize: 35)
 
-        let attributedString = NSMutableAttributedString(string: "Custom community question with very very long text", attributes: multipleAttributes)
+        let attributedString = NSMutableAttributedString(string: textView.text, attributes: multipleAttributes)
         textView.attributedText = attributedString
         if (isDarkMode) {
             textView.textColor = .white
