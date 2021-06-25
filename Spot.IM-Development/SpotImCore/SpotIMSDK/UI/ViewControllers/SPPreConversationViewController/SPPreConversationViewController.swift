@@ -16,6 +16,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
     private lazy var bannerView: PreConversationBannerView = .init()
+    private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
     private lazy var header: SPPreConversationHeaderView = .init()
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
@@ -48,11 +49,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         let result = bannerView.frame.height +
             actualBannerMargin +
             header.frame.height +
-            //TODO LoginPrompt height
             communityGuidelinesView.frame.height +
             whatYouThinkView.frame.height +
             tableView.frame.height +
-            footerView.frame.height
+            footerView.frame.height +
+            communityQuestionView.frame.height
         
         return result
     }
@@ -63,13 +64,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
         
         self.adsProvider = adsProvider
         self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
         
-        super.init(model: model)
-        
+        super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
     }
@@ -141,12 +141,19 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.tableView.backgroundColor = .spBackground0
         self.bannerView.updateColorsAccordingToStyle()
         self.whatYouThinkView.updateColorsAccordingToStyle()
+        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
+        self.communityQuestionView.updateColorsAccordingToStyle()
+        self.updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
         self.communityGuidelinesView.updateColorsAccordingToStyle()
         if let htmlString = self.communityGuidelinesHtmlString {
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
         self.header.updateColorsAccordingToStyle()
         self.footerView.updateColorsAccordingToStyle()
+    }
+    
+    override func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
+        super.updateFooterViewCustomUI(footerView: footerView, isPreConversation: true)
     }
     
     
@@ -181,12 +188,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     // MARK: - Private methods
 
     override func setupUI() {
-        view.addSubviews(bannerView, header, communityGuidelinesView, whatYouThinkView, footerView)
+        view.addSubviews(bannerView, header, communityGuidelinesView, communityQuestionView, whatYouThinkView, footerView)
 
         super.setupUI()
 
         setupBannerView()
         setupHeader()
+        configureCommunityQuestionView()
         setupCommunityGuidelinesView()
         setupWhatYouThinkView()
         setupFooterView()
@@ -211,6 +219,32 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.headerHeight)
         }
+    }
+    
+    private func configureCommunityQuestionView() {
+        communityQuestionView.clipsToBounds = true
+        updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
+        communityQuestionView.layout {
+            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
+            $0.leading.equal(to: view.leadingAnchor)
+            $0.trailing.equal(to: view.trailingAnchor)
+        }
+    }
+    
+    private func updateCommunityQuestion(communityQuestionText: String?) {
+        if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0 {
+            communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
+            communityQuestionView.clipsToBounds = true
+            communityQuestionView.setupPreConversationConstraints()
+            communityGuidelinesView.setSeperatorVisible(isVisible: false)
+        } else {
+            communityQuestionView.isHidden = true
+            communityQuestionView.layout {
+                $0.height.equal(to: 0.0)
+            }
+            communityGuidelinesView.setSeperatorVisible(isVisible: true)
+        }
+        updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
     }
     
     private func setupCommunityGuidelinesView() {
@@ -239,11 +273,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         whatYouThinkView.showsSeparator = false
         whatYouThinkView.delegate = self
         whatYouThinkView.layout {
-            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
+            $0.top.equal(to: communityQuestionView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.whatYouThinkHeight)
         }
+        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
     }
     
     override func setupTableView() {
@@ -303,6 +338,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.header.set(commentCount: messageCount.decimalFormatted)
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
+                        self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
                     }
                 }
                 
