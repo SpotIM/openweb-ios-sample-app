@@ -19,6 +19,7 @@ final class SPConversationSummaryView: BaseView {
 
     private let commentsCountLabel: BaseLabel = .init()
     private let separatorView: BaseView = .init()
+    private let sortByLabel: BaseLabel = .init()
     private let sortButton: BaseButton = .init()
     private let newCommentsButton: BaseButton = .init()
 
@@ -46,7 +47,9 @@ final class SPConversationSummaryView: BaseView {
         backgroundColor = .spBackground0
         commentsCountLabel.textColor = .spForeground4
         commentsCountLabel.backgroundColor = .spBackground0
-        sortButton.setTitleColor(.spForeground4, for: .normal)
+        sortButton.setTitleColor(.spForeground0, for: .normal)
+        sortButton.setImage(UIImage(spNamed: "sortingIcon"), for: .normal)
+        sortByLabel.textColor = .spForeground0
         newCommentsButton.setTitleColor(.white, for: .normal)
         newCommentsButton.backgroundColor = .brandColor
         separatorView.backgroundColor = .spSeparator2
@@ -87,9 +90,10 @@ final class SPConversationSummaryView: BaseView {
 extension SPConversationSummaryView {
     
     private func setupUI() {
-        addSubviews(commentsCountLabel, newCommentsButton, sortButton, separatorView)
+        addSubviews(commentsCountLabel, newCommentsButton, sortByLabel, sortButton, separatorView)
         
         configureCommentCountLabel()
+        configureSortByLabel()
         configureSortButton()
         configureNewCommentsButton()
         configureSeparatorView()
@@ -104,10 +108,19 @@ extension SPConversationSummaryView {
         }
     }
     
+    private func configureSortByLabel() {
+        sortByLabel.font = UIFont.preferred(style: .regular, of: Theme.sortButtonFontSize)
+        sortByLabel.text = LocalizationManager.localizedString(key: "Sort by")
+        
+        sortByLabel.layout {
+            $0.trailing.equal(to: sortButton.leadingAnchor, offsetBy: -Theme.sortByTrailingOffset)
+            $0.bottom.equal(to: bottomAnchor)
+            $0.top.equal(to: topAnchor)
+        }
+    }
+    
     private func configureSortButton() {
-        let sortIcon = UIImage(spNamed: "sortingIcon")?.withRenderingMode(.alwaysOriginal)
-        sortButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.sortButtonFontSize)
-        sortButton.setImage(sortIcon, for: .normal)
+        sortButton.titleLabel?.font = UIFont.preferred(style: .bold, of: Theme.sortButtonFontSize)
         let spacing: CGFloat = Theme.insetTiny
         var inset: CGFloat = spacing / 2
         
@@ -184,6 +197,7 @@ private enum Theme {
     static let sortButtonFontSize: CGFloat = 15.0
     static let commentsFontSize: CGFloat = 15.0
     static let newCommentsFontSize: CGFloat = 13.0
+    static let sortByTrailingOffset: CGFloat = 4.0
     static let sideOffset: CGFloat = 16.0
     static let viewShadowOpacity: Float = 0.08
 }
