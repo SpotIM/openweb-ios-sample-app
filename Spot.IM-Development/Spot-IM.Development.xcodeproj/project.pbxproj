@@ -87,7 +87,7 @@
 		445417FD23685144001D0ED0 /* NavigationController+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B723685144001D0ED0 /* NavigationController+Appearance.swift */; };
 		445417FE23685144001D0ED0 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B823685144001D0ED0 /* NSAttributedString+Extensions.swift */; };
 		445417FF23685144001D0ED0 /* Int+Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B923685144001D0ED0 /* Int+Formatting.swift */; };
-		4454180023685144001D0ED0 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417BB23685144001D0ED0 /* BaseViewController.swift */; };
+		4454180023685144001D0ED0 /* SPBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417BB23685144001D0ED0 /* SPBaseViewController.swift */; };
 		4454180123685144001D0ED0 /* BaseTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417BD23685144001D0ED0 /* BaseTextView.swift */; };
 		4454180223685144001D0ED0 /* SPAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417BE23685144001D0ED0 /* SPAvatarView.swift */; };
 		4454180323685144001D0ED0 /* SPAnimatedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417BF23685144001D0ED0 /* SPAnimatedButton.swift */; };
@@ -664,7 +664,7 @@
 		445417B723685144001D0ED0 /* NavigationController+Appearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationController+Appearance.swift"; sourceTree = "<group>"; };
 		445417B823685144001D0ED0 /* NSAttributedString+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		445417B923685144001D0ED0 /* Int+Formatting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Formatting.swift"; sourceTree = "<group>"; };
-		445417BB23685144001D0ED0 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		445417BB23685144001D0ED0 /* SPBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPBaseViewController.swift; sourceTree = "<group>"; };
 		445417BD23685144001D0ED0 /* BaseTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTextView.swift; sourceTree = "<group>"; };
 		445417BE23685144001D0ED0 /* SPAvatarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAvatarView.swift; sourceTree = "<group>"; };
 		445417BF23685144001D0ED0 /* SPAnimatedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAnimatedButton.swift; sourceTree = "<group>"; };
@@ -1112,7 +1112,7 @@
 		445417BA23685144001D0ED0 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				445417BB23685144001D0ED0 /* BaseViewController.swift */,
+				445417BB23685144001D0ED0 /* SPBaseViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -2591,7 +2591,7 @@
 				441165A12375BBC100B781F3 /* ApiManager.swift in Sources */,
 				4454181723685144001D0ED0 /* SPLoaderCell.swift in Sources */,
 				4454180423685144001D0ED0 /* InputTextView.swift in Sources */,
-				4454180023685144001D0ED0 /* BaseViewController.swift in Sources */,
+				4454180023685144001D0ED0 /* SPBaseViewController.swift in Sources */,
 				4454188A23685154001D0ED0 /* SPConversationRequests.swift in Sources */,
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
 				445418B123685154001D0ED0 /* Date+SPExtensions.swift in Sources */,
