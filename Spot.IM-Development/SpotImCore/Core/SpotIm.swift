@@ -100,6 +100,7 @@ public class SpotIm {
     public static var customFontFamily: String? = nil
     public static var displayArticleHeader: Bool = true
     public static var enableCreateCommentNewDesign: Bool = false
+    public static var shouldConversationFooterStartFromBottomAnchor = false
     
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
