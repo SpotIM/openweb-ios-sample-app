@@ -102,7 +102,7 @@ final class SPCommentCreationNewHeaderView: BaseView {
     }
     
     private func setupHeaderTitle() {
-        headerTitleLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
+        headerTitleLabel.text = LocalizationManager.localizedString(key: "Add a comment")
         headerTitleLabel.textAlignment = .center
         headerTitleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         headerTitleLabel.layout {
