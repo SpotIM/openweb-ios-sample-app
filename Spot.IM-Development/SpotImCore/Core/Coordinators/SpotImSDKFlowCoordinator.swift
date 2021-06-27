@@ -313,6 +313,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         conversationModel.delegates.add(delegate: preConversationViewController)
         conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
         
+        preConversationViewController.customUIDelegate = self
         preConversationViewController.delegate = self
         preConversationViewController.userAuthFlowDelegate = self
         
@@ -333,6 +334,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
         let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self)
         
+        controller.customUIDelegate = self
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
