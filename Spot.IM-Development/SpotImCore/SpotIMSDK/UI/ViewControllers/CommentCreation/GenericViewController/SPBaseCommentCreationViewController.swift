@@ -15,12 +15,11 @@ protocol CommentReplyViewControllerDelegate: class {
     
 }
 
-class SPBaseCommentCreationViewController<T: SPBaseCommentCreationModel>: BaseViewController, AlertPresentable,
+class SPBaseCommentCreationViewController<T: SPBaseCommentCreationModel>: SPBaseViewController, AlertPresentable,
 LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
-    weak var customUIDelegate: CustomUIDelegate?
     private var authHandler: AuthenticationHandler?
     
     var model: T? {
@@ -143,7 +142,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
+    override func updateColorsAccordingToStyle() {
+        super.updateColorsAccordingToStyle()
         self.view.backgroundColor = .spBackground0
         mainContainerView.backgroundColor = .spBackground0
         textInputViewContainer.backgroundColor = .spBackground0
