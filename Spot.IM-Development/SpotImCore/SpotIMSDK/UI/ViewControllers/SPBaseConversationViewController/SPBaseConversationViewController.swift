@@ -8,10 +8,9 @@
 
 import UIKit
 
-internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
+internal class SPBaseConversationViewController: SPBaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
-    weak var customUIDelegate: CustomUIDelegate?
     private var authHandler: AuthenticationHandler?
     
     weak var webPageDelegate: SPSafariWebPageDelegate?
@@ -40,7 +39,6 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
 
     internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate? = nil) {
         self.model = model
-        self.customUIDelegate = customUIDelegate
         
         super.init()
     }

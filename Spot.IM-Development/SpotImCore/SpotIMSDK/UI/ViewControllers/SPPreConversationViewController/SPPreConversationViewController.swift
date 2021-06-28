@@ -136,7 +136,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
+    override func updateColorsAccordingToStyle() {
+        super.updateColorsAccordingToStyle()
         self.view.backgroundColor = .spBackground0
         self.tableView.backgroundColor = .spBackground0
         self.bannerView.updateColorsAccordingToStyle()
