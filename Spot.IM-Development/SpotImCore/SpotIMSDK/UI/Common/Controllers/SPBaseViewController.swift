@@ -7,7 +7,7 @@ import UIKit
 
 internal class SPBaseViewController: UIViewController {
     
-    weak var customUIDelegate: CustomUIDelegate?
+    internal weak var customUIDelegate: CustomUIDelegate?
     
     var userRightBarItem: UIBarButtonItem?
     var userIcon: BaseButton = {
@@ -20,9 +20,9 @@ internal class SPBaseViewController: UIViewController {
         return button
     }()
     
-    init() {
+    init(customUIDelegate: CustomUIDelegate?) {
         super.init(nibName: nil, bundle: nil)
-
+        self.customUIDelegate = customUIDelegate
         view.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? view.semanticContentAttribute
         overrideInterfaceStyleIfNeeded()
