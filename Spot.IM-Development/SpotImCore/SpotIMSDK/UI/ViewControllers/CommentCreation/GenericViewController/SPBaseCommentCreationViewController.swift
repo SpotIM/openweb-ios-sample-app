@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol CommentReplyViewControllerDelegate: class {
+protocol CommentReplyViewControllerDelegate: AnyObject {
     
     func commentReplyDidCreate(_ comment: SPComment)
     func commentReplyDidBlock(with commentText: String?)
