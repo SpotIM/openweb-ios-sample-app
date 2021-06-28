@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal protocol SPCommentsCreationDelegate: class {
+internal protocol SPCommentsCreationDelegate: AnyObject {
     func createComment(with dataModel: SPMainConversationModel)
     func createReply(with dataModel: SPMainConversationModel, to id: String)
 }

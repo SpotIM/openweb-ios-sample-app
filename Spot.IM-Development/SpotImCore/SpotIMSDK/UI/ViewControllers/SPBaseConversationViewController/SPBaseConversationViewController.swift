@@ -40,7 +40,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate? = nil) {
         self.model = model
         
-        super.init()
+        super.init(customUIDelegate: customUIDelegate)
     }
 
     override func viewDidLoad() {
