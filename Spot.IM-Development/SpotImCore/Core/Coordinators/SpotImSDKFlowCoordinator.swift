@@ -60,7 +60,7 @@ public extension SpotImLoginDelegate {
     }
 }
 
-class PresentedContainerNavigationController: UINavigationController {
+private class PresentedContainerNavigationController: UINavigationController {
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if let topViewController = topViewController {
             return topViewController.supportedInterfaceOrientations
