@@ -139,6 +139,17 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
                 self.textInputViewContainer.makeFirstResponder()
             }
         }
+        
+        // force portrait orientation
+        UIDevice.current.setValue(
+            UIInterfaceOrientation.portrait.rawValue,
+            forKey: "orientation"
+        )
+        UINavigationController.attemptRotationToDeviceOrientation()
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
     }
     
     // Handle dark mode \ light mode change
