@@ -25,6 +25,7 @@
 "Cancel" = "Cancelar";
 "Are you sure you want to log out?" = "¿Están seguros de querer cerrar sesión?";
 "Add a Comment" = "¿Qué piensas?";
+"Add a comment" = "¿Qué piensas?";
 "Commenting on" = "Comentando en";
 "Oops..." = "Whoops!";
 "Leave Page" = "Cerrar la página";
@@ -51,7 +52,7 @@
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "Parece que su comentario ha violado nuestra política de moderación. Le recomendamos que intente nuevamente con una frase distinta.";
 "Got it" = "Comprendido";
 "Be the first to comment" = "Sean los primeros en comentar";
-"Sort By" = "Ordenar por";
+"Sort by" = "Ordenar por";
 "Share" = "Compartir";
 "What do you think?" = "¿Qué piensas?";
 "Loading" = "Cargando...";
@@ -75,3 +76,7 @@
 "Comment" = "Comentario";
 "Typing" = "Escribiendo ahora";
 "User is already logged in." = "User is already logged in.";
+"Profile image" = "Profile image";
+"Up vote button" = "Up vote button";
+"Down vote button" = "Down vote button";
+"Options menu" = "Options menu";

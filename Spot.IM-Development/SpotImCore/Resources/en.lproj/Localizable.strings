@@ -25,6 +25,7 @@
 "Cancel" = "Cancel";
 "Are you sure you want to log out?" = "Are you sure you want to log out?";
 "Add a Comment" = "Add a Comment";
+"Add a comment" = "Add a comment";
 "Commenting on" = "Commenting on";
 "Oops..." = "Whoops!";
 "Leave Page" = "Leave Page";
@@ -51,7 +52,7 @@
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "It seems like your comment has violated our policy. We recommend you try again with different phrasing.";
 "Got it" = "Got it";
 "Be the first to comment" = "Be the first to comment";
-"Sort By" = "Sort By";
+"Sort by" = "Sort by";
 "Share" = "Share";
 "What do you think?" = "What do you think?";
 "Loading" = "Loading";
@@ -75,3 +76,7 @@
 "Comment" = "Comment";
 "Typing" = "Typing Now";
 "User is already logged in." = "User is already logged in.";
+"Profile image" = "Profile image";
+"Up vote button" = "Up vote button";
+"Down vote button" = "Down vote button";
+"Options menu" = "Options menu";

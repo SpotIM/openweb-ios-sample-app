@@ -81,7 +81,6 @@ final class SPMainConversationModel {
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
         self.abTestsData = abTestData
-        
         dataSource = conversationDataSource
         
         dataSource.messageCounterUpdated = { [weak self] count in
