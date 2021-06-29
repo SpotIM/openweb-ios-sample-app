@@ -35,6 +35,7 @@ final class SPAvatarView: BaseView {
         super.init(frame: frame)
         
         setup()
+        applyAccessibility()
     }
     
     // Handle dark mode \ light mode change
@@ -124,4 +125,13 @@ final class SPAvatarView: BaseView {
     private func avatarTapped() {
         delegate?.avatarDidTapped()
     }
+}
+
+// MARK: Accessibility
+
+extension SPAvatarView {
+  func applyAccessibility() {
+    avatarButton.accessibilityTraits = .image
+    avatarButton.accessibilityLabel = LocalizationManager.localizedString(key: "Profile image")
+  }
 }

@@ -26,22 +26,13 @@ internal final class SPWebSDKProvider {
         url.appendQueryParam(name: "module_name", value: params.module.rawValue)
         url.appendQueryParam(name: "spot_id", value: params.spotId)
         url.appendQueryParam(name: "post_id", value: params.postId)
+        url.appendQueryParam(name: "single_use_ticket", value: params.singleUseTicket)
         if let userId = params.userId {
             url.appendQueryParam(name: "user_id", value: userId)
-        }
-        if let userAccessToken = params.userAccessToken {
-            url.appendQueryParam(name: "user_access_token", value: getCleanToken(token: userAccessToken))
-        }
-        if let userOwToken = params.userOwToken {
-            url.appendQueryParam(name: "user_ow_token", value: userOwToken)
         }
 
         url = urlWithDarkModeParam(url: url)
         return url.absoluteString
-    }
-    
-    private static func getCleanToken(token: String) -> String {
-        return token.replacingOccurrences(of: "Bearer ", with: "")
     }
     
     public static func urlWithDarkModeParam(url: URL) -> URL {
@@ -57,8 +48,7 @@ extension SPWebSDKProvider {
         var spotId: String
         var postId: String = "default"
         var userId: String?
-        var userAccessToken: String?
-        var userOwToken: String?
+        var singleUseTicket: String?
         
         init(module: WebModule, spotId: String, postId: String) {
             self.module = module
@@ -66,11 +56,9 @@ extension SPWebSDKProvider {
             self.postId = postId
         }
         
-        convenience init(module: WebModule, spotId: String, postId: String, userId: String, userAccessToken: String? = nil, userOwToken: String? = nil) {
+        convenience init(module: WebModule, spotId: String, postId: String, userId: String) {
             self.init(module: module, spotId: spotId, postId: postId)
             self.userId = userId
-            self.userAccessToken = userAccessToken
-            self.userOwToken = userOwToken
         }
     }
 }

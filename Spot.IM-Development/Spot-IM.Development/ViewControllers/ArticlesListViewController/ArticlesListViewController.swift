@@ -39,7 +39,12 @@ class ArticlesListViewController: UITableViewController {
         super.viewDidLoad()
         
         SpotIm.reinit = shouldReinit
-        SpotIm.initialize(spotId: spotId)
+        SpotIm.initialize(spotId: spotId) { (isInitialized, error) in
+            if let error = error {
+                print("SpotIm.initialize - error: \(error)")
+            }
+            print("SpotIm.initialize - isInitialized: \(isInitialized)")
+        }
         
         // This is the new implementation for publishers with monetization. The app developer should provide the AdsProvider implementation instance
         // to utilize the ad-network dependecies from the app target instead of the SDK.
