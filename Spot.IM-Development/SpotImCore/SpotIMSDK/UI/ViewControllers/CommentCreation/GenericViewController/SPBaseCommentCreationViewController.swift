@@ -140,12 +140,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             }
         }
         
-        // force portrait orientation
-        UIDevice.current.setValue(
-            UIInterfaceOrientation.portrait.rawValue,
-            forKey: "orientation"
-        )
-        UINavigationController.attemptRotationToDeviceOrientation()
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            // force portrait orientation for iphone
+            UIDevice.current.setValue(
+                UIInterfaceOrientation.portrait.rawValue,
+                forKey: "orientation"
+            )
+            UINavigationController.attemptRotationToDeviceOrientation()
+        }
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
