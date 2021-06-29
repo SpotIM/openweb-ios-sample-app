@@ -84,6 +84,7 @@ internal struct CommentViewModel {
         
         if let image = comment.image {
             commentImage = CommentImage(id: image.imageId, height: image.originalHeight, width: image.originalWidth, imageUrl: commentImageURL)
+            (self.commentGifHeight, self.commentGifWidth) = self.calculateGifSize(gifHeight: image.originalHeight, gifWidth: image.originalWidth)
         }
         
         
