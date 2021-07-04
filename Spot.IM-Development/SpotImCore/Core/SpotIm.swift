@@ -102,6 +102,8 @@ public class SpotIm {
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
     
+    public static var customBIData: [String:String]? = nil
+    
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"

@@ -39,6 +39,13 @@ class ArticlesListViewController: UITableViewController {
         super.viewDidLoad()
         
         SpotIm.reinit = shouldReinit
+        
+        SpotIm.customBIData = [
+            "partner_id": "test1",
+            "page_type": "test2",
+            "product_id": "test3"
+        ]
+        
         SpotIm.initialize(spotId: spotId) { (isInitialized, error) in
             if let error = error {
                 print("SpotIm.initialize - error: \(error)")
