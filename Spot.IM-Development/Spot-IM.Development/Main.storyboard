@@ -20,7 +20,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2wZ-ea-mne">
                                 <rect key="frame" x="105.5" y="617" width="164" height="30"/>
                                 <state key="normal" title="reset all authentications">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="resetAllAuthentication:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TCS-FO-aw6"/>
@@ -32,7 +32,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Generic token" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N1m-o4-5uz">
                                         <rect key="frame" x="43" y="118.5" width="112" height="22"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="❌" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lkc-3M-egv">
@@ -51,7 +51,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ua6-ML-Y4R">
                                         <rect key="frame" x="210" y="58" width="42" height="30"/>
                                         <state key="normal" title="Log In">
-                                            <color key="titleColor" systemColor="labelColor"/>
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="logIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mDr-06-GRs"/>
@@ -66,13 +66,13 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo user token" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rTp-Eb-aBC">
                                         <rect key="frame" x="18" y="62" width="137" height="22"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Generic SSO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdc-eL-AB2">
                                         <rect key="frame" x="18" y="18" width="118.5" height="24"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -105,7 +105,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SDr-Zq-72M">
                                         <rect key="frame" x="210" y="50" width="42" height="30"/>
                                         <state key="normal" title="Log In">
-                                            <color key="titleColor" systemColor="labelColor"/>
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="startFoxSSO:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jlk-3y-SNj"/>
@@ -120,13 +120,13 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fox token" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ZQ-SB-hZi">
                                         <rect key="frame" x="77" y="54" width="78" height="22"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fox SSO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ok3-Rp-aos">
                                         <rect key="frame" x="18" y="10" width="78.5" height="24"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -143,7 +143,7 @@
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="ok3-Rp-aos" firstAttribute="leading" secondItem="mdc-eL-AB2" secondAttribute="leading" id="4Qs-Nr-b9d"/>
                             <constraint firstItem="2wZ-ea-mne" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Cgf-6z-zRf"/>
@@ -256,7 +256,7 @@
                                     <constraint firstAttribute="height" constant="30" id="Enw-qr-7Yp"/>
                                 </constraints>
                                 <state key="normal" title="Authentication Playground">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="show" id="K30-vi-Uta"/>
@@ -271,7 +271,7 @@
                                     <constraint firstAttribute="height" constant="30" id="vof-Hc-A7m"/>
                                 </constraints>
                                 <state key="normal" title="Show sp_mobileSSO">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="showsp_mobileSSO:" destination="COS-Sr-MbI" eventType="touchUpInside" id="bFJ-0u-qnB"/>
@@ -283,7 +283,7 @@
                                     <constraint firstAttribute="height" constant="30" id="RoJ-27-Jxo"/>
                                 </constraints>
                                 <state key="normal" title="Show sp_mobileSocial">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="showsp_mobileSocial:" destination="COS-Sr-MbI" eventType="touchUpInside" id="LZK-i6-YMk"/>
@@ -295,7 +295,7 @@
                                     <constraint firstAttribute="height" constant="30" id="2lq-tq-Ls8"/>
                                 </constraints>
                                 <state key="normal" title="Show sp_mobileSocialGuest">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="show_spmobileSocialGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="YDn-7x-T72"/>
@@ -307,7 +307,7 @@
                                     <constraint firstAttribute="height" constant="30" id="7Jf-eq-pKe"/>
                                 </constraints>
                                 <state key="normal" title="Show Fox News (New login)">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kdg-Eo-W3h"/>
@@ -319,7 +319,7 @@
                                     <constraint firstAttribute="height" constant="30" id="zYi-OH-ba9"/>
                                 </constraints>
                                 <state key="normal" title="Show Demo Spot Articles">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="showDemoSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kt7-rq-mfA"/>
@@ -338,7 +338,7 @@ Build: [unknown]</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="tintColor" systemColor="labelColor"/>
                                 <state key="normal" title="Settings">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <segue destination="afI-iB-Nmt" kind="show" id="HUT-J0-M8W"/>
@@ -351,7 +351,7 @@ Build: [unknown]</string>
                                     <constraint firstAttribute="height" constant="30" id="Xff-6B-YBx"/>
                                 </constraints>
                                 <state key="normal" title="Show Demo Table View">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="yiT-6s-KbC"/>
@@ -363,7 +363,7 @@ Build: [unknown]</string>
                                     <constraint firstAttribute="height" constant="30" id="oZl-57-cHJ"/>
                                 </constraints>
                                 <state key="normal" title="Show sp_mobileGuest">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="showsp_mobileGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="uEF-Ec-8X5"/>
@@ -488,17 +488,21 @@ Build: [unknown]</string>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Override system dark mode" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kMe-b0-d39">
                                 <rect key="frame" x="60" y="582" width="178.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hide article header" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fki-wM-TQv">
-                                <rect key="frame" x="60" y="121" width="123" height="17"/>
+                                <rect key="frame" x="30" y="121" width="123" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create comment new design" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bvT-bO-ucE">
+                                <rect key="frame" x="30" y="169" width="185" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="aKr-SD-OJK">
                                 <rect key="frame" x="60" y="615" width="255" height="32"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <segments>
                                     <segment title="Light"/>
                                     <segment title="Dark"/>
@@ -516,14 +520,12 @@ Build: [unknown]</string>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dark mode settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bTW-Wt-zDR">
                                 <rect key="frame" x="98.5" y="526.5" width="178" height="25.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="General settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTs-Sn-XWm">
                                 <rect key="frame" x="112.5" y="65" width="150" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="COa-ig-fWj">
                                 <rect key="frame" x="266" y="114" width="51" height="31"/>
@@ -531,20 +533,30 @@ Build: [unknown]</string>
                                     <action selector="switchHideArticleHeader:" destination="afI-iB-Nmt" eventType="valueChanged" id="Ru8-2g-Gws"/>
                                 </connections>
                             </switch>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oFl-re-kEH">
+                                <rect key="frame" x="266" y="162" width="51" height="31"/>
+                                <connections>
+                                    <action selector="switchCreateCommentNewDesign:" destination="afI-iB-Nmt" eventType="valueChanged" id="WDD-tT-uMV"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pIh-k2-j8N"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Fki-wM-TQv" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="1QX-Pv-Y6q"/>
+                            <constraint firstItem="Fki-wM-TQv" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="30" id="1QX-Pv-Y6q"/>
                             <constraint firstItem="bTW-Wt-zDR" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="8cf-uB-SEj"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="bottom" secondItem="aKr-SD-OJK" secondAttribute="bottom" constant="21" id="8mJ-Rf-Yvc"/>
+                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="oFl-re-kEH" secondAttribute="trailing" constant="60" id="9Jm-D1-Okx"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="aKr-SD-OJK" secondAttribute="trailing" constant="60" id="ABi-XR-SpD"/>
+                            <constraint firstItem="bvT-bO-ucE" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="30" id="E62-wv-6KY"/>
                             <constraint firstItem="kMe-b0-d39" firstAttribute="top" secondItem="bTW-Wt-zDR" secondAttribute="bottom" constant="30" id="Guk-xR-Fik"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="COa-ig-fWj" secondAttribute="trailing" constant="60" id="IIP-D6-Bgg"/>
                             <constraint firstItem="Fki-wM-TQv" firstAttribute="top" secondItem="mTs-Sn-XWm" secondAttribute="bottom" constant="30" id="Iyl-MM-LJX"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="JID-vg-Zmg"/>
+                            <constraint firstItem="oFl-re-kEH" firstAttribute="top" secondItem="COa-ig-fWj" secondAttribute="bottom" constant="17" id="Sa9-zq-5FF"/>
                             <constraint firstItem="mTs-Sn-XWm" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="WKT-FA-Ssj"/>
                             <constraint firstItem="COa-ig-fWj" firstAttribute="centerY" secondItem="Fki-wM-TQv" secondAttribute="centerY" id="XW5-xw-L7s"/>
+                            <constraint firstItem="bvT-bO-ucE" firstAttribute="top" secondItem="Fki-wM-TQv" secondAttribute="bottom" constant="31" id="Xlc-t3-iwr"/>
                             <constraint firstItem="mTs-Sn-XWm" firstAttribute="top" secondItem="pIh-k2-j8N" secondAttribute="top" constant="21" id="ckz-A8-QEs"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="kMe-b0-d39" secondAttribute="bottom" constant="16" id="lPA-MJ-6K0"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="RrX-Ol-vho" secondAttribute="bottom" constant="8" id="ukZ-kp-Elp"/>
@@ -554,6 +566,7 @@ Build: [unknown]</string>
                     </view>
                     <navigationItem key="navigationItem" id="zdw-3c-jGR"/>
                     <connections>
+                        <outlet property="createCommentNewDesignSwitch" destination="oFl-re-kEH" id="9LE-GL-k10"/>
                         <outlet property="darkModeSwitch" destination="RrX-Ol-vho" id="dF2-iX-Gco"/>
                         <outlet property="hideArtcleHeaderSwitch" destination="COa-ig-fWj" id="X8E-u4-OcZ"/>
                         <outlet property="modeControl" destination="aKr-SD-OJK" id="DcC-wq-pGd"/>
@@ -569,9 +582,6 @@ Build: [unknown]</string>
         <image name="spot_logo" width="90" height="90"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

@@ -51,13 +51,19 @@ final class SPMainConversationFooterView: BaseView {
         setup()
     }
     
+    func handleUICustomizations(customUIDelegate: CustomUIDelegate, isPreConversation: Bool) {
+        customUIDelegate.customizeSayControl(labelContainer: labelContainer, label: callToActionLabel, isPreConversation: isPreConversation)
+        if (!isPreConversation) {
+            customUIDelegate.customizeConversationFooter(view: self)
+        }
+    }
+    
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
         labelContainer.backgroundColor = .spBackground1
         labelContainer.layer.borderColor = UIColor.spBorder.cgColor
         callToActionLabel.textColor = .spForeground2
-        userAvatarView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
         dropsShadow = !SPUserInterfaceStyle.isDarkMode
     }
@@ -133,7 +139,7 @@ final class SPMainConversationFooterView: BaseView {
     }
     
     private func setupUserAvatarImageView() {
-        userAvatarView.backgroundColor = .spBackground0
+        userAvatarView.backgroundColor = .clear
         userAvatarView.layout {
             $0.centerY.equal(to: labelContainer.centerYAnchor)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.userAvatarLeading)
