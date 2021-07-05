@@ -12,6 +12,8 @@ import PromiseKit
 public enum SpotImError: Error {
     /// SDK was not initilized, please call SpotIm.initialize(spotId: String) with your spotId before calling any other SDK APIs
     case notInitialized
+    /// SDK is already initialized, set reinit to true if you want to initialize it again
+    case alreadyInitialized
     /// SDK is disabled for the provided spotId, please contact Spot.IM to obtain your spotId before trying to use this SDK
     case configurationSdkDisabled
     /// Internal Error in Spot.IM SDK, please contact Spot.IM for more information
@@ -63,6 +65,12 @@ public struct SpotImArticleMetadata {
     }
 }
 
+public enum SpotImSortByOption {
+    case best
+    case newest
+    case oldest
+}
+
 extension SpotImResult where T == Void {
     static var success: SpotImResult {
         return .success(())
@@ -76,11 +84,14 @@ private struct InitResult {
     let user: SPUser
 }
 
+public typealias InitizlizeCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
+
 public class SpotIm {
     private static var configurationPromise: Promise<SpotConfig>?
     private static var userPromise: Promise<SPUser>?
     private static let apiManager: ApiManager = ApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
+    internal static let profileProvider: SPProfileProvider = SPProfileProvider(apiManager: SpotIm.apiManager)
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?
     public static var reinit: Bool = false
@@ -88,7 +99,16 @@ public class SpotIm {
     
     public static var customFontFamily: String? = nil
     public static var displayArticleHeader: Bool = true
+
     public static var reactNativeNotifyOnCreateComment: Bool = false
+
+    public static var enableCreateCommentNewDesign: Bool = false
+    public static var shouldConversationFooterStartFromBottomAnchor = false
+    
+    public static var customBIData: [String:String]? = nil
+    
+    internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
+
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
@@ -99,8 +119,9 @@ public class SpotIm {
      This method should be called from your application AppDelegate
 
      - Parameter spotId: The SpotId you got from Spot.IM, if you don't have one contact Spot.IM
+     - Parameter completion: Initialize success callback
      */
-    public static func initialize(spotId: String) {
+    public static func initialize(spotId: String, completion: InitizlizeCompletionHandler? = nil) {
         if SpotIm.reinit {
             SpotIm.reinit = false
             SpotIm.spotId = nil
@@ -115,9 +136,13 @@ public class SpotIm {
             SpotIm.spotId = spotId
             getConfigPromise(spotId: spotId).ensure {
                 SPClientSettings.main.sendAppInitEvent()
+                completion?(true, nil)
             }.catch { error in
                 Logger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
+                completion?(false, SpotImError.internalError(error.localizedDescription))
             }
+        } else {
+            completion?(false, SpotImError.alreadyInitialized)
         }
     }
     
@@ -324,6 +349,10 @@ public class SpotIm {
         } else {
             return nil
         }
+    }
+    
+    public static func setCustomSortByOptionText(option: SpotImSortByOption, text: String) {
+        customSortByOptionText[option] = text
     }
     
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {

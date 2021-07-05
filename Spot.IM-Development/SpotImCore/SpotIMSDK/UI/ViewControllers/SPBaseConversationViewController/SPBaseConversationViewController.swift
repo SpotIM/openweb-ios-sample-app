@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal class SPBaseConversationViewController: BaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
+internal class SPBaseConversationViewController: SPBaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     private var authHandler: AuthenticationHandler?
@@ -37,10 +37,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
     
     // MARK: - Internal methods
 
-    internal init(model: SPMainConversationModel) {
+    internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate? = nil) {
         self.model = model
-
-        super.init()
+        
+        super.init(customUIDelegate: customUIDelegate)
     }
 
     override func viewDidLoad() {
@@ -104,6 +104,15 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         // Override this method in your VC to handle
     }
     
+    internal func updateCommunityQuestionCustomUI(communityQuestionView: SPCommunityQuestionView) {
+        guard let customUIDelegate = self.customUIDelegate else { return }
+        communityQuestionView.customizeCommunityQuestion(customUIDelegate: customUIDelegate)
+    }
+    internal func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
+        guard let customUIDelegate = self.customUIDelegate else { return }
+        footerView.handleUICustomizations(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
+    }
+    
     internal func getCommunityGuidelinesTextIfExists() -> String? {
         guard let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
               conversationConfig.communityGuidelinesEnabled == true,
@@ -111,6 +120,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
             return nil
         }
         return getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesTitle)
+    }
+    
+    internal func getCommunityQuestion() -> String? {
+        return model.dataSource.communityQuestion
     }
     
     private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
@@ -149,11 +162,19 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
         )
         
         if isMyProfile {
-            params.userAccessToken =  SPUserSessionHolder.session.token
-            params.userOwToken = SPUserSessionHolder.session.openwebToken
+            // add singleUseTicket to params when navigating to profile screen
+            SpotIm.profileProvider.getSingleUseToken().done { singleUseToken in
+                params.singleUseTicket = singleUseToken
+            }
+            .ensure {
+                SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
+            }
+            .catch { error in
+                Logger.verbose("Failed to get single use token: \(error)")
+            }
+        } else {
+            SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
-        
-        SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
     }
 
     internal func setupUI() {
@@ -210,6 +231,10 @@ internal class SPBaseConversationViewController: BaseViewController, AlertPresen
                 action: createCommentAction
             )
         )
+    }
+    
+    internal func updateEmptyStateViewAccordingToStyle() {
+        stateActionView?.updateColorsAccordingToStyle()
     }
 
     func configureErrorAction() -> ConversationStateAction {
@@ -892,6 +917,9 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
 extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
     func clickOnUrl(url: URL) {
         webPageDelegate?.openWebPage(with: SPWebSDKProvider.urlWithDarkModeParam(url: url).absoluteString)
+    }
+    func customizeTextView(textView: UITextView) {
+        customUIDelegate?.customizeCommunityGuidelines(textView: textView)
     }
 }
 

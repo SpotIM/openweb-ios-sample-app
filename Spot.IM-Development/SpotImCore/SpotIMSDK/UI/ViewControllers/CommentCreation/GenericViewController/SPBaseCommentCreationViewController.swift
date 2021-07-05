@@ -1,5 +1,5 @@
 //
-//  CommentReplyViewController.swift
+//  SPBaseCommentCreationViewController.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 8/1/19.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol CommentReplyViewControllerDelegate: class {
+protocol CommentReplyViewControllerDelegate: AnyObject {
     
     func commentReplyDidCreate(_ comment: SPComment)
     func commentReplyDidBlock(with commentText: String?)
     
 }
 
-class CommentReplyViewController<T: SPBaseCommentCreationModel>: BaseViewController, AlertPresentable,
+class SPBaseCommentCreationViewController<T: SPBaseCommentCreationModel>: SPBaseViewController, AlertPresentable,
 LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
@@ -139,10 +139,28 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
                 self.textInputViewContainer.makeFirstResponder()
             }
         }
+        
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            // force portrait orientation for iphone
+            UIDevice.current.setValue(
+                UIInterfaceOrientation.portrait.rawValue,
+                forKey: "orientation"
+            )
+            UINavigationController.attemptRotationToDeviceOrientation()
+        }
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIInterfaceOrientationMask.portrait
+        }
+        return UIInterfaceOrientationMask.all
     }
     
     // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
+    override func updateColorsAccordingToStyle() {
+        super.updateColorsAccordingToStyle()
         self.view.backgroundColor = .spBackground0
         mainContainerView.backgroundColor = .spBackground0
         textInputViewContainer.backgroundColor = .spBackground0
@@ -198,10 +216,13 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             }
             
             self.updatePostButton()
+            self.updatePostButtonEnabledState()
             self.updateAvatar()
             
             if isAuthenticated && !self.shouldBeAutoPosted {
-                self.post()
+                if (self.isValidInput()) {
+                    self.post()
+                }
                 self.shouldBeAutoPosted = true
             }
         }
@@ -268,11 +289,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         SPAnalyticsHolder.default.log(event: .loginClicked(.commentSignUp), source: .conversation)
     }
     
-    private func validateInput() {
-        var postEnabled = true
+    private func updatePostButtonEnabledState() {
+        postButton.isEnabled = isValidInput() || self.signupToPostButtonIsActive()
+    }
+    
+    private func isValidInput() -> Bool {
+        var isValidInput = true
         for aView in inputViews {
             if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
-                postEnabled = false
+                isValidInput = false
                 break
             }
         }
@@ -280,14 +305,25 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         // check comment labels minSelected
         if let sectionLabelsConfig = self.sectionLabels,
            sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
-            postEnabled = false
+            isValidInput = false
         }
-
-        postButton.isEnabled = postEnabled
+        
+        return isValidInput
+    }
+    
+    private func signupToPostButtonIsActive() -> Bool {
+        if let config = SPConfigsDataSource.appConfig,
+           config.initialization?.policyForceRegister == true,
+           SPUserSessionHolder.session.user?.registered == false {
+            return true
+        }
+        else {
+            return false
+        }
     }
 }
 
-extension CommentReplyViewController {
+extension SPBaseCommentCreationViewController {
     
     private func setupUI() {
         view.addSubview(scrollView)
@@ -370,9 +406,7 @@ extension CommentReplyViewController {
 
     private func updatePostButton() {
         var postButtonTitle: String = LocalizationManager.localizedString(key: "Post")
-        if let config = SPConfigsDataSource.appConfig,
-            config.initialization?.policyForceRegister == true,
-            SPUserSessionHolder.session.user?.registered == false {
+        if self.signupToPostButtonIsActive() {
             postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
             postButton.addTarget(self, action: #selector(presentAuth), for: .touchUpInside)
         } else {
@@ -383,7 +417,6 @@ extension CommentReplyViewController {
     
     private func configurePostButton() {
         postButton.setTitleColor(.white, for: .normal)
-        
         postButton.isEnabled = false
         postButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.postButtonFontSize)
         postButton.contentEdgeInsets = UIEdgeInsets(
@@ -430,7 +463,7 @@ extension CommentReplyViewController {
 
 // MARK: - Extensions
 
-extension CommentReplyViewController: KeyboardHandable {
+extension SPBaseCommentCreationViewController: KeyboardHandable {
     
     func keyboardWillShow(_ notification: Notification) {
         guard
@@ -460,7 +493,7 @@ extension CommentReplyViewController: KeyboardHandable {
     }
 }
 
-extension CommentReplyViewController: SPTextInputViewDelegate {
+extension SPBaseCommentCreationViewController: SPTextInputViewDelegate {
 
     func tooLongTextWasPassed() {
         // handle too long text passing
@@ -473,19 +506,27 @@ extension CommentReplyViewController: SPTextInputViewDelegate {
             SPUserSessionHolder.update(displayName: text)
         }
 
-        self.validateInput()
+        self.updatePostButtonEnabledState()
     }
 }
 
-extension CommentReplyViewController: AuthenticationViewDelegate {
+extension SPBaseCommentCreationViewController: AuthenticationViewDelegate {
     func authenticationStarted() {
-        showLoader()
+        if (isValidInput()) {
+            showLoader()
+        }
     }
 }
 
-extension CommentReplyViewController: SPCommentLabelsContainerViewDelegate {
+extension SPBaseCommentCreationViewController: SPCommentLabelsContainerViewDelegate {
     func didSelectionChanged() {
-        self.validateInput()
+        self.updatePostButtonEnabledState()
+    }
+}
+
+extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDelegate {
+    func customizeHeaderTitle(textView: UITextView) {
+        customUIDelegate?.customizeNavigationItemTitle(textView: textView)
     }
 }
 

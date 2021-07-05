@@ -43,6 +43,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.totalComments] = info.totalComments
         parameters[AnalyticsAPIKeys.engineStatusType] = info.engineStatusType
         parameters[AnalyticsAPIKeys.splitName] = info.splitName
+        parameters[AnalyticsAPIKeys.publisherCustomData] = info.publisherCustomData
         
         var headers = HTTPHeaders.basic(with: spotKey)
         if let postId = postId {
@@ -77,6 +78,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         static let totalComments = "total_comments"
         static let engineStatusType = "engine_status"
         static let splitName = "split_name"
+        static let publisherCustomData = "publisher_custom_data"
     }
 }
 
@@ -98,4 +100,5 @@ internal struct SPAnalyticsDTO {
     let itemId: String?
     let totalComments: Int?
     let engineStatusType: String?
+    let publisherCustomData: [String: String]?
 }

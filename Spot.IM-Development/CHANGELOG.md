@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.5.7] - 2021-06-29
+
+### Fixed
+- Toolbar overlaps conversation footer
+- Conversation navigation bar is not updated when dark mode change on comment creation screen
+- New create comment screen title “Add a Comment” should be stylized as “Add a comment”
+
+### Changed
+- Comment creation screen orientation should be portrait for iPhone (on present conversation ViewController)
+
+## [1.5.6] - 2021-06-23
+
+### Added
+- Create comment screen new design (with flag)
+- "Sort by" new design
+- "Sort by" option text customization
+- Navigation title customization
+- Conversation footer customization
+- Community guidelines text customization
+
+### Changed
+- Update divider UI in Conversation
+
+## [1.5.5] - 2021-06-10
+
+### Added
+- Community question
+- Community question - support customization
+- SayCtrl - support customization
+- Success callback on SDK initialization
+
+### Fixed
+- Back icon for dark-mode
+- Login prompt above sticky header
+- Empty view update when switching dark/light mode
+
+### Changed
+- Use one time token for the websdk
+- Login prompt customization via SpotImCustomUIDelegate
+- Signup To Post button (Comment Create) always enabled
+
 ## [1.5.4] - 2021-05-25
 
 ### Fixed
@@ -33,11 +75,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.1] - 2021-04-29
 
 ### Added
-- Clicking on my guest profile should open registration flow 
+- Clicking on my guest profile should open registration flow
 
 ### Fixed
-- Deleted message should not show comment labels 
-- The icon change its color when clicking on the context-menu 
+- Deleted message should not show comment labels
+- The icon change its color when clicking on the context-menu
 - Dark mode change should affect nav bar
 
 ## [1.5.0] - 2021-04-28
@@ -48,7 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Switch dark/light mode in full conversation screen
-- Links in comment should open in Safari view controller 
+- Links in comment should open in Safari view controller
 
 
 ## [1.4.4] - 2021-04-07

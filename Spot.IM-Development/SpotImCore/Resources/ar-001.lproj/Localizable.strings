@@ -25,6 +25,7 @@
 "Cancel" = "الغاء";
 "Are you sure you want to log out?" = "هل انت متاكد من تسجيل الخروج؟";
 "Add a Comment" = "بم تفكر؟";
+"Add a comment" = "بم تفكر؟";
 "Commenting on" = "للتعليق على";
 "Oops..." = "عفوًا!";
 "Leave Page" = "الخروج من الصفحة";
@@ -51,7 +52,7 @@
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "يبدو أن التعليق الذي كتبته ينتهك سياستنا.  نوصي بمحاولة إعادة صياغة محتوى الرد.";
 "Got it" = "فهمت";
 "Be the first to comment" = "كن أول من يعلق...";
-"Sort By" = "الترتيب حسب";
+"Sort by" = "الترتيب حسب";
 "Share" = "مشاركة";
 "What do you think?" = "بم تفكر؟";
 "Loading" = "جار التحميل...";
