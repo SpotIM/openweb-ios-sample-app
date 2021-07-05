@@ -26,7 +26,6 @@ internal class CommentMediaView: BaseView {
     
     private func setupUI() {
         addSubviews(gifWebView, imageView)
-        layer.cornerRadius = 6
         configureGifWebView()
         configureImageView()
     }
@@ -35,13 +34,12 @@ internal class CommentMediaView: BaseView {
         gifWebView.layout {
             $0.top.equal(to: self.topAnchor)
             $0.bottom.equal(to: self.bottomAnchor)
-            gifViewHeightConstraint = $0.height.equal(to: 0)
-            gifViewWidthConstraint = $0.width.equal(to: 0)
         }
     }
     
     private func configureImageView() {
         imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = CGFloat(SPCommonConstants.mediaCornerRadius)
         imageView.layout {
             imageViewHeightConstraint = $0.height.equal(to: 0)
             imageViewWidthConstraint = $0.width.equal(to: 0)
@@ -51,16 +49,17 @@ internal class CommentMediaView: BaseView {
     }
     
     func configureMedia(imageUrl: URL?, gifUrl: String?, width: Float?, height: Float?) {
+        // if imageUrl exist, set image and clean gif
         if let imageUrl = imageUrl, let height = height, let width = width {
             imageView.setImage(with: imageUrl)
             imageViewHeightConstraint?.constant = CGFloat(height)
             imageViewWidthConstraint?.constant = CGFloat(width)
-            gifViewHeightConstraint?.constant = 0
-            gifViewWidthConstraint?.constant = 0
-        } else if let gifUrl = gifUrl, let height = height, let width = width {
+            gifWebView.configure(gifUrl: nil, gifWidth: 0, gifHeight: 0)
+        }
+        // if gifUrl exist, set gif and clean image
+        else if let gifUrl = gifUrl, let height = height, let width = width {
             gifWebView.configure(gifUrl: gifUrl, gifWidth: width, gifHeight: height)
-            gifViewHeightConstraint?.constant = CGFloat(height)
-            gifViewWidthConstraint?.constant = CGFloat(width)
+            imageView.setImage(with: nil)
             imageViewHeightConstraint?.constant = 0
             imageViewWidthConstraint?.constant = 0
         }
