@@ -13,7 +13,7 @@ internal enum SPCommonConstants {
     static let commentTextLineLimitPreConv: Int = 4
     static let commentMediaTopPadding: Float = 19.0
     static let emptyCommentMediaTopPadding: Float = 10.0
-    static let mediaCornerRadius: Float = 6.0
+    static let commentMediaCornerRadius: Float = 6.0
 }
 
 internal enum SPAnimationDuration {
