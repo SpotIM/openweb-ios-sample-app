@@ -109,6 +109,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         }
         splitNames = String(splitNames.dropLast())
         
+        let publisherCustomData = SpotIm.customBIData
+        
         let info = SPAnalyticsDTO(eventType: event.kebabValue,
                                   source: source.kebabValue,
                                   isRegistered: isUserRegistered,
@@ -124,7 +126,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
                                   readingSeconds: reading,
                                   itemId: itemId,
                                   totalComments: totalComments,
-                                  engineStatusType: engineStatusType)
+                                  engineStatusType: engineStatusType,
+                                  publisherCustomData: publisherCustomData)
         return info
     }
 

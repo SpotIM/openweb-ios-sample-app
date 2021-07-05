@@ -139,6 +139,23 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
                 self.textInputViewContainer.makeFirstResponder()
             }
         }
+        
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            // force portrait orientation for iphone
+            UIDevice.current.setValue(
+                UIInterfaceOrientation.portrait.rawValue,
+                forKey: "orientation"
+            )
+            UINavigationController.attemptRotationToDeviceOrientation()
+        }
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            return UIInterfaceOrientationMask.portrait
+        }
+        return UIInterfaceOrientationMask.all
     }
     
     // Handle dark mode \ light mode change

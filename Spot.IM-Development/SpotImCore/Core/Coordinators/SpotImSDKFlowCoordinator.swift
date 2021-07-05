@@ -60,6 +60,15 @@ public extension SpotImLoginDelegate {
     }
 }
 
+private class PresentedContainerNavigationController: UINavigationController {
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if let topViewController = topViewController {
+            return topViewController.supportedInterfaceOrientations
+        }
+        return super.supportedInterfaceOrientations
+    }
+}
+
 public let SPOTIM_NAV_CONTROL_TAG = 11223344;
 
 final public class SpotImSDKFlowCoordinator: Coordinator {
@@ -174,7 +183,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
         
         // create nav controller in code to be the container for conversationController
-        let navController = UINavigationController()
+        let navController = PresentedContainerNavigationController()
         navController.view.tag = SPOTIM_NAV_CONTROL_TAG
         navController.modalPresentationStyle = .fullScreen
         navController.navigationBar.barTintColor = .spBackground0
