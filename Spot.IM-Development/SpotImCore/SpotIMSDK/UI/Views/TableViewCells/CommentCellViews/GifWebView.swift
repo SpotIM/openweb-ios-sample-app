@@ -52,7 +52,7 @@ internal final class GifWebView: BaseView, WKUIDelegate {
     
     private func configureGifWebView() {
         gifWebView.uiDelegate = self
-        gifWebView.layer.cornerRadius = 6
+        gifWebView.layer.cornerRadius = CGFloat(SPCommonConstants.mediaCornerRadius)
         gifWebView.layer.masksToBounds = true
         gifWebView.scrollView.isScrollEnabled = false
         gifWebView.isUserInteractionEnabled = false
