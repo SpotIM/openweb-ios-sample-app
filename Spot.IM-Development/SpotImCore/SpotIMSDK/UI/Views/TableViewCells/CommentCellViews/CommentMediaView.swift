@@ -39,7 +39,7 @@ internal class CommentMediaView: BaseView {
     
     private func configureImageView() {
         imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = CGFloat(SPCommonConstants.mediaCornerRadius)
+        imageView.layer.cornerRadius = CGFloat(SPCommonConstants.commentMediaCornerRadius)
         imageView.layout {
             imageViewHeightConstraint = $0.height.equal(to: 0)
             imageViewWidthConstraint = $0.width.equal(to: 0)
