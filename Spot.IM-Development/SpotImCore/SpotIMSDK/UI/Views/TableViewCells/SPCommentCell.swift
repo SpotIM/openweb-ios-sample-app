@@ -33,7 +33,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: BaseView = .init()
     private let separatorView: BaseView = .init()
-//    private let gifWebView: GifWebView = .init()
     private let commentMediaView: CommentMediaView = .init()
     
     private var commentId: String?
@@ -46,7 +45,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private var userNameViewTopConstraint: NSLayoutConstraint?
     private var separatorHeightConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
-    private var gifWebViewTopConstraint: NSLayoutConstraint?
+    private var commentMediaViewTopConstraint: NSLayoutConstraint?
+    private var commentMediaHeightConstraint: NSLayoutConstraint?
+    private var commentMediaWidthConstraint: NSLayoutConstraint?
 
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var imageRequest: DataRequest?
@@ -88,7 +89,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         updateActionView(with: data)
         updateAvatarView(with: data)
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
-        updateGifWebView(with: data)
+        updateCommentMediaView(with: data)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit)
         updateCommentLabelView(with: data)
@@ -102,7 +103,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
                                 userNameView,
                                 commentLabelView,
                                 messageView,
-//                                gifWebView,
                                 commentMediaView,
                                 replyActionsView,
                                 moreRepliesView)
@@ -111,7 +111,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         configureUserNameView()
         configureCommentLabelView()
         configureMessageView()
-        configureGifWebView()
+        configureCommentMediaView()
         configureReplyActionsView()
         configureMoreRepliesView()
     }
@@ -172,16 +172,13 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func configureGifWebView() {
-//        gifWebView.layout {
-//            gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: CGFloat(SPCommonConstants.emptyGifViewTopPadding))
-//            $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
-//            $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
-//        }
+    private func configureCommentMediaView() {
         commentMediaView.layout {
-            gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: CGFloat(SPCommonConstants.emptyGifViewTopPadding))
-            $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
+            commentMediaViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: CGFloat(SPCommonConstants.emptyCommentMediaTopPadding))
+            $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
+            commentMediaHeightConstraint = $0.height.equal(to: 0)
+            commentMediaWidthConstraint = $0.width.equal(to: 0)
         }
     }
     
@@ -189,7 +186,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         replyActionsView.delegate = self
         
         replyActionsView.layout {
-//            $0.top.equal(to: gifWebView.bottomAnchor)
             $0.top.equal(to: commentMediaView.bottomAnchor)
             $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
@@ -309,27 +305,18 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func updateGifWebView(with dataModel: CommentViewModel) {
-//        if let image = dataModel.commentImage {
-//            gifWebView.configure(gifUrl: image.imageUrl?.absoluteString, gifWidth: Float(200), gifHeight: Float(200))
-//        } else {
-//            gifWebView.configure(gifUrl: dataModel.commentGifUrl, gifWidth: dataModel.commentGifWidth, gifHeight: dataModel.commentGifHeight)
-//        }
-        guard !dataModel.isDeleted else {
-            gifWebViewTopConstraint?.constant = CGFloat(SPCommonConstants.emptyGifViewTopPadding)
+    private func updateCommentMediaView(with dataModel: CommentViewModel) {
+        guard !dataModel.isDeleted && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
+            commentMediaViewTopConstraint?.constant = CGFloat(SPCommonConstants.emptyCommentMediaTopPadding)
+            commentMediaWidthConstraint?.constant = 0
+            commentMediaHeightConstraint?.constant = 0
             return
         }
-        if let image = dataModel.commentImage {
-            commentMediaView.configureImage(imageUrl: image.imageUrl, gifWidth: dataModel.commentGifWidth, gifHeight: dataModel.commentGifHeight)
-        } else if let gifUrl = dataModel.commentGifUrl {
-            commentMediaView.configureGif(gifUrl: gifUrl, gifWidth: dataModel.commentGifWidth, gifHeight: dataModel.commentGifHeight)
-        }
-        // set margin
-        if dataModel.commentGifUrl != nil || dataModel.commentImage != nil {
-            gifWebViewTopConstraint?.constant = CGFloat(SPCommonConstants.gifViewTopPadding)
-        } else {
-            gifWebViewTopConstraint?.constant = CGFloat(SPCommonConstants.emptyGifViewTopPadding)
-        }
+        
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: dataModel.commentMediaWidth, height: dataModel.commentMediaHeight)
+        commentMediaViewTopConstraint?.constant = CGFloat(SPCommonConstants.commentMediaTopPadding)
+        commentMediaWidthConstraint?.constant = CGFloat(dataModel.commentMediaWidth ?? 0)
+        commentMediaHeightConstraint?.constant = CGFloat(dataModel.commentMediaHeight ?? 0)
     }
     
     private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {
