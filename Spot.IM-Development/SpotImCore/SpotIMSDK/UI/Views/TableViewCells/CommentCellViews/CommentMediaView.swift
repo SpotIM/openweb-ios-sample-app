@@ -15,6 +15,8 @@ internal class CommentMediaView: BaseView {
     
     private var imageViewHeightConstraint: NSLayoutConstraint?
     private var imageViewWidthConstraint: NSLayoutConstraint?
+    private var gifViewHeightConstraint: NSLayoutConstraint?
+    private var gifViewWidthConstraint: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,15 +32,15 @@ internal class CommentMediaView: BaseView {
     }
     
     private func configureGifWebView() {
-        gifWebView.isHidden = true
         gifWebView.layout {
             $0.top.equal(to: self.topAnchor)
             $0.bottom.equal(to: self.bottomAnchor)
+            gifViewHeightConstraint = $0.height.equal(to: 0)
+            gifViewWidthConstraint = $0.width.equal(to: 0)
         }
     }
     
     private func configureImageView() {
-        imageView.isHidden = true
         imageView.layer.masksToBounds = true
         imageView.layout {
             imageViewHeightConstraint = $0.height.equal(to: 0)
@@ -48,18 +50,19 @@ internal class CommentMediaView: BaseView {
         }
     }
     
-    func configureImage(imageUrl: URL?, gifWidth: Float?, gifHeight: Float?) {
-        gifWebView.isHidden = true
-        imageView.isHidden = false
-        imageView.setImage(with: imageUrl)
-        imageViewHeightConstraint?.constant = CGFloat(gifHeight ?? 0)
-        imageViewWidthConstraint?.constant = CGFloat(gifWidth ?? 0)
-//        updateGifWebView(gifUrl: gifUrl, gifWidth: gifWidth, gifHeight: gifHeight)
-    }
-    
-    func configureGif(gifUrl: String?, gifWidth: Float?, gifHeight: Float?) {
-        gifWebView.isHidden = false
-        imageView.isHidden = true
-        gifWebView.configure(gifUrl: gifUrl, gifWidth: gifWidth, gifHeight: gifHeight)
+    func configureMedia(imageUrl: URL?, gifUrl: String?, width: Float?, height: Float?) {
+        if let imageUrl = imageUrl, let height = height, let width = width {
+            imageView.setImage(with: imageUrl)
+            imageViewHeightConstraint?.constant = CGFloat(height)
+            imageViewWidthConstraint?.constant = CGFloat(width)
+            gifViewHeightConstraint?.constant = 0
+            gifViewWidthConstraint?.constant = 0
+        } else if let gifUrl = gifUrl, let height = height, let width = width {
+            gifWebView.configure(gifUrl: gifUrl, gifWidth: width, gifHeight: height)
+            gifViewHeightConstraint?.constant = CGFloat(height)
+            gifViewWidthConstraint?.constant = CGFloat(width)
+            imageViewHeightConstraint?.constant = 0
+            imageViewWidthConstraint?.constant = 0
+        }
     }
 }
