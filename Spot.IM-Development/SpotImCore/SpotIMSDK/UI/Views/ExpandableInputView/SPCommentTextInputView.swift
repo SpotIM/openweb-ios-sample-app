@@ -52,8 +52,16 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
         backgroundColor = .spBackground0
         textInputView.backgroundColor = .spBackground0
         textInputView.textColor = .spForeground1
-        textInputView.autocorrectionType = UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
+        textInputView.autocorrectionType = UIDevice.current.orientation.isLandscape || UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
         avatarImageView.updateColorsAccordingToStyle()
+    }
+    
+    func setKeyboardSuggestionsVisibility(visible: Bool) {
+        textInputView.autocorrectionType = visible && !(UIDevice.current.screenType == .iPhones_5_5s_5c_SE) ? .yes : .no
+        if textInputView.isFirstResponder {
+            textInputView.resignFirstResponder()
+            textInputView.becomeFirstResponder()
+        }
     }
 
     func makeFirstResponder() {
@@ -131,6 +139,7 @@ extension SPCommentTextInputView: UITextViewDelegate {
         delegate?.input(self, didChange: textView.text)
     }
     
+
     func textView(
         _ textView: UITextView,
         shouldChangeTextIn range: NSRange,

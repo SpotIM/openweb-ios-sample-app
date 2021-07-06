@@ -145,11 +145,11 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         
         if UIDevice.current.userInterfaceIdiom == .phone {
             // force portrait orientation for iphone
-            UIDevice.current.setValue(
-                UIInterfaceOrientation.portrait.rawValue,
-                forKey: "orientation"
-            )
-            UINavigationController.attemptRotationToDeviceOrientation()
+//            UIDevice.current.setValue(
+//                UIInterfaceOrientation.portrait.rawValue,
+//                forKey: "orientation"
+//            )
+//            UINavigationController.attemptRotationToDeviceOrientation()
         }
     }
     
@@ -324,8 +324,16 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
+    // on device orientation change
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        
+        super.viewWillTransition(to: size, with: coordinator)
+        // set hide/show keyboard suggestions according to landscape/portrait mode
+        var showSuggestions = true
+        if size.width > self.view.frame.size.width {
+            showSuggestions = false
+        }
+        textInputViewContainer.setKeyboardSuggestionsVisibility(visible: showSuggestions)
+        usernameView.setKeyboardSuggestionsVisibility(visible: showSuggestions)
     }
 }
 
@@ -382,7 +390,6 @@ extension SPBaseCommentCreationViewController {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.bottom.equal(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
@@ -498,6 +505,7 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
         case .landscapeLeft, .landscapeRight:
             //IQKeyboardManager.shared().isEnableAutoToolbar = true
             scrollViewBottomConstraint?.constant = 0
+            Logger.verbose("Updating constraints to \(0)")
         default:
             break
         }
