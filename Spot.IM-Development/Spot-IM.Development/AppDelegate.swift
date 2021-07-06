@@ -24,9 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         // Custom fonts example
         // SpotIm.customFontFamiliy = "BigShouldersDisplay"
-        IQKeyboardManager.shared().isEnabled = false
+//        IQKeyboardManager.shared().isEnabled = false
         IQKeyboardManager.shared().shouldResignOnTouchOutside = true
-        IQKeyboardManager.shared().isEnableAutoToolbar = false
+        IQKeyboardManager.shared().isEnableAutoToolbar = true
 //        UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
 //        UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
         
