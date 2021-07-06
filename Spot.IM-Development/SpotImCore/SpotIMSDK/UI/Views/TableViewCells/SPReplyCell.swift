@@ -79,13 +79,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
         guard !dataModel.isDeleted && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
-            commentMediaViewTopConstraint?.constant = CGFloat(SPCommonConstants.emptyCommentMediaTopPadding)
+            commentMediaViewTopConstraint?.constant = SPCommonConstants.emptyCommentMediaTopPadding
             commentMediaViewWidthConstraint?.constant = 0
             commentMediaViewHeightConstraint?.constant = 0
             return
         }
         commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: dataModel.commentMediaWidth, height: dataModel.commentMediaHeight)
-        commentMediaViewTopConstraint?.constant = CGFloat(SPCommonConstants.commentMediaTopPadding)
+        commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
         commentMediaViewWidthConstraint?.constant = CGFloat(dataModel.commentMediaWidth ?? 0)
         commentMediaViewHeightConstraint?.constant = CGFloat(dataModel.commentMediaHeight ?? 0)
     }
@@ -194,7 +194,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func configureCommentMediaView() {
         commentMediaView.layout {
-            commentMediaViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: CGFloat(SPCommonConstants.emptyCommentMediaTopPadding))
+            commentMediaViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: SPCommonConstants.emptyCommentMediaTopPadding)
             $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
             commentMediaViewHeightConstraint = $0.height.equal(to: 0)
