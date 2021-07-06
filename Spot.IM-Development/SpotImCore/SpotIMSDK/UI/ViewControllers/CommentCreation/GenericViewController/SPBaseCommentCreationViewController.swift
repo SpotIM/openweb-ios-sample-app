@@ -391,6 +391,7 @@ extension SPBaseCommentCreationViewController {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
+            $0.bottom.greaterThanOrEqual(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
@@ -499,15 +500,11 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
         Logger.verbose("Current constraints is \(scrollViewBottomConstraint!.constant)")
         Logger.verbose("Updating constraints to \(-constant)")
         switch UIDevice.current.orientation {
-        case .portrait:
-//            mainContainerBottomConstraint?.constant = -constant
-            //IQKeyboardManager.shared().isEnableAutoToolbar = false
-            scrollViewBottomConstraint?.constant = -constant
         case .landscapeLeft, .landscapeRight:
-            //IQKeyboardManager.shared().isEnableAutoToolbar = true
             scrollViewBottomConstraint?.constant = 0
             Logger.verbose("Updating constraints to \(0)")
         default:
+            scrollViewBottomConstraint?.constant = -constant
             break
         }
         UIView.animate(
