@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import IQKeyboardManager
 
 protocol CommentReplyViewControllerDelegate: AnyObject {
     
@@ -49,6 +50,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
+    private var scrollViewBottomConstraint: NSLayoutConstraint?
     
     private var shouldBeAutoPosted: Bool = true
     var showsUsernameInput: Bool {
@@ -331,7 +333,7 @@ extension SPBaseCommentCreationViewController {
             $0.top.equal(to: view.layoutMarginsGuide.topAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            $0.bottom.equal(to: view.bottomAnchor)
+            scrollViewBottomConstraint = $0.bottom.equal(to: view.bottomAnchor, offsetBy: 0)
         }
         scrollView.addSubview(mainContainerView)
         mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, postButtonSeperator, commentLabelsContainer)
@@ -470,26 +472,34 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
             let expandedKeyboardHeight = notification.keyboardSize?.height,
             let animationDuration = notification.keyboardAnimationDuration
             else { return }
-        updateBottomConstraint(constant: expandedKeyboardHeight + Theme.postButtonBottom,
+        updateBottomConstraint(constant: expandedKeyboardHeight/* + Theme.postButtonBottom*/,
                                animationDuration: animationDuration)
     }
     
     func keyboardWillHide(_ notification: Notification) {
         guard let animationDuration = notification.keyboardAnimationDuration else { return }
         
-        updateBottomConstraint(constant: Theme.postButtonBottom, animationDuration: animationDuration)
+        updateBottomConstraint(constant: 0 /*Theme.postButtonBottom*/, animationDuration: animationDuration)
     }
     
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
-        Logger.verbose("Current constraints is \(mainContainerBottomConstraint!.constant)")
+        
+        Logger.verbose("Current constraints is \(scrollViewBottomConstraint!.constant)")
         Logger.verbose("Updating constraints to \(-constant)")
-
-        mainContainerBottomConstraint?.constant = -constant
-        UIView.animate(
-            withDuration: animationDuration,
-            animations: {
-                self.view.layoutIfNeeded()
-            })
+        switch UIDevice.current.orientation {
+        case .portrait:
+//            mainContainerBottomConstraint?.constant = -constant
+            scrollViewBottomConstraint?.constant = -constant
+            UIView.animate(
+                withDuration: animationDuration,
+                animations: {
+                    self.view.layoutIfNeeded()
+                })
+        case .landscapeLeft, .landscapeRight:
+            IQKeyboardManager.shared().isEnableAutoToolbar = true
+        default:
+            return
+        }
     }
 }
 
