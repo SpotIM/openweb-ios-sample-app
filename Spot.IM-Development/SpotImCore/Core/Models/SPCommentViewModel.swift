@@ -82,7 +82,7 @@ internal struct CommentViewModel {
             (self.commentMediaHeight, self.commentMediaWidth) = self.calculateMediaSize(mediaHeight: gif.previewHeight, mediaWidth: gif.previewWidth)
         }
         
-        if let image = comment.image {
+        if let image = comment.image, let commentImageURL = commentImageURL {
             commentImage = CommentImage(id: image.imageId, height: image.originalHeight, width: image.originalWidth, imageUrl: commentImageURL)
             (self.commentMediaHeight, self.commentMediaWidth) = self.calculateMediaSize(mediaHeight: image.originalHeight, mediaWidth: image.originalWidth)
         }
@@ -183,7 +183,7 @@ internal struct CommentViewModel {
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
         // media extra height includes - media acual heigh + media extra padding
-        let mediaHeight: CGFloat = commentMediaHeight == nil ? 0.0 : CGFloat(commentMediaHeight! + (SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
+        let mediaHeight: CGFloat = commentMediaHeight == nil ? 0.0 : CGFloat(commentMediaHeight! + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
         
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
@@ -296,7 +296,7 @@ struct CommentImage {
     var id: String
     var height: Int
     var width: Int
-    var imageUrl: URL?
+    var imageUrl: URL
 }
 
 // MARK: - Theme

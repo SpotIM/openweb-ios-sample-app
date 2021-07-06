@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import UIKit
 
 internal enum SPCommonConstants {
     static let commentTextLineLimitMainConv: Int = 16
     static let commentTextLineLimitPreConv: Int = 4
-    static let commentMediaTopPadding: Float = 19.0
-    static let emptyCommentMediaTopPadding: Float = 10.0
-    static let commentMediaCornerRadius: Float = 6.0
+    static let commentMediaTopPadding: CGFloat = 19.0
+    static let emptyCommentMediaTopPadding: CGFloat = 10.0
+    static let commentMediaCornerRadius: CGFloat = 6.0
 }
 
 internal enum SPAnimationDuration {
