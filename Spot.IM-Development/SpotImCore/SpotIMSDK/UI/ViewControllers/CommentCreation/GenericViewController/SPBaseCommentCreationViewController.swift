@@ -330,6 +330,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         // set hide/show keyboard suggestions according to landscape/portrait mode
         var showSuggestions = true
         if size.width > self.view.frame.size.width {
+            // landscape
             showSuggestions = false
         }
         textInputViewContainer.setKeyboardSuggestionsVisibility(visible: showSuggestions)
