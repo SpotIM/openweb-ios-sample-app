@@ -323,6 +323,10 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             return false
         }
     }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+    }
 }
 
 extension SPBaseCommentCreationViewController {
@@ -489,17 +493,19 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
         switch UIDevice.current.orientation {
         case .portrait:
 //            mainContainerBottomConstraint?.constant = -constant
+            //IQKeyboardManager.shared().isEnableAutoToolbar = false
             scrollViewBottomConstraint?.constant = -constant
-            UIView.animate(
-                withDuration: animationDuration,
-                animations: {
-                    self.view.layoutIfNeeded()
-                })
         case .landscapeLeft, .landscapeRight:
-            IQKeyboardManager.shared().isEnableAutoToolbar = true
+            //IQKeyboardManager.shared().isEnableAutoToolbar = true
+            scrollViewBottomConstraint?.constant = 0
         default:
-            return
+            break
         }
+        UIView.animate(
+            withDuration: animationDuration,
+            animations: {
+                self.view.layoutIfNeeded()
+            })
     }
 }
 
