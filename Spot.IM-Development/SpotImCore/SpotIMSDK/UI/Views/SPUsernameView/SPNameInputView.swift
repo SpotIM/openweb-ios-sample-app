@@ -47,7 +47,7 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
         self.backgroundColor = .clear
         usernameTextView.textColor = .spForeground0
         usernameTextView.backgroundColor = .spBackground0
-        usernameTextView.autocorrectionType = UIDevice.current.orientation.isLandscape || UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
+        usernameTextView.autocorrectionType = !UIDevice.current.isPortrait() || UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
         separatorView.backgroundColor = .spSeparator2
         avatarImageView.updateColorsAccordingToStyle()
     }

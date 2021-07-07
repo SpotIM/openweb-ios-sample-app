@@ -489,7 +489,7 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
         Logger.verbose("Current constraints is \(scrollViewBottomConstraint!.constant)")
         // set bottom margin according to orientations
         // in landscape mode - bottom section is behinde keyboard instead on top of it
-        if UIDevice.current.orientation.isLandscape {
+        if !UIDevice.current.isPortrait() {
             scrollViewBottomConstraint?.constant = 0
             Logger.verbose("Updating constraints to \(0)")
         } else {
