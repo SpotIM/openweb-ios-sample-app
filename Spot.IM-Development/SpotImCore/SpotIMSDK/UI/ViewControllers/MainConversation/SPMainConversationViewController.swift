@@ -559,7 +559,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         view.bringSubviewToFront(sortView)
         stateActionView?.layout {
-            $0.bottom.equal(to: view.layoutMarginsGuide.bottomAnchor)
+            $0.bottom.equal(to: SpotIm.shouldConversationFooterStartFromBottomAnchor ? view.bottomAnchor : view.layoutMarginsGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : collapsableContainer.bottomAnchor)
