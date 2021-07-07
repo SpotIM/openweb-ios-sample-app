@@ -9,7 +9,9 @@ class BaseTextView: UITextView {
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
-        addDoneButtonOnKeyboard()
+        if !UIDevice.current.isPortrait() {
+            addDoneButtonOnKeyboard()
+        }
     }
     
     @available(*, unavailable)
@@ -17,8 +19,12 @@ class BaseTextView: UITextView {
         fatalError("Init is not implemented")
     }
     
+    func removeDoneButtonOnKeyboard() {
+        self.inputAccessoryView = nil
+    }
+    
     // https://stackoverflow.com/a/53618313
-    fileprivate func addDoneButtonOnKeyboard() {
+    func addDoneButtonOnKeyboard() {
         let doneToolbar: UIToolbar = UIToolbar(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
         doneToolbar.barStyle = .default
 
