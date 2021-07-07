@@ -11,7 +11,6 @@ import Fabric
 import Crashlytics
 import SpotImCore
 import GoogleMobileAds
-import IQKeyboardManager
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,10 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
         UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
-        
-        IQKeyboardManager.shared().isEnabled = false
-        IQKeyboardManager.shared().shouldResignOnTouchOutside = true
-        IQKeyboardManager.shared().isEnableAutoToolbar = true
         
         return true
     }

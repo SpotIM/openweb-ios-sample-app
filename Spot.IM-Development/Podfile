@@ -9,7 +9,6 @@ abstract_target 'Shared' do
 
   pod 'Alamofire', '~> 5.2'
   pod 'PromiseKit', '~> 6.8'
-  pod 'IQKeyboardManager', '6.5.6'
   
   target 'SpotImCore'
   
