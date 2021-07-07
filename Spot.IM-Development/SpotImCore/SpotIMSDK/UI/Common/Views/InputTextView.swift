@@ -93,9 +93,16 @@ final class InputTextView: BaseTextView {
         placeholderLabel?.isHidden = !text.isEmpty
     }
     
-    // in landscape mode - remove keyboard suggestions
     func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
+        // set keyboard suggestions
         self.autocorrectionType = isPortrait && !(UIDevice.current.screenType == .iPhones_5_5s_5c_SE) ? .yes : .no
+        // set done button
+        if (isPortrait) {
+            self.removeDoneButtonOnKeyboard()
+        } else {
+            self.addDoneButtonOnKeyboard()
+        }
+        // close & reopen keyboard to view changes
         if self.isFirstResponder {
             self.resignFirstResponder()
             self.becomeFirstResponder()

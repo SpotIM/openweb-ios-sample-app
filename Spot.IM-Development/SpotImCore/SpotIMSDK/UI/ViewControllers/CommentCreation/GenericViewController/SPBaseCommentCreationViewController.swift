@@ -49,7 +49,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
-    private var scrollViewBottomConstraint: NSLayoutConstraint?
     
     private var shouldBeAutoPosted: Bool = true
     var showsUsernameInput: Bool {
@@ -87,6 +86,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         if showsUsernameInput {
             inputViews.append(usernameView)
         }
+        
+        // remove keyboard when tapping outside of textView
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        mainContainerView.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        mainContainerView.endEditing(true)
     }
     
     private func setupCommentLabelsContainer() {
@@ -335,7 +343,7 @@ extension SPBaseCommentCreationViewController {
             $0.top.equal(to: view.layoutMarginsGuide.topAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            scrollViewBottomConstraint = $0.bottom.equal(to: view.bottomAnchor, offsetBy: 0)
+            $0.bottom.equal(to: view.bottomAnchor, offsetBy: -Theme.postButtonBottom)
         }
         scrollView.addSubview(mainContainerView)
         mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, postButtonSeperator, commentLabelsContainer)
@@ -486,14 +494,14 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
     
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
         
-        Logger.verbose("Current constraints is \(scrollViewBottomConstraint!.constant)")
+        Logger.verbose("Current constraints is \(mainContainerBottomConstraint!.constant)")
         // set bottom margin according to orientations
         // in landscape mode - bottom section is behinde keyboard instead on top of it
         if !UIDevice.current.isPortrait() {
-            scrollViewBottomConstraint?.constant = 0
+            mainContainerBottomConstraint?.constant = 0
             Logger.verbose("Updating constraints to \(0)")
         } else {
-            scrollViewBottomConstraint?.constant = -constant
+            mainContainerBottomConstraint?.constant = -constant
             Logger.verbose("Updating constraints to \(-constant)")
         }
 
