@@ -52,12 +52,8 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
         avatarImageView.updateColorsAccordingToStyle()
     }
     
-    func setKeyboardSuggestionsVisibility(visible: Bool) {
-        usernameTextView.autocorrectionType = visible && !(UIDevice.current.screenType == .iPhones_5_5s_5c_SE) ? .yes : .no
-        if usernameTextView.isFirstResponder {
-            usernameTextView.resignFirstResponder()
-            usernameTextView.becomeFirstResponder()
-        }
+    func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
+        usernameTextView.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
     }
 
     // MARK: - Internal methods

@@ -25,12 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Custom fonts example
         // SpotIm.customFontFamiliy = "BigShouldersDisplay"
         
+        UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
+        UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
+        
         IQKeyboardManager.shared().isEnabled = false
         IQKeyboardManager.shared().shouldResignOnTouchOutside = true
         IQKeyboardManager.shared().isEnableAutoToolbar = true
-        
-//        UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
-//        UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
         
         return true
     }

@@ -56,12 +56,8 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
         avatarImageView.updateColorsAccordingToStyle()
     }
     
-    func setKeyboardSuggestionsVisibility(visible: Bool) {
-        textInputView.autocorrectionType = visible && !(UIDevice.current.screenType == .iPhones_5_5s_5c_SE) ? .yes : .no
-        if textInputView.isFirstResponder {
-            textInputView.resignFirstResponder()
-            textInputView.becomeFirstResponder()
-        }
+    func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
+        textInputView.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
     }
 
     func makeFirstResponder() {

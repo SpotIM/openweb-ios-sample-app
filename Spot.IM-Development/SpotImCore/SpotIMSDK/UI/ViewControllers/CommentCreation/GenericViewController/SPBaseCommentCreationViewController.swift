@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import IQKeyboardManager
 
 protocol CommentReplyViewControllerDelegate: AnyObject {
     
@@ -140,16 +139,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             } else {
                 self.textInputViewContainer.makeFirstResponder()
             }
-        }
-        
-        
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            // force portrait orientation for iphone
-//            UIDevice.current.setValue(
-//                UIInterfaceOrientation.portrait.rawValue,
-//                forKey: "orientation"
-//            )
-//            UINavigationController.attemptRotationToDeviceOrientation()
         }
     }
     
@@ -328,13 +317,13 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         // set hide/show keyboard suggestions according to landscape/portrait mode
-        var showSuggestions = true
+        var isPortrait = true
         if size.width > self.view.frame.size.width {
             // landscape
-            showSuggestions = false
+            isPortrait = false
         }
-        textInputViewContainer.setKeyboardSuggestionsVisibility(visible: showSuggestions)
-        usernameView.setKeyboardSuggestionsVisibility(visible: showSuggestions)
+        textInputViewContainer.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
+        usernameView.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
     }
 }
 
@@ -485,28 +474,29 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
             let expandedKeyboardHeight = notification.keyboardSize?.height,
             let animationDuration = notification.keyboardAnimationDuration
             else { return }
-        updateBottomConstraint(constant: expandedKeyboardHeight/* + Theme.postButtonBottom*/,
+        updateBottomConstraint(constant: expandedKeyboardHeight,
                                animationDuration: animationDuration)
     }
     
     func keyboardWillHide(_ notification: Notification) {
         guard let animationDuration = notification.keyboardAnimationDuration else { return }
         
-        updateBottomConstraint(constant: 0 /*Theme.postButtonBottom*/, animationDuration: animationDuration)
+        updateBottomConstraint(constant: 0 , animationDuration: animationDuration)
     }
     
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
         
         Logger.verbose("Current constraints is \(scrollViewBottomConstraint!.constant)")
-        Logger.verbose("Updating constraints to \(-constant)")
-        switch UIDevice.current.orientation {
-        case .landscapeLeft, .landscapeRight:
+        // set bottom margin according to orientations
+        // in landscape mode - bottom section is behinde keyboard instead on top of it
+        if UIDevice.current.orientation.isLandscape {
             scrollViewBottomConstraint?.constant = 0
             Logger.verbose("Updating constraints to \(0)")
-        default:
+        } else {
             scrollViewBottomConstraint?.constant = -constant
-            break
+            Logger.verbose("Updating constraints to \(-constant)")
         }
+
         UIView.animate(
             withDuration: animationDuration,
             animations: {
