@@ -40,11 +40,11 @@ class ArticlesListViewController: UITableViewController {
         
         SpotIm.reinit = shouldReinit
         
-        SpotIm.customBIData = [
+        SpotIm.setCustomBIData(data: [
             "partner_id": "test1",
             "page_type": "test2",
             "product_id": "test3"
-        ]
+        ])
         
         SpotIm.initialize(spotId: spotId) { (isInitialized, error) in
             if let error = error {
