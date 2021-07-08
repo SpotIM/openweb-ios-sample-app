@@ -55,13 +55,15 @@ public struct SpotImArticleMetadata {
     let subtitle: String
     let thumbnailUrl: String
     let section: String
+    let customBIData: [String:String]?
 
-    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default") {
+    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil) {
         self.url = url
         self.title = title
         self.subtitle = subtitle
         self.thumbnailUrl = thumbnailUrl
         self.section = section
+        self.customBIData = customBIData
     }
 }
 
@@ -101,9 +103,6 @@ public class SpotIm {
     public static var displayArticleHeader: Bool = true
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
-    
-    internal static let customBIDataLock = NSLock()
-    internal static var customBIData: [String:String]? = nil
     
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
@@ -364,12 +363,6 @@ public class SpotIm {
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
-    }
-    
-    public static func setCustomBIData(data: [String:String]?) {
-        customBIDataLock.lock()
-        customBIData = data
-        customBIDataLock.unlock()
     }
 
     // MARK: Private

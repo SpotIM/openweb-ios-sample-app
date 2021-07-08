@@ -20,7 +20,7 @@ internal protocol SPAnalyticsService {
     var pageViewId: String { get }
     var lastRecordedMainViewedPageViewId: String { get set }
     var postId: String? { get set }
-    func prepareForNewPage()
+    func prepareForNewPage(customBIData: [String:String]?)
     func log(event: SPAnalyticsEvent, source: SPAnSource)
 }
 
@@ -48,16 +48,18 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     private (set) var pageViewId: String = UUID().uuidString
     public var lastRecordedMainViewedPageViewId: String = ""
     internal var postId: String?
+    private var customBIData: [String: String]?
 
     func log(event: SPAnalyticsEvent, source: SPAnSource) {
         sender?.sendEvent(with: analyticsInfo(from: event, source: source), postId: postId)
     }
 
-    internal func prepareForNewPage() {
+    internal func prepareForNewPage(customBIData: [String:String]?) {
         pageViewId = UUID().uuidString
         isUserRegistered = false
         userId = nil
         totalComments = 0
+        self.customBIData = customBIData
     }
 
     private func analyticsInfo(from event: SPAnalyticsEvent,
@@ -109,9 +111,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         }
         splitNames = String(splitNames.dropLast())
         
-        SpotIm.customBIDataLock.lock()
-        let publisherCustomData = SpotIm.customBIData
-        SpotIm.customBIDataLock.unlock()
+        let publisherCustomData = customBIData
 
         let info = SPAnalyticsDTO(eventType: event.kebabValue,
                                   source: source.kebabValue,
