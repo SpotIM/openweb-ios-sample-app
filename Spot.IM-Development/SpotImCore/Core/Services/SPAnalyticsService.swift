@@ -109,8 +109,10 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         }
         splitNames = String(splitNames.dropLast())
         
+        SpotIm.customBIDataLock.lock()
         let publisherCustomData = SpotIm.customBIData
-        
+        SpotIm.customBIDataLock.unlock()
+
         let info = SPAnalyticsDTO(eventType: event.kebabValue,
                                   source: source.kebabValue,
                                   isRegistered: isUserRegistered,

@@ -102,7 +102,8 @@ public class SpotIm {
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
     
-    public static var customBIData: [String:String]? = nil
+    internal static let customBIDataLock = NSLock()
+    internal static var customBIData: [String:String]? = nil
     
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
@@ -363,6 +364,12 @@ public class SpotIm {
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
+    }
+    
+    public static func setCustomBIData(data: [String:String]?) {
+        customBIDataLock.lock()
+        customBIData = data
+        customBIDataLock.unlock()
     }
 
     // MARK: Private
