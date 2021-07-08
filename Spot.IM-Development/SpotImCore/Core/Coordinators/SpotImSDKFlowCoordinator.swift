@@ -250,7 +250,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
     
     private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
-        SPAnalyticsHolder.default.prepareForNewPage()
+        SPAnalyticsHolder.default.prepareForNewPage(customBIData: articleMetadata.customBIData)
 
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
         let conversationDataSource = SPMainConversationDataSource(
