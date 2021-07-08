@@ -18,6 +18,9 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     var text: String? { get { usernameTextView.text }
                         set { usernameTextView.text = newValue } }
 
+    var isSelected: Bool {
+        usernameTextView.isFirstResponder
+    }
     // MARK: - Overrides
 
     deinit {

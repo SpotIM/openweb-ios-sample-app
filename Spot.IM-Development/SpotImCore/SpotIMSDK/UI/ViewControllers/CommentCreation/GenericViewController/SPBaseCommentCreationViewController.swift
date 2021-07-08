@@ -496,13 +496,20 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
         
         Logger.verbose("Current constraints is \(mainContainerBottomConstraint!.constant)")
         // set bottom margin according to orientations
-        // in landscape mode - bottom section is behinde keyboard instead on top of it
         if !UIDevice.current.isPortrait() {
+            // landscape - keep content behind keyboard and scroll to selected textView
             mainContainerBottomConstraint?.constant = 0
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: constant, right: 0)
             Logger.verbose("Updating constraints to \(0)")
+            setScrollView(
+                toView: usernameView.isSelected ? usernameView : textInputViewContainer,
+                toTop: constant == 0)
         } else {
+            // portrait - push content on top of keyboard
             mainContainerBottomConstraint?.constant = -constant
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             Logger.verbose("Updating constraints to \(-constant)")
+            scrollToTop()
         }
 
         UIView.animate(
@@ -510,6 +517,28 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
             animations: {
                 self.view.layoutIfNeeded()
             })
+    }
+    
+    // scroll to given view (or to top if toTop is true)
+    private func setScrollView(toView: UIView, toTop: Bool) {
+        if toTop {
+            scrollToTop()
+        } else {
+            scrollToView(toView: toView)
+        }
+    }
+    
+    // Scroll to a specific view so that it's top is at the top our scrollview
+    private func scrollToView(toView:UIView) {
+        if let origin = toView.superview {
+            // Get the Y position of your child view
+            let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
+            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - Theme.mainOffset), animated: true)
+        }
+    }
+    private func scrollToTop() {
+        let scrollPoint = CGPoint.init(x:0, y: 0)
+        self.scrollView.setContentOffset(scrollPoint, animated: true)
     }
 }
 
