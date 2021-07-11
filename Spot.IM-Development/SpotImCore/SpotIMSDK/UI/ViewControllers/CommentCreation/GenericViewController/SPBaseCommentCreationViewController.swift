@@ -341,8 +341,14 @@ extension SPBaseCommentCreationViewController {
         view.addSubview(scrollView)
         scrollView.layout {
             $0.top.equal(to: view.layoutMarginsGuide.topAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
+            // avoide device notch in landscape
+            if #available(iOS 11.0, *) {
+                $0.leading.equal(to: view.safeAreaLayoutGuide.leadingAnchor)
+                $0.trailing.equal(to: view.safeAreaLayoutGuide.trailingAnchor)
+            } else {
+                $0.leading.equal(to: view.leadingAnchor)
+                $0.trailing.equal(to: view.trailingAnchor)
+            }
             $0.bottom.equal(to: view.bottomAnchor, offsetBy: -Theme.postButtonBottom)
         }
         scrollView.addSubview(mainContainerView)
