@@ -800,12 +800,15 @@ extension SPMainConversationDataSource {
             cellData[indexPath.section][indexPath.row].repliesCount = (repliesCount + 1).kmFormatted
         }
         var newReplyIndexPath: IndexPath?
+        let updatedMessageCount = messageCount + 1
         if let lastReplyViewModel = lastReplyViewModel,
             let indexPath = indexPathOfComment(with: lastReplyViewModel.commentId) {
             let insertionIndex = indexForInsertion(initialIP: indexPath,
             currentReplyDepth: viewModel.depth)
             cellData[indexPath.section].insert(viewModel, at: insertionIndex)
             newReplyIndexPath = IndexPath(row: insertionIndex, section: indexPath.section)
+            self.messageCount = updatedMessageCount
+            self.messageCounterUpdated?(updatedMessageCount)
         } else {
             let commentViewModel = cellData.flatMap { $0 }.last { $0.commentId == reply.parentId }
             if let commentViewModel = commentViewModel,
@@ -814,6 +817,8 @@ extension SPMainConversationDataSource {
                                                        currentReplyDepth: viewModel.depth)
                 cellData[indexPath.section].insert(viewModel, at: insertionIndex)
                 newReplyIndexPath = IndexPath(row: insertionIndex, section: indexPath.section)
+                self.messageCount = updatedMessageCount
+                self.messageCounterUpdated?(updatedMessageCount)
             }
         }
         cachedCommentReply = nil
