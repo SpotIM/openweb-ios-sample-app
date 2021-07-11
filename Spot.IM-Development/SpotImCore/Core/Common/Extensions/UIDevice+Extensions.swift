@@ -91,5 +91,9 @@ internal extension UIDevice {
                // Fallback on earlier versions
                return false
            }
-       }    
+       }
+    
+    func isPortrait() -> Bool {
+        return UIScreen.main.bounds.width < UIScreen.main.bounds.height
+    }
 }

@@ -86,6 +86,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         if showsUsernameInput {
             inputViews.append(usernameView)
         }
+        
+        // remove keyboard when tapping outside of textView
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        mainContainerView.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        mainContainerView.endEditing(true)
     }
     
     private func setupCommentLabelsContainer() {
@@ -138,16 +147,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             } else {
                 self.textInputViewContainer.makeFirstResponder()
             }
-        }
-        
-        
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            // force portrait orientation for iphone
-            UIDevice.current.setValue(
-                UIInterfaceOrientation.portrait.rawValue,
-                forKey: "orientation"
-            )
-            UINavigationController.attemptRotationToDeviceOrientation()
         }
     }
     
@@ -321,6 +320,19 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             return false
         }
     }
+    
+    // on device orientation change
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        // set hide/show keyboard suggestions according to landscape/portrait mode
+        var isPortrait = true
+        if size.width > self.view.frame.size.width {
+            // landscape
+            isPortrait = false
+        }
+        textInputViewContainer.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
+        usernameView.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
+    }
 }
 
 extension SPBaseCommentCreationViewController {
@@ -331,7 +343,7 @@ extension SPBaseCommentCreationViewController {
             $0.top.equal(to: view.layoutMarginsGuide.topAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            $0.bottom.equal(to: view.bottomAnchor)
+            $0.bottom.equal(to: view.bottomAnchor, offsetBy: -Theme.postButtonBottom)
         }
         scrollView.addSubview(mainContainerView)
         mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, postButtonSeperator, commentLabelsContainer)
@@ -376,7 +388,7 @@ extension SPBaseCommentCreationViewController {
             $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
             $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
             $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.bottom.equal(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
+            $0.bottom.greaterThanOrEqual(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
             $0.height.greaterThanOrEqual(to: 40.0)
         }
     }
@@ -470,26 +482,63 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
             let expandedKeyboardHeight = notification.keyboardSize?.height,
             let animationDuration = notification.keyboardAnimationDuration
             else { return }
-        updateBottomConstraint(constant: expandedKeyboardHeight + Theme.postButtonBottom,
+        updateBottomConstraint(constant: expandedKeyboardHeight,
                                animationDuration: animationDuration)
     }
     
     func keyboardWillHide(_ notification: Notification) {
         guard let animationDuration = notification.keyboardAnimationDuration else { return }
         
-        updateBottomConstraint(constant: Theme.postButtonBottom, animationDuration: animationDuration)
+        updateBottomConstraint(constant: 0 , animationDuration: animationDuration)
     }
     
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
+        
         Logger.verbose("Current constraints is \(mainContainerBottomConstraint!.constant)")
-        Logger.verbose("Updating constraints to \(-constant)")
+        // set bottom margin according to orientations
+        if !UIDevice.current.isPortrait() {
+            // landscape - keep content behind keyboard and scroll to selected textView
+            mainContainerBottomConstraint?.constant = 0
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: constant, right: 0)
+            Logger.verbose("Updating constraints to \(0)")
+            setScrollView(
+                toView: usernameView.isSelected ? usernameView : textInputViewContainer,
+                toTop: constant == 0)
+        } else {
+            // portrait - push content on top of keyboard
+            mainContainerBottomConstraint?.constant = -constant
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            Logger.verbose("Updating constraints to \(-constant)")
+            scrollToTop()
+        }
 
-        mainContainerBottomConstraint?.constant = -constant
         UIView.animate(
             withDuration: animationDuration,
             animations: {
                 self.view.layoutIfNeeded()
             })
+    }
+    
+    // scroll to given view (or to top if toTop is true)
+    private func setScrollView(toView: UIView, toTop: Bool) {
+        if toTop {
+            scrollToTop()
+        } else {
+            scrollToView(toView: toView)
+        }
+    }
+    
+    // Scroll to a specific view so that it's top is at the top our scrollview
+    private func scrollToView(toView:UIView) {
+        if let origin = toView.superview {
+            // Get the Y position of your child view
+            let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
+            scrollView.setContentOffset(CGPoint(x: 0, y: childStartPoint.y - Theme.mainOffset), animated: true)
+        }
+    }
+    private func scrollToTop() {
+        let scrollPoint = CGPoint.init(x:0, y: 0)
+        self.scrollView.setContentOffset(scrollPoint, animated: true)
     }
 }
 
