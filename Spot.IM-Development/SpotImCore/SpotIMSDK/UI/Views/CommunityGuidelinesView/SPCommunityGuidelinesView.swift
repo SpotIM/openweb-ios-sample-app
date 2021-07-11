@@ -101,8 +101,14 @@ internal final class SPCommunityGuidelinesView: BaseView {
         titleTextView.layout {
             $0.top.equal(to: self.topAnchor)
             titleBottomConstraint = $0.bottom.equal(to: self.bottomAnchor)
-            $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
-            $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
+            // avoide device notch in landscape
+            if #available(iOS 11.0, *) {
+                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
+                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
+            } else {
+                $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
+                $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
+            }
         }
     }
     
