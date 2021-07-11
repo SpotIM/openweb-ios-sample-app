@@ -66,8 +66,14 @@ internal final class SPCommunityQuestionView: BaseView {
         questionTextView.layout {
             $0.top.equal(to: self.topAnchor)
             questionBottomConstraint = $0.bottom.equal(to: separatorView.topAnchor, offsetBy: -Theme.QuestionBottomOffsetFullConversation)
-            $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.questionHorizontalOffset)
-            $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.questionHorizontalOffset)
+            // avoide device notch in landscape
+            if #available(iOS 11.0, *) {
+                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Theme.questionHorizontalOffset)
+                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.questionHorizontalOffset)
+            } else {
+                $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.questionHorizontalOffset)
+                $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.questionHorizontalOffset)
+            }
         }
     }
     
