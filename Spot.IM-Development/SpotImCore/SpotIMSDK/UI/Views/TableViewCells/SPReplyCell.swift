@@ -54,7 +54,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         messageView.delegate = self
         
         textViewLeadingConstraint?.constant = data.depthOffset()
-        if data.commentDeletedOrReported() {
+        if data.isDeletedOrReported() {
             messageView.setMessage("", attributes: attributes(isDeleted: true), isCollapsed: data.commentTextCollapsed)
             replyActionsViewHeightConstraint?.constant = 0.0
             moreRepliesViewHeightConstraint?.constant = 0.0
@@ -78,7 +78,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
-        guard !dataModel.commentDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
+        guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
             commentMediaViewTopConstraint?.constant = SPCommonConstants.emptyCommentMediaTopPadding
             commentMediaViewWidthConstraint?.constant = 0
             commentMediaViewHeightConstraint?.constant = 0
@@ -112,13 +112,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateUserView(with dataModel: CommentViewModel) {
-        userNameView.setDeleted(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
+        userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
         userNameView.setUserName(dataModel.displayName,
                                  badgeTitle: dataModel.badgeTitle,
                                  isLeader: dataModel.showsStar,
                                  contentType: .reply,
-                                 isDeleted: dataModel.commentDeletedOrReported())
-        userNameView.setMoreButton(hidden: dataModel.commentDeletedOrReported())
+                                 isDeleted: dataModel.isDeletedOrReported())
+        userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? ""
@@ -146,7 +146,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         imageRequest?.cancel()
         avatarView.updateAvatar(image: nil)
         avatarView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
-        if !dataModel.commentDeletedOrReported() {
+        if !dataModel.isDeletedOrReported() {
             imageRequest = UIImage.load(with: dataModel.userAvatar) { [weak self] image, _ in
                 self?.avatarView.updateAvatar(image: image)
             }
@@ -158,7 +158,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabel = dataModel.commentLabel,
-           dataModel.commentDeletedOrReported() == false {
+           dataModel.isDeletedOrReported() == false {
             commentLabelView.setLabel(commentLabelIconUrl: commentLabel.iconUrl, labelColor: commentLabel.color, labelText: commentLabel.text, labelId: commentLabel.id, state: .readOnly)
             commentLabelView.isHidden = false
             commentLabelHeightConstraint?.constant = Theme.commentLabelHeight

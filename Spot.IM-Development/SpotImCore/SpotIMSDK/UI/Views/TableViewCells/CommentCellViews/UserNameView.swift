@@ -46,11 +46,10 @@ internal final class UserNameView: BaseView {
         dateLabel.textColor = .spForeground3
         dateLabel.backgroundColor = .spBackground0
         deletedMessageLabel.backgroundColor = .spBackground0
-        //configureDeletedLabel()
     }
 
 
-    func setDeleted(isDeleted: Bool, isReported: Bool) {
+    func setDeletedOrReported(isDeleted: Bool, isReported: Bool) {
         let showDeletedLabel = isDeleted || isReported
         deletedMessageLabel.isHidden = !showDeletedLabel
         userNameLabel.isHidden = showDeletedLabel
@@ -60,7 +59,6 @@ internal final class UserNameView: BaseView {
         moreButton.isHidden = showDeletedLabel
         userNameButton.isHidden = showDeletedLabel
         badgeTagLabel.isHidden = showDeletedLabel
-        
         configureDeletedLabel(isReported: isReported)
     }
 
@@ -111,7 +109,6 @@ internal final class UserNameView: BaseView {
                     moreButton,
                     subtitleLabel,
                     dateLabel)
-        //configureDeletedLabel()
         configureUserNameLabel()
         setupMoreButton()
         configureLeaderBadge()

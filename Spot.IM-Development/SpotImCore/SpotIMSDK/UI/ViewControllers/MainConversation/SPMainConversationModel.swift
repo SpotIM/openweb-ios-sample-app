@@ -299,6 +299,7 @@ extension SPMainConversationModel {
             parameters: parameters,
             postId: dataSource.postId,
             success: {
+                // update model & cache on reported comment
                 self.dataSource.reportComment(with: id)
                 SPUserSessionHolder.reportComment(commentId: id)
                 completion(nil)

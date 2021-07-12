@@ -15,7 +15,7 @@ internal protocol SPUserSessionType {
     var token: String? { get set }
     var openwebToken: String? { get set }
     var displayNameFrozen: Bool { get set }
-    var reportedComments: [String] { get set }
+    var reportedComments: [String:Bool] { get set }
 }
 
 final internal class SPUserSession: SPUserSessionType {
@@ -25,7 +25,7 @@ final internal class SPUserSession: SPUserSessionType {
     internal var token: String?
     internal var openwebToken: String?
     var displayNameFrozen: Bool = false
-    var reportedComments: [String] = []
+    var reportedComments: [String:Bool] = [:]
 
 }
 
@@ -104,8 +104,8 @@ internal class SPUserSessionHolder {
         session.token = UserDefaults.standard.string(forKey: .guestSessionTokenKey)
         session.openwebToken = UserDefaults.standard.string(forKey: .openwebSessionToken)
         
-        if let reportedComments = UserDefaults.standard.array(forKey: .reportedCommentsKey),
-           let reportedCommentsString = reportedComments as? [String] {
+        if let reportedComments = UserDefaults.standard.dictionary(forKey: .reportedCommentsKey),
+           let reportedCommentsString = reportedComments as? [String:Bool] {
             session.reportedComments = reportedCommentsString
         }
         
@@ -120,7 +120,7 @@ internal class SPUserSessionHolder {
     }
     
     static func reportComment(commentId: String) {
-        session.reportedComments.append(commentId)
+        session.reportedComments[commentId] = true
         UserDefaults.standard.set(session.reportedComments, forKey: .reportedCommentsKey)
     }
     
