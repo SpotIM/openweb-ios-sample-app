@@ -79,7 +79,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
         guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
-            commentMediaViewTopConstraint?.constant = SPCommonConstants.emptyCommentMediaTopPadding
+            commentMediaViewTopConstraint?.constant = dataModel.isDeletedOrReported() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding
             commentMediaViewWidthConstraint?.constant = 0
             commentMediaViewHeightConstraint?.constant = 0
             return
