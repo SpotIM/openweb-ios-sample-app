@@ -36,6 +36,7 @@ internal struct CommentViewModel {
     var showsOnline: Bool = false
     var hasOffset: Bool = false
     var isDeleted: Bool = false
+    var isReported: Bool = false
     // helper property for array cleaning
     var shouldBeRemoved: Bool = false
     var repliesButtonState: RepliesButtonState = .collapsed
@@ -69,7 +70,7 @@ internal struct CommentViewModel {
         hasOffset = comment.isReply
         parentCommentId = comment.parentId
         depth = comment.depth ?? 0
-        
+        isReported = SPUserSessionHolder.session.reportedComments.contains(commentId ?? "")
         
         if let commentLabelConfig = getCommentLabelFromConfig(comment: comment),
            let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
@@ -173,7 +174,7 @@ internal struct CommentViewModel {
     
     func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
         let width = textWidth()
-        let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isDeleted))
+        let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: commentDeletedOrReported()))
         let clippedMessage = attributedMessage.clippedToLine(
             index: lineLimit,
             width: width,
@@ -183,7 +184,7 @@ internal struct CommentViewModel {
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
         // media extra height includes - media acual heigh + media extra padding
-        let mediaHeight: CGFloat = commentMediaHeight == nil ? 0.0 : CGFloat(commentMediaHeight! + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
+        let mediaHeight: CGFloat = commentDeletedOrReported() || commentMediaHeight == nil ? 0.0 : CGFloat(commentMediaHeight! + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
         
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
@@ -192,14 +193,14 @@ internal struct CommentViewModel {
         let commentLabelHeight: CGFloat = Theme.commentLabelViewHeight
         
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
-        let deletedOffset = isDeleted ? Theme.bottomOffset : lastInSectionOffset
+        let deletedOffset = commentDeletedOrReported() ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
         
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
             + userViewHeight
-            + (isDeleted ? 0.0 : Theme.messageContainerTopOffset)
-            + (isDeleted ? 0.0 : Theme.replyActionsViewHeight)
+            + (commentDeletedOrReported() ? 0.0 : Theme.messageContainerTopOffset)
+            + (commentDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + (commentLabel == nil ? 0.0 : commentLabelHeight)
@@ -215,6 +216,10 @@ internal struct CommentViewModel {
         case 2: return Theme.leadingCommentOffset + 40.0
         default: return Theme.leadingCommentOffset + 55.0
         }
+    }
+    
+    func commentDeletedOrReported() -> Bool {
+        return isDeleted||isReported
     }
 
     private enum Theme {
@@ -238,7 +243,7 @@ internal struct CommentViewModel {
     }
 
     private func message() -> String {
-        if isDeleted {
+        if commentDeletedOrReported() {
             return ""
         } else {
             return commentText ?? ""

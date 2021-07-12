@@ -15,6 +15,7 @@ internal protocol SPUserSessionType {
     var token: String? { get set }
     var openwebToken: String? { get set }
     var displayNameFrozen: Bool { get set }
+    var reportedComments: [String] { get set }
 }
 
 final internal class SPUserSession: SPUserSessionType {
@@ -24,6 +25,7 @@ final internal class SPUserSession: SPUserSessionType {
     internal var token: String?
     internal var openwebToken: String?
     var displayNameFrozen: Bool = false
+    var reportedComments: [String] = []
 
 }
 

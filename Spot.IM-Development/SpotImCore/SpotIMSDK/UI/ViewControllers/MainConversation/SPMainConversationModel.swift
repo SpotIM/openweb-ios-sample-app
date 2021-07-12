@@ -299,7 +299,8 @@ extension SPMainConversationModel {
             parameters: parameters,
             postId: dataSource.postId,
             success: {
-                self.dataSource.deleteComment(with: id, isCascade: true)
+                //self.dataSource.deleteComment(with: id, isCascade: true)
+                SPUserSessionHolder.session.reportedComments.append(id)
                 completion(nil)
             },
             failure: { error in
