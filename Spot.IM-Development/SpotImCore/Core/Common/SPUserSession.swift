@@ -89,6 +89,7 @@ internal class SPUserSessionHolder {
     static func resetUserSession() {
         UserDefaults.standard.removeObject(forKey: .guestSessionTokenKey)
         UserDefaults.standard.removeObject(forKey: .userSessionKey)
+        UserDefaults.standard.removeObject(forKey: .reportedCommentsKey)
         session = loadOrCreateGuestUserSession()
     }
 
@@ -103,6 +104,11 @@ internal class SPUserSessionHolder {
         session.token = UserDefaults.standard.string(forKey: .guestSessionTokenKey)
         session.openwebToken = UserDefaults.standard.string(forKey: .openwebSessionToken)
         
+        if let reportedComments = UserDefaults.standard.array(forKey: .reportedCommentsKey),
+           let reportedCommentsString = reportedComments as? [String] {
+            session.reportedComments = reportedCommentsString
+        }
+        
         if let savedUser = UserDefaults.standard.object(forKey: .userSessionKey) as? Data {
             let decoder = JSONDecoder()
             if let user = try? decoder.decode(SPUser.self, from: savedUser) {
@@ -111,6 +117,11 @@ internal class SPUserSessionHolder {
         }
 
         return session
+    }
+    
+    static func reportComment(commentId: String) {
+        session.reportedComments.append(commentId)
+        UserDefaults.standard.set(session.reportedComments, forKey: .reportedCommentsKey)
     }
     
     static func isRegister() -> Bool {
@@ -126,6 +137,7 @@ private extension String {
     static let guestSessionTokenKey = "session.guest.token"
     static let openwebSessionToken = "openweb.session.toekn"
     static let userSessionKey = "session.user"
+    static let reportedCommentsKey = "session.reportedComments"
 }
 
 public final class SPPublicSessionInterface {

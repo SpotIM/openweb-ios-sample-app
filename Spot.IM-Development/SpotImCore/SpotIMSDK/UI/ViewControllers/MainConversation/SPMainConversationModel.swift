@@ -300,7 +300,7 @@ extension SPMainConversationModel {
             postId: dataSource.postId,
             success: {
                 self.dataSource.reportComment(with: id)
-                SPUserSessionHolder.session.reportedComments.append(id)
+                SPUserSessionHolder.reportComment(commentId: id)
                 completion(nil)
             },
             failure: { error in
