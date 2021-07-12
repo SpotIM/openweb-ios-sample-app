@@ -299,7 +299,7 @@ extension SPMainConversationModel {
             parameters: parameters,
             postId: dataSource.postId,
             success: {
-                //self.dataSource.deleteComment(with: id, isCascade: true)
+                self.dataSource.reportComment(with: id)
                 SPUserSessionHolder.session.reportedComments.append(id)
                 completion(nil)
             },
