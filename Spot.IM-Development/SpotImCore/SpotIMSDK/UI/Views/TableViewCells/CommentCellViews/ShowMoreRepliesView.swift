@@ -30,6 +30,7 @@ internal final class ShowMoreRepliesView: BaseView {
         backgroundColor = .spBackground0
         showHideRepliesButton.backgroundColor = .spBackground0
         showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
+        disclosureIndicator.image = UIImage(spNamed: "messageDisclosureIndicatorIcon")
     }
     
 
