@@ -184,7 +184,7 @@ internal struct CommentViewModel {
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
         // media extra height includes - media acual heigh + media extra padding
-        let mediaHeight: CGFloat = commentDeletedOrReported() || commentMediaHeight == nil ? 0.0 : CGFloat(commentMediaHeight! + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
+        let mediaHeight: CGFloat = commentMediaHeight == nil ? 0.0 : CGFloat(commentMediaHeight! + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
         
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
@@ -203,8 +203,8 @@ internal struct CommentViewModel {
             + (commentDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
-            + (commentLabel == nil ? 0.0 : commentLabelHeight)
-            + mediaHeight
+            + ((commentDeletedOrReported() || commentLabel == nil) ? 0.0 : commentLabelHeight)
+            + (commentDeletedOrReported() ? 0.0 : mediaHeight)
 
         return height
     }
