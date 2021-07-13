@@ -104,9 +104,8 @@ internal class SPUserSessionHolder {
         session.token = UserDefaults.standard.string(forKey: .guestSessionTokenKey)
         session.openwebToken = UserDefaults.standard.string(forKey: .openwebSessionToken)
         
-        if let reportedComments = UserDefaults.standard.dictionary(forKey: .reportedCommentsKey),
-           let reportedCommentsString = reportedComments as? [String:Bool] {
-            session.reportedComments = reportedCommentsString
+        if let reportedComments = UserDefaults.standard.dictionary(forKey: .reportedCommentsKey) as? [String:Bool] {
+            session.reportedComments = reportedComments
         }
         
         if let savedUser = UserDefaults.standard.object(forKey: .userSessionKey) as? Data {
