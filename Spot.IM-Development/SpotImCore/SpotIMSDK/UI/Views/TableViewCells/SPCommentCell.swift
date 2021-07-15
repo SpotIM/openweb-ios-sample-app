@@ -214,15 +214,15 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateUserView(with dataModel: CommentViewModel) {
-        userNameView.setDeleted(dataModel.isDeleted)
+        userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
         
         userNameView.setUserName(
             dataModel.displayName,
             badgeTitle: dataModel.badgeTitle,
             isLeader: dataModel.showsStar,
             contentType: .reply,
-            isDeleted: dataModel.isDeleted)
-        userNameView.setMoreButton(hidden: dataModel.isDeleted)
+            isDeleted: dataModel.isDeletedOrReported())
+        userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? dataModel.timestamp
@@ -236,7 +236,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabel = dataModel.commentLabel,
-           dataModel.isDeleted == false {
+           dataModel.isDeletedOrReported() == false {
             commentLabelView.setLabel(commentLabelIconUrl: commentLabel.iconUrl, labelColor: commentLabel.color, labelText: commentLabel.text, labelId: commentLabel.id, state: .readOnly)
             commentLabelView.isHidden = false
             commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
@@ -252,7 +252,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         replyActionsView.setRankUp(dataModel.rankUp)
         replyActionsView.setRankDown(dataModel.rankDown)
         replyActionsView.setRanked(with: dataModel.rankedByUser)
-        replyActionsViewHeightConstraint?.constant = dataModel.isDeleted ? 0.0 : Theme.replyActionsViewHeight
+        replyActionsViewHeightConstraint?.constant = dataModel.isDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight
     }
     
     private func updateHeaderView(with dataModel: CommentViewModel, shouldShowHeader: Bool) {
@@ -266,7 +266,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         imageRequest?.cancel()
         avatarImageView.updateAvatar(image: nil)
         avatarImageView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
-        if !dataModel.isDeleted {
+        if !dataModel.isDeletedOrReported() {
             imageRequest = UIImage.load(with: dataModel.userAvatar) { [weak self] image, _ in
                 self?.avatarImageView.updateAvatar(image: image)
             }
@@ -291,7 +291,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             setNeedsLayout()
             layoutIfNeeded()
         }
-        if dataModel.isDeleted {
+        if dataModel.isDeletedOrReported() {
             messageView.setMessage(
                 "",
                 attributes: attributes(isDeleted: true),
@@ -306,7 +306,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
-        guard !dataModel.isDeleted && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
+        guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
             commentMediaViewTopConstraint?.constant = SPCommonConstants.emptyCommentMediaTopPadding
             commentMediaWidthConstraint?.constant = 0
             commentMediaHeightConstraint?.constant = 0
