@@ -15,6 +15,7 @@ internal protocol SPUserSessionType {
     var token: String? { get set }
     var openwebToken: String? { get set }
     var displayNameFrozen: Bool { get set }
+    var reportedComments: [String:Bool] { get set }
 }
 
 final internal class SPUserSession: SPUserSessionType {
@@ -24,6 +25,7 @@ final internal class SPUserSession: SPUserSessionType {
     internal var token: String?
     internal var openwebToken: String?
     var displayNameFrozen: Bool = false
+    var reportedComments: [String:Bool] = [:]
 
 }
 
@@ -87,6 +89,7 @@ internal class SPUserSessionHolder {
     static func resetUserSession() {
         UserDefaults.standard.removeObject(forKey: .guestSessionTokenKey)
         UserDefaults.standard.removeObject(forKey: .userSessionKey)
+        UserDefaults.standard.removeObject(forKey: .reportedCommentsKey)
         session = loadOrCreateGuestUserSession()
     }
 
@@ -101,6 +104,10 @@ internal class SPUserSessionHolder {
         session.token = UserDefaults.standard.string(forKey: .guestSessionTokenKey)
         session.openwebToken = UserDefaults.standard.string(forKey: .openwebSessionToken)
         
+        if let reportedComments = UserDefaults.standard.dictionary(forKey: .reportedCommentsKey) as? [String:Bool] {
+            session.reportedComments = reportedComments
+        }
+        
         if let savedUser = UserDefaults.standard.object(forKey: .userSessionKey) as? Data {
             let decoder = JSONDecoder()
             if let user = try? decoder.decode(SPUser.self, from: savedUser) {
@@ -109,6 +116,11 @@ internal class SPUserSessionHolder {
         }
 
         return session
+    }
+    
+    static func reportComment(commentId: String) {
+        session.reportedComments[commentId] = true
+        UserDefaults.standard.set(session.reportedComments, forKey: .reportedCommentsKey)
     }
     
     static func isRegister() -> Bool {
@@ -124,6 +136,7 @@ private extension String {
     static let guestSessionTokenKey = "session.guest.token"
     static let openwebSessionToken = "openweb.session.toekn"
     static let userSessionKey = "session.user"
+    static let reportedCommentsKey = "session.reportedComments"
 }
 
 public final class SPPublicSessionInterface {

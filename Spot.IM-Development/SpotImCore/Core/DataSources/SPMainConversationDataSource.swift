@@ -13,6 +13,7 @@ internal protocol SPMainConversationDataSourceDelegate: NSObjectProtocol {
     
     func reload(shouldBeScrolledToTop: Bool)
     func reload(scrollToIndexPath: IndexPath?)
+    func reloadAt(indexPath: IndexPath)
     func dataSource(dataSource: SPMainConversationDataSource, didInsertRowsAt indexPaths: [IndexPath])
     func dataSource(dataSource: SPMainConversationDataSource, didInsertSectionsAt indexex: [Int])
     func dataSource(didChangeRowAt indexPaths: IndexPath)
@@ -838,5 +839,11 @@ extension SPMainConversationDataSource {
         }
         
         return (latestIndexPath ?? IndexPath(row: firstIndex, section: initialIP.section)).row
+    }
+    
+    func reportComment(with id: String) {
+        guard let indexPath = indexPathOfComment(with: id) else { return }
+        (cellData[indexPath.section])[indexPath.row].isReported = true
+        delegate?.reloadAt(indexPath: indexPath)
     }
 }
