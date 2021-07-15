@@ -583,6 +583,11 @@ extension SPBaseConversationViewController: UITableViewDelegate {
 
 extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate {
     
+    func reloadAt(indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+    
+    
     @objc
     func reload(shouldBeScrolledToTop: Bool) {
         if shouldBeScrolledToTop {
@@ -619,7 +624,6 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
                        lineLimit: messageLineLimit)
         }
-        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 
     func dataSource(dataSource: SPMainConversationDataSource, didCollapseRowsAt indexPaths: [IndexPath]) {
