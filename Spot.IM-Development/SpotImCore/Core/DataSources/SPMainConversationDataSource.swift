@@ -843,6 +843,6 @@ extension SPMainConversationDataSource {
     func reportComment(with id: String) {
         guard let indexPath = indexPathOfComment(with: id) else { return }
         (cellData[indexPath.section])[indexPath.row].isReported = true
-        delegate?.reload(shouldBeScrolledToTop: false)
+        delegate?.dataSource(didChangeRowAt: indexPath)
     }
 }
