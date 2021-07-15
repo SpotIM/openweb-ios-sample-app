@@ -431,6 +431,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
                        lineLimit: messageLineLimit)
         }
+    }
+    
+    override func reloadAt(indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
         updateTableViewHeightIfNeeded()
     }
