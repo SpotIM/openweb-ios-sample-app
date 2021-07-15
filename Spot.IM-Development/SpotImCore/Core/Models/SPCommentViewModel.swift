@@ -222,7 +222,7 @@ internal struct CommentViewModel {
     }
     
     func isDeletedOrReported() -> Bool {
-        return isDeleted||isReported
+        return isDeleted || isReported
     }
 
     private enum Theme {

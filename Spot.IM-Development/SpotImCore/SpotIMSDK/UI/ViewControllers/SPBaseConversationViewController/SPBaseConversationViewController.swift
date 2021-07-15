@@ -619,6 +619,7 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
                        lineLimit: messageLineLimit)
         }
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 
     func dataSource(dataSource: SPMainConversationDataSource, didCollapseRowsAt indexPaths: [IndexPath]) {
