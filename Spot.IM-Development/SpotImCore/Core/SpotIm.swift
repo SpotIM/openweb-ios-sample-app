@@ -74,7 +74,7 @@ public enum SpotImSortByOption {
 }
 
 public protocol AnalyticsEventDelegate {
-    func trackEvent(name: SPAnalyticsEventType, event: SPAnalyticsDTO)
+    func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo)
 }
 
 extension SpotImResult where T == Void {
