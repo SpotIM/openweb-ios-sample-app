@@ -82,7 +82,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
     }
 }
 
-internal struct SPAnalyticsDTO {
+public struct SPAnalyticsDTO {
     let eventType: String
     let source: String
     let isRegistered: Bool

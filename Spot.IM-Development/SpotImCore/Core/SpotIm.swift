@@ -108,6 +108,7 @@ public class SpotIm {
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
+    internal static var trackAnalyticsEvent: ((String, SPAnalyticsDTO) -> Void)? = nil
     /**
     Initialize the SDK
 
@@ -363,6 +364,10 @@ public class SpotIm {
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
+    }
+    
+    public static func addEventListener(trackEvent: @escaping ((String, SPAnalyticsDTO) -> Void)) {
+        trackAnalyticsEvent = trackEvent
     }
 
     // MARK: Private
