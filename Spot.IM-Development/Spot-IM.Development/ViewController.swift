@@ -187,10 +187,10 @@ extension ViewController: AnalyticsEventDelegate {
     internal func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo) {
         switch type {
         case .userProfileClicked:
-            print(event)
-        // more cases can be handled here
+            print("user profile clicked")
+        // more cases can be handled here ...
         default:
-            print(event)
+            print("other")
         }
     }
 }
