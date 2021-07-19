@@ -73,6 +73,10 @@ public enum SpotImSortByOption {
     case oldest
 }
 
+public protocol AnalyticsEventDelegate {
+    func trackEvent(name: SPAnalyticsEventType, event: SPAnalyticsDTO)
+}
+
 extension SpotImResult where T == Void {
     static var success: SpotImResult {
         return .success(())
@@ -108,7 +112,7 @@ public class SpotIm {
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
-    internal static var trackAnalyticsEvent: ((SPAnalyticsEventType, SPAnalyticsDTO) -> Void)? = nil
+    internal static var analyticsEventDelegate: AnalyticsEventDelegate?
     /**
     Initialize the SDK
 
@@ -366,8 +370,8 @@ public class SpotIm {
         }
     }
     
-    public static func addAnalyticsEventListener(trackEvent: @escaping (SPAnalyticsEventType, SPAnalyticsDTO) -> Void) {
-        trackAnalyticsEvent = trackEvent
+    public static func setAnalyticsEventDelegate(analyticsEventDelegate: AnalyticsEventDelegate) {
+        self.analyticsEventDelegate = analyticsEventDelegate
     }
 
     // MARK: Private
