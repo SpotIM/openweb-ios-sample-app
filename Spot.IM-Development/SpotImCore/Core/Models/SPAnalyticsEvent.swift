@@ -84,6 +84,71 @@ internal enum SPAnalyticsEvent: Equatable {
             return "engine_status"
         }
     }
+    
+    var eventType: SPAnalyticsEventType {
+        switch self {
+        case .loaded:
+            return .loaded
+        case .viewed:
+            return .viewed
+        case .mainViewed:
+            return .mainViewed
+        case .messageContextMenuClicked:
+            return .messageContextMenuClicked
+        case .userProfileClicked:
+            return .userProfileClicked
+        case .myProfileClicked:
+            return .myProfileClicked
+        case .loginClicked:
+            return .loginClicked
+        case .reading:
+            return .reading
+        case .loadMoreRepliesClicked:
+            return .loadMoreRepliesClicked
+        case .hideMoreRepliesClicked:
+            return .hideMoreRepliesClicked
+        case .appInit:
+            return .appInit
+        case .appOpened:
+            return .appOpened
+        case .appClosed:
+            return .appClosed
+        case .sortByOpened:
+            return .sortByOpened
+        case .sortByClicked:
+            return .sortByClicked
+        case .createMessageClicked:
+            return .createMessageClicked
+        case .backClicked:
+            return .backClicked
+        case .loadMoreComments:
+            return .loadMoreComments
+        case .engineStatus:
+            return .engineStatus
+        }
+    }
+}
+
+public enum SPAnalyticsEventType: Equatable {
+    case loaded
+    case viewed
+    case mainViewed
+    case messageContextMenuClicked
+    case userProfileClicked
+    case myProfileClicked
+    case loginClicked
+    case reading
+    case loadMoreRepliesClicked
+    case hideMoreRepliesClicked
+    case appInit
+    case appOpened
+    case appClosed
+    case sortByOpened
+    case sortByClicked
+    case createMessageClicked
+    case backClicked
+    case loadMoreComments
+    case engineStatus
 }
 
 internal enum SPAnSource: String {
