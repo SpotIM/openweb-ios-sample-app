@@ -53,9 +53,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     func log(event: SPAnalyticsEvent, source: SPAnSource) {
         let analyticsInfo = analyticsInfo(from: event, source: source)
         sender?.sendEvent(with: analyticsInfo, postId: postId)
-        if let trackEvent = SpotIm.trackAnalyticsEvent {
-            trackEvent(event.eventType , analyticsInfo)
-        }
+        SpotIm.analyticsEventDelegate?.trackEvent(name: event.eventType, event: analyticsInfo)
     }
 
     internal func prepareForNewPage(customBIData: [String:String]?) {
