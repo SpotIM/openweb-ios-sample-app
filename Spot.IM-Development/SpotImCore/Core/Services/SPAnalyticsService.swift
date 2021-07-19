@@ -54,7 +54,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         let analyticsInfo = analyticsInfo(from: event, source: source)
         sender?.sendEvent(with: analyticsInfo, postId: postId)
         if let trackEvent = SpotIm.trackAnalyticsEvent {
-            trackEvent(event.kebabValue , analyticsInfo)
+            trackEvent(event.eventType , analyticsInfo)
         }
     }
 

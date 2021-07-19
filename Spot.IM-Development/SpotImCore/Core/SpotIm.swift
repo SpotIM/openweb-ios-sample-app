@@ -108,7 +108,7 @@ public class SpotIm {
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
-    internal static var trackAnalyticsEvent: ((String, SPAnalyticsDTO) -> Void)? = nil
+    internal static var trackAnalyticsEvent: ((SPAnalyticsEventType, SPAnalyticsDTO) -> Void)? = nil
     /**
     Initialize the SDK
 
@@ -366,7 +366,7 @@ public class SpotIm {
         }
     }
     
-    public static func addEventListener(trackEvent: @escaping ((String, SPAnalyticsDTO) -> Void)) {
+    public static func addAnalyticsEventListener(trackEvent: @escaping (SPAnalyticsEventType, SPAnalyticsDTO) -> Void) {
         trackAnalyticsEvent = trackEvent
     }
 
