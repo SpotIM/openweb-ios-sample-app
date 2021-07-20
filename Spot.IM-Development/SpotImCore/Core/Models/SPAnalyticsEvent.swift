@@ -129,28 +129,6 @@ internal enum SPAnalyticsEvent: Equatable {
     }
 }
 
-public enum SPAnalyticsEventType: Equatable {
-    case loaded
-    case viewed
-    case mainViewed
-    case messageContextMenuClicked
-    case userProfileClicked
-    case myProfileClicked
-    case loginClicked
-    case reading
-    case loadMoreRepliesClicked
-    case hideMoreRepliesClicked
-    case appInit
-    case appOpened
-    case appClosed
-    case sortByOpened
-    case sortByClicked
-    case createMessageClicked
-    case backClicked
-    case loadMoreComments
-    case engineStatus
-}
-
 internal enum SPAnSource: String {
     case launcher
     case conversation
