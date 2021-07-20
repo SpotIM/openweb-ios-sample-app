@@ -83,22 +83,22 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
 }
 
 public struct SPAnalyticsEventInfo {
-    let eventType: String
-    let source: String
-    let isRegistered: Bool
-    let splitName: String
+    public let eventType: String
+    public let source: String
+    public let isRegistered: Bool
+    public let splitName: String
 
-    let itemType: String?
-    let targetType: String?
-    let segment: String?
-    let lang: String?
-    let domain: String?
-    let userId: String?
-    let messageId: String?
-    let relatedMessageId: String?
-    let readingSeconds: Int?
-    let itemId: String?
-    let totalComments: Int?
-    let engineStatusType: String?
-    let publisherCustomData: [String: String]?
+    public let itemType: String?
+    public let targetType: String?
+    public let segment: String?
+    public let lang: String?
+    public let domain: String?
+    public let userId: String?
+    public let messageId: String?
+    public let relatedMessageId: String?
+    public let readingSeconds: Int?
+    public let itemId: String?
+    public let totalComments: Int?
+    public let engineStatusType: String?
+    public let publisherCustomData: [String: String]?
 }
