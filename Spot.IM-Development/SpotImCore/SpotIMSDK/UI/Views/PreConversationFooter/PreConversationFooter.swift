@@ -29,7 +29,9 @@ internal final class SPPreConversationFooter: BaseView {
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
     private var moreCommentsTopConstraint: NSLayoutConstraint?
-        
+    private var termsHeightConstraint: NSLayoutConstraint?
+    private var termsBottomConstraint: NSLayoutConstraint?
+    
     internal weak var delegate: SPPreConversationFooterDelegate?
 
     override init(frame: CGRect = .zero) {
@@ -83,6 +85,18 @@ internal final class SPPreConversationFooter: BaseView {
         showMoreCommentsButton.isHidden = false
         separatorView.isHidden = false
     }
+    
+    func setButtonOnlyMode(buttonOnlyMode: Bool) {
+        termsButton.isHidden = buttonOnlyMode
+        dotLabel.isHidden = buttonOnlyMode
+        privacyButton.isHidden = buttonOnlyMode
+        spotIMIcon.isHidden = buttonOnlyMode
+        addSpotIMButton.isHidden = buttonOnlyMode
+        openwebLinkView.isHidden = buttonOnlyMode
+        separatorView.isHidden = buttonOnlyMode
+        termsHeightConstraint?.constant = 0
+        termsBottomConstraint?.constant = 0
+    }
 
     private func setupShowMoreCommentsButton() {
         separatorView.backgroundColor = .spSeparator5
@@ -121,8 +135,8 @@ internal final class SPPreConversationFooter: BaseView {
         termsButton.layout {
             $0.top.equal(to: showMoreCommentsButton.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.horisontalMargin)
-            $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
-            $0.height.equal(to: 15)
+            termsBottomConstraint = $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
+            termsHeightConstraint = $0.height.equal(to: 15)
         }
     }
 

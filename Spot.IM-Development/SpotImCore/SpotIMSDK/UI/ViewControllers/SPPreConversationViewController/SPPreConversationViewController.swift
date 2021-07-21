@@ -33,6 +33,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private var isWaitingForSignIn: Bool = false
     private var communityGuidelinesHtmlString: String? = nil
     
+    private var buttonOnlyMode: Bool = false
+    
     internal var dataLoaded: (() -> Void)?
     
     internal override var screenTargetType: SPAnScreenTargetType {
@@ -68,10 +70,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         
         self.adsProvider = adsProvider
         self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
+        self.buttonOnlyMode = numberOfMessagesToShow == 0
         
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
+        
     }
     
     override func viewDidLoad() {
@@ -233,7 +237,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     private func updateCommunityQuestion(communityQuestionText: String?) {
-        if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0 {
+        // hide when no community question or in on button mode
+        if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0, !buttonOnlyMode {
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
             communityQuestionView.clipsToBounds = true
             communityQuestionView.setupPreConversationConstraints()
@@ -254,7 +259,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
-        if let htmlString = getCommunityGuidelinesTextIfExists() {
+        // hide when no community guidelines or in button only mode
+        if let htmlString = getCommunityGuidelinesTextIfExists(), !buttonOnlyMode {
             communityGuidelinesHtmlString = htmlString
             communityGuidelinesView.delegate = self
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
@@ -297,6 +303,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func setupFooterView() {
         view.bringSubviewToFront(footerView)
         footerView.delegate = self
+        footerView.setButtonOnlyMode(buttonOnlyMode: buttonOnlyMode)
         footerView.layout {
             $0.top.equal(to: tableView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
@@ -405,6 +412,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     private func updateWhatYouThinkView() {
         whatYouThinkView.updateAvatar(model.dataSource.currentUserAvatarUrl)
+        if self.buttonOnlyMode {
+            whatYouThinkView.isHidden = true
+            whatYouThinkView.layout {
+                $0.height.equal(to: 0)
+            }
+        }
     }
 
     override func isLastSection(with section: Int) -> Bool {
