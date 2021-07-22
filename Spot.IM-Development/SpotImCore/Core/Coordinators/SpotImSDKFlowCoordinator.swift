@@ -36,6 +36,7 @@ public enum CustomizableView {
     case conversationFooter(view: UIView)
     case communityGuidelines(textView: UITextView)
     case navigationItemTitle(textView: UITextView)
+    case showCommentsButton(button: SPShowCommentsButton)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -572,6 +573,10 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: CustomUIDelegate {
+    func customizeShowCommentsButton(button: SPShowCommentsButton) {
+        customUIDelegate?.customizeView(view: .showCommentsButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    
     func customizeLoginPromptTextView(textView: UITextView) {
         customUIDelegate?.customizeView(view: .loginPrompt(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
