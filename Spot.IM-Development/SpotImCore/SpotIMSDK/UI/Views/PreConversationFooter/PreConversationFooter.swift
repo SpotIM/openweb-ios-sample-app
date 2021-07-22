@@ -111,7 +111,8 @@ internal final class SPPreConversationFooter: BaseView {
             termsHeightConstraint?.constant = 0
             termsBottomConstraint?.constant = 0
             var title = LocalizationManager.localizedString(key: "Post a Comment")
-            if let commentsCount = showMoreCommentsButton.getCommentsCount() { // TODO - check is without title
+            // when in no title mode - set button text with comments count
+            if let commentsCount = showMoreCommentsButton.getCommentsCount(), SpotIm.buttonOnlyMode == .withoutTitle {
                 title += " (\(commentsCount))"
             }
             showMoreCommentsButton.setTitle(title, for: .normal)
