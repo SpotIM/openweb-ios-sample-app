@@ -45,19 +45,21 @@ internal final class UserNameView: BaseView {
         subtitleLabel.backgroundColor = .spBackground0
         dateLabel.textColor = .spForeground3
         dateLabel.backgroundColor = .spBackground0
-        configureDeletedLabel()
+        deletedMessageLabel.backgroundColor = .spBackground0
     }
 
 
-    func setDeleted(_ isDeleted: Bool) {
-        deletedMessageLabel.isHidden = !isDeleted
-        userNameLabel.isHidden = isDeleted
-        dateLabel.isHidden = isDeleted
-        subtitleLabel.isHidden = isDeleted
-        leaderBadge.isHidden = isDeleted
-        moreButton.isHidden = isDeleted
-        userNameButton.isHidden = isDeleted
-        badgeTagLabel.isHidden = isDeleted
+    func setDeletedOrReported(isDeleted: Bool, isReported: Bool) {
+        let showDeletedLabel = isDeleted || isReported
+        deletedMessageLabel.isHidden = !showDeletedLabel
+        userNameLabel.isHidden = showDeletedLabel
+        dateLabel.isHidden = showDeletedLabel
+        subtitleLabel.isHidden = showDeletedLabel
+        leaderBadge.isHidden = showDeletedLabel
+        moreButton.isHidden = showDeletedLabel
+        userNameButton.isHidden = showDeletedLabel
+        badgeTagLabel.isHidden = showDeletedLabel
+        configureDeletedLabel(isReported: isReported)
     }
 
     func setUserName(
@@ -107,7 +109,6 @@ internal final class UserNameView: BaseView {
                     moreButton,
                     subtitleLabel,
                     dateLabel)
-        configureDeletedLabel()
         configureUserNameLabel()
         setupMoreButton()
         configureLeaderBadge()
@@ -116,7 +117,7 @@ internal final class UserNameView: BaseView {
         updateColorsAccordingToStyle()
     }
 
-    private func configureDeletedLabel() {
+    private func configureDeletedLabel(isReported: Bool = false) {
         deletedMessageLabel.backgroundColor = .spBackground0
 
         deletedMessageLabel.pinEdges(to: self)
@@ -134,7 +135,7 @@ internal final class UserNameView: BaseView {
         ]
 
         deletedMessageLabel.attributedText = NSAttributedString(
-            string: LocalizationManager.localizedString(key: "This message was deleted."),
+            string: LocalizationManager.localizedString(key: isReported ? "This message was reported." : "This message was deleted."),
             attributes: attributes
         )
     }

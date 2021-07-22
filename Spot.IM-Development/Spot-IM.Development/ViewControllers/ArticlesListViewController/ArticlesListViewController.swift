@@ -40,12 +40,6 @@ class ArticlesListViewController: UITableViewController {
         
         SpotIm.reinit = shouldReinit
         
-        SpotIm.customBIData = [
-            "partner_id": "test1",
-            "page_type": "test2",
-            "product_id": "test3"
-        ]
-        
         SpotIm.initialize(spotId: spotId) { (isInitialized, error) in
             if let error = error {
                 print("SpotIm.initialize - error: \(error)")
@@ -105,7 +99,12 @@ class ArticlesListViewController: UITableViewController {
 extension ArticlesListViewController : ArticleTableViewCellDelegate {
     func articleCellTapped(withPost post: Post?) {
         guard let post = post, let postId = postId(post: post) else { return }
-        let metadata = SpotImArticleMetadata(url: post.extractData.url, title: post.extractData.title, subtitle: post.extractData.description, thumbnailUrl: post.extractData.thumbnailUrl)
+        let customBIData = [
+            "partner_id": "test1",
+            "page_type": "test2",
+            "product_id": "test3"
+        ]
+        let metadata = SpotImArticleMetadata(url: post.extractData.url, title: post.extractData.title, subtitle: post.extractData.description, thumbnailUrl: post.extractData.thumbnailUrl, customBIData: customBIData)
         if addToTableView {
             let tableViewController = TableViewFooterTesterViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
             self.navigationController?.pushViewController(tableViewController, animated: true)

@@ -439,6 +439,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
     
+    override func reloadAt(indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+        updateTableViewHeightIfNeeded()
+    }
+    
     override func removeSectionAt(index: Int) {
         tableView.reloadData()
     }

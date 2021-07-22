@@ -582,6 +582,11 @@ extension SPBaseConversationViewController: UITableViewDelegate {
 }
 
 extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate {
+    @objc
+    func reloadAt(indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+    
     
     @objc
     func reload(shouldBeScrolledToTop: Bool) {

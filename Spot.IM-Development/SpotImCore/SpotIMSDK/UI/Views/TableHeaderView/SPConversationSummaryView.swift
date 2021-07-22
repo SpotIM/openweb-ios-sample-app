@@ -103,7 +103,12 @@ extension SPConversationSummaryView {
     private func configureCommentCountLabel() {
         commentsCountLabel.font = UIFont.preferred(style: .regular, of: Theme.commentsFontSize)
         commentsCountLabel.layout {
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.sideOffset)
+            // avoide device notch in landscape
+            if #available(iOS 11.0, *) {
+                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Theme.sideOffset)
+            } else {
+                $0.leading.equal(to: leadingAnchor, offsetBy: Theme.sideOffset)
+            }
             $0.centerY.equal(to: centerYAnchor)
         }
     }
@@ -139,7 +144,12 @@ extension SPConversationSummaryView {
         sortButton.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         
         sortButton.layout {
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.sideOffset)
+            // avoide device notch in landscape
+            if #available(iOS 11.0, *) {
+                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.sideOffset)
+            } else {
+                $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.sideOffset)
+            }
             $0.bottom.equal(to: bottomAnchor)
             $0.top.equal(to: topAnchor)
         }
