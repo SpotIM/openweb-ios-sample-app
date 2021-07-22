@@ -549,6 +549,11 @@ extension SPPreConversationViewController { // UITableViewDataSource
 
 extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     
+    func updateMoreCommentsButtonCustomUI(button: SPShowCommentsButton) {
+        customUIDelegate?.customizeShowCommentsButton(button: button)
+    }
+    
+    
     func showMoreComments() {
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         if  model.adsGroup().interstitialEnabled(),

@@ -14,12 +14,13 @@ protocol SPPreConversationFooterDelegate: class {
     func showTerms()
     func showPrivacy()
     func showAddSpotIM()
+    func updateMoreCommentsButtonCustomUI(button: SPShowCommentsButton)
 }
 
 internal final class SPPreConversationFooter: BaseView {
     
     private lazy var separatorView: BaseView = .init()
-    private lazy var showMoreCommentsButton: BaseButton = .init()
+    private lazy var showMoreCommentsButton: SPShowCommentsButton = .init()
     private lazy var termsButton: BaseButton = .init()
     private lazy var dotLabel: BaseLabel = .init()
     private lazy var privacyButton: BaseButton = .init()
@@ -33,7 +34,6 @@ internal final class SPPreConversationFooter: BaseView {
     private var termsBottomConstraint: NSLayoutConstraint?
     
     private var buttonOnlyMode: Bool = false
-    private var commentsCount: String? = nil
     
     internal weak var delegate: SPPreConversationFooterDelegate?
 
@@ -95,7 +95,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
     
     internal func set(commentsCount: String?) {
-        self.commentsCount = commentsCount
+        showMoreCommentsButton.setCommentsCount(commentsCount: commentsCount)
         setViewsAccordingToButtonOnlyMode()
     }
     
@@ -111,11 +111,12 @@ internal final class SPPreConversationFooter: BaseView {
             termsHeightConstraint?.constant = 0
             termsBottomConstraint?.constant = 0
             var title = LocalizationManager.localizedString(key: "Post a Comment")
-            if let commentsCount = commentsCount { // TODO - check is without title
+            if let commentsCount = showMoreCommentsButton.getCommentsCount() { // TODO - check is without title
                 title += " (\(commentsCount))"
             }
             showMoreCommentsButton.setTitle(title, for: .normal)
         }
+        delegate?.updateMoreCommentsButtonCustomUI(button: showMoreCommentsButton)
     }
 
     private func setupShowMoreCommentsButton() {
