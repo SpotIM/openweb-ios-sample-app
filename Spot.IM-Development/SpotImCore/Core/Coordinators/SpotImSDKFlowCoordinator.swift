@@ -250,7 +250,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
     
     private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
-        SPAnalyticsHolder.default.prepareForNewPage()
+        SPAnalyticsHolder.default.prepareForNewPage(customBIData: articleMetadata.customBIData)
 
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
         let conversationDataSource = SPMainConversationDataSource(
@@ -369,6 +369,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         let attributedTitleText = NSMutableAttributedString(string: text)
         attributedTitleText.addAttribute(.font, value: UIFont.systemFont(ofSize: 20, weight: .regular), range: NSMakeRange(0, attributedTitleText.length))
         navigationItemTextView.attributedText = attributedTitleText
+        navigationItemTextView.isEditable = false
+        navigationItemTextView.isSelectable = false
         customizeNavigationItemTitle(textView: navigationItemTextView)
         return navigationItemTextView
     }

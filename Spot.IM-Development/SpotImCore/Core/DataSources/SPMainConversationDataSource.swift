@@ -13,6 +13,7 @@ internal protocol SPMainConversationDataSourceDelegate: NSObjectProtocol {
     
     func reload(shouldBeScrolledToTop: Bool)
     func reload(scrollToIndexPath: IndexPath?)
+    func reloadAt(indexPath: IndexPath)
     func dataSource(dataSource: SPMainConversationDataSource, didInsertRowsAt indexPaths: [IndexPath])
     func dataSource(dataSource: SPMainConversationDataSource, didInsertSectionsAt indexex: [Int])
     func dataSource(didChangeRowAt indexPaths: IndexPath)
@@ -460,7 +461,8 @@ internal final class SPMainConversationDataSource {
             replyingToDisplayName: replyingToDisplayName,
             color: .brandColor,
             user: user,
-            userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil)
+            userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil),
+            commentImageURL: dataProvider.imageURLProvider?.imageURL(with: comment.image?.imageId, size: nil)
         )
     }
 
@@ -722,7 +724,8 @@ extension SPMainConversationDataSource {
             replyingToDisplayName: displayName,
             color: .brandColor,
             user: user,
-            userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil)
+            userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil),
+            commentImageURL: dataProvider.imageURLProvider?.imageURL(with: comment.image?.imageId, size: nil)
         )
         
         cachedCommentReply = viewModel
@@ -798,12 +801,15 @@ extension SPMainConversationDataSource {
             cellData[indexPath.section][indexPath.row].repliesCount = (repliesCount + 1).kmFormatted
         }
         var newReplyIndexPath: IndexPath?
+        let updatedMessageCount = messageCount + 1
         if let lastReplyViewModel = lastReplyViewModel,
             let indexPath = indexPathOfComment(with: lastReplyViewModel.commentId) {
             let insertionIndex = indexForInsertion(initialIP: indexPath,
             currentReplyDepth: viewModel.depth)
             cellData[indexPath.section].insert(viewModel, at: insertionIndex)
             newReplyIndexPath = IndexPath(row: insertionIndex, section: indexPath.section)
+            self.messageCount = updatedMessageCount
+            self.messageCounterUpdated?(updatedMessageCount)
         } else {
             let commentViewModel = cellData.flatMap { $0 }.last { $0.commentId == reply.parentId }
             if let commentViewModel = commentViewModel,
@@ -812,6 +818,8 @@ extension SPMainConversationDataSource {
                                                        currentReplyDepth: viewModel.depth)
                 cellData[indexPath.section].insert(viewModel, at: insertionIndex)
                 newReplyIndexPath = IndexPath(row: insertionIndex, section: indexPath.section)
+                self.messageCount = updatedMessageCount
+                self.messageCounterUpdated?(updatedMessageCount)
             }
         }
         cachedCommentReply = nil
@@ -831,5 +839,11 @@ extension SPMainConversationDataSource {
         }
         
         return (latestIndexPath ?? IndexPath(row: firstIndex, section: initialIP.section)).row
+    }
+    
+    func reportComment(with id: String) {
+        guard let indexPath = indexPathOfComment(with: id) else { return }
+        (cellData[indexPath.section])[indexPath.row].isReported = true
+        delegate?.reloadAt(indexPath: indexPath)
     }
 }

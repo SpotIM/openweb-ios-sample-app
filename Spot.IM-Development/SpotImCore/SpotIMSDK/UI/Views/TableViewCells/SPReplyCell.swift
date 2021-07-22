@@ -20,7 +20,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let gifWebView: GifWebView = .init()
+    private let commentMediaView: CommentMediaView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -31,7 +31,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var textViewLeadingConstraint: NSLayoutConstraint?
     private var commentLabelHeightConstraint: NSLayoutConstraint?
-    private var gifWebViewTopConstraint: NSLayoutConstraint?
+    private var commentMediaViewTopConstraint: NSLayoutConstraint?
+    private var commentMediaViewHeightConstraint: NSLayoutConstraint?
+    private var commentMediaViewWidthConstraint: NSLayoutConstraint?
     
     private var imageRequest: DataRequest?
 
@@ -52,7 +54,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         messageView.delegate = self
         
         textViewLeadingConstraint?.constant = data.depthOffset()
-        if data.isDeleted {
+        if data.isDeletedOrReported() {
             messageView.setMessage("", attributes: attributes(isDeleted: true), isCollapsed: data.commentTextCollapsed)
             replyActionsViewHeightConstraint?.constant = 0.0
             moreRepliesViewHeightConstraint?.constant = 0.0
@@ -72,16 +74,20 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             Theme.moreRepliesViewHeight
         updateRepliesButtonTitle(with: data.repliesRawCount)
         moreRepliesView.updateView(with: data.repliesButtonState)
-        updateGifWebView(with: data)
+        updateCommentMediaView(with: data)
     }
     
-    private func updateGifWebView(with dataModel: CommentViewModel) {
-        gifWebView.configure(gifUrl: dataModel.commentGifUrl, gifWidth: dataModel.commentGifWidth, gifHeight: dataModel.commentGifHeight)
-        if dataModel.commentGifUrl != nil {
-            gifWebViewTopConstraint?.constant = CGFloat(SPCommonConstants.gifViewTopPadding)
-        } else {
-            gifWebViewTopConstraint?.constant = CGFloat(SPCommonConstants.emptyGifViewTopPadding)
+    private func updateCommentMediaView(with dataModel: CommentViewModel) {
+        guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
+            commentMediaViewTopConstraint?.constant = dataModel.isDeletedOrReported() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding
+            commentMediaViewWidthConstraint?.constant = 0
+            commentMediaViewHeightConstraint?.constant = 0
+            return
         }
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: dataModel.commentMediaWidth, height: dataModel.commentMediaHeight)
+        commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
+        commentMediaViewWidthConstraint?.constant = CGFloat(dataModel.commentMediaWidth ?? 0)
+        commentMediaViewHeightConstraint?.constant = CGFloat(dataModel.commentMediaHeight ?? 0)
     }
     
     // Handle dark mode \ light mode change
@@ -106,13 +112,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateUserView(with dataModel: CommentViewModel) {
-        userNameView.setDeleted(dataModel.isDeleted)
+        userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
         userNameView.setUserName(dataModel.displayName,
                                  badgeTitle: dataModel.badgeTitle,
                                  isLeader: dataModel.showsStar,
                                  contentType: .reply,
-                                 isDeleted: dataModel.isDeleted)
-        userNameView.setMoreButton(hidden: dataModel.isDeleted)
+                                 isDeleted: dataModel.isDeletedOrReported())
+        userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? ""
@@ -140,7 +146,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         imageRequest?.cancel()
         avatarView.updateAvatar(image: nil)
         avatarView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
-        if !dataModel.isDeleted {
+        if !dataModel.isDeletedOrReported() {
             imageRequest = UIImage.load(with: dataModel.userAvatar) { [weak self] image, _ in
                 self?.avatarView.updateAvatar(image: image)
             }
@@ -152,7 +158,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabel = dataModel.commentLabel,
-           dataModel.isDeleted == false {
+           dataModel.isDeletedOrReported() == false {
             commentLabelView.setLabel(commentLabelIconUrl: commentLabel.iconUrl, labelColor: commentLabel.color, labelText: commentLabel.text, labelId: commentLabel.id, state: .readOnly)
             commentLabelView.isHidden = false
             commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
@@ -165,14 +171,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, gifWebView)
+        contentView.addSubviews(avatarView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView)
         configureAvatarView()
         configureUserNameView()
         configureCommentLabelView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
-        configureGifWebView()
+        configureCommentMediaView()
     }
     
     private func configureAvatarView() {
@@ -186,11 +192,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
     
-    private func configureGifWebView() {
-        gifWebView.layout {
-            gifWebViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: CGFloat(SPCommonConstants.emptyGifViewTopPadding))
-            $0.leading.greaterThanOrEqual(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
+    private func configureCommentMediaView() {
+        commentMediaView.layout {
+            commentMediaViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: SPCommonConstants.emptyCommentMediaTopPadding)
+            $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
+            commentMediaViewHeightConstraint = $0.height.equal(to: 0)
+            commentMediaViewWidthConstraint = $0.width.equal(to: 0)
         }
     }
     
@@ -223,7 +231,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         replyActionsView.delegate = self
         
         replyActionsView.layout {
-            $0.top.equal(to: gifWebView.bottomAnchor)
+            $0.top.equal(to: commentMediaView.bottomAnchor)
             $0.leading.equal(to: messageView.leadingAnchor)
             $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
             replyActionsViewHeightConstraint = $0.height.equal(to: Theme.replyActionsViewHeight)

@@ -10,7 +10,6 @@ abstract_target 'Shared' do
   pod 'Alamofire', '~> 5.2'
   pod 'PromiseKit', '~> 6.8'
   
-  
   target 'SpotImCore'
   
   abstract_target 'DemoApps' do

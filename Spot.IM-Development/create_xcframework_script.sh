@@ -33,10 +33,6 @@ mkdir "${SRCROOT}/Release"
 
 # https://medium.com/@er.mayursharma14/how-to-create-xcframework-855817f854cf
 
-# Clean
-xcodebuild clean -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -destination="iOS" -sdk iphonesimulator
-xcodebuild clean -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -destination="iOS" -sdk iphoneos
-
 # Build the framework for device and for simulator (using
 # all needed architectures).
 xcodebuild archive -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -destination="iOS" -sdk iphonesimulator SKIP_INSTALL=NO BUILD_LIBRARIES_FOR_DISTRIBUTION=YES -archivePath "${BUILD_DIR}/Release-iphonesimulator"
