@@ -32,6 +32,9 @@ internal final class SPPreConversationFooter: BaseView {
     private var termsHeightConstraint: NSLayoutConstraint?
     private var termsBottomConstraint: NSLayoutConstraint?
     
+    private var buttonOnlyMode: Bool = false
+    private var commentsCount: String? = nil
+    
     internal weak var delegate: SPPreConversationFooterDelegate?
 
     override init(frame: CGRect = .zero) {
@@ -86,7 +89,17 @@ internal final class SPPreConversationFooter: BaseView {
         separatorView.isHidden = false
     }
     
-    func setButtonOnlyMode(buttonOnlyMode: Bool) {
+    internal func set(buttonOnlyMode: Bool) {
+        self.buttonOnlyMode = buttonOnlyMode
+        setViewsAccordingToButtonOnlyMode()
+    }
+    
+    internal func set(commentsCount: String?) {
+        self.commentsCount = commentsCount
+        setViewsAccordingToButtonOnlyMode()
+    }
+    
+    private func setViewsAccordingToButtonOnlyMode() {
         termsButton.isHidden = buttonOnlyMode
         dotLabel.isHidden = buttonOnlyMode
         privacyButton.isHidden = buttonOnlyMode
@@ -94,8 +107,15 @@ internal final class SPPreConversationFooter: BaseView {
         addSpotIMButton.isHidden = buttonOnlyMode
         openwebLinkView.isHidden = buttonOnlyMode
         separatorView.isHidden = buttonOnlyMode
-        termsHeightConstraint?.constant = 0
-        termsBottomConstraint?.constant = 0
+        if (buttonOnlyMode) {
+            termsHeightConstraint?.constant = 0
+            termsBottomConstraint?.constant = 0
+            var title = LocalizationManager.localizedString(key: "Post a Comment")
+            if let commentsCount = commentsCount { // TODO - check is without title
+                title += " (\(commentsCount))"
+            }
+            showMoreCommentsButton.setTitle(title, for: .normal)
+        }
     }
 
     private func setupShowMoreCommentsButton() {

@@ -118,6 +118,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         } else {
             self.hideEmptyStateView()
             self.header.set(commentCount: self.model.dataSource.messageCount.decimalFormatted)
+            self.footerView.set(commentsCount: self.model.dataSource.messageCount.decimalFormatted)
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
         }
@@ -303,7 +304,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func setupFooterView() {
         view.bringSubviewToFront(footerView)
         footerView.delegate = self
-        footerView.setButtonOnlyMode(buttonOnlyMode: buttonOnlyMode)
+        footerView.set(buttonOnlyMode: buttonOnlyMode)
         footerView.layout {
             $0.top.equal(to: tableView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
@@ -344,6 +345,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     } else {
                         self.hideEmptyStateView()
                         self.header.set(commentCount: messageCount.decimalFormatted)
+                        self.footerView.set(commentsCount: messageCount.decimalFormatted)
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
                         self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
@@ -626,6 +628,7 @@ extension SPPreConversationViewController: AdsProviderInterstitialDelegate {
 extension SPPreConversationViewController: CommentsCounterDelegate {
     func commentsCountDidUpdate(count: Int) {
         self.header.set(commentCount: count.decimalFormatted)
+        self.footerView.set(commentsCount: count.decimalFormatted)
     }
 }
 
