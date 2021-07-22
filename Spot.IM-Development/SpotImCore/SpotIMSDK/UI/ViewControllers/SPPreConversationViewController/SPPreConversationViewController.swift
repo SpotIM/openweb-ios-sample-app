@@ -69,8 +69,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
         
         self.adsProvider = adsProvider
-        self.maxSectionCount = numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM
-        self.buttonOnlyMode = numberOfMessagesToShow == 0
+        // when buttonOnlyMode is on, show no comments
+        self.maxSectionCount = SpotIm.buttonOnlyMode != .disable ? 0 :
+                            (numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM)
+        // button only when numberOfMessagesToShow is 0 OR publisher set mode in SpotIm
+        self.buttonOnlyMode = (numberOfMessagesToShow == 0 || SpotIm.buttonOnlyMode != .disable)
         
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
@@ -223,7 +226,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.top.equal(to: bannerView.bottomAnchor, offsetBy: actualBannerMargin)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
-            $0.height.equal(to: Theme.headerHeight)
+            $0.height.equal(to: SpotIm.buttonOnlyMode == .withoutTitle ? 0 : Theme.headerHeight)
+        }
+        
+        if SpotIm.buttonOnlyMode == .withoutTitle {
+            header.isHidden = true
         }
     }
     

@@ -73,6 +73,12 @@ public enum SpotImSortByOption {
     case oldest
 }
 
+public enum SpotImButtonOnlyMode {
+    case disable
+    case withTitle
+    case withoutTitle
+}
+
 public protocol SPAnalyticsEventDelegate {
     func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo)
 }
@@ -107,12 +113,14 @@ public class SpotIm {
     public static var displayArticleHeader: Bool = true
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
+    internal static var buttonOnlyMode: SpotImButtonOnlyMode = .disable
     
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
     internal static var analyticsEventDelegate: SPAnalyticsEventDelegate?
+    
     /**
     Initialize the SDK
 
@@ -377,6 +385,15 @@ public class SpotIm {
      */
     public static func setAnalyticsEventDelegate(delegate: SPAnalyticsEventDelegate) {
         self.analyticsEventDelegate = delegate
+    }
+    
+    /**
+        Set SpotImButtonOnlyMode for pre-conversation button-only mode
+
+     - Parameter mode: SpotImButtonOnlyMode (to disable/enable/no title)
+     */
+    public static func SetButtonOnlyMode(mode: SpotImButtonOnlyMode) {
+        self.buttonOnlyMode = mode
     }
 
     // MARK: Private

@@ -250,6 +250,9 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .sayControlInMainConversation(let labelContainer, let label):
             label.textColor = isDarkMode ? UIColor.blue : UIColor.red
             break
+        case .showCommentsButton(let button):
+            //
+            break
         default:
             break
         }
