@@ -395,6 +395,10 @@ public class SpotIm {
     public static func SetButtonOnlyMode(mode: SpotImButtonOnlyMode) {
         self.buttonOnlyMode = mode
     }
+    
+    public static func GetButtonOnlyMode() -> SpotImButtonOnlyMode{
+        return self.buttonOnlyMode
+    }
 
     // MARK: Private
     private static func execute(call: @escaping (SpotConfig) -> Void, failure: @escaping ((SpotImError) -> Void)) {
