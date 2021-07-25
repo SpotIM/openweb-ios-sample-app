@@ -251,7 +251,8 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
             label.textColor = isDarkMode ? UIColor.blue : UIColor.red
             break
         case .showCommentsButton(let button):
-            //
+            button.setTitleColor(isDarkMode ? UIColor.blue : UIColor.red, for: .normal)
+            button.setTitle("comments " + (button.getCommentsCount() ?? ""), for: .normal)
             break
         default:
             break
