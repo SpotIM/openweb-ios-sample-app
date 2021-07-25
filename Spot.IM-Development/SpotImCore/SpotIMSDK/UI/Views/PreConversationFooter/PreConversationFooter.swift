@@ -51,6 +51,7 @@ internal final class SPPreConversationFooter: BaseView {
         addSpotIMButton.backgroundColor = .spBackground0
         openwebLinkView.backgroundColor = .spBackground0
         spotIMIcon.image = UIImage(spNamed: "openwebIconSimple") // reload image for dark mode if needed
+        delegate?.updateMoreCommentsButtonCustomUI(button: showMoreCommentsButton)
     }
 
     func setShowMoreCommentsButtonColor(color: UIColor, withSeparator: Bool = false) {
