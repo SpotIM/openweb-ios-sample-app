@@ -53,6 +53,11 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     func log(event: SPAnalyticsEvent, source: SPAnSource) {
         let analyticsEventInfo = analyticsInfo(from: event, source: source)
         sender?.sendEvent(with: analyticsEventInfo, postId: postId)
+//        SpotIm.analyticsEventDelegate?.trackEvent(type: event.eventType, event: analyticsEventInfo)
+    }
+    
+    func trackEvent(event: SPAnalyticsEvent, source: SPAnSource) {
+        let analyticsEventInfo = analyticsInfo(from: event, source: source)
         SpotIm.analyticsEventDelegate?.trackEvent(type: event.eventType, event: analyticsEventInfo)
     }
 
@@ -65,7 +70,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     }
 
     private func analyticsInfo(from event: SPAnalyticsEvent,
-                               source: SPAnSource) -> SPAnalyticsEventInfo {
+                               source: SPAnSource) -> SPEventInfo {
 
         var itemType: String?
         var targetType: String?
@@ -115,7 +120,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         
         let publisherCustomData = customBIData
 
-        let info = SPAnalyticsEventInfo(eventType: event.kebabValue,
+        let info = SPEventInfo(eventType: event.kebabValue,
                                   source: source.kebabValue,
                                   isRegistered: isUserRegistered,
                                   splitName: splitNames,

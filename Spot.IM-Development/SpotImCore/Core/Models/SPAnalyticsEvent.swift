@@ -85,7 +85,7 @@ internal enum SPAnalyticsEvent: Equatable {
         }
     }
     
-    var eventType: SPAnalyticsEventType {
+    var eventType: SPEventType {
         switch self {
         case .loaded:
             return .loaded
