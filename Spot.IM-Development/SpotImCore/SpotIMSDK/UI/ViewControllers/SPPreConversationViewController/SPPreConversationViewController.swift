@@ -91,7 +91,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
         
         SPAnalyticsHolder.default.log(event: .loaded, source: .launcher)
-
+        SPAnalyticsHolder.default.trackEvent(event: .loaded, source: .conversation)
+        
         loadConversation()
         
         self.visibilityTracker.setup(view: view, delegate: self)
@@ -331,6 +332,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     let messageCount = self.model.dataSource.messageCount
                     SPAnalyticsHolder.default.totalComments = messageCount
                     SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
+                    SPAnalyticsHolder.default.trackEvent(event: .loaded, source: .conversation)
                     
                     if self.model.areCommentsEmpty() {
                         self.showEmptyStateView()
@@ -622,6 +624,7 @@ extension SPPreConversationViewController: ViewVisibilityDelegate {
             if !didBecomeVisible {
                 didBecomeVisible = true
                 SPAnalyticsHolder.default.log(event: .viewed, source: .conversation)
+                SPAnalyticsHolder.default.trackEvent(event: .viewed, source: .conversation)
             }
             let delay = (SPConfigsDataSource.appConfig?.realtime?.startTimeoutMilliseconds ?? 5000) / 1000
             

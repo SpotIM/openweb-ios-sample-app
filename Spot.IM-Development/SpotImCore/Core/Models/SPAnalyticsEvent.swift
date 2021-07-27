@@ -17,7 +17,7 @@ internal enum SPAnalyticsEvent: Equatable {
         messageId: String,
         userId: String
     )
-    case myProfileClicked(messageId: String, userId: String)
+    case myProfileClicked(messageId: String?, userId: String)
     case loginClicked(SPAnLoginTargetType)          
     case reading(Int)                               
     case loadMoreRepliesClicked(                    
