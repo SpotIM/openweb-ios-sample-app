@@ -656,6 +656,11 @@ extension SPMainConversationViewController { // SPCommentCellDelegate
                     messageId: commentId,
                     relatedMessageId: relatedCommentId),
                 source: .conversation)
+            SPAnalyticsHolder.default.trackEvent(
+                event: .loadMoreRepliesClicked(
+                    messageId: commentId,
+                    relatedMessageId: relatedCommentId),
+                source: .conversation)
         }
         model.dataSource.showMoreReplies(for: commentId, sortMode: model.sortOption)
     }
