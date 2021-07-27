@@ -325,6 +325,14 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
             ),
             source: .conversation
         )
+        SPAnalyticsHolder.default.trackEvent(
+            event: .createMessageClicked(
+                itemType: creationType,
+                targetType: screenTargetType,
+                relatedMessage: parentId
+            ),
+            source: .conversation
+        )
     }
     
     @objc
@@ -706,6 +714,11 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         if let commentId = commentId {
             let relatedCommentId = model.dataSource.commentViewModel(commentId)?.rootCommentId
             SPAnalyticsHolder.default.log(
+                event: .hideMoreRepliesClicked(
+                    messageId: commentId,
+                    relatedMessageId: relatedCommentId),
+                source: .conversation)
+            SPAnalyticsHolder.default.trackEvent(
                 event: .hideMoreRepliesClicked(
                     messageId: commentId,
                     relatedMessageId: relatedCommentId),
