@@ -144,6 +144,8 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         }
         if (user.registered || !policyForceRegister) {
             openProfileWebScreen(userId: userId, isMyProfile: true)
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId), source: .conversation)
+            SPAnalyticsHolder.default.trackEvent(event: .myProfileClicked(messageId: nil, userId: userId), source: .conversation)
         } else {
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
@@ -652,11 +654,13 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool) {
         if isMyProfile {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
+            SPAnalyticsHolder.default.trackEvent(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
         } else {
             SPAnalyticsHolder.default.log(
                 event: .userProfileClicked(messageId: commentId, userId: authorId),
                 source: .conversation
             )
+            SPAnalyticsHolder.default.trackEvent(event: .userProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
         }
     }
 
@@ -723,6 +727,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             event: .messageContextMenuClicked(commentId),
             source: .conversation
         )
+        SPAnalyticsHolder.default.trackEvent(event: .messageContextMenuClicked(commentId), source: .conversation)
         
         let actions = model.commentAvailableActions(commentId, sender: sender)
         if !actions.isEmpty {

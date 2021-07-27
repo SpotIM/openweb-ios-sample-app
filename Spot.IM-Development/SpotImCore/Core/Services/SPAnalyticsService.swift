@@ -22,6 +22,7 @@ internal protocol SPAnalyticsService {
     var postId: String? { get set }
     func prepareForNewPage(customBIData: [String:String]?)
     func log(event: SPAnalyticsEvent, source: SPAnSource)
+    func trackEvent(event: SPAnalyticsEvent, source: SPAnSource)
 }
 
 internal final class SPAnalyticsHolder {
@@ -53,7 +54,9 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     func log(event: SPAnalyticsEvent, source: SPAnSource) {
         let analyticsEventInfo = analyticsInfo(from: event, source: source)
         sender?.sendEvent(with: analyticsEventInfo, postId: postId)
-//        SpotIm.analyticsEventDelegate?.trackEvent(type: event.eventType, event: analyticsEventInfo)
+//        if trackEvent == true {
+//            SpotIm.analyticsEventDelegate?.trackEvent(type: event.eventType, event: analyticsEventInfo)
+//        }
     }
     
     func trackEvent(event: SPAnalyticsEvent, source: SPAnSource) {
