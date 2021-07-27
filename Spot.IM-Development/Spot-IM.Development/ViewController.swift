@@ -184,7 +184,7 @@ extension ViewController: GADAdLoaderDelegate, GADNativeCustomTemplateAdLoaderDe
 }
 
 extension ViewController: SPAnalyticsEventDelegate {
-    internal func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo) {
+    internal func trackEvent(type: SPEventType, event: SPEventInfo) {
         switch type {
         case .userProfileClicked:
             print("Spot.IM Analytics Event - " + event.eventType)

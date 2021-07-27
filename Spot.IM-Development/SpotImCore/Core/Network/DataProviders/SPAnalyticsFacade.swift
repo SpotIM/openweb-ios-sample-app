@@ -10,12 +10,12 @@ import Foundation
 import Alamofire
 
 internal protocol SPAnalyticsSender {
-    func sendEvent(with info: SPAnalyticsEventInfo, postId: String?)
+    func sendEvent(with info: SPEventInfo, postId: String?)
 }
 
 internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsSender {
 
-    func sendEvent(with info: SPAnalyticsEventInfo, postId: String?) {
+    func sendEvent(with info: SPEventInfo, postId: String?) {
 
         guard let spotKey = SPClientSettings.main.spotKey else {
             Logger.error("[ERROR]: No spot key for analytics")
@@ -82,7 +82,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
     }
 }
 
-public struct SPAnalyticsEventInfo {
+public struct SPEventInfo {
     public let eventType: String
     public let source: String
     public let isRegistered: Bool

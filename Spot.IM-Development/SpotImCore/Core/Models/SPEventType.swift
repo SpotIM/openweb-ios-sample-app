@@ -1,5 +1,5 @@
 //
-//  SPAnalyticsEventType.swift
+//  SPEventType.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 20/07/2021.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum SPAnalyticsEventType: Equatable {
+public enum SPEventType: String {
     case loaded
     case viewed
     case mainViewed
