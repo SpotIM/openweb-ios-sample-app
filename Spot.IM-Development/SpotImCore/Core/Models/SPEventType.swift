@@ -36,5 +36,9 @@ public enum SPEventType: String {
     case shareCommentClicked
     case reportCommentClicked
     case deleteCommentClicked
+    case rankUpButtonClicked
+    case rankDownButtonClicked
+    case rankUpButtonUndo
+    case rankDownButtonUndo
 }
 

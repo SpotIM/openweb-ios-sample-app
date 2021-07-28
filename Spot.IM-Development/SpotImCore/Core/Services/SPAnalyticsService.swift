@@ -122,6 +122,14 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             messageId = shareMessageId
         case .deleteCommentClicked(let shareMessageId):
             messageId = shareMessageId
+        case .rankUpButtonClicked(let clickedMessageId):
+            messageId = clickedMessageId
+        case .rankDownButtonClicked(let clickedMessageId):
+            messageId = clickedMessageId
+        case .rankUpButtonUndo(let clickedMessageId):
+            messageId = clickedMessageId
+        case .rankDownButtonUndo(let clickedMessageId):
+            messageId = clickedMessageId
         default:
             break
         }
