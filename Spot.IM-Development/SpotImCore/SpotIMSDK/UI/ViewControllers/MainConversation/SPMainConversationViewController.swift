@@ -101,7 +101,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         Logger.verbose("FirstComment: Main view did load")
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
             SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
-            SPAnalyticsHolder.default.trackEvent(event: .mainViewed, source: .conversation)
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
         }
         checkAdsAvailability()
@@ -652,11 +651,6 @@ extension SPMainConversationViewController { // SPCommentCellDelegate
         if let commentId = commentId {
             let relatedCommentId = model.dataSource.commentViewModel(commentId)?.rootCommentId
             SPAnalyticsHolder.default.log(
-                event: .loadMoreRepliesClicked(
-                    messageId: commentId,
-                    relatedMessageId: relatedCommentId),
-                source: .conversation)
-            SPAnalyticsHolder.default.trackEvent(
                 event: .loadMoreRepliesClicked(
                     messageId: commentId,
                     relatedMessageId: relatedCommentId),

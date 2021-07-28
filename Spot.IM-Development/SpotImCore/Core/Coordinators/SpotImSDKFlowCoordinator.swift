@@ -295,7 +295,6 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                     let messageCount = model.dataSource.messageCount
                     SPAnalyticsHolder.default.totalComments = messageCount
                     SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
-                    SPAnalyticsHolder.default.trackEvent(event: .loaded, source: .conversation)
                     completion(.success(true))
                 }
             }

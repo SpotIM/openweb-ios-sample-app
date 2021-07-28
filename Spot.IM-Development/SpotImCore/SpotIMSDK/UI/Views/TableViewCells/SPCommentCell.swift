@@ -399,12 +399,12 @@ extension SPCommentCell: MessageContainerViewDelegate {
     
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
-        SPAnalyticsHolder.default.trackEvent(event: .commentReadMoreClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .commentReadMoreClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
     }
 
     func readLessTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showLessText(for: commentId)
-        SPAnalyticsHolder.default.trackEvent(event: .commentReadLessClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .commentReadLessClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
     }
 
 }
