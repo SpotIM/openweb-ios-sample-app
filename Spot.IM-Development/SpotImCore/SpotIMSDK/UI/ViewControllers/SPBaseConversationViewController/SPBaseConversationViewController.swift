@@ -145,7 +145,6 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         if (user.registered || !policyForceRegister) {
             openProfileWebScreen(userId: userId, isMyProfile: true)
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId), source: .conversation)
-            SPAnalyticsHolder.default.trackEvent(event: .myProfileClicked(messageId: nil, userId: userId), source: .conversation)
         } else {
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
@@ -318,14 +317,6 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
 
     private func logCreationOpen(with creationType: SPAnItemType, parentId: String? = nil) {
         SPAnalyticsHolder.default.log(
-            event: .createMessageClicked(
-                itemType: creationType,
-                targetType: screenTargetType,
-                relatedMessage: parentId
-            ),
-            source: .conversation
-        )
-        SPAnalyticsHolder.default.trackEvent(
             event: .createMessageClicked(
                 itemType: creationType,
                 targetType: screenTargetType,
@@ -662,13 +653,11 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool) {
         if isMyProfile {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
-            SPAnalyticsHolder.default.trackEvent(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
         } else {
             SPAnalyticsHolder.default.log(
                 event: .userProfileClicked(messageId: commentId, userId: authorId),
                 source: .conversation
             )
-            SPAnalyticsHolder.default.trackEvent(event: .userProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
         }
     }
 
@@ -687,16 +676,16 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         // track event
         switch change.operation {
         case "like":
-            SPAnalyticsHolder.default.trackEvent(event: .rankUpButtonClicked(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .rankUpButtonClicked(messageId: commentId ?? ""), source: .conversation)
             break
         case "toggle-like":
-            SPAnalyticsHolder.default.trackEvent(event: .rankUpButtonUndo(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .rankUpButtonUndo(messageId: commentId ?? ""), source: .conversation)
             break
         case "dislike":
-            SPAnalyticsHolder.default.trackEvent(event: .rankDownButtonClicked(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .rankDownButtonClicked(messageId: commentId ?? ""), source: .conversation)
             break
         case "toggle-dislike":
-            SPAnalyticsHolder.default.trackEvent(event: .rankDownButtonUndo(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .rankDownButtonUndo(messageId: commentId ?? ""), source: .conversation)
             break
         default:
             break
@@ -735,11 +724,6 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
                     messageId: commentId,
                     relatedMessageId: relatedCommentId),
                 source: .conversation)
-            SPAnalyticsHolder.default.trackEvent(
-                event: .hideMoreRepliesClicked(
-                    messageId: commentId,
-                    relatedMessageId: relatedCommentId),
-                source: .conversation)
         }
         model.dataSource.hideReplies(for: commentId)
     }
@@ -757,7 +741,6 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             event: .messageContextMenuClicked(commentId),
             source: .conversation
         )
-        SPAnalyticsHolder.default.trackEvent(event: .messageContextMenuClicked(commentId), source: .conversation)
         
         let actions = model.commentAvailableActions(commentId, sender: sender)
         if !actions.isEmpty {
@@ -867,7 +850,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Delete Comment"),
             message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
-        SPAnalyticsHolder.default.trackEvent(event: .deleteCommentClicked(messageId: commentId), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .deleteCommentClicked(messageId: commentId), source: .conversation)
     }
     
     private func showCommentReportFlow(_ commentId: String) {
@@ -897,7 +880,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Report Comment"),
             message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
-        SPAnalyticsHolder.default.trackEvent(event: .reportCommentClicked(messageId: commentId), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .reportCommentClicked(messageId: commentId), source: .conversation)
     }
     
     private func showCommentShareFlow(_ commentId: String, sender: UIButton) {
@@ -916,7 +899,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
-            SPAnalyticsHolder.default.trackEvent(event: .shareCommentClicked(messageId: commentId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .shareCommentClicked(messageId: commentId), source: .conversation)
         }
     }
 

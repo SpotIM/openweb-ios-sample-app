@@ -193,6 +193,18 @@ internal enum SPAnalyticsEvent: Equatable {
             return .rankDownButtonUndo
         }
     }
+    
+    // is the event need to be send to our backand BI (or just for event delegate)
+    var shouldSendToBI: Bool {
+        switch self {
+        case .loaded, .viewed, .mainViewed, .messageContextMenuClicked, .userProfileClicked, .myProfileClicked,
+             .loginClicked, .reading, .loadMoreRepliesClicked, .hideMoreRepliesClicked, .appInit, .appOpened, .appClosed,
+             .sortByOpened, .sortByClicked, .createMessageClicked, .backClicked, .loadMoreComments, .engineStatus:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 internal enum SPAnSource: String {
