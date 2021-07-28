@@ -850,6 +850,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Delete Comment"),
             message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
+        SPAnalyticsHolder.default.trackEvent(event: .deleteCommentClicked(messageId: commentId), source: .conversation)
     }
     
     private func showCommentReportFlow(_ commentId: String) {
@@ -879,6 +880,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Report Comment"),
             message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
+        SPAnalyticsHolder.default.trackEvent(event: .reportCommentClicked(messageId: commentId), source: .conversation)
     }
     
     private func showCommentShareFlow(_ commentId: String, sender: UIButton) {
@@ -897,6 +899,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
+            SPAnalyticsHolder.default.trackEvent(event: .shareCommentClicked(messageId: commentId), source: .conversation)
         }
     }
 

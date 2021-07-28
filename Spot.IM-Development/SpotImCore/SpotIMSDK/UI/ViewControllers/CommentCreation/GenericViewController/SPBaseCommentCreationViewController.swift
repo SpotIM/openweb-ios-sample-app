@@ -269,6 +269,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
             model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
         }
         model?.post()
+        SPAnalyticsHolder.default.trackEvent(event: .postCommentClicked, source: .conversation)
     }
 
     @objc

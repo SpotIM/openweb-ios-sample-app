@@ -12,7 +12,8 @@ internal enum SPAnalyticsEvent: Equatable {
     case loaded                                     
     case viewed                                     
     case mainViewed                                 
-    case messageContextMenuClicked(String)          
+    case messageContextMenuClicked(String)
+    case messageContextMenuClosed(String)
     case userProfileClicked(                        
         messageId: String,
         userId: String
@@ -28,6 +29,14 @@ internal enum SPAnalyticsEvent: Equatable {
         messageId: String,
         relatedMessageId: String?
     )
+    case commentReadMoreClicked(
+        messageId: String,
+        relatedMessageId: String?
+    )
+    case commentReadLessClicked(
+        messageId: String,
+        relatedMessageId: String?
+    )
     case appInit
     case appOpened                                  
     case appClosed                                  
@@ -38,10 +47,14 @@ internal enum SPAnalyticsEvent: Equatable {
         targetType: SPAnScreenTargetType,
         relatedMessage: String?
     )
+    case postCommentClicked
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
     case engineStatus(SPEngineStatusType, SPEngineTargetType)
     case communityGuidelinesClicked
+    case shareCommentClicked(messageId: String)
+    case reportCommentClicked(messageId: String)
+    case deleteCommentClicked(messageId: String)
 
     var kebabValue: String {
         switch self {
@@ -53,6 +66,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "main-viewed"
         case .messageContextMenuClicked:
             return "message-context-menu-clicked"
+        case .messageContextMenuClosed:
+            return "message-context-menu-closed"
         case .userProfileClicked:
             return "user-profile-clicked"
         case .myProfileClicked:
@@ -65,6 +80,10 @@ internal enum SPAnalyticsEvent: Equatable {
             return "load-more-replies-clicked"
         case .hideMoreRepliesClicked:
             return "hide-more-replies-clicked"
+        case .commentReadMoreClicked:
+            return "comment-read-more-clicked"
+        case .commentReadLessClicked:
+            return "comment-read-less-clicked"
         case .appInit:
             return "app-initialized"
         case .appOpened:
@@ -77,6 +96,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "sort-by-clicked"
         case .createMessageClicked:
             return "create-message-clicked"
+        case .postCommentClicked:
+            return "post-comment-clicked"
         case .backClicked:
             return "back-clicked"
         case .loadMoreComments:
@@ -85,6 +106,13 @@ internal enum SPAnalyticsEvent: Equatable {
             return "engine_status"
         case .communityGuidelinesClicked:
             return "community-guidelines-clicked"
+        case .shareCommentClicked:
+            return "share-comment-clicked"
+        case .reportCommentClicked:
+            return "report-comment-clicked"
+        case .deleteCommentClicked:
+            return "delete-comment-clicked"
+            
         }
     }
     
@@ -98,6 +126,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .mainViewed
         case .messageContextMenuClicked:
             return .messageContextMenuClicked
+        case .messageContextMenuClosed:
+            return .messageContextMenuClosed
         case .userProfileClicked:
             return .userProfileClicked
         case .myProfileClicked:
@@ -110,6 +140,10 @@ internal enum SPAnalyticsEvent: Equatable {
             return .loadMoreRepliesClicked
         case .hideMoreRepliesClicked:
             return .hideMoreRepliesClicked
+        case .commentReadMoreClicked:
+            return .commentReadMoreClicked
+        case .commentReadLessClicked:
+            return .commentReadLessClicked
         case .appInit:
             return .appInit
         case .appOpened:
@@ -122,6 +156,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .sortByClicked
         case .createMessageClicked:
             return .createMessageClicked
+        case .postCommentClicked:
+            return .postCommentClicked
         case .backClicked:
             return .backClicked
         case .loadMoreComments:
@@ -130,6 +166,12 @@ internal enum SPAnalyticsEvent: Equatable {
             return .engineStatus
         case .communityGuidelinesClicked:
             return .communityGuidelinesClicked
+        case .shareCommentClicked:
+            return .shareCommentClicked
+        case .reportCommentClicked:
+            return .reportCommentClicked
+        case .deleteCommentClicked:
+            return .deleteCommentClicked
         }
     }
 }

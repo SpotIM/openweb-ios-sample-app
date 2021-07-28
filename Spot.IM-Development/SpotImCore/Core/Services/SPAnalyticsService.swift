@@ -98,6 +98,12 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             itemType = SPAnItemType.main.kebabValue
             messageId = newMessageId
             relatedMessageId = newRelatedMessageId
+        case .commentReadMoreClicked(let newMessageId, let newRelatedMessageId):
+            messageId = newMessageId
+            relatedMessageId = newRelatedMessageId
+        case .commentReadLessClicked(let newMessageId, let newRelatedMessageId):
+            messageId = newMessageId
+            relatedMessageId = newRelatedMessageId
         case .createMessageClicked(let newItemType, let newTargetType, let newRelatedMessageId):
             itemType = newItemType.kebabValue
             targetType = newTargetType.kebabValue
@@ -110,6 +116,12 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         case .engineStatus(let statusType, let engineStatusTargetType):
             engineStatusType = statusType.kebabValue
             targetType = engineStatusTargetType.kebabValue
+        case .shareCommentClicked(let shareMessageId):
+            messageId = shareMessageId
+        case .reportCommentClicked(let shareMessageId):
+            messageId = shareMessageId
+        case .deleteCommentClicked(let shareMessageId):
+            messageId = shareMessageId
         default:
             break
         }
