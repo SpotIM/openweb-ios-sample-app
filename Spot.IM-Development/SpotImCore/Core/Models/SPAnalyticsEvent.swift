@@ -41,6 +41,7 @@ internal enum SPAnalyticsEvent: Equatable {
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
     case engineStatus(SPEngineStatusType, SPEngineTargetType)
+    case communityGuidelinesClicked
 
     var kebabValue: String {
         switch self {
@@ -82,6 +83,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "load-more-comments-clicked"
         case .engineStatus:
             return "engine_status"
+        case .communityGuidelinesClicked:
+            return "community-guidelines-clicked"
         }
     }
     
@@ -125,6 +128,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .loadMoreComments
         case .engineStatus:
             return .engineStatus
+        case .communityGuidelinesClicked:
+            return .communityGuidelinesClicked
         }
     }
 }
