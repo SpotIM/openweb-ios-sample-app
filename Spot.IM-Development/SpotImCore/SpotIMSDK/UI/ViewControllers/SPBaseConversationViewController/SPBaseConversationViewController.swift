@@ -684,6 +684,23 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             self.didStartSignInFlow()
             return
         }
+        // track event
+        switch change.operation {
+        case "like":
+            SPAnalyticsHolder.default.trackEvent(event: .rankUpButtonClicked(messageId: commentId ?? ""), source: .conversation)
+            break
+        case "toggle-like":
+            SPAnalyticsHolder.default.trackEvent(event: .rankUpButtonUndo(messageId: commentId ?? ""), source: .conversation)
+            break
+        case "dislike":
+            SPAnalyticsHolder.default.trackEvent(event: .rankDownButtonClicked(messageId: commentId ?? ""), source: .conversation)
+            break
+        case "toggle-dislike":
+            SPAnalyticsHolder.default.trackEvent(event: .rankDownButtonUndo(messageId: commentId ?? ""), source: .conversation)
+            break
+        default:
+            break
+        }
         
         model.dataSource.updateRank(with: change, inCellWith: commentId)
         let rankActionDataModel = RankActionDataModel(change: change,

@@ -55,6 +55,10 @@ internal enum SPAnalyticsEvent: Equatable {
     case shareCommentClicked(messageId: String)
     case reportCommentClicked(messageId: String)
     case deleteCommentClicked(messageId: String)
+    case rankUpButtonClicked(messageId: String)
+    case rankDownButtonClicked(messageId: String)
+    case rankUpButtonUndo(messageId: String)
+    case rankDownButtonUndo(messageId: String)
 
     var kebabValue: String {
         switch self {
@@ -112,7 +116,14 @@ internal enum SPAnalyticsEvent: Equatable {
             return "report-comment-clicked"
         case .deleteCommentClicked:
             return "delete-comment-clicked"
-            
+        case .rankUpButtonClicked:
+            return "rank-up-button-clicked"
+        case .rankDownButtonClicked:
+            return "rank-down-button-clicked"
+        case .rankUpButtonUndo:
+            return "rank-up-button-undo"
+        case .rankDownButtonUndo:
+            return "rank-down-button-undo"
         }
     }
     
@@ -172,6 +183,14 @@ internal enum SPAnalyticsEvent: Equatable {
             return .reportCommentClicked
         case .deleteCommentClicked:
             return .deleteCommentClicked
+        case .rankUpButtonClicked:
+            return .rankUpButtonClicked
+        case .rankDownButtonClicked:
+            return .rankDownButtonClicked
+        case .rankUpButtonUndo:
+            return .rankUpButtonUndo
+        case .rankDownButtonUndo:
+            return .rankDownButtonUndo
         }
     }
 }
