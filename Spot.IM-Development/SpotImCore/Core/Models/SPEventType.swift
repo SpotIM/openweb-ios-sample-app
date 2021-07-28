@@ -28,5 +28,6 @@ public enum SPEventType: String {
     case backClicked
     case loadMoreComments
     case engineStatus
+    case communityGuidelinesClicked
 }
 
