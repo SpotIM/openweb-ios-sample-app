@@ -41,7 +41,7 @@ class SettingsViewController: UIViewController {
     
     var buttonOnlyModeIndex: Int {
         get {
-            switch (SpotIm.GetButtonOnlyMode()) {
+            switch (SpotIm.getButtonOnlyMode()) {
             case .disable:
                 return 0
             case .withTitle:
@@ -66,7 +66,7 @@ class SettingsViewController: UIViewController {
             default:
                 break
             }
-            SpotIm.SetButtonOnlyMode(mode: newMode)
+            SpotIm.setButtonOnlyMode(mode: newMode)
         }
     }
 

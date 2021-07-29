@@ -33,7 +33,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private var isWaitingForSignIn: Bool = false
     private var communityGuidelinesHtmlString: String? = nil
     
-    private var buttonOnlyMode: Bool = false
+    private var isButtonOnlyModeEnabled: Bool = false
     
     internal var dataLoaded: (() -> Void)?
     
@@ -70,10 +70,10 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         
         self.adsProvider = adsProvider
         // when buttonOnlyMode is on, show no comments
-        self.maxSectionCount = SpotIm.buttonOnlyMode != .disable ? 0 :
+        self.maxSectionCount = SpotIm.buttonOnlyMode.isEnabled() ? 0 :
                             (numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM)
         // button only when numberOfMessagesToShow is 0 OR publisher set mode in SpotIm
-        self.buttonOnlyMode = (numberOfMessagesToShow == 0 || SpotIm.buttonOnlyMode != .disable)
+        self.isButtonOnlyModeEnabled = (numberOfMessagesToShow == 0 || SpotIm.buttonOnlyMode.isEnabled())
         
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
@@ -246,7 +246,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     private func updateCommunityQuestion(communityQuestionText: String?) {
         // hide when no community question or in on button mode
-        if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0, !buttonOnlyMode {
+        if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0, !isButtonOnlyModeEnabled {
             communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
             communityQuestionView.clipsToBounds = true
             communityQuestionView.setupPreConversationConstraints()
@@ -268,7 +268,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.trailing.equal(to: view.trailingAnchor)
         }
         // hide when no community guidelines or in button only mode
-        if let htmlString = getCommunityGuidelinesTextIfExists(), !buttonOnlyMode {
+        if let htmlString = getCommunityGuidelinesTextIfExists(), !isButtonOnlyModeEnabled {
             communityGuidelinesHtmlString = htmlString
             communityGuidelinesView.delegate = self
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
@@ -311,7 +311,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func setupFooterView() {
         view.bringSubviewToFront(footerView)
         footerView.delegate = self
-        footerView.set(buttonOnlyMode: buttonOnlyMode)
+        footerView.set(buttonOnlyMode: isButtonOnlyModeEnabled)
         footerView.layout {
             $0.top.equal(to: tableView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
@@ -421,7 +421,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     private func updateWhatYouThinkView() {
         whatYouThinkView.updateAvatar(model.dataSource.currentUserAvatarUrl)
-        if self.buttonOnlyMode {
+        if self.isButtonOnlyModeEnabled {
             whatYouThinkView.isHidden = true
             whatYouThinkView.layout {
                 $0.height.equal(to: 0)

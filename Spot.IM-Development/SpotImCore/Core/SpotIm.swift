@@ -77,6 +77,10 @@ public enum SpotImButtonOnlyMode {
     case disable
     case withTitle
     case withoutTitle
+    
+    func isEnabled() -> Bool {
+        return self != .disable
+    }
 }
 
 public protocol SPAnalyticsEventDelegate {
@@ -392,11 +396,11 @@ public class SpotIm {
 
      - Parameter mode: SpotImButtonOnlyMode (to disable/enable/no title)
      */
-    public static func SetButtonOnlyMode(mode: SpotImButtonOnlyMode) {
+    public static func setButtonOnlyMode(mode: SpotImButtonOnlyMode) {
         self.buttonOnlyMode = mode
     }
     
-    public static func GetButtonOnlyMode() -> SpotImButtonOnlyMode{
+    public static func getButtonOnlyMode() -> SpotImButtonOnlyMode {
         return self.buttonOnlyMode
     }
 
