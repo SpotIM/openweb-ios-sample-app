@@ -217,7 +217,9 @@ final class SPMainConversationModel {
         let cancelAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Cancel"),
             style: .cancel
-        )
+        ) { action in
+            SPAnalyticsHolder.default.log(event: .messageContextMenuClosed(commentId), source: .conversation)
+        }
         if !actions.isEmpty {
             actions.append(cancelAction)
         }
