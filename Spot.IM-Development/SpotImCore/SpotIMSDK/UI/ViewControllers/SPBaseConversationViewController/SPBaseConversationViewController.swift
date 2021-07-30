@@ -145,6 +145,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         if (user.registered || !policyForceRegister) {
             openProfileWebScreen(userId: userId, isMyProfile: true)
         } else {
+            if SpotIm.reactNativeNotifyOnCreateComment && self.isInFullConversationVC() {
+                self.navigationController?.popViewController(animated: false)
+            }
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
         }
@@ -668,6 +671,9 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
         guard let config = SPConfigsDataSource.appConfig,
            config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
+            if SpotIm.reactNativeNotifyOnCreateComment && self.isInFullConversationVC() {
+                self.navigationController?.popViewController(animated: false)
+            }
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
             return
@@ -762,18 +768,16 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
 }
 
 extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate {
-    func labelContainerDidTap(_ foorterView: SPMainConversationFooterView) {
+    func labelContainerDidTap(_ footerView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
         
         if SpotIm.reactNativeNotifyOnCreateComment && SpotIm.getRegisteredUserId() == nil {
-            if self.isInFullConversationVC(foorterView) {
+            if self.isInFullConversationVC() {
                 self.navigationController?.popViewController(animated: false)
-                NotificationCenter.default.post(name: Notification.Name("OWCreateCommentFullConversation"), object: nil)
             }
-            else {
-                NotificationCenter.default.post(name: Notification.Name("OWCreateCommentPreConversation"), object: nil)
-            }
-            
+
+            userAuthFlowDelegate?.presentAuth()
+            self.didStartSignInFlow()
             return
         }
         logCreationOpen(with: .comment)
@@ -784,7 +788,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
         openMyProfileWebScreen()
     }
     
-    private func isInFullConversationVC(_ foorterView: SPMainConversationFooterView) -> Bool {
+    private func isInFullConversationVC() -> Bool {
         if self is SPPreConversationViewController {
             return false
         }
