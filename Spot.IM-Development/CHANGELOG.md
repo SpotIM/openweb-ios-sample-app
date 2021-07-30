@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.11] - 2021-07-28
+
+### Added
+- Fix for XCFramework build setting - `CLANG_ENABLE_CODE_COVERAGE=NO` - see https://blog.scichart.com/xcframework-xcode-12-and-bigsur-issues/
+
+## [1.5.10] - 2021-07-21
+
+### Added
+- Analytics event listener
+
+### Fixed
+- “Add a comment” screen gets locked in Portrait mode
+
 ## [1.5.9] - 2021-07-15
 
 ### Added

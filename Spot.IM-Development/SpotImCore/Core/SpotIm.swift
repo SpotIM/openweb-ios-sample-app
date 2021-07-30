@@ -73,6 +73,10 @@ public enum SpotImSortByOption {
     case oldest
 }
 
+public protocol SPAnalyticsEventDelegate {
+    func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo)
+}
+
 extension SpotImResult where T == Void {
     static var success: SpotImResult {
         return .success(())
@@ -112,6 +116,7 @@ public class SpotIm {
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
+    internal static var analyticsEventDelegate: SPAnalyticsEventDelegate?
     /**
     Initialize the SDK
 
@@ -367,6 +372,15 @@ public class SpotIm {
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
+    }
+    
+    /**
+     Set SPAnalyticsEventDelegate for tracking analytics events
+
+     - Parameter delegate: A delegate to notify the parent app that an analytics event sent
+     */
+    public static func setAnalyticsEventDelegate(delegate: SPAnalyticsEventDelegate) {
+        self.analyticsEventDelegate = delegate
     }
 
     // MARK: Private
