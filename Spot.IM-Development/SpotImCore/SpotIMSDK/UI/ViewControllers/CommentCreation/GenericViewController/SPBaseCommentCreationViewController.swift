@@ -150,13 +150,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return UIInterfaceOrientationMask.portrait
-        }
-        return UIInterfaceOrientationMask.all
-    }
-    
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
         super.updateColorsAccordingToStyle()

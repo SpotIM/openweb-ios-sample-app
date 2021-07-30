@@ -31,6 +31,7 @@ class ViewController: UIViewController {
         self.adLoader = GADAdLoader(adUnitID: "/282897603/elnuevodia.com/home/app_scroll", rootViewController: self, adTypes: [.nativeCustomTemplate], options: nil)
         self.adLoader?.delegate = self
         self.adLoader?.load(GADRequest())
+        SpotIm.setAnalyticsEventDelegate(delegate: self)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -179,5 +180,17 @@ extension ViewController: GADAdLoaderDelegate, GADNativeCustomTemplateAdLoaderDe
     ) {
         print("Received custom native ad: \(nativeCustomTemplateAd)")
 
+    }
+}
+
+extension ViewController: SPAnalyticsEventDelegate {
+    internal func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo) {
+        switch type {
+        case .userProfileClicked:
+            print("Spot.IM Analytics Event - " + event.eventType)
+        // more cases can be handled here ...
+        default:
+            print("Spot.IM Analytics Event - " + event.eventType)
+        }
     }
 }
