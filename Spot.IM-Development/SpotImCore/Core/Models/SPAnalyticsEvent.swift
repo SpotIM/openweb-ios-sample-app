@@ -52,13 +52,13 @@ internal enum SPAnalyticsEvent: Equatable {
     case loadMoreComments
     case engineStatus(SPEngineStatusType, SPEngineTargetType)
     case communityGuidelinesLinkClicked(targetUrl: String)
-    case commentShareClicked(messageId: String)
-    case commentReportClicked(messageId: String)
-    case commentDeleteClicked(messageId: String)
-    case commentRankUpButtonClicked(messageId: String)
-    case commentRankDownButtonClicked(messageId: String)
-    case commentRankUpButtonUndo(messageId: String)
-    case commentRankDownButtonUndo(messageId: String)
+    case commentShareClicked(messageId: String, relatedMessageId: String?)
+    case commentReportClicked(messageId: String, relatedMessageId: String?)
+    case commentDeleteClicked(messageId: String, relatedMessageId: String?)
+    case commentRankUpButtonClicked(messageId: String, relatedMessageId: String?)
+    case commentRankDownButtonClicked(messageId: String, relatedMessageId: String?)
+    case commentRankUpButtonUndo(messageId: String, relatedMessageId: String?)
+    case commentRankDownButtonUndo(messageId: String, relatedMessageId: String?)
 
     var kebabValue: String {
         switch self {

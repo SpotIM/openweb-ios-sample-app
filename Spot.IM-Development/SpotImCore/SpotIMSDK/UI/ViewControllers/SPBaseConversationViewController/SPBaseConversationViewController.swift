@@ -674,18 +674,19 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             return
         }
         // track event
+        let relatedCommentId = model.dataSource.commentViewModel(commentId ?? "")?.rootCommentId
         switch change.operation {
         case "like":
-            SPAnalyticsHolder.default.log(event: .commentRankUpButtonClicked(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonClicked(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
             break
         case "toggle-like":
-            SPAnalyticsHolder.default.log(event: .commentRankUpButtonUndo(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonUndo(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
             break
         case "dislike":
-            SPAnalyticsHolder.default.log(event: .commentRankDownButtonClicked(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonClicked(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
             break
         case "toggle-dislike":
-            SPAnalyticsHolder.default.log(event: .commentRankDownButtonUndo(messageId: commentId ?? ""), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonUndo(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
             break
         default:
             break
@@ -850,7 +851,8 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Delete Comment"),
             message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
-        SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId), source: .conversation)
+        let relatedCommentId = model.dataSource.commentViewModel(commentId)?.rootCommentId
+        SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: relatedCommentId), source: .conversation)
     }
     
     private func showCommentReportFlow(_ commentId: String) {
@@ -880,7 +882,8 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Report Comment"),
             message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
-        SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId), source: .conversation)
+        let relatedCommentId = model.dataSource.commentViewModel(commentId)?.rootCommentId
+        SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: relatedCommentId), source: .conversation)
     }
     
     private func showCommentShareFlow(_ commentId: String, sender: UIButton) {
@@ -899,7 +902,8 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
-            SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId), source: .conversation)
+            let relatedCommentId = self.model.dataSource.commentViewModel(commentId)?.rootCommentId
+            SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId, relatedMessageId: relatedCommentId), source: .conversation)
         }
     }
 

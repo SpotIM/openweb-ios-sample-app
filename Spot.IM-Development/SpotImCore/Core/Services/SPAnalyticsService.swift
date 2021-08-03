@@ -111,20 +111,27 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         case .engineStatus(let statusType, let engineStatusTargetType):
             engineStatusType = statusType.kebabValue
             targetType = engineStatusTargetType.kebabValue
-        case .commentShareClicked(let shareMessageId):
+        case .commentShareClicked(let shareMessageId, let relatedMessage):
             messageId = shareMessageId
-        case .commentReportClicked(let shareMessageId):
+            relatedMessageId = relatedMessage
+        case .commentReportClicked(let shareMessageId, let relatedMessage):
             messageId = shareMessageId
-        case .commentDeleteClicked(let shareMessageId):
+            relatedMessageId = relatedMessage
+        case .commentDeleteClicked(let shareMessageId, let relatedMessage):
             messageId = shareMessageId
-        case .commentRankUpButtonClicked(let clickedMessageId):
+            relatedMessageId = relatedMessage
+        case .commentRankUpButtonClicked(let clickedMessageId, let relatedMessage):
             messageId = clickedMessageId
-        case .commentRankDownButtonClicked(let clickedMessageId):
+            relatedMessageId = relatedMessage
+        case .commentRankDownButtonClicked(let clickedMessageId, let relatedMessage):
             messageId = clickedMessageId
-        case .commentRankUpButtonUndo(let clickedMessageId):
+            relatedMessageId = relatedMessage
+        case .commentRankUpButtonUndo(let clickedMessageId, let relatedMessage):
             messageId = clickedMessageId
-        case .commentRankDownButtonUndo(let clickedMessageId):
+            relatedMessageId = relatedMessage
+        case .commentRankDownButtonUndo(let clickedMessageId, let relatedMessage):
             messageId = clickedMessageId
+            relatedMessageId = relatedMessage
         case .communityGuidelinesLinkClicked(let url):
             targetUrl = url
         default:
