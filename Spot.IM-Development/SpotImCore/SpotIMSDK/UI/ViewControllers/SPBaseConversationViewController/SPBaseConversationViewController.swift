@@ -674,19 +674,18 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             return
         }
         // track event
-        let relatedCommentId = model.dataSource.commentViewModel(commentId ?? "")?.rootCommentId
         switch change.operation {
         case "like":
-            SPAnalyticsHolder.default.log(event: .commentRankUpButtonClicked(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
             break
         case "toggle-like":
-            SPAnalyticsHolder.default.log(event: .commentRankUpButtonUndo(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
             break
         case "dislike":
-            SPAnalyticsHolder.default.log(event: .commentRankDownButtonClicked(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
             break
         case "toggle-dislike":
-            SPAnalyticsHolder.default.log(event: .commentRankDownButtonUndo(messageId: commentId ?? "", relatedMessageId: relatedCommentId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
             break
         default:
             break
@@ -814,22 +813,27 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func prepareFlowForAction(_ type: ActionType, sender: UIButton) {
+        let replyingToID: String?
         switch type {
         case .delete(let commentId):
-            showCommentDeletionFlow(commentId)
-            
+            replyingToID = model.dataSource.commentViewModel(commentId)?.rootCommentId
+            showCommentDeletionFlow(commentId, replyingToID: replyingToID)
+            break
         case .report(let commentId):
-            showCommentReportFlow(commentId)
-            
+            replyingToID = model.dataSource.commentViewModel(commentId)?.rootCommentId
+            showCommentReportFlow(commentId, replyingToID: replyingToID)
+            break
         case .edit(let commentId):
             model.editComment(with: commentId)
-            
+            break
         case .share(let commentId):
-            showCommentShareFlow(commentId, sender: sender)
+            replyingToID = model.dataSource.commentViewModel(commentId)?.rootCommentId
+            showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
+            break
         }
     }
     
-    private func showCommentDeletionFlow(_ commentId: String) {
+    private func showCommentDeletionFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Delete"),
             style: .destructive) { [weak self] _ in
@@ -851,11 +855,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Delete Comment"),
             message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
-        let relatedCommentId = model.dataSource.commentViewModel(commentId)?.rootCommentId
-        SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: relatedCommentId), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
-    private func showCommentReportFlow(_ commentId: String) {
+    private func showCommentReportFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Report"),
             style: .destructive) { [weak self] _ in
@@ -882,11 +885,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Report Comment"),
             message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
-        let relatedCommentId = model.dataSource.commentViewModel(commentId)?.rootCommentId
-        SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: relatedCommentId), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
-    private func showCommentShareFlow(_ commentId: String, sender: UIButton) {
+    private func showCommentShareFlow(_ commentId: String, sender: UIButton, replyingToID: String?) {
         showLoader()
         model.shareComment(with: commentId) { [weak self] url, error in
             guard let self = self else { return }
@@ -902,8 +904,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
-            let relatedCommentId = self.model.dataSource.commentViewModel(commentId)?.rootCommentId
-            SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId, relatedMessageId: relatedCommentId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
     }
 
