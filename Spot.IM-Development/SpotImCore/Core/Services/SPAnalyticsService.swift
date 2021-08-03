@@ -110,19 +110,19 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         case .engineStatus(let statusType, let engineStatusTargetType):
             engineStatusType = statusType.kebabValue
             targetType = engineStatusTargetType.kebabValue
-        case .shareCommentClicked(let shareMessageId):
+        case .commentShareClicked(let shareMessageId):
             messageId = shareMessageId
-        case .reportCommentClicked(let shareMessageId):
+        case .commentReportClicked(let shareMessageId):
             messageId = shareMessageId
-        case .deleteCommentClicked(let shareMessageId):
+        case .commentDeleteClicked(let shareMessageId):
             messageId = shareMessageId
-        case .rankUpButtonClicked(let clickedMessageId):
+        case .commentRankUpButtonClicked(let clickedMessageId):
             messageId = clickedMessageId
-        case .rankDownButtonClicked(let clickedMessageId):
+        case .commentRankDownButtonClicked(let clickedMessageId):
             messageId = clickedMessageId
-        case .rankUpButtonUndo(let clickedMessageId):
+        case .commentRankUpButtonUndo(let clickedMessageId):
             messageId = clickedMessageId
-        case .rankDownButtonUndo(let clickedMessageId):
+        case .commentRankDownButtonUndo(let clickedMessageId):
             messageId = clickedMessageId
         default:
             break
