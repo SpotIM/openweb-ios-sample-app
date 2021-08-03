@@ -101,4 +101,5 @@ public struct SPEventInfo {
     public let totalComments: Int?
     public let engineStatusType: String?
     public let publisherCustomData: [String: String]?
+    public let targetUrl: String?
 }
