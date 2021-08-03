@@ -51,7 +51,7 @@ internal enum SPAnalyticsEvent: Equatable {
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
     case engineStatus(SPEngineStatusType, SPEngineTargetType)
-    case communityGuidelinesClicked
+    case communityGuidelinesLinkClicked(targetUrl: String)
     case commentShareClicked(messageId: String)
     case commentReportClicked(messageId: String)
     case commentDeleteClicked(messageId: String)
@@ -108,8 +108,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "load-more-comments-clicked"
         case .engineStatus:
             return "engine_status"
-        case .communityGuidelinesClicked:
-            return "community-guidelines-clicked"
+        case .communityGuidelinesLinkClicked:
+            return "community-guidelines-link-clicked"
         case .commentShareClicked:
             return "comment-share-clicked"
         case .commentReportClicked:
@@ -175,8 +175,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .loadMoreComments
         case .engineStatus:
             return .engineStatus
-        case .communityGuidelinesClicked:
-            return .communityGuidelinesClicked
+        case .communityGuidelinesLinkClicked:
+            return .communityGuidelinesLinkClicked
         case .commentShareClicked:
             return .commentShareClicked
         case .commentReportClicked:

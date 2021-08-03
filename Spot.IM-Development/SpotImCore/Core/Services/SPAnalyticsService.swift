@@ -76,6 +76,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         var itemId: String?
         var reading: Int?
         var engineStatusType: String?
+        var targetUrl: String?
 
         switch event {
         case .loginClicked(let newTargetType):
@@ -124,6 +125,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             messageId = clickedMessageId
         case .commentRankDownButtonUndo(let clickedMessageId):
             messageId = clickedMessageId
+        case .communityGuidelinesLinkClicked(let url):
+            targetUrl = url
         default:
             break
         }
@@ -153,7 +156,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
                                   itemId: itemId,
                                   totalComments: totalComments,
                                   engineStatusType: engineStatusType,
-                                  publisherCustomData: publisherCustomData)
+                                  publisherCustomData: publisherCustomData,
+                                  targetUrl: targetUrl)
         return info
     }
 

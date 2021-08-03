@@ -32,7 +32,7 @@ public enum SPEventType: String {
     case backClicked
     case loadMoreComments
     case engineStatus
-    case communityGuidelinesClicked
+    case communityGuidelinesLinkClicked
     case commentShareClicked
     case commentReportClicked
     case commentDeleteClicked
