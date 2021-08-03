@@ -47,18 +47,18 @@ internal enum SPAnalyticsEvent: Equatable {
         targetType: SPAnScreenTargetType,
         relatedMessage: String?
     )
-    case postCommentClicked
+    case commentPostClicked
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
     case engineStatus(SPEngineStatusType, SPEngineTargetType)
     case communityGuidelinesClicked
-    case shareCommentClicked(messageId: String)
-    case reportCommentClicked(messageId: String)
-    case deleteCommentClicked(messageId: String)
-    case rankUpButtonClicked(messageId: String)
-    case rankDownButtonClicked(messageId: String)
-    case rankUpButtonUndo(messageId: String)
-    case rankDownButtonUndo(messageId: String)
+    case commentShareClicked(messageId: String)
+    case commentReportClicked(messageId: String)
+    case commentDeleteClicked(messageId: String)
+    case commentRankUpButtonClicked(messageId: String)
+    case commentRankDownButtonClicked(messageId: String)
+    case commentRankUpButtonUndo(messageId: String)
+    case commentRankDownButtonUndo(messageId: String)
 
     var kebabValue: String {
         switch self {
@@ -100,8 +100,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "sort-by-clicked"
         case .createMessageClicked:
             return "create-message-clicked"
-        case .postCommentClicked:
-            return "post-comment-clicked"
+        case .commentPostClicked:
+            return "comment-post-clicked"
         case .backClicked:
             return "back-clicked"
         case .loadMoreComments:
@@ -110,20 +110,20 @@ internal enum SPAnalyticsEvent: Equatable {
             return "engine_status"
         case .communityGuidelinesClicked:
             return "community-guidelines-clicked"
-        case .shareCommentClicked:
-            return "share-comment-clicked"
-        case .reportCommentClicked:
-            return "report-comment-clicked"
-        case .deleteCommentClicked:
-            return "delete-comment-clicked"
-        case .rankUpButtonClicked:
-            return "rank-up-button-clicked"
-        case .rankDownButtonClicked:
-            return "rank-down-button-clicked"
-        case .rankUpButtonUndo:
-            return "rank-up-button-undo"
-        case .rankDownButtonUndo:
-            return "rank-down-button-undo"
+        case .commentShareClicked:
+            return "comment-share-clicked"
+        case .commentReportClicked:
+            return "comment-report-clicked"
+        case .commentDeleteClicked:
+            return "comment-delete-clicked"
+        case .commentRankUpButtonClicked:
+            return "comment-rank-up-button-clicked"
+        case .commentRankDownButtonClicked:
+            return "comment-rank-down-button-clicked"
+        case .commentRankUpButtonUndo:
+            return "comment-rank-up-button-undo"
+        case .commentRankDownButtonUndo:
+            return "comment-rank-down-button-undo"
         }
     }
     
@@ -167,8 +167,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .sortByClicked
         case .createMessageClicked:
             return .createMessageClicked
-        case .postCommentClicked:
-            return .postCommentClicked
+        case .commentPostClicked:
+            return .commentPostClicked
         case .backClicked:
             return .backClicked
         case .loadMoreComments:
@@ -177,20 +177,20 @@ internal enum SPAnalyticsEvent: Equatable {
             return .engineStatus
         case .communityGuidelinesClicked:
             return .communityGuidelinesClicked
-        case .shareCommentClicked:
-            return .shareCommentClicked
-        case .reportCommentClicked:
-            return .reportCommentClicked
-        case .deleteCommentClicked:
-            return .deleteCommentClicked
-        case .rankUpButtonClicked:
-            return .rankUpButtonClicked
-        case .rankDownButtonClicked:
-            return .rankDownButtonClicked
-        case .rankUpButtonUndo:
-            return .rankUpButtonUndo
-        case .rankDownButtonUndo:
-            return .rankDownButtonUndo
+        case .commentShareClicked:
+            return .commentShareClicked
+        case .commentReportClicked:
+            return .commentReportClicked
+        case .commentDeleteClicked:
+            return .commentDeleteClicked
+        case .commentRankUpButtonClicked:
+            return .commentRankUpButtonClicked
+        case .commentRankDownButtonClicked:
+            return .commentRankDownButtonClicked
+        case .commentRankUpButtonUndo:
+            return .commentRankUpButtonUndo
+        case .commentRankDownButtonUndo:
+            return .commentRankDownButtonUndo
         }
     }
     

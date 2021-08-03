@@ -28,17 +28,17 @@ public enum SPEventType: String {
     case sortByOpened
     case sortByClicked
     case createMessageClicked
-    case postCommentClicked
+    case commentPostClicked
     case backClicked
     case loadMoreComments
     case engineStatus
     case communityGuidelinesClicked
-    case shareCommentClicked
-    case reportCommentClicked
-    case deleteCommentClicked
-    case rankUpButtonClicked
-    case rankDownButtonClicked
-    case rankUpButtonUndo
-    case rankDownButtonUndo
+    case commentShareClicked
+    case commentReportClicked
+    case commentDeleteClicked
+    case commentRankUpButtonClicked
+    case commentRankDownButtonClicked
+    case commentRankUpButtonUndo
+    case commentRankDownButtonUndo
 }
 
