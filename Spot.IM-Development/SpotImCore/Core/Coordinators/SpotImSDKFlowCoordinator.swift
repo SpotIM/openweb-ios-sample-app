@@ -339,7 +339,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.preConversationViewController = preConversationViewController
     }
 
-    private func conversationController(with model: SPMainConversationModel, openedByPublisher: Bool=false) -> SPMainConversationViewController {
+    private func conversationController(with model: SPMainConversationModel, openedByPublisher: Bool = false) -> SPMainConversationViewController {
         let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self, openedByPublisher: openedByPublisher)
         
         controller.delegate = self
