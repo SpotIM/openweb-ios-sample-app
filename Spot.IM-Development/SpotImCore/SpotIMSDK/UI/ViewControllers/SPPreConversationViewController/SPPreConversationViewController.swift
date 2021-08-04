@@ -486,12 +486,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func moveToFullConversation(selectedCommentId: String?) {
         // show interstitial if needed
         if  model.adsGroup().interstitialEnabled(),
-            AdsManager.shouldShowInterstitial(for: model.dataSource.postId),
-            adsProvider.showInterstitial(in: self) {
-            preConversationDelegate?.showMoreComments(with: model, selectedCommentId: selectedCommentId)
-        } else {
-            preConversationDelegate?.showMoreComments(with: model, selectedCommentId: selectedCommentId)
+            AdsManager.shouldShowInterstitial(for: model.dataSource.postId) {
+            if adsProvider.showInterstitial(in: self) {
+                print("Did not showed interstitial")
+            }
         }
+         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: selectedCommentId)
     }
     
     override func didStartSignInFlow() {
@@ -566,7 +566,7 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
 extension SPPreConversationViewController { // SPCommentCellDelegate
 
     override func showMoreReplies(for commentId: String?) {
-        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
+        moveToFullConversation(selectedCommentId: commentId)
     }
 
 }
