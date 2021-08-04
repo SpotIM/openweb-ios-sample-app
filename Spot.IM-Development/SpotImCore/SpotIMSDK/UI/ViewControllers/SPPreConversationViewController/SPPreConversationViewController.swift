@@ -91,7 +91,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
         
         SPAnalyticsHolder.default.log(event: .loaded, source: .launcher)
-
+        
         loadConversation()
         
         self.visibilityTracker.setup(view: view, delegate: self)

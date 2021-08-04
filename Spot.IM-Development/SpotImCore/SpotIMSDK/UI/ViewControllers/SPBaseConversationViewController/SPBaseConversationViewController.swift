@@ -144,6 +144,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         }
         if (user.registered || !policyForceRegister) {
             openProfileWebScreen(userId: userId, isMyProfile: true)
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId), source: .conversation)
         } else {
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
@@ -672,6 +673,23 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             self.didStartSignInFlow()
             return
         }
+        // track event
+        switch change.operation {
+        case "like":
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        case "toggle-like":
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        case "dislike":
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        case "toggle-dislike":
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        default:
+            break
+        }
         
         model.dataSource.updateRank(with: change, inCellWith: commentId)
         let rankActionDataModel = RankActionDataModel(change: change,
@@ -796,21 +814,22 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     
     func prepareFlowForAction(_ type: ActionType, sender: UIButton) {
         switch type {
-        case .delete(let commentId):
-            showCommentDeletionFlow(commentId)
-            
-        case .report(let commentId):
-            showCommentReportFlow(commentId)
-            
-        case .edit(let commentId):
+        case .delete(let commentId, let replyingToID):
+            showCommentDeletionFlow(commentId, replyingToID: replyingToID)
+            break
+        case .report(let commentId, let replyingToID):
+            showCommentReportFlow(commentId, replyingToID: replyingToID)
+            break
+        case .edit(let commentId, let replyingToID):
             model.editComment(with: commentId)
-            
-        case .share(let commentId):
-            showCommentShareFlow(commentId, sender: sender)
+            break
+        case .share(let commentId, let replyingToID):
+            showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
+            break
         }
     }
     
-    private func showCommentDeletionFlow(_ commentId: String) {
+    private func showCommentDeletionFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Delete"),
             style: .destructive) { [weak self] _ in
@@ -832,9 +851,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Delete Comment"),
             message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
+        SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
-    private func showCommentReportFlow(_ commentId: String) {
+    private func showCommentReportFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Report"),
             style: .destructive) { [weak self] _ in
@@ -861,9 +881,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Report Comment"),
             message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
+        SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
-    private func showCommentShareFlow(_ commentId: String, sender: UIButton) {
+    private func showCommentShareFlow(_ commentId: String, sender: UIButton, replyingToID: String?) {
         showLoader()
         model.shareComment(with: commentId) { [weak self] url, error in
             guard let self = self else { return }
@@ -879,6 +900,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
+            SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
     }
 
