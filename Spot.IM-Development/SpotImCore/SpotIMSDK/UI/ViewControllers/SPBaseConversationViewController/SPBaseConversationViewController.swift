@@ -813,21 +813,17 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func prepareFlowForAction(_ type: ActionType, sender: UIButton) {
-        let replyingToID: String?
         switch type {
-        case .delete(let commentId):
-            replyingToID = model.dataSource.commentViewModel(commentId)?.rootCommentId
+        case .delete(let commentId, let replyingToID):
             showCommentDeletionFlow(commentId, replyingToID: replyingToID)
             break
-        case .report(let commentId):
-            replyingToID = model.dataSource.commentViewModel(commentId)?.rootCommentId
+        case .report(let commentId, let replyingToID):
             showCommentReportFlow(commentId, replyingToID: replyingToID)
             break
-        case .edit(let commentId):
+        case .edit(let commentId, let replyingToID):
             model.editComment(with: commentId)
             break
-        case .share(let commentId):
-            replyingToID = model.dataSource.commentViewModel(commentId)?.rootCommentId
+        case .share(let commentId, let replyingToID):
             showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
             break
         }

@@ -187,20 +187,20 @@ final class SPMainConversationModel {
     func commentAvailableActions(_ commentId: String, sender: UIButton) -> [UIAlertAction] {
         let viewModel = dataSource.commentViewModel(commentId)
         let availability = commentActionsAvailability(viewModel: viewModel)
-        
+        let replyingToID = viewModel?.rootCommentId
         var actions: [UIAlertAction] = []
 
         let shareAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Share"),
             style: .default) { [weak self] _ in
-                self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId), sender: sender)
+            self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId, replyingToID: replyingToID), sender: sender)
         }
         actions.append(shareAction)
         if availability.isReportable {
             let reportAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Report"),
                 style: .default) { [weak self] _ in
-                    self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId), sender: sender)
+                self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId, replyingToID: replyingToID), sender: sender)
             }
             actions.append(reportAction)
         }
@@ -209,7 +209,7 @@ final class SPMainConversationModel {
             let deleteAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Delete"),
                 style: .default) { [weak self] _ in
-                    self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId), sender: sender)
+                self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId, replyingToID: replyingToID), sender: sender)
             }
             actions.append(deleteAction)
         }
@@ -386,8 +386,8 @@ protocol CommentsActionDelegate: class {
 }
 
 enum ActionType {
-    case delete(commentId: String)
-    case report(commentId: String)
-    case edit(commentId: String)
-    case share(commentId: String)
+    case delete(commentId: String, replyingToID: String?)
+    case report(commentId: String, replyingToID: String?)
+    case edit(commentId: String, replyingToID: String?)
+    case share(commentId: String, replyingToID: String?)
 }
