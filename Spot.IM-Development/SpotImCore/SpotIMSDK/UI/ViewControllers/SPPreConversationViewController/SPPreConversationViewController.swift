@@ -480,7 +480,18 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     private func didTapComment(with indexPath: IndexPath) {
         let commentId = model.dataSource.clippedCellData(for: indexPath)?.commentId
-        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: commentId)
+        moveToFullConversation(selectedCommentId: commentId)
+    }
+    
+    private func moveToFullConversation(selectedCommentId: String?) {
+        // show interstitial if needed
+        if  model.adsGroup().interstitialEnabled(),
+            AdsManager.shouldShowInterstitial(for: model.dataSource.postId) {
+            if adsProvider.showInterstitial(in: self) {
+                print("Did not showed interstitial")
+            }
+        }
+         preConversationDelegate?.showMoreComments(with: model, selectedCommentId: selectedCommentId)
     }
     
     override func didStartSignInFlow() {
@@ -536,13 +547,7 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     
     func showMoreComments() {
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
-        if  model.adsGroup().interstitialEnabled(),
-            AdsManager.shouldShowInterstitial(for: model.dataSource.postId),
-            adsProvider.showInterstitial(in: self) {
-            preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
-        } else {
-            preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
-        }
+        moveToFullConversation(selectedCommentId: nil)
     }
 
     func showTerms() {
@@ -561,7 +566,7 @@ extension SPPreConversationViewController: SPPreConversationFooterDelegate {
 extension SPPreConversationViewController { // SPCommentCellDelegate
 
     override func showMoreReplies(for commentId: String?) {
-        preConversationDelegate?.showMoreComments(with: model, selectedCommentId: nil)
+        moveToFullConversation(selectedCommentId: commentId)
     }
 
 }
