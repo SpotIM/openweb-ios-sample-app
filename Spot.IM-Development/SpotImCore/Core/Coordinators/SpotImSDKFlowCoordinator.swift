@@ -166,7 +166,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let controller = self.conversationController(with: self.conversationModel!)
+                let controller = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
                 controller.commentIdToShowOnOpen = selectedCommentId
                 self.conversationModel!.dataSource.showReplies = true
                 self.startFlow(with: controller)
@@ -192,7 +192,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let conversationController = self.conversationController(with: self.conversationModel!)
+                let conversationController = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
                 conversationController.commentIdToShowOnOpen = selectedCommentId
                 self.conversationModel!.dataSource.showReplies = true
                 navController.viewControllers = [conversationController]
@@ -340,8 +340,8 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.preConversationViewController = preConversationViewController
     }
 
-    private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
-        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self)
+    private func conversationController(with model: SPMainConversationModel, openedByPublisher: Bool = false) -> SPMainConversationViewController {
+        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self, openedByPublisher: openedByPublisher)
         
         controller.delegate = self
         controller.userAuthFlowDelegate = self

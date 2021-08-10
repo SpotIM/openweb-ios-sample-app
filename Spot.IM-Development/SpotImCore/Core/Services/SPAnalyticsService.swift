@@ -52,7 +52,9 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
 
     func log(event: SPAnalyticsEvent, source: SPAnSource) {
         let analyticsEventInfo = analyticsInfo(from: event, source: source)
-        sender?.sendEvent(with: analyticsEventInfo, postId: postId)
+        if event.shouldSendToBI {
+            sender?.sendEvent(with: analyticsEventInfo, postId: postId)
+        }
         SpotIm.analyticsEventDelegate?.trackEvent(type: event.eventType, event: analyticsEventInfo)
     }
 
@@ -65,7 +67,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
     }
 
     private func analyticsInfo(from event: SPAnalyticsEvent,
-                               source: SPAnSource) -> SPAnalyticsEventInfo {
+                               source: SPAnSource) -> SPEventInfo {
 
         var itemType: String?
         var targetType: String?
@@ -74,6 +76,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         var itemId: String?
         var reading: Int?
         var engineStatusType: String?
+        var targetUrl: String?
 
         switch event {
         case .loginClicked(let newTargetType):
@@ -90,6 +93,12 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             itemType = SPAnItemType.main.kebabValue
             messageId = newMessageId
             relatedMessageId = newRelatedMessageId
+        case .commentReadMoreClicked(let newMessageId, let newRelatedMessageId):
+            messageId = newMessageId
+            relatedMessageId = newRelatedMessageId
+        case .commentReadLessClicked(let newMessageId, let newRelatedMessageId):
+            messageId = newMessageId
+            relatedMessageId = newRelatedMessageId
         case .createMessageClicked(let newItemType, let newTargetType, let newRelatedMessageId):
             itemType = newItemType.kebabValue
             targetType = newTargetType.kebabValue
@@ -102,6 +111,29 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         case .engineStatus(let statusType, let engineStatusTargetType):
             engineStatusType = statusType.kebabValue
             targetType = engineStatusTargetType.kebabValue
+        case .commentShareClicked(let shareMessageId, let relatedMessage):
+            messageId = shareMessageId
+            relatedMessageId = relatedMessage
+        case .commentReportClicked(let shareMessageId, let relatedMessage):
+            messageId = shareMessageId
+            relatedMessageId = relatedMessage
+        case .commentDeleteClicked(let shareMessageId, let relatedMessage):
+            messageId = shareMessageId
+            relatedMessageId = relatedMessage
+        case .commentRankUpButtonClicked(let clickedMessageId, let relatedMessage):
+            messageId = clickedMessageId
+            relatedMessageId = relatedMessage
+        case .commentRankDownButtonClicked(let clickedMessageId, let relatedMessage):
+            messageId = clickedMessageId
+            relatedMessageId = relatedMessage
+        case .commentRankUpButtonUndo(let clickedMessageId, let relatedMessage):
+            messageId = clickedMessageId
+            relatedMessageId = relatedMessage
+        case .commentRankDownButtonUndo(let clickedMessageId, let relatedMessage):
+            messageId = clickedMessageId
+            relatedMessageId = relatedMessage
+        case .communityGuidelinesLinkClicked(let url):
+            targetUrl = url
         default:
             break
         }
@@ -115,7 +147,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         
         let publisherCustomData = customBIData
 
-        let info = SPAnalyticsEventInfo(eventType: event.kebabValue,
+        let info = SPEventInfo(eventType: event.kebabValue,
                                   source: source.kebabValue,
                                   isRegistered: isUserRegistered,
                                   splitName: splitNames,
@@ -131,7 +163,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
                                   itemId: itemId,
                                   totalComments: totalComments,
                                   engineStatusType: engineStatusType,
-                                  publisherCustomData: publisherCustomData)
+                                  publisherCustomData: publisherCustomData,
+                                  targetUrl: targetUrl)
         return info
     }
 
