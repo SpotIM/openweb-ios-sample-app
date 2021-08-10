@@ -108,15 +108,18 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.updateWhatYouThinkView()
+        updateViewFromModel()
         
-        self.tableView.reloadData()
-        self.view.setNeedsLayout()
-        self.view.layoutIfNeeded()
+        if !isButtonOnlyModeEnabled {
+            self.updateWhatYouThinkView()
+            self.updateTableViewData()
+        }
         
-        self.updateTableViewHeightIfNeeded()
-        
-        if self.model.areCommentsEmpty() {
+        self.visibilityTracker.startTracking()
+    }
+    
+    private func updateViewFromModel() {
+        if self.model.areCommentsEmpty() && !self.isButtonOnlyModeEnabled {
             self.showEmptyStateView()
         } else {
             self.hideEmptyStateView()
@@ -125,8 +128,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
         }
-        
-        self.visibilityTracker.startTracking()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -197,18 +198,33 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     // MARK: - Private methods
 
     override func setupUI() {
-        view.addSubviews(bannerView, header, communityGuidelinesView, communityQuestionView, whatYouThinkView, footerView)
-
-        super.setupUI()
-
+        view.addSubviews(bannerView, footerView)
+        
         setupBannerView()
-        setupHeaderView()
-        configureCommunityQuestionView()
-        setupCommunityGuidelinesView()
-        setupWhatYouThinkView()
-        setupFooterView()
+        
+        if SpotIm.buttonOnlyMode != .withoutTitle {
+            view.addSubview(header)
+            setupHeaderView()
+        }
+        
+        if !isButtonOnlyModeEnabled {
+            view.addSubviews(communityGuidelinesView, communityQuestionView, whatYouThinkView)
+            super.setupUI()
+            configureCommunityQuestionView()
+            setupCommunityGuidelinesView()
+            setupWhatYouThinkView()
+        }
 
+        setupFooterView()
         footerView.setShowMoreCommentsButtonColor(color: .brandColor, withSeparator: true)
+    }
+    
+    private func updateTableViewData() {
+        self.tableView.reloadData()
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+        
+        self.updateTableViewHeightIfNeeded()
     }
     
     private func setupBannerView() {
@@ -269,7 +285,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             $0.trailing.equal(to: view.trailingAnchor)
         }
         // hide when no community guidelines or in button only mode
-        if let htmlString = getCommunityGuidelinesTextIfExists(), !isButtonOnlyModeEnabled {
+        if let htmlString = getCommunityGuidelinesTextIfExists() {
             communityGuidelinesHtmlString = htmlString
             communityGuidelinesView.delegate = self
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
@@ -314,7 +330,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         footerView.delegate = self
         footerView.set(buttonOnlyMode: isButtonOnlyModeEnabled)
         footerView.layout {
-            $0.top.equal(to: tableView.bottomAnchor)
+            $0.top.equal(to: isButtonOnlyModeEnabled ? (SpotIm.buttonOnlyMode == .withoutTitle ? bannerView.bottomAnchor : header.bottomAnchor) :  tableView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
@@ -344,29 +360,18 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                 } else {
                     self.checkAdsAvailability()
                     
-                    let messageCount = self.model.dataSource.messageCount
-                    SPAnalyticsHolder.default.totalComments = messageCount
+                    SPAnalyticsHolder.default.totalComments = self.model.dataSource.messageCount
                     SPAnalyticsHolder.default.log(event: .loaded, source: .conversation)
                     
-                    if self.model.areCommentsEmpty() {
-                        self.showEmptyStateView()
-                    } else {
-                        self.hideEmptyStateView()
-                        self.header.set(commentCount: messageCount.decimalFormatted)
-                        self.footerView.set(commentsCount: messageCount.decimalFormatted)
-                        self.stateActionView?.removeFromSuperview()
-                        self.stateActionView = nil
-                        self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
-                    }
+                    self.updateViewFromModel()
                 }
                 
-                self.updateWhatYouThinkView()
+                if !self.isButtonOnlyModeEnabled {
+                    self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
+                    self.updateWhatYouThinkView()
+                    self.updateTableViewData()
+                }
                 
-                self.tableView.reloadData()
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-                
-                self.updateTableViewHeightIfNeeded()
                 self.dataLoaded?()
             }
         )
@@ -422,12 +427,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     private func updateWhatYouThinkView() {
         whatYouThinkView.updateAvatar(model.dataSource.currentUserAvatarUrl)
-        if self.isButtonOnlyModeEnabled {
-            whatYouThinkView.isHidden = true
-            whatYouThinkView.layout {
-                $0.height.equal(to: 0)
-            }
-        }
     }
 
     override func isLastSection(with section: Int) -> Bool {
@@ -528,12 +527,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
-        self.tableView.reloadData()
-        
-        self.view.setNeedsLayout()
-        self.view.layoutIfNeeded()
-        
-        self.updateTableViewHeightIfNeeded()
+        self.updateTableViewData()
     }
     
     @objc
