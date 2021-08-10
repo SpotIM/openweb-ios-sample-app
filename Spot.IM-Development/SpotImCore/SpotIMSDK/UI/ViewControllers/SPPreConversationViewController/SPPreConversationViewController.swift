@@ -202,7 +202,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         super.setupUI()
 
         setupBannerView()
-        setupHeader()
+        setupHeaderView()
         configureCommunityQuestionView()
         setupCommunityGuidelinesView()
         setupWhatYouThinkView()
@@ -219,8 +219,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
 
-    private func setupHeader() {
+    private func setupHeaderView() {
         header.set(title: LocalizationManager.localizedString(key: "Conversation"))
+        header.delegate = self
 
         header.layout {
             $0.top.equal(to: bannerView.bottomAnchor, offsetBy: actualBannerMargin)
@@ -565,6 +566,12 @@ extension SPPreConversationViewController { // UITableViewDataSource
     }
 }
 
+extension SPPreConversationViewController: SPPreConversationHeaderViewDelegate {
+    func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel) {
+        customUIDelegate?.customizePreConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel)
+    }
+}
+
 extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     
     func updateMoreCommentsButtonCustomUI(button: SPShowCommentsButton) {
@@ -689,7 +696,7 @@ private extension SPPreConversationViewController {
 
 // MARK: - Delegate
 
-internal protocol SPPreConversationViewControllerDelegate: class {
+internal protocol SPPreConversationViewControllerDelegate: AnyObject {
     func showMoreComments(with dataModel: SPMainConversationModel, selectedCommentId: String?)
     func showTerms()
     func showPrivacy()
