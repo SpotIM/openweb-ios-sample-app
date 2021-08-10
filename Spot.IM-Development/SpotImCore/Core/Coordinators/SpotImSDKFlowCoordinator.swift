@@ -37,6 +37,7 @@ public enum CustomizableView {
     case communityGuidelines(textView: UITextView)
     case navigationItemTitle(textView: UITextView)
     case showCommentsButton(button: SPShowCommentsButton)
+    case preConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -595,5 +596,9 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     }
     func customizeNavigationItemTitle(textView: UITextView) {
         customUIDelegate?.customizeView(view: .navigationItemTitle(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    
+    func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
+        customUIDelegate?.customizeView(view: .preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel), isDarkMode:  SPUserInterfaceStyle.isDarkMode)
     }
 }

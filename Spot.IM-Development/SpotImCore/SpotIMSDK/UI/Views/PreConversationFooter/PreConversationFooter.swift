@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol SPPreConversationFooterDelegate: class {
+protocol SPPreConversationFooterDelegate: AnyObject {
     func showMoreComments()
     func showTerms()
     func showPrivacy()
