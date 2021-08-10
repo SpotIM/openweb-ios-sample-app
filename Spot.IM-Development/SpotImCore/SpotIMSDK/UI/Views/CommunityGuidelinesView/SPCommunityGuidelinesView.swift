@@ -135,6 +135,7 @@ private enum Theme {
 extension SPCommunityGuidelinesView: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         delegate?.clickOnUrl(url: URL)
+        SPAnalyticsHolder.default.log(event: .communityGuidelinesLinkClicked(targetUrl: URL.absoluteString), source: .conversation)
         return false
     }
     

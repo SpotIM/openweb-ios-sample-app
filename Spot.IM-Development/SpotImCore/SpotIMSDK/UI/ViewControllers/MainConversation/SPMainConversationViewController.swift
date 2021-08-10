@@ -37,6 +37,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     internal override var screenTargetType: SPAnScreenTargetType {
         return .main
     }
+    
+    // true if the full conversation is opened via present/push and not from pre-conversation
+    internal var openedByPublisher = false
 
     // MARK: - Header scrolling properties
 
@@ -85,10 +88,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
+    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?, openedByPublisher: Bool = false) {
         Logger.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
+        self.openedByPublisher = openedByPublisher
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
@@ -100,7 +104,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         Logger.verbose("FirstComment: Main view did load")
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
-            SPAnalyticsHolder.default.log(event: .mainViewed, source: .conversation)
+            SPAnalyticsHolder.default.log(event: openedByPublisher ? .viewed : .mainViewed, source: .conversation)
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
         }
         checkAdsAvailability()

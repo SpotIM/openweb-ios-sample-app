@@ -84,7 +84,7 @@ public enum SpotImButtonOnlyMode {
 }
 
 public protocol SPAnalyticsEventDelegate {
-    func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo)
+    func trackEvent(type: SPEventType, event: SPEventInfo)
 }
 
 extension SpotImResult where T == Void {

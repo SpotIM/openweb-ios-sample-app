@@ -12,12 +12,13 @@ internal enum SPAnalyticsEvent: Equatable {
     case loaded                                     
     case viewed                                     
     case mainViewed                                 
-    case messageContextMenuClicked(String)          
+    case messageContextMenuClicked(String)
+    case messageContextMenuClosed(String)
     case userProfileClicked(                        
         messageId: String,
         userId: String
     )
-    case myProfileClicked(messageId: String, userId: String)
+    case myProfileClicked(messageId: String?, userId: String)
     case loginClicked(SPAnLoginTargetType)          
     case reading(Int)                               
     case loadMoreRepliesClicked(                    
@@ -25,6 +26,14 @@ internal enum SPAnalyticsEvent: Equatable {
         relatedMessageId: String?
     )
     case hideMoreRepliesClicked(                    
+        messageId: String,
+        relatedMessageId: String?
+    )
+    case commentReadMoreClicked(
+        messageId: String,
+        relatedMessageId: String?
+    )
+    case commentReadLessClicked(
         messageId: String,
         relatedMessageId: String?
     )
@@ -38,9 +47,18 @@ internal enum SPAnalyticsEvent: Equatable {
         targetType: SPAnScreenTargetType,
         relatedMessage: String?
     )
+    case commentPostClicked
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
     case engineStatus(SPEngineStatusType, SPEngineTargetType)
+    case communityGuidelinesLinkClicked(targetUrl: String)
+    case commentShareClicked(messageId: String, relatedMessageId: String?)
+    case commentReportClicked(messageId: String, relatedMessageId: String?)
+    case commentDeleteClicked(messageId: String, relatedMessageId: String?)
+    case commentRankUpButtonClicked(messageId: String, relatedMessageId: String?)
+    case commentRankDownButtonClicked(messageId: String, relatedMessageId: String?)
+    case commentRankUpButtonUndo(messageId: String, relatedMessageId: String?)
+    case commentRankDownButtonUndo(messageId: String, relatedMessageId: String?)
 
     var kebabValue: String {
         switch self {
@@ -52,6 +70,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "main-viewed"
         case .messageContextMenuClicked:
             return "message-context-menu-clicked"
+        case .messageContextMenuClosed:
+            return "message-context-menu-closed"
         case .userProfileClicked:
             return "user-profile-clicked"
         case .myProfileClicked:
@@ -64,6 +84,10 @@ internal enum SPAnalyticsEvent: Equatable {
             return "load-more-replies-clicked"
         case .hideMoreRepliesClicked:
             return "hide-more-replies-clicked"
+        case .commentReadMoreClicked:
+            return "comment-read-more-clicked"
+        case .commentReadLessClicked:
+            return "comment-read-less-clicked"
         case .appInit:
             return "app-initialized"
         case .appOpened:
@@ -76,16 +100,34 @@ internal enum SPAnalyticsEvent: Equatable {
             return "sort-by-clicked"
         case .createMessageClicked:
             return "create-message-clicked"
+        case .commentPostClicked:
+            return "comment-post-clicked"
         case .backClicked:
             return "back-clicked"
         case .loadMoreComments:
             return "load-more-comments-clicked"
         case .engineStatus:
             return "engine_status"
+        case .communityGuidelinesLinkClicked:
+            return "community-guidelines-link-clicked"
+        case .commentShareClicked:
+            return "comment-share-clicked"
+        case .commentReportClicked:
+            return "comment-report-clicked"
+        case .commentDeleteClicked:
+            return "comment-delete-clicked"
+        case .commentRankUpButtonClicked:
+            return "comment-rank-up-button-clicked"
+        case .commentRankDownButtonClicked:
+            return "comment-rank-down-button-clicked"
+        case .commentRankUpButtonUndo:
+            return "comment-rank-up-button-undo"
+        case .commentRankDownButtonUndo:
+            return "comment-rank-down-button-undo"
         }
     }
     
-    var eventType: SPAnalyticsEventType {
+    var eventType: SPEventType {
         switch self {
         case .loaded:
             return .loaded
@@ -95,6 +137,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .mainViewed
         case .messageContextMenuClicked:
             return .messageContextMenuClicked
+        case .messageContextMenuClosed:
+            return .messageContextMenuClosed
         case .userProfileClicked:
             return .userProfileClicked
         case .myProfileClicked:
@@ -107,6 +151,10 @@ internal enum SPAnalyticsEvent: Equatable {
             return .loadMoreRepliesClicked
         case .hideMoreRepliesClicked:
             return .hideMoreRepliesClicked
+        case .commentReadMoreClicked:
+            return .commentReadMoreClicked
+        case .commentReadLessClicked:
+            return .commentReadLessClicked
         case .appInit:
             return .appInit
         case .appOpened:
@@ -119,12 +167,42 @@ internal enum SPAnalyticsEvent: Equatable {
             return .sortByClicked
         case .createMessageClicked:
             return .createMessageClicked
+        case .commentPostClicked:
+            return .commentPostClicked
         case .backClicked:
             return .backClicked
         case .loadMoreComments:
             return .loadMoreComments
         case .engineStatus:
             return .engineStatus
+        case .communityGuidelinesLinkClicked:
+            return .communityGuidelinesLinkClicked
+        case .commentShareClicked:
+            return .commentShareClicked
+        case .commentReportClicked:
+            return .commentReportClicked
+        case .commentDeleteClicked:
+            return .commentDeleteClicked
+        case .commentRankUpButtonClicked:
+            return .commentRankUpButtonClicked
+        case .commentRankDownButtonClicked:
+            return .commentRankDownButtonClicked
+        case .commentRankUpButtonUndo:
+            return .commentRankUpButtonUndo
+        case .commentRankDownButtonUndo:
+            return .commentRankDownButtonUndo
+        }
+    }
+    
+    // is the event need to be send to our backand BI (or just for event delegate)
+    var shouldSendToBI: Bool {
+        switch self {
+        case .loaded, .viewed, .mainViewed, .messageContextMenuClicked, .userProfileClicked, .myProfileClicked,
+             .loginClicked, .reading, .loadMoreRepliesClicked, .hideMoreRepliesClicked, .appInit, .appOpened, .appClosed,
+             .sortByOpened, .sortByClicked, .createMessageClicked, .backClicked, .loadMoreComments, .engineStatus:
+            return true
+        default:
+            return false
         }
     }
 }
