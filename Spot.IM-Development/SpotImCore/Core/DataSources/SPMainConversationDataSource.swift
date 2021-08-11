@@ -545,6 +545,12 @@ internal final class SPMainConversationDataSource {
                 let reply = replyViewModel(from: reply, with: comment)
                 if showReplies {
                     section.insert(reply, at: 1)
+                    if let replyId = reply.commentId,
+                       let provider = repliesProviders[replyId] {
+                        // The replies of the reply are hidden,
+                        // we reset the offset of this reply repliesProviders
+                        provider.resetOffset()
+                    }
                 } else if let id = comment.id {
                     if hiddenData[id] == nil {
                         hiddenData[id] = [CommentViewModel]()
