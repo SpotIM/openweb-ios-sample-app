@@ -12,8 +12,8 @@ internal enum SPAnalyticsEvent: Equatable {
     case loaded                                     
     case viewed                                     
     case mainViewed                                 
-    case messageContextMenuClicked(String)
-    case messageContextMenuClosed(String)
+    case messageContextMenuClicked(messageId: String, relatedMessageId: String?)
+    case messageContextMenuClosed(messageId: String, relatedMessageId: String?)
     case userProfileClicked(messageId: String, userId: String, targetType: SPAnProfileTargetType)
     case myProfileClicked(messageId: String?, userId: String, targetType: SPAnProfileTargetType)
     case loginClicked(SPAnLoginTargetType)          

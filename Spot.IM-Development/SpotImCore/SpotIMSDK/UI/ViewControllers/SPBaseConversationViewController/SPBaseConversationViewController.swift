@@ -733,11 +733,11 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         delegate.createReply(with: model, to: id)
     }
 
-    func moreTapped(for commentId: String?, sender: UIButton) {
+    func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton) {
         guard let commentId = commentId else { return }
 
         SPAnalyticsHolder.default.log(
-            event: .messageContextMenuClicked(commentId),
+            event: .messageContextMenuClicked(messageId: commentId, relatedMessageId: replyingToID),
             source: .conversation
         )
         
