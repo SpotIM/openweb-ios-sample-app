@@ -835,6 +835,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 self?.showLoader()
                 self?.model.deleteComment(with: commentId) { error in
                     self?.hideLoader()
+                    SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
                     if let error = error {
                         self?.showAlert(
                             title: LocalizationManager.localizedString(key: "Oops..."),
@@ -850,7 +851,6 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Delete Comment"),
             message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
-        SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
     private func showCommentReportFlow(_ commentId: String, replyingToID: String?) {
