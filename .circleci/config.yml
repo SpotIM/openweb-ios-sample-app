@@ -101,7 +101,7 @@ jobs:
           paths:
             - 'vendor/bundle'
      
-     - run:
+      - run:
          name: Before Running Fastlane Release
          command: |
              ls -l Release
