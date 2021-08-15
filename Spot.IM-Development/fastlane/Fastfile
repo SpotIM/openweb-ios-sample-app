@@ -61,6 +61,11 @@ platform :ios do
     )
   end
 
+  lane :oded_test do |options|
+    increment_build_number()
+    increment_version_number(version_number: options[:version]) # Set a specific version number)
+  end
+
   lane :prepare_demo_app do
     match(type: "appstore", readonly: true)
     increment_build_number_in_xcodeproj
