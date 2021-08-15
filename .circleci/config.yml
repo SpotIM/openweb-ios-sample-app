@@ -100,11 +100,23 @@ jobs:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
             - 'vendor/bundle'
-
+     
+     - run:
+         name: Before Running Fastlane Release
+         command: |
+             ls -l Release
+             git status
+      
       - run:
           name: Run Fastlane Release 
           command: |
             bundle exec fastlane release_pod version:$RELEASE_VERSION
+            
+      - run:
+         name: After Running Fastlane Release
+         command: |
+             ls -l Release
+             git status
 
       # - run:
       #     name: Update Github repo with new SDK version
@@ -116,75 +128,28 @@ jobs:
       #     command: |
       #       bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
 
-  release_app_job:
-    <<: *ios_config
-    steps:
-      - checkout
-      - *define_var_release_version
-      - run:
-          name: start release build
-          command: |
-            echo "Start release build $RELEASE_VERSION"
 
-      - run:
-          name: Configure Apple Key
-          command: |
-            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - 'vendor/bundle'
-
-      - run:
-          name: Before Running Fastlane Release 
-          command: |
-            ls -l Release
-            git status
-            
-      - run:
-          name: Run Fastlane Release 
-          command: |
-            bundle exec fastlane release version:$RELEASE_VERSION
-
-      - run:
-          name: After Running Fastlane Release 
-          command: |
-            ls -l Release
-            git status
-
-      # - run:
-      #     name: Update Bitbucket repo with new SDK version
-      #     command: | # https://community.atlassian.com/t5/Bitbucket-questions/How-to-add-an-Access-Key-with-Write-permission/qaq-p/842539
-      #       bash -x ./commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
-            
-      # - run:
-      #     name: Open Pull Request on Bitbucket
-      #     command: |
-      #       bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
 
   oded_test:
     <<: *ios_config
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
+
       - *define_var_release_version
+      
       - run:
-          name: start Oded Test
+          name: start release build
           command: |
             echo "Start release build $RELEASE_VERSION"
+            pwd
+            ls -l
 
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
 
       - run:
           name: Bundle Install
@@ -197,7 +162,7 @@ jobs:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
             - 'vendor/bundle'
-            
+
       - run:
           name: Run Fastlane Release 
           command: |
