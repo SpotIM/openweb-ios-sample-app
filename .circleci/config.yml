@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Build app and run unit-tests
           command: |
-            fastlane scan --workspace "Spot-IM.Development.xcworkspace" --scheme "Spot-IM.Development" --device "iPhone 12 Pro" # Run build using fastlane
+            bundle exec fastlane scan --workspace "Spot-IM.Development.xcworkspace" --scheme "Spot-IM.DevelopmentTests" --device "iPhone 12 Pro" # Run build using fastlane
 
       # Collect XML test results data to show in the UI, and save the same XML
       # files under test-results folder in the Artifacts tab
