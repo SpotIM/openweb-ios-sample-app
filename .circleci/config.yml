@@ -10,7 +10,6 @@ references:
   ios_config: &ios_config
     macos:
       xcode: "12.5.0"
-    working_directory: "Spot.IM-Development"
 
   define_var_release_version: &define_var_release_version
     run:
@@ -50,6 +49,7 @@ jobs:
           name: start release build
           command: |
             echo "Start release build $RELEASE_VERSION"
+            cd Spot.IM-Development
 
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
