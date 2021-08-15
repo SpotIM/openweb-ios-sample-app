@@ -218,7 +218,7 @@ workflows:
             branches:
               ignore: /^release/.*/
 
-      - release_sdk_job:
+      - oded_test:
           filters:
             branches:
               only:
