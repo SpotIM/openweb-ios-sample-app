@@ -10,6 +10,7 @@ references:
   ios_config: &ios_config
     macos:
       xcode: "12.5.0"
+    working_directory: "Spot.IM-Development"
 
   define_var_release_version: &define_var_release_version
     run:
