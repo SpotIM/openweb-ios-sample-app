@@ -71,8 +71,11 @@ jobs:
   release_sdk_job:
     <<: *ios_config
     steps:
-      - checkout
+      - checkout:
+        path: ~/project
+
       - *define_var_release_version
+      
       - run:
           name: start release build
           command: |
