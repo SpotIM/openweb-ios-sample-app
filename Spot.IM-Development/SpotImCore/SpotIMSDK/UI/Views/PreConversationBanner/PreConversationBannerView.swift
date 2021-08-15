@@ -42,7 +42,7 @@ internal final class PreConversationBannerView: BaseView {
         bannerContainerHeight?.constant = height
         
         setNeedsLayout()
-        layoutSubviews()
+        layoutIfNeeded()
     }
     
     private func setupBannerContainerView() {
