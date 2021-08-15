@@ -72,7 +72,7 @@ jobs:
     <<: *ios_config
     steps:
       - checkout:
-        path: ~/project
+          path: ~/project
 
       - *define_var_release_version
       
