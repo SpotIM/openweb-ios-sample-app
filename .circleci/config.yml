@@ -120,13 +120,18 @@ jobs:
 
       - run:
           name: Update Github repo with new SDK version
-          command: | # https://community.atlassian.com/t5/Bitbucket-questions/How-to-add-an-Access-Key-with-Write-permission/qaq-p/842539
+          command: |
             bash -x ./commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
-            
-      # - run:
-      #     name: Open Pull Request on Bitbucket
-      #     command: |
-      #       bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
+
+      - run:
+          name: Create a pull request on Github for the new release
+          command: |
+            bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
+
+      - run:
+          name: Update public Github repo SpotIM/spotim-ios-sdk-pod with new SDK version
+          command: |
+            bash -x ./update_public_pod_repo_with_sdk.sh $RELEASE_VERSION
 
 
 
