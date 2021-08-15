@@ -84,6 +84,7 @@ fastlane/test_output
 
 # Cherrypick additions
 test_output/
+.DS_Store
 Spot.IM-Development/.DS_Store
 Spot.IM-Development/SpotImCore/Resources/.DS_Store
 Spot.IM-Development/SpotImCore/SpotIMSDK/UI/.DS_Store
