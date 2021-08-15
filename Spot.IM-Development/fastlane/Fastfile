@@ -21,13 +21,31 @@ default_platform(:ios)
 git_url = "git@github.com:SpotIM/openweb-ios-certs.git"
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
   
+  desc "The setup_circle_ci fastlane action will perform the following actions:
+  Create a new temporary keychain for use with match (see the CircleCI code signing doc for more details).
+  Switch match to readonly mode to make sure CI does not create new code signing certificates or provisioning profiles.
+  Set up log and test result paths to be easily collectible."
+  before_all do
+    puts "in setup_circle_ci"
+    setup_circle_ci
+  end
+
+  desc "Push a new beta build to TestFlight"
   lane :beta do
     match(type: "appstore")
     increment_build_number(build_number: Time.now.to_i.to_s[0..7])
     build_app(workspace: "Spot-IM.Development.xcworkspace", scheme: "Spot-IM.Development")
     upload_to_testflight
+  end
+
+  lane :unit_tests do |options|
+    cocoapods()
+    scan(
+      scheme: "Spot-IM.DevelopmentTests",
+      workspace: "Spot-IM.Development.xcworkspace",
+      device: "iPhone 12 Pro",
+    )
   end
 
   lane :release_pod do |options|

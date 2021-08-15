@@ -29,14 +29,11 @@ jobs:
           name: Bash
           command: |
             pwd
-      - run:
-          name: pod install
-          command: |
-            pod install # Install CocoaPods dependencies
+            ls -l
       - run:
           name: Build app and run unit-tests
           command: |
-            bundle exec fastlane scan --workspace "Spot-IM.Development.xcworkspace" --scheme "Spot-IM.DevelopmentTests" --device "iPhone 12 Pro" # Run build using fastlane
+            bundle exec fastlane unit_tests
 
       # Collect XML test results data to show in the UI, and save the same XML
       # files under test-results folder in the Artifacts tab
@@ -55,6 +52,8 @@ jobs:
           name: start release build
           command: |
             echo "Start release build $RELEASE_VERSION"
+            pwd
+            ls -l
 
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
