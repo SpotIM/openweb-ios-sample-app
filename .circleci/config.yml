@@ -147,11 +147,19 @@ jobs:
             - 'vendor/bundle'
 
       - run:
-          name: Run Fastlane Release 
+          name: Before Running Fastlane Release 
           command: |
             ls -l Release
             git status
+            
+      - run:
+          name: Run Fastlane Release 
+          command: |
             bundle exec fastlane release version:$RELEASE_VERSION
+
+      - run:
+          name: After Running Fastlane Release 
+          command: |
             ls -l Release
             git status
 
