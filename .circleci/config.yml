@@ -23,7 +23,7 @@ jobs:
   default_job:
     <<: *ios_config
     steps:
-      - checkout
+      - checkout:
           path: ~/project
       - run:
           name: Bash
