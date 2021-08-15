@@ -23,3 +23,5 @@ git commit -m "CircleCI update SpotIMCore.xcframework to version $RELEASE_VERSIO
 git tag $RELEASE_VERSION
 git push origin master
 git push origin --tags
+
+pod trunk push 
