@@ -33,6 +33,7 @@ platform :ios do
   lane :release_pod do |options|
     increment_build_number()
     increment_version_number(version_number: options[:version]) # Set a specific version number)
+    cocoapods()
     xcodebuild(
       scheme: "Package SpotImCoreSDK",
       configuration: "Release",

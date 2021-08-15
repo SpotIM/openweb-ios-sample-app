@@ -55,7 +55,6 @@ jobs:
           name: start release build
           command: |
             echo "Start release build $RELEASE_VERSION"
-            cd Spot.IM-Development
 
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
