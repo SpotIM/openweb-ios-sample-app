@@ -301,7 +301,7 @@ extension SPReplyCell: CommentActionsDelegate {
 extension SPReplyCell: UserNameViewDelegate {
     
     func moreButtonDidTapped(sender: UIButton) {
-        delegate?.moreTapped(for: commentId, sender: sender)
+        delegate?.moreTapped(for: commentId, replyingToID: replyingToId, sender: sender)
     }
     
     func userNameDidTapped() {

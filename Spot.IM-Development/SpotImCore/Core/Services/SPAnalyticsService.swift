@@ -139,6 +139,12 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             relatedMessageId = relatedMessage
         case .communityGuidelinesLinkClicked(let url):
             targetUrl = url
+        case .messageContextMenuClicked(let newMessageId, let relatedMessage):
+            messageId = newMessageId
+            relatedMessageId = relatedMessage
+        case .messageContextMenuClosed(let newMessageId, let relatedMessage):
+            messageId = newMessageId
+            relatedMessageId = relatedMessage
         default:
             break
         }
