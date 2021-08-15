@@ -84,13 +84,12 @@ fastlane/test_output
 
 # Cherrypick additions
 test_output/
-.DS_Store
 Spot.IM-Development/.DS_Store
 Spot.IM-Development/SpotImCore/Resources/.DS_Store
 Spot.IM-Development/SpotImCore/SpotIMSDK/UI/.DS_Store
 Spot.IM-Development/SpotImCore/SpotIMSDK/UI/Views/.DS_Store
-vendor/bundle
-.bundle/config
+Spot.IM-Development/vendor/bundle
+Spot.IM-Development/.bundle/config
 
 # Code Injection
 #
