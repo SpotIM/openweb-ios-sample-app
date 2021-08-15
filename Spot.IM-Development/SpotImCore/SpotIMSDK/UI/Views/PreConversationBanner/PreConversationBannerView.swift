@@ -32,13 +32,17 @@ internal final class PreConversationBannerView: BaseView {
         self.bannerView?.removeFromSuperview()
         self.bannerView = bannerView
         bannerContainerView.addSubview(bannerView)
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
         bannerView.layout {
             $0.height.equal(to: height)
+            $0.top.equal(to: bannerContainerView.topAnchor)
             $0.leading.equal(to: bannerContainerView.leadingAnchor)
             $0.trailing.equal(to: bannerContainerView.trailingAnchor)
-            $0.bottom.equal(to: bannerContainerView.bottomAnchor)
         }
         bannerContainerHeight?.constant = height
+        
+        setNeedsLayout()
+        layoutSubviews()
     }
     
     private func setupBannerContainerView() {
