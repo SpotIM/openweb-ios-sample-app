@@ -40,6 +40,9 @@ jobs:
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
 
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
       - run:
           name: Bundle Install
           command: |
@@ -79,6 +82,9 @@ jobs:
 
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
 
       - run:
           name: Bundle Install
