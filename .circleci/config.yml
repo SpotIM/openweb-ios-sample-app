@@ -146,17 +146,21 @@ jobs:
       - run:
           name: Run Fastlane Release 
           command: |
+            ls -l Release
+            git status
             bundle exec fastlane release version:$RELEASE_VERSION
+            ls -l Release
+            git status
 
-      - run:
-          name: Update Bitbucket repo with new SDK version
-          command: | # https://community.atlassian.com/t5/Bitbucket-questions/How-to-add-an-Access-Key-with-Write-permission/qaq-p/842539
-            bash -x ./commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
+      # - run:
+      #     name: Update Bitbucket repo with new SDK version
+      #     command: | # https://community.atlassian.com/t5/Bitbucket-questions/How-to-add-an-Access-Key-with-Write-permission/qaq-p/842539
+      #       bash -x ./commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
             
-      - run:
-          name: Open Pull Request on Bitbucket
-          command: |
-            bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
+      # - run:
+      #     name: Open Pull Request on Bitbucket
+      #     command: |
+      #       bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
 
 
 workflows:
