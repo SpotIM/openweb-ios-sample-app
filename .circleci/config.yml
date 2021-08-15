@@ -31,9 +31,9 @@ jobs:
             pwd
             ls -l
       - run:
-          name: start release build
+          name: start default build
           command: |
-            echo "Start release build $RELEASE_VERSION"
+            echo "Start deafult build"
             pwd
             ls -l
 
@@ -51,7 +51,7 @@ jobs:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
             - 'vendor/bundle'
-            
+
       - run:
           name: Build app and run unit-tests
           command: |
