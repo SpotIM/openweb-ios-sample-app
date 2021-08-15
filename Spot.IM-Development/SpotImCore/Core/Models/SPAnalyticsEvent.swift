@@ -14,11 +14,8 @@ internal enum SPAnalyticsEvent: Equatable {
     case mainViewed                                 
     case messageContextMenuClicked(String)
     case messageContextMenuClosed(String)
-    case userProfileClicked(                        
-        messageId: String,
-        userId: String
-    )
-    case myProfileClicked(messageId: String?, userId: String)
+    case userProfileClicked(messageId: String, userId: String, targetType: SPAnProfileTargetType)
+    case myProfileClicked(messageId: String?, userId: String, targetType: SPAnProfileTargetType)
     case loginClicked(SPAnLoginTargetType)          
     case reading(Int)                               
     case loadMoreRepliesClicked(                    
@@ -248,6 +245,20 @@ internal enum SPAnLoginTargetType: String {
             return "comment-sign-up"
         case .mainLogin:
             return "main-login"
+        }
+    }
+}
+
+internal enum SPAnProfileTargetType: String {
+    case avatar
+    case userName
+
+    var kebabValue: String {
+        switch self {
+        case .avatar:
+            return "profile-avatar"
+        case .userName:
+            return "profile-user-name"
         }
     }
 }

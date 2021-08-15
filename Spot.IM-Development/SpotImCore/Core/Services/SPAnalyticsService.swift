@@ -103,9 +103,14 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             itemType = newItemType.kebabValue
             targetType = newTargetType.kebabValue
             relatedMessageId = newRelatedMessageId
-        case .userProfileClicked(let newMessageId, let authorId):
+        case .userProfileClicked(let newMessageId, let authorId, let newTargetType):
             messageId = newMessageId
             itemId = authorId
+            targetType = newTargetType.kebabValue
+        case .myProfileClicked(let newMessageId, let authorId, let newTargetType):
+            messageId = newMessageId
+            itemId = authorId
+            targetType = newTargetType.kebabValue
         case .sortByClicked(let sortMode):
             targetType = sortMode.kebabValue
         case .engineStatus(let statusType, let engineStatusTargetType):

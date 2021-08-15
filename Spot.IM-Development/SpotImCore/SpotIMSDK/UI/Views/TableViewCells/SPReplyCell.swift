@@ -279,7 +279,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 extension SPReplyCell: AvatarViewDelegate {
     
     func avatarDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
     }
 }
 
@@ -305,7 +305,7 @@ extension SPReplyCell: UserNameViewDelegate {
     }
     
     func userNameDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: false)
     }
 }
 

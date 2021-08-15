@@ -144,7 +144,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         }
         if (user.registered || !policyForceRegister) {
             openProfileWebScreen(userId: userId, isMyProfile: true)
-            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId, targetType: .avatar), source: .conversation)
         } else {
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
@@ -637,25 +637,24 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
 }
 
 extension SPBaseConversationViewController: SPCommentCellDelegate {
-    
-    func respondToAuthorTap(for commentId: String?) {
+    func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool = false) {
         guard let commentId = commentId,
               let comment = model.dataSource.commentViewModel(commentId),
               let authorId = comment.authorId else { return }
         
         let isMyProfile = SPPublicSessionInterface.isMe(userId: authorId)
-        
-        trackProfileClicked(commentId: commentId, authorId: authorId, isMyProfile: isMyProfile)
+        let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
+        trackProfileClicked(commentId: commentId, authorId: authorId, isMyProfile: isMyProfile, targetType: targetType)
         
         openProfileWebScreen(userId: authorId, isMyProfile: isMyProfile)
     }
     
-    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool) {
+    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
         if isMyProfile {
-            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId, targetType: targetType), source: .conversation)
         } else {
             SPAnalyticsHolder.default.log(
-                event: .userProfileClicked(messageId: commentId, userId: authorId),
+                event: .userProfileClicked(messageId: commentId, userId: authorId, targetType: targetType),
                 source: .conversation
             )
         }
