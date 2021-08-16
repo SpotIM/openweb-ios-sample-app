@@ -1,7 +1,6 @@
 #!/bin/bash
 
 RELEASE_VERSION=$1
-GITHUB_ODED_USER_TOKEN=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
 
 generate_post_data()
 {
