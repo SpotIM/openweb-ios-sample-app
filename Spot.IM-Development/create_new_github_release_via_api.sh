@@ -1,0 +1,26 @@
+#!/bin/bash
+
+RELEASE_VERSION=$1
+GITHUB_ODED_USER_TOKEN=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
+
+generate_post_data()
+{
+  cat <<EOF
+{ 
+  "name": "Version $RELEASE_VERSION",
+  "body": "TODO fill in the body. (Generated via CircleCI - release_sdk_job)",
+  "draft": true,
+  "tag_name": "$RELEASE_VERSION"
+}
+EOF
+}
+
+
+echo "$(generate_post_data)"
+
+curl -X POST \
+  https://api.github.com/repos/SpotIM/spotim-ios-sdk-pod/releases \
+  -i -u "oded-regev:$GITHUB_ODED_USER_TOKEN" \
+  -H 'Accept: application/vnd.github.v3+json' \
+  -d "$(generate_post_data)"
+
