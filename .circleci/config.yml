@@ -133,6 +133,11 @@ jobs:
           command: |
             bash -x ./update_public_pod_repo_with_sdk.sh $RELEASE_VERSION
 
+      - run:
+          name: Create a "Github Release" on public Github repo SpotIM/spotim-ios-sdk-pod
+          command: |
+            bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
+
 
 
 workflows:
