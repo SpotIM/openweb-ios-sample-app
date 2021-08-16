@@ -24,4 +24,4 @@ git tag $RELEASE_VERSION
 git push origin master
 git push origin --tags
 
-pod trunk push 
+
