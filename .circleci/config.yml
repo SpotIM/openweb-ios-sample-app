@@ -135,55 +135,6 @@ jobs:
 
 
 
-  oded_test:
-    <<: *ios_config
-    steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-      
-      - run:
-          name: start release build
-          command: |
-            echo "Start release build $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - 'vendor/bundle'
-
-      - run:
-          name: Run Fastlane Release 
-          command: |
-            bundle exec fastlane oded_test version:$RELEASE_VERSION
-
-      - run:
-          name: Update Github repo with new SDK version
-          command: |
-            bash -x ./commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
-
-      - run:
-          name: Create a pull request on Github for the new release
-          command: |
-            bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
-
-
 workflows:
   version: 2
   workflow:
