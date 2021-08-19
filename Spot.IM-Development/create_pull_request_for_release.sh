@@ -9,7 +9,7 @@ generate_post_data()
   cat <<EOF
 { 
   "title": "SDK Release $RELEASE_VERSION",
-  "body": "Generated via CircleCI release_sdk_job"
+  "body": "Generated via CircleCI release_sdk_job",
   "head": "$CIRCLE_BRANCH",
   "base": "master"
 }
