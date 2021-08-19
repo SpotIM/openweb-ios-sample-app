@@ -27,6 +27,8 @@ internal protocol SPConversationsDataProvider {
 
     var imageURLProvider: SPImageURLProvider? { get set }
 
+    func resetOffset()
+    
     /// fetch conversation for id
     func conversation(_ id: String,
                       _ mode: SPCommentSortMode,
@@ -63,6 +65,10 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
 
     internal var canLoadNextPage: Bool {
         return !isLoading && hasNext
+    }
+    
+    internal func resetOffset() {
+        self.offset = SPConversationsFacade.defaultOffset
     }
 
     internal func conversation(
