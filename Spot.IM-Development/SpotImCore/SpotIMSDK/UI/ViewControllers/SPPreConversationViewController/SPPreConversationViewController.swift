@@ -457,7 +457,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
                     
-                    adsProvider.bannerView.subviews.forEach({$0.removeFromSuperview()}) // cleanup previous banners if exists
                     adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small, .medium, .large])
                 }
             case .interstitial:
@@ -572,9 +571,7 @@ extension SPPreConversationViewController { // SPCommentCellDelegate
 }
 
 extension SPPreConversationViewController: AdsProviderBannerDelegate {
-    func bannerLoaded(adBannerSize: CGSize) {
-        let bannerView = adsProvider.bannerView
-        
+    func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
  
         self.bannerView.layout {
@@ -585,6 +582,20 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
         
         self.bannerVisisilityTracker.startTracking()
     }
+    
+//    func bannerLoaded(adBannerSize: CGSize) {
+//        let bannerView = adsProvider.bannerView
+//        
+//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
+// 
+//        self.bannerView.layout {
+//            $0.height.equal(to: adBannerSize.height)
+//        }
+//        
+//        self.bannerView.update(bannerView, height: adBannerSize.height)
+//        
+//        self.bannerVisisilityTracker.startTracking()
+//    }
     
     func bannerFailedToLoad(error: Error) {
         Logger.error("error bannerFailedToLoad - \(error)")

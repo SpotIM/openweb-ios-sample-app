@@ -829,7 +829,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
 }
 
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
-    func bannerLoaded(adBannerSize: CGSize) {
+    func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
 //        let bannerView = adsProvider.bannerView
 //
 //        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
