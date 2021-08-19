@@ -530,7 +530,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 extension SPPreConversationViewController { // UITableViewDataSource
 
     public override func numberOfSections(in tableView: UITableView) -> Int {
-        let numberOfSections = super.numberOfSections(in: tableView)
+        let numberOfSections = model.dataSource.numberOfSections()
         return numberOfSections < maxSectionCount ? numberOfSections : maxSectionCount
     }
 
@@ -661,7 +661,7 @@ private extension SPPreConversationViewController {
 
 // MARK: - Delegate
 
-internal protocol SPPreConversationViewControllerDelegate: class {
+internal protocol SPPreConversationViewControllerDelegate: AnyObject {
     func showMoreComments(with dataModel: SPMainConversationModel, selectedCommentId: String?)
     func showTerms()
     func showPrivacy()

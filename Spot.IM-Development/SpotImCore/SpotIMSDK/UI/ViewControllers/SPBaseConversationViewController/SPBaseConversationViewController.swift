@@ -350,7 +350,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         
     }
 
-    private func heightForRow(at indexPath: IndexPath) -> CGFloat {
+    public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         if shouldShowLoader(forRowAt: indexPath) {
             return 50.0
         } else {
@@ -476,17 +476,15 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
 extension SPBaseConversationViewController: UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return model.dataSource.numberOfRows(in: section)
+        return 0 // Implement in subclass
     }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
-        let result = model.dataSource.numberOfSections()
-        Logger.warn("DEBUG: numberOfSections called - result = \(result)")
-        return result
+        return 0 // Implement in subclass
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        Logger.warn("DEBUG: cell for tow called for indexPath: \(indexPath)")
+        Logger.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
         if shouldShowLoader(forRowAt: indexPath) {
             let identifier = String(describing: SPLoaderCell.self)
             guard let loaderCell = tableView.dequeueReusableCell(withIdentifier: identifier,
