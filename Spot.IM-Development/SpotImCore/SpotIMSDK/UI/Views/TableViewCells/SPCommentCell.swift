@@ -365,18 +365,18 @@ extension SPCommentCell: CommentActionsDelegate {
 extension SPCommentCell: UserNameViewDelegate {
     
     func moreButtonDidTapped(sender: UIButton) {
-        delegate?.moreTapped(for: commentId, sender: sender)
+        delegate?.moreTapped(for: commentId, replyingToID: replyingToId, sender: sender)
     }
     
     func userNameDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: false)
     }
 }
 
 extension SPCommentCell: AvatarViewDelegate {
     
     func avatarDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
     }
 }
 
@@ -425,8 +425,8 @@ protocol SPCommentCellDelegate: class {
     func hideReplies(for commentId: String?)
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?)
     func replyTapped(for commentId: String?)
-    func moreTapped(for commentId: String?, sender: UIButton)
-    func respondToAuthorTap(for commentId: String?)
+    func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton)
+    func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool)
     func showMoreText(for commentId: String?)
     func showLessText(for commentId: String?)
     func clickOnUrlInComment(url: URL)
