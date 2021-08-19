@@ -103,9 +103,14 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             itemType = newItemType.kebabValue
             targetType = newTargetType.kebabValue
             relatedMessageId = newRelatedMessageId
-        case .userProfileClicked(let newMessageId, let authorId):
+        case .userProfileClicked(let newMessageId, let authorId, let newTargetType):
             messageId = newMessageId
             itemId = authorId
+            targetType = newTargetType.kebabValue
+        case .myProfileClicked(let newMessageId, let authorId, let newTargetType):
+            messageId = newMessageId
+            itemId = authorId
+            targetType = newTargetType.kebabValue
         case .sortByClicked(let sortMode):
             targetType = sortMode.kebabValue
         case .engineStatus(let statusType, let engineStatusTargetType):
@@ -134,6 +139,12 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             relatedMessageId = relatedMessage
         case .communityGuidelinesLinkClicked(let url):
             targetUrl = url
+        case .messageContextMenuClicked(let newMessageId, let relatedMessage):
+            messageId = newMessageId
+            relatedMessageId = relatedMessage
+        case .messageContextMenuClosed(let newMessageId, let relatedMessage):
+            messageId = newMessageId
+            relatedMessageId = relatedMessage
         default:
             break
         }
