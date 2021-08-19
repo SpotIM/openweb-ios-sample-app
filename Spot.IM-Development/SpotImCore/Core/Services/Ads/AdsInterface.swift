@@ -9,12 +9,12 @@
 import UIKit
 
 
-public protocol AdsProviderBannerDelegate: class {
+public protocol AdsProviderBannerDelegate: AnyObject {
     func bannerLoaded(adBannerSize: CGSize)
     func bannerFailedToLoad(error: Error)
 }
 
-public protocol AdsProviderInterstitialDelegate: class {
+public protocol AdsProviderInterstitialDelegate: AnyObject {
     func interstitialLoaded()
     func interstitialWillBeShown()
     func interstitialDidDismiss()
@@ -45,7 +45,11 @@ internal struct AdsABGroup {
     }
     
     func mainConversationBannerEnabled() -> Bool {
-        return self.abGroup == .third
+        return self.abGroup == .first || self.abGroup == .second || self.abGroup == .third
+    }
+    
+    func mainConversationBannerInFooterEnabled() -> Bool {
+        return false
     }
 }
 
@@ -55,7 +59,7 @@ public enum AdSize {
     case large
 }
 
-public protocol AdsProvider: class {
+public protocol AdsProvider: AnyObject {
     
     func version() -> String
     func setSpotId(spotId: String)

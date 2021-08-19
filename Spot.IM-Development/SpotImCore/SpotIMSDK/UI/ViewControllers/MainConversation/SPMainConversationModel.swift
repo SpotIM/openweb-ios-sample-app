@@ -22,12 +22,12 @@ typealias BooleanCompletion = (Bool, Error?) -> Void
 
 let navigationAvatarSize: CGSize = CGSize(width: 25.0, height: 25.0)
 
-protocol MainConversationModelDelegate: class {
+protocol MainConversationModelDelegate: AnyObject {
     func totalTypingCountDidUpdate(count: Int)
     func stopTypingTrack()
 }
 
-protocol CommentsCounterDelegate: class {
+protocol CommentsCounterDelegate: AnyObject {
     func commentsCountDidUpdate(count: Int)
 }
 
@@ -377,7 +377,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
     }
 }
 
-protocol CommentsActionDelegate: class {
+protocol CommentsActionDelegate: AnyObject {
     
     func prepareFlowForAction(_ type: ActionType, sender: UIButton)
     func localCommentWasCreated()
