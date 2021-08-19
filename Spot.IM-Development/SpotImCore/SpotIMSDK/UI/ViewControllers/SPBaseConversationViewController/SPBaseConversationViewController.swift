@@ -637,7 +637,7 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
 }
 
 extension SPBaseConversationViewController: SPCommentCellDelegate {
-    func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool = false) {
+    func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool) {
         guard let commentId = commentId,
               let comment = model.dataSource.commentViewModel(commentId),
               let authorId = comment.authorId else { return }
