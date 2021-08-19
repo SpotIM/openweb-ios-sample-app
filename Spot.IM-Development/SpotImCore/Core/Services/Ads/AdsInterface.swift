@@ -10,7 +10,7 @@ import UIKit
 
 
 public protocol AdsProviderBannerDelegate: AnyObject {
-    func bannerLoaded(adBannerSize: CGSize)
+    func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String)
     func bannerFailedToLoad(error: Error)
 }
 
@@ -69,7 +69,6 @@ public protocol AdsProvider: AnyObject {
     ///Return` true` or `false` if interstitial ready or not
     func showInterstitial(in controller: UIViewController) -> Bool
     
-    var bannerView: BaseView { get }
     var bannerDelegate: AdsProviderBannerDelegate? { get set }
     var interstitialDelegate: AdsProviderInterstitialDelegate? { get set }
 }
