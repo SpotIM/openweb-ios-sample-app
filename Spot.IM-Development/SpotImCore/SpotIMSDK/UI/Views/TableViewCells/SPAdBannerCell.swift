@@ -48,8 +48,7 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
         bannerContainerView.addSubview(bannerView)
         bannerView.layout {
             $0.top.equal(to: bannerContainerView.topAnchor)
-            $0.leading.equal(to: bannerContainerView.leadingAnchor)
-            $0.trailing.equal(to: bannerContainerView.trailingAnchor)
+            $0.centerX.equal(to: bannerContainerView.centerXAnchor)
             $0.height.equal(to: height)
         }
         
