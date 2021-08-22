@@ -16,8 +16,7 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     
     weak var delegate: SPAdBannerCellDelegate?
     
-    private lazy var bannerContainerView: BaseView = .init()
-    private var bannerView: UIView?
+    private lazy var adBannerView: SPAdBannerView = .init()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         
@@ -28,10 +27,11 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     
     func updateColorsAccordingToStyle() {
         contentView.backgroundColor = .spBackground0
+        self.adBannerView.updateColorsAccordingToStyle()
     }
     
     private func setupUI() {
-        addSubviews(bannerContainerView)
+        addSubviews(adBannerView)
         
         setupCloseView()
         setupBannerView()
@@ -42,22 +42,11 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     }
     
     func updateBannerView(_ bannerView: UIView, height: CGFloat) {
-        self.bannerView?.removeFromSuperview()
-        self.bannerView = bannerView
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        bannerContainerView.addSubview(bannerView)
-        bannerView.layout {
-            $0.top.equal(to: bannerContainerView.topAnchor)
-            $0.centerX.equal(to: bannerContainerView.centerXAnchor)
-            $0.height.equal(to: height)
-        }
-        
-        setNeedsLayout()
-        layoutIfNeeded()
+        self.adBannerView.update(bannerView, height: height)
     }
     
     private func setupBannerView() {
-        bannerContainerView.layout {
+        adBannerView.layout {
             $0.top.equal(to: topAnchor, offsetBy: 20.0)
             $0.bottom.equal(to: bottomAnchor, offsetBy: -20.0)
             $0.leading.equal(to: leadingAnchor)
