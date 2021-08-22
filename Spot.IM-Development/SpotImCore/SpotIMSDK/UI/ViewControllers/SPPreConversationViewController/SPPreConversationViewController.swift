@@ -15,7 +15,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     let adsProvider: AdsProvider
     internal weak var preConversationDelegate: SPPreConversationViewControllerDelegate?
 
-    private lazy var bannerView: PreConversationBannerView = .init()
+    private lazy var adBannerView: SPAdBannerView = .init()
     private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
     private lazy var header: SPPreConversationHeaderView = .init()
@@ -42,11 +42,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     internal override var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitPreConv }
 
     private var actualBannerMargin: CGFloat {
-        bannerView.frame.height == 0 ? 0 : Theme.bannerViewMargin
+        adBannerView.frame.height == 0 ? 0 : Theme.bannerViewMargin
     }
     
     private var totalHeight: CGFloat {
-        let result = bannerView.frame.height +
+        let result = adBannerView.frame.height +
             actualBannerMargin +
             header.frame.height +
             communityGuidelinesView.frame.height +
@@ -95,7 +95,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         loadConversation()
         
         self.visibilityTracker.setup(view: view, delegate: self)
-        self.bannerVisisilityTracker.setup(view: self.bannerView, delegate: self)
+        self.bannerVisisilityTracker.setup(view: self.adBannerView, delegate: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -140,7 +140,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         super.updateColorsAccordingToStyle()
         self.view.backgroundColor = .spBackground0
         self.tableView.backgroundColor = .spBackground0
-        self.bannerView.updateColorsAccordingToStyle()
+        self.adBannerView.updateColorsAccordingToStyle()
         self.whatYouThinkView.updateColorsAccordingToStyle()
         self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
         self.communityQuestionView.updateColorsAccordingToStyle()
@@ -189,7 +189,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     // MARK: - Private methods
 
     override func setupUI() {
-        view.addSubviews(bannerView, header, communityGuidelinesView, communityQuestionView, whatYouThinkView, footerView)
+        view.addSubviews(adBannerView, header, communityGuidelinesView, communityQuestionView, whatYouThinkView, footerView)
 
         super.setupUI()
 
@@ -204,7 +204,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     private func setupBannerView() {
-        bannerView.layout {
+        adBannerView.layout {
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.top.equal(to: view.topAnchor)
@@ -215,7 +215,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         header.set(title: LocalizationManager.localizedString(key: "Conversation"))
 
         header.layout {
-            $0.top.equal(to: bannerView.bottomAnchor, offsetBy: actualBannerMargin)
+            $0.top.equal(to: adBannerView.bottomAnchor, offsetBy: actualBannerMargin)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.height.equal(to: Theme.headerHeight)
@@ -574,11 +574,11 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
  
-        self.bannerView.layout {
+        self.adBannerView.layout {
             $0.height.equal(to: adBannerSize.height)
         }
         
-        self.bannerView.update(bannerView, height: adBannerSize.height)
+        self.adBannerView.update(bannerView, height: adBannerSize.height)
         
         self.bannerVisisilityTracker.startTracking()
     }
@@ -634,7 +634,7 @@ extension SPPreConversationViewController: ViewVisibilityDelegate {
             readingTracker.startReadingTracking()
         }
         
-        if view == self.bannerView {
+        if view == self.adBannerView {
             SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
             self.bannerVisisilityTracker.shutdown()
         }
