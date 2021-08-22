@@ -583,20 +583,6 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
         self.bannerVisisilityTracker.startTracking()
     }
     
-//    func bannerLoaded(adBannerSize: CGSize) {
-//        let bannerView = adsProvider.bannerView
-//        
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
-// 
-//        self.bannerView.layout {
-//            $0.height.equal(to: adBannerSize.height)
-//        }
-//        
-//        self.bannerView.update(bannerView, height: adBannerSize.height)
-//        
-//        self.bannerVisisilityTracker.startTracking()
-//    }
-    
     func bannerFailedToLoad(error: Error) {
         Logger.error("error bannerFailedToLoad - \(error)")
         let monetizationFailureData = MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .banner)
