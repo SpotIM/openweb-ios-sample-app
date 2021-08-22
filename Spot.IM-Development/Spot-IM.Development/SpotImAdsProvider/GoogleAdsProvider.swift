@@ -105,14 +105,7 @@ extension GoogleAdsProvider: GADInterstitialDelegate {
 extension GoogleAdsProvider: GADBannerViewDelegate {
     
     func adViewDidReceiveAd(_ bannerView: GADBannerView) {
-        let banner = UIView()
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        banner.addSubview(bannerView)
-        bannerView.centerXAnchor.constraint(equalTo: banner.centerXAnchor).isActive = true
-        bannerView.topAnchor.constraint(equalTo: banner.topAnchor).isActive = true
-        bannerView.bottomAnchor.constraint(equalTo: banner.bottomAnchor).isActive = true
-        
-        bannerDelegate?.bannerLoaded(bannerView: banner, adBannerSize: bannerView.adSize.size, adUnitID: bannerView.adUnitID ?? "")
+        bannerDelegate?.bannerLoaded(bannerView: bannerView, adBannerSize: bannerView.adSize.size, adUnitID: bannerView.adUnitID ?? "")
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
