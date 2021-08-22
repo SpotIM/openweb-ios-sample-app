@@ -33,6 +33,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
     private var typingIndicationView: TotalTypingIndicationView?
+    
+    private var bannerView: UIView?
 
     internal override var screenTargetType: SPAnScreenTargetType {
         return .main
@@ -611,7 +613,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     override func heightForRow(at indexPath: IndexPath) -> CGFloat {
         if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
-            return 320.0
+            return 290.0
         } else {
             return super.heightForRow(at: indexPath)
         }
@@ -664,14 +666,15 @@ extension SPMainConversationViewController { // UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
-            let identifier = String(describing: SPLoaderCell.self)
-            guard let loaderCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                 for: indexPath) as? SPLoaderCell else {
+            let identifier = String(describing: SPAdBannerCell.self)
+            guard let adBannerCell = tableView.dequeueReusableCell(withIdentifier: identifier,
+                                                                 for: indexPath) as? SPAdBannerCell,
+                  let bannerView = self.bannerView else {
                                                                     return UITableViewCell()
             }
-            loaderCell.startAnimating()
+            adBannerCell.updateBannerView(bannerView, height: 250.0)
 
-            return loaderCell
+            return adBannerCell
         } else {
             return super.tableView(tableView, cellForRowAt: indexPath)
         }
@@ -838,6 +841,7 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
 //        footer.updateBannerView(bannerView, height: adBannerSize.height)
         
         if !self.model.dataSource.shouldShowBanner {
+            self.bannerView = bannerView
             tableView.beginUpdates()
             self.model.dataSource.shouldShowBanner = true
             tableView.insertSections(IndexSet(integer: 0), with: .top)
