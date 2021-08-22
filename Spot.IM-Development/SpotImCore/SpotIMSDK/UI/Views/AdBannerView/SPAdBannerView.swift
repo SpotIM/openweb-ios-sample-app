@@ -1,14 +1,14 @@
 //
-//  PreConversationBannerView.swift
+//  SPAdBannerView.swift
 //  SpotImCore
 //
-//  Created by Rotem Itzhak on 11/03/2020.
-//  Copyright © 2020 Spot.IM. All rights reserved.
+//  Created by Alon Shprung on 22/08/2021.
+//  Copyright © 2021 Spot.IM. All rights reserved.
 //
 
 import UIKit
 
-internal final class PreConversationBannerView: BaseView {
+internal final class SPAdBannerView: BaseView {
     private lazy var bannerContainerView: BaseView = .init()
     private var bannerView: UIView?
     private var bannerContainerHeight: NSLayoutConstraint?
