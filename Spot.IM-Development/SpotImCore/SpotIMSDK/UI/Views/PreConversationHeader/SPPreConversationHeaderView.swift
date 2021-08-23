@@ -8,9 +8,15 @@
 
 import UIKit
 
+protocol SPPreConversationHeaderViewDelegate: AnyObject {
+    func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel)
+}
+
 internal final class SPPreConversationHeaderView: BaseView {
     private lazy var titleLabel: BaseLabel = .init()
     private lazy var counterLabel: BaseLabel = .init()
+    
+    internal weak var delegate: SPPreConversationHeaderViewDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,16 +29,27 @@ internal final class SPPreConversationHeaderView: BaseView {
         backgroundColor = .spBackground0
         titleLabel.textColor = .spForeground0
         counterLabel.textColor = .spForeground1
+        updateCustomUI()
+    }
+    
+    private func updateCustomUI() {
+        delegate?.updateHeaderCustomUI(titleLabel: titleLabel, counterLabel: counterLabel)
     }
     
 
     internal func set(title: String) {
         titleLabel.text = title
+        updateCustomUI()
     }
 
     internal func set(commentCount: String?) {
         counterLabel.fadeTransition(1.0)
-        counterLabel.text = commentCount == nil ? nil : "(\(commentCount!))"
+        if let commentCount = commentCount {
+            counterLabel.text = "(\(commentCount))"
+        } else {
+            counterLabel.text = nil
+        }
+        updateCustomUI()
     }
 
     private func setup() {

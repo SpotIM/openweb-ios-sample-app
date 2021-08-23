@@ -9,17 +9,18 @@
 import Foundation
 import UIKit
 
-protocol SPPreConversationFooterDelegate: class {
+protocol SPPreConversationFooterDelegate: AnyObject {
     func showMoreComments()
     func showTerms()
     func showPrivacy()
     func showAddSpotIM()
+    func updateMoreCommentsButtonCustomUI(button: SPShowCommentsButton)
 }
 
 internal final class SPPreConversationFooter: BaseView {
     
     private lazy var separatorView: BaseView = .init()
-    private lazy var showMoreCommentsButton: BaseButton = .init()
+    private lazy var showMoreCommentsButton: SPShowCommentsButton = .init()
     private lazy var termsButton: BaseButton = .init()
     private lazy var dotLabel: BaseLabel = .init()
     private lazy var privacyButton: BaseButton = .init()
@@ -29,7 +30,11 @@ internal final class SPPreConversationFooter: BaseView {
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
     private var moreCommentsTopConstraint: NSLayoutConstraint?
-        
+    private var termsHeightConstraint: NSLayoutConstraint?
+    private var termsBottomConstraint: NSLayoutConstraint?
+    
+    private var buttonOnlyMode: Bool = false
+    
     internal weak var delegate: SPPreConversationFooterDelegate?
 
     override init(frame: CGRect = .zero) {
@@ -46,6 +51,7 @@ internal final class SPPreConversationFooter: BaseView {
         addSpotIMButton.backgroundColor = .spBackground0
         openwebLinkView.backgroundColor = .spBackground0
         spotIMIcon.image = UIImage(spNamed: "openwebIconSimple") // reload image for dark mode if needed
+        delegate?.updateMoreCommentsButtonCustomUI(button: showMoreCommentsButton)
     }
 
     func setShowMoreCommentsButtonColor(color: UIColor, withSeparator: Bool = false) {
@@ -82,6 +88,37 @@ internal final class SPPreConversationFooter: BaseView {
         moreCommentsHeightConstraint?.constant = Theme.showMoreCommentsButtonHeight
         showMoreCommentsButton.isHidden = false
         separatorView.isHidden = false
+    }
+    
+    internal func set(buttonOnlyMode: Bool) {
+        self.buttonOnlyMode = buttonOnlyMode
+        setViewsAccordingToButtonOnlyMode()
+    }
+    
+    internal func set(commentsCount: String?) {
+        showMoreCommentsButton.setCommentsCount(commentsCount: commentsCount)
+        setViewsAccordingToButtonOnlyMode()
+    }
+    
+    private func setViewsAccordingToButtonOnlyMode() {
+        termsButton.isHidden = buttonOnlyMode
+        dotLabel.isHidden = buttonOnlyMode
+        privacyButton.isHidden = buttonOnlyMode
+        spotIMIcon.isHidden = buttonOnlyMode
+        addSpotIMButton.isHidden = buttonOnlyMode
+        openwebLinkView.isHidden = buttonOnlyMode
+        separatorView.isHidden = buttonOnlyMode
+        if (buttonOnlyMode) {
+            termsHeightConstraint?.constant = 0
+            termsBottomConstraint?.constant = 0
+            var title = LocalizationManager.localizedString(key: "Post a Comment")
+            // when in no title mode - set button text with comments count
+            if let commentsCount = showMoreCommentsButton.getCommentsCount(), SpotIm.buttonOnlyMode == .withoutTitle {
+                title += " (\(commentsCount))"
+            }
+            showMoreCommentsButton.setTitle(title, for: .normal)
+        }
+        delegate?.updateMoreCommentsButtonCustomUI(button: showMoreCommentsButton)
     }
 
     private func setupShowMoreCommentsButton() {
@@ -121,8 +158,8 @@ internal final class SPPreConversationFooter: BaseView {
         termsButton.layout {
             $0.top.equal(to: showMoreCommentsButton.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.horisontalMargin)
-            $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
-            $0.height.equal(to: 15)
+            termsBottomConstraint = $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
+            termsHeightConstraint = $0.height.equal(to: 15)
         }
     }
 
