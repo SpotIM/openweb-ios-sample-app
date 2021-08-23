@@ -218,7 +218,7 @@ final class SPMainConversationModel {
             title: LocalizationManager.localizedString(key: "Cancel"),
             style: .cancel
         ) { action in
-            SPAnalyticsHolder.default.log(event: .messageContextMenuClosed(commentId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .messageContextMenuClosed(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
         if !actions.isEmpty {
             actions.append(cancelAction)

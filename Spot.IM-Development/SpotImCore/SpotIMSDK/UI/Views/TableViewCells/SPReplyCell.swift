@@ -279,7 +279,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 extension SPReplyCell: AvatarViewDelegate {
     
     func avatarDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
     }
 }
 
@@ -301,11 +301,11 @@ extension SPReplyCell: CommentActionsDelegate {
 extension SPReplyCell: UserNameViewDelegate {
     
     func moreButtonDidTapped(sender: UIButton) {
-        delegate?.moreTapped(for: commentId, sender: sender)
+        delegate?.moreTapped(for: commentId, replyingToID: replyingToId, sender: sender)
     }
     
     func userNameDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: false)
     }
 }
 
@@ -328,10 +328,12 @@ extension SPReplyCell: MessageContainerViewDelegate {
     
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
+        SPAnalyticsHolder.default.log(event: .commentReadMoreClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
     }
 
     func readLessTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showLessText(for: commentId)
+        SPAnalyticsHolder.default.log(event: .commentReadLessClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
     }
 
 }
