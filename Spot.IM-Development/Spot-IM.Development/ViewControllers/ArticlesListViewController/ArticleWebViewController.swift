@@ -250,6 +250,14 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .sayControlInMainConversation(let labelContainer, let label):
             label.textColor = isDarkMode ? UIColor.blue : UIColor.red
             break
+        case .showCommentsButton(let button):
+            button.setTitleColor(isDarkMode ? UIColor.blue : UIColor.red, for: .normal)
+            button.setTitle("comments " + (button.getCommentsCount() ?? ""), for: .normal)
+            break
+        case .preConversationHeader(let titleLabel, let counterLabel):
+            titleLabel.text = "Comments"
+            counterLabel.isHidden = true
+            break
         default:
             break
         }
