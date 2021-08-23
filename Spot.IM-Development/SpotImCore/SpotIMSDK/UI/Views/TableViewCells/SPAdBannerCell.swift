@@ -47,10 +47,10 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
         closeButton.contentVerticalAlignment = .top
         
         closeButton.layout {
-            $0.top.equal(to: topAnchor, offsetBy: 20.0)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -16)
-            $0.height.equal(to: 35.0)
-            $0.width.equal(to: 35.0)
+            $0.top.equal(to: topAnchor, offsetBy: Theme.bannerTopOffset)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.closeButtonTrailingOffset)
+            $0.height.equal(to: Theme.closeButtonHeight)
+            $0.width.equal(to: Theme.closeButtonWidth)
         }
     }
     
@@ -65,10 +65,22 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     
     private func setupBannerView() {
         adBannerView.layout {
-            $0.top.equal(to: topAnchor, offsetBy: 20.0)
-            $0.bottom.equal(to: bottomAnchor, offsetBy: -20.0)
+            $0.top.equal(to: topAnchor, offsetBy: Theme.bannerTopOffset)
+            $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bannerBottomOffset)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.equal(to: trailingAnchor)
         }
+    }
+}
+
+extension SPAdBannerCell {
+    // MARK: - Theme
+
+    private enum Theme {
+        static let bannerTopOffset: CGFloat = 16.0
+        static let bannerBottomOffset: CGFloat = 0.0
+        static let closeButtonTrailingOffset: CGFloat = 16.0
+        static let closeButtonWidth: CGFloat = 35.0
+        static let closeButtonHeight: CGFloat = 35.0
     }
 }

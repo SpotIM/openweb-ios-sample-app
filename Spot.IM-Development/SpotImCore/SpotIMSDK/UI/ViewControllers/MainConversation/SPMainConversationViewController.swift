@@ -615,7 +615,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     override func heightForRow(at indexPath: IndexPath) -> CGFloat {
         if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
-            return 290.0
+            return 280.0
         } else {
             return super.heightForRow(at: indexPath)
         }
@@ -848,11 +848,12 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
 //        footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
 //        footer.updateBannerView(bannerView, height: adBannerSize.height)
         
+        self.bannerView = bannerView
+        
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
         
-        if !self.model.dataSource.shouldShowBanner {
-            self.bannerView = bannerView
+        if !self.model.dataSource.shouldShowBanner && !self.model.dataSource.isLoading {
             tableView.beginUpdates()
             self.model.dataSource.shouldShowBanner = true
             tableView.insertSections(IndexSet(integer: 0), with: .top)
