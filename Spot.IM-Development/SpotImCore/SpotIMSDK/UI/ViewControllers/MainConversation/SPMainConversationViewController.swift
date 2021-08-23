@@ -494,6 +494,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 break
             case .fullConversationBanner:
                 if model.adsGroup().mainConversationBannerEnabled() {
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
                     adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.large])
                 }
             default:
@@ -840,10 +842,14 @@ extension SPMainConversationViewController { // Article header scrolling logic
 
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
+//        preparation code for banner in the footer view -
+//        need to use adUnitID to handle different banners.
+        
 //        footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
 //        footer.updateBannerView(bannerView, height: adBannerSize.height)
+        
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
+        SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
         
         if !self.model.dataSource.shouldShowBanner {
             self.bannerView = bannerView
