@@ -24,6 +24,7 @@ internal final class SPAdBannerView: BaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
+        bannerContainerView.backgroundColor = .spBackground0
         bannerView?.backgroundColor = .spBackground0
     }
     

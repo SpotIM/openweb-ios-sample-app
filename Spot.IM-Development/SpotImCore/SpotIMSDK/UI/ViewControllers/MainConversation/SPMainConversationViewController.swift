@@ -621,9 +621,32 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 }
 
 extension SPMainConversationViewController { // UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
+            let identifier = String(describing: SPAdBannerCell.self)
+            guard let adBannerCell = tableView.dequeueReusableCell(withIdentifier: identifier,
+                                                                 for: indexPath) as? SPAdBannerCell,
+                  let bannerView = self.bannerView else {
+                                                                    return UITableViewCell()
+            }
+            adBannerCell.updateBannerView(bannerView, height: 250.0)
+            adBannerCell.delegate = self
+
+            return adBannerCell
+        } else {
+            return super.tableView(tableView, cellForRowAt: indexPath)
+        }
+    }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
+            if let adBannerCell = cell as? SPAdBannerCell {
+                adBannerCell.updateColorsAccordingToStyle()
+            }
+        } else {
+            super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        }
         loadNextPageIfNeeded(forRowAt: indexPath)
     }
 
@@ -663,27 +686,11 @@ extension SPMainConversationViewController { // UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int {
         return model.dataSource.numberOfSections()
     }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
-            let identifier = String(describing: SPAdBannerCell.self)
-            guard let adBannerCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                 for: indexPath) as? SPAdBannerCell,
-                  let bannerView = self.bannerView else {
-                                                                    return UITableViewCell()
-            }
-            adBannerCell.updateBannerView(bannerView, height: 250.0)
+}
 
-            return adBannerCell
-        } else {
-            return super.tableView(tableView, cellForRowAt: indexPath)
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
-            self.removeBannerFromConversation()
-        }
+extension SPMainConversationViewController: SPAdBannerCellDelegate {
+    func hideBanner() {
+        removeBannerFromConversation()
     }
 }
 
