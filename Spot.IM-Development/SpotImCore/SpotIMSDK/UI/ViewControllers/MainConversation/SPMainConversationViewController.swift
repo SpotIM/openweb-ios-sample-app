@@ -843,6 +843,10 @@ extension SPMainConversationViewController { // Article header scrolling logic
 
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
+        guard navigationController?.topViewController is SPMainConversationViewController else {
+            return
+        }
+        
 //        preparation code for banner in the footer view -
 //        need to use adUnitID to handle different banners.
         
