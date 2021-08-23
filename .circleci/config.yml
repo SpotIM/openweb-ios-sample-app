@@ -1,0 +1,155 @@
+# For a detailed guide to building and testing on iOS, read the docs:
+# https://circleci.com/docs/2.0/testing-ios/
+
+version: 2.1
+
+references:
+
+  # Docker image configurations
+
+  ios_config: &ios_config
+    macos:
+      xcode: "12.5.0"
+    working_directory: ~/project/Spot.IM-Development
+
+  define_var_release_version: &define_var_release_version
+    run:
+      name: Export new version number to environment variable
+      command: |
+        echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
+        echo $RELEASE_VERSION
+
+jobs:
+  default_job:
+    <<: *ios_config
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Bash
+          command: |
+            pwd
+            ls -l
+      - run:
+          name: start default build
+          command: |
+            echo "Start deafult build"
+            pwd
+            ls -l
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - 'vendor/bundle'
+
+      - run:
+          name: Build app and run unit-tests
+          command: |
+            bundle exec fastlane unit_tests
+
+      # Collect XML test results data to show in the UI, and save the same XML
+      # files under test-results folder in the Artifacts tab
+      - store_test_results:
+          path: test_output
+      - store_artifacts:
+          path: test_output
+          destination: scan-output
+
+  release_sdk_job:
+    <<: *ios_config
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_release_version
+      
+      - run:
+          name: start release build
+          command: |
+            echo "Start release build $RELEASE_VERSION"
+            pwd
+            ls -l
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - 'vendor/bundle'
+     
+      - run:
+         name: Before Running Fastlane Release
+         command: |
+             git status
+      
+      - run:
+          name: Run Fastlane Release 
+          command: |
+            bundle exec fastlane release_pod version:$RELEASE_VERSION
+            
+      - run:
+         name: After Running Fastlane Release
+         command: |
+             ls -l Release
+             git status
+
+      - run:
+          name: Update Github repo with new SDK version
+          command: |
+            bash -x ./commit_and_push_changes.sh $RELEASE_VERSION $CIRCLE_BRANCH
+
+      - run:
+          name: Create a pull request on Github for the new release
+          command: |
+            bash -x ./create_pull_request_for_release.sh $RELEASE_VERSION $CIRCLE_BRANCH
+
+      - run:
+          name: Update public Github repo SpotIM/spotim-ios-sdk-pod with new SDK version
+          command: |
+            bash -x ./update_public_pod_repo_with_sdk.sh $RELEASE_VERSION
+
+      - run:
+          name: Create a "Github Release" on public Github repo SpotIM/spotim-ios-sdk-pod
+          command: |
+            bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
+
+
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - default_job:
+          filters:
+            branches:
+              ignore: /^release/.*/
+
+      - release_sdk_job:
+          filters:
+            branches:
+              only:
+                - /^release/sdk/.*/

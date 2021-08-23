@@ -109,7 +109,9 @@ extension GoogleAdsProvider: GADBannerViewDelegate {
         bannerView.translatesAutoresizingMaskIntoConstraints = false
         self.bannerView.addSubview(bannerView)
         bannerView.centerXAnchor.constraint(equalTo: self.bannerView.centerXAnchor).isActive = true
-        bannerView.centerYAnchor.constraint(equalTo: self.bannerView.centerYAnchor).isActive = true
+        bannerView.topAnchor.constraint(equalTo: self.bannerView.topAnchor).isActive = true
+        bannerView.bottomAnchor.constraint(equalTo: self.bannerView.bottomAnchor).isActive = true
+        
         bannerDelegate?.bannerLoaded(adBannerSize: bannerView.adSize.size)
     }
     
