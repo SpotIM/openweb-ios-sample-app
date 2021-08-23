@@ -692,6 +692,7 @@ extension SPMainConversationViewController { // UITableViewDataSource
 
 extension SPMainConversationViewController: SPAdBannerCellDelegate {
     func hideBanner() {
+        SPAnalyticsHolder.default.log(event: .fullConversationAdCloseClicked, source: .conversation)
         removeBannerFromConversation()
     }
 }
