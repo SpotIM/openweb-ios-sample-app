@@ -17,6 +17,7 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     weak var delegate: SPAdBannerCellDelegate?
     
     private lazy var adBannerView: SPAdBannerView = .init()
+    private lazy var closeButton: BaseButton = .init(type: .custom)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         
@@ -28,17 +29,34 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     func updateColorsAccordingToStyle() {
         contentView.backgroundColor = .spBackground0
         self.adBannerView.updateColorsAccordingToStyle()
+        self.closeButton.setImage(UIImage(spNamed: "closeIcon"), for: .normal)
     }
     
     private func setupUI() {
-        addSubviews(adBannerView)
+        addSubviews(adBannerView, closeButton)
         
-        setupCloseView()
+        setupCloseButton()
         setupBannerView()
         updateColorsAccordingToStyle()
     }
     
-    private func setupCloseView() {
+    private func setupCloseButton() {
+        closeButton.addTarget(self, action: #selector(self.onCloseClicked(_:)), for: .touchUpInside)
+        
+        closeButton.contentHorizontalAlignment = .right
+        closeButton.contentVerticalAlignment = .top
+        
+        closeButton.layout {
+            $0.top.equal(to: topAnchor, offsetBy: 20.0)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -16)
+            $0.height.equal(to: 35.0)
+            $0.width.equal(to: 35.0)
+        }
+    }
+    
+    @objc
+    private func onCloseClicked(_ sender: UIButton) {
+        delegate?.hideBanner()
     }
     
     func updateBannerView(_ bannerView: UIView, height: CGFloat) {

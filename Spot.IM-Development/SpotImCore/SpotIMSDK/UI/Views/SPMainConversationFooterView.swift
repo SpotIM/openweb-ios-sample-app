@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal protocol SPMainConversationFooterViewDelegate: class {
+internal protocol SPMainConversationFooterViewDelegate: AnyObject {
     
     func labelContainerDidTap(_ foorterView: SPMainConversationFooterView)
     
