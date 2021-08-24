@@ -48,7 +48,11 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
         
         closeButton.layout {
             $0.top.equal(to: topAnchor, offsetBy: Theme.bannerTopOffset)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.closeButtonTrailingOffset)
+            if #available(iOS 11.0, *) {
+                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.closeButtonTrailingOffset)
+            } else {
+                $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.closeButtonTrailingOffset)
+            }
             $0.height.equal(to: Theme.closeButtonHeight)
             $0.width.equal(to: Theme.closeButtonWidth)
         }
