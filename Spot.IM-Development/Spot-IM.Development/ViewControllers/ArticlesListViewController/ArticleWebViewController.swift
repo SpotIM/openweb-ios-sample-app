@@ -221,7 +221,7 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     }
     
     func shouldDisplayLoginPromptForGuests() -> Bool {
-        return true
+        return spotId == "sp_mobileGuest"
     }
 }
 
