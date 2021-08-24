@@ -1,14 +1,14 @@
 //
-//  PreConversationBannerView.swift
+//  SPAdBannerView.swift
 //  SpotImCore
 //
-//  Created by Rotem Itzhak on 11/03/2020.
-//  Copyright © 2020 Spot.IM. All rights reserved.
+//  Created by Alon Shprung on 22/08/2021.
+//  Copyright © 2021 Spot.IM. All rights reserved.
 //
 
 import UIKit
 
-internal final class PreConversationBannerView: BaseView {
+internal final class SPAdBannerView: BaseView {
     private lazy var bannerContainerView: BaseView = .init()
     private var bannerView: UIView?
     private var bannerContainerHeight: NSLayoutConstraint?
@@ -24,6 +24,7 @@ internal final class PreConversationBannerView: BaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
+        bannerContainerView.backgroundColor = .spBackground0
         bannerView?.backgroundColor = .spBackground0
     }
     
@@ -36,8 +37,7 @@ internal final class PreConversationBannerView: BaseView {
         bannerView.layout {
             $0.height.equal(to: height)
             $0.top.equal(to: bannerContainerView.topAnchor)
-            $0.leading.equal(to: bannerContainerView.leadingAnchor)
-            $0.trailing.equal(to: bannerContainerView.trailingAnchor)
+            $0.centerX.equal(to: bannerContainerView.centerXAnchor)
         }
         bannerContainerHeight?.constant = height
         
