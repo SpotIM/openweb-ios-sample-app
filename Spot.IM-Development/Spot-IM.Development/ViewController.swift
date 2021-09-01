@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         fillVersionAndBuildNumber()
         
         print("Google Mobile Ads SDK version: \(GADMobileAds.sharedInstance().sdkVersion)")
-        self.adLoader = GADAdLoader(adUnitID: "/282897603/elnuevodia.com/home/app_scroll", rootViewController: self, adTypes: [.nativeCustomTemplate], options: nil)
+        self.adLoader = GADAdLoader(adUnitID: "/282897603/elnuevodia.com/home/app_scroll", rootViewController: self, adTypes: [.customNative], options: nil)
         self.adLoader?.delegate = self
         self.adLoader?.load(GADRequest())
         SpotIm.setAnalyticsEventDelegate(delegate: self)
@@ -155,31 +155,23 @@ private extension String {
     static var demoSpotKeyForMobileSocialGuest:     String { return "sp_mobileSocialGuest" }
 }
 
-extension ViewController: GADAdLoaderDelegate, GADNativeCustomTemplateAdLoaderDelegate {
-
-
+extension ViewController: GADAdLoaderDelegate, GADCustomNativeAdLoaderDelegate {
     // MARK: - GADAdLoaderDelegate Methods
     
-    func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: GADRequestError) {
+    func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: Error) {
         print("adLoader - didFailToReceiveAdWithError: \(error)")
-
     }
 
     func adLoaderDidFinishLoading(_ adLoader: GADAdLoader) {
         print("adLoaderDidFinishLoading")
     }
-
-
-    func nativeCustomTemplateIDs(for adLoader: GADAdLoader) -> [String] {
+    
+    func customNativeAdFormatIDs(for adLoader: GADAdLoader) -> [String] {
         return ["10067603"]
     }
-
-    func adLoader(
-        _ adLoader: GADAdLoader,
-        didReceive nativeCustomTemplateAd: GADNativeCustomTemplateAd
-    ) {
-        print("Received custom native ad: \(nativeCustomTemplateAd)")
-
+    
+    func adLoader(_ adLoader: GADAdLoader, didReceive customNativeAd: GADCustomNativeAd) {
+        print("Received custom native ad: \(customNativeAd)")
     }
 }
 
