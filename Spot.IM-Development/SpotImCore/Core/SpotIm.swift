@@ -73,6 +73,12 @@ public enum SpotImSortByOption {
     case oldest
 }
 
+public enum SpotImReadOnlyMode {
+    case `default`
+    case enable
+    case disable
+}
+
 public protocol SPAnalyticsEventDelegate {
     func trackEvent(type: SPEventType, event: SPEventInfo)
 }
@@ -108,6 +114,7 @@ public class SpotIm {
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
     
+    internal static var readOnlyMode: SpotImReadOnlyMode = .default
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
@@ -377,6 +384,19 @@ public class SpotIm {
      */
     public static func setAnalyticsEventDelegate(delegate: SPAnalyticsEventDelegate) {
         self.analyticsEventDelegate = delegate
+    }
+    
+    /**
+     Set SpotImReadOnlyMode for read-only mode
+     
+     - Parameter mode: SpotImReadOnlyMode (to default/enable/disable)
+     */
+    public static func setReadOnlyMode(mode: SpotImReadOnlyMode) {
+        self.readOnlyMode = mode
+    }
+    
+    public static func getReadOnlyMode() -> SpotImReadOnlyMode {
+        return self.readOnlyMode
     }
 
     // MARK: Private
