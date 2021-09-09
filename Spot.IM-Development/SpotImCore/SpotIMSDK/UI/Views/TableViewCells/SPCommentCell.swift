@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-protocol MessageItemContainable: class {
+protocol MessageItemContainable: AnyObject {
     var messageView: MessageContainerView { get }
 }
 
@@ -78,7 +78,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         with data: CommentViewModel,
         shouldShowHeader: Bool,
         minimumVisibleReplies: Int,
-        lineLimit: Int
+        lineLimit: Int,
+        isReadOnlyMode: Bool
     ) {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
@@ -86,7 +87,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         messageView.delegate = self
         
         updateUserView(with: data)
-        updateActionView(with: data)
+        updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
         updateAvatarView(with: data)
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
         updateCommentMediaView(with: data)
@@ -246,9 +247,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func updateActionView(with dataModel: CommentViewModel) {
+    private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
+        replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setBrandColor(.brandColor)
-        replyActionsView.setRepliesCount(dataModel.repliesCount)
+        replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount)
         replyActionsView.setRankUp(dataModel.rankUp)
         replyActionsView.setRankDown(dataModel.rankDown)
         replyActionsView.setRanked(with: dataModel.rankedByUser)

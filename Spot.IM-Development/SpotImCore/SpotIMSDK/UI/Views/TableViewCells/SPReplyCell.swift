@@ -43,12 +43,12 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         setupUI()
     }
     
-    func configure(with data: CommentViewModel, lineLimit: Int) {
+    func configure(with data: CommentViewModel, lineLimit: Int, isReadOnlyMode: Bool) {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
         repliesButtonState = data.repliesButtonState
         updateUserView(with: data)
-        updateActionView(with: data)
+        updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
         updateAvatarView(with: data)
         updateCommentLabelView(with: data)
         messageView.delegate = self
@@ -133,13 +133,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userViewHeightConstraint?.constant = userViewHeight
     }
     
-    private func updateActionView(with dataModel: CommentViewModel) {
+    private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
+        replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setBrandColor(.brandColor)
-        replyActionsView.setRepliesCount(dataModel.repliesCount)
+        replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
         replyActionsView.setRankUp(dataModel.rankUp)
         replyActionsView.setRankDown(dataModel.rankDown)
         replyActionsView.setRanked(with: dataModel.rankedByUser)
-        replyActionsView.setReplyButton(enabled: dataModel.depth < 6)
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
