@@ -35,6 +35,7 @@ internal final class SPMainConversationDataSource {
     var messageCount: Int = 0
     var minVisibleReplies: Int = 2
     var communityQuestion: String?
+    var isReadOnly: Bool = false
 
     private(set) var sortMode: SPCommentSortMode?
     private(set) var postId: String
@@ -151,6 +152,7 @@ internal final class SPMainConversationDataSource {
                 self.cellData = self.processed(response?.conversation?.comments)
                 
                 self.communityQuestion = response?.conversation?.communityQuestion ?? nil
+                self.isReadOnly = response?.conversation?.readOnly ?? false
                 completion(true, nil)
             }
         }

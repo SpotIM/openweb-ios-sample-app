@@ -8,13 +8,13 @@
 
 import UIKit
 
-internal protocol SPTextInputView: class {
+internal protocol SPTextInputView: AnyObject {
 
     var text: String? { set get }
 
 }
 
-internal protocol SPTextInputViewDelegate: class {
+internal protocol SPTextInputViewDelegate: AnyObject {
     
     func input(_ view: SPTextInputView, didChange text: String)
     func tooLongTextWasPassed()

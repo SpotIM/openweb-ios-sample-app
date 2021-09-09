@@ -126,6 +126,12 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         return model.dataSource.communityQuestion
     }
     
+    internal func isReadOnlyModeEnabled() -> Bool {
+        return
+            (SpotIm.getReadOnlyMode() == .default && model.dataSource.isReadOnly) ||
+            SpotIm.getReadOnlyMode() == .enable
+    }
+    
     private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
         var htmlString = communityGuidelinesTitle.value
         
