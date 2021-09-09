@@ -16,6 +16,7 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var createCommentNewDesignSwitch: UISwitch!
     @IBOutlet weak var darkModeSwitch: UISwitch!
     @IBOutlet weak var modeControl: UISegmentedControl!
+    @IBOutlet weak var readOnlyModeControl: UISegmentedControl!
     
     private var navBarHiddenOldValue = false
     var isCustomDarkModeEnabled: Bool {
@@ -33,6 +34,37 @@ class SettingsViewController: UIViewController {
         set { SpotIm.enableCreateCommentNewDesign = newValue }
     }
     
+    var readOnlyModeIndex: Int {
+            get {
+                switch (SpotIm.getReadOnlyMode()) {
+                case .default:
+                    return 0
+                case .enable:
+                    return 1
+                case .disable:
+                    return 2
+                default:
+                    return 0
+                } }
+            set {
+                var newMode = SpotImReadOnlyMode.default
+                switch newValue {
+                case 0:
+                    newMode = .default
+                    break
+                case 1:
+                    newMode = .enable
+                    break
+                case 2:
+                    newMode = .disable
+                    break
+                default:
+                    break
+                }
+                SpotIm.setReadOnlyMode(mode: newMode)
+            }
+        }
+    
     var interfaceStyle: Int {
         get { UserDefaults.standard.integer(forKey: "demo.interfaceStyle") }
         set { UserDefaults.standard.set(newValue, forKey: "demo.interfaceStyle") }
@@ -48,6 +80,7 @@ class SettingsViewController: UIViewController {
         darkModeSwitch.isOn = isCustomDarkModeEnabled
         hideArtcleHeaderSwitch.isOn = isHideArticleHeaderEnabled
         createCommentNewDesignSwitch.isOn = isCreateCommentNewDesignEnabled
+        readOnlyModeControl.selectedSegmentIndex = readOnlyModeIndex
         
         modeControl.isHidden = !isCustomDarkModeEnabled
         modeControl.selectedSegmentIndex = interfaceStyle
@@ -76,6 +109,11 @@ class SettingsViewController: UIViewController {
         let style: SPUserInterfaceStyle = interfaceStyle == 0 ? .light : .dark
         SpotIm.overrideUserInterfaceStyle = style
     }
+    
+    @IBAction func changeReadOnlyMode(_ sender: UISegmentedControl) {
+        readOnlyModeIndex = sender.selectedSegmentIndex
+    }
+    
 
     private func setCustomDarkMode(enabled: Bool) {
         UserDefaults.standard.set(enabled, forKey: "demo.isCustomDarkModeEnabled")
