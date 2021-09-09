@@ -340,6 +340,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.stateActionView?.removeFromSuperview()
                         self.stateActionView = nil
                         self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
+                        if (self.isReadOnlyModeEnabled()) {
+                            self.whatYouThinkView.setReadOnlyMode(isPreConversation: true)
+                        }
                     }
                 }
                 
