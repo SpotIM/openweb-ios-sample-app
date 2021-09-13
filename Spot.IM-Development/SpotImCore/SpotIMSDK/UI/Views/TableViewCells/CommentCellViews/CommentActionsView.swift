@@ -22,6 +22,8 @@ final class CommentActionsView: BaseView {
     private lazy var rankDownButton: SPAnimatedButton = initializeRankDownButton()
     private var replyActionViewWidthConstraint: NSLayoutConstraint?
     private var replyButtonTrailingConstraint: NSLayoutConstraint?
+    
+    private var isReadOnlyMode: Bool = false
 
     private var rankedByUser: Int = 0 {
         didSet {
@@ -39,6 +41,10 @@ final class CommentActionsView: BaseView {
         applyAccessibility()
     }
     
+    func setReadOnlyMode(enabled: Bool) {
+        self.isReadOnlyMode = enabled
+    }
+    
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -54,20 +60,35 @@ final class CommentActionsView: BaseView {
         rankDownLabel.textColor = .buttonTitle
     }
     
-
-    /// Will collapse and disable button if disabled
-    func setReplyButton(enabled: Bool) {
-        replyButton.isUserInteractionEnabled = enabled
-        replyActionViewWidthConstraint?.isActive = !enabled
-        replyButtonTrailingConstraint?.constant = enabled ? -Theme.baseOffset : 0.0
-    }
-    
-    func setRepliesCount(_ count: String?) {
-        var replyButtonTitle = replyDefaultTitle
-        if let repliesCount = count {
-            replyButtonTitle.append(" (\(repliesCount))")
+    func setReplyButton(repliesCount: String?, shouldHideButton: Bool = false) {
+        var replyButtonTitle: String?
+        var isEnabled: Bool = true
+        
+        switch (self.isReadOnlyMode, repliesCount, shouldHideButton) {
+        case (_, _, true), (true, nil, _):
+            isEnabled = false
+            break
+        case (false, _, false):
+            isEnabled = true
+            replyButtonTitle = replyDefaultTitle
+            break
+        case (true, .some, false):
+            isEnabled = false
+            replyButtonTitle = LocalizationManager.localizedString(key: "Replies")
+            break
         }
-        replyButton.setTitle(replyButtonTitle, for: .normal)
+        
+        replyButton.isEnabled = isEnabled
+        
+        if var replyButtonTitle = replyButtonTitle {
+            if let repliesCount = repliesCount {
+                replyButtonTitle.append(" (\(repliesCount))")
+            }
+            setShowReplyButton(true)
+            replyButton.setTitle(replyButtonTitle, for: .normal)
+        } else {
+            setShowReplyButton(false)
+        }
     }
 
     func setBrandColor(_ color: UIColor) {
@@ -96,6 +117,11 @@ final class CommentActionsView: BaseView {
     }
 
     // MARK: - Private
+    
+    private func setShowReplyButton(_ showButton: Bool) {
+        replyActionViewWidthConstraint?.isActive = !showButton
+        replyButtonTrailingConstraint?.constant = showButton ? -Theme.baseOffset : 0.0
+    }
 
     private func updateRankButtonState() {
         switch rankedByUser {
@@ -266,7 +292,7 @@ extension CommentActionsView {
 
 // MARK: - Delegate
 
-protocol CommentActionsDelegate: class {
+protocol CommentActionsDelegate: AnyObject {
 
     func reply()
     func rankUp(_ rankChange: SPRankChange)

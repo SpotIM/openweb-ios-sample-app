@@ -55,15 +55,25 @@ public struct SpotImArticleMetadata {
     let subtitle: String
     let thumbnailUrl: String
     let section: String
-    let customBIData: [String:String]?
+    var customBIData: [String:String]?
+    var readOnlyMode: SpotImReadOnlyMode
 
-    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil) {
+    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil, readOnlyMode: SpotImReadOnlyMode = .default) {
         self.url = url
         self.title = title
         self.subtitle = subtitle
         self.thumbnailUrl = thumbnailUrl
         self.section = section
         self.customBIData = customBIData
+        self.readOnlyMode = readOnlyMode
+    }
+    
+    public mutating func setCustomBIData(_ data: [String:String]) {
+        self.customBIData = data
+    }
+    
+    public mutating func setReadOnlymode(_ mode: SpotImReadOnlyMode) {
+        self.readOnlyMode = mode
     }
 }
 
@@ -71,6 +81,12 @@ public enum SpotImSortByOption {
     case best
     case newest
     case oldest
+}
+
+public enum SpotImReadOnlyMode {
+    case `default`
+    case enable
+    case disable
 }
 
 public protocol SPAnalyticsEventDelegate {
