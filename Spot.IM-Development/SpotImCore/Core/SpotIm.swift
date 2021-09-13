@@ -55,15 +55,25 @@ public struct SpotImArticleMetadata {
     let subtitle: String
     let thumbnailUrl: String
     let section: String
-    let customBIData: [String:String]?
+    var customBIData: [String:String]?
+    var readOnlyMode: SpotImReadOnlyMode
 
-    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil) {
+    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil, readOnlyMode: SpotImReadOnlyMode = .default) {
         self.url = url
         self.title = title
         self.subtitle = subtitle
         self.thumbnailUrl = thumbnailUrl
         self.section = section
         self.customBIData = customBIData
+        self.readOnlyMode = readOnlyMode
+    }
+    
+    public mutating func setCustomBIData(_ data: [String:String]) {
+        self.customBIData = data
+    }
+    
+    public mutating func setReadOnlymode(_ mode: SpotImReadOnlyMode) {
+        self.readOnlyMode = mode
     }
 }
 
@@ -114,7 +124,6 @@ public class SpotIm {
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
     
-    internal static var readOnlyMode: SpotImReadOnlyMode = .default
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
@@ -384,19 +393,6 @@ public class SpotIm {
      */
     public static func setAnalyticsEventDelegate(delegate: SPAnalyticsEventDelegate) {
         self.analyticsEventDelegate = delegate
-    }
-    
-    /**
-     Set SpotImReadOnlyMode for read-only mode
-     
-     - Parameter mode: SpotImReadOnlyMode (to default/enable/disable)
-     */
-    public static func setReadOnlyMode(mode: SpotImReadOnlyMode) {
-        self.readOnlyMode = mode
-    }
-    
-    public static func getReadOnlyMode() -> SpotImReadOnlyMode {
-        return self.readOnlyMode
     }
 
     // MARK: Private

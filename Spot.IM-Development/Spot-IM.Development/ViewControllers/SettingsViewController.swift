@@ -35,35 +35,9 @@ class SettingsViewController: UIViewController {
     }
     
     var readOnlyModeIndex: Int {
-            get {
-                switch (SpotIm.getReadOnlyMode()) {
-                case .default:
-                    return 0
-                case .enable:
-                    return 1
-                case .disable:
-                    return 2
-                default:
-                    return 0
-                } }
-            set {
-                var newMode = SpotImReadOnlyMode.default
-                switch newValue {
-                case 0:
-                    newMode = .default
-                    break
-                case 1:
-                    newMode = .enable
-                    break
-                case 2:
-                    newMode = .disable
-                    break
-                default:
-                    break
-                }
-                SpotIm.setReadOnlyMode(mode: newMode)
-            }
-        }
+        get { UserDefaults.standard.integer(forKey: "demo.isReadOnlyEnabled") }
+        set { UserDefaults.standard.set(newValue, forKey: "demo.isReadOnlyEnabled") }
+    }
     
     var interfaceStyle: Int {
         get { UserDefaults.standard.integer(forKey: "demo.interfaceStyle") }
