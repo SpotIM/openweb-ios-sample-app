@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -539,6 +539,22 @@ Build: [unknown]</string>
                                     <action selector="switchCreateCommentNewDesign:" destination="afI-iB-Nmt" eventType="valueChanged" id="WDD-tT-uMV"/>
                                 </connections>
                             </switch>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="VV8-wS-Oem">
+                                <rect key="frame" x="26" y="241" width="319" height="32"/>
+                                <segments>
+                                    <segment title="Default"/>
+                                    <segment title="Enable"/>
+                                    <segment title="Disable"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeReadOnlyMode:" destination="afI-iB-Nmt" eventType="valueChanged" id="wsL-Lb-kJe"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Read only mode" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pmk-pF-Lk4">
+                                <rect key="frame" x="26" y="216" width="104" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pIh-k2-j8N"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -550,17 +566,22 @@ Build: [unknown]</string>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="aKr-SD-OJK" secondAttribute="trailing" constant="60" id="ABi-XR-SpD"/>
                             <constraint firstItem="bvT-bO-ucE" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="30" id="E62-wv-6KY"/>
                             <constraint firstItem="kMe-b0-d39" firstAttribute="top" secondItem="bTW-Wt-zDR" secondAttribute="bottom" constant="30" id="Guk-xR-Fik"/>
+                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="VV8-wS-Oem" secondAttribute="trailing" constant="30" id="I9Q-Jg-vq7"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="COa-ig-fWj" secondAttribute="trailing" constant="60" id="IIP-D6-Bgg"/>
                             <constraint firstItem="Fki-wM-TQv" firstAttribute="top" secondItem="mTs-Sn-XWm" secondAttribute="bottom" constant="30" id="Iyl-MM-LJX"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="JID-vg-Zmg"/>
+                            <constraint firstItem="VV8-wS-Oem" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="26" id="P41-uH-WuA"/>
                             <constraint firstItem="oFl-re-kEH" firstAttribute="top" secondItem="COa-ig-fWj" secondAttribute="bottom" constant="17" id="Sa9-zq-5FF"/>
                             <constraint firstItem="mTs-Sn-XWm" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="WKT-FA-Ssj"/>
                             <constraint firstItem="COa-ig-fWj" firstAttribute="centerY" secondItem="Fki-wM-TQv" secondAttribute="centerY" id="XW5-xw-L7s"/>
                             <constraint firstItem="bvT-bO-ucE" firstAttribute="top" secondItem="Fki-wM-TQv" secondAttribute="bottom" constant="31" id="Xlc-t3-iwr"/>
                             <constraint firstItem="mTs-Sn-XWm" firstAttribute="top" secondItem="pIh-k2-j8N" secondAttribute="top" constant="21" id="ckz-A8-QEs"/>
+                            <constraint firstItem="VV8-wS-Oem" firstAttribute="top" secondItem="pmk-pF-Lk4" secondAttribute="bottom" constant="8" symbolic="YES" id="fV0-e5-eae"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="kMe-b0-d39" secondAttribute="bottom" constant="16" id="lPA-MJ-6K0"/>
+                            <constraint firstItem="pmk-pF-Lk4" firstAttribute="top" secondItem="bvT-bO-ucE" secondAttribute="bottom" constant="30" id="u6R-rO-gNW"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="RrX-Ol-vho" secondAttribute="bottom" constant="8" id="ukZ-kp-Elp"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="RrX-Ol-vho" secondAttribute="trailing" constant="60" id="wpP-Ab-X9e"/>
+                            <constraint firstItem="pmk-pF-Lk4" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="26" id="xXY-Jf-Lkn"/>
                             <constraint firstItem="kMe-b0-d39" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="zT7-od-D5y"/>
                         </constraints>
                     </view>
@@ -570,6 +591,7 @@ Build: [unknown]</string>
                         <outlet property="darkModeSwitch" destination="RrX-Ol-vho" id="dF2-iX-Gco"/>
                         <outlet property="hideArtcleHeaderSwitch" destination="COa-ig-fWj" id="X8E-u4-OcZ"/>
                         <outlet property="modeControl" destination="aKr-SD-OJK" id="DcC-wq-pGd"/>
+                        <outlet property="readOnlyModeControl" destination="VV8-wS-Oem" id="OS2-he-UsH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D4v-oL-etS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

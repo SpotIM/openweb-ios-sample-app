@@ -126,6 +126,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         return model.dataSource.communityQuestion
     }
     
+    internal func isReadOnlyModeEnabled() -> Bool {
+        let readOnlyMode = model.dataSource.articleMetadata.readOnlyMode
+        return
+            (readOnlyMode == .default && model.dataSource.isReadOnly) ||
+            readOnlyMode == .enable
+    }
+    
     private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
         var htmlString = communityGuidelinesTitle.value
         
@@ -506,7 +513,8 @@ extension SPBaseConversationViewController: UITableViewDataSource {
                 commentCell.setup(with: data,
                                   shouldShowHeader: indexPath.section != 0,
                                   minimumVisibleReplies: model.dataSource.minVisibleReplies,
-                                  lineLimit: messageLineLimit)
+                                  lineLimit: messageLineLimit,
+                                  isReadOnlyMode: isReadOnlyModeEnabled())
             }
             commentCell.delegate = self
 
@@ -517,7 +525,7 @@ extension SPBaseConversationViewController: UITableViewDataSource {
                                                                   for: indexPath) as? SPReplyCell else {
                                                                     return UITableViewCell()
             }
-            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit)
+            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled())
             commentCell.delegate = self
             
             return commentCell
@@ -618,12 +626,13 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
     @objc
     func dataSource(didChangeRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? SPReplyCell {
-            cell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit)
+            cell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled())
         } else if let cell = tableView.cellForRow(at: indexPath) as? SPCommentCell {
             cell.setup(with: model.dataSource.cellData(for: indexPath),
                        shouldShowHeader: indexPath.section != 0,
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
-                       lineLimit: messageLineLimit)
+                       lineLimit: messageLineLimit,
+                       isReadOnlyMode: isReadOnlyModeEnabled())
         }
     }
 
