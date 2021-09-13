@@ -117,7 +117,7 @@ public class SpotIm {
     public static var displayArticleHeader: Bool = true
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
-    internal static var buttonOnlyMode: SpotImButtonOnlyMode = .disable
+    public static var buttonOnlyMode: SpotImButtonOnlyMode = .disable
     
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
     
