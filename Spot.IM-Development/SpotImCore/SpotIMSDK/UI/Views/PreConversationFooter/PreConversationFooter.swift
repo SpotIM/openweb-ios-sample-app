@@ -90,12 +90,12 @@ internal final class SPPreConversationFooter: BaseView {
         separatorView.isHidden = false
     }
     
-    internal func set(buttonOnlyMode: Bool) {
+    func set(buttonOnlyMode: Bool) {
         self.buttonOnlyMode = buttonOnlyMode
         setViewsAccordingToButtonOnlyMode()
     }
     
-    internal func set(commentsCount: String?) {
+    func set(commentsCount: String?) {
         showMoreCommentsButton.setCommentsCount(commentsCount: commentsCount)
         setViewsAccordingToButtonOnlyMode()
     }

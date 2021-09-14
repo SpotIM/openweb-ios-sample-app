@@ -368,6 +368,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                 
                 if !self.isButtonOnlyModeEnabled {
                     self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
+                    if (self.isReadOnlyModeEnabled()) {
+                        self.whatYouThinkView.setReadOnlyMode(isPreConversation: true)
+                    }
                     self.updateWhatYouThinkView()
                     self.updateTableViewData()
                 }
@@ -451,7 +454,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             cell.setup(with: viewModel,
                        shouldShowHeader: indexPath.section != 0,
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
-                       lineLimit: messageLineLimit)
+                       lineLimit: messageLineLimit,
+                       isReadOnlyMode: isReadOnlyModeEnabled())
         }
     }
     
