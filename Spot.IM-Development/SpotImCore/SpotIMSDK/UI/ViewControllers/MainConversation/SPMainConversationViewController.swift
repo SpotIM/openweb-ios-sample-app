@@ -516,6 +516,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         } else {
             bottomPadding = 0
         }
+        if (isReadOnlyModeEnabled()) {
+            footer.setReadOnlyMode()
+        }
         footer.layout {
             footerHeightConstraint = $0.height.equal(to: 80.0 + bottomPadding)
             $0.trailing.equal(to: view.trailingAnchor)
