@@ -11,7 +11,6 @@ import GoogleMobileAds
 import SpotImCore
 
 final class GoogleAdsProvider: NSObject, AdsProvider {
-    let bannerView: BaseView = .init()
     weak var bannerDelegate: AdsProviderBannerDelegate?
     weak var interstitialDelegate: AdsProviderInterstitialDelegate?
     
@@ -100,14 +99,9 @@ extension GoogleAdsProvider: GADFullScreenContentDelegate {
 }
 
 extension GoogleAdsProvider: GADBannerViewDelegate {
+    
     func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        self.bannerView.addSubview(bannerView)
-        bannerView.centerXAnchor.constraint(equalTo: self.bannerView.centerXAnchor).isActive = true
-        bannerView.topAnchor.constraint(equalTo: self.bannerView.topAnchor).isActive = true
-        bannerView.bottomAnchor.constraint(equalTo: self.bannerView.bottomAnchor).isActive = true
-        
-        bannerDelegate?.bannerLoaded(adBannerSize: bannerView.adSize.size)
+        bannerDelegate?.bannerLoaded(bannerView: bannerView, adBannerSize: bannerView.adSize.size, adUnitID: bannerView.adUnitID ?? "")
     }
     
     func bannerView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: Error) {

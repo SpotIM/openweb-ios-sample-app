@@ -132,8 +132,7 @@ final class SPMainConversationFooterView: BaseView {
         bannerContainerView.addSubview(bannerView)
         bannerView.layout {
             $0.height.equal(to: height)
-            $0.leading.equal(to: bannerContainerView.leadingAnchor)
-            $0.trailing.equal(to: bannerContainerView.trailingAnchor)
+            $0.centerX.equal(to: bannerContainerView.centerXAnchor)
             $0.bottom.equal(to: bannerContainerView.bottomAnchor)
         }
         bannerContainerHeight?.constant = height + 16.0

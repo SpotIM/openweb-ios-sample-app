@@ -221,7 +221,7 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     }
     
     func shouldDisplayLoginPromptForGuests() -> Bool {
-        return true
+        return spotId == "sp_mobileGuest"
     }
 }
 
@@ -249,6 +249,14 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
             break
         case .sayControlInMainConversation(let labelContainer, let label):
             label.textColor = isDarkMode ? UIColor.blue : UIColor.red
+            break
+        case .showCommentsButton(let button):
+            button.setTitleColor(isDarkMode ? UIColor.blue : UIColor.red, for: .normal)
+            button.setTitle("comments " + (button.getCommentsCount() ?? ""), for: .normal)
+            break
+        case .preConversationHeader(let titleLabel, let counterLabel):
+            titleLabel.text = "Comments"
+            counterLabel.isHidden = true
             break
         default:
             break

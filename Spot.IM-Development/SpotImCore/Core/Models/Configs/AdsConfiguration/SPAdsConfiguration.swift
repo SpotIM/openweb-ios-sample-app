@@ -19,6 +19,7 @@ struct SPAdsConfiguration: Decodable {
 enum AdType: String, Encodable {
     case banner = "sdk_banner"
     case interstitial = "sdk_interstitial"
+    case fullConversationBanner = "full_conv_sdk"
 }
 
 struct SPAdsConfigurationTag: Decodable {

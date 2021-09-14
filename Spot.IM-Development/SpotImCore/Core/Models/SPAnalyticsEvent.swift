@@ -56,6 +56,7 @@ internal enum SPAnalyticsEvent: Equatable {
     case commentRankDownButtonClicked(messageId: String, relatedMessageId: String?)
     case commentRankUpButtonUndo(messageId: String, relatedMessageId: String?)
     case commentRankDownButtonUndo(messageId: String, relatedMessageId: String?)
+    case fullConversationAdCloseClicked
 
     var kebabValue: String {
         switch self {
@@ -121,6 +122,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "comment-rank-up-button-undo"
         case .commentRankDownButtonUndo:
             return "comment-rank-down-button-undo"
+        case .fullConversationAdCloseClicked:
+            return "full-conversation-ad-close-clicked"
         }
     }
     
@@ -188,6 +191,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .commentRankUpButtonUndo
         case .commentRankDownButtonUndo:
             return .commentRankDownButtonUndo
+        case .fullConversationAdCloseClicked:
+            return .fullConversationAdCloseClicked
         }
     }
     
@@ -196,7 +201,7 @@ internal enum SPAnalyticsEvent: Equatable {
         switch self {
         case .loaded, .viewed, .mainViewed, .messageContextMenuClicked, .userProfileClicked, .myProfileClicked,
              .loginClicked, .reading, .loadMoreRepliesClicked, .hideMoreRepliesClicked, .appInit, .appOpened, .appClosed,
-             .sortByOpened, .sortByClicked, .createMessageClicked, .backClicked, .loadMoreComments, .engineStatus:
+             .sortByOpened, .sortByClicked, .createMessageClicked, .backClicked, .loadMoreComments, .engineStatus, .fullConversationAdCloseClicked:
             return true
         default:
             return false
