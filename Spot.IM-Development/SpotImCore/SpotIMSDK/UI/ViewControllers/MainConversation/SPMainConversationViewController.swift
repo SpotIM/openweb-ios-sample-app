@@ -33,6 +33,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
     private var typingIndicationView: TotalTypingIndicationView?
+    
+    private var bannerView: UIView?
 
     internal override var screenTargetType: SPAnScreenTargetType {
         return .main
@@ -149,6 +151,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.updateColorsAccordingToStyle()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if self.isMovingFromParent {
+            self.removeBannerFromConversation()
+        }
     }
 
     func updateLoginPromptVisibily() {
@@ -477,10 +486,17 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             guard let adsId = tag.code else { break }
             switch tag.adType {
             case .banner:
-                if model.adsGroup().mainConversationBannerEnabled() {
+                if model.adsGroup().mainConversationBannerInFooterEnabled() {
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
                     adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small])
+                }
+                break
+            case .fullConversationBanner:
+                if model.adsGroup().mainConversationBannerEnabled() {
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)
+                    SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
+                    adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.large])
                 }
             default:
                 break
@@ -560,6 +576,15 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         tableHeader.setImage(with: URL(string: model.dataSource.articleMetadata.thumbnailUrl))
         tableHeader.setTitle(model.dataSource.articleMetadata.title)
     }
+    
+    private func removeBannerFromConversation() {
+        if model.dataSource.shouldShowBanner {
+            tableView.beginUpdates()
+            model.dataSource.shouldShowBanner = false
+            tableView.deleteSections(IndexSet(integer: model.dataSource.isLoading ? 1 : 0), with: .none)
+            tableView.endUpdates()
+        }
+    }
 
     override func configureEmptyStateView() {
         super.configureEmptyStateView()
@@ -590,12 +615,43 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     override func isLastSection(with section: Int) -> Bool {
         return model.dataSource.numberOfSections() == section + 1
     }
+    
+    override func heightForRow(at indexPath: IndexPath) -> CGFloat {
+        if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
+            return 280.0
+        } else {
+            return super.heightForRow(at: indexPath)
+        }
+    }
 }
 
 extension SPMainConversationViewController { // UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
+            let identifier = String(describing: SPAdBannerCell.self)
+            guard let adBannerCell = tableView.dequeueReusableCell(withIdentifier: identifier,
+                                                                 for: indexPath) as? SPAdBannerCell,
+                  let bannerView = self.bannerView else {
+                                                                    return UITableViewCell()
+            }
+            adBannerCell.updateBannerView(bannerView, height: 250.0)
+            adBannerCell.delegate = self
+
+            return adBannerCell
+        } else {
+            return super.tableView(tableView, cellForRowAt: indexPath)
+        }
+    }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
+            if let adBannerCell = cell as? SPAdBannerCell {
+                adBannerCell.updateColorsAccordingToStyle()
+            }
+        } else {
+            super.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        }
         loadNextPageIfNeeded(forRowAt: indexPath)
     }
 
@@ -624,6 +680,23 @@ extension SPMainConversationViewController { // UITableViewDelegate
         if !decelerate {
             handleFinalHeaderHeightUpdate(with: scrollView.contentOffset)
         }
+    }
+}
+
+extension SPMainConversationViewController { // UITableViewDataSource
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return model.dataSource.numberOfRows(in: section)
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return model.dataSource.numberOfSections()
+    }
+}
+
+extension SPMainConversationViewController: SPAdBannerCellDelegate {
+    func hideBanner() {
+        SPAnalyticsHolder.default.log(event: .fullConversationAdCloseClicked, source: .conversation)
+        removeBannerFromConversation()
     }
 }
 
@@ -772,13 +845,28 @@ extension SPMainConversationViewController { // Article header scrolling logic
 }
 
 extension SPMainConversationViewController: AdsProviderBannerDelegate {
-    func bannerLoaded(adBannerSize: CGSize) {
-        let bannerView = adsProvider.bannerView
-
+    func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
+        guard navigationController?.topViewController is SPMainConversationViewController else {
+            return
+        }
+        
+//        preparation code for banner in the footer view -
+//        need to use adUnitID to handle different banners.
+        
+//        footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
+//        footer.updateBannerView(bannerView, height: adBannerSize.height)
+        
+        self.bannerView = bannerView
+        
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
-        footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
-        footer.updateBannerView(bannerView, height: adBannerSize.height)
+        
+        if !self.model.dataSource.shouldShowBanner && !self.model.dataSource.isLoading {
+            tableView.beginUpdates()
+            self.model.dataSource.shouldShowBanner = true
+            tableView.insertSections(IndexSet(integer: 0), with: .top)
+            tableView.endUpdates()
+        }
     }
 
     func bannerFailedToLoad(error: Error) {

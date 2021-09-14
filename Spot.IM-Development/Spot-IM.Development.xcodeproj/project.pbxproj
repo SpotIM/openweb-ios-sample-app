@@ -40,6 +40,8 @@
 		16A12A8A2608E49500A7B3F6 /* String+SPExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */; };
 		16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */; };
 		16A62B6826662F6C00DFE9B7 /* CustomUIDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A62B6726662F6C00DFE9B7 /* CustomUIDelegate.swift */; };
+		16D7F55026CE996800A06693 /* SPAdBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */; };
+		16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55226D282E100A06693 /* SPAdBannerView.swift */; };
 		16D7F55526D5084C00A06693 /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */; };
 		182BE3B9B67AB394B8892E1C /* libPods-Shared-SpotImCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */; };
 		24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24000A34268AEADD004C2A78 /* CommentMediaView.swift */; };
@@ -48,6 +50,7 @@
 		2421B8FD2670A69200B0C9FF /* SPProfileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421B8FC2670A69200B0C9FF /* SPProfileRequest.swift */; };
 		2421B8FF2670ACD400B0C9FF /* SPProfileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421B8FE2670ACD400B0C9FF /* SPProfileProvider.swift */; };
 		2440DD0626A6B01300001462 /* SPEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2440DD0526A6B01300001462 /* SPEventType.swift */; };
+		2440DD0826A98DED00001462 /* SPShowCommentsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2440DD0726A98DEC00001462 /* SPShowCommentsButton.swift */; };
 		244FD0A426661A3300BFBC8F /* SPCommunityQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244FD0A326661A3300BFBC8F /* SPCommunityQuestionView.swift */; };
 		2459B8772637FA3F006A0CF0 /* gifWebViewTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */; };
 		2459B87F263823A8006A0CF0 /* SPBaseCommentCreationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2459B87E263823A8006A0CF0 /* SPBaseCommentCreationModel.swift */; };
@@ -369,7 +372,6 @@
 		6D85E4AA24150B8A000265D3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */; };
 		6D85E4AB24150B8A000265D3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4416C652237ABDE700D3F7B9 /* Main.storyboard */; };
 		6D85E4AD24150B8A000265D3 /* SpotImCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44C8788D23608BC100E0E662 /* SpotImCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6D85E4B92418E783000265D3 /* PreConversationBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D85E4B82418E783000265D3 /* PreConversationBannerView.swift */; };
 		6DA75C6C238D313600FBDF19 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */; };
 		6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
@@ -616,6 +618,8 @@
 		16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SPExtentions.swift"; sourceTree = "<group>"; };
 		16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityGuidelinesTitle.swift; sourceTree = "<group>"; };
 		16A62B6726662F6C00DFE9B7 /* CustomUIDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIDelegate.swift; sourceTree = "<group>"; };
+		16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerCell.swift; sourceTree = "<group>"; };
+		16D7F55226D282E100A06693 /* SPAdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerView.swift; sourceTree = "<group>"; };
 		16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
 		1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-Focus.de.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
@@ -624,6 +628,7 @@
 		2421B8FC2670A69200B0C9FF /* SPProfileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPProfileRequest.swift; sourceTree = "<group>"; };
 		2421B8FE2670ACD400B0C9FF /* SPProfileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPProfileProvider.swift; sourceTree = "<group>"; };
 		2440DD0526A6B01300001462 /* SPEventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPEventType.swift; sourceTree = "<group>"; };
+		2440DD0726A98DEC00001462 /* SPShowCommentsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPShowCommentsButton.swift; sourceTree = "<group>"; };
 		244FD0A326661A3300BFBC8F /* SPCommunityQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommunityQuestionView.swift; sourceTree = "<group>"; };
 		2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = gifWebViewTemplate.html; sourceTree = "<group>"; };
 		2459B87E263823A8006A0CF0 /* SPBaseCommentCreationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPBaseCommentCreationModel.swift; sourceTree = "<group>"; };
@@ -835,7 +840,6 @@
 		6D85E45D2414E846000265D3 /* AOL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AOL.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D85E4892414FA4B000265D3 /* Express.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Express.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D85E4B524150B8A000265D3 /* SkySports.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkySports.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D85E4B82418E783000265D3 /* PreConversationBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreConversationBannerView.swift; sourceTree = "<group>"; };
 		6D92BDEF24C98258005E3683 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6D92BDF024C988B8005E3683 /* ar-001 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ar-001"; path = "ar-001.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6DA75C8E238D313600FBDF19 /* YentSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YentSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1012,6 +1016,14 @@
 			path = CommunityGuidelinesView;
 			sourceTree = "<group>";
 		};
+		16D7F55126D282B900A06693 /* AdBannerView */ = {
+			isa = PBXGroup;
+			children = (
+				16D7F55226D282E100A06693 /* SPAdBannerView.swift */,
+			);
+			path = AdBannerView;
+			sourceTree = "<group>";
+		};
 		244FD0A226661A0D00BFBC8F /* CommunityQuestionView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1142,6 +1154,7 @@
 				44F247A62379B75300B36F12 /* BaseTableView.swift */,
 				5DBD33E22397F98F003DE0BF /* BaseStackView.swift */,
 				5DBD33E623980D6A003DE0BF /* BaseTextField.swift */,
+				2440DD0726A98DEC00001462 /* SPShowCommentsButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1247,7 +1260,7 @@
 				1656EEFC2636AE0C000043A2 /* CommentLabelsContainerView */,
 				E6A1EC74263169C3006E1517 /* LoginPromptView */,
 				16A12A6B2608DCB100A7B3F6 /* CommunityGuidelinesView */,
-				6D85E4B72418E766000265D3 /* PreConversationBanner */,
+				16D7F55126D282B900A06693 /* AdBannerView */,
 				5DB97790236B257000E9D547 /* SPUsernameView */,
 				440E0DB1237D7E0F00757554 /* TypingIndicationView */,
 				445417DB23685144001D0ED0 /* SPMainConversationFooterView.swift */,
@@ -1279,6 +1292,7 @@
 				445417E123685144001D0ED0 /* SPBaseTableViewCell.swift */,
 				445417E223685144001D0ED0 /* SPReplyCell.swift */,
 				445417E323685144001D0ED0 /* SPConversationSectionHeaderFooterView.swift */,
+				16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */,
 				445417E423685144001D0ED0 /* CommentCellViews */,
 			);
 			path = TableViewCells;
@@ -1767,14 +1781,6 @@
 				6D4E56A9239F9D5C005B79B6 /* OpenSansHebrew-Regular.ttf */,
 			);
 			path = OpenSansHebrew;
-			sourceTree = "<group>";
-		};
-		6D85E4B72418E766000265D3 /* PreConversationBanner */ = {
-			isa = PBXGroup;
-			children = (
-				6D85E4B82418E783000265D3 /* PreConversationBannerView.swift */,
-			);
-			path = PreConversationBanner;
 			sourceTree = "<group>";
 		};
 		6DF3A6F62386CCCE00419B30 /* TableViewFooterTesterViewController */ = {
@@ -2637,7 +2643,6 @@
 				5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */,
 				4454189523685154001D0ED0 /* SPConfigurationSDKStatus.swift in Sources */,
 				4454189023685154001D0ED0 /* SPNetworkError.swift in Sources */,
-				6D85E4B92418E783000265D3 /* PreConversationBannerView.swift in Sources */,
 				4454189C23685154001D0ED0 /* SPConversationExtraDataRM.swift in Sources */,
 				445418B823685154001D0ED0 /* SPUserSession.swift in Sources */,
 				4454182023685144001D0ED0 /* PreConversationFooter.swift in Sources */,
@@ -2668,6 +2673,7 @@
 				4454180D23685144001D0ED0 /* SPBaseCommentCreationViewController.swift in Sources */,
 				5DB97792236B25A400E9D547 /* SPNameInputView.swift in Sources */,
 				4454181A23685144001D0ED0 /* SPConversationSectionHeaderFooterView.swift in Sources */,
+				16D7F55026CE996800A06693 /* SPAdBannerCell.swift in Sources */,
 				4454180A23685144001D0ED0 /* SPCommentCreationViewController.swift in Sources */,
 				445418AB23685154001D0ED0 /* Int+SPExtensions.swift in Sources */,
 				445418A923685154001D0ED0 /* UIFont+Extensions.swift in Sources */,
@@ -2676,9 +2682,11 @@
 				44689B7D237414850024EFC1 /* SPABData.swift in Sources */,
 				4454188223685154001D0ED0 /* SPFailureReporter.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
+				16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */,
 				445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */,
 				4454181B23685144001D0ED0 /* CommentActionsView.swift in Sources */,
 				445417FE23685144001D0ED0 /* NSAttributedString+Extensions.swift in Sources */,
+				2440DD0826A98DED00001462 /* SPShowCommentsButton.swift in Sources */,
 				16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */,
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
 				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
@@ -3087,7 +3095,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = NO;
@@ -3128,7 +3136,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = NO;
@@ -3288,7 +3296,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3318,7 +3326,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -3345,7 +3353,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -3370,7 +3378,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -3399,7 +3407,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3427,7 +3435,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.focus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = Focus.de;
@@ -3457,7 +3465,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.market.watch;
 				PRODUCT_NAME = "Market Watch";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3485,7 +3493,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.market.watch;
 				PRODUCT_NAME = "Market Watch";
 				PROVISIONING_PROFILE_SPECIFIER = "Market Watch";
@@ -3532,7 +3540,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3559,7 +3567,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.aol;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "AOL demo app";
@@ -3588,7 +3596,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3615,7 +3623,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Express demo app";
@@ -3644,7 +3652,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3671,7 +3679,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.sky.sports;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Sky Sports";
@@ -3701,7 +3709,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ynet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3729,7 +3737,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.ynet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3759,7 +3767,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.dailycaller;
 				PRODUCT_NAME = DailyCallerDemo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3787,7 +3795,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Demo;
-				MARKETING_VERSION = 1.5.13;
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.dailycaller;
 				PRODUCT_NAME = DailyCallerDemo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
