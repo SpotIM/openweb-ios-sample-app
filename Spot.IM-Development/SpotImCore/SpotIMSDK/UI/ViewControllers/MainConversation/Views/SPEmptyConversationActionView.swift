@@ -10,12 +10,14 @@ import UIKit
 
 struct EmptyActionDataModel {
     
+    typealias Action = (() -> Void)
+    
     let actionMessage: String
     let actionIcon: UIImage
-    let actionButtonTitle: String
-    let action: () -> Void
+    let actionButtonTitle: String?
+    let action: Action?
     
-    init(actionMessage: String, actionIcon: UIImage, actionButtonTitle: String, action: @escaping () -> Void) {
+    init(actionMessage: String, actionIcon: UIImage, actionButtonTitle: String? = nil, action: Action? = nil) {
         self.actionMessage = actionMessage
         self.actionIcon = actionIcon
         self.actionButtonTitle = actionButtonTitle
@@ -47,7 +49,12 @@ final class SPEmptyConversationActionView: BaseView {
         action = actionModel.action
         iconView.image = actionModel.actionIcon
         messageLabel.text = actionModel.actionMessage
-        actionButton.setTitle(actionModel.actionButtonTitle, for: .normal)
+        if let actionButtonTitle = actionModel.actionButtonTitle {
+            actionButton.setTitle(actionButtonTitle, for: .normal)
+        } else {
+            actionButton.isHidden = true
+        }
+        
         updateColorsAccordingToStyle()
     }
     
