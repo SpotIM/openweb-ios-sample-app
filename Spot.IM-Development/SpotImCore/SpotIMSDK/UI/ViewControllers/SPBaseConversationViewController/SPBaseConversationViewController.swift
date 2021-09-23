@@ -226,17 +226,29 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     
     internal func presentEmptyCommentsStateView() {
         configureEmptyStateView()
-        let createCommentAction = { [weak self] in
-            guard let self = self, let delegate = self.delegate else { return }
-            self.logCreationOpen(with: .comment)
-            delegate.createComment(with: self.model)
+        let actionMessage: String
+        let actionIcon: UIImage
+        var actionButtonTitle: String? = nil
+        var action: EmptyActionDataModel.Action? = nil
+        if (isReadOnlyModeEnabled()) {
+            actionMessage = LocalizationManager.localizedString(key: "Commenting on this article has ended")
+            actionIcon = UIImage(spNamed: "emptyCommentsReadOnlyIcon")!
+        } else {
+            actionMessage = LocalizationManager.localizedString(key: "Be the first to comment on this article.")
+            actionIcon = UIImage(spNamed: "emptyCommentsIcon")!
+            actionButtonTitle = LocalizationManager.localizedString(key: "Write a Comment")
+            action = { [weak self] in
+                guard let self = self, let delegate = self.delegate else { return }
+                self.logCreationOpen(with: .comment)
+                delegate.createComment(with: self.model)
+            }
         }
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
-                actionMessage: LocalizationManager.localizedString(key: "Be the first to comment on this article."),
-                actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
-                actionButtonTitle: LocalizationManager.localizedString(key: "Write a Comment"),
-                action: createCommentAction
+                actionMessage: actionMessage,
+                actionIcon: actionIcon,
+                actionButtonTitle: actionButtonTitle,
+                action: action
             )
         )
     }
