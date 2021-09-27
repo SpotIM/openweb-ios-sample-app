@@ -82,7 +82,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
     }
 }
 
-public struct SPEventInfo {
+public struct SPEventInfo: Codable {
     public let eventType: String
     public let source: String
     public let isRegistered: Bool
