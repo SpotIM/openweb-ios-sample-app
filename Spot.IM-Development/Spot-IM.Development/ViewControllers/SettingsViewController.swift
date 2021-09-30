@@ -18,6 +18,7 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var modeControl: UISegmentedControl!
     @IBOutlet weak var buttonOnlyModeControl: UISegmentedControl!
     @IBOutlet weak var readOnlyModeControl: UISegmentedControl!
+    @IBOutlet weak var enableCustomNavigationTitleSwitch: UISwitch!
     
     private var navBarHiddenOldValue = false
     var isCustomDarkModeEnabled: Bool {
@@ -33,6 +34,11 @@ class SettingsViewController: UIViewController {
     var isCreateCommentNewDesignEnabled: Bool {
         get { SpotIm.enableCreateCommentNewDesign }
         set { SpotIm.enableCreateCommentNewDesign = newValue }
+    }
+    
+    var isCustomNavigationTitleEnabled: Bool {
+        get { SpotIm.enableCustomNavigationItemTitle }
+        set { SpotIm.enableCustomNavigationItemTitle = newValue }
     }
     
     var readOnlyModeIndex: Int {
@@ -88,6 +94,7 @@ class SettingsViewController: UIViewController {
         createCommentNewDesignSwitch.isOn = isCreateCommentNewDesignEnabled
         buttonOnlyModeControl.selectedSegmentIndex = buttonOnlyModeIndex
         readOnlyModeControl.selectedSegmentIndex = readOnlyModeIndex
+        enableCustomNavigationTitleSwitch.isOn = isCustomNavigationTitleEnabled
         
         modeControl.isHidden = !isCustomDarkModeEnabled
         modeControl.selectedSegmentIndex = interfaceStyle
@@ -122,6 +129,11 @@ class SettingsViewController: UIViewController {
     
     @IBAction func changeReadOnlyMode(_ sender: UISegmentedControl) {
         readOnlyModeIndex = sender.selectedSegmentIndex
+    }
+    
+    
+    @IBAction func switchEnableCustomNavigationTitle(_ sender: UISwitch) {
+        isCustomNavigationTitleEnabled = sender.isOn
     }
     
 
