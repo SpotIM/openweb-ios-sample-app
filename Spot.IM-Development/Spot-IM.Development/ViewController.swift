@@ -56,14 +56,28 @@ class ViewController: UIViewController {
     private func setupNavigationBar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
 
-        navigationController?.navigationBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.titleTextAttributes = [
+        
+        let navigationBarBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        let navigationTitleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
             NSAttributedString.Key.foregroundColor: UIColor.black
         ]
+        
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = navigationBarBackgroundColor
+            appearance.titleTextAttributes = navigationTitleTextAttributes
+
+            navigationController?.navigationBar.standardAppearance = appearance;
+            navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+        } else {
+            navigationController?.navigationBar.backgroundColor = navigationBarBackgroundColor
+            navigationController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+        }
     }
 
     private func fillVersionAndBuildNumber() {

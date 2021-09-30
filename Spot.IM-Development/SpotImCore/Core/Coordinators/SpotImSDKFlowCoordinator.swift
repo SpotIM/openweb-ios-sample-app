@@ -348,8 +348,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
         
-        let navigationItemTextView = getNavigationItemTitleTextView(with: LocalizationManager.localizedString(key: "Conversation"))
-        controller.navigationItem.titleView = navigationItemTextView
+        let navigationItemTitleText = LocalizationManager.localizedString(key: "Conversation")
+        if SpotIm.enableCustomNavigationItemTitle {
+            let navigationItemTextView = getNavigationItemTitleTextView(with: navigationItemTitleText)
+            controller.navigationItem.titleView = navigationItemTextView
+        } else {
+            controller.title = navigationItemTitleText
+        }
         
         Logger.verbose("FirstComment: localCommentReplayDidCreate SET")
         localCommentReplyDidCreate = { comment in
@@ -595,6 +600,7 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
         customUIDelegate?.customizeView(view: .communityGuidelines(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
     func customizeNavigationItemTitle(textView: UITextView) {
+        guard SpotIm.enableCustomNavigationItemTitle else { return }
         customUIDelegate?.customizeView(view: .navigationItemTitle(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
     
