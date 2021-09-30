@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -500,6 +500,11 @@ Build: [unknown]</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable custom navigation title" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5va-Us-qiw">
+                                <rect key="frame" x="31" y="314" width="193.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="aKr-SD-OJK">
                                 <rect key="frame" x="60" y="615" width="255" height="32"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -571,10 +576,17 @@ Build: [unknown]</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p9i-bB-4NE">
+                                <rect key="frame" x="266" y="307" width="51" height="31"/>
+                                <connections>
+                                    <action selector="switchEnableCustomNavigationTitle:" destination="afI-iB-Nmt" eventType="valueChanged" id="KDI-bU-FPu"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="pIh-k2-j8N"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="5va-Us-qiw" firstAttribute="top" secondItem="VV8-wS-Oem" secondAttribute="bottom" constant="24" id="0gy-jE-M0d"/>
                             <constraint firstItem="Fki-wM-TQv" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="30" id="1QX-Pv-Y6q"/>
                             <constraint firstItem="bTW-Wt-zDR" firstAttribute="centerX" secondItem="pIh-k2-j8N" secondAttribute="centerX" id="8cf-uB-SEj"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="bottom" secondItem="aKr-SD-OJK" secondAttribute="bottom" constant="21" id="8mJ-Rf-Yvc"/>
@@ -593,9 +605,11 @@ Build: [unknown]</string>
                             <constraint firstItem="COa-ig-fWj" firstAttribute="centerY" secondItem="Fki-wM-TQv" secondAttribute="centerY" id="XW5-xw-L7s"/>
                             <constraint firstItem="bvT-bO-ucE" firstAttribute="top" secondItem="Fki-wM-TQv" secondAttribute="bottom" constant="31" id="Xlc-t3-iwr"/>
                             <constraint firstItem="mTs-Sn-XWm" firstAttribute="top" secondItem="pIh-k2-j8N" secondAttribute="top" constant="21" id="ckz-A8-QEs"/>
+                            <constraint firstItem="p9i-bB-4NE" firstAttribute="top" secondItem="VV8-wS-Oem" secondAttribute="bottom" constant="17" id="dd0-Uo-vAT"/>
                             <constraint firstItem="VV8-wS-Oem" firstAttribute="top" secondItem="ow6-Py-boU" secondAttribute="bottom" constant="15" id="fV0-Bl-7gv"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="VV8-wS-Oem" secondAttribute="trailing" constant="16" id="fzu-rs-3CY"/>
                             <constraint firstItem="sGs-Ui-CkE" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="31" id="gNW-1u-Zw5"/>
+                            <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="p9i-bB-4NE" secondAttribute="trailing" constant="60" id="iK8-VU-oo5"/>
                             <constraint firstItem="sGs-Ui-CkE" firstAttribute="top" secondItem="bvT-bO-ucE" secondAttribute="bottom" constant="34" id="kbo-zc-7SZ"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="ow6-Py-boU" secondAttribute="trailing" constant="16" id="l2Z-Bl-u19"/>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="kMe-b0-d39" secondAttribute="bottom" constant="16" id="lPA-MJ-6K0"/>
@@ -603,6 +617,7 @@ Build: [unknown]</string>
                             <constraint firstItem="aKr-SD-OJK" firstAttribute="top" secondItem="RrX-Ol-vho" secondAttribute="bottom" constant="8" id="ukZ-kp-Elp"/>
                             <constraint firstItem="pIh-k2-j8N" firstAttribute="trailing" secondItem="RrX-Ol-vho" secondAttribute="trailing" constant="60" id="wpP-Ab-X9e"/>
                             <constraint firstItem="ow6-Py-boU" firstAttribute="leading" secondItem="sGs-Ui-CkE" secondAttribute="trailing" constant="8" symbolic="YES" id="wu4-XV-I7v"/>
+                            <constraint firstItem="5va-Us-qiw" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="31" id="yH2-A4-1oi"/>
                             <constraint firstItem="kMe-b0-d39" firstAttribute="leading" secondItem="pIh-k2-j8N" secondAttribute="leading" constant="60" id="zT7-od-D5y"/>
                         </constraints>
                     </view>
@@ -611,6 +626,7 @@ Build: [unknown]</string>
                         <outlet property="buttonOnlyModeControl" destination="ow6-Py-boU" id="pr3-bk-Giv"/>
                         <outlet property="createCommentNewDesignSwitch" destination="oFl-re-kEH" id="9LE-GL-k10"/>
                         <outlet property="darkModeSwitch" destination="RrX-Ol-vho" id="dF2-iX-Gco"/>
+                        <outlet property="enableCustomNavigationTitleSwitch" destination="p9i-bB-4NE" id="Dag-oP-kcg"/>
                         <outlet property="hideArtcleHeaderSwitch" destination="COa-ig-fWj" id="X8E-u4-OcZ"/>
                         <outlet property="modeControl" destination="aKr-SD-OJK" id="DcC-wq-pGd"/>
                         <outlet property="readOnlyModeControl" destination="VV8-wS-Oem" id="OS2-he-UsH"/>
