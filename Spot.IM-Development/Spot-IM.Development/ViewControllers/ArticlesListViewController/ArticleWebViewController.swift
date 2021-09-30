@@ -270,6 +270,11 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
                 value: UIFont.systemFont(ofSize: 18, weight: .bold),
                 range: NSMakeRange(0,attributedString.length)
             )
+            attributedString.addAttribute(
+                .foregroundColor,
+                value: UIColor.red,
+                range: NSMakeRange(0,attributedString.length)
+            )
             textView.attributedText = attributedString
         }
     }
