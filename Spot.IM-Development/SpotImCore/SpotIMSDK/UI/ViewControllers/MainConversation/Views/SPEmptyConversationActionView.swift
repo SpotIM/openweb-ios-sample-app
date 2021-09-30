@@ -94,6 +94,8 @@ final class SPEmptyConversationActionView: BaseView {
         iconView.layout {
             $0.centerX.equal(to: containerView.centerXAnchor)
             $0.top.equal(to: containerView.topAnchor)
+            $0.height.equal(to: Theme.imageViewHeight)
+            $0.width.equal(to: Theme.imageViewWidth)
         }
     }
     
@@ -151,5 +153,6 @@ private enum Theme {
     static let messageMinHeight: CGFloat = 68.0
     static let actionButtonSideOffset: CGFloat = 20.0
     static let actionButtonCornerRadius: CGFloat = 4
-
+    static let imageViewHeight: CGFloat = 50
+    static let imageViewWidth: CGFloat = 60
 }
