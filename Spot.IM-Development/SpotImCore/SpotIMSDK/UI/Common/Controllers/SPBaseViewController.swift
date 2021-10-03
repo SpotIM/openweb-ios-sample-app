@@ -73,4 +73,11 @@ internal class SPBaseViewController: UIViewController {
         guard #available(iOS 13.0, *), let style = SpotIm.overrideUserInterfaceStyle else { return }
         overrideUserInterfaceStyle = style.nativeValue
     }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil) { _ in
+            SPUIWindow.frame = self.view.window?.frame ?? UIScreen.main.bounds
+        }
+    }
 }

@@ -445,7 +445,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     override func cellDataHeight(for indexPath: IndexPath) -> CGFloat {
-        return model.dataSource.clippedCellData(for: indexPath)?.height(with: messageLineLimit, windowWidth: self.view.window?.frame.width) ?? 0
+        return model.dataSource.clippedCellData(for: indexPath)?.height(with: messageLineLimit) ?? 0
     }
     
     override func dataSource(didChangeRowAt indexPath: IndexPath) {

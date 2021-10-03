@@ -149,7 +149,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     override func viewDidChangeWindowSize() {
         super.viewDidChangeWindowSize()
-        self.resetCollapsableContainerHeightOnChangeWindowSize()
+        self.resetCollapsableContainerHeight()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -261,6 +261,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         }
         commentIdToShowOnOpen = nil
+        
+        self.resetCollapsableContainerHeight()
     }
 
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
@@ -308,7 +310,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     // MARK: - Private Methods
     
-    private func resetCollapsableContainerHeightOnChangeWindowSize() {
+    private func resetCollapsableContainerHeight() {
         guard shouldDisplayCollapsableContainer else { return }
         let isCollapsableContainerVisible = collapsableContainerHeightConstraint?.constant != 0
         
