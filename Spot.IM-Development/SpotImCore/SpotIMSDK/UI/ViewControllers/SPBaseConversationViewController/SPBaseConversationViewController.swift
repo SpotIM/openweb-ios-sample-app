@@ -221,7 +221,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         let isLast = model.dataSource.numberOfRows(in: indexPath.section) == indexPath.row + 1
         let cellData = model.dataSource.cellData(for: indexPath)
         
-        return cellData.height(with: messageLineLimit, windowWidth: self.view.window?.frame.width, isLastInSection: isLast)
+        return cellData.height(with: messageLineLimit, isLastInSection: isLast)
     }
 
     internal func showErrorStateView() {
