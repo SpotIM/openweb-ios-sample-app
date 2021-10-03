@@ -23,7 +23,7 @@ final class SPCommentCreationNewHeaderView: BaseView {
     
     let closeButton: BaseButton = .init()
 
-    private let headerTitleLabel: BaseTextView = .init()
+    private let headerTitleTextView: BaseTextView = .init()
     private let replyingLabel: BaseLabel = .init()
     private let commentAuthorLabel: BaseLabel = .init()
     private let commentLabel: BaseLabel = .init()
@@ -41,8 +41,8 @@ final class SPCommentCreationNewHeaderView: BaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
-        headerTitleLabel.backgroundColor = .spBackground0
-        headerTitleLabel.textColor = .spForeground0
+        headerTitleTextView.backgroundColor = .spBackground0
+        headerTitleTextView.textColor = .spForeground0
         commentAuthorLabel.backgroundColor = .spBackground0
         commentAuthorLabel.textColor = .spForeground1
         closeButton.backgroundColor = .spBackground0
@@ -51,7 +51,7 @@ final class SPCommentCreationNewHeaderView: BaseView {
         separatorView.backgroundColor = .spSeparator2
         closeButton.setImage(UIImage(spNamed: "closeCrossIconNew"), for: .normal)
         
-        delegate?.customizeHeaderTitle(textView: headerTitleLabel)
+        delegate?.customizeHeaderTitle(textView: headerTitleTextView)
     }
     
     func hideCommentText() {
@@ -91,7 +91,7 @@ final class SPCommentCreationNewHeaderView: BaseView {
     }
     
     private func setup() {
-        addSubviews(headerTitleLabel, replyingLabel, commentAuthorLabel, closeButton, commentLabel, separatorView)
+        addSubviews(headerTitleTextView, replyingLabel, commentAuthorLabel, closeButton, commentLabel, separatorView)
         setupHeaderTitle()
         setupReplyingLabel()
         setupCommentAuthorLabel()
@@ -102,10 +102,12 @@ final class SPCommentCreationNewHeaderView: BaseView {
     }
     
     private func setupHeaderTitle() {
-        headerTitleLabel.text = LocalizationManager.localizedString(key: "Add a comment")
-        headerTitleLabel.textAlignment = .center
-        headerTitleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
-        headerTitleLabel.layout {
+        headerTitleTextView.text = LocalizationManager.localizedString(key: "Add a comment")
+        headerTitleTextView.textAlignment = .center
+        headerTitleTextView.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
+        headerTitleTextView.isEditable = false
+        headerTitleTextView.isSelectable = false
+        headerTitleTextView.layout {
             $0.height.equal(to: Theme.headerTitleHeight)
             $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
@@ -116,7 +118,7 @@ final class SPCommentCreationNewHeaderView: BaseView {
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIconNew"), for: .normal)
         closeButton.layout {
-            $0.centerY.equal(to: headerTitleLabel.centerYAnchor)
+            $0.centerY.equal(to: headerTitleTextView.centerYAnchor)
             $0.trailing.equal(to: trailingAnchor, offsetBy: -6.0)
             $0.width.equal(to: 45.0)
             $0.height.equal(to: 45.0)
@@ -125,7 +127,7 @@ final class SPCommentCreationNewHeaderView: BaseView {
     
     private func setupSeparatorView() {
         separatorView.layout {
-            $0.top.equal(to: headerTitleLabel.bottomAnchor)
+            $0.top.equal(to: headerTitleTextView.bottomAnchor)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.equal(to: trailingAnchor)
             $0.height.equal(to: Theme.separatorHeight)
