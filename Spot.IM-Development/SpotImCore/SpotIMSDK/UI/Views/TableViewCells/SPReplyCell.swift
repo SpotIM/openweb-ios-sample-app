@@ -63,7 +63,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 data.commentText ?? "",
                 attributes: attributes(isDeleted: false),
                 clipToLine: lineLimit,
-                width: data.textWidth(windowWidth: windowWidth),
+                width: data.textWidth(),
                 isCollapsed: data.commentTextCollapsed
             )
             replyActionsViewHeightConstraint?.constant = Theme.replyActionsViewHeight
@@ -84,13 +84,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             commentMediaViewHeightConstraint?.constant = 0
             return
         }
-        let windowWidth = self.contentView.window?.frame.width
-        let mediaWidth = dataModel.getMediaWidth(windowWidth: windowWidth)
-        let mediaHeight = dataModel.getMediaHeight(windowWidth: windowWidth)
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaWidth), height: Float(mediaHeight))
+        let mediaSize = dataModel.getMediaSize()
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaSize.width), height: Float(mediaSize.height))
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
-        commentMediaViewWidthConstraint?.constant = mediaWidth
-        commentMediaViewHeightConstraint?.constant = mediaHeight
+        commentMediaViewWidthConstraint?.constant = mediaSize.width
+        commentMediaViewHeightConstraint?.constant = mediaSize.height
     }
     
     // Handle dark mode \ light mode change

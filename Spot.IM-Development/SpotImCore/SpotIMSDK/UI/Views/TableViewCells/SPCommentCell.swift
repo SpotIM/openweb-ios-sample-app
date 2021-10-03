@@ -303,7 +303,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             messageView.setMessage(dataModel.commentText ?? "",
                                    attributes: attributes(isDeleted: false),
                                    clipToLine: clipToLine,
-                                   width: dataModel.textWidth(windowWidth: windowWidth),
+                                   width: dataModel.textWidth(),
                                    isCollapsed: dataModel.commentTextCollapsed)
         }
     }
@@ -315,13 +315,11 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             commentMediaHeightConstraint?.constant = 0
             return
         }
-        let windowWidth = self.contentView.window?.frame.width
-        let mediaWidth = dataModel.getMediaWidth(windowWidth: windowWidth)
-        let mediaHeight = dataModel.getMediaHeight(windowWidth: windowWidth)
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaWidth), height: Float(mediaHeight))
+        let mediaSize = dataModel.getMediaSize()
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaSize.width), height: Float(mediaSize.height))
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
-        commentMediaWidthConstraint?.constant = mediaWidth
-        commentMediaHeightConstraint?.constant = mediaHeight
+        commentMediaWidthConstraint?.constant = mediaSize.width
+        commentMediaHeightConstraint?.constant = mediaSize.height
     }
     
     private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {
