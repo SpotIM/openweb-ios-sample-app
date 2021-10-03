@@ -43,7 +43,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         setupUI()
     }
     
-    func configure(with data: CommentViewModel, lineLimit: Int, isReadOnlyMode: Bool) {
+    func configure(with data: CommentViewModel, lineLimit: Int, isReadOnlyMode: Bool, windowWidth: CGFloat?) {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
         repliesButtonState = data.repliesButtonState
@@ -63,7 +63,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 data.commentText ?? "",
                 attributes: attributes(isDeleted: false),
                 clipToLine: lineLimit,
-                width: data.textWidth(),
+                width: data.textWidth(windowWidth: windowWidth),
                 isCollapsed: data.commentTextCollapsed
             )
             replyActionsViewHeightConstraint?.constant = Theme.replyActionsViewHeight
@@ -84,10 +84,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             commentMediaViewHeightConstraint?.constant = 0
             return
         }
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: dataModel.commentMediaWidth, height: dataModel.commentMediaHeight)
+        let windowWidth = self.contentView.window?.frame.width
+        let mediaWidth = dataModel.getMediaWidth(windowWidth: windowWidth)
+        let mediaHeight = dataModel.getMediaHeight(windowWidth: windowWidth)
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaWidth), height: Float(mediaHeight))
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
-        commentMediaViewWidthConstraint?.constant = CGFloat(dataModel.commentMediaWidth ?? 0)
-        commentMediaViewHeightConstraint?.constant = CGFloat(dataModel.commentMediaHeight ?? 0)
+        commentMediaViewWidthConstraint?.constant = mediaWidth
+        commentMediaViewHeightConstraint?.constant = mediaHeight
     }
     
     // Handle dark mode \ light mode change
