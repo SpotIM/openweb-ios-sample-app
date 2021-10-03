@@ -65,6 +65,17 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+            coordinator.animate(alongsideTransition: nil) { _ in
+                self.viewDidChangeWindowSize()
+            }
+    }
+    
+    func viewDidChangeWindowSize() {
+        self.tableView.reloadData()
+    }
+    
     func didStartSignInFlow() {
         // Override this method in your VC to handle
     }
