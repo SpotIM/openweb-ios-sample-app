@@ -27,8 +27,8 @@ internal struct CommentViewModel {
     var commentLabel: CommentLabel?
     var commentGifUrl: String?
     var commentImage: CommentImage?
-    var commentMediaHeight: Float?
-    var commentMediaWidth: Float?
+    private var commentMediaOriginalHeight: Int?
+    private var commentMediaOriginalWidth: Int?
     
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
@@ -83,12 +83,14 @@ internal struct CommentViewModel {
         
         if let gif = comment.gif {
             commentGifUrl = gif.originalUrl
-            (self.commentMediaHeight, self.commentMediaWidth) = self.calculateMediaSize(mediaHeight: gif.previewHeight, mediaWidth: gif.previewWidth)
+            self.commentMediaOriginalHeight = gif.previewHeight
+            self.commentMediaOriginalWidth = gif.previewWidth
         }
         
         if let image = comment.image, let commentImageURL = commentImageURL {
             commentImage = CommentImage(id: image.imageId, height: image.originalHeight, width: image.originalWidth, imageUrl: commentImageURL)
-            (self.commentMediaHeight, self.commentMediaWidth) = self.calculateMediaSize(mediaHeight: image.originalHeight, mediaWidth: image.originalWidth)
+            self.commentMediaOriginalHeight = image.originalHeight
+            self.commentMediaOriginalWidth = image.originalWidth
         }
         
         
@@ -150,16 +152,20 @@ internal struct CommentViewModel {
         self.replyingToDisplayName = replyingToDisplayName
     }
 
-    func textWidth() -> CGFloat {
+    func textWidth(windowWidth: CGFloat?) -> CGFloat {
+        guard let screenWidth = windowWidth else { return 0 }
         let leadingOffset: CGFloat = depthOffset()
-        let textWidth = UIScreen.main.bounds.width - leadingOffset - Theme.trailingOffset
+        let textWidth = screenWidth - leadingOffset - Theme.trailingOffset
         
         return textWidth
     }
     
-    func calculateMediaSize(mediaHeight: Int, mediaWidth: Int) -> (Float, Float) {
+    private func calculateMediaSize(windowWidth: CGFloat) -> (Float, Float) {
+        guard let mediaHeight = commentMediaOriginalHeight,
+              let mediaWidth = commentMediaOriginalWidth
+        else { return (0,0) } 
         let leadingOffset: CGFloat = depthOffset()
-        let maxWidth = UIScreen.main.bounds.width - leadingOffset - Theme.trailingOffset
+        let maxWidth = windowWidth - leadingOffset - Theme.trailingOffset
         
         // calculate media width according to height ratio
         var height = Theme.commentMediaMaxHeight
@@ -175,8 +181,18 @@ internal struct CommentViewModel {
         return (height, width)
     }
     
-    func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
-        let width = textWidth()
+    func getMediaWidth(windowWidth: CGFloat?) -> CGFloat {
+        guard let windowWidth = windowWidth else { return 0 }
+        return CGFloat(calculateMediaSize(windowWidth: windowWidth).1)
+    }
+    
+    func getMediaHeight(windowWidth: CGFloat?) -> CGFloat {
+        guard let windowWidth = windowWidth else { return 0 }
+        return CGFloat(calculateMediaSize(windowWidth: windowWidth).0)
+    }
+    
+    func height(with lineLimit: Int, windowWidth: CGFloat?, isLastInSection: Bool = false) -> CGFloat {
+        let width = textWidth(windowWidth: windowWidth)
         let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isDeletedOrReported()))
         let clippedMessage = attributedMessage.clippedToLine(
             index: lineLimit,
@@ -187,7 +203,7 @@ internal struct CommentViewModel {
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
         // media extra height includes - media acual heigh + media extra padding
-        let mediaHeight: CGFloat = commentMediaHeight == nil ? 0.0 : CGFloat(commentMediaHeight! + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
+        let mediaHeight = CGFloat(Float(getMediaHeight(windowWidth: windowWidth)) + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
         
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset

@@ -79,7 +79,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         shouldShowHeader: Bool,
         minimumVisibleReplies: Int,
         lineLimit: Int,
-        isReadOnlyMode: Bool
+        isReadOnlyMode: Bool,
+        windowWidth: CGFloat?
     ) {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
@@ -92,7 +93,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
         updateCommentMediaView(with: data)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
-        updateMessageView(with: data, clipToLine: lineLimit)
+        updateMessageView(with: data, clipToLine: lineLimit, windowWidth: windowWidth)
         updateCommentLabelView(with: data)
     }
 
@@ -288,7 +289,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         moreRepliesView.updateView(with: dataModel.repliesButtonState)
     }
 
-    private func updateMessageView(with dataModel: CommentViewModel, clipToLine: Int) {
+    private func updateMessageView(with dataModel: CommentViewModel, clipToLine: Int, windowWidth: CGFloat?) {
         if messageView.frame.width < 1 {
             setNeedsLayout()
             layoutIfNeeded()
@@ -302,7 +303,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             messageView.setMessage(dataModel.commentText ?? "",
                                    attributes: attributes(isDeleted: false),
                                    clipToLine: clipToLine,
-                                   width: dataModel.textWidth(),
+                                   width: dataModel.textWidth(windowWidth: windowWidth),
                                    isCollapsed: dataModel.commentTextCollapsed)
         }
     }
@@ -314,11 +315,13 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             commentMediaHeightConstraint?.constant = 0
             return
         }
-        
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: dataModel.commentMediaWidth, height: dataModel.commentMediaHeight)
+        let windowWidth = self.contentView.window?.frame.width
+        let mediaWidth = dataModel.getMediaWidth(windowWidth: windowWidth)
+        let mediaHeight = dataModel.getMediaHeight(windowWidth: windowWidth)
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaWidth), height: Float(mediaHeight))
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
-        commentMediaWidthConstraint?.constant = CGFloat(dataModel.commentMediaWidth ?? 0)
-        commentMediaHeightConstraint?.constant = CGFloat(dataModel.commentMediaHeight ?? 0)
+        commentMediaWidthConstraint?.constant = mediaWidth
+        commentMediaHeightConstraint?.constant = mediaHeight
     }
     
     private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {
@@ -422,7 +425,7 @@ enum RepliesButtonState {
 
 // MARK: - Delegate
 
-protocol SPCommentCellDelegate: class {
+protocol SPCommentCellDelegate: AnyObject {
     func showMoreReplies(for commentId: String?)
     func hideReplies(for commentId: String?)
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?)

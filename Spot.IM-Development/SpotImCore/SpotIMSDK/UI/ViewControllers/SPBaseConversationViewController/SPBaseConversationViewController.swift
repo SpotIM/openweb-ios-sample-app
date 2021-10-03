@@ -209,7 +209,8 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     internal func cellDataHeight(for indexPath: IndexPath) -> CGFloat {
         let isLast = model.dataSource.numberOfRows(in: indexPath.section) == indexPath.row + 1
         let cellData = model.dataSource.cellData(for: indexPath)
-        return cellData.height(with: messageLineLimit, isLastInSection: isLast)
+        
+        return cellData.height(with: messageLineLimit, windowWidth: self.view.window?.frame.width, isLastInSection: isLast)
     }
 
     internal func showErrorStateView() {
@@ -524,7 +525,8 @@ extension SPBaseConversationViewController: UITableViewDataSource {
                                   shouldShowHeader: indexPath.section != 0,
                                   minimumVisibleReplies: model.dataSource.minVisibleReplies,
                                   lineLimit: messageLineLimit,
-                                  isReadOnlyMode: isReadOnlyModeEnabled())
+                                  isReadOnlyMode: isReadOnlyModeEnabled(),
+                                  windowWidth: self.view.window?.frame.width)
             }
             commentCell.delegate = self
 
@@ -535,7 +537,8 @@ extension SPBaseConversationViewController: UITableViewDataSource {
                                                                   for: indexPath) as? SPReplyCell else {
                                                                     return UITableViewCell()
             }
-            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled())
+            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
+                                  windowWidth: self.view.window?.frame.width)
             commentCell.delegate = self
             
             return commentCell
@@ -636,13 +639,14 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
     @objc
     func dataSource(didChangeRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? SPReplyCell {
-            cell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled())
+            cell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(), windowWidth: self.view.window?.frame.width)
         } else if let cell = tableView.cellForRow(at: indexPath) as? SPCommentCell {
             cell.setup(with: model.dataSource.cellData(for: indexPath),
                        shouldShowHeader: indexPath.section != 0,
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
                        lineLimit: messageLineLimit,
-                       isReadOnlyMode: isReadOnlyModeEnabled())
+                       isReadOnlyMode: isReadOnlyModeEnabled(),
+                       windowWidth: self.view.window?.frame.width)
         }
     }
 
