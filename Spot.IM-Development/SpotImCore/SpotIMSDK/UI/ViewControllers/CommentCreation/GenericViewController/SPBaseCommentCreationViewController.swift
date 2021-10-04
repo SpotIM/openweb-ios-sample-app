@@ -39,8 +39,12 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     var showsUserAvatarInTextInput: Bool { !showsUsernameInput }
     
     private let mainContainerView: BaseView = .init()
+    
+    private let footerView: BaseView = .init()
+    
     private let postButton: BaseButton = .init()
-    private let postButtonSeperator: BaseView = .init()
+    private let footerSeperator: BaseView = .init()
+    
     private let scrollView: BaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
     private var commentLabelsSection: String?
@@ -162,7 +166,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
         postButton.backgroundColor = .brandColor
         userIcon.backgroundColor = .spBackground0
-        postButtonSeperator.backgroundColor = .spSeparator2
+        footerSeperator.backgroundColor = .spSeparator2
         commentLabelsContainer.updateColorsAccordingToStyle()
         usernameView.updateColorsAccordingToStyle()
     }
@@ -339,14 +343,15 @@ extension SPBaseCommentCreationViewController {
             if #available(iOS 11.0, *) {
                 $0.leading.equal(to: view.safeAreaLayoutGuide.leadingAnchor)
                 $0.trailing.equal(to: view.safeAreaLayoutGuide.trailingAnchor)
+                $0.bottom.equal(to: view.safeAreaLayoutGuide.bottomAnchor)
             } else {
                 $0.leading.equal(to: view.leadingAnchor)
                 $0.trailing.equal(to: view.trailingAnchor)
+                $0.bottom.equal(to: view.bottomAnchor)
             }
-            $0.bottom.equal(to: view.bottomAnchor, offsetBy: -Theme.postButtonBottom)
         }
         scrollView.addSubview(mainContainerView)
-        mainContainerView.addSubviews(topContainerView, textInputViewContainer, postButton, postButtonSeperator, commentLabelsContainer)
+        mainContainerView.addSubviews(topContainerView, textInputViewContainer, commentLabelsContainer, footerView)
         topContainerView.addSubview(topContainerStack)
         
         configureMainContainer()
@@ -354,8 +359,7 @@ extension SPBaseCommentCreationViewController {
         configureTopContainer()
         configureUsernameView()
         configureInputContainerView()
-        configurePostButton()
-        configurePostButtonSeperator()
+        configureFooterView()
         configureCommentLabelsContainer()
         updateColorsAccordingToStyle()
     }
@@ -427,6 +431,21 @@ extension SPBaseCommentCreationViewController {
         postButton.setTitle(postButtonTitle, for: .normal)
     }
     
+    private func configureFooterView() {
+        footerView.addSubviews(postButton, footerSeperator)
+        footerView.backgroundColor = UIColor.clear
+        
+        footerView.layout {
+            mainContainerBottomConstraint = $0.bottom.equal(to: scrollView.bottomAnchor)
+            $0.trailing.equal(to: mainContainerView.trailingAnchor)
+            $0.leading.equal(to: mainContainerView.leadingAnchor)
+            $0.height.equal(to: Theme.footerViewHeight)
+        }
+        
+        configurePostButton()
+        configureFooterSeperator()
+    }
+    
     private func configurePostButton() {
         postButton.setTitleColor(.white, for: .normal)
         postButton.isEnabled = false
@@ -440,32 +459,26 @@ extension SPBaseCommentCreationViewController {
         
         postButton.addCornerRadius(Theme.postButtonRadius)
         postButton.layout {
-            if UIDevice.current.hasNotch {
-                mainContainerBottomConstraint = $0.bottom.equal(to: mainContainerView.layoutMarginsGuide.bottomAnchor,
-                                                                offsetBy: -Theme.postButtonBottom)
-            } else {
-                mainContainerBottomConstraint = $0.bottom.equal(to: mainContainerView.bottomAnchor,
-                offsetBy: -Theme.postButtonBottom)
-            }
-            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.postButtonTrailing)
+            $0.centerY.equal(to: footerView.centerYAnchor)
+            $0.trailing.equal(to: footerView.trailingAnchor, offsetBy: -Theme.postButtonTrailing)
             $0.height.equal(to: Theme.postButtonHeight)
         }
     }
     
-    private func configurePostButtonSeperator() {
-        postButtonSeperator.backgroundColor = .spSeparator2
-        postButtonSeperator.layout {
-            $0.bottom.equal(to: postButton.topAnchor, offsetBy: -15)
+    private func configureFooterSeperator() {
+        footerSeperator.backgroundColor = .spSeparator2
+        footerSeperator.layout {
+            $0.top.equal(to: footerView.topAnchor)
             $0.height.equal(to: 1.0)
-            $0.leading.equal(to: topContainerView.leadingAnchor)
-            $0.trailing.equal(to: topContainerView.trailingAnchor)
+            $0.leading.equal(to: footerView.leadingAnchor)
+            $0.trailing.equal(to: footerView.trailingAnchor)
         }
     }
     
     private func configureCommentLabelsContainer() {
         commentLabelsContainer.delegate = self
         commentLabelsContainer.layout {
-            $0.bottom.equal(to: postButtonSeperator.topAnchor, offsetBy: -15.0)
+            $0.bottom.equal(to: footerView.topAnchor, offsetBy: -15.0)
             $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
             $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -15.0)
             commentLabelsContainerHeightConstraint = $0.height.greaterThanOrEqual(to: 56.0)
@@ -482,13 +495,18 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
             let expandedKeyboardHeight = notification.keyboardSize?.height,
             let animationDuration = notification.keyboardAnimationDuration
             else { return }
-        updateBottomConstraint(constant: expandedKeyboardHeight,
+        let bottomPadding: CGFloat
+        if #available(iOS 11.0, *) {
+            bottomPadding = UIApplication.shared.windows[0].safeAreaInsets.bottom
+        } else {
+            bottomPadding = 0
+        }
+        updateBottomConstraint(constant: expandedKeyboardHeight - bottomPadding,
                                animationDuration: animationDuration)
     }
     
     func keyboardWillHide(_ notification: Notification) {
         guard let animationDuration = notification.keyboardAnimationDuration else { return }
-        
         updateBottomConstraint(constant: 0 , animationDuration: animationDuration)
     }
     
@@ -582,7 +600,6 @@ extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDel
 // MARK: - Theme
 
 private enum Theme {
-    static let postButtonBottom: CGFloat = 20.0
     static let mainOffset: CGFloat = 16.0
     static let postButtonHeight: CGFloat = 32.0
     static let postButtonRadius: CGFloat = 5.0
@@ -591,4 +608,5 @@ private enum Theme {
     static let postButtonTrailing: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
     static let inputViewLeadingInset: CGFloat = 10.0
+    static let footerViewHeight: CGFloat = 54.0
 }
