@@ -159,7 +159,7 @@ internal struct CommentViewModel {
         return textWidth
     }
     
-    private func calculateMediaSize() -> CGSize {
+    func getMediaSize() -> CGSize {
         guard let mediaHeight = commentMediaOriginalHeight,
               let mediaWidth = commentMediaOriginalWidth
         else { return CGSize(width: 0, height: 0) }
@@ -178,10 +178,6 @@ internal struct CommentViewModel {
         }
         
         return CGSize(width: CGFloat(width), height: CGFloat(height))
-    }
-    
-    func getMediaSize() -> CGSize {
-        return calculateMediaSize()
     }
     
     func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
