@@ -455,7 +455,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                        shouldShowHeader: indexPath.section != 0,
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
                        lineLimit: messageLineLimit,
-                       isReadOnlyMode: isReadOnlyModeEnabled())
+                       isReadOnlyMode: isReadOnlyModeEnabled(),
+                       windowWidth: self.view.window?.frame.width)
         }
     }
     

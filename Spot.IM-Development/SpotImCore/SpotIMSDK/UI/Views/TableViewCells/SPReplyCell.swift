@@ -43,7 +43,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         setupUI()
     }
     
-    func configure(with data: CommentViewModel, lineLimit: Int, isReadOnlyMode: Bool) {
+    func configure(with data: CommentViewModel, lineLimit: Int, isReadOnlyMode: Bool, windowWidth: CGFloat?) {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
         repliesButtonState = data.repliesButtonState
@@ -84,10 +84,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             commentMediaViewHeightConstraint?.constant = 0
             return
         }
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: dataModel.commentMediaWidth, height: dataModel.commentMediaHeight)
+        let mediaSize = dataModel.getMediaSize()
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaSize.width), height: Float(mediaSize.height))
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
-        commentMediaViewWidthConstraint?.constant = CGFloat(dataModel.commentMediaWidth ?? 0)
-        commentMediaViewHeightConstraint?.constant = CGFloat(dataModel.commentMediaHeight ?? 0)
+        commentMediaViewWidthConstraint?.constant = mediaSize.width
+        commentMediaViewHeightConstraint?.constant = mediaSize.height
     }
     
     // Handle dark mode \ light mode change
