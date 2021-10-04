@@ -37,6 +37,10 @@ internal class SPBaseViewController: UIViewController {
         navigationItem.backBarButtonItem = backItem
     }
     
+    override func viewWillLayoutSubviews() {
+        self.updateViewWindowFrame()
+    }
+
     func updateColorsAccordingToStyle() {
         let navigationItemTitleView = self.navigationItem.titleView as? UITextView
 
@@ -64,6 +68,13 @@ internal class SPBaseViewController: UIViewController {
         }
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil) { _ in
+            self.updateViewWindowFrame()
+        }
+    }
+    
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init is not implemented")
@@ -74,10 +85,13 @@ internal class SPBaseViewController: UIViewController {
         overrideUserInterfaceStyle = style.nativeValue
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: nil) { _ in
-            SPUIWindow.frame = self.view.window?.frame ?? UIScreen.main.bounds
-        }
+    private func updateViewWindowFrame() {
+        guard let frame = self.view.window?.frame else { return }
+        SPUIWindow.frame = frame
+        viewDidChangeWindowSize()
+    }
+    
+    internal func viewDidChangeWindowSize() {
+        // To implement in subclasses
     }
 }
