@@ -40,10 +40,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     private let mainContainerView: BaseView = .init()
     
-    private let footerView: BaseView = .init()
-    
-    private let postButton: BaseButton = .init()
-    private let footerSeperator: BaseView = .init()
+    private let footerView: SPCommentFooterView = .init()
     
     private let scrollView: BaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
@@ -163,12 +160,10 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         topContainerView.backgroundColor = .spBackground0
         topContainerStack.backgroundColor = .spBackground0
         textInputViewContainer.updateColorsAccordingToStyle()
-        postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
-        postButton.backgroundColor = .brandColor
         userIcon.backgroundColor = .spBackground0
-        footerSeperator.backgroundColor = .spSeparator2
         commentLabelsContainer.updateColorsAccordingToStyle()
         usernameView.updateColorsAccordingToStyle()
+        footerView.updateColorsAccordingToStyle()
     }
     
     @objc
@@ -264,7 +259,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         showProfileActions(sender: userIcon)
     }
 
-    @objc
     private func post() {
         view.endEditing(true)
         Logger.verbose("FirstComment: Post clicked")
@@ -276,7 +270,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         SPAnalyticsHolder.default.log(event: .commentPostClicked, source: .conversation)
     }
 
-    @objc
     private func presentAuth() {
         view.endEditing(true)
         Logger.verbose("FirstComment: Signup to post clicked")
@@ -287,7 +280,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func updatePostButtonEnabledState() {
-        postButton.isEnabled = isValidInput() || self.signupToPostButtonIsActive()
+        let isEnabled = isValidInput() || self.signupToPostButtonIsActive()
+        footerView.setIsPostButtonEnabled(isEnabled)
     }
     
     private func isValidInput() -> Bool {
@@ -421,57 +415,24 @@ extension SPBaseCommentCreationViewController {
     }
 
     private func updatePostButton() {
-        var postButtonTitle: String = LocalizationManager.localizedString(key: "Post")
+        let postButtonTitle: String
+        let action: SPCommentFooterView.PostButtonAction
         if self.signupToPostButtonIsActive() {
             postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
-            postButton.addTarget(self, action: #selector(presentAuth), for: .touchUpInside)
+            action = presentAuth
         } else {
-            postButton.addTarget(self, action: #selector(post), for: .touchUpInside)
+            postButtonTitle = LocalizationManager.localizedString(key: "Post")
+            action = post
         }
-        postButton.setTitle(postButtonTitle, for: .normal)
+        footerView.configurePostButton(title: postButtonTitle, action: action)
     }
     
-    private func configureFooterView() {
-        footerView.addSubviews(postButton, footerSeperator)
-        footerView.backgroundColor = UIColor.clear
-        
+    private func configureFooterView() {        
         footerView.layout {
             mainContainerBottomConstraint = $0.bottom.equal(to: scrollView.bottomAnchor)
             $0.trailing.equal(to: mainContainerView.trailingAnchor)
             $0.leading.equal(to: mainContainerView.leadingAnchor)
             $0.height.equal(to: Theme.footerViewHeight)
-        }
-        
-        configurePostButton()
-        configureFooterSeperator()
-    }
-    
-    private func configurePostButton() {
-        postButton.setTitleColor(.white, for: .normal)
-        postButton.isEnabled = false
-        postButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.postButtonFontSize)
-        postButton.contentEdgeInsets = UIEdgeInsets(
-            top: 0.0,
-            left: Theme.postButtonHorizontalInset,
-            bottom: 0.0,
-            right: Theme.postButtonHorizontalInset
-        )
-        
-        postButton.addCornerRadius(Theme.postButtonRadius)
-        postButton.layout {
-            $0.centerY.equal(to: footerView.centerYAnchor)
-            $0.trailing.equal(to: footerView.trailingAnchor, offsetBy: -Theme.postButtonTrailing)
-            $0.height.equal(to: Theme.postButtonHeight)
-        }
-    }
-    
-    private func configureFooterSeperator() {
-        footerSeperator.backgroundColor = .spSeparator2
-        footerSeperator.layout {
-            $0.top.equal(to: footerView.topAnchor)
-            $0.height.equal(to: 1.0)
-            $0.leading.equal(to: footerView.leadingAnchor)
-            $0.trailing.equal(to: footerView.trailingAnchor)
         }
     }
     
@@ -601,11 +562,6 @@ extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDel
 
 private enum Theme {
     static let mainOffset: CGFloat = 16.0
-    static let postButtonHeight: CGFloat = 32.0
-    static let postButtonRadius: CGFloat = 5.0
-    static let postButtonHorizontalInset: CGFloat = 32.0
-    static let postButtonFontSize: CGFloat = 15.0
-    static let postButtonTrailing: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
     static let inputViewLeadingInset: CGFloat = 10.0
     static let footerViewHeight: CGFloat = 54.0
