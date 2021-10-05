@@ -51,6 +51,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
     
+    private var imagePicker: ImagePicker!
+    
     private var shouldBeAutoPosted: Bool = true
     var showsUsernameInput: Bool {
         guard let config = SPConfigsDataSource.appConfig else { return true }
@@ -427,7 +429,10 @@ extension SPBaseCommentCreationViewController {
         footerView.configurePostButton(title: postButtonTitle, action: action)
     }
     
-    private func configureFooterView() {        
+    private func configureFooterView() {
+        self.imagePicker = ImagePicker(presentationController: self)
+        footerView.setImagePicker(self.imagePicker)
+        footerView.delegate = self
         footerView.layout {
             mainContainerBottomConstraint = $0.bottom.equal(to: scrollView.bottomAnchor)
             $0.trailing.equal(to: mainContainerView.trailingAnchor)
@@ -555,6 +560,13 @@ extension SPBaseCommentCreationViewController: SPCommentLabelsContainerViewDeleg
 extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDelegate {
     func customizeHeaderTitle(textView: UITextView) {
         customUIDelegate?.customizeNavigationItemTitle(textView: textView)
+    }
+}
+
+extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
+    func imageUploaded(image: UIImage) {
+        // TODO
+        print("imageUploaded")
     }
 }
 
