@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol SPCommentFooterViewDelegate: AnyObject {
+    func imageUploaded(image: UIImage)
+}
+
 final class SPCommentFooterView: BaseView {
     
     private let postButton: BaseButton = .init()
@@ -17,6 +21,9 @@ final class SPCommentFooterView: BaseView {
     
     typealias PostButtonAction = () -> Void
     private var postButtonAction: PostButtonAction?
+    
+    private weak var imagePicker: ImagePicker?
+    public weak var delegate: SPCommentFooterViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,6 +46,11 @@ final class SPCommentFooterView: BaseView {
     func configurePostButton(title: String, action: @escaping PostButtonAction) {
         postButton.setTitle(title, for: .normal)
         postButtonAction = action
+    }
+    
+    func setImagePicker(_ imagePicker: ImagePicker) {
+        self.imagePicker = imagePicker
+        self.imagePicker?.delegate = self
     }
     
     private func setup() {
@@ -80,7 +92,7 @@ final class SPCommentFooterView: BaseView {
     
     private func configureAddImageButton() {
         addImageButton.setImage(UIImage(spNamed: "addImageIcon"), for: .normal)
-        addImageButton.addTarget(self, action: #selector(onClickOnAddImageButton), for: .touchUpInside)
+        addImageButton.addTarget(self, action: #selector(onClickOnAddImageButton(_:)), for: .touchUpInside)
         addInsentsToActionButton(addImageButton)
         addImageButton.layout {
             $0.centerY.equal(to: centerYAnchor)
@@ -100,10 +112,17 @@ final class SPCommentFooterView: BaseView {
     }
     
     @objc
-    private func onClickOnAddImageButton() {
-        print("onClickOnAddImageButton")
+    private func onClickOnAddImageButton(_ sender: UIButton) {
+        imagePicker?.present(from: sender)
     }
-    
+}
+
+extension SPCommentFooterView: ImagePickerDelegate {
+    func didSelect(image: UIImage?) {
+        if let image = image {
+            delegate?.imageUploaded(image: image)
+        }
+    }
 }
 
 private enum Theme {

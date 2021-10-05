@@ -113,7 +113,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
-        
+        SPPermissionsProvider.delegate = self
         configureAPIAndRealTimeHandlers()
         
         if let localeId = localeId {
@@ -128,7 +128,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
-        
+        SPPermissionsProvider.delegate = self
         configureAPIAndRealTimeHandlers()
         
         if let localeId = localeId {
@@ -606,5 +606,11 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
         customUIDelegate?.customizeView(view: .preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel), isDarkMode:  SPUserInterfaceStyle.isDarkMode)
+    }
+}
+
+extension SpotImSDKFlowCoordinator: SPPermissionsProviderDelegate {
+    func presentAlert(_ alert: UIAlertController) {
+        navigationController?.present(alert, animated: true, completion: nil)
     }
 }
