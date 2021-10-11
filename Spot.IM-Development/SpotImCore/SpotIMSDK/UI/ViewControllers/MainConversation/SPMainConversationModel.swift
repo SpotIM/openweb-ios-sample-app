@@ -146,7 +146,7 @@ final class SPMainConversationModel {
             let image = ImageCache.sdkCache.image(for: key) {
             completion(image, nil)
         } else {
-            imageProvider.image(with: avatarImageURL,
+            imageProvider.fetchImage(with: avatarImageURL,
                                 size: navigationAvatarSize,
                                 completion: completion)
         }

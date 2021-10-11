@@ -9,24 +9,24 @@
 import Foundation
 import Alamofire
 
-internal enum SPImageFetchRequest: SPRequest {
-    case image(url: URL)
+internal enum SPCloudinaryRequests: SPRequest {
+    case fetchImage(url: URL)
 
     internal var method: HTTPMethod {
         switch self {
-        case .image: return .get
+        case .fetchImage: return .get
         }
     }
 
     internal var pathString: String {
         switch self {
-        case .image: return ""
+        case .fetchImage: return ""
         }
     }
 
     internal var url: URL! {
         switch self {
-        case .image(let url): return url
+        case .fetchImage(let url): return url
         }
     }
 }
