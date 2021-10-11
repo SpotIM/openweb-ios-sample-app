@@ -592,7 +592,7 @@ extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDel
 
 extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
     func imageUploaded(image: UIImage) {
-        imagePreviewView.setImage(image: image)
+        imagePreviewView.image = image
     }
 }
 
