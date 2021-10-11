@@ -13,10 +13,13 @@ final class CommentImagePreview: BaseView {
     private let imageView: BaseUIImageView = .init()
     private var heightConstraint: NSLayoutConstraint?
     
+    private lazy var removeButton: BaseButton = .init(type: .custom)
+    
     var image: UIImage? {
         didSet {
             imageView.image = image
             resizeViewToFitImageSize()
+            removeButton.isHidden = image == nil
         }
     }
  
@@ -24,11 +27,13 @@ final class CommentImagePreview: BaseView {
         super.init(frame: frame)
         
         setup()
+        updateColorsAccordingToStyle()
     }
     
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
+        self.removeButton.setImage(UIImage(spNamed: "closeIcon"), for: .normal)
     }
     
     override func layoutSubviews() {
@@ -37,7 +42,10 @@ final class CommentImagePreview: BaseView {
     }
     
     func resizeViewToFitImageSize() {
-        guard let image = imageView.image else { return }
+        guard let image = imageView.image else {
+            heightConstraint?.constant = 0
+            return
+        }
         let ratio = image.size.width / image.size.height
         let newHeight = imageView.frame.width / ratio
         heightConstraint?.constant = newHeight
@@ -48,8 +56,9 @@ final class CommentImagePreview: BaseView {
             heightConstraint = $0.height.equal(to: 0)
         }
         
-        addSubviews(imageView)
+        addSubviews(imageView, removeButton)
         setupImageView()
+        setupRemoveButton()
     }
     
     private func setupImageView() {
@@ -60,5 +69,34 @@ final class CommentImagePreview: BaseView {
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.equal(to: trailingAnchor)
         }
+    }
+    
+    private func setupRemoveButton() {
+        removeButton.isHidden = true
+        removeButton.addTarget(self, action: #selector(self.removeImage), for: .touchUpInside)
+        removeButton.contentHorizontalAlignment = .right
+        removeButton.contentVerticalAlignment = .top
+        removeButton.layout {
+            $0.top.equal(to: topAnchor, offsetBy: Theme.removeButtonTopOffset)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.removeButtonTrailingOffset)
+            $0.height.equal(to: Theme.removeButtonHeight)
+            $0.width.equal(to: Theme.removeButtonWidth)
+        }
+    }
+    
+    @objc
+    private func removeImage() {
+        self.image = nil
+    }
+}
+
+extension CommentImagePreview {
+    // MARK: - Theme
+
+    private enum Theme {
+        static let removeButtonTopOffset: CGFloat = 8.0
+        static let removeButtonTrailingOffset: CGFloat = 8.0
+        static let removeButtonWidth: CGFloat = 45.0
+        static let removeButtonHeight: CGFloat = 45.0
     }
 }
