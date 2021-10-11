@@ -45,6 +45,7 @@
 		16BD5F82270B3AAC00066505 /* SPCommentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BD5F81270B3AAC00066505 /* SPCommentFooterView.swift */; };
 		16BD5F84270C3FB000066505 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BD5F83270C3FB000066505 /* ImagePicker.swift */; };
 		16BD5F87270C694F00066505 /* SPPermissionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BD5F86270C694F00066505 /* SPPermissionsProvider.swift */; };
+		16BD5F8A27144F2C00066505 /* CommentImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BD5F8927144F2C00066505 /* CommentImagePreview.swift */; };
 		16D7F55026CE996800A06693 /* SPAdBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */; };
 		16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55226D282E100A06693 /* SPAdBannerView.swift */; };
 		182BE3B9B67AB394B8892E1C /* libPods-Shared-SpotImCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */; };
@@ -626,6 +627,7 @@
 		16BD5F81270B3AAC00066505 /* SPCommentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentFooterView.swift; sourceTree = "<group>"; };
 		16BD5F83270C3FB000066505 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		16BD5F86270C694F00066505 /* SPPermissionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPPermissionsProvider.swift; sourceTree = "<group>"; };
+		16BD5F8927144F2C00066505 /* CommentImagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentImagePreview.swift; sourceTree = "<group>"; };
 		16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerCell.swift; sourceTree = "<group>"; };
 		16D7F55226D282E100A06693 /* SPAdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerView.swift; sourceTree = "<group>"; };
 		16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
@@ -1040,6 +1042,14 @@
 			path = ImagePicker;
 			sourceTree = "<group>";
 		};
+		16BD5F8827144EF400066505 /* CommentImagePreview */ = {
+			isa = PBXGroup;
+			children = (
+				16BD5F8927144F2C00066505 /* CommentImagePreview.swift */,
+			);
+			path = CommentImagePreview;
+			sourceTree = "<group>";
+		};
 		16D7F55126D282B900A06693 /* AdBannerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1295,6 +1305,7 @@
 				445417EB23685144001D0ED0 /* PreConversationFooter */,
 				445417ED23685144001D0ED0 /* ExpandableInputView */,
 				445417EF23685144001D0ED0 /* CommentHeader */,
+				16BD5F8827144EF400066505 /* CommentImagePreview */,
 				16BD5F80270B3A8300066505 /* CommentFooter */,
 				445417F123685144001D0ED0 /* TableHeaderView */,
 				445417F323685144001D0ED0 /* LoaderView */,
@@ -2754,6 +2765,7 @@
 				4454189A23685154001D0ED0 /* SPConfigurationAPM.swift in Sources */,
 				448E1116236C53BE0005C9F9 /* FeedbackGenerator.swift in Sources */,
 				449F5F72237C064F00F81EA3 /* RealTimeService.swift in Sources */,
+				16BD5F8A27144F2C00066505 /* CommentImagePreview.swift in Sources */,
 				4454189D23685154001D0ED0 /* SPCommentDelete.swift in Sources */,
 				445417FD23685144001D0ED0 /* NavigationController+Appearance.swift in Sources */,
 				4454187B23685154001D0ED0 /* SPMainConversationDataSource.swift in Sources */,
