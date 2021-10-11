@@ -34,6 +34,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     var textInputViewContainer: SPCommentTextInputView = .init(
         hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
     )
+    private let imagePreviewView: CommentImagePreview = .init()
     lazy var usernameView: SPNameInputView = SPNameInputView()
 
     let activityIndicator: SPLoaderView = SPLoaderView()
@@ -396,14 +397,23 @@ extension SPBaseCommentCreationViewController {
             $0.height.greaterThanOrEqual(to: 40.0)
         }
         
-        commentContentScrollView.addSubview(textInputViewContainer)
+        commentContentScrollView.addSubviews(textInputViewContainer, imagePreviewView)
         self.configureInputContainerView()
+        self.configureImagePreviewView()
     }
     
     private func configureInputContainerView() {
         textInputViewContainer.delegate = self
         textInputViewContainer.layout {
             $0.top.equal(to: commentContentScrollView.topAnchor, offsetBy: Theme.mainOffset)
+            $0.bottom.equal(to: imagePreviewView.topAnchor, offsetBy: -Theme.mainOffset)
+            $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
+            $0.trailing.equal(to: commentContentScrollView.layoutMarginsGuide.trailingAnchor)
+        }
+    }
+    
+    private func configureImagePreviewView() {
+        imagePreviewView.layout {
             $0.bottom.equal(to: commentContentScrollView.bottomAnchor, offsetBy: -Theme.mainOffset)
             $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
             $0.trailing.equal(to: commentContentScrollView.layoutMarginsGuide.trailingAnchor)
@@ -582,8 +592,7 @@ extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDel
 
 extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
     func imageUploaded(image: UIImage) {
-        // TODO
-        print("imageUploaded")
+        imagePreviewView.setImage(image: image)
     }
 }
 
