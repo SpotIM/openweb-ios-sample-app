@@ -67,7 +67,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
     
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
-        imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
+        imageProvider.fetchImage(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
     }

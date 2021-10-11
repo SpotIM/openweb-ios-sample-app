@@ -15,7 +15,7 @@ internal protocol SPImageURLProvider {
     func imageURL(with id: String?, size: CGSize?) -> URL?
     
     @discardableResult
-    func image(with url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> DataRequest?
+    func fetchImage(with url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> DataRequest?
 }
 
 internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLProvider {
@@ -23,7 +23,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLP
     
     /// Use prepared url with size here, please
     @discardableResult
-    func image(with url: URL?, size: CGSize? = nil,
+    func fetchImage(with url: URL?, size: CGSize? = nil,
                completion: @escaping ImageLoadingCompletion) -> DataRequest? {
         guard let url = url else { return nil }
         
@@ -32,7 +32,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLP
             
             return nil
         } else {
-            let request = SPImageFetchRequest.image(url: url)
+            let request = SPCloudinaryRequests.fetchImage(url: url)
             
             return manager.execute(
                 request: request,
