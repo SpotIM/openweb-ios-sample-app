@@ -30,6 +30,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
 
     let topContainerView: BaseView = .init()
     let topContainerStack: BaseStackView = .init()
+    let commentContentScrollView: BaseScrollView = .init()
     var textInputViewContainer: SPCommentTextInputView = .init(
         hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
     )
@@ -48,6 +49,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
     private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
+    private var commentLabelsContainerBottomConstraint: NSLayoutConstraint?
+    private var commentContentScrollViewBottomConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
     
@@ -124,6 +127,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private func hideCommentLabelsContainer() {
         commentLabelsContainer.isHidden = true
         commentLabelsContainerHeightConstraint?.constant = 0
+        commentLabelsContainerBottomConstraint?.constant = 0
+        commentContentScrollViewBottomConstraint?.constant = 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -347,14 +352,14 @@ extension SPBaseCommentCreationViewController {
             }
         }
         scrollView.addSubview(mainContainerView)
-        mainContainerView.addSubviews(topContainerView, textInputViewContainer, commentLabelsContainer, footerView)
+        mainContainerView.addSubviews(topContainerView, commentContentScrollView, commentLabelsContainer, footerView)
         topContainerView.addSubview(topContainerStack)
         
         configureMainContainer()
         configureTopContainerStack()
         configureTopContainer()
         configureUsernameView()
-        configureInputContainerView()
+        configureContentScrollView()
         configureFooterView()
         configureCommentLabelsContainer()
         updateColorsAccordingToStyle()
@@ -382,14 +387,26 @@ extension SPBaseCommentCreationViewController {
         }
     }
     
+    private func configureContentScrollView() {
+        commentContentScrollView.layout {
+            $0.top.equal(to: topContainerView.bottomAnchor)
+            $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
+            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewTrailingInset)
+            commentContentScrollViewBottomConstraint = $0.bottom.equal(to: commentLabelsContainer.topAnchor, offsetBy: -15)
+            $0.height.greaterThanOrEqual(to: 40.0)
+        }
+        
+        commentContentScrollView.addSubview(textInputViewContainer)
+        self.configureInputContainerView()
+    }
+    
     private func configureInputContainerView() {
         textInputViewContainer.delegate = self
         textInputViewContainer.layout {
-            $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
-            $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
-            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.bottom.greaterThanOrEqual(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.height.greaterThanOrEqual(to: 40.0)
+            $0.top.equal(to: commentContentScrollView.topAnchor, offsetBy: Theme.mainOffset)
+            $0.bottom.equal(to: commentContentScrollView.bottomAnchor, offsetBy: -Theme.mainOffset)
+            $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
+            $0.trailing.equal(to: commentContentScrollView.layoutMarginsGuide.trailingAnchor)
         }
     }
     
@@ -444,10 +461,10 @@ extension SPBaseCommentCreationViewController {
     private func configureCommentLabelsContainer() {
         commentLabelsContainer.delegate = self
         commentLabelsContainer.layout {
-            $0.bottom.equal(to: footerView.topAnchor, offsetBy: -15.0)
+            commentLabelsContainerBottomConstraint = $0.bottom.equal(to: footerView.topAnchor, offsetBy: -15.0)
             $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
             $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -15.0)
-            commentLabelsContainerHeightConstraint = $0.height.greaterThanOrEqual(to: 56.0)
+            commentLabelsContainerHeightConstraint = $0.height.equal(to: 56.0)
         }
     }
 }
@@ -576,5 +593,6 @@ private enum Theme {
     static let mainOffset: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
     static let inputViewLeadingInset: CGFloat = 10.0
+    static let inputViewTrailingInset: CGFloat = 10.0
     static let footerViewHeight: CGFloat = 54.0
 }
