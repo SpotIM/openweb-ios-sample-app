@@ -12,6 +12,13 @@ final class CommentImagePreview: BaseView {
     
     private let imageView: BaseUIImageView = .init()
     private var heightConstraint: NSLayoutConstraint?
+    
+    var image: UIImage? {
+        didSet {
+            imageView.image = image
+            resizeViewToFitImageSize()
+        }
+    }
  
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,11 +29,6 @@ final class CommentImagePreview: BaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
-    }
-    
-    func setImage(image: UIImage) {
-        imageView.image = image
-        resizeViewToFitImageSize()
     }
     
     override func layoutSubviews() {
