@@ -95,7 +95,7 @@ class SPBaseCommentCreationModel: CommentStateable {
         }
     }
     
-    func removeImage() { // TODO: handle remove
+    func removeImage() {
         self.isUploadingImage = false
         self.imageContent = nil
     }
