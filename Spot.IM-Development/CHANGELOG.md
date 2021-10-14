@@ -5,6 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.4] - 2021-10-04
+
+### Added
+- Handle window size changes to support iPad split view
+
+### Fixed
+- New comment creation screen title should not be editable
+
+## [1.6.3] - 2021-09-30
+
+### Changed
+- Build SDK in Xcode 13
+- Flag for enable customization of navigation title
+
+### Fixed
+- Empty conversation image size
+
+## [1.6.2] - 2021-09-27
+
+### Changed
+- Update GoogleAdsProvider files
+- Make SPEventInfo Codable
+
+## [1.6.1] - 2021-09-23
+
+### Added
+- Support for Swift Package Manager
+
+### Fixed
+- Commenting on empty conversation in read only should be disable
+
+## [1.6.0] - 2021-09-14
+
+### Added
+- Support GoogleAdsSDK V8 (breaking changes)
+- Button only in pre-conversation
+- Full conversation ad banner
+- Read only conversation
+
+## [1.5.13] - 2021-08-19
+
+### Fixed
+- Replies cannot be viewed after refreshing the page
+- Analytics events fixes
+- Big ads are cut in pre-conversation
+
+## [1.5.12] - 2021-08-05
+
+### Fixed
+- Any transition from pre-conv to full should show the interstitial (if its enabled)
+
+### Changed
+- Event listener refactor - Add more events and not send all of them to BI
+- When the full conversation is opened by the publisher send "viewed" event instead of "main-viewed"
+
 ## [1.5.11] - 2021-07-28
 
 ### Added

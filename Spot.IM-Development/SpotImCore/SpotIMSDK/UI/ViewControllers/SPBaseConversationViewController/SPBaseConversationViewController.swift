@@ -65,6 +65,10 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         
     }
     
+    override func viewDidChangeWindowSize() {
+        self.tableView.reloadData()
+    }
+    
     func didStartSignInFlow() {
         // Override this method in your VC to handle
     }
@@ -126,6 +130,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         return model.dataSource.communityQuestion
     }
     
+    internal func isReadOnlyModeEnabled() -> Bool {
+        let readOnlyMode = model.dataSource.articleMetadata.readOnlyMode
+        return
+            (readOnlyMode == .default && model.dataSource.isReadOnly) ||
+            readOnlyMode == .enable
+    }
+    
     private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
         var htmlString = communityGuidelinesTitle.value
         
@@ -144,6 +155,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         }
         if (user.registered || !policyForceRegister) {
             openProfileWebScreen(userId: userId, isMyProfile: true)
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId, targetType: .avatar), source: .conversation)
         } else {
             if SpotIm.reactNativeNotifyOnCreateComment && self.isInFullConversationVC() {
                 self.navigationController?.popViewController(animated: false)
@@ -204,6 +216,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     internal func cellDataHeight(for indexPath: IndexPath) -> CGFloat {
         let isLast = model.dataSource.numberOfRows(in: indexPath.section) == indexPath.row + 1
         let cellData = model.dataSource.cellData(for: indexPath)
+        
         return cellData.height(with: messageLineLimit, isLastInSection: isLast)
     }
 
@@ -221,17 +234,29 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     
     internal func presentEmptyCommentsStateView() {
         configureEmptyStateView()
-        let createCommentAction = { [weak self] in
-            guard let self = self, let delegate = self.delegate else { return }
-            self.logCreationOpen(with: .comment)
-            delegate.createComment(with: self.model)
+        let actionMessage: String
+        let actionIcon: UIImage
+        var actionButtonTitle: String? = nil
+        var action: EmptyActionDataModel.Action? = nil
+        if (isReadOnlyModeEnabled()) {
+            actionMessage = LocalizationManager.localizedString(key: "Commenting on this article has ended")
+            actionIcon = UIImage(spNamed: "emptyCommentsReadOnlyIcon")!
+        } else {
+            actionMessage = LocalizationManager.localizedString(key: "Be the first to comment on this article.")
+            actionIcon = UIImage(spNamed: "emptyCommentsIcon")!
+            actionButtonTitle = LocalizationManager.localizedString(key: "Write a Comment")
+            action = { [weak self] in
+                guard let self = self, let delegate = self.delegate else { return }
+                self.logCreationOpen(with: .comment)
+                delegate.createComment(with: self.model)
+            }
         }
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
-                actionMessage: LocalizationManager.localizedString(key: "Be the first to comment on this article."),
-                actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
-                actionButtonTitle: LocalizationManager.localizedString(key: "Write a Comment"),
-                action: createCommentAction
+                actionMessage: actionMessage,
+                actionIcon: actionIcon,
+                actionButtonTitle: actionButtonTitle,
+                action: action
             )
         )
     }
@@ -352,7 +377,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         
     }
 
-    private func heightForRow(at indexPath: IndexPath) -> CGFloat {
+    public func heightForRow(at indexPath: IndexPath) -> CGFloat {
         if shouldShowLoader(forRowAt: indexPath) {
             return 50.0
         } else {
@@ -478,17 +503,15 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
 extension SPBaseConversationViewController: UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return model.dataSource.numberOfRows(in: section)
+        return 0 // Implement in subclass
     }
 
     public func numberOfSections(in tableView: UITableView) -> Int {
-        let result = model.dataSource.numberOfSections()
-        Logger.warn("DEBUG: numberOfSections called - result = \(result)")
-        return result
+        return 0 // Implement in subclass
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        Logger.warn("DEBUG: cell for tow called for indexPath: \(indexPath)")
+        Logger.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
         if shouldShowLoader(forRowAt: indexPath) {
             let identifier = String(describing: SPLoaderCell.self)
             guard let loaderCell = tableView.dequeueReusableCell(withIdentifier: identifier,
@@ -508,7 +531,9 @@ extension SPBaseConversationViewController: UITableViewDataSource {
                 commentCell.setup(with: data,
                                   shouldShowHeader: indexPath.section != 0,
                                   minimumVisibleReplies: model.dataSource.minVisibleReplies,
-                                  lineLimit: messageLineLimit)
+                                  lineLimit: messageLineLimit,
+                                  isReadOnlyMode: isReadOnlyModeEnabled(),
+                                  windowWidth: self.view.window?.frame.width)
             }
             commentCell.delegate = self
 
@@ -519,7 +544,8 @@ extension SPBaseConversationViewController: UITableViewDataSource {
                                                                   for: indexPath) as? SPReplyCell else {
                                                                     return UITableViewCell()
             }
-            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit)
+            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
+                                  windowWidth: self.view.window?.frame.width)
             commentCell.delegate = self
             
             return commentCell
@@ -620,12 +646,14 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
     @objc
     func dataSource(didChangeRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? SPReplyCell {
-            cell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit)
+            cell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(), windowWidth: self.view.window?.frame.width)
         } else if let cell = tableView.cellForRow(at: indexPath) as? SPCommentCell {
             cell.setup(with: model.dataSource.cellData(for: indexPath),
                        shouldShowHeader: indexPath.section != 0,
                        minimumVisibleReplies: model.dataSource.minVisibleReplies,
-                       lineLimit: messageLineLimit)
+                       lineLimit: messageLineLimit,
+                       isReadOnlyMode: isReadOnlyModeEnabled(),
+                       windowWidth: self.view.window?.frame.width)
         }
     }
 
@@ -639,25 +667,24 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
 }
 
 extension SPBaseConversationViewController: SPCommentCellDelegate {
-    
-    func respondToAuthorTap(for commentId: String?) {
+    func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool) {
         guard let commentId = commentId,
               let comment = model.dataSource.commentViewModel(commentId),
               let authorId = comment.authorId else { return }
         
         let isMyProfile = SPPublicSessionInterface.isMe(userId: authorId)
-        
-        trackProfileClicked(commentId: commentId, authorId: authorId, isMyProfile: isMyProfile)
+        let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
+        trackProfileClicked(commentId: commentId, authorId: authorId, isMyProfile: isMyProfile, targetType: targetType)
         
         openProfileWebScreen(userId: authorId, isMyProfile: isMyProfile)
     }
     
-    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool) {
+    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
         if isMyProfile {
-            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId), source: .conversation)
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId, targetType: targetType), source: .conversation)
         } else {
             SPAnalyticsHolder.default.log(
-                event: .userProfileClicked(messageId: commentId, userId: authorId),
+                event: .userProfileClicked(messageId: commentId, userId: authorId, targetType: targetType),
                 source: .conversation
             )
         }
@@ -677,6 +704,23 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
             return
+        }
+        // track event
+        switch change.operation {
+        case "like":
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        case "toggle-like":
+            SPAnalyticsHolder.default.log(event: .commentRankUpButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        case "dislike":
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        case "toggle-dislike":
+            SPAnalyticsHolder.default.log(event: .commentRankDownButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
+            break
+        default:
+            break
         }
         
         model.dataSource.updateRank(with: change, inCellWith: commentId)
@@ -722,11 +766,11 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         delegate.createReply(with: model, to: id)
     }
 
-    func moreTapped(for commentId: String?, sender: UIButton) {
+    func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton) {
         guard let commentId = commentId else { return }
 
         SPAnalyticsHolder.default.log(
-            event: .messageContextMenuClicked(commentId),
+            event: .messageContextMenuClicked(messageId: commentId, relatedMessageId: replyingToID),
             source: .conversation
         )
         
@@ -821,27 +865,29 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     
     func prepareFlowForAction(_ type: ActionType, sender: UIButton) {
         switch type {
-        case .delete(let commentId):
-            showCommentDeletionFlow(commentId)
-            
-        case .report(let commentId):
-            showCommentReportFlow(commentId)
-            
-        case .edit(let commentId):
+        case .delete(let commentId, let replyingToID):
+            showCommentDeletionFlow(commentId, replyingToID: replyingToID)
+            break
+        case .report(let commentId, let replyingToID):
+            showCommentReportFlow(commentId, replyingToID: replyingToID)
+            break
+        case .edit(let commentId, let replyingToID):
             model.editComment(with: commentId)
-            
-        case .share(let commentId):
-            showCommentShareFlow(commentId, sender: sender)
+            break
+        case .share(let commentId, let replyingToID):
+            showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
+            break
         }
     }
     
-    private func showCommentDeletionFlow(_ commentId: String) {
+    private func showCommentDeletionFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Delete"),
             style: .destructive) { [weak self] _ in
                 self?.showLoader()
                 self?.model.deleteComment(with: commentId) { error in
                     self?.hideLoader()
+                    SPAnalyticsHolder.default.log(event: .commentDeleteClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
                     if let error = error {
                         self?.showAlert(
                             title: LocalizationManager.localizedString(key: "Oops..."),
@@ -859,7 +905,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             actions: [noAction, yesAction])
     }
     
-    private func showCommentReportFlow(_ commentId: String) {
+    private func showCommentReportFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Report"),
             style: .destructive) { [weak self] _ in
@@ -886,9 +932,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             title: LocalizationManager.localizedString(key: "Report Comment"),
             message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
+        SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
-    private func showCommentShareFlow(_ commentId: String, sender: UIButton) {
+    private func showCommentShareFlow(_ commentId: String, sender: UIButton, replyingToID: String?) {
         showLoader()
         model.shareComment(with: commentId) { [weak self] url, error in
             guard let self = self else { return }
@@ -904,6 +951,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 activityViewController.popoverPresentationController?.sourceView = sender
                 self.present(activityViewController, animated: true, completion: nil)
             }
+            SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
     }
 
