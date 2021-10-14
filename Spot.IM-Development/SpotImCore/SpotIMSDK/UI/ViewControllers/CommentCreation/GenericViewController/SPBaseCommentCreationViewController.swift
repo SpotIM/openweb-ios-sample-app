@@ -132,6 +132,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         navigationController?.setNavigationBarHidden(true, animated: animated)
         updatePostButton()
         setupCommentLabelsContainer()
+        setFooterViewContentButtons()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -480,9 +481,21 @@ extension SPBaseCommentCreationViewController {
         }
     }
     
+    private func setFooterViewContentButtons() {
+        guard let model = self.model else { return }
+        
+        var contentButtonTypes: [SPCommentFooterContentButtonType] = []
+        
+        if model.shouldDisplayImageUploadButton() {
+            contentButtonTypes.append(.image)
+        }
+        
+        footerView.setContentButtonTypes(contentButtonTypes)
+    }
+    
     private func uploadImageToCloudinary(imageData: String) {
         imagePreviewView.isUploadingImage = true
-        view.endEditing(true)
+        self.dismissKeyboard()
         model?.uploadImageToCloudinary(imageData: imageData) { isUploaded in
             self.imagePreviewView.isUploadingImage = false
             self.updatePostButtonEnabledState()

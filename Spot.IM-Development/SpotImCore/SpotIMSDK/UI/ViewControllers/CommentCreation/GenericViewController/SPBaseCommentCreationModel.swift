@@ -61,6 +61,15 @@ class SPBaseCommentCreationModel: CommentStateable {
         return (sectionLabelsConfig, commentLabelsSection)
     }
     
+    func shouldDisplayImageUploadButton() -> Bool {
+        if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
+           conversationConfig.disableImageUploadButton == true {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     func updateCommentLabels(labelsIds: [String]) {
         if let commentLabelsSection = commentLabelsSection, !labelsIds.isEmpty {
             selectedLabels = SelectedLabels(section: commentLabelsSection, ids: labelsIds)
