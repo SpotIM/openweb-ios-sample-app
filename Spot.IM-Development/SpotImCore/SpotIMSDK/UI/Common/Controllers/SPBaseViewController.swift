@@ -38,7 +38,7 @@ internal class SPBaseViewController: UIViewController {
     }
     
     override func viewWillLayoutSubviews() {
-        self.updateViewWindowFrame()
+        self.updateViewWindowFrameIfChanged()
     }
 
     func updateColorsAccordingToStyle() {
@@ -71,7 +71,7 @@ internal class SPBaseViewController: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(alongsideTransition: nil) { _ in
-            self.updateViewWindowFrame()
+            self.updateViewWindowFrameIfChanged()
         }
     }
     
@@ -85,10 +85,12 @@ internal class SPBaseViewController: UIViewController {
         overrideUserInterfaceStyle = style.nativeValue
     }
     
-    private func updateViewWindowFrame() {
+    private func updateViewWindowFrameIfChanged() {
         guard let frame = self.view.window?.frame else { return }
-        SPUIWindow.frame = frame
-        viewDidChangeWindowSize()
+        if frame != SPUIWindow.frame {
+            SPUIWindow.frame = frame
+            viewDidChangeWindowSize()
+        }
     }
     
     internal func viewDidChangeWindowSize() {
