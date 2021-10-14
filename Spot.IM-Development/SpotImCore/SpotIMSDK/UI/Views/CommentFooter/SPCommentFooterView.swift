@@ -12,6 +12,11 @@ protocol SPCommentFooterViewDelegate: AnyObject {
     func imageSelected(image: UIImage)
 }
 
+enum SPCommentFooterContentButtonType {
+    case image
+    case gif // Not supported yet
+}
+
 final class SPCommentFooterView: BaseView {
     
     private let postButton: BaseButton = .init()
@@ -48,17 +53,29 @@ final class SPCommentFooterView: BaseView {
         postButtonAction = action
     }
     
+    func setContentButtonTypes(_ types: [SPCommentFooterContentButtonType]) {
+        for type in types {
+            switch type {
+            case .image:
+                addSubview(addImageButton)
+                configureAddImageButton()
+                break
+            default:
+                break
+            }
+        }
+    }
+    
     func setImagePicker(_ imagePicker: ImagePicker) {
         self.imagePicker = imagePicker
         self.imagePicker?.delegate = self
     }
     
     private func setup() {
-        addSubviews(footerSeperator, postButton, addImageButton)
+        addSubviews(footerSeperator, postButton)
         
         configureFooterSeperator()
         configurePostButton()
-        configureAddImageButton()
     }
     
     private func configurePostButton() {
