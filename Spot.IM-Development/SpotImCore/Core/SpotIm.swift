@@ -132,12 +132,16 @@ public class SpotIm {
     
     public static var customFontFamily: String? = nil
     public static var displayArticleHeader: Bool = true
+
+    public static var reactNativeShowLoginScreenOnRootVC: Bool = false
+
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
     public static var buttonOnlyMode: SpotImButtonOnlyMode = .disable
     public static var enableCustomNavigationItemTitle: Bool = false
     
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
+
     
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
