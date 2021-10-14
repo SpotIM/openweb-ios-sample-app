@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SPCommentFooterViewDelegate: AnyObject {
-    func imageUploaded(image: UIImage)
+    func imageSelected(image: UIImage)
 }
 
 final class SPCommentFooterView: BaseView {
@@ -120,7 +120,7 @@ final class SPCommentFooterView: BaseView {
 extension SPCommentFooterView: ImagePickerDelegate {
     func didSelect(image: UIImage?) {
         if let image = image {
-            delegate?.imageUploaded(image: image)
+            delegate?.imageSelected(image: image)
         }
     }
 }

@@ -78,9 +78,7 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
         var parameters = [
             CreateReplyAPIKeys.parentId: dataModel.rootCommentId ?? dataModel.commentId,
             CreateReplyAPIKeys.conversationId: dataModel.postId,
-            CreateReplyAPIKeys.content: [
-                [CreateReplyAPIKeys.text: commentText]
-            ],
+            CreateReplyAPIKeys.content: self.getContentRequestParam(),
             CreateReplyAPIKeys.metadata: metadata
         ] as [String : Any]
         

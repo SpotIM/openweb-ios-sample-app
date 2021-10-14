@@ -16,6 +16,18 @@ internal protocol SPImageURLProvider {
     
     @discardableResult
     func fetchImage(with url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> DataRequest?
+    
+    func uploadImage(imageData: String, completion: @escaping (SPComment.Content.Image?, Error?) -> Void)
+}
+
+internal class SPSignResponse: Decodable {
+    let signature: String
+}
+
+internal class CloudinaryUploadResponse: Decodable {
+    let assetId: String
+    let width: Int
+    let height: Int
 }
 
 internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLProvider {
@@ -60,6 +72,71 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLP
         }
     }
     
+    func uploadImage(imageData: String, completion: @escaping (SPComment.Content.Image?, Error?) -> Void) {
+        let publicId = UUID().uuidString
+        let timestamp = String(round(NSDate().timeIntervalSince1970 * 1000) / 1000.0)
+        
+        signToCloudinary(publicId: publicId, timestamp: timestamp) { signature, err in
+            guard let signature = signature else { return }
+            
+            self.uploadImageToCloudinary(imageData: imageData, publicId: publicId, timestamp: timestamp, signature: signature, completion: completion)
+        }
+    }
+    
+    private func uploadImageToCloudinary(imageData: String, publicId: String, timestamp: String, signature: String, completion: @escaping (SPComment.Content.Image?, Error?) -> Void) {
+        
+        let parameters: [String: Any] = [
+            "api_key": Constants.cloudinaryApiKey,
+            "signature": signature,
+            "public_id": publicId,
+            "timestamp": timestamp,
+            "file": "data:image/jpeg;base64," + imageData
+        ]
+        
+        manager.execute(
+            request: SPCloudinaryRequests.upload,
+            parameters: parameters,
+            parser: DecodableParser<CloudinaryUploadResponse>()) { (result, _) in
+            switch result {
+            case .success(let response):
+                let image = SPComment.Content.Image(
+                    originalWidth: response.width,
+                    originalHeight: response.height,
+                    imageId: publicId
+                )
+                completion(image, nil)
+                break
+            case .failure(let err):
+                completion(nil, err)
+                break
+            }
+        }
+    }
+    
+    private func signToCloudinary(publicId: String, timestamp: String, completion: @escaping (String?, Error?) -> Void) {
+        
+        let parameters: [String: Any] = [
+            "cloudinary_params": [
+                "public_id": publicId,
+                "timestamp": timestamp
+            ]
+        ]
+        
+        manager.execute(
+            request: SPCloudinaryRequests.login,
+            parameters: parameters,
+            parser: DecodableParser<SPSignResponse>()) { (result, _) in
+            switch result {
+            case .success(let response):
+                completion(response.signature, nil)
+                break
+            case .failure(let err):
+                completion(nil, err)
+                break
+            }
+        }
+    }
+    
     func imageURL(with id: String?, size: CGSize? = nil) -> URL? {
         guard var id = id else { return nil }
         
@@ -92,6 +169,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLP
 }
 
 private enum Constants {
+    static let cloudinaryApiKey = "281466446316913"
     static let cloudinaryBaseURL = "https://images.spot.im/image/upload/"
     static let cloudinaryParamString = "dpr_3,c_thumb,g_face"
     static let cloudinaryWidthPrefix = ",w_"

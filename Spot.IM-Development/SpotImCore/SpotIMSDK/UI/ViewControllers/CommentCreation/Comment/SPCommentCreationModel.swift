@@ -44,7 +44,7 @@ final class SPCommentCreationModel: SPBaseCommentCreationModel {
     override func post() {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         var parameters: [String: Any] = [
-            CreateCommentAPIKeys.content: [[CreateCommentAPIKeys.text: commentText]],
+            CreateCommentAPIKeys.content: self.getContentRequestParam(),
             CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName]
         ]
         
@@ -86,16 +86,4 @@ final class SPCommentCreationModel: SPBaseCommentCreationModel {
             }
         )
     }
-    
-    private enum CreateCommentAPIKeys {
-        static let content = "content"
-        static let text = "text"
-        static let metadata = "metadata"
-        static let displayName = "display_name"
-        static let additionalData = "additional_data"
-        static let labels = "labels"
-        static let labelsSection = "section"
-        static let labelsIds = "ids"
-    }
-    
 }
