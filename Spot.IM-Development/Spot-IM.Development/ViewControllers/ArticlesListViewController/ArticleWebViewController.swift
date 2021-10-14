@@ -221,7 +221,7 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     }
     
     func shouldDisplayLoginPromptForGuests() -> Bool {
-        return true
+        return spotId == "sp_mobileGuest"
     }
 }
 
@@ -250,6 +250,14 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .sayControlInMainConversation(let labelContainer, let label):
             label.textColor = isDarkMode ? UIColor.blue : UIColor.red
             break
+        case .showCommentsButton(let button):
+            button.setTitleColor(isDarkMode ? UIColor.blue : UIColor.red, for: .normal)
+            button.setTitle("comments " + (button.getCommentsCount() ?? ""), for: .normal)
+            break
+        case .preConversationHeader(let titleLabel, let counterLabel):
+            titleLabel.text = "Comments"
+            counterLabel.isHidden = true
+            break
         default:
             break
         }
@@ -260,6 +268,11 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
             attributedString.addAttribute(
                 .font,
                 value: UIFont.systemFont(ofSize: 18, weight: .bold),
+                range: NSMakeRange(0,attributedString.length)
+            )
+            attributedString.addAttribute(
+                .foregroundColor,
+                value: UIColor.red,
                 range: NSMakeRange(0,attributedString.length)
             )
             textView.attributedText = attributedString

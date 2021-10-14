@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal protocol SPMainConversationFooterViewDelegate: class {
+internal protocol SPMainConversationFooterViewDelegate: AnyObject {
     
     func labelContainerDidTap(_ foorterView: SPMainConversationFooterView)
     
@@ -27,6 +27,8 @@ final class SPMainConversationFooterView: BaseView {
     
     private var bannerView: UIView?
     private var bannerContainerHeight: NSLayoutConstraint?
+    
+    private var readOnlyLabel: BaseLabel?
 
     internal weak var delegate: SPMainConversationFooterViewDelegate?
     
@@ -66,6 +68,7 @@ final class SPMainConversationFooterView: BaseView {
         callToActionLabel.textColor = .spForeground2
         separatorView.backgroundColor = .spSeparator2
         dropsShadow = !SPUserInterfaceStyle.isDarkMode
+        self.readOnlyLabel?.textColor = .spForeground3
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
@@ -84,13 +87,43 @@ final class SPMainConversationFooterView: BaseView {
     
     private func setup() {
         addSubviews(bannerContainerView, labelContainer, userAvatarView, separatorView)
+        
         labelContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(labelContainerTap)))
         labelContainer.isUserInteractionEnabled = true
-        userAvatarView.delegate = self
-        setupBannerView()
-        setupUserAvatarImageView()
+        
+        setupUserAvatarView()
         setupCallToActionLabel()
+        
         configureSeparatorView()
+        setupBannerView()
+    }
+    
+    func setReadOnlyMode(isPreConversation: Bool = false) {
+        guard readOnlyLabel == nil else { return }
+        labelContainer.isUserInteractionEnabled = false
+        labelContainer.isHidden = true
+        userAvatarView.isHidden = true
+        
+        readOnlyLabel = BaseLabel()
+        setupReadOnlyLabel(isPreConversation: isPreConversation)
+    }
+    
+    func setupReadOnlyLabel(isPreConversation: Bool) {
+        guard let readOnlyLabel = self.readOnlyLabel else { return }
+        addSubview(readOnlyLabel)
+        
+        readOnlyLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
+        readOnlyLabel.textColor = .spForeground3
+        readOnlyLabel.text = LocalizationManager.localizedString(key: "Commenting on this article has ended")
+        
+        readOnlyLabel.layout {
+            $0.centerY.equal(to: labelContainer.centerYAnchor)
+            if (isPreConversation) {
+                $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.readOnlyLabelLeading)
+            } else {
+                $0.centerX.equal(to: self.centerXAnchor)
+            }
+        }
     }
     
     func updateBannerView(_ bannerView: UIView, height: CGFloat) {
@@ -99,8 +132,7 @@ final class SPMainConversationFooterView: BaseView {
         bannerContainerView.addSubview(bannerView)
         bannerView.layout {
             $0.height.equal(to: height)
-            $0.leading.equal(to: bannerContainerView.leadingAnchor)
-            $0.trailing.equal(to: bannerContainerView.trailingAnchor)
+            $0.centerX.equal(to: bannerContainerView.centerXAnchor)
             $0.bottom.equal(to: bannerContainerView.bottomAnchor)
         }
         bannerContainerHeight?.constant = height + 16.0
@@ -138,7 +170,8 @@ final class SPMainConversationFooterView: BaseView {
         }
     }
     
-    private func setupUserAvatarImageView() {
+    private func setupUserAvatarView() {
+        userAvatarView.delegate = self
         userAvatarView.backgroundColor = .clear
         userAvatarView.layout {
             $0.centerY.equal(to: labelContainer.centerYAnchor)
@@ -217,5 +250,6 @@ private enum Theme {
     static let userAvatarLeading: CGFloat = 15
     static let callToActionLeading: CGFloat = 12
     static let callToActionHeight: CGFloat = 48
+    static let readOnlyLabelLeading: CGFloat = 15
     static let fontSize: CGFloat = 16
 }

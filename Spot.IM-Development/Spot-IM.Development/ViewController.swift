@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         fillVersionAndBuildNumber()
         
         print("Google Mobile Ads SDK version: \(GADMobileAds.sharedInstance().sdkVersion)")
-        self.adLoader = GADAdLoader(adUnitID: "/282897603/elnuevodia.com/home/app_scroll", rootViewController: self, adTypes: [.nativeCustomTemplate], options: nil)
+        self.adLoader = GADAdLoader(adUnitID: "/282897603/elnuevodia.com/home/app_scroll", rootViewController: self, adTypes: [.customNative], options: nil)
         self.adLoader?.delegate = self
         self.adLoader?.load(GADRequest())
         SpotIm.setAnalyticsEventDelegate(delegate: self)
@@ -56,14 +56,28 @@ class ViewController: UIViewController {
     private func setupNavigationBar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
 
-        navigationController?.navigationBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.barTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.titleTextAttributes = [
+        
+        let navigationBarBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        let navigationTitleTextAttributes = [
             NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
             NSAttributedString.Key.foregroundColor: UIColor.black
         ]
+        
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = navigationBarBackgroundColor
+            appearance.titleTextAttributes = navigationTitleTextAttributes
+
+            navigationController?.navigationBar.standardAppearance = appearance;
+            navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+        } else {
+            navigationController?.navigationBar.backgroundColor = navigationBarBackgroundColor
+            navigationController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+        }
     }
 
     private func fillVersionAndBuildNumber() {
@@ -79,7 +93,7 @@ class ViewController: UIViewController {
     
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
         setup(with: .demoGenericSpotKeyForSSO, from: sender)
-        showArticles(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
     }
 
     @IBAction func showsp_mobileSSO(_ sender: UIButton) {
@@ -104,24 +118,31 @@ class ViewController: UIViewController {
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
+        showArticlesWithSettingsAlert(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+    }
+    
+    private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
+        let showArticles = {
+            self.showArticles(with: spotId, authenticationControllerId: authenticationControllerId, showArticleOnTableView: showArticleOnTableView)
+        }
+        
         let alert = UIAlertController(title: "Alert", message: "Please choose in which setting to open an article", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Pre-Conversation", style: .default, handler: { action in
-            self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+            showArticles()
         }))
         alert.addAction(UIAlertAction(title: "Full-Conversation - Push", style: .default, handler: { action in
             UserDefaults.standard.setValue(true, forKey: "shouldShowOpenFullConversation")
             UserDefaults.standard.setValue(false, forKey: "shouldPresentInNewNavStack")
-            self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+            showArticles()
         }))
         alert.addAction(UIAlertAction(title: "Full-Conversation - Present", style: .default, handler: { action in
             UserDefaults.standard.setValue(true, forKey: "shouldShowOpenFullConversation")
             UserDefaults.standard.setValue(true, forKey: "shouldPresentInNewNavStack")
-            self.showArticles(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+            showArticles()
         }))
         
         self.present(alert, animated: true, completion: nil)
-        
-        
     }
 
     private func showArticles(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
@@ -155,36 +176,28 @@ private extension String {
     static var demoSpotKeyForMobileSocialGuest:     String { return "sp_mobileSocialGuest" }
 }
 
-extension ViewController: GADAdLoaderDelegate, GADNativeCustomTemplateAdLoaderDelegate {
-
-
+extension ViewController: GADAdLoaderDelegate, GADCustomNativeAdLoaderDelegate {
     // MARK: - GADAdLoaderDelegate Methods
     
-    func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: GADRequestError) {
+    func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: Error) {
         print("adLoader - didFailToReceiveAdWithError: \(error)")
-
     }
 
     func adLoaderDidFinishLoading(_ adLoader: GADAdLoader) {
         print("adLoaderDidFinishLoading")
     }
-
-
-    func nativeCustomTemplateIDs(for adLoader: GADAdLoader) -> [String] {
+    
+    func customNativeAdFormatIDs(for adLoader: GADAdLoader) -> [String] {
         return ["10067603"]
     }
-
-    func adLoader(
-        _ adLoader: GADAdLoader,
-        didReceive nativeCustomTemplateAd: GADNativeCustomTemplateAd
-    ) {
-        print("Received custom native ad: \(nativeCustomTemplateAd)")
-
+    
+    func adLoader(_ adLoader: GADAdLoader, didReceive customNativeAd: GADCustomNativeAd) {
+        print("Received custom native ad: \(customNativeAd)")
     }
 }
 
 extension ViewController: SPAnalyticsEventDelegate {
-    internal func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo) {
+    internal func trackEvent(type: SPEventType, event: SPEventInfo) {
         switch type {
         case .userProfileClicked:
             print("Spot.IM Analytics Event - " + event.eventType)

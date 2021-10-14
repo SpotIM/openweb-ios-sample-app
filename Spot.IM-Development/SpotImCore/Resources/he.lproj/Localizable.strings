@@ -64,6 +64,8 @@
 "View Reply" = "הצג תגובה";
 "View Replies" = "הצג תגובות";
 "Reply" = "הגיבו לתגובה";
+"Replies" = "תגובות";
+"Commenting on this article has ended" = "פרק הזמן להוספת תגובות למאמר זה הסתיים";
 "This message was deleted." = "הודעה זו נמחקה.";
 "This message was reported." = "התקבל דיווח על הודעה זו.";
 "This message was rejected." = "תגובה זו לא אושרה.";
@@ -81,3 +83,5 @@
 "Up vote button" = "Up vote button";
 "Down vote button" = "Down vote button";
 "Options menu" = "Options menu";
+"Post a Comment" = "פרסם תגובה";
+"Show Comments" = "הצג תגובות";

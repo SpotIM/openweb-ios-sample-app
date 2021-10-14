@@ -55,15 +55,25 @@ public struct SpotImArticleMetadata {
     let subtitle: String
     let thumbnailUrl: String
     let section: String
-    let customBIData: [String:String]?
+    var customBIData: [String:String]?
+    var readOnlyMode: SpotImReadOnlyMode
 
-    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil) {
+    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil, readOnlyMode: SpotImReadOnlyMode = .default) {
         self.url = url
         self.title = title
         self.subtitle = subtitle
         self.thumbnailUrl = thumbnailUrl
         self.section = section
         self.customBIData = customBIData
+        self.readOnlyMode = readOnlyMode
+    }
+    
+    public mutating func setCustomBIData(_ data: [String:String]) {
+        self.customBIData = data
+    }
+    
+    public mutating func setReadOnlymode(_ mode: SpotImReadOnlyMode) {
+        self.readOnlyMode = mode
     }
 }
 
@@ -73,8 +83,25 @@ public enum SpotImSortByOption {
     case oldest
 }
 
+public enum SpotImButtonOnlyMode {
+    case disable
+    case withTitle
+    case withoutTitle
+    
+    func isEnabled() -> Bool {
+        return self != .disable
+    }
+}
+
+    
+public enum SpotImReadOnlyMode {
+    case `default`
+    case enable
+    case disable
+}
+
 public protocol SPAnalyticsEventDelegate {
-    func trackEvent(type: SPAnalyticsEventType, event: SPAnalyticsEventInfo)
+    func trackEvent(type: SPEventType, event: SPEventInfo)
 }
 
 extension SpotImResult where T == Void {
@@ -110,6 +137,8 @@ public class SpotIm {
 
     public static var enableCreateCommentNewDesign: Bool = false
     public static var shouldConversationFooterStartFromBottomAnchor = false
+    public static var buttonOnlyMode: SpotImButtonOnlyMode = .disable
+    public static var enableCustomNavigationItemTitle: Bool = false
     
     internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
 
@@ -117,6 +146,7 @@ public class SpotIm {
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
     
     internal static var analyticsEventDelegate: SPAnalyticsEventDelegate?
+    
     /**
     Initialize the SDK
 
@@ -381,6 +411,19 @@ public class SpotIm {
      */
     public static func setAnalyticsEventDelegate(delegate: SPAnalyticsEventDelegate) {
         self.analyticsEventDelegate = delegate
+    }
+    
+    /**
+        Set SpotImButtonOnlyMode for pre-conversation button-only mode
+
+     - Parameter mode: SpotImButtonOnlyMode (to disable/enable/no title)
+     */
+    public static func setButtonOnlyMode(mode: SpotImButtonOnlyMode) {
+        self.buttonOnlyMode = mode
+    }
+    
+    public static func getButtonOnlyMode() -> SpotImButtonOnlyMode {
+        return self.buttonOnlyMode
     }
 
     // MARK: Private

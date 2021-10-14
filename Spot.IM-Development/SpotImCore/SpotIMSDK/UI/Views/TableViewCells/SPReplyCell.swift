@@ -43,12 +43,12 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         setupUI()
     }
     
-    func configure(with data: CommentViewModel, lineLimit: Int) {
+    func configure(with data: CommentViewModel, lineLimit: Int, isReadOnlyMode: Bool, windowWidth: CGFloat?) {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
         repliesButtonState = data.repliesButtonState
         updateUserView(with: data)
-        updateActionView(with: data)
+        updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
         updateAvatarView(with: data)
         updateCommentLabelView(with: data)
         messageView.delegate = self
@@ -84,10 +84,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             commentMediaViewHeightConstraint?.constant = 0
             return
         }
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: dataModel.commentMediaWidth, height: dataModel.commentMediaHeight)
+        let mediaSize = dataModel.getMediaSize()
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaSize.width), height: Float(mediaSize.height))
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
-        commentMediaViewWidthConstraint?.constant = CGFloat(dataModel.commentMediaWidth ?? 0)
-        commentMediaViewHeightConstraint?.constant = CGFloat(dataModel.commentMediaHeight ?? 0)
+        commentMediaViewWidthConstraint?.constant = mediaSize.width
+        commentMediaViewHeightConstraint?.constant = mediaSize.height
     }
     
     // Handle dark mode \ light mode change
@@ -133,13 +134,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userViewHeightConstraint?.constant = userViewHeight
     }
     
-    private func updateActionView(with dataModel: CommentViewModel) {
+    private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
+        replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setBrandColor(.brandColor)
-        replyActionsView.setRepliesCount(dataModel.repliesCount)
+        replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
         replyActionsView.setRankUp(dataModel.rankUp)
         replyActionsView.setRankDown(dataModel.rankDown)
         replyActionsView.setRanked(with: dataModel.rankedByUser)
-        replyActionsView.setReplyButton(enabled: dataModel.depth < 6)
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
@@ -279,7 +280,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 extension SPReplyCell: AvatarViewDelegate {
     
     func avatarDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
     }
 }
 
@@ -301,11 +302,11 @@ extension SPReplyCell: CommentActionsDelegate {
 extension SPReplyCell: UserNameViewDelegate {
     
     func moreButtonDidTapped(sender: UIButton) {
-        delegate?.moreTapped(for: commentId, sender: sender)
+        delegate?.moreTapped(for: commentId, replyingToID: replyingToId, sender: sender)
     }
     
     func userNameDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId)
+        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: false)
     }
 }
 
@@ -328,10 +329,12 @@ extension SPReplyCell: MessageContainerViewDelegate {
     
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
+        SPAnalyticsHolder.default.log(event: .commentReadMoreClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
     }
 
     func readLessTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showLessText(for: commentId)
+        SPAnalyticsHolder.default.log(event: .commentReadLessClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
     }
 
 }
