@@ -157,7 +157,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
             openProfileWebScreen(userId: userId, isMyProfile: true)
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId, targetType: .avatar), source: .conversation)
         } else {
-            if SpotIm.reactNativeNotifyOnCreateComment && self.isInFullConversationVC() {
+            if SpotIm.reactNativeShowLoginScreenOnRootVC && self.isInFullConversationVC() {
                 self.navigationController?.popViewController(animated: false)
             }
             userAuthFlowDelegate?.presentAuth()
@@ -698,7 +698,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
         guard let config = SPConfigsDataSource.appConfig,
            config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
-            if SpotIm.reactNativeNotifyOnCreateComment && self.isInFullConversationVC() {
+            if SpotIm.reactNativeShowLoginScreenOnRootVC && self.isInFullConversationVC() {
                 self.navigationController?.popViewController(animated: false)
             }
             userAuthFlowDelegate?.presentAuth()
@@ -815,7 +815,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
     func labelContainerDidTap(_ footerView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
         
-        if SpotIm.reactNativeNotifyOnCreateComment && SpotIm.getRegisteredUserId() == nil {
+        if SpotIm.reactNativeShowLoginScreenOnRootVC && SpotIm.getRegisteredUserId() == nil {
             if self.isInFullConversationVC() {
                 self.navigationController?.popViewController(animated: false)
             }
@@ -833,12 +833,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
     }
     
     private func isInFullConversationVC() -> Bool {
-        if self is SPPreConversationViewController {
-            return false
-        }
-        else {
-            return true
-        }
+        return self is SPMainConversationViewController
     }
 }
 
