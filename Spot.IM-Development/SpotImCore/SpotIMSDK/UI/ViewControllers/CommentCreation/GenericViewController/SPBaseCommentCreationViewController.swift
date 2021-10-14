@@ -145,6 +145,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         
         // delay added for keyboard not to appear earlier than the screen
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) {
+            guard !self.imagePreviewView.isUploadingImage else { return }
             if self.showsUsernameInput {
                 self.usernameView.makeFirstResponder()
             } else {
@@ -413,6 +414,7 @@ extension SPBaseCommentCreationViewController {
     }
     
     private func configureImagePreviewView() {
+        imagePreviewView.delegate = self
         imagePreviewView.layout {
             $0.bottom.equal(to: commentContentScrollView.bottomAnchor, offsetBy: -Theme.mainOffset)
             $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
@@ -479,8 +481,14 @@ extension SPBaseCommentCreationViewController {
     }
     
     private func uploadImageToCloudinary(imageData: String) {
+        imagePreviewView.isUploadingImage = true
+        view.endEditing(true)
         model?.uploadImageToCloudinary(imageData: imageData) { isUploaded in
+            self.imagePreviewView.isUploadingImage = false
             self.updatePostButtonEnabledState()
+            if !isUploaded {
+                self.imagePreviewView.image = nil
+            }
         }
     }
 }
@@ -601,6 +609,13 @@ extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
         guard let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() else { return }
         imagePreviewView.image = image
         uploadImageToCloudinary(imageData: imageData)
+    }
+}
+
+extension SPBaseCommentCreationViewController: CommentImagePreviewDelegate {
+    func imageRemoved() {
+        model?.removeImage()
+        self.updatePostButtonEnabledState()
     }
 }
 

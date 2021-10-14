@@ -8,12 +8,31 @@
 
 import UIKit
 
+protocol CommentImagePreviewDelegate: AnyObject {
+    func imageRemoved()
+}
+
 final class CommentImagePreview: BaseView {
     
     private let imageView: BaseUIImageView = .init()
     private var heightConstraint: NSLayoutConstraint?
+    private let loaderView: SPLoaderView = .init(backgroundOpacity: 0.4)
     
     private lazy var removeButton: BaseButton = .init(type: .custom)
+    
+    weak var delegate: CommentImagePreviewDelegate?
+    
+    var isUploadingImage: Bool {
+        didSet {
+            if isUploadingImage {
+                loaderView.isHidden = false
+                loaderView.startLoader()
+            } else {
+                loaderView.isHidden = true
+                loaderView.stopLoader()
+            }
+        }
+    }
     
     var image: UIImage? {
         didSet {
@@ -24,8 +43,8 @@ final class CommentImagePreview: BaseView {
     }
  
     override init(frame: CGRect) {
+        isUploadingImage = false
         super.init(frame: frame)
-        
         setup()
         updateColorsAccordingToStyle()
     }
@@ -56,9 +75,14 @@ final class CommentImagePreview: BaseView {
             heightConstraint = $0.height.equal(to: 0)
         }
         
-        addSubviews(imageView, removeButton)
+        addSubviews(imageView, removeButton, loaderView)
         setupImageView()
         setupRemoveButton()
+        setupLoaderView()
+    }
+    
+    private func setupLoaderView() {
+        loaderView.pinEdges(to: imageView)
     }
     
     private func setupImageView() {
@@ -87,6 +111,8 @@ final class CommentImagePreview: BaseView {
     @objc
     private func removeImage() {
         self.image = nil
+        self.isUploadingImage = false
+        delegate?.imageRemoved()
     }
 }
 
