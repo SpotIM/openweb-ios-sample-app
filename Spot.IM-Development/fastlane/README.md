@@ -20,7 +20,17 @@ or alternatively using `brew install fastlane`
 ```
 fastlane ios beta
 ```
+The setup_circle_ci fastlane action will perform the following actions:
+  Create a new temporary keychain for use with match (see the CircleCI code signing doc for more details).
+  Switch match to readonly mode to make sure CI does not create new code signing certificates or provisioning profiles.
+  Set up log and test result paths to be easily collectible.
+
 Push a new beta build to TestFlight
+### ios unit_tests
+```
+fastlane ios unit_tests
+```
+
 ### ios release_pod
 ```
 fastlane ios release_pod

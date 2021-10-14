@@ -63,6 +63,8 @@
 "View Reply" = "عرض التعليق";
 "View Replies" = "عرض التعليقات";
 "Reply" = "رد";
+"Replies" = "الردود";
+"Commenting on this article has ended" = "انتهت فترة التعليق على هذا المقال";
 "This message was deleted." = "تم حذف هذه الرسالة.";
 "This message was reported." = "تم الابلاغ عن هذه الرساله";
 "This message was rejected." = "تم رفض هذا التعليق";
@@ -80,3 +82,5 @@
 "Up vote button" = "Up vote button";
 "Down vote button" = "Down vote button";
 "Options menu" = "Options menu";
+"Post a Comment" = "انشر تعليق";
+"Show Comments" = "إظهار التعليقات";

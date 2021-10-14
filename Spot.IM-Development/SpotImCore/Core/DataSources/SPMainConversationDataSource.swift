@@ -35,6 +35,7 @@ internal final class SPMainConversationDataSource {
     var messageCount: Int = 0
     var minVisibleReplies: Int = 2
     var communityQuestion: String?
+    var isReadOnly: Bool = false
 
     private(set) var sortMode: SPCommentSortMode?
     private(set) var postId: String
@@ -85,6 +86,17 @@ internal final class SPMainConversationDataSource {
     
     internal var isLoading: Bool {
         return dataProvider.isLoading
+    }
+    
+    public var shouldShowBanner = false {
+        willSet {
+            if newValue {
+                cellData.insert([], at: 0)
+            } else {
+                cellData.remove(at: 0)
+            }
+            
+        }
     }
     
     internal var canLoadNextPage: Bool {
@@ -149,8 +161,12 @@ internal final class SPMainConversationDataSource {
                 self.messageCounterUpdated?(self.messageCount)
                 
                 self.cellData = self.processed(response?.conversation?.comments)
+                if self.shouldShowBanner {
+                    self.cellData.insert([], at: 0)
+                }
                 
                 self.communityQuestion = response?.conversation?.communityQuestion ?? nil
+                self.isReadOnly = response?.conversation?.readOnly ?? false
                 completion(true, nil)
             }
         }
@@ -281,7 +297,7 @@ internal final class SPMainConversationDataSource {
     }
 
     func numberOfSections() -> Int {
-        let count = cellData.filter { !$0.isEmpty }.count + (isLoading ? 1 : 0)
+        let count = cellData.filter { !$0.isEmpty }.count + (isLoading ? 1 : 0) + (shouldShowBanner ? 1 : 0)
         return count
     }
     
@@ -316,6 +332,8 @@ internal final class SPMainConversationDataSource {
     
     internal func numberOfRows(in section: Int) -> Int {
         if isLoading && section == numberOfSections() - 1 { // loader cell in dedicated section
+            return 1
+        } else if shouldShowBanner && section == 0 {
             return 1
         } else {
             return cellData[section].count
@@ -545,6 +563,12 @@ internal final class SPMainConversationDataSource {
                 let reply = replyViewModel(from: reply, with: comment)
                 if showReplies {
                     section.insert(reply, at: 1)
+                    if let replyId = reply.commentId,
+                       let provider = repliesProviders[replyId] {
+                        // The replies of the reply are hidden,
+                        // we reset the offset of this reply repliesProviders
+                        provider.resetOffset()
+                    }
                 } else if let id = comment.id {
                     if hiddenData[id] == nil {
                         hiddenData[id] = [CommentViewModel]()
@@ -758,7 +782,7 @@ extension SPMainConversationDataSource {
             Logger.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
             self.messageCount = updatedMessageCount
             self.messageCounterUpdated?(updatedMessageCount)
-            cellData.insert([viewModel], at: 0)
+            cellData.insert([viewModel], at: shouldShowBanner ? 1 : 0)
             cachedCommentReply = nil
             delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
         } else {
@@ -776,7 +800,7 @@ extension SPMainConversationDataSource {
                     let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
                     if dataModel == nil {
                         Logger.verbose("FirstComment: Data model not found, adding it manually")
-                        self.cellData.insert([viewModel], at: 0)
+                        self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
                         self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
                         Logger.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
                         self.messageCount = updatedMessageCount

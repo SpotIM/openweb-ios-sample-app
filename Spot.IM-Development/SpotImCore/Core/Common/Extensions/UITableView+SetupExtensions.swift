@@ -18,6 +18,7 @@ internal extension UITableView {
         register(SPReplyCell.self, forCellReuseIdentifier: String(describing: SPReplyCell.self))
         register(SPCommentCell.self, forCellReuseIdentifier: String(describing: SPCommentCell.self))
         register(SPLoaderCell.self, forCellReuseIdentifier: String(describing: SPLoaderCell.self))
+        register(SPAdBannerCell.self, forCellReuseIdentifier: String(describing: SPAdBannerCell.self))
         register(
             SPConversationSectionHeaderFooterView.self,
             forHeaderFooterViewReuseIdentifier: String(describing: SPConversationSectionHeaderFooterView.self)

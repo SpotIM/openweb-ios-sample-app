@@ -15,6 +15,7 @@ internal struct SPConversation: Decodable {
     var hasNext: Bool = false
     var maxDepth: Int?
     var communityQuestion: String?
+    var readOnly: Bool = false
 
     var users: [String: SPUser]?
     var comments: [SPComment]?

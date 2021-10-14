@@ -36,6 +36,8 @@ public enum CustomizableView {
     case conversationFooter(view: UIView)
     case communityGuidelines(textView: UITextView)
     case navigationItemTitle(textView: UITextView)
+    case showCommentsButton(button: SPShowCommentsButton)
+    case preConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -165,7 +167,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let controller = self.conversationController(with: self.conversationModel!)
+                let controller = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
                 controller.commentIdToShowOnOpen = selectedCommentId
                 self.conversationModel!.dataSource.showReplies = true
                 self.startFlow(with: controller)
@@ -191,7 +193,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let conversationController = self.conversationController(with: self.conversationModel!)
+                let conversationController = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
                 conversationController.commentIdToShowOnOpen = selectedCommentId
                 self.conversationModel!.dataSource.showReplies = true
                 navController.viewControllers = [conversationController]
@@ -339,15 +341,20 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         self.preConversationViewController = preConversationViewController
     }
 
-    private func conversationController(with model: SPMainConversationModel) -> SPMainConversationViewController {
-        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self)
+    private func conversationController(with model: SPMainConversationModel, openedByPublisher: Bool = false) -> SPMainConversationViewController {
+        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self, openedByPublisher: openedByPublisher)
         
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         controller.webPageDelegate = self
         
-        let navigationItemTextView = getNavigationItemTitleTextView(with: LocalizationManager.localizedString(key: "Conversation"))
-        controller.navigationItem.titleView = navigationItemTextView
+        let navigationItemTitleText = LocalizationManager.localizedString(key: "Conversation")
+        if SpotIm.enableCustomNavigationItemTitle {
+            let navigationItemTextView = getNavigationItemTitleTextView(with: navigationItemTitleText)
+            controller.navigationItem.titleView = navigationItemTextView
+        } else {
+            controller.title = navigationItemTitleText
+        }
         
         Logger.verbose("FirstComment: localCommentReplayDidCreate SET")
         localCommentReplyDidCreate = { comment in
@@ -572,6 +579,10 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: CustomUIDelegate {
+    func customizeShowCommentsButton(button: SPShowCommentsButton) {
+        customUIDelegate?.customizeView(view: .showCommentsButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    
     func customizeLoginPromptTextView(textView: UITextView) {
         customUIDelegate?.customizeView(view: .loginPrompt(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
@@ -589,6 +600,11 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
         customUIDelegate?.customizeView(view: .communityGuidelines(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
     func customizeNavigationItemTitle(textView: UITextView) {
+        guard SpotIm.enableCustomNavigationItemTitle else { return }
         customUIDelegate?.customizeView(view: .navigationItemTitle(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    
+    func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
+        customUIDelegate?.customizeView(view: .preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel), isDarkMode:  SPUserInterfaceStyle.isDarkMode)
     }
 }
