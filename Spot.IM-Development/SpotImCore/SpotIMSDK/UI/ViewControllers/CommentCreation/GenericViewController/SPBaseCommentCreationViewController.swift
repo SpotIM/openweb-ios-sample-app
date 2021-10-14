@@ -77,8 +77,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         return false
     }
     
-    private var inputViews = [SPTextInputView]()
-    
     deinit {
         unregisterFromKeyboardNotifications()
     }
@@ -89,10 +87,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         setupUI()
         setupUserIconHandler()
         registerForKeyboardNotifications()
-        inputViews.append(textInputViewContainer)
-        if showsUsernameInput {
-            inputViews.append(usernameView)
-        }
         
         // remove keyboard when tapping outside of textView
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -293,12 +287,18 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func isValidInput() -> Bool {
+        guard let model = self.model else { return false }
         var isValidInput = true
-        for aView in inputViews {
-            if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
+        
+        // check user name input text
+        if showsUsernameInput {
+            if usernameView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
                 isValidInput = false
-                break
             }
+        }
+        
+        if !model.isValidContent() {
+            isValidInput = false
         }
         
         // check comment labels minSelected
@@ -477,6 +477,12 @@ extension SPBaseCommentCreationViewController {
             commentLabelsContainerHeightConstraint = $0.height.equal(to: 56.0)
         }
     }
+    
+    private func uploadImageToCloudinary(imageData: String) {
+        model?.uploadImageToCloudinary(imageData: imageData) { isUploaded in
+            self.updatePostButtonEnabledState()
+        }
+    }
 }
 
 // MARK: - Extensions
@@ -591,8 +597,10 @@ extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDel
 }
 
 extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
-    func imageUploaded(image: UIImage) {
+    func imageSelected(image: UIImage) {
+        guard let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() else { return }
         imagePreviewView.image = image
+        uploadImageToCloudinary(imageData: imageData)
     }
 }
 

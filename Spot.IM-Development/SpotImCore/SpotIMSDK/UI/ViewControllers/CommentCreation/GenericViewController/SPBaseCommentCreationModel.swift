@@ -13,6 +13,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     var postCompletionHandler: ((SPComment) -> Void)?
     var postErrorHandler: ((Error) -> Void)?
     var commentText: String = ""
+    var imageContent: SPComment.Content.Image?
     var articleMetadate: SpotImArticleMetadata
     var selectedLabels: SelectedLabels?
     var commentLabelsSection: String?
@@ -21,6 +22,8 @@ class SPBaseCommentCreationModel: CommentStateable {
     let imageProvider: SPImageURLProvider
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
+    
+    private var isUploadingImage: Bool = false
     
     init(cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
@@ -70,5 +73,69 @@ class SPBaseCommentCreationModel: CommentStateable {
         imageProvider.fetchImage(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
+    }
+    
+    func isValidContent() -> Bool {
+        return
+            !commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            imageContent != nil
+    }
+    
+    func uploadImageToCloudinary(imageData: String, completion: @escaping (Bool) -> Void) {
+        self.isUploadingImage = true
+        imageProvider.uploadImage(imageData: imageData) { imageContent, err in
+            if self.isUploadingImage {
+                self.imageContent = imageContent
+            }
+            if err == nil && imageContent != nil { // TODO - refactor
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
+    func removeImage() { // TODO: handle remove
+        self.isUploadingImage = false
+        self.imageContent = nil
+    }
+    
+    func getContentRequestParam() -> [[String: Any]] {
+        var content: [[String: Any]] = []
+        
+        if !commentText.isEmpty { // TODO: real empty
+            content.append([
+                CreateCommentAPIKeys.type: CreateCommentAPIKeys.text,
+                CreateCommentAPIKeys.text: commentText
+            ])
+        }
+        
+        if let imageContent = self.imageContent {
+            content.append([
+                CreateCommentAPIKeys.type: CreateCommentAPIKeys.image,
+                CreateCommentAPIKeys.imageId: imageContent.imageId,
+                CreateCommentAPIKeys.originalWidth: imageContent.originalWidth,
+                CreateCommentAPIKeys.originalHeight: imageContent.originalHeight
+            ])
+        }
+        return content
+    }
+}
+
+extension SPBaseCommentCreationModel {
+    internal enum CreateCommentAPIKeys {
+        static let content = "content"
+        static let type = "type"
+        static let text = "text"
+        static let image = "image"
+        static let imageId = "imageId"
+        static let originalHeight = "originalHeight"
+        static let originalWidth = "originalWidth"
+        static let metadata = "metadata"
+        static let displayName = "display_name"
+        static let additionalData = "additional_data"
+        static let labels = "labels"
+        static let labelsSection = "section"
+        static let labelsIds = "ids"
     }
 }
