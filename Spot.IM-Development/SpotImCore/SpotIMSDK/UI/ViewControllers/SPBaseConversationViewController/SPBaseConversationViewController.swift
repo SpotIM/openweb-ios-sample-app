@@ -157,6 +157,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
             openProfileWebScreen(userId: userId, isMyProfile: true)
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId, targetType: .avatar), source: .conversation)
         } else {
+            if SpotIm.reactNativeShowLoginScreenOnRootVC && self.isInFullConversationVC() {
+                self.navigationController?.popViewController(animated: false)
+            }
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
         }
@@ -695,6 +698,9 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
         guard let config = SPConfigsDataSource.appConfig,
            config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
+            if SpotIm.reactNativeShowLoginScreenOnRootVC && self.isInFullConversationVC() {
+                self.navigationController?.popViewController(animated: false)
+            }
             userAuthFlowDelegate?.presentAuth()
             self.didStartSignInFlow()
             return
@@ -806,14 +812,28 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
 }
 
 extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate {
-    func labelContainerDidTap(_ foorterView: SPMainConversationFooterView) {
+    func labelContainerDidTap(_ footerView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
+        
+        if SpotIm.reactNativeShowLoginScreenOnRootVC && SpotIm.getRegisteredUserId() == nil {
+            if self.isInFullConversationVC() {
+                self.navigationController?.popViewController(animated: false)
+            }
+
+            userAuthFlowDelegate?.presentAuth()
+            self.didStartSignInFlow()
+            return
+        }
         logCreationOpen(with: .comment)
         delegate.createComment(with: model)
     }
     
     func userAvatarDidTap(_ foorterView: SPMainConversationFooterView) {
         openMyProfileWebScreen()
+    }
+    
+    private func isInFullConversationVC() -> Bool {
+        return self is SPMainConversationViewController
     }
 }
 
