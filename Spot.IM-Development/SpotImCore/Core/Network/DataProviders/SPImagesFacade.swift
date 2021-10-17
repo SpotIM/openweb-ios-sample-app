@@ -35,6 +35,8 @@ typealias ImageUploadCompletionHandler = (SPComment.Content.Image?, Error?) -> V
 internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProvider {
     internal var avatarSize: CGSize?
     
+    internal var currentUploadingImageId: String?
+    
     /// Use prepared url with size here, please
     @discardableResult
     func fetchImage(with url: URL?, size: CGSize? = nil,
@@ -78,13 +80,21 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
         let publicId = UUID().uuidString
         let timestamp = String(round(NSDate().timeIntervalSince1970 * 1000) / 1000.0)
         
+        self.currentUploadingImageId = publicId
         signToCloudinary(publicId: publicId, timestamp: timestamp) { signature, err in
             guard let signature = signature else {
                 completion(nil, err)
                 return
             }
             
-            self.uploadImageToCloudinary(imageData: imageData, publicId: publicId, timestamp: timestamp, signature: signature, completion: completion)
+            self.uploadImageToCloudinary(imageData: imageData, publicId: publicId, timestamp: timestamp, signature: signature) { imageData, err in
+                guard imageData?.imageId == self.currentUploadingImageId else {
+                    // got result of previous uploaded image - ignore
+                    return
+                }
+                self.currentUploadingImageId = nil
+                completion(imageData, err)
+            }
         }
     }
     

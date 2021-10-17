@@ -9,7 +9,7 @@
 import UIKit
 
 protocol CommentImagePreviewDelegate: AnyObject {
-    func imageRemoved()
+    func clickedOnRemoveButton()
 }
 
 final class CommentImagePreview: BaseView {
@@ -77,8 +77,8 @@ final class CommentImagePreview: BaseView {
         
         addSubviews(imageView, removeButton, loaderView)
         setupImageView()
-        setupRemoveButton()
         setupLoaderView()
+        setupRemoveButton()
     }
     
     private func setupLoaderView() {
@@ -96,6 +96,7 @@ final class CommentImagePreview: BaseView {
     }
     
     private func setupRemoveButton() {
+        bringSubviewToFront(removeButton)
         removeButton.isHidden = true
         removeButton.addTarget(self, action: #selector(self.removeImage), for: .touchUpInside)
         removeButton.contentHorizontalAlignment = .right
@@ -112,7 +113,7 @@ final class CommentImagePreview: BaseView {
     private func removeImage() {
         self.image = nil
         self.isUploadingImage = false
-        delegate?.imageRemoved()
+        delegate?.clickedOnRemoveButton()
     }
 }
 

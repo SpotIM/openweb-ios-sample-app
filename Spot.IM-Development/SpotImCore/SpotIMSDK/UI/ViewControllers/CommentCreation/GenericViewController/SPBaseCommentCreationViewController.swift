@@ -504,6 +504,13 @@ extension SPBaseCommentCreationViewController {
             }
         }
     }
+    
+    private func removeImage() {
+        model?.removeImage()
+        self.imagePreviewView.image = nil
+        self.imagePreviewView.isUploadingImage = false
+        self.updatePostButtonEnabledState()
+    }
 }
 
 // MARK: - Extensions
@@ -620,15 +627,15 @@ extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDel
 extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
     func imageSelected(image: UIImage) {
         guard let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() else { return }
+        removeImage()
         imagePreviewView.image = image
         uploadImageToCloudinary(imageData: imageData)
     }
 }
 
 extension SPBaseCommentCreationViewController: CommentImagePreviewDelegate {
-    func imageRemoved() {
-        model?.removeImage()
-        self.updatePostButtonEnabledState()
+    func clickedOnRemoveButton() {
+        self.removeImage()
     }
 }
 
