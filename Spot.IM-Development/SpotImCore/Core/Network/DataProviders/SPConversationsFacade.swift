@@ -25,7 +25,7 @@ internal protocol SPConversationsDataProvider {
     var canLoadNextPage: Bool { get }
     var hasNext: Bool { get }
 
-    var imageURLProvider: SPImageURLProvider? { get set }
+    var imageURLProvider: SPImageProvider? { get set }
 
     func resetOffset()
     
@@ -55,7 +55,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
     static private let defaultHasNext = false
     static private let defaultOffset = 0
 
-    internal var imageURLProvider: SPImageURLProvider?
+    internal var imageURLProvider: SPImageProvider?
 
     private let pageSize = 15
     private var offset = defaultOffset

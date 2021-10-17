@@ -189,7 +189,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
             }
             self.dismissController()
         }
-        model?.postErrorHandler = { [weak self] error in
+        model?.errorHandler = { [weak self] error in
             guard let self = self else { return }
 
             self.hideLoader()

@@ -28,18 +28,19 @@ internal final class SPPermissionsProvider {
     }
     
     private static func openAppSettings() {
-        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(settingsUrl)
     }
     
-    private static func getPermissionDeniedMessage(type: SPPermissionType) -> String {
+    private static func getPermissionDeniedMessage(for type: SPPermissionType) -> String {
         switch type {
         case .camera:
             return LocalizationManager.localizedString(key: "Camera permissions are needed")
         }
     }
     
-    private static func handlePermissionDenied(type: SPPermissionType) {
-        let alert = UIAlertController(title: nil, message: getPermissionDeniedMessage(type: type), preferredStyle: .alert)
+    private static func handlePermissionDenied(for type: SPPermissionType) {
+        let alert = UIAlertController(title: nil, message: getPermissionDeniedMessage(for: type), preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"), style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: LocalizationManager.localizedString(key: "Open settings"), style: .default, handler: { _ in
             openAppSettings()
@@ -54,16 +55,16 @@ internal final class SPPermissionsProvider {
             onAuthorized()
             break
         case .denied:
-            handlePermissionDenied(type: .camera)
+            handlePermissionDenied(for: .camera)
             break
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+            AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted { //access allowed
                     onAuthorized()
                 } else { //access denied
                     // TODO - Do something?
                 }
-            })
+            }
             break
         default:
             break

@@ -39,13 +39,18 @@ internal class ImagePicker: NSObject {
             if type == .camera {
                 SPPermissionsProvider.requestPermission(type: .camera, onAuthorized: {
                     DispatchQueue.main.async {
-                        self.presentationController?.present(self.pickerController, animated: true)
+                        presentPickerController()
                     }
                 })
             } else {
-                self.presentationController?.present(self.pickerController, animated: true)
+                presentPickerController()
             }
         }
+    }
+    
+    private func presentPickerController() {
+        guard let presentationController = self.presentationController  else { return }
+        presentationController.present(self.pickerController, animated: true)
     }
 
     public func present(from sourceView: UIView) {
