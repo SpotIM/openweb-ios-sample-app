@@ -294,7 +294,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         
         // check user name input text
         if showsUsernameInput {
-            if usernameView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
+            if usernameView.text == nil || usernameView.text?.hasContent == false {
                 isValidInput = false
             }
         }

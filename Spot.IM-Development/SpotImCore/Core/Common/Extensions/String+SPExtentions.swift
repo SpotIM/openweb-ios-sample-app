@@ -17,4 +17,8 @@ extension String {
             return nil
         }
     }
+    
+    var hasContent: Bool {
+        return !trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 }
