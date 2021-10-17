@@ -28,7 +28,7 @@ final class SPCommentCreationModel: SPBaseCommentCreationModel {
     init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider,
+         imageProvider: SPImageProvider,
          articleMetadate: SpotImArticleMetadata
         ) {
         self.dataModel = commentCreationDTO
@@ -82,7 +82,7 @@ final class SPCommentCreationModel: SPBaseCommentCreationModel {
                 self.postCompletionHandler?(comment)
             },
             failure: { [weak self] error in
-                self?.postErrorHandler?(error)
+                self?.errorHandler?(error)
             }
         )
     }

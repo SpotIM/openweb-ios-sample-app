@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-internal protocol SPImageURLProvider {
+internal protocol SPImageProvider {
     
     var avatarSize: CGSize? { get set }
     func imageURL(with id: String?, size: CGSize?) -> URL?
@@ -17,7 +17,7 @@ internal protocol SPImageURLProvider {
     @discardableResult
     func fetchImage(with url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> DataRequest?
     
-    func uploadImage(imageData: String, completion: @escaping (SPComment.Content.Image?, Error?) -> Void)
+    func uploadImage(imageData: String, completion: @escaping ImageUploadCompletionHandler)
 }
 
 internal class SPSignResponse: Decodable {
@@ -30,7 +30,9 @@ internal class CloudinaryUploadResponse: Decodable {
     let height: Int
 }
 
-internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLProvider {
+typealias ImageUploadCompletionHandler = (SPComment.Content.Image?, Error?) -> Void
+
+internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProvider {
     internal var avatarSize: CGSize?
     
     /// Use prepared url with size here, please
@@ -72,12 +74,15 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageURLP
         }
     }
     
-    func uploadImage(imageData: String, completion: @escaping (SPComment.Content.Image?, Error?) -> Void) {
+    func uploadImage(imageData: String, completion: @escaping ImageUploadCompletionHandler) {
         let publicId = UUID().uuidString
         let timestamp = String(round(NSDate().timeIntervalSince1970 * 1000) / 1000.0)
         
         signToCloudinary(publicId: publicId, timestamp: timestamp) { signature, err in
-            guard let signature = signature else { return }
+            guard let signature = signature else {
+                completion(nil, err)
+                return
+            }
             
             self.uploadImageToCloudinary(imageData: imageData, publicId: publicId, timestamp: timestamp, signature: signature, completion: completion)
         }
