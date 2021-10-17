@@ -98,7 +98,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     private weak var conversationModel: SPMainConversationModel?
     private let adsManager: AdsManager
     private let apiManager: ApiManager
-    private let imageProvider: SPImageURLProvider
+    private let imageProvider: SPImageProvider
     private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
     private var isLoadingConversation: Bool = false

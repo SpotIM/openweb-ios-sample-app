@@ -11,7 +11,7 @@ import Foundation
 class SPBaseCommentCreationModel: CommentStateable {
     
     var postCompletionHandler: ((SPComment) -> Void)?
-    var postErrorHandler: ((Error) -> Void)?
+    var errorHandler: ((Error) -> Void)?
     var commentText: String = ""
     var imageContent: SPComment.Content.Image?
     var articleMetadate: SpotImArticleMetadata
@@ -19,7 +19,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     var commentLabelsSection: String?
     var sectionCommentLabelsConfig: SPCommentLabelsSectionConfiguration?
     
-    let imageProvider: SPImageURLProvider
+    let imageProvider: SPImageProvider
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
     
@@ -27,7 +27,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     
     init(cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider,
+         imageProvider: SPImageProvider,
          articleMetadate: SpotImArticleMetadata
     ) {
         self.imageProvider = imageProvider
@@ -96,10 +96,12 @@ class SPBaseCommentCreationModel: CommentStateable {
             if self.isUploadingImage {
                 self.imageContent = imageContent
             }
-            if err == nil && imageContent != nil { // TODO - refactor
-                completion(true)
+            
+            if let error = err {
+                print("Failed to upload image: " + error.localizedDescription)
+                self.errorHandler?(error)
             } else {
-                completion(false)
+                completion(imageContent != nil)
             }
         }
     }

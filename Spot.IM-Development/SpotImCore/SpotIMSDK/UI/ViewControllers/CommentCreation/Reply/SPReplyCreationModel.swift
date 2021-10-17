@@ -15,7 +15,7 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
     init(replyCreationDTO: SPReplyCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider,
+         imageProvider: SPImageProvider,
          articleMetadata: SpotImArticleMetadata
         ) {
         self.dataModel = replyCreationDTO
@@ -57,7 +57,7 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
                 self.postCompletionHandler?(reply)
             },
             failure: { [weak self] error in
-                self?.postErrorHandler?(error)
+                self?.errorHandler?(error)
             }
         )
     }
