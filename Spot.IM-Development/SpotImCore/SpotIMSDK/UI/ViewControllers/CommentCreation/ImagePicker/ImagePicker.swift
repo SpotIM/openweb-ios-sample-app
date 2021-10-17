@@ -52,14 +52,14 @@ internal class ImagePicker: NSObject {
 
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        if let action = self.action(for: .camera, title: "Take photo") { // TODO: translations
+        if let action = self.action(for: .camera, title: LocalizationManager.localizedString(key: "Take a Photo")) {
             alertController.addAction(action)
         }
-        if let action = self.action(for: .photoLibrary, title: "Photo library") { // TODO: translations
+        if let action = self.action(for: .photoLibrary, title: LocalizationManager.localizedString(key: "Choose from Gallery")) {
             alertController.addAction(action)
         }
 
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil)) // TODO: translations
+        alertController.addAction(UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"), style: .cancel, handler: nil))
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             alertController.popoverPresentationController?.sourceView = sourceView
