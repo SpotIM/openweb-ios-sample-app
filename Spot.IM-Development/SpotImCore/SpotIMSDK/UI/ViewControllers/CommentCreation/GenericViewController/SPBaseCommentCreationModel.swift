@@ -91,6 +91,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
     
     func uploadImageToCloudinary(imageData: String, completion: @escaping (Bool) -> Void) {
+        self.imageContent = nil
         self.isUploadingImage = true
         imageProvider.uploadImage(imageData: imageData) { imageContent, err in
             if self.isUploadingImage {
@@ -101,8 +102,9 @@ class SPBaseCommentCreationModel: CommentStateable {
                 print("Failed to upload image: " + error.localizedDescription)
                 self.errorHandler?(error)
             } else {
-                completion(imageContent != nil)
+                completion(self.isUploadingImage && imageContent != nil)
             }
+            self.isUploadingImage = false
         }
     }
     
