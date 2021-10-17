@@ -86,7 +86,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     
     func isValidContent() -> Bool {
         return
-            !commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            commentText.hasContent ||
             imageContent != nil
     }
     
@@ -116,7 +116,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     func getContentRequestParam() -> [[String: Any]] {
         var content: [[String: Any]] = []
         
-        if !commentText.isEmpty { // TODO: real empty
+        if commentText.hasContent {
             content.append([
                 CreateCommentAPIKeys.type: CreateCommentAPIKeys.text,
                 CreateCommentAPIKeys.text: commentText
