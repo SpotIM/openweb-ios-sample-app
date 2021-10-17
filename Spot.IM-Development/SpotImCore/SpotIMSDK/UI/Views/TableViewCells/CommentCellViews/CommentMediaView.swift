@@ -38,6 +38,7 @@ internal class CommentMediaView: BaseView {
     }
     
     private func configureImageView() {
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = SPCommonConstants.commentMediaCornerRadius
         imageView.layout {
@@ -51,6 +52,9 @@ internal class CommentMediaView: BaseView {
     func configureMedia(imageUrl: URL?, gifUrl: String?, width: Float?, height: Float?) {
         // if imageUrl exist, set image and clean gif
         if let imageUrl = imageUrl, let height = height, let width = width {
+            // set placeholder
+            imageView.image = UIImage(spNamed: "imageMediaPlaceholder", for: .light)
+            // load image
             imageView.setImage(with: imageUrl)
             imageViewHeightConstraint?.constant = CGFloat(height)
             imageViewWidthConstraint?.constant = CGFloat(width)
