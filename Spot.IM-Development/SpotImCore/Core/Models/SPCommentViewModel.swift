@@ -104,20 +104,6 @@ internal struct CommentViewModel {
            let attributedHtmlString = htmlText.text.htmlToMutableAttributedString {
             commentText = attributedHtmlString.string
         }
-        
-//        switch comment.content?.first {
-//        case .text(let htmlText):
-//            if let attributedHtmlString = htmlText.text.htmlToMutableAttributedString {
-//                commentText = attributedHtmlString.string
-//            }
-//            if let data = htmlText.text.data(using: String.Encoding.unicode, allowLossyConversion: false),
-//               let attributedHtmlString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
-//                commentText = attributedHtmlString.string
-//                break
-//            }
-//        default:
-//            commentText = "no text"
-//        }
 
         if let time = comment.writtenAt {
             timestamp = Date(timeIntervalSince1970: time).timeAgo()
