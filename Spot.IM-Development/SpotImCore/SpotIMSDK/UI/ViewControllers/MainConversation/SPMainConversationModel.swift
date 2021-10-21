@@ -349,7 +349,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
                 Logger.error("Failed to update real time data: \(realtimeError)")
                 stopRealTimeFetching()
                 let realtimeFailureReport = RealTimeFailureModel(reason: realtimeError.description)
-                SPDefaultFailureReporter.shared.sendRealTimeFailureReport(realtimeFailureReport)
+                SPDefaultFailureReporter.shared.sendFaliureReport(realtimeFailureReport)
             }
         }
     }
