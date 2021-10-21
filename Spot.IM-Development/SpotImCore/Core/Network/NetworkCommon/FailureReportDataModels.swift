@@ -27,6 +27,9 @@ extension ParametersPresentable where Self: Encodable {
 
 struct GeneralFailureReportDataModel: Encodable, ParametersPresentable {
     let reason: String
+    
+    var commentId: String? = nil
+    var parentCommentId: String? = nil
 }
 
 struct NetworkFailureReportDataModel: Encodable, ParametersPresentable {
