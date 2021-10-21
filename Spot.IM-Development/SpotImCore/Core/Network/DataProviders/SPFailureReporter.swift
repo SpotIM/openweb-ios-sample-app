@@ -24,14 +24,14 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         super.init(apiManager: ApiManager())
     }
     
-    func sendFailureReport(_ rawReport: RawReportModel) {
+    func sendNetworkFailureReport(_ rawReport: RawReportModel) {
         guard
             let spotKey = SPClientSettings.main.spotKey
             else { return }
         
         let spRequest = SPFailureReportRequest.error
         let headers = HTTPHeaders.basic(with: spotKey)
-        let failureReportDataModel = prepareReportDataModel(rawReport)
+        let failureReportDataModel = prepareNetworkReportDataModel(rawReport)
         
         manager.execute(
             request: spRequest,
@@ -81,13 +81,13 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         }
     }
     
-    private func prepareReportDataModel(_ rawReport: RawReportModel) -> FailureReportDataModel {
+    private func prepareNetworkReportDataModel(_ rawReport: RawReportModel) -> NetworkFailureReportDataModel {
         var bodyString: String = rawReport.errorMessage
         if let data = rawReport.errorData, let dataString = String(data: data, encoding: .utf8) {
             bodyString = dataString
         }
         
-        return FailureReportDataModel(
+        return NetworkFailureReportDataModel(
             errorSource: "HTTP",
             httpPayload: FailureHttpPayload(
                 body: bodyString,
