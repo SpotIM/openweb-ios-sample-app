@@ -244,7 +244,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             if let realtimeError = error as? RealTimeErorr {
                 model.stopRealTimeFetching()
                 let realtimeFailureReport = RealTimeFailureModel(reason: realtimeError.description)
-                SPDefaultFailureReporter.shared.sendRealTimeFailureReport(realtimeFailureReport)
+                SPDefaultFailureReporter.shared.sendFaliureReport(realtimeFailureReport)
             }
         }
 
@@ -897,7 +897,7 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     func bannerFailedToLoad(error: Error) {
         Logger.error("error bannerFailedToLoad - \(error)")
         let monetizationFailureData = MonetizationFailureModel(source: .mainConversation, reason: error.localizedDescription, bannerType: .banner)
-        SPDefaultFailureReporter.shared.sendMonetizationFaliureReport(monetizationFailureData)
+        SPDefaultFailureReporter.shared.sendFaliureReport(monetizationFailureData)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }
 }
