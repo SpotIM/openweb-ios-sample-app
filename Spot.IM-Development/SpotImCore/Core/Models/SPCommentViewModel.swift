@@ -100,9 +100,18 @@ internal struct CommentViewModel {
             repliesButtonState = .hidden
         }
         
-        if let htmlText = comment.text,
-           let attributedHtmlString = htmlText.text.htmlToMutableAttributedString {
-            commentText = attributedHtmlString.string
+        if let htmlText = comment.text {
+           if let attributedHtmlString = htmlText.text.htmlToMutableAttributedString {
+                commentText = attributedHtmlString.string
+           } else {
+                SPDefaultFailureReporter.shared.sendFaliureReport(
+                    GeneralFailureReportDataModel(
+                        reason: "Error in html text",
+                        commentId: self.commentId,
+                        parentCommentId: self.parentCommentId
+                    )
+                )
+           }
         }
 
         if let time = comment.writtenAt {
