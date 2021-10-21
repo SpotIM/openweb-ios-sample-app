@@ -45,29 +45,11 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         }
     }
     
-    func sendMonetizationFaliureReport(_ failureData: ParametersPresentable) {
+    func sendFaliureReport(_ failureData: ParametersPresentable, postId: String = "default") {
         guard let spotKey = SPClientSettings.main.spotKey else { return }
         
         let spRequest = SPFailureReportRequest.error
-        let headers = HTTPHeaders.basic(with: spotKey)
-        
-        manager.execute(
-            request: spRequest,
-            parameters: failureData.parameters(),
-            parser: EmptyParser(),
-            headers: headers
-        ) { (result, response) in
-            guard case let .failure(error) = result else { return }
-            
-            Logger.error(error)
-        }
-    }
-    
-    func sendRealTimeFailureReport(_ failureData: ParametersPresentable) {
-        guard let spotKey = SPClientSettings.main.spotKey else { return }
-        
-        let spRequest = SPFailureReportRequest.error
-        let headers = HTTPHeaders.basic(with: spotKey)
+        let headers = HTTPHeaders.basic(with: spotKey, postId: postId)
         
         manager.execute(
             request: spRequest,
