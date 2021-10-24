@@ -624,8 +624,7 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     
     func bannerFailedToLoad(error: Error) {
         Logger.error("error bannerFailedToLoad - \(error)")
-        let monetizationFailureData = MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .banner)
-        SPDefaultFailureReporter.shared.sendFaliureReport(monetizationFailureData)
+        SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .preConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }
 }
@@ -645,8 +644,7 @@ extension SPPreConversationViewController: AdsProviderInterstitialDelegate {
     }
     
     func interstitialFailedToLoad(error: Error) {
-        let monetizationFailureData = MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .interstitial)
-        SPDefaultFailureReporter.shared.sendFaliureReport(monetizationFailureData)
+        SPDefaultFailureReporter.shared.report(error: .monetizationError(.interstitialFailedToLoad(error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .interstitial), source: .conversation)
     }
 }

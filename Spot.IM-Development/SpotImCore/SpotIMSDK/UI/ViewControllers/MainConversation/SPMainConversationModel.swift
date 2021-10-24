@@ -345,11 +345,10 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
                 )
             }
         } catch {
-            if let realtimeError = error as? RealTimeErorr {
+            if let realtimeError = error as? RealTimeError {
                 Logger.error("Failed to update real time data: \(realtimeError)")
                 stopRealTimeFetching()
-                let realtimeFailureReport = RealTimeFailureModel(reason: realtimeError.description)
-                SPDefaultFailureReporter.shared.sendFaliureReport(realtimeFailureReport)
+                SPDefaultFailureReporter.shared.report(error: .realTimeError(realtimeError))
             }
         }
     }
