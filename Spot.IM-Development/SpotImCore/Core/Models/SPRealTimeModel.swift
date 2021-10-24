@@ -14,7 +14,7 @@ struct RealTimeModel: Decodable {
     let timestamp: Int
 }
 
-internal enum RealTimeErorr: Error, CustomStringConvertible {
+internal enum RealTimeError: Error, CustomStringConvertible {
     case conversationNotFound
     case corruptedData
     
@@ -66,11 +66,11 @@ struct RealTimeDataModel: Decodable {
     /// Will return typing count in conversation if it exists and throw conversationNotFound exception if not
     func totalTypingCountForConversation(_ id: String) throws -> Int {
         guard let typingCountDataArray = conversationTypingV2Users?[id] else {
-            throw RealTimeErorr.conversationNotFound
+            throw RealTimeError.conversationNotFound
         }
         
         guard let count = typingCountDataArray.first(where: { $0.key == "Overall" })?.count else {
-            throw RealTimeErorr.corruptedData
+            throw RealTimeError.corruptedData
         }
         
         return count
@@ -78,11 +78,11 @@ struct RealTimeDataModel: Decodable {
     
     private func getRealTimeMessagesCountModel(_ id: String) throws -> RealTimeMessagesCountModel {
         guard let conversationDataArray = conversationCountMessages?[id] else {
-            throw RealTimeErorr.conversationNotFound
+            throw RealTimeError.conversationNotFound
         }
         
         guard let conversationCounterData = conversationDataArray.first else {
-            throw RealTimeErorr.corruptedData
+            throw RealTimeError.corruptedData
         }
         
         return conversationCounterData

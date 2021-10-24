@@ -42,7 +42,7 @@ internal final class SPProfileProvider: NetworkDataProvider {
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter.shared.sendNetworkFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
                     seal.reject(SpotImError.internalError(error.localizedDescription))
                 }
             }
