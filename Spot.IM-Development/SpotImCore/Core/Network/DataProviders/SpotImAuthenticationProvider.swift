@@ -129,7 +129,7 @@ internal class SpotImAuthenticationProvider {
                                                    parameters: requestParams,
                                                    errorData: response.data,
                                                    errorMessage: error.localizedDescription)
-                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
                     self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
                     completion(nil, SPNetworkError.default)
                 }
@@ -186,7 +186,7 @@ internal class SpotImAuthenticationProvider {
                         errorData: response.data,
                         errorMessage: error.localizedDescription
                     )
-                    SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
 
                     self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
                     completion(false, error)
@@ -198,7 +198,7 @@ internal class SpotImAuthenticationProvider {
                     errorData: response.data,
                     errorMessage: error.localizedDescription
                 )
-                SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+                SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
 
                 self.ssoAuthDelegate?.ssoFlowDidFail(with: SPNetworkError.default)
                 completion(false, SPNetworkError.default)

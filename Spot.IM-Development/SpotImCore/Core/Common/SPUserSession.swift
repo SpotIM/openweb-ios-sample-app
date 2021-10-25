@@ -58,7 +58,7 @@ internal class SPUserSessionHolder {
                 errorData: nil,
                 errorMessage: "My GUID is: \(String(describing: session.guid)), but the server returned \(serverGuid)"
                            )
-            SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+            SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
         }
         
         if forced {
