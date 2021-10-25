@@ -31,6 +31,22 @@ abstract_target 'Shared' do
 
 end
 
+pre_install do |installer|
+  remove_swiftui_for_kingfisher()
+end
+
+def remove_swiftui_for_kingfisher
+  # https://github.com/onevcat/Kingfisher/issues/1725#issuecomment-927861930
+  system("rm -rf ./Pods/Kingfisher/Sources/SwiftUI")
+  code_file = "./Pods/Kingfisher/Sources/General/KFOptionsSetter.swift"
+  code_text = File.read(code_file)
+  code_text.gsub!(/#if canImport\(SwiftUI\) \&\& canImport\(Combine\)(.|\n)+#endif/,'')
+  system("rm -rf " + code_file)
+  aFile = File.new(code_file, 'w+')
+  aFile.syswrite(code_text)
+  aFile.close()
+end
+
 post_install do |installer|
   fix_deployment_target(installer)
   installer.pods_project.targets.each do |target|
