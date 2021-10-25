@@ -152,5 +152,9 @@ extension SPBaseCommentCreationModel {
         static let labels = "labels"
         static let labelsSection = "section"
         static let labelsIds = "ids"
+        static let replyTo = "reply_to"
+        static let replyId = "reply_id"
+        static let parentId = "parent_id"
+        static let conversationId = "conversation_id"
     }
 }

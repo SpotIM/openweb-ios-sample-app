@@ -67,46 +67,30 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
         let userId = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         
         var metadata: [String: Any] = [
-            CreateReplyAPIKeys.displayName: userId
+            CreateCommentAPIKeys.displayName: userId
         ]
         
         let isRootComment = dataModel.commentId == dataModel.rootCommentId
         if !isRootComment {
-            metadata[CreateReplyAPIKeys.replyTo] = [CreateReplyAPIKeys.replyId: dataModel.commentId]
+            metadata[CreateCommentAPIKeys.replyTo] = [CreateCommentAPIKeys.replyId: dataModel.commentId]
         }
         
         var parameters = [
-            CreateReplyAPIKeys.parentId: dataModel.rootCommentId ?? dataModel.commentId,
-            CreateReplyAPIKeys.conversationId: dataModel.postId,
-            CreateReplyAPIKeys.content: self.getContentRequestParam(),
-            CreateReplyAPIKeys.metadata: metadata
+            CreateCommentAPIKeys.parentId: dataModel.rootCommentId ?? dataModel.commentId,
+            CreateCommentAPIKeys.conversationId: dataModel.postId,
+            CreateCommentAPIKeys.content: self.getContentRequestParam(),
+            CreateCommentAPIKeys.metadata: metadata
         ] as [String : Any]
         
         if let selectedLabels = self.selectedLabels {
-            parameters[CreateReplyAPIKeys.additionalData] = [
-                CreateReplyAPIKeys.labels: [
-                    CreateReplyAPIKeys.labelsSection: selectedLabels.section,
-                    CreateReplyAPIKeys.labelsIds: selectedLabels.ids,
+            parameters[CreateCommentAPIKeys.additionalData] = [
+                CreateCommentAPIKeys.labels: [
+                    CreateCommentAPIKeys.labelsSection: selectedLabels.section,
+                    CreateCommentAPIKeys.labelsIds: selectedLabels.ids,
                 ]
             ]
         }
         
         return parameters
     }
-    
-    private enum CreateReplyAPIKeys {
-        static let content = "content"
-        static let text = "text"
-        static let metadata = "metadata"
-        static let displayName = "display_name"
-        static let parentId = "parent_id"
-        static let conversationId = "conversation_id"
-        static let replyTo = "reply_to"
-        static let replyId = "reply_id"
-        static let additionalData = "additional_data"
-        static let labels = "labels"
-        static let labelsSection = "section"
-        static let labelsIds = "ids"
-    }
-    
 }
