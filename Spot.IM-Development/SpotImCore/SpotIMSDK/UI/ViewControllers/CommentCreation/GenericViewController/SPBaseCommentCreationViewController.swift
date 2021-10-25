@@ -55,7 +55,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
     
-    private var imagePicker: ImagePicker!
+    private var imagePicker: ImagePicker?
     
     private var shouldBeAutoPosted: Bool = true
     var showsUsernameInput: Bool {
@@ -460,8 +460,6 @@ extension SPBaseCommentCreationViewController {
     }
     
     private func configureFooterView() {
-        self.imagePicker = ImagePicker(presentationController: self)
-        footerView.setImagePicker(self.imagePicker)
         footerView.delegate = self
         footerView.layout {
             mainContainerBottomConstraint = $0.bottom.equal(to: scrollView.bottomAnchor)
@@ -487,10 +485,16 @@ extension SPBaseCommentCreationViewController {
         var contentButtonTypes: [SPCommentFooterContentButtonType] = []
         
         if model.shouldDisplayImageUploadButton() {
+            self.setImagePicker()
             contentButtonTypes.append(.image)
         }
         
         footerView.setContentButtonTypes(contentButtonTypes)
+    }
+    
+    private func setImagePicker() {
+        self.imagePicker = ImagePicker(presentationController: self)
+        self.imagePicker?.delegate = self
     }
     
     private func uploadImageToCloudinary(imageData: String) {
@@ -625,6 +629,10 @@ extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDel
 }
 
 extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
+    func clickedOnAddContentButton(type: SPCommentFooterContentButtonType) {
+        self.imagePicker?.present(from: self.view)
+    }
+    
     func imageSelected(image: UIImage) {
         guard let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() else { return }
         removeImage()
@@ -636,6 +644,18 @@ extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
 extension SPBaseCommentCreationViewController: CommentImagePreviewDelegate {
     func clickedOnRemoveButton() {
         self.removeImage()
+    }
+}
+
+extension SPBaseCommentCreationViewController: ImagePickerDelegate {
+    func didSelect(image: UIImage?) {
+        guard
+            let image = image,
+            let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
+        else { return }
+        removeImage()
+        imagePreviewView.image = image
+        uploadImageToCloudinary(imageData: imageData)
     }
 }
 
