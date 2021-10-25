@@ -1,5 +1,5 @@
 //
-//  FailureReportDataModel.swift
+//  FailureReportDataModels.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 10/4/19.
@@ -25,7 +25,14 @@ extension ParametersPresentable where Self: Encodable {
     
 }
 
-struct FailureReportDataModel: Encodable, ParametersPresentable {
+struct GeneralFailureReportDataModel: Encodable, ParametersPresentable {
+    let reason: String
+    
+    var commentId: String? = nil
+    var parentCommentId: String? = nil
+}
+
+struct NetworkFailureReportDataModel: Encodable, ParametersPresentable {
     let errorSource: String
     let httpPayload: FailureHttpPayload
     let isRegistered: Bool

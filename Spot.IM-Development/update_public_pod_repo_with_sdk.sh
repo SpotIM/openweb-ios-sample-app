@@ -12,8 +12,9 @@ ls -l
 PREVIOUS_SDK_VERSION=`cat SpotIMCore.podspec | grep -m 1 s.version |  cut -d "=" -f2 | cut -d \" -f2 | cut -d \' -f2`
 echo "SpotIMCore.podspec - replacing previous version ($PREVIOUS_SDK_VERSION) with current version ($RELEASE_VERSION)"
 sed -i '' -e "s/${PREVIOUS_SDK_VERSION}/${RELEASE_VERSION}/g" SpotImCore.podspec
-echo "README.md - replacing previous version ($PREVIOUS_SDK_VERSION) with current version ($RELEASE_VERSION)"
-sed -i '' -e "s/${PREVIOUS_POD_VERSION}/${RELEASE_VERSION}/g" README.md
+PREVIOUS_SDK_VERSION_IN_README=`cat README.md | grep pod\ \'SpotIMCore\' | cut -d , -f2 | cut -d \' -f2`
+echo "README.md - replacing previous version ($PREVIOUS_SDK_VERSION_IN_README) with current version ($RELEASE_VERSION)"
+sed -i '' -e "s/${PREVIOUS_SDK_VERSION_IN_README}/${RELEASE_VERSION}/g" README.md
 git status
 git add .
 git status
