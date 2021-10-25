@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SPCommentFooterViewDelegate: AnyObject {
-    func imageSelected(image: UIImage)
+    func clickedOnAddContentButton(type: SPCommentFooterContentButtonType)
 }
 
 enum SPCommentFooterContentButtonType {
@@ -27,7 +27,6 @@ final class SPCommentFooterView: BaseView {
     typealias PostButtonAction = () -> Void
     private var postButtonAction: PostButtonAction?
     
-    private weak var imagePicker: ImagePicker?
     public weak var delegate: SPCommentFooterViewDelegate?
     
     override init(frame: CGRect) {
@@ -64,11 +63,6 @@ final class SPCommentFooterView: BaseView {
                 break
             }
         }
-    }
-    
-    func setImagePicker(_ imagePicker: ImagePicker) {
-        self.imagePicker = imagePicker
-        self.imagePicker?.delegate = self
     }
     
     private func setup() {
@@ -130,15 +124,7 @@ final class SPCommentFooterView: BaseView {
     
     @objc
     private func onClickOnAddImageButton(_ sender: UIButton) {
-        imagePicker?.present(from: sender)
-    }
-}
-
-extension SPCommentFooterView: ImagePickerDelegate {
-    func didSelect(image: UIImage?) {
-        if let image = image {
-            delegate?.imageSelected(image: image)
-        }
+        delegate?.clickedOnAddContentButton(type: .image)
     }
 }
 
