@@ -16,78 +16,70 @@ struct RawReportModel {
     let errorMessage: String
 }
 
-internal final class SPDefaultFailureReporter: NetworkDataProvider {
+enum SPGeneralError {
+    case encodingHtmlError(onCommentId: String?, parentId: String?)
     
-    static let shared = SPDefaultFailureReporter()
-    
-    private init() {
-        super.init(apiManager: ApiManager())
+    var description: String {
+        switch self {
+        case .encodingHtmlError:
+            return "Error encoding html comment text"
+        }
     }
-    
-    func sendFailureReport(_ rawReport: RawReportModel) {
-        guard
-            let spotKey = SPClientSettings.main.spotKey
-            else { return }
-        
-        let spRequest = SPFailureReportRequest.error
-        let headers = HTTPHeaders.basic(with: spotKey)
-        let failureReportDataModel = prepareReportDataModel(rawReport)
-        
-        manager.execute(
-            request: spRequest,
-            parameters: failureReportDataModel.parameters(),
-            parser: EmptyParser(),
-            headers: headers
-        ) { (result, response) in
-            guard case let .failure(error) = result else { return }
-            
-            Logger.error(error)
+}
+
+enum SPMonetizationError {
+    case bannerFailedToLoad(source: MonetizationSource, error: Error)
+    case interstitialFailedToLoad(error: Error)
+}
+
+enum SPError {
+    case generalError(_ generalError: SPGeneralError)
+    case networkError(rawReport: RawReportModel)
+    case monetizationError(_ monetizationError: SPMonetizationError)
+    case realTimeError(_ realTimeError: RealTimeError)
+}
+
+extension SPError {
+    func parameters() -> [String: Any]? {
+        switch self {
+        case .networkError(let rawReport):
+            return prepareNetworkReportDataModel(rawReport).parameters()
+        case .monetizationError(let monetizationError):
+            return prepareMonetizationFailureModel(monetizationError).parameters()
+        case .realTimeError(let realTimeError):
+            return prepareRealTimeFailureModel(realTimeError).parameters()
+        case .generalError(let generalError):
+            return prepareGeneralFailureModel(generalError).parameters()
         }
     }
     
-    func sendMonetizationFaliureReport(_ failureData: ParametersPresentable) {
-        guard let spotKey = SPClientSettings.main.spotKey else { return }
-        
-        let spRequest = SPFailureReportRequest.error
-        let headers = HTTPHeaders.basic(with: spotKey)
-        
-        manager.execute(
-            request: spRequest,
-            parameters: failureData.parameters(),
-            parser: EmptyParser(),
-            headers: headers
-        ) { (result, response) in
-            guard case let .failure(error) = result else { return }
-            
-            Logger.error(error)
+    private func prepareGeneralFailureModel(_ generalError: SPGeneralError) -> GeneralFailureReportDataModel {
+        switch generalError {
+        case .encodingHtmlError(let commentId,let parentId):
+            return GeneralFailureReportDataModel(reason: generalError.description, commentId: commentId, parentCommentId: parentId)
         }
     }
     
-    func sendRealTimeFailureReport(_ failureData: ParametersPresentable) {
-        guard let spotKey = SPClientSettings.main.spotKey else { return }
-        
-        let spRequest = SPFailureReportRequest.error
-        let headers = HTTPHeaders.basic(with: spotKey)
-        
-        manager.execute(
-            request: spRequest,
-            parameters: failureData.parameters(),
-            parser: EmptyParser(),
-            headers: headers
-        ) { (result, response) in
-            guard case let .failure(error) = result else { return }
-            
-            Logger.error(error)
+    private func prepareRealTimeFailureModel(_ realTimeError: RealTimeError) -> RealTimeFailureModel {
+        return RealTimeFailureModel(reason: realTimeError.description)
+    }
+    
+    private func prepareMonetizationFailureModel(_ monetizationError: SPMonetizationError) -> MonetizationFailureModel {
+        switch monetizationError {
+        case .bannerFailedToLoad(let source, let error):
+            return MonetizationFailureModel(source: source, reason: error.localizedDescription, bannerType: .banner)
+        case .interstitialFailedToLoad(let error):
+            return MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .interstitial)
         }
     }
     
-    private func prepareReportDataModel(_ rawReport: RawReportModel) -> FailureReportDataModel {
+    private func prepareNetworkReportDataModel(_ rawReport: RawReportModel) -> NetworkFailureReportDataModel {
         var bodyString: String = rawReport.errorMessage
         if let data = rawReport.errorData, let dataString = String(data: data, encoding: .utf8) {
             bodyString = dataString
         }
         
-        return FailureReportDataModel(
+        return NetworkFailureReportDataModel(
             errorSource: "HTTP",
             httpPayload: FailureHttpPayload(
                 body: bodyString,
@@ -99,5 +91,30 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
             userId: SPUserSessionHolder.session.user?.id ?? ""
         )
     }
+}
 
+internal final class SPDefaultFailureReporter: NetworkDataProvider {
+    
+    static let shared = SPDefaultFailureReporter()
+    
+    private init() {
+        super.init(apiManager: ApiManager())
+    }
+    
+    func report(error: SPError, postId: String = "default") {
+        guard let spotKey = SPClientSettings.main.spotKey else { return }
+        
+        let headers = HTTPHeaders.basic(with: spotKey, postId: postId)
+        
+        manager.execute(
+            request: SPFailureReportRequest.error,
+            parameters: error.parameters(),
+            parser: EmptyParser(),
+            headers: headers
+        ) { (result, response) in
+            guard case let .failure(error) = result else { return }
+            
+            Logger.error(error)
+        }
+    }
 }
