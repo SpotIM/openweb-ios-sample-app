@@ -17,7 +17,7 @@ internal protocol SPImageProvider {
     @discardableResult
     func fetchImage(with url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> DataRequest?
     
-    func uploadImage(imageData: String, completion: @escaping ImageUploadCompletionHandler)
+    func uploadImage(imageData: String, imageId: String, completion: @escaping ImageUploadCompletionHandler)
 }
 
 internal class SPSignResponse: Decodable {
@@ -34,8 +34,6 @@ typealias ImageUploadCompletionHandler = (SPComment.Content.Image?, Error?) -> V
 
 internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProvider {
     internal var avatarSize: CGSize?
-    
-    internal var currentUploadingImageId: String?
     
     /// Use prepared url with size here, please
     @discardableResult
@@ -76,29 +74,22 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
         }
     }
     
-    func uploadImage(imageData: String, completion: @escaping ImageUploadCompletionHandler) {
-        let publicId = UUID().uuidString
+    func uploadImage(imageData: String, imageId: String, completion: @escaping ImageUploadCompletionHandler) {
         let timestamp = String(round(NSDate().timeIntervalSince1970 * 1000) / 1000.0)
         
-        self.currentUploadingImageId = publicId
-        signToCloudinary(publicId: publicId, timestamp: timestamp) { signature, err in
+        signToCloudinary(publicId: imageId, timestamp: timestamp) { signature, err in
             guard let signature = signature else {
                 completion(nil, err)
                 return
             }
             
-            self.uploadImageToCloudinary(imageData: imageData, publicId: publicId, timestamp: timestamp, signature: signature) { imageData, err in
-                guard imageData?.imageId == self.currentUploadingImageId else {
-                    // got result of previous uploaded image - ignore
-                    return
-                }
-                self.currentUploadingImageId = nil
+            self.uploadImageToCloudinary(imageData: imageData, publicId: imageId, timestamp: timestamp, signature: signature) { imageData, err in
                 completion(imageData, err)
             }
         }
     }
     
-    private func uploadImageToCloudinary(imageData: String, publicId: String, timestamp: String, signature: String, completion: @escaping (SPComment.Content.Image?, Error?) -> Void) {
+    private func uploadImageToCloudinary(imageData: String, publicId: String, timestamp: String, signature: String, completion: @escaping ImageUploadCompletionHandler) {
         
         let parameters: [String: Any] = [
             "api_key": Constants.cloudinaryApiKey,

@@ -23,7 +23,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
     
-    private var isUploadingImage: Bool = false
+    private var currentUploadingImageId: String?
     
     init(cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
@@ -92,24 +92,26 @@ class SPBaseCommentCreationModel: CommentStateable {
     
     func uploadImageToCloudinary(imageData: String, completion: @escaping (Bool) -> Void) {
         self.imageContent = nil
-        self.isUploadingImage = true
-        imageProvider.uploadImage(imageData: imageData) { imageContent, err in
-            if self.isUploadingImage {
+        
+        let imageId = UUID().uuidString
+        self.currentUploadingImageId = imageId
+        
+        imageProvider.uploadImage(imageData: imageData, imageId: imageId) { imageContent, err in
+            if self.currentUploadingImageId == imageContent?.imageId {
                 self.imageContent = imageContent
-            }
-            
-            if let error = err {
+                self.currentUploadingImageId = nil
+                completion(imageContent != nil)
+            } else if let error = err {
                 print("Failed to upload image: " + error.localizedDescription)
+                self.currentUploadingImageId = nil
                 self.errorHandler?(error)
-            } else {
-                completion(self.isUploadingImage && imageContent != nil)
+                completion(false)
             }
-            self.isUploadingImage = false
         }
     }
     
     func removeImage() {
-        self.isUploadingImage = false
+        self.currentUploadingImageId = nil
         self.imageContent = nil
     }
     
