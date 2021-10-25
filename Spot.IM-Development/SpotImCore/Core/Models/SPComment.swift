@@ -49,31 +49,9 @@ internal struct SPComment: Decodable, Equatable {
         return status == .unknown ? nil : status
     }
     
-    var gif: Content.Animation? {
-        guard let content = content else { return nil }
-        for contentItem in content {
-            switch contentItem {
-            case .animation(let animation):
-                return animation
-            default:
-                break
-            }
-        }
-        return nil
-    }
-    
-    var image: Content.Image? {
-        guard let content = content else { return nil }
-        for contentItem in content {
-            switch contentItem {
-            case .image(let image):
-                return image
-            default:
-                break
-            }
-        }
-        return nil
-    }
+    var text: Content.Text?
+    var gif: Content.Animation?
+    var image: Content.Image?
         
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -96,6 +74,23 @@ internal struct SPComment: Decodable, Equatable {
         published = (try? container.decode(Bool.self, forKey: .published)) ?? true
         rank = try? container.decode(Rank.self, forKey: .rank)
         content = try? container.decode([Content].self, forKey: .content)
+        if let content = content {
+            for contentItem in content {
+                switch contentItem {
+                case .text(let textContent):
+                    self.text = textContent
+                    break
+                case .image(let imageContent):
+                    self.image = imageContent
+                    break
+                case .animation(let animationContent):
+                    self.gif = animationContent
+                    break
+                case .none:
+                    break
+                }
+            }
+        }
         users = try? container.decode([String: CommentUser].self, forKey: .users)
         replies = try? container.decode([SPComment].self, forKey: .replies)
         additionalData = try? container.decode(AdditionalData.self, forKey: .additionalData)

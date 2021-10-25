@@ -100,15 +100,9 @@ internal struct CommentViewModel {
             repliesButtonState = .hidden
         }
         
-        switch comment.content?.first {
-        case .text(let htmlText):
-            if let data = htmlText.text.data(using: String.Encoding.unicode, allowLossyConversion: false),
-               let attributedHtmlString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil) {
-                commentText = attributedHtmlString.string
-                break
-            }
-        default:
-            commentText = "no text"
+        if let htmlText = comment.text,
+           let commentText = getCommentTextFromHtmlString(htmlString: htmlText.text) {
+            self.commentText = commentText
         }
 
         if let time = comment.writtenAt {
@@ -150,6 +144,15 @@ internal struct CommentViewModel {
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
+    }
+    
+    func getCommentTextFromHtmlString(htmlString: String) -> String? {
+        if let attributedHtmlString = htmlString.htmlToMutableAttributedString {
+            return attributedHtmlString.string
+        } else {
+            SPDefaultFailureReporter.shared.report(error: .generalError(.encodingHtmlError(onCommentId: self.commentId, parentId: self.parentCommentId)))
+            return nil
+        }
     }
 
     func textWidth() -> CGFloat {
