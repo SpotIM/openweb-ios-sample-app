@@ -122,7 +122,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                                     errorData: response.data,
                                     errorMessage: error.localizedDescription
                                 )
-                                SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+                                SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
                                 failure(SPNetworkError.default)
                             }
         }
@@ -156,7 +156,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                                     errorData: response.data,
                                     errorMessage: error.localizedDescription
                                 )
-                                SPDefaultFailureReporter.shared.sendFailureReport(rawReport)
+                                SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
                                 
                                 failure(SPNetworkError.default)
                             }

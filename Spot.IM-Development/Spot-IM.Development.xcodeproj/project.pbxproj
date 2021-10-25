@@ -151,7 +151,7 @@
 		4454188A23685154001D0ED0 /* SPConversationRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454183B23685153001D0ED0 /* SPConversationRequests.swift */; };
 		4454188B23685154001D0ED0 /* SPInternalAuthenticationRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454183C23685153001D0ED0 /* SPInternalAuthenticationRequests.swift */; };
 		4454188C23685154001D0ED0 /* SPConfigRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454183D23685153001D0ED0 /* SPConfigRequests.swift */; };
-		4454188D23685154001D0ED0 /* FailureReportDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454183F23685153001D0ED0 /* FailureReportDataModel.swift */; };
+		4454188D23685154001D0ED0 /* FailureReportDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454183F23685153001D0ED0 /* FailureReportDataModels.swift */; };
 		4454188E23685154001D0ED0 /* SPNetworkConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454184023685153001D0ED0 /* SPNetworkConstants.swift */; };
 		4454188F23685154001D0ED0 /* SPNetworkExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454184123685153001D0ED0 /* SPNetworkExtensions.swift */; };
 		4454189023685154001D0ED0 /* SPNetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454184223685153001D0ED0 /* SPNetworkError.swift */; };
@@ -735,7 +735,7 @@
 		4454183B23685153001D0ED0 /* SPConversationRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConversationRequests.swift; sourceTree = "<group>"; };
 		4454183C23685153001D0ED0 /* SPInternalAuthenticationRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPInternalAuthenticationRequests.swift; sourceTree = "<group>"; };
 		4454183D23685153001D0ED0 /* SPConfigRequests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPConfigRequests.swift; sourceTree = "<group>"; };
-		4454183F23685153001D0ED0 /* FailureReportDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FailureReportDataModel.swift; sourceTree = "<group>"; };
+		4454183F23685153001D0ED0 /* FailureReportDataModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FailureReportDataModels.swift; sourceTree = "<group>"; };
 		4454184023685153001D0ED0 /* SPNetworkConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPNetworkConstants.swift; sourceTree = "<group>"; };
 		4454184123685153001D0ED0 /* SPNetworkExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPNetworkExtensions.swift; sourceTree = "<group>"; };
 		4454184223685153001D0ED0 /* SPNetworkError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPNetworkError.swift; sourceTree = "<group>"; };
@@ -1457,7 +1457,7 @@
 		4454183E23685153001D0ED0 /* NetworkCommon */ = {
 			isa = PBXGroup;
 			children = (
-				4454183F23685153001D0ED0 /* FailureReportDataModel.swift */,
+				4454183F23685153001D0ED0 /* FailureReportDataModels.swift */,
 				4454184023685153001D0ED0 /* SPNetworkConstants.swift */,
 				4454184123685153001D0ED0 /* SPNetworkExtensions.swift */,
 				4454184223685153001D0ED0 /* SPNetworkError.swift */,
@@ -2747,7 +2747,7 @@
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
 				445418A823685154001D0ED0 /* Dictionary+JSONString.swift in Sources */,
-				4454188D23685154001D0ED0 /* FailureReportDataModel.swift in Sources */,
+				4454188D23685154001D0ED0 /* FailureReportDataModels.swift in Sources */,
 				5DBD33E42397F98F003DE0BF /* BaseStackView.swift in Sources */,
 				445417FB23685144001D0ED0 /* UIColor+Hex.swift in Sources */,
 				4454189623685154001D0ED0 /* SPConfigurationSpotlight.swift in Sources */,

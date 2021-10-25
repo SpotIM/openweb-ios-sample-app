@@ -101,8 +101,8 @@ internal struct CommentViewModel {
         }
         
         if let htmlText = comment.text,
-           let attributedHtmlString = htmlText.text.htmlToMutableAttributedString {
-            commentText = attributedHtmlString.string
+           let commentText = getCommentTextFromHtmlString(htmlString: htmlText.text) {
+            self.commentText = commentText
         }
 
         if let time = comment.writtenAt {
@@ -144,6 +144,15 @@ internal struct CommentViewModel {
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
+    }
+    
+    func getCommentTextFromHtmlString(htmlString: String) -> String? {
+        if let attributedHtmlString = htmlString.htmlToMutableAttributedString {
+            return attributedHtmlString.string
+        } else {
+            SPDefaultFailureReporter.shared.report(error: .generalError(.encodingHtmlError(onCommentId: self.commentId, parentId: self.parentCommentId)))
+            return nil
+        }
     }
 
     func textWidth() -> CGFloat {
