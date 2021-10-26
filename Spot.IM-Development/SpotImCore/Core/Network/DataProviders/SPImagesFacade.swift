@@ -96,7 +96,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             "signature": signature,
             "public_id": publicId,
             "timestamp": timestamp,
-            "file": "data:image/jpeg;base64," + imageData
+            "file": Constants.imageFileJpegBase64Prefix + imageData
         ]
         
         manager.execute(
@@ -182,4 +182,5 @@ private enum Constants {
     static let cloudinaryHeightPrefix = ",h_"
     static let placeholderImagePrefix = "#"
     static let avatarPathComponent = "avatars/"
+    static let imageFileJpegBase64Prefix = "data:image/jpeg;base64,"
 }
