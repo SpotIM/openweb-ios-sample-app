@@ -509,11 +509,18 @@ extension SPBaseCommentCreationViewController {
         }
     }
     
-    private func removeImage() {
+    private func setImage(image: UIImage?) {
+        // clean previous image in the model
         model?.removeImage()
-        self.imagePreviewView.image = nil
-        self.imagePreviewView.isUploadingImage = false
         self.updatePostButtonEnabledState()
+        if let image = image,
+           let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() {
+            imagePreviewView.image = image
+            uploadImageToCloudinary(imageData: imageData)
+        } else {
+            self.imagePreviewView.image = nil
+            self.imagePreviewView.isUploadingImage = false
+        }
     }
 }
 
@@ -632,30 +639,18 @@ extension SPBaseCommentCreationViewController: SPCommentFooterViewDelegate {
     func clickedOnAddContentButton(type: SPCommentFooterContentButtonType) {
         self.imagePicker?.present(from: self.view)
     }
-    
-    func imageSelected(image: UIImage) {
-        guard let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() else { return }
-        removeImage()
-        imagePreviewView.image = image
-        uploadImageToCloudinary(imageData: imageData)
-    }
 }
 
 extension SPBaseCommentCreationViewController: CommentImagePreviewDelegate {
     func clickedOnRemoveButton() {
-        self.removeImage()
+        self.setImage(image: nil)
     }
 }
 
 extension SPBaseCommentCreationViewController: ImagePickerDelegate {
     func didSelect(image: UIImage?) {
-        guard
-            let image = image,
-            let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString()
-        else { return }
-        removeImage()
-        imagePreviewView.image = image
-        uploadImageToCloudinary(imageData: imageData)
+        guard image != nil else { return }
+        self.setImage(image: image)
     }
 }
 
