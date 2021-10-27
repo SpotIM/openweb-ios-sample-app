@@ -16,9 +16,9 @@ internal extension HTTPHeaders {
     
     static func basic(with spotId: String, postId: String = "default") -> HTTPHeaders {
         let iosVersion = UIDevice.current.systemVersion
-        let frameworkVersion = Bundle.spot.shortVersion() ?? "na"
-        let hostVerion = Bundle.main.shortVersion() ?? "na"
-        let scheme = Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String ?? "na"
+        let frameworkVersion = Bundle.spot.shortVersion ?? "na"
+        let hostVerion = Bundle.main.shortVersion ?? "na"
+        let scheme = Bundle.main.bundleIdentifier ?? "na"
         let agent = extendedAgent()
 
         let pageViewId = SPAnalyticsHolder.default.pageViewId
