@@ -246,8 +246,7 @@ final class CommentActionsView: BaseView {
         let from: SPRank = SPRank(rawValue: rankedByUser) ?? .unrank
         let to: SPRank = (rankedByUser == 0 || rankedByUser == -1) ? .up : .unrank
         
-        rankUpLocal()
-        delegate?.rankUp(SPRankChange(from: from, to: to), onCancel: rankUpLocal)
+        delegate?.rankUp(SPRankChange(from: from, to: to), updateRankLocal: rankUpLocal)
     }
     
     private func rankUpLocal() {
@@ -266,8 +265,7 @@ final class CommentActionsView: BaseView {
         let from: SPRank = SPRank(rawValue: rankedByUser) ?? .unrank
         let to: SPRank = (rankedByUser == 0 || rankedByUser == 1) ? .down : .unrank
         
-        rankDownLocal()
-        delegate?.rankDown(SPRankChange(from: from, to: to), onCancel: rankDownLocal)
+        delegate?.rankDown(SPRankChange(from: from, to: to), updateRankLocal: rankDownLocal)
     }
     
     private func rankDownLocal() {
@@ -299,8 +297,8 @@ extension CommentActionsView {
 protocol CommentActionsDelegate: AnyObject {
 
     func reply()
-    func rankUp(_ rankChange: SPRankChange, onCancel: () -> Void)
-    func rankDown(_ rankChange: SPRankChange, onCancel: () -> Void)
+    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void)
+    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void)
 
 }
 
