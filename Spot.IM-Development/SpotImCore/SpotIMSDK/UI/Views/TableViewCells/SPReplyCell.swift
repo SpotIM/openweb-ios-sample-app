@@ -290,12 +290,12 @@ extension SPReplyCell: CommentActionsDelegate {
         delegate?.replyTapped(for: commentId)
     }
     
-    func rankUp(_ rankChange: SPRankChange) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
+    func rankUp(_ rankChange: SPRankChange, onCancel: () -> Void) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, onCancel: onCancel)
     }
     
-    func rankDown(_ rankChange: SPRankChange) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
+    func rankDown(_ rankChange: SPRankChange, onCancel: () -> Void) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, onCancel: onCancel)
     }
 }
 
