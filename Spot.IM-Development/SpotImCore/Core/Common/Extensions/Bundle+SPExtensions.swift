@@ -11,8 +11,12 @@ import UIKit
 extension Bundle {
     static let spot = Bundle(for: BundleToken.self)
     
-    func shortVersion() -> String? {
+    var shortVersion: String? {
         return self.infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+    
+    var bundleIdentifier: String? {
+        return self.infoDictionary?[kCFBundleIdentifierKey as String] as? String
     }
 }
 
