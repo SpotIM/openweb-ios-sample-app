@@ -157,11 +157,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
             openProfileWebScreen(userId: userId, isMyProfile: true)
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId, targetType: .avatar), source: .conversation)
         } else {
-            if SpotIm.reactNativeShowLoginScreenOnRootVC && self.isInFullConversationVC() {
-                self.navigationController?.popViewController(animated: false)
-            }
-            userAuthFlowDelegate?.presentAuth()
-            self.didStartSignInFlow()
+            self.startLoginFlow()
         }
     }
     
@@ -697,12 +693,10 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
 
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
         guard let config = SPConfigsDataSource.appConfig,
-           config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
-            if SpotIm.reactNativeShowLoginScreenOnRootVC && self.isInFullConversationVC() {
-                self.navigationController?.popViewController(animated: false)
-            }
-            userAuthFlowDelegate?.presentAuth()
-            self.didStartSignInFlow()
+              config.initialization?.policyAllowGuestsToLike == true ||
+                SPUserSessionHolder.session.user?.registered == true
+        else {
+            self.startLoginFlow()
             return
         }
         // track event
@@ -762,6 +756,13 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
 
     func replyTapped(for commentId: String?) {
         guard let id = commentId, let delegate = delegate else { return }
+        
+        if SpotIm.reactNativeShowLoginScreenOnRootVC &&
+            SpotIm.getRegisteredUserId() == nil {
+            self.startLoginFlow()
+            return
+        }
+        
         logCreationOpen(with: .reply, parentId: commentId)
         delegate.createReply(with: model, to: id)
     }
@@ -797,6 +798,16 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     func clickOnUrlInComment(url: URL) {
         webPageDelegate?.openWebPage(with: url.absoluteString)
     }
+    
+    private func startLoginFlow() {
+        if SpotIm.reactNativeShowLoginScreenOnRootVC &&
+            self.isInFullConversationVC() {
+            self.navigationController?.popViewController(animated: false)
+        }
+
+        userAuthFlowDelegate?.presentAuth()
+        self.didStartSignInFlow()
+    }
 }
 
 extension SPBaseConversationViewController: MainConversationModelDelegate {
@@ -815,13 +826,9 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
     func labelContainerDidTap(_ footerView: SPMainConversationFooterView) {
         guard let delegate = delegate else { return }
         
-        if SpotIm.reactNativeShowLoginScreenOnRootVC && SpotIm.getRegisteredUserId() == nil {
-            if self.isInFullConversationVC() {
-                self.navigationController?.popViewController(animated: false)
-            }
-
-            userAuthFlowDelegate?.presentAuth()
-            self.didStartSignInFlow()
+        if SpotIm.reactNativeShowLoginScreenOnRootVC &&
+            SpotIm.getRegisteredUserId() == nil {
+            self.startLoginFlow()
             return
         }
         logCreationOpen(with: .comment)
