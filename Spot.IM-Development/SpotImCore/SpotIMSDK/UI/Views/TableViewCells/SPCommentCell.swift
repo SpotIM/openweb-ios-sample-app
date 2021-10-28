@@ -355,12 +355,12 @@ extension SPCommentCell: CommentActionsDelegate {
         delegate?.replyTapped(for: commentId)
     }
     
-    func rankUp(_ rankChange: SPRankChange) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
+    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
     }
     
-    func rankDown(_ rankChange: SPRankChange) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
+    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
     }
     
 }
@@ -426,7 +426,7 @@ enum RepliesButtonState {
 protocol SPCommentCellDelegate: AnyObject {
     func showMoreReplies(for commentId: String?)
     func hideReplies(for commentId: String?)
-    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?)
+    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?, updateRankLocal: () -> Void)
     func replyTapped(for commentId: String?)
     func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton)
     func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool)

@@ -695,7 +695,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         fatalError("Implement in subclass")
     }
 
-    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
+    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?, updateRankLocal: () -> Void) {
         guard let config = SPConfigsDataSource.appConfig,
            config.initialization?.policyAllowGuestsToLike == true || SPUserSessionHolder.session.user?.registered == true else {
             if SpotIm.reactNativeShowLoginScreenOnRootVC && self.isInFullConversationVC() {
@@ -705,6 +705,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             self.didStartSignInFlow()
             return
         }
+        updateRankLocal()
         // track event
         switch change.operation {
         case "like":
