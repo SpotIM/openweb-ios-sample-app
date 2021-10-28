@@ -65,6 +65,10 @@ class SPBaseCommentCreationModel: CommentStateable {
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            conversationConfig.disableImageUploadButton == true {
             return false
+        } else if !Bundle.main.hasCameraUsageDescription ||
+                    !Bundle.main.hasPhotoLibraryUsageDescription {
+            Logger.warn("Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file")
+            return false
         } else {
             return true
         }
