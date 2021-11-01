@@ -116,11 +116,18 @@ internal final class ArticleWebViewController: UIViewController {
         guard let coordinator = self.spotIMCoordinator else {
             return
         }
+        let completionHandler: SPShowFullConversationCompletionHandler = { success, error in
+            if success {
+                print("Successfully show full conversation")
+            } else if let error = error {
+                print("Error show full conversation - \(error.localizedDescription)")
+            }
+        }
         if (self.shouldPresentFullConInNewNavStack) {
-            coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil)
+            coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil, completion: completionHandler)
         }
         else {
-            coordinator.pushFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata)
+            coordinator.pushFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, completion: completionHandler)
         }
     }
 }
