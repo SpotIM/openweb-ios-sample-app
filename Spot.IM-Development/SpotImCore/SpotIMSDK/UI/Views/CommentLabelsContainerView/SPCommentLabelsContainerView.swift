@@ -29,7 +29,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     }
     
     func setLabelsContainer(labels: [CommentLabel], guidelineText: String, maxLabels: Int) {
-        cleanLabelsIfNeeded()
+        cleanExistingLabels()
         self.maxLabels = maxLabels
         guidelineTextLabel.text = guidelineText
         guidelineTextLabel.numberOfLines = 1
@@ -43,7 +43,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         }
     }
     
-    private func cleanLabelsIfNeeded() {
+    private func cleanExistingLabels() {
         labelsViews.removeAll()
         container.arrangedSubviews.forEach { view in
             view.removeFromSuperview()
