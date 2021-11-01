@@ -115,21 +115,22 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                 return
             }
             
-            var shouldAddAuthorizationHeader = true
+            var shouldRemoveAuthorizationHeader = false
             if let user = SPUserSessionHolder.session.user {
                 if !user.expired { // valid user - no need to fetch user/data
                     seal.fulfill(user)
                     return
                 } else { // user token is expired
-                    shouldAddAuthorizationHeader = false
+                    shouldRemoveAuthorizationHeader = true
                 }
             }
             
             let spRequest = SPInternalAuthRequests.user
             
             var headers = HTTPHeaders.basic(with: spotKey)
-            if let token = SPUserSessionHolder.session.token, shouldAddAuthorizationHeader {
-                headers["Authorization"] = token
+            // remove expired auth header to avoid 403 status
+            if shouldRemoveAuthorizationHeader {
+                headers.remove(name: "Authorization")
             }
             
             manager.execute(
