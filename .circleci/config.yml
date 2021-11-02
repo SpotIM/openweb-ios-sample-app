@@ -191,6 +191,12 @@ jobs:
              ls -l Release
              git status
 
+      - run:
+          name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
+          command: |
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION
+
+
 workflows:
   version: 2
   workflow:
