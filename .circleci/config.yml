@@ -216,4 +216,4 @@ workflows:
           filters:
             branches:
               only:
-                - /^release/tag/.*/
+                - /^release/tag12.5/.*/
