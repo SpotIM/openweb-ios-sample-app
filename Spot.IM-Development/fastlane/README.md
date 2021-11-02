@@ -36,6 +36,11 @@ fastlane ios unit_tests
 fastlane ios release_pod
 ```
 
+### ios build_release_sdk
+```
+fastlane ios build_release_sdk
+```
+
 ### ios prepare_demo_app
 ```
 fastlane ios prepare_demo_app
