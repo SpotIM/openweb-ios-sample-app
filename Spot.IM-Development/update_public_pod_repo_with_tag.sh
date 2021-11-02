@@ -4,8 +4,8 @@ RELEASE_VERSION=$1
 TAG="$RELEASE_VERSION-xcode12.5"
 
 git clone git@github.com:SpotIM/spotim-ios-sdk-pod.git
-git checkout -b $TAG
 cd spotim-ios-sdk-pod
+git checkout -b $TAG
 echo "remove the old xcframework"
 rm -fr SpotImCore.xcframework
 ls -l
@@ -15,7 +15,7 @@ PREVIOUS_SDK_VERSION=`cat SpotIMCore.podspec | grep -m 1 s.version |  cut -d "="
 echo "SpotIMCore.podspec - replacing previous version ($PREVIOUS_SDK_VERSION) with current version ($RELEASE_VERSION)"
 sed -i '' -e "s/${PREVIOUS_SDK_VERSION}/${RELEASE_VERSION}/g" SpotImCore.podspec
 echo "SpotIMCore.podspec - update source tag to $TAG"
-sed -i '' -e "s/:tag => '${RELEASE_VERSION}'/:tag => '${TAG}'/g" SpotImCore.podspec
+sed -i '' -e "s/tag => s.version.to_s/tag => '${TAG}'/g" SpotImCore.podspec
 git status
 git add .
 git status
