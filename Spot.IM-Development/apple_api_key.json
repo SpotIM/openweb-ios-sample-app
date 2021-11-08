@@ -1,0 +1,7 @@
+{
+  "key_id": "B5QA2H62AX",
+  "issuer_id": "69a6de83-5f54-47e3-e053-5b8c7c11a4d1",
+  "key": "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgnc/KkgsCiwVmhy8VXbDTepmSC/gBgf7NCE6N4N3E41egCgYIKoZIzj0DAQehRANCAAT4AaEUkUUtIHpKMiQrGKPCN8Zy1czCxsuvAR2xJ6nZ9oQ1QH6gwB5bZd/ByJTRYYMXJf542VfWBrzMo8GFKTYp\n-----END PRIVATE KEY-----",
+  "duration": 1200,
+  "in_house": false
+}

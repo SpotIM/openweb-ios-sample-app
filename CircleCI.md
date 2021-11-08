@@ -2,9 +2,9 @@
 
 ## Introduction
 
-We integrate our code with CircleCI so that every `git push` will trigger a build. 
+We integrate our code with CircleCI so that every `git push` will trigger a build.
 
-We currently support 3 types of "jobs", very soon we will support 4 types
+We currently support 4 types of "jobs":
 
 1. default_job - build the app scheme and run unit-tests on the SDK. Triggered by any branch that DOES NOT match `/^release/.*/`
 
@@ -42,14 +42,10 @@ build the app scheme and run unit-tests on the SDK. If one of those fail the job
 3. Update public Github repo SpotIM/spotim-ios-sdk-pod with new SDK tag.
 
 
-## release_app_job (TBD)
+## release_app_job
 
-1. grep the version from the branch name.
+1. Bump the "build number".
 
-2. Update version according to (1) and bump the "build number".
+2. Clean and build the Sample App.
 
-3. Clean and build the Sample App. SpotImCore SDK will be taken from Podfile dependency with version as in (1).
-
-4. Release the sample app - upload to Test Flight and automatically notify internal testers.
-
-
+3. Release the sample app - upload to Test Flight and automatically notify internal testers.
