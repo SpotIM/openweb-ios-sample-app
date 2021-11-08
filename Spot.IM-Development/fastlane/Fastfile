@@ -21,7 +21,7 @@ default_platform(:ios)
 git_url = "git@github.com:SpotIM/openweb-ios-certs.git"
 
 platform :ios do
-  
+
   desc "The setup_circle_ci fastlane action will perform the following actions:
   Create a new temporary keychain for use with match (see the CircleCI code signing doc for more details).
   Switch match to readonly mode to make sure CI does not create new code signing certificates or provisioning profiles.
@@ -53,7 +53,7 @@ platform :ios do
     increment_version_number(version_number: options[:version]) # Set a specific version number)
     build_release_sdk()
   end
-  
+
   lane :build_release_sdk do
     cocoapods(use_bundle_exec: false)
     xcodebuild(
@@ -69,14 +69,37 @@ platform :ios do
     match(type: "appstore", readonly: true)
     increment_build_number_in_xcodeproj
 
-    build_app(workspace: "Spot-IM.Development.xcworkspace", 
-      scheme: "Spot-IM.Development", 
+    build_app(workspace: "Spot-IM.Development.xcworkspace",
+      scheme: "Spot-IM.Development",
       export_options: {
         method: "app-store",
-        provisioningProfiles: { 
+        provisioningProfiles: {
             "im.spot.demo" => "match AppStore im.spot.demo"
         }
     })
+  end
+
+  lane :release_demo_app do
+    match(
+        type: "appstore",
+        readonly: true,
+        api_key_path: "apple_api_key.json"
+    )
+    increment_build_number_in_xcodeproj
+    cocoapods(use_bundle_exec: false)
+    gym(
+        scheme: "Spot-IM.Development",
+        workspace: "Spot-IM.Development.xcworkspace",
+        export_method: "app-store",
+        export_options: {
+            signingStyle: "manual",
+            provisioningProfiles: {
+                "im.spot.demo" => "match AppStore im.spot.demo"
+            }
+        },
+        xcargs: "-allowProvisioningUpdates"
+    )
+    upload_to_testflight(api_key_path: "apple_api_key.json")
   end
 
   lane :bump_version do
