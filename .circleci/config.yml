@@ -204,6 +204,12 @@ jobs:
 
       - *define_var_release_version
 
+
+      - run:
+          name: Configure Apple Key
+          command: |
+            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
+
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
 
