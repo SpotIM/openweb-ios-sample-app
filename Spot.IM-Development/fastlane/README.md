@@ -46,6 +46,11 @@ fastlane ios build_release_sdk
 fastlane ios prepare_demo_app
 ```
 
+### ios release_demo_app
+```
+fastlane ios release_demo_app
+```
+
 ### ios bump_version
 ```
 fastlane ios bump_version
