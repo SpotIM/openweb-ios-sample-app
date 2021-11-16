@@ -84,8 +84,9 @@ internal final class UserNameView: BaseView {
         checkStackViewDirection(isOneLine: isOneLine)
         
         subtitleToNameConstraint?.isActive = badgeTitle == nil ? true : false
-        badgeTagLabel.textColor = isLeader ? .spForeground3 : .brandColor
-        badgeTagLabel.layer.borderColor = isLeader ? UIColor.spForeground3.cgColor : UIColor.brandColor.cgColor
+        badgeTagLabel.isHidden = badgeTitle == nil
+        badgeTagLabel.textColor = .brandColor
+        badgeTagLabel.layer.borderColor = UIColor.brandColor.cgColor
         leaderBadge.isHidden = !isLeader || isDeleted
     }
     
