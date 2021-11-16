@@ -12,7 +12,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     
     enum CodingKeys: String, CodingKey {
         case id, userId, displayName, userName, imageId, registered,
-        isAdmin, isModerator, isSuperAdmin, isJournalist, badgeType, points, tokenExpiration, ssoData
+        isAdmin, isModerator, isCommunityModerator, isSuperAdmin, isJournalist, badgeType, points, tokenExpiration, ssoData
     }
     
     // all users
@@ -24,6 +24,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     var registered: Bool
     var isAdmin: Bool
     var isModerator: Bool
+    var isCommunityModerator: Bool
     var isSuperAdmin: Bool
     var isJournalist: Bool
     let badgeType: String
@@ -48,12 +49,10 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     }
 
     var authorityTitle: String? {
-        if isAdmin {
-            return LocalizationManager.localizedString(key: "Admin")
-        } else if isSuperAdmin {
-            return LocalizationManager.localizedString(key: "Moderator")
-        } else if isJournalist {
-            return LocalizationManager.localizedString(key: "Journalist")
+        if isAdmin || isSuperAdmin || isModerator || isJournalist {
+            return LocalizationManager.localizedString(key: "Staff")
+        } else if isCommunityModerator {
+            return LocalizationManager.localizedString(key: "Community Moderator")
         } else {
             return nil
         }
@@ -82,6 +81,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
         isAdmin = (try? container.decode(Bool.self, forKey: .isAdmin)) ?? false
         isJournalist = (try? container.decode(Bool.self, forKey: .isJournalist)) ?? false
         isModerator = (try? container.decode(Bool.self, forKey: .isModerator)) ?? false
+        isCommunityModerator = (try? container.decode(Bool.self, forKey: .isCommunityModerator)) ?? false
         isSuperAdmin = (try? container.decode(Bool.self, forKey: .isSuperAdmin)) ?? false
         points = try? container.decode(Int.self, forKey: .points)
         registered = (try? container.decode(Bool.self, forKey: .registered)) ?? false
