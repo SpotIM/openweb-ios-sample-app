@@ -143,7 +143,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         avatarImageView.layout {
             $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
             $0.trailing.equal(to: userNameView.leadingAnchor, offsetBy: -Theme.avatarImageViewTrailingOffset)
-            $0.centerY.equal(to: userNameView.centerYAnchor)
+//            $0.centerY.equal(to: userNameView.centerYAnchor)
+            $0.top.equal(to: userNameView.topAnchor)
             $0.height.equal(to: Theme.avatarSideSize)
             $0.width.equal(to: Theme.avatarSideSize)
         }
@@ -223,14 +224,15 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             badgeTitle: dataModel.badgeTitle,
             isLeader: dataModel.showsStar,
             contentType: .reply,
-            isDeleted: dataModel.isDeletedOrReported())
+            isDeleted: dataModel.isDeletedOrReported(),
+            isOneLine: dataModel.isUsernameOneLine())
         userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? dataModel.timestamp
                 : "\(dataModel.replyingToDisplayName!) · ".appending(dataModel.timestamp ?? "")
         )
-        let userViewHeight = dataModel.badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
+        let userViewHeight = dataModel.usernameViewHeight() //dataModel.badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
         userViewHeightConstraint?.constant = userViewHeight
         userNameViewTopConstraint?.constant = dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset
 
