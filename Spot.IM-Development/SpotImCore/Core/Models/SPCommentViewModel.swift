@@ -139,7 +139,7 @@ internal struct CommentViewModel {
                 badgeIsGamification = true
                 showsStar = true
                 badgeTitle = nil
-            } 
+            }
         }
 
         self.replyingToCommentId = replyingToCommentId
@@ -160,6 +160,20 @@ internal struct CommentViewModel {
         let textWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset
         
         return textWidth
+    }
+    
+    func isUsernameOneLine() -> Bool {
+        let leadingOffset: CGFloat = depthOffset()
+        let width = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - 44 /*avatar width*/ - 25 /*username trailing constraint*/
+        
+        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? "") , attributes: usernameAttributes())
+        
+        return attributedMessage.width(withConstrainedHeight: 19) < width
+    }
+    
+    func usernameViewHeight() -> CGFloat {
+        
+        return isUsernameOneLine() ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
     }
     
     func getMediaSize() -> CGSize {
@@ -200,7 +214,7 @@ internal struct CommentViewModel {
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
-        let userViewHeight: CGFloat = badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
+        let userViewHeight: CGFloat = usernameViewHeight() //badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
         let commentLabelHeight: CGFloat = Theme.commentLabelViewHeight
         
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
@@ -281,6 +295,15 @@ internal struct CommentViewModel {
             ]
         }
 
+        return attributes
+    }
+    
+    private func usernameAttributes() -> [NSAttributedString.Key: Any] {
+        var attributes: [NSAttributedString.Key: Any]
+            attributes = [
+                .foregroundColor: UIColor.charcoalGrey,
+                .font: UIFont.preferred(style: .medium, of: Theme.fontSize),
+            ]
         return attributes
     }
     

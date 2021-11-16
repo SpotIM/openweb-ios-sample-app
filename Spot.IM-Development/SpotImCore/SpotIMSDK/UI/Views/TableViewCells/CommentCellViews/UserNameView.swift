@@ -66,7 +66,8 @@ internal final class UserNameView: BaseView {
         badgeTitle: String?,
         isLeader: Bool = false,
         contentType: ContentType,
-        isDeleted: Bool) {
+        isDeleted: Bool,
+        isOneLine: Bool = true) {
 
         leaderBadge.tintColor = .brandColor
         switch contentType {
@@ -80,7 +81,7 @@ internal final class UserNameView: BaseView {
         userNameLabel.text = name
         badgeTagLabel.text = badgeTitle
         
-        checkStackViewDirection()
+        checkStackViewDirection(isOneLine: isOneLine)
         
         subtitleToNameConstraint?.isActive = badgeTitle == nil ? true : false
         badgeTagLabel.textColor = isLeader ? .spForeground3 : .brandColor
@@ -88,27 +89,13 @@ internal final class UserNameView: BaseView {
         leaderBadge.isHidden = !isLeader || isDeleted
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.checkStackViewDirection()
-    }
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        self.checkStackViewDirection()
+//    }
     
-    private func checkStackViewDirection() {
-        if let usernameString = userNameLabel.attributedText {
-            var attributedString = NSMutableAttributedString(attributedString: usernameString)
-            if let badgeText = badgeTagLabel.attributedText {
-                attributedString.append(badgeText)
-                let width = attributedString.width(withConstrainedHeight: 19)
-                if width > stackview.frame.width, stackview.frame.width > 0 {
-                    stackview.axis = .vertical
-                    stackview.spacing = 2
-                } else {
-                    stackview.axis = .horizontal
-                    stackview.spacing = 4
-                }
-            }
-        }
-        
+    private func checkStackViewDirection(isOneLine: Bool) {
+        stackview.axis = isOneLine ? .horizontal : .vertical
     }
 
     /// Subtitle should contains `replying to` and `timestamp` information
@@ -170,7 +157,7 @@ internal final class UserNameView: BaseView {
         stackview.addArrangedSubview(badgeTagLabel)
         stackview.axis = .horizontal
         stackview.alignment = .leading
-//        stackview.isUserInteractionEnabled = true
+        stackview.spacing = 4
         
         badgeTagLabel.font = .preferred(style: .medium, of: Theme.labelFontSize)
         badgeTagLabel.layer.borderWidth = 1
@@ -184,7 +171,7 @@ internal final class UserNameView: BaseView {
         stackview.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -69.0)
+            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -25)
         }
 
         userNameLabel.isUserInteractionEnabled = true
@@ -233,8 +220,7 @@ internal final class UserNameView: BaseView {
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
         subtitleLabel.layout {
-            $0.top.equal(to: badgeTagLabel.bottomAnchor, offsetBy: 6.0).priority = .defaultHigh
-            subtitleToNameConstraint = $0.top.equal(to: userNameLabel.bottomAnchor, offsetBy: 6.0)
+            $0.top.equal(to: stackview.bottomAnchor, offsetBy: 6.0)
             $0.leading.equal(to: userNameLabel.leadingAnchor)
             $0.trailing.equal(to: dateLabel.leadingAnchor)
         }
