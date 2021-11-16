@@ -17,12 +17,12 @@ internal final class UserNameView: BaseView {
     weak var delegate: UserNameViewDelegate?
 
     private let userNameLabel: BaseLabel = .init()
+    private let badgeTagLabel: BaseLabel = .init()
+    private let stackview = UIStackView()
     private let subtitleLabel: BaseLabel = .init()
     private let dateLabel: BaseLabel = .init()
     private let leaderBadge: BaseUIImageView = .init()
-    private let badgeTagLabel: BaseLabel = .init()
     private let moreButton: BaseButton = .init()
-    private let userNameButton: BaseButton = .init()
     private let deletedMessageLabel: BaseLabel = .init()
 
     private var subtitleToNameConstraint: NSLayoutConstraint?
@@ -57,7 +57,6 @@ internal final class UserNameView: BaseView {
         subtitleLabel.isHidden = showDeletedLabel
         leaderBadge.isHidden = showDeletedLabel
         moreButton.isHidden = showDeletedLabel
-        userNameButton.isHidden = showDeletedLabel
         badgeTagLabel.isHidden = showDeletedLabel
         configureDeletedLabel(isReported: isReported)
     }
@@ -80,9 +79,36 @@ internal final class UserNameView: BaseView {
 
         userNameLabel.text = name
         badgeTagLabel.text = badgeTitle
+        
+        checkStackViewDirection()
+        
         subtitleToNameConstraint?.isActive = badgeTitle == nil ? true : false
         badgeTagLabel.textColor = isLeader ? .spForeground3 : .brandColor
+        badgeTagLabel.layer.borderColor = isLeader ? UIColor.spForeground3.cgColor : UIColor.brandColor.cgColor
         leaderBadge.isHidden = !isLeader || isDeleted
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.checkStackViewDirection()
+    }
+    
+    private func checkStackViewDirection() {
+        if let usernameString = userNameLabel.attributedText {
+            var attributedString = NSMutableAttributedString(attributedString: usernameString)
+            if let badgeText = badgeTagLabel.attributedText {
+                attributedString.append(badgeText)
+                let width = attributedString.width(withConstrainedHeight: 19)
+                if width > stackview.frame.width, stackview.frame.width > 0 {
+                    stackview.axis = .vertical
+                    stackview.spacing = 2
+                } else {
+                    stackview.axis = .horizontal
+                    stackview.spacing = 4
+                }
+            }
+        }
+        
     }
 
     /// Subtitle should contains `replying to` and `timestamp` information
@@ -102,7 +128,6 @@ internal final class UserNameView: BaseView {
 
     private func setupUI() {
         addSubviews(deletedMessageLabel,
-                    userNameButton,
                     userNameLabel,
                     badgeTagLabel,
                     leaderBadge,
@@ -112,7 +137,7 @@ internal final class UserNameView: BaseView {
         configureUserNameLabel()
         setupMoreButton()
         configureLeaderBadge()
-        configureBadgeTagLabel()
+//        configureBadgeTagLabel()
         configureSubtitleAndDateLabels()
         updateColorsAccordingToStyle()
     }
@@ -141,22 +166,30 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureUserNameLabel() {
+        stackview.addArrangedSubview(userNameLabel)
+        stackview.addArrangedSubview(badgeTagLabel)
+        stackview.axis = .horizontal
+        stackview.alignment = .leading
+//        stackview.isUserInteractionEnabled = true
+        
+        badgeTagLabel.font = .preferred(style: .medium, of: Theme.labelFontSize)
+        badgeTagLabel.layer.borderWidth = 1
+        badgeTagLabel.layer.cornerRadius = 3
+        badgeTagLabel.insets = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+        badgeTagLabel.layer.masksToBounds = true
+        badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        userNameLabel.layout {
+
+        self.addSubviews(stackview)
+        stackview.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -69.0)
         }
 
-        userNameLabel.isUserInteractionEnabled = false
-
-        userNameButton.addTarget(self, action: #selector(userNameTapped), for: .touchUpInside)
-        userNameButton.layout {
-            $0.top.equal(to: userNameLabel.topAnchor)
-            $0.leading.equal(to: userNameLabel.leadingAnchor)
-            $0.trailing.equal(to: userNameLabel.trailingAnchor)
-            $0.bottom.equal(to: subtitleLabel.bottomAnchor)
-        }
+        userNameLabel.isUserInteractionEnabled = true
+        let labelTap = UITapGestureRecognizer(target: self, action: #selector(userNameTapped))
+        userNameLabel.addGestureRecognizer(labelTap)
     }
 
     private func setupMoreButton() {
@@ -183,14 +216,16 @@ internal final class UserNameView: BaseView {
         }
     }
 
-    private func configureBadgeTagLabel() {
-        badgeTagLabel.font = .preferred(style: .medium, of: Theme.fontSize)
-        badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        badgeTagLabel.layout {
-            $0.top.equal(to: userNameLabel.bottomAnchor, offsetBy: 6.0)
-            $0.leading.equal(to: userNameLabel.leadingAnchor)
-        }
-    }
+//    private func configureBadgeTagLabel() {
+//        badgeTagLabel.font = .preferred(style: .medium, of: Theme.fontSize)
+//        badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+//        badgeTagLabel.layout {
+////            $0.top.equal(to: userNameLabel.bottomAnchor, offsetBy: 6.0)
+////            $0.leading.equal(to: userNameLabel.leadingAnchor)
+//            $0.leading.equal(to: userNameLabel.trailingAnchor, offsetBy: 4)
+//            $0.centerY.equal(to: userNameLabel.centerYAnchor)
+//        }
+//    }
 
     private func configureSubtitleAndDateLabels() {
         subtitleLabel.font = .preferred(style: .regular, of: Theme.fontSize)
@@ -247,4 +282,5 @@ protocol UserNameViewDelegate: class {
 
 private enum Theme {
     static let fontSize: CGFloat = 16.0
+    static let labelFontSize: CGFloat = 12.0
 }
