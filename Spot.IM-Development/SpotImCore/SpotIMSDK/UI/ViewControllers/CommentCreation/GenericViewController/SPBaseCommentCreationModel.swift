@@ -36,15 +36,14 @@ class SPBaseCommentCreationModel: CommentStateable {
         self.articleMetadate = articleMetadate
         setupCommentLabels()
         
-        if let commentIdentifier : String = baseCommentCreationDTO.replyModel?.commentId {
-            commentText = cacheService.comment(for: commentIdentifier)
-        } else {
-            commentText = cacheService.comment(for: baseCommentCreationDTO.postId)
-        }
+        let commentIdentifier: String = getCommentIdentifierForCommentType()
+        commentText = cacheService.comment(for: commentIdentifier)
         
     }
     
-    func post() {}
+    func post() {
+        
+    }
     
     func updateCommentText(_ text: String) {
         commentText = text
@@ -53,6 +52,14 @@ class SPBaseCommentCreationModel: CommentStateable {
         } else {
             cacheService.update(comment: text, with: self.dataModel.postId)
         }
+    }
+    
+    private func getCommentIdentifierForCommentType() -> String {
+        if let commentIdentifier : String = self.dataModel.replyModel?.commentId {
+            return commentIdentifier
+        }
+        
+        return self.dataModel.postId
     }
 
     private func setupCommentLabels() {
