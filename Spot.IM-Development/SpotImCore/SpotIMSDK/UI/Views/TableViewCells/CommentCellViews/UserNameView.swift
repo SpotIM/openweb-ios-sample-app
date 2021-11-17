@@ -18,7 +18,7 @@ internal final class UserNameView: BaseView {
 
     private let userNameLabel: BaseLabel = .init()
     private let badgeTagLabel: BaseLabel = .init()
-    private let stackview = UIStackView()
+    private let nameAndBadgeStackview = UIStackView()
     private let subtitleLabel: BaseLabel = .init()
     private let dateLabel: BaseLabel = .init()
     private let leaderBadge: BaseUIImageView = .init()
@@ -81,22 +81,12 @@ internal final class UserNameView: BaseView {
         userNameLabel.text = name
         badgeTagLabel.text = badgeTitle
         
-        checkStackViewDirection(isOneLine: isOneLine)
-        
         subtitleToNameConstraint?.isActive = badgeTitle == nil ? true : false
+        nameAndBadgeStackview.axis = isOneLine ? .horizontal : .vertical
         badgeTagLabel.isHidden = badgeTitle == nil
         badgeTagLabel.textColor = .brandColor
         badgeTagLabel.layer.borderColor = UIColor.brandColor.cgColor
         leaderBadge.isHidden = !isLeader || isDeleted
-    }
-    
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        self.checkStackViewDirection()
-//    }
-    
-    private func checkStackViewDirection(isOneLine: Bool) {
-        stackview.axis = isOneLine ? .horizontal : .vertical
     }
 
     /// Subtitle should contains `replying to` and `timestamp` information
@@ -125,7 +115,6 @@ internal final class UserNameView: BaseView {
         configureUserNameLabel()
         setupMoreButton()
         configureLeaderBadge()
-//        configureBadgeTagLabel()
         configureSubtitleAndDateLabels()
         updateColorsAccordingToStyle()
     }
@@ -154,11 +143,11 @@ internal final class UserNameView: BaseView {
     }
 
     private func configureUserNameLabel() {
-        stackview.addArrangedSubview(userNameLabel)
-        stackview.addArrangedSubview(badgeTagLabel)
-        stackview.axis = .horizontal
-        stackview.alignment = .leading
-        stackview.spacing = 4
+        nameAndBadgeStackview.addArrangedSubview(userNameLabel)
+        nameAndBadgeStackview.addArrangedSubview(badgeTagLabel)
+        nameAndBadgeStackview.axis = .horizontal
+        nameAndBadgeStackview.alignment = .leading
+        nameAndBadgeStackview.spacing = 4
         
         badgeTagLabel.font = .preferred(style: .medium, of: Theme.labelFontSize)
         badgeTagLabel.layer.borderWidth = 1
@@ -168,8 +157,8 @@ internal final class UserNameView: BaseView {
         badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
-        self.addSubviews(stackview)
-        stackview.layout {
+        self.addSubviews(nameAndBadgeStackview)
+        nameAndBadgeStackview.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
             $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -25)
@@ -204,24 +193,13 @@ internal final class UserNameView: BaseView {
         }
     }
 
-//    private func configureBadgeTagLabel() {
-//        badgeTagLabel.font = .preferred(style: .medium, of: Theme.fontSize)
-//        badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-//        badgeTagLabel.layout {
-////            $0.top.equal(to: userNameLabel.bottomAnchor, offsetBy: 6.0)
-////            $0.leading.equal(to: userNameLabel.leadingAnchor)
-//            $0.leading.equal(to: userNameLabel.trailingAnchor, offsetBy: 4)
-//            $0.centerY.equal(to: userNameLabel.centerYAnchor)
-//        }
-//    }
-
     private func configureSubtitleAndDateLabels() {
         subtitleLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
         subtitleLabel.layout {
-            $0.top.equal(to: stackview.bottomAnchor, offsetBy: 6.0)
+            $0.top.equal(to: nameAndBadgeStackview.bottomAnchor, offsetBy: 6.0)
             $0.leading.equal(to: userNameLabel.leadingAnchor)
             $0.trailing.equal(to: dateLabel.leadingAnchor)
         }
