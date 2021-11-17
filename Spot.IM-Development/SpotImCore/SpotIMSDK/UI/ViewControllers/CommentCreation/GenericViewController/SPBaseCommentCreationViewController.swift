@@ -288,6 +288,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     func updateModelData() {
+        configureModelHandlers()
         if model?.isCommentAReply() == true {
             updateModelDataForReply()
         } else {
@@ -295,18 +296,44 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         }
     }
     
+    func configureModelHandlers() {
+        model?.postCompletionHandler = {
+            [weak self] responseData in
+            guard let self = self else { return }
+
+            if responseData.status == .block || !responseData.published {
+                switch responseData.content?.first {
+                case .text(let text):
+                    self.delegate?.commentReplyDidBlock(with: text.text)
+                default: break
+                }
+                
+            } else {
+                self.delegate?.commentReplyDidCreate(responseData)
+            }
+            self.dismissController()
+        }
+        
+        model?.postErrorHandler = { [weak self] error in
+            guard let self = self else { return }
+
+            self.hideLoader()
+            self.showAlert(
+                title: LocalizationManager.localizedString(key: "Oops..."),
+                message: error.localizedDescription
+            )
+        }
+    }
+    
     
     // MARK: - Comment Related Logic
     func updateModelDataForComment() {
-        
+        configureModelHandlers()
     }
-
 
 
     // MARK: - Reply Related Logic
     func updateModelDataForReply() {
-        
-        configureModelHandlersForReply()
         
         let shouldHideCommentText = showCommentLabels && showsUsernameInput
         let commentReplyDataModel = CommentReplyDataModel(
@@ -345,35 +372,6 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
 
         updateTextInputContainer(with: .reply)
         updateAvatar()
-    }
-
-    func configureModelHandlersForReply() {
-        model?.postCompletionHandler = {
-            [weak self] reply in
-            guard let self = self else { return }
-
-            if reply.status == .block || !reply.published {
-                switch reply.content?.first {
-                case .text(let text):
-                    self.delegate?.commentReplyDidBlock(with: text.text)
-                default: break
-                }
-                
-            } else {
-                self.delegate?.commentReplyDidCreate(reply)
-            }
-            self.dismissController()
-        }
-        
-        model?.postErrorHandler = { [weak self] error in
-            guard let self = self else { return }
-
-            self.hideLoader()
-            self.showAlert(
-                title: LocalizationManager.localizedString(key: "Oops..."),
-                message: error.localizedDescription
-            )
-        }
     }
 
 
