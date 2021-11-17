@@ -287,7 +287,95 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         navigationItem.setRightBarButton(userRightBarItem!, animated: true)
     }
     
-    func updateModelData() {}
+    func updateModelData() {
+        if model?.isCommentAReply() == true {
+            updateModelDataForReply()
+        } else {
+            updateModelDataForComment()
+        }
+    }
+    
+    
+    // MARK: - Comment Related Logic
+    func updateModelDataForComment() {
+        
+    }
+
+
+
+    // MARK: - Reply Related Logic
+    func updateModelDataForReply() {
+        
+        configureModelHandlersForReply()
+        
+        let shouldHideCommentText = showCommentLabels && showsUsernameInput
+        let commentReplyDataModel = CommentReplyDataModel(
+            author: model?.dataModel.replyModel?.authorName,
+            comment: model?.dataModel.replyModel?.commentText
+        )
+        
+        let headerView: UIView
+        if SpotIm.enableCreateCommentNewDesign {
+            commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+            commentNewHeaderView.delegate = self
+            commentNewHeaderView.configure(with: commentReplyDataModel)
+            if shouldHideCommentText {
+                commentNewHeaderView.hideCommentText()
+            }
+            headerView = commentNewHeaderView
+        } else {
+            commentHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+            commentHeaderView.configure(with: commentReplyDataModel)
+            if shouldHideCommentText {
+                commentHeaderView.hideCommentText()
+            }
+            headerView = commentHeaderView
+        }
+        
+        topContainerStack.insertArrangedSubview(headerView, at: 0)
+        
+        let heightWithCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 135 : 111
+        let heightWithoutCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 115 : 68
+
+        headerView.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.height.equal(to: shouldHideCommentText ? heightWithoutCommentText : heightWithCommentText)
+            $0.width.equal(to: topContainerStack.widthAnchor)
+        }
+
+        updateTextInputContainer(with: .reply)
+        updateAvatar()
+    }
+
+    func configureModelHandlersForReply() {
+        model?.postCompletionHandler = {
+            [weak self] reply in
+            guard let self = self else { return }
+
+            if reply.status == .block || !reply.published {
+                switch reply.content?.first {
+                case .text(let text):
+                    self.delegate?.commentReplyDidBlock(with: text.text)
+                default: break
+                }
+                
+            } else {
+                self.delegate?.commentReplyDidCreate(reply)
+            }
+            self.dismissController()
+        }
+        
+        model?.postErrorHandler = { [weak self] error in
+            guard let self = self else { return }
+
+            self.hideLoader()
+            self.showAlert(
+                title: LocalizationManager.localizedString(key: "Oops..."),
+                message: error.localizedDescription
+            )
+        }
+    }
+
 
     func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
         textInputViewContainer.configureCommentType(type)
