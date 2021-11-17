@@ -134,7 +134,7 @@ internal struct CommentViewModel {
             if user.isAuthority {
                 badgeIsGamification = false
                 showsStar = false
-                badgeTitle = getUserBadgeUsingConfig(user: user)//user.authorityTitle
+                badgeTitle = getUserBadgeUsingConfig(user: user)
             } else if user.hasGamification {
                 badgeIsGamification = true
                 showsStar = true
@@ -162,18 +162,18 @@ internal struct CommentViewModel {
         return textWidth
     }
     
-    func isUsernameOneLine() -> Bool {
+    // check if userName & badge should be in one row or two
+    func isUsernameOneRow() -> Bool {
         let leadingOffset: CGFloat = depthOffset()
         let width = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - 44 /*avatar width*/ - 25 /*username trailing constraint*/
         
-        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? "") , attributes: usernameAttributes())
+        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? "") , attributes: [.font: UIFont.preferred(style: .medium, of: Theme.fontSize)])
         
         return attributedMessage.width(withConstrainedHeight: 19) < width
     }
     
     func usernameViewHeight() -> CGFloat {
-        
-        return isUsernameOneLine() ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
+        return isUsernameOneRow() ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
     }
     
     func getMediaSize() -> CGSize {
@@ -214,7 +214,7 @@ internal struct CommentViewModel {
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
-        let userViewHeight: CGFloat = usernameViewHeight() //badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
+        let userViewHeight: CGFloat = usernameViewHeight()
         let commentLabelHeight: CGFloat = Theme.commentLabelViewHeight
         
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
@@ -298,15 +298,6 @@ internal struct CommentViewModel {
         return attributes
     }
     
-    private func usernameAttributes() -> [NSAttributedString.Key: Any] {
-        var attributes: [NSAttributedString.Key: Any]
-            attributes = [
-                .foregroundColor: UIColor.charcoalGrey,
-                .font: UIFont.preferred(style: .medium, of: Theme.fontSize),
-            ]
-        return attributes
-    }
-    
     private func getCommentLabelFromConfig(comment: SPComment) -> SPLabelConfiguration? {
         // cross given commentLabels to appConfig labels
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
@@ -322,6 +313,7 @@ internal struct CommentViewModel {
         return nil
     }
     
+    // if user role exist in config translationTextOverrides -> return translation, else return user authorityTitle
     private func getUserBadgeUsingConfig(user: SPUser) -> String? {
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
