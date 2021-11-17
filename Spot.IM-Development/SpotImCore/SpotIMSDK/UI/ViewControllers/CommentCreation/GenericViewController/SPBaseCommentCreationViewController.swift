@@ -50,6 +50,8 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
+    private var emptyArticleBottomConstraint: NSLayoutConstraint?
+
     
     private let closeButton: BaseButton = .init()
     
@@ -328,7 +330,105 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     
     // MARK: - Comment Related Logic
     func updateModelDataForComment() {
-        configureModelHandlers()
+        if SpotIm.enableCreateCommentNewDesign {
+            setupNewHeader()
+        } else {
+            setupHeader()
+        }
+
+        updateTextInputContainer(with: .comment)
+        updateAvatar()
+    }
+    
+    private func setupNewHeader() {
+        guard commentNewHeaderView.superview == nil else {
+            return
+        }
+        topContainerStack.insertArrangedSubview(commentNewHeaderView, at: 0)
+        
+        commentNewHeaderView.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.leading.equal(to: topContainerStack.leadingAnchor)
+            $0.trailing.equal(to: topContainerStack.trailingAnchor)
+            $0.height.equal(to: 60)
+        }
+        
+        commentNewHeaderView.delegate = self
+        commentNewHeaderView.configure()
+        commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+    }
+    
+    private func setupHeader() {
+        setupHeaderComponentsIfNeeded()
+        if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
+            topContainerStack.insertArrangedSubview(articleView, at: 1)
+            articleView.setTitle(model?.dataModel.articleMetadata.title)
+            articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))
+            articleView.setAuthor(model?.dataModel.articleMetadata.subtitle)
+
+            articleView.layout {
+                $0.height.equal(to: 85.0)
+                $0.width.equal(to: topContainerStack.widthAnchor)
+            }
+            
+            topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
+            commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
+        } else {
+            emptyArticleBottomConstraint?.isActive = true
+            commentingOnLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
+        }
+    }
+    
+    private func setupHeaderComponentsIfNeeded() {
+        guard commentingOnLabel.superview == nil, closeButton.superview == nil else {
+            return
+        }
+
+        commentingContainer.addSubview(commentingOnLabel)
+
+        topContainerStack.insertArrangedSubview(commentingContainer, at: 0)
+
+        topContainerView.addSubview(closeButton)
+        
+        commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
+        commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
+        commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        commentingOnLabel.sizeToFit()
+        
+        commentingContainer.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.leading.equal(to: topContainerStack.leadingAnchor)
+            $0.trailing.equal(to: topContainerStack.trailingAnchor)
+            $0.height.equal(to: commentingOnLabel.frame.height + 41)
+        }
+        
+        commentingOnLabel.layout {
+            $0.top.equal(to: commentingContainer.topAnchor, offsetBy: 25)
+            $0.leading.equal(to: commentingContainer.leadingAnchor, offsetBy: 16)
+            $0.trailing.equal(to: commentingContainer.trailingAnchor, offsetBy: -16)
+            $0.bottom.equal(to: commentingContainer.bottomAnchor, offsetBy: -16)
+        }
+        
+        closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+        closeButton.layout {
+            $0.centerY.equal(to: topContainerView.topAnchor, offsetBy: 35)
+            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -5.0)
+            $0.width.equal(to: 40.0)
+            $0.height.equal(to: 40.0)
+        }
+        
+        closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+    }
+
+    private func shouldDisplayArticleHeader() -> Bool {
+        if model?.dataModel != nil,
+           UIDevice.current.screenType != .iPhones_5_5s_5c_SE,
+           SpotIm.displayArticleHeader,
+           !(showCommentLabels && showsUsernameInput) {
+            return true
+        } else {
+            return false
+        }
     }
 
 
