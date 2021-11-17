@@ -134,7 +134,7 @@ internal struct CommentViewModel {
             if user.isAuthority {
                 badgeIsGamification = false
                 showsStar = false
-                badgeTitle = user.authorityTitle
+                badgeTitle = getUserBadgeUsingConfig(user: user)//user.authorityTitle
             } else if user.hasGamification {
                 badgeIsGamification = true
                 showsStar = true
@@ -320,6 +320,25 @@ internal struct CommentViewModel {
             return sectionLabels.getLabelById(labelId: labelIds[0])
         }
         return nil
+    }
+    
+    private func getUserBadgeUsingConfig(user: SPUser) -> String? {
+        if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
+           let translations = conversationConfig.translationTextOverrides,
+           let currentLanguage = LocalizationManager.currentLanguage?.rawValue,
+           let currentTranslation = translations[currentLanguage]
+        {
+            if user.isAdmin, let adminBadge = currentTranslation["user.badges.admin"] {
+                return adminBadge
+            } else if user.isJournalist, let jurnalistBadge = currentTranslation["user.badges.jurnalist"] {
+                return jurnalistBadge
+            } else if user.isModerator, let moderatorBadge = currentTranslation["user.badges.moderator"] {
+                return moderatorBadge
+            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation["user.badges.community-moderator"]  {
+                return communityModeratorBadge
+            }
+        }
+        return user.authorityTitle
     }
 
 }
