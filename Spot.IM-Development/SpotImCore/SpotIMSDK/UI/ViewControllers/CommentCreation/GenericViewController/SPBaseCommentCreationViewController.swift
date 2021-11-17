@@ -51,6 +51,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
     
+    private let closeButton: BaseButton = .init()
+
+    
     private var shouldBeAutoPosted: Bool = true
     var showsUsernameInput: Bool {
         guard let config = SPConfigsDataSource.appConfig else { return true }
@@ -91,6 +94,20 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         // remove keyboard when tapping outside of textView
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         mainContainerView.addGestureRecognizer(tap)
+        
+        if model?.isCommentAReply() == false {
+            topContainerView.bringSubviewToFront(closeButton)
+        }
+        
+        NotificationCenter.default.addObserver(
+                   self,
+                   selector: #selector(overrideUserInterfaceStyleDidChange),
+                   name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
+                   object: nil)
+    }
+    
+    @objc private func overrideUserInterfaceStyleDidChange() {
+        self.updateColorsAccordingToStyle()
     }
     
     @objc func dismissKeyboard() {
