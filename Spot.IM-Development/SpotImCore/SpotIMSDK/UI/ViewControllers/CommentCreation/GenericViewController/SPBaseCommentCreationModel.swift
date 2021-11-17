@@ -45,7 +45,15 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
     
     func post() {}
-    func updateCommentText(_ text: String) {}
+    
+    func updateCommentText(_ text: String) {
+        commentText = text
+        if let commentIdentifier : String = self.dataModel.replyModel?.commentId {
+            cacheService.update(comment: text, with: commentIdentifier)
+        } else {
+            cacheService.update(comment: text, with: self.dataModel.postId)
+        }
+    }
 
     private func setupCommentLabels() {
         guard let sharedConfig = SPConfigsDataSource.appConfig?.shared,
