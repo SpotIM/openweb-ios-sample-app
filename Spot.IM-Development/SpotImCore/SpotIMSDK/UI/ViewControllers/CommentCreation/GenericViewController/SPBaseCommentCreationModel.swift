@@ -117,7 +117,7 @@ class SPBaseCommentCreationModel: CommentStateable {
         cacheService.update(comment: text, with: commentIdentifier)
     }
     
-    private func isCommentAReply() -> Bool {
+    func isCommentAReply() -> Bool {
         return dataModel.replyModel != nil
     }
     
