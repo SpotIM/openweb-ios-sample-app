@@ -52,7 +52,12 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var topContainerTopConstraint: NSLayoutConstraint?
     
     private let closeButton: BaseButton = .init()
-
+    
+    private lazy var commentHeaderView = SPCommentReplyHeaderView()
+    private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
+    private let commentingContainer: UIView = .init()
+    private let commentingOnLabel: BaseLabel = .init()
+    private lazy var articleView: SPArticleHeader = SPArticleHeader()
     
     private var shouldBeAutoPosted: Bool = true
     var showsUsernameInput: Bool {
@@ -181,6 +186,27 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         commentLabelsContainer.updateColorsAccordingToStyle()
         usernameView.updateColorsAccordingToStyle()
         footerView.updateColorsAccordingToStyle()
+        
+        if SpotIm.enableCreateCommentNewDesign {
+            commentNewHeaderView.updateColorsAccordingToStyle()
+        } else {
+            if model?.isCommentAReply() == true {
+                commentHeaderView.updateColorsAccordingToStyle()
+            } else {
+                commentingContainer.backgroundColor = .spBackground0
+                commentingOnLabel.textColor = .spForeground4
+                commentingOnLabel.backgroundColor = .spBackground0
+                closeButton.backgroundColor = .spBackground0
+                closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+            }
+        }
+        
+        
+        if model?.isCommentAReply() == false {
+            articleView.updateColorsAccordingToStyle()
+        }
+        
+        updateAvatar() // placeholder is adjusted to theme
     }
     
     @objc
