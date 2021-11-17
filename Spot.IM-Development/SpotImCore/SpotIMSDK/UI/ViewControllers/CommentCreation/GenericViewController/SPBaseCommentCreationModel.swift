@@ -17,21 +17,31 @@ class SPBaseCommentCreationModel: CommentStateable {
     var selectedLabels: SelectedLabels?
     var commentLabelsSection: String?
     var sectionCommentLabelsConfig: SPCommentLabelsSectionConfiguration?
+    var dataModel: SPBaseCommentCreationDTO
     
     let imageProvider: SPImageURLProvider
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
     
-    init(cacheService: SPCommentsInMemoryCacheService,
+    init(baseCommentCreationDTO: SPBaseCommentCreationDTO,
+         cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageURLProvider,
          articleMetadate: SpotImArticleMetadata
     ) {
+        self.dataModel = baseCommentCreationDTO
         self.imageProvider = imageProvider
         self.cacheService = cacheService
         commentService = updater
         self.articleMetadate = articleMetadate
-        self.setupCommentLabels()
+        setupCommentLabels()
+        
+        if let commentIdentifier : String = baseCommentCreationDTO.replyModel?.commentId {
+            commentText = cacheService.comment(for: commentIdentifier)
+        } else {
+            commentText = cacheService.comment(for: baseCommentCreationDTO.postId)
+        }
+        
     }
     
     func post() {}
