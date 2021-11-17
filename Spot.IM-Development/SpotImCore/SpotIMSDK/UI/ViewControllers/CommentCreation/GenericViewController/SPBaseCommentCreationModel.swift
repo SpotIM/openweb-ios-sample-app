@@ -42,7 +42,73 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
     
     func post() {
+        let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         
+        var metadata: [String: Any] = [
+            apiKeys.metadata: [apiKeys.displayName: displayName]
+        ]
+        
+        var parameters: [String: Any] = [
+            apiKeys.content: [[apiKeys.text: commentText]]
+        ]
+        
+        if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
+            parameters[apiKeys.additionalData] = [
+                apiKeys.labels: [
+                    apiKeys.labelsSection: selectedLabels.section,
+                    apiKeys.labelsIds: selectedLabels.ids,
+                ]
+            ]
+        }
+        
+        if isCommentAReply() {
+            let isRootComment = dataModel.replyModel?.commentId == dataModel.replyModel?.rootCommentId
+            if !isRootComment {
+                metadata[apiKeys.replyTo] = [apiKeys.replyId: dataModel.replyModel?.commentId]
+            }
+            parameters[apiKeys.conversationId] = dataModel.postId
+        }
+        
+        commentService.createComment(
+            parameters: parameters,
+            postId: dataModel.postId,
+            success: {
+                [weak self] response in
+                guard let self = self else { return }
+                
+                var responseData = response
+                responseData.writtenAt = Date().timeIntervalSince1970
+                let userId = SPUserSessionHolder.session.user?.id
+                responseData.userId = userId
+                
+                if self.isCommentAReply() {
+                    responseData.parentId = self.dataModel.replyModel?.commentId
+                    responseData.rootComment = self.dataModel.replyModel?.rootCommentId
+                    responseData.depth = (self.dataModel.replyModel?.parentDepth ?? 0) + 1
+                } else {
+                    responseData.rootComment = responseData.id
+                    responseData.depth = 0
+                }
+                
+                if let userId = responseData.userId {
+                    let user = SPComment.CommentUser(id: userId)
+                    responseData.users = [userId: user]
+                }
+                if let labels = self.selectedLabels {
+                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
+                    responseData.additionalData = SPComment.AdditionalData(labels: commentLabels)
+                }
+                
+                let commentIdentifier : String = self.getCommentIdentifierForCommentType()
+                self.cacheService.remove(for: commentIdentifier)
+                
+                self.postCompletionHandler?(responseData)
+            },
+            failure: {
+                [weak self] error in
+                self?.postErrorHandler?(error)
+            }
+        )
     }
     
     func updateCommentText(_ text: String) {
@@ -51,12 +117,16 @@ class SPBaseCommentCreationModel: CommentStateable {
         cacheService.update(comment: text, with: commentIdentifier)
     }
     
+    private func isCommentAReply() -> Bool {
+        return dataModel.replyModel != nil
+    }
+    
     private func getCommentIdentifierForCommentType() -> String {
-        if let commentIdentifier : String = self.dataModel.replyModel?.commentId {
+        if let commentIdentifier : String = dataModel.replyModel?.commentId {
             return commentIdentifier
         }
         
-        return self.dataModel.postId
+        return dataModel.postId
     }
 
     private func setupCommentLabels() {
@@ -92,5 +162,21 @@ class SPBaseCommentCreationModel: CommentStateable {
         imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
+    }
+    
+    
+    private enum apiKeys {
+        static let content = "content"
+        static let text = "text"
+        static let metadata = "metadata"
+        static let displayName = "display_name"
+        static let additionalData = "additional_data"
+        static let labels = "labels"
+        static let labelsSection = "section"
+        static let labelsIds = "ids"
+        static let replyTo = "reply_to"
+        static let replyId = "reply_id"
+        static let parentId = "parent_id"
+        static let conversationId = "conversation_id"
     }
 }
