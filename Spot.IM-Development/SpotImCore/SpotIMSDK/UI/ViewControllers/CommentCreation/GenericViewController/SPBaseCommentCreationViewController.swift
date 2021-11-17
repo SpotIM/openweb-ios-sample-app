@@ -209,6 +209,23 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         updateAvatar() // placeholder is adjusted to theme
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let state = UIApplication.shared.applicationState
+        if #available(iOS 12.0, *) {
+            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                // traitCollectionDidChange() is called multiple times, see: https://stackoverflow.com/a/63380259/583425
+                if state != .background {
+                    self.updateColorsAccordingToStyle()
+                }
+            }
+        } else {
+            if state != .background {
+                self.updateColorsAccordingToStyle()
+            }
+        }
+    }
+    
     @objc
     func close() {
         if (model?.commentText.count ?? 0) >= commentCacheMinCount {
