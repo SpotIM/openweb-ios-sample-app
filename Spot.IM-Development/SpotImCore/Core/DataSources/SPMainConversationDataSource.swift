@@ -330,6 +330,30 @@ internal final class SPMainConversationDataSource {
                                   user: currentUser)
     }
     
+    internal func baseCreationModel(for id: String?) -> SPBaseCommentCreationDTO {
+        var replyModel: SPReplyCommentDTO? = nil
+        
+        if let commentId = id {
+            let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
+            replyModel = SPReplyCommentDTO(
+                authorName: comment?.displayName,
+                commentText: comment?.commentText,
+                commentId: commentId,
+                rootCommentId: comment?.rootCommentId,
+                parentDepth: comment?.depth
+            )
+        }
+        
+        return SPBaseCommentCreationDTO(
+            articleMetadata: articleMetadata,
+            currentUserAvatarUrl: currentUserAvatarUrl,
+            postId: postId,
+            displayName: currentUserName,
+            user: currentUser,
+            replyModel: replyModel
+        )
+    }
+    
     internal func numberOfRows(in section: Int) -> Int {
         if isLoading && section == numberOfSections() - 1 { // loader cell in dedicated section
             return 1
