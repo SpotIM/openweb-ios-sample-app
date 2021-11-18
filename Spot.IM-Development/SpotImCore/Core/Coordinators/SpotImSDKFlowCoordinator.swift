@@ -445,7 +445,7 @@ extension SpotImSDKFlowCoordinator: SPSafariWebPageDelegate {
 
 extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
 
-    internal func createBaseComment(with dataModel: SPMainConversationModel, to commentId: String?) {
+    internal func createBaseComment(with dataModel: SPMainConversationModel, commentId: String?) {
         
         let controller = SPBaseCommentCreationViewController(customUIDelegate: self)
         controller.delegate = self
@@ -461,41 +461,6 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
      
         controller.model = model
         dataModel.dataSource.showReplies = true
-        presentContentCreationViewController(controller: controller, dataModel)
-    }
-    
-    internal func createComment(with dataModel: SPMainConversationModel) {
-        let controller = SPCommentCreationViewController(customUIDelegate: self)
-        controller.delegate = self
-        controller.userAuthFlowDelegate = self
-        
-        let model = SPCommentCreationModel(
-            commentCreationDTO: dataModel.dataSource.commentCreationModel(),
-            cacheService: commentsCacheService,
-            updater: conversationUpdater,
-            imageProvider: imageProvider,
-            articleMetadate: dataModel.dataSource.articleMetadata
-        )
-        controller.model = model
-        dataModel.dataSource.showReplies = true
-        presentContentCreationViewController(controller: controller, dataModel)
-    }
-    
-    internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
-        let controller = SPReplyCreationViewController(customUIDelegate: self)
-        controller.delegate = self
-        controller.userAuthFlowDelegate = self
-        
-        let model = SPReplyCreationModel(
-            replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
-            cacheService: commentsCacheService,
-            updater: conversationUpdater,
-            imageProvider: imageProvider,
-            articleMetadata: dataModel.dataSource.articleMetadata
-        )
-        controller.model = model
-        dataModel.dataSource.showReplies = true
-        
         presentContentCreationViewController(controller: controller, dataModel)
     }
 }
