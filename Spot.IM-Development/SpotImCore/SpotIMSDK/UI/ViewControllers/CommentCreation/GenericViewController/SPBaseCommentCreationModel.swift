@@ -45,18 +45,18 @@ class SPBaseCommentCreationModel: CommentStateable {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         
         var metadata: [String: Any] = [
-            apiKeys.metadata: [apiKeys.displayName: displayName]
+            SPRequestKeys.metadata: [SPRequestKeys.displayName: displayName]
         ]
         
         var parameters: [String: Any] = [
-            apiKeys.content: [[apiKeys.text: commentText]]
+            SPRequestKeys.content: [[SPRequestKeys.text: commentText]]
         ]
         
         if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
-            parameters[apiKeys.additionalData] = [
-                apiKeys.labels: [
-                    apiKeys.labelsSection: selectedLabels.section,
-                    apiKeys.labelsIds: selectedLabels.ids,
+            parameters[SPRequestKeys.additionalData] = [
+                SPRequestKeys.labels: [
+                    SPRequestKeys.labelsSection: selectedLabels.section,
+                    SPRequestKeys.labelsIds: selectedLabels.ids,
                 ]
             ]
         }
@@ -64,9 +64,9 @@ class SPBaseCommentCreationModel: CommentStateable {
         if isCommentAReply() {
             let isRootComment = dataModel.replyModel?.commentId == dataModel.replyModel?.rootCommentId
             if !isRootComment {
-                metadata[apiKeys.replyTo] = [apiKeys.replyId: dataModel.replyModel?.commentId]
+                metadata[SPRequestKeys.replyTo] = [SPRequestKeys.replyId: dataModel.replyModel?.commentId]
             }
-            parameters[apiKeys.conversationId] = dataModel.postId
+            parameters[SPRequestKeys.conversationId] = dataModel.postId
         }
         
         commentService.createComment(
@@ -167,7 +167,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
     
     
-    private enum apiKeys {
+    private enum SPRequestKeys {
         static let content = "content"
         static let text = "text"
         static let metadata = "metadata"
