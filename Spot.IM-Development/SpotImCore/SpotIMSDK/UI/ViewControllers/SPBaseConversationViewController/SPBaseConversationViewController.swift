@@ -244,7 +244,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
             action = { [weak self] in
                 guard let self = self, let delegate = self.delegate else { return }
                 self.logCreationOpen(with: .comment)
-                delegate.createBaseComment(with: self.model, to: nil)
+                delegate.createBaseComment(with: self.model, commentId: nil)
             }
         }
         stateActionView?.configure(
@@ -765,7 +765,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         }
         
         logCreationOpen(with: .reply, parentId: commentId)
-        delegate.createBaseComment(with: model, to: id)
+        delegate.createBaseComment(with: model, commentId: id)
     }
 
     func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton) {
@@ -833,7 +833,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
             return
         }
         logCreationOpen(with: .comment)
-        delegate.createBaseComment(with: model, to: nil)
+        delegate.createBaseComment(with: model, commentId: nil)
     }
     
     func userAvatarDidTap(_ foorterView: SPMainConversationFooterView) {
