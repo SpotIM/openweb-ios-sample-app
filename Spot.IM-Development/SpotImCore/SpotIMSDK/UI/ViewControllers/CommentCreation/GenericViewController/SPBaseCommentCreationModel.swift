@@ -180,3 +180,8 @@ class SPBaseCommentCreationModel: CommentStateable {
         static let conversationId = "conversation_id"
     }
 }
+
+struct SelectedLabels {
+    var section: String
+    var ids: [String]
+}
