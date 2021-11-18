@@ -301,33 +301,10 @@ internal final class SPMainConversationDataSource {
         return count
     }
     
-    internal func commentCreationModel() -> SPCommentCreationDTO {
-        return SPCommentCreationDTO(articleMetadata: articleMetadata,
-                                    currentUserAvatar: currentUserAvatarUrl,
-                                    postId: postId,
-                                    displayName: currentUserName,
-                                    converstionId: postId,
-                                    user: currentUser)
-    }
-    
     internal func commentViewModel(_ id: String) -> CommentViewModel? {
         let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
         
         return comment
-    }
-    
-    internal func replyCreationModel(for id: String) -> SPReplyCreationDTO {
-        let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
-        
-        return SPReplyCreationDTO(currentUserAvatar: currentUserAvatarUrl,
-                                  authorName: comment?.displayName,
-                                  comment: comment?.commentText,
-                                  commentId: id,
-                                  postId: postId,
-                                  displayName: currentUserName,
-                                  rootCommentId: comment?.rootCommentId,
-                                  parentDepth: comment?.depth,
-                                  user: currentUser)
     }
     
     internal func baseCreationModel(for id: String?) -> SPBaseCommentCreationDTO {
