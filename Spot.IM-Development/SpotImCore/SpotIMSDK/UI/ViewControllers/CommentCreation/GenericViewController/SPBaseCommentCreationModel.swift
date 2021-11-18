@@ -78,8 +78,19 @@ class SPBaseCommentCreationModel: CommentStateable {
                 
                 var responseData = response
                 responseData.writtenAt = Date().timeIntervalSince1970
+                
                 let userId = SPUserSessionHolder.session.user?.id
                 responseData.userId = userId
+                
+                if let userId = responseData.userId {
+                    let user = SPComment.CommentUser(id: userId)
+                    responseData.users = [userId: user]
+                }
+                
+                if let labels = self.selectedLabels {
+                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
+                    responseData.additionalData = SPComment.AdditionalData(labels: commentLabels)
+                }
                 
                 if self.isCommentAReply() {
                     responseData.parentId = self.dataModel.replyModel?.commentId
@@ -88,15 +99,6 @@ class SPBaseCommentCreationModel: CommentStateable {
                 } else {
                     responseData.rootComment = responseData.id
                     responseData.depth = 0
-                }
-                
-                if let userId = responseData.userId {
-                    let user = SPComment.CommentUser(id: userId)
-                    responseData.users = [userId: user]
-                }
-                if let labels = self.selectedLabels {
-                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
-                    responseData.additionalData = SPComment.AdditionalData(labels: commentLabels)
                 }
                 
                 let commentIdentifier : String = self.getCommentIdentifierForCommentType()
