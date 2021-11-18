@@ -189,26 +189,34 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         usernameView.updateColorsAccordingToStyle()
         footerView.updateColorsAccordingToStyle()
         
-        if SpotIm.enableCreateCommentNewDesign {
-            commentNewHeaderView.updateColorsAccordingToStyle()
-        } else {
-            if model?.isCommentAReply() == true {
-                commentHeaderView.updateColorsAccordingToStyle()
-            } else {
-                commentingContainer.backgroundColor = .spBackground0
-                commentingOnLabel.textColor = .spForeground4
-                commentingOnLabel.backgroundColor = .spBackground0
-                closeButton.backgroundColor = .spBackground0
-                closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
-            }
-        }
-        
+        configureCommentDesign(SpotIm.enableCreateCommentNewDesign)
         
         if model?.isCommentAReply() == false {
             articleView.updateColorsAccordingToStyle()
         }
         
         updateAvatar() // placeholder is adjusted to theme
+    }
+    
+    private func configureCommentDesign(_ shouldEnableCreateCommentNewDesign: Bool) {
+        
+        if shouldEnableCreateCommentNewDesign {
+            commentNewHeaderView.updateColorsAccordingToStyle()
+        } else {
+            configureCommentOldDesign()
+        }
+    }
+    
+    private func configureCommentOldDesign() {
+        if model?.isCommentAReply() == true {
+            commentHeaderView.updateColorsAccordingToStyle()
+        } else {
+            commentingContainer.backgroundColor = .spBackground0
+            commentingOnLabel.textColor = .spForeground4
+            commentingOnLabel.backgroundColor = .spBackground0
+            closeButton.backgroundColor = .spBackground0
+            closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
