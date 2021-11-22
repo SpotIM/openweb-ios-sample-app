@@ -307,19 +307,25 @@ internal final class SPMainConversationDataSource {
         return comment
     }
     
-    internal func baseCreationModel(for id: String?) -> SPBaseCommentCreationDTO {
-        var replyModel: SPReplyCommentDTO? = nil
+    internal func commentCreationModel() -> SPBaseCommentCreationDTO {
+        return baseCreationModel(replyModel: nil)
+    }
+    
+    internal func replyCreationModel(for id: String) -> SPBaseCommentCreationDTO {
+        let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
         
-        if let commentId = id {
-            let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
-            replyModel = SPReplyCommentDTO(
-                authorName: comment?.displayName,
-                commentText: comment?.commentText,
-                commentId: commentId,
-                rootCommentId: comment?.rootCommentId,
-                parentDepth: comment?.depth
-            )
-        }
+        let replyModel = SPReplyCommentDTO(
+            authorName: comment?.displayName,
+            commentText: comment?.commentText,
+            commentId: id,
+            rootCommentId: comment?.rootCommentId,
+            parentDepth: comment?.depth
+        )
+        
+        return baseCreationModel(replyModel: replyModel)
+    }
+    
+    internal func baseCreationModel(replyModel: SPReplyCommentDTO?) -> SPBaseCommentCreationDTO {
         
         return SPBaseCommentCreationDTO(
             articleMetadata: articleMetadata,
