@@ -475,13 +475,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         tableView.reloadData()
     }
     
-    override func checkAdsAvailability() {
-        guard
-            !disableAdsForUser(),
-            let adsConfig = SPConfigsDataSource.adsConfig,
-            let tags = adsConfig.tags
-            else { return }
-        
+    override func setupAds(for tags: [SPAdsConfigurationTag]) {
         for tag in tags {
             guard let adsId = tag.code else { break }
             switch tag.adType {
