@@ -307,11 +307,11 @@ internal final class SPMainConversationDataSource {
         return comment
     }
     
-    internal func commentCreationModel() -> SPBaseCommentCreationDTO {
+    internal func commentCreationModel() -> SPCommentCreationDTO {
         return baseCreationModel(replyModel: nil)
     }
     
-    internal func replyCreationModel(for id: String) -> SPBaseCommentCreationDTO {
+    internal func replyCreationModel(for id: String) -> SPCommentCreationDTO {
         let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
         
         let replyModel = SPReplyCommentDTO(
@@ -325,9 +325,9 @@ internal final class SPMainConversationDataSource {
         return baseCreationModel(replyModel: replyModel)
     }
     
-    internal func baseCreationModel(replyModel: SPReplyCommentDTO?) -> SPBaseCommentCreationDTO {
+    internal func baseCreationModel(replyModel: SPReplyCommentDTO?) -> SPCommentCreationDTO {
         
-        return SPBaseCommentCreationDTO(
+        return SPCommentCreationDTO(
             articleMetadata: articleMetadata,
             currentUserAvatarUrl: currentUserAvatarUrl,
             postId: postId,
