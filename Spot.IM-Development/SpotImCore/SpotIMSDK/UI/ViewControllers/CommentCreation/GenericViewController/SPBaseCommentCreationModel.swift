@@ -101,7 +101,7 @@ class SPBaseCommentCreationModel: CommentStateable {
                     responseData.depth = 0
                 }
                 
-                let commentIdentifier : String = self.getCommentIdentifierForCommentType()
+                let commentIdentifier: String = self.getCommentIdentifierForCommentType()
                 self.cacheService.remove(for: commentIdentifier)
                 
                 self.postCompletionHandler?(responseData)
@@ -115,7 +115,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     
     func updateCommentText(_ text: String) {
         commentText = text
-        let commentIdentifier : String = getCommentIdentifierForCommentType()
+        let commentIdentifier: String = getCommentIdentifierForCommentType()
         cacheService.update(comment: text, with: commentIdentifier)
     }
     
@@ -124,7 +124,7 @@ class SPBaseCommentCreationModel: CommentStateable {
     }
     
     private func getCommentIdentifierForCommentType() -> String {
-        if let commentIdentifier : String = dataModel.replyModel?.commentId {
+        if let commentIdentifier: String = dataModel.replyModel?.commentId {
             return commentIdentifier
         }
         
