@@ -15,14 +15,17 @@ protocol CommentReplyViewControllerDelegate: AnyObject {
     
 }
 
-class SPBaseCommentCreationViewController<T: SPBaseCommentCreationModel>: SPBaseViewController, AlertPresentable,
-LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
+class SPBaseCommentCreationViewController: SPBaseViewController,
+                                                                          AlertPresentable,
+                                                                          LoaderPresentable,
+                                                                          UserAuthFlowDelegateContainable,
+                                                                          UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: AuthenticationHandler?
     
-    var model: T? {
+    var model: SPBaseCommentCreationModel? {
         didSet {
             updateModelData()
         }
