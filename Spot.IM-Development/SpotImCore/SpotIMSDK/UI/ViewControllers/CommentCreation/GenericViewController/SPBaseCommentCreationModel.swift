@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SPBaseCommentCreationModel: CommentStateable {
+class SPBaseCommentCreationModel {
     
     var postCompletionHandler: ((SPComment) -> Void)?
     var postErrorHandler: ((Error) -> Void)?
