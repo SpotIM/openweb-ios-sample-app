@@ -445,20 +445,38 @@ extension SpotImSDKFlowCoordinator: SPSafariWebPageDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
-
-    internal func createBaseComment(with dataModel: SPMainConversationModel, commentId: String?) {
-        
-        let controller = SPBaseCommentCreationViewController(customUIDelegate: self)
-        controller.delegate = self
-        controller.userAuthFlowDelegate = self
-        
+    
+    internal func createComment(with dataModel: SPMainConversationModel) {
         let model = SPBaseCommentCreationModel(
-            baseCommentCreationDTO: dataModel.dataSource.baseCreationModel(for: commentId),
+            baseCommentCreationDTO: dataModel.dataSource.commentCreationModel(),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
             articleMetadate: dataModel.dataSource.articleMetadata
         )
+        
+        setupAndPresentCommentCreation(with: model, dataModel: dataModel)
+    }
+    
+    internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
+        
+        let model = SPBaseCommentCreationModel(
+            baseCommentCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
+            cacheService: commentsCacheService,
+            updater: conversationUpdater,
+            imageProvider: imageProvider,
+            articleMetadate: dataModel.dataSource.articleMetadata
+        )
+        
+        setupAndPresentCommentCreation(with: model, dataModel: dataModel)
+    }
+
+    internal func setupAndPresentCommentCreation(with model: SPBaseCommentCreationModel,
+                                    dataModel: SPMainConversationModel) {
+        
+        let controller = SPBaseCommentCreationViewController(customUIDelegate: self)
+        controller.delegate = self
+        controller.userAuthFlowDelegate = self
      
         controller.model = model
         dataModel.dataSource.showReplies = true
