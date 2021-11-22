@@ -108,15 +108,9 @@ class SPBaseCommentCreationViewController: SPBaseViewController,
         if model?.isCommentAReply() == false {
             topContainerView.bringSubviewToFront(closeButton)
         }
-        
-        NotificationCenter.default.addObserver(
-                   self,
-                   selector: #selector(overrideUserInterfaceStyleDidChange),
-                   name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
-                   object: nil)
     }
     
-    @objc private func overrideUserInterfaceStyleDidChange() {
+    @objc override func overrideUserInterfaceStyleDidChange() {
         self.updateColorsAccordingToStyle()
     }
     
