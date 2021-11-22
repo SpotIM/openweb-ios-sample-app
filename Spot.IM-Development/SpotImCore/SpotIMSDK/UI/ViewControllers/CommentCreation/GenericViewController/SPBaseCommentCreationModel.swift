@@ -52,33 +52,7 @@ class SPBaseCommentCreationModel {
                 [weak self] response in
                 guard let self = self else { return }
                 
-                var responseData = response
-                responseData.writtenAt = Date().timeIntervalSince1970
-                
-                let userId = SPUserSessionHolder.session.user?.id
-                responseData.userId = userId
-                
-                if let userId = responseData.userId {
-                    let user = SPComment.CommentUser(id: userId)
-                    responseData.users = [userId: user]
-                }
-                
-                if let labels = self.selectedLabels {
-                    let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
-                    responseData.additionalData = SPComment.AdditionalData(labels: commentLabels)
-                }
-                
-                if self.isCommentAReply() {
-                    responseData.parentId = self.dataModel.replyModel?.commentId
-                    responseData.rootComment = self.dataModel.replyModel?.rootCommentId
-                    responseData.depth = (self.dataModel.replyModel?.parentDepth ?? 0) + 1
-                } else {
-                    responseData.rootComment = responseData.id
-                    responseData.depth = 0
-                }
-                
-                let commentIdentifier: String = self.getCommentIdentifierForCommentType()
-                self.cacheService.remove(for: commentIdentifier)
+                let responseData = self.populateResponseFields(response)
                 
                 self.postCompletionHandler?(responseData)
             },
@@ -118,6 +92,38 @@ class SPBaseCommentCreationModel {
         }
         
         return parameters
+    }
+    
+    func populateResponseFields(_ response: SPComment) -> SPComment {
+        var responseData = response
+        responseData.writtenAt = Date().timeIntervalSince1970
+        
+        let userId = SPUserSessionHolder.session.user?.id
+        responseData.userId = userId
+        
+        if let userId = responseData.userId {
+            let user = SPComment.CommentUser(id: userId)
+            responseData.users = [userId: user]
+        }
+        
+        if let labels = self.selectedLabels {
+            let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
+            responseData.additionalData = SPComment.AdditionalData(labels: commentLabels)
+        }
+        
+        if self.isCommentAReply() {
+            responseData.parentId = self.dataModel.replyModel?.commentId
+            responseData.rootComment = self.dataModel.replyModel?.rootCommentId
+            responseData.depth = (self.dataModel.replyModel?.parentDepth ?? 0) + 1
+        } else {
+            responseData.rootComment = responseData.id
+            responseData.depth = 0
+        }
+        
+        let commentIdentifier: String = self.getCommentIdentifierForCommentType()
+        self.cacheService.remove(for: commentIdentifier)
+        
+        return responseData
     }
     
     func updateCommentText(_ text: String) {
