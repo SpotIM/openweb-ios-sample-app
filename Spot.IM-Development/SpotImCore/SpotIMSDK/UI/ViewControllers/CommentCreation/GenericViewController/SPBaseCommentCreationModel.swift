@@ -42,35 +42,11 @@ class SPBaseCommentCreationModel {
     }
     
     func post() {
-        let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         
-        var metadata: [String: Any] = [
-            SPRequestKeys.metadata: [SPRequestKeys.displayName: displayName]
-        ]
-        
-        var parameters: [String: Any] = [
-            SPRequestKeys.content: [[SPRequestKeys.text: commentText]]
-        ]
-        
-        if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
-            parameters[SPRequestKeys.additionalData] = [
-                SPRequestKeys.labels: [
-                    SPRequestKeys.labelsSection: selectedLabels.section,
-                    SPRequestKeys.labelsIds: selectedLabels.ids,
-                ]
-            ]
-        }
-        
-        if isCommentAReply() {
-            let isRootComment = dataModel.replyModel?.commentId == dataModel.replyModel?.rootCommentId
-            if !isRootComment {
-                metadata[SPRequestKeys.replyTo] = [SPRequestKeys.replyId: dataModel.replyModel?.commentId]
-            }
-            parameters[SPRequestKeys.conversationId] = dataModel.postId
-        }
+        let createCommentParameters: [String: Any] = gatherParametersForCreateCommentRequest()
         
         commentService.createComment(
-            parameters: parameters,
+            parameters: createCommentParameters,
             postId: dataModel.postId,
             success: {
                 [weak self] response in
@@ -111,6 +87,37 @@ class SPBaseCommentCreationModel {
                 self?.postErrorHandler?(error)
             }
         )
+    }
+    
+    func gatherParametersForCreateCommentRequest() -> [String: Any] {
+        let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
+        
+        var metadata: [String: Any] = [
+            SPRequestKeys.metadata: [SPRequestKeys.displayName: displayName]
+        ]
+        
+        var parameters: [String: Any] = [
+            SPRequestKeys.content: [[SPRequestKeys.text: commentText]]
+        ]
+        
+        if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
+            parameters[SPRequestKeys.additionalData] = [
+                SPRequestKeys.labels: [
+                    SPRequestKeys.labelsSection: selectedLabels.section,
+                    SPRequestKeys.labelsIds: selectedLabels.ids,
+                ]
+            ]
+        }
+        
+        if isCommentAReply() {
+            let isRootComment = dataModel.replyModel?.commentId == dataModel.replyModel?.rootCommentId
+            if !isRootComment {
+                metadata[SPRequestKeys.replyTo] = [SPRequestKeys.replyId: dataModel.replyModel?.commentId]
+            }
+            parameters[SPRequestKeys.conversationId] = dataModel.postId
+        }
+        
+        return parameters
     }
     
     func updateCommentText(_ text: String) {
