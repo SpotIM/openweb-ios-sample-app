@@ -125,11 +125,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
 
         NotificationCenter.default.addObserver(
-           self,
-           selector: #selector(overrideUserInterfaceStyleDidChange),
-           name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
-           object: nil)
-        NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.userLoginSuccessNotification(notification:)),
             name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION),
@@ -223,8 +218,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    @objc
-    private func overrideUserInterfaceStyleDidChange() {
+    @objc override func overrideUserInterfaceStyleDidChange() {
         self.tableView.reloadData()
         self.updateColorsAccordingToStyle()
     }
