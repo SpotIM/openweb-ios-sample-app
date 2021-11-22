@@ -9,7 +9,8 @@
 import UIKit
 
 internal protocol SPCommentsCreationDelegate: AnyObject {
-    func createBaseComment(with dataModel: SPMainConversationModel, commentId id: String?)
+    func createComment(with dataModel: SPMainConversationModel)
+    func createReply(with dataModel: SPMainConversationModel, to id: String)
 }
 
 final class SPMainConversationViewController: SPBaseConversationViewController, UserPresentable {
