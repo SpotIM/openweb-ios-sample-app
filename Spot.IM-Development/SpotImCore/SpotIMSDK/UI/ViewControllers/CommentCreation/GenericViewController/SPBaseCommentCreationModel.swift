@@ -17,13 +17,13 @@ class SPBaseCommentCreationModel {
     var selectedLabels: SelectedLabels?
     var commentLabelsSection: String?
     var sectionCommentLabelsConfig: SPCommentLabelsSectionConfiguration?
-    var dataModel: SPBaseCommentCreationDTO
+    var dataModel: SPCommentCreationDTO
     
     let imageProvider: SPImageURLProvider
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
     
-    init(baseCommentCreationDTO: SPBaseCommentCreationDTO,
+    init(baseCommentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageURLProvider,
