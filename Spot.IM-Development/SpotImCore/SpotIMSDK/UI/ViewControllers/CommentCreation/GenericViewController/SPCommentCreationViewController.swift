@@ -16,16 +16,15 @@ protocol CommentReplyViewControllerDelegate: AnyObject {
 }
 
 class SPCommentCreationViewController: SPBaseViewController,
-                                                                          AlertPresentable,
-                                                                          LoaderPresentable,
-                                                                          UserAuthFlowDelegateContainable,
-                                                                          UserPresentable {
+                                       AlertPresentable,
+                                       LoaderPresentable,
+                                       UserAuthFlowDelegateContainable,
+                                       UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: AuthenticationHandler?
-    
-    var model: SPCommentCreationModel? {
+    private var model: SPCommentCreationModel {
         didSet {
             updateModelData()
         }
@@ -90,6 +89,11 @@ class SPCommentCreationViewController: SPBaseViewController,
         unregisterFromKeyboardNotifications()
     }
     
+    init(customUIDelegate: CustomUIDelegate?, model: SPCommentCreationModel) {
+        self.model = model
+        super.init(customUIDelegate: customUIDelegate)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -105,7 +109,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         mainContainerView.addGestureRecognizer(tap)
         
-        if model?.isCommentAReply() == false {
+        if model.isCommentAReply() == false {
             topContainerView.bringSubviewToFront(closeButton)
         }
     }
@@ -120,7 +124,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     private func setupCommentLabelsContainer() {
-        guard showCommentLabels == true, let sectionLabelsConfig = model?.sectionCommentLabelsConfig else {
+        guard showCommentLabels == true, let sectionLabelsConfig = model.sectionCommentLabelsConfig else {
             hideCommentLabelsContainer()
             return
         }
@@ -188,7 +192,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         
         configureCommentDesign(SpotIm.enableCreateCommentNewDesign)
         
-        if model?.isCommentAReply() == false {
+        if model.isCommentAReply() == false {
             articleView.updateColorsAccordingToStyle()
         }
         
@@ -205,7 +209,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     private func configureCommentOldDesign() {
-        if model?.isCommentAReply() == true {
+        if model.isCommentAReply() == true {
             commentHeaderView.updateColorsAccordingToStyle()
         } else {
             commentingContainer.backgroundColor = .spBackground0
@@ -235,7 +239,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     @objc
     func close() {
-        if (model?.commentText.count ?? 0) >= commentCacheMinCount {
+        if (model.commentText.count) >= commentCacheMinCount {
             let actions: [UIAlertAction] = [
                 UIAlertAction(title: LocalizationManager.localizedString(key: "Leave Page"),
                               style: .destructive) { _ in
@@ -296,7 +300,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     func updateModelData() {
         configureModelHandlers()
-        if model?.isCommentAReply() == true {
+        if model.isCommentAReply() == true {
             updateModelDataForReply()
         } else {
             updateModelDataForComment()
@@ -304,7 +308,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     func configureModelHandlers() {
-        model?.postCompletionHandler = {
+        model.postCompletionHandler = {
             [weak self] responseData in
             guard let self = self else { return }
 
@@ -321,7 +325,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             self.dismissController()
         }
         
-        model?.postErrorHandler = { [weak self] error in
+        model.postErrorHandler = { [weak self] error in
             guard let self = self else { return }
 
             self.hideLoader()
@@ -367,9 +371,9 @@ class SPCommentCreationViewController: SPBaseViewController,
         setupHeaderComponentsIfNeeded()
         if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
             topContainerStack.insertArrangedSubview(articleView, at: 1)
-            articleView.setTitle(model?.dataModel.articleMetadata.title)
-            articleView.setImage(with: URL(string: model?.dataModel.articleMetadata.thumbnailUrl ?? ""))
-            articleView.setAuthor(model?.dataModel.articleMetadata.subtitle)
+            articleView.setTitle(model.dataModel.articleMetadata.title)
+            articleView.setImage(with: URL(string: model.dataModel.articleMetadata.thumbnailUrl))
+            articleView.setAuthor(model.dataModel.articleMetadata.subtitle)
 
             articleView.layout {
                 $0.height.equal(to: 85.0)
@@ -426,8 +430,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
 
     private func shouldDisplayArticleHeader() -> Bool {
-        if model?.dataModel != nil,
-           UIDevice.current.screenType != .iPhones_5_5s_5c_SE,
+        if UIDevice.current.screenType != .iPhones_5_5s_5c_SE,
            SpotIm.displayArticleHeader,
            !(showCommentLabels && showsUsernameInput) {
             return true
@@ -442,8 +445,8 @@ class SPCommentCreationViewController: SPBaseViewController,
         
         let shouldHideCommentText = showCommentLabels && showsUsernameInput
         let commentReplyDataModel = CommentReplyDataModel(
-            author: model?.dataModel.replyModel?.authorName,
-            comment: model?.dataModel.replyModel?.commentText
+            author: model.dataModel.replyModel?.authorName,
+            comment: model.dataModel.replyModel?.commentText
         )
         
         let headerView: UIView
@@ -482,11 +485,11 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
         textInputViewContainer.configureCommentType(type)
-        textInputViewContainer.updateText(model?.commentText ?? "")
+        textInputViewContainer.updateText(model.commentText)
     }
 
     func updateAvatar() {
-        model?.fetchNavigationAvatar { [weak self] image, _ in
+        model.fetchNavigationAvatar { [weak self] image, _ in
             guard
                 let self = self,
                 let image = image
@@ -515,9 +518,9 @@ class SPCommentCreationViewController: SPBaseViewController,
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
         if commentLabelsContainer.selectedLabelsIds.count > 0 {
-            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
+            model.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
         }
-        model?.post()
+        model.post()
         SPAnalyticsHolder.default.log(event: .commentPostClicked, source: .conversation)
     }
 
@@ -780,7 +783,7 @@ extension SPCommentCreationViewController: SPTextInputViewDelegate {
     
     func input(_ view: SPTextInputView, didChange text: String) {
         if view === textInputViewContainer {
-            model?.updateCommentText(text)
+            model.updateCommentText(text)
         } else if showsUsernameInput, view === usernameView {
             SPUserSessionHolder.update(displayName: text)
         }
