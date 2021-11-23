@@ -24,11 +24,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: AuthenticationHandler?
-    private var model: SPCommentCreationModel {
-        didSet {
-            updateModelData()
-        }
-    }
+    private var model: SPCommentCreationModel
 
     let topContainerView: BaseView = .init()
     let topContainerStack: BaseStackView = .init()
@@ -92,6 +88,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     init(customUIDelegate: CustomUIDelegate?, model: SPCommentCreationModel) {
         self.model = model
         super.init(customUIDelegate: customUIDelegate)
+        self.updateModelData()
     }
     
     override func viewDidLoad() {
