@@ -461,7 +461,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         let communityQuestionText = getCommunityQuestion()
         if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0 {
-            communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
+            communityQuestionView.setupCommunityQuestion(with: communityQuestionText)
             communityQuestionView.clipsToBounds = true
             shouldDisplayCommunityQuestion = true
         } else {
