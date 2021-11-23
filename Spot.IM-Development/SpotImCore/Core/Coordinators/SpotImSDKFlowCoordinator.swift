@@ -389,7 +389,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     }
 
     private func presentContentCreationViewController(
-        controller: SPBaseCommentCreationViewController,
+        controller: SPCommentCreationViewController,
         _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
@@ -447,7 +447,7 @@ extension SpotImSDKFlowCoordinator: SPSafariWebPageDelegate {
 extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func createComment(with dataModel: SPMainConversationModel) {
-        let model = SPBaseCommentCreationModel(
+        let model = SPCommentCreationModel(
             baseCommentCreationDTO: dataModel.dataSource.commentCreationModel(),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
@@ -460,7 +460,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
         
-        let model = SPBaseCommentCreationModel(
+        let model = SPCommentCreationModel(
             baseCommentCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
@@ -471,10 +471,10 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
 
-    internal func setupAndPresentCommentCreation(with model: SPBaseCommentCreationModel,
+    internal func setupAndPresentCommentCreation(with model: SPCommentCreationModel,
                                     dataModel: SPMainConversationModel) {
         
-        let controller = SPBaseCommentCreationViewController(customUIDelegate: self)
+        let controller = SPCommentCreationViewController(customUIDelegate: self)
         controller.delegate = self
         controller.userAuthFlowDelegate = self
      
