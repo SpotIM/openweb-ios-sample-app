@@ -138,17 +138,15 @@ final class MessageContainerView: BaseView {
             )
             
             for match in matches {
-                if let urlMatch = match.url {
-                    if (isUrlSchemeValid(url: urlMatch)) {
+                if let urlMatch = match.url, isUrlSchemeValid(for: urlMatch) {
                         text.addAttributes([.foregroundColor: UIColor.darkSkyBlue], range: match.range)
                         activeURLs[match.range] = urlMatch
                     }
                 }
             }
-        }
     }
     
-    private func isUrlSchemeValid(url: URL) -> Bool {
+    private func isUrlSchemeValid(for url: URL) -> Bool {
         return url.scheme?.lowercased() != "mailto"
     }
 }
