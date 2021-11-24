@@ -539,6 +539,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     @objc override func overrideUserInterfaceStyleDidChange() {
+        super.overrideUserInterfaceStyleDidChange()
         self.tableView.reloadData()
         self.updateColorsAccordingToStyle()
     }
