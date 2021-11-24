@@ -21,47 +21,37 @@ internal class CommentMediaView: BaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .clear
-        setupUI()
-    }
-    
-    private func setupUI() {
-        addSubviews(gifWebView, imageView)
-        configureGifWebView()
-        configureImageView()
     }
     
     private func configureGifWebView() {
-        gifWebView.layout {
-            $0.top.equal(to: self.topAnchor)
-            $0.bottom.equal(to: self.bottomAnchor)
-        }
+        gifWebView.pinEdges(to: self)
     }
     
     private func configureImageView() {
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = SPCommonConstants.commentMediaCornerRadius
-        imageView.layout {
-            imageViewHeightConstraint = $0.height.equal(to: 0)
-            imageViewWidthConstraint = $0.width.equal(to: 0)
-            $0.top.equal(to: self.topAnchor)
-            $0.bottom.equal(to: self.bottomAnchor)
+        imageView.pinEdges(to: self)
+    }
+    
+    func clearExistingMedia() {
+        for view in subviews {
+            view.removeFromSuperview()
         }
     }
     
-    func configureMedia(imageUrl: URL?, gifUrl: String?, width: Float?, height: Float?) {
+    func configureMedia(imageUrl: URL?, gifUrl: String?) {
+        clearExistingMedia()
         // if imageUrl exist, set image and clean gif
-        if let imageUrl = imageUrl, let height = height, let width = width {
+        if let imageUrl = imageUrl {
+            addSubview(imageView)
+            configureImageView()
             imageView.setImage(with: imageUrl)
-            imageViewHeightConstraint?.constant = CGFloat(height)
-            imageViewWidthConstraint?.constant = CGFloat(width)
-            gifWebView.configure(gifUrl: nil, gifWidth: 0, gifHeight: 0)
         }
         // if gifUrl exist, set gif and clean image
-        else if let gifUrl = gifUrl, let height = height, let width = width {
-            gifWebView.configure(gifUrl: gifUrl, gifWidth: width, gifHeight: height)
-            imageView.setImage(with: nil)
-            imageViewHeightConstraint?.constant = 0
-            imageViewWidthConstraint?.constant = 0
+        else if let gifUrl = gifUrl {
+            addSubview(gifWebView)
+            configureGifWebView()
+            gifWebView.configure(gifUrl: gifUrl)
         }
     }
 }

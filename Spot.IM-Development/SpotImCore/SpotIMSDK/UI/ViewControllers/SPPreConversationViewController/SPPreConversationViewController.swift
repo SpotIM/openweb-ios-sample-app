@@ -270,7 +270,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func updateCommunityQuestion(communityQuestionText: String?) {
         // hide when no community question or in on button mode
         if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0, !isButtonOnlyModeEnabled {
-            communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
+            communityQuestionView.setupCommunityQuestion(with: communityQuestionText)
             communityQuestionView.clipsToBounds = true
             communityQuestionView.setupPreConversationConstraints()
             communityGuidelinesView.setSeperatorVisible(isVisible: false)
