@@ -220,6 +220,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     @objc override func overrideUserInterfaceStyleDidChange() {
+        super.overrideUserInterfaceStyleDidChange()
         self.tableView.reloadData()
         self.updateColorsAccordingToStyle()
     }

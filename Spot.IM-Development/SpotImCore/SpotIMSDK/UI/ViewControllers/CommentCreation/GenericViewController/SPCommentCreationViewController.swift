@@ -112,6 +112,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     @objc override func overrideUserInterfaceStyleDidChange() {
+        super.overrideUserInterfaceStyleDidChange()
         self.updateColorsAccordingToStyle()
     }
     
