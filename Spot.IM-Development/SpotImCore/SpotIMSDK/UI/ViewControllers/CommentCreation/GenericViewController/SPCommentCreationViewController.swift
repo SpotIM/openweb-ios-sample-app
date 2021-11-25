@@ -1,5 +1,5 @@
 //
-//  SPBaseCommentCreationViewController.swift
+//  SPCommentCreationViewController.swift
 //  Spot.IM-Core
 //
 //  Created by Eugene on 8/1/19.
@@ -15,18 +15,16 @@ protocol CommentReplyViewControllerDelegate: AnyObject {
     
 }
 
-class SPBaseCommentCreationViewController<T: SPBaseCommentCreationModel>: SPBaseViewController, AlertPresentable,
-LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
+class SPCommentCreationViewController: SPBaseViewController,
+                                       AlertPresentable,
+                                       LoaderPresentable,
+                                       UserAuthFlowDelegateContainable,
+                                       UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: AuthenticationHandler?
-    
-    var model: T? {
-        didSet {
-            updateModelData()
-        }
-    }
+    private var model: SPCommentCreationModel
 
     let topContainerView: BaseView = .init()
     let topContainerStack: BaseStackView = .init()
@@ -50,6 +48,16 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
+    private var emptyArticleBottomConstraint: NSLayoutConstraint?
+
+    
+    private let closeButton: BaseButton = .init()
+    
+    private lazy var commentHeaderView = SPCommentReplyHeaderView()
+    private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
+    private let commentingContainer: UIView = .init()
+    private let commentingOnLabel: BaseLabel = .init()
+    private lazy var articleView: SPArticleHeader = SPArticleHeader()
     
     private var shouldBeAutoPosted: Bool = true
     var showsUsernameInput: Bool {
@@ -77,6 +85,12 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         unregisterFromKeyboardNotifications()
     }
     
+    init(customUIDelegate: CustomUIDelegate?, model: SPCommentCreationModel) {
+        self.model = model
+        super.init(customUIDelegate: customUIDelegate)
+        self.updateModelData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -91,6 +105,15 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         // remove keyboard when tapping outside of textView
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         mainContainerView.addGestureRecognizer(tap)
+        
+        if model.isCommentAReply() == false {
+            topContainerView.bringSubviewToFront(closeButton)
+        }
+    }
+    
+    @objc override func overrideUserInterfaceStyleDidChange() {
+        super.overrideUserInterfaceStyleDidChange()
+        self.updateColorsAccordingToStyle()
     }
     
     @objc func dismissKeyboard() {
@@ -99,7 +122,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
     
     private func setupCommentLabelsContainer() {
-        guard showCommentLabels == true, let sectionLabelsConfig = model?.sectionCommentLabelsConfig else {
+        guard showCommentLabels == true, let sectionLabelsConfig = model.sectionCommentLabelsConfig else {
             hideCommentLabelsContainer()
             return
         }
@@ -164,11 +187,57 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         commentLabelsContainer.updateColorsAccordingToStyle()
         usernameView.updateColorsAccordingToStyle()
         footerView.updateColorsAccordingToStyle()
+        
+        configureCommentDesign(SpotIm.enableCreateCommentNewDesign)
+        
+        if model.isCommentAReply() == false {
+            articleView.updateColorsAccordingToStyle()
+        }
+        
+        updateAvatar() // placeholder is adjusted to theme
+    }
+    
+    private func configureCommentDesign(_ shouldEnableCreateCommentNewDesign: Bool) {
+        
+        if shouldEnableCreateCommentNewDesign {
+            commentNewHeaderView.updateColorsAccordingToStyle()
+        } else {
+            configureCommentOldDesign()
+        }
+    }
+    
+    private func configureCommentOldDesign() {
+        if model.isCommentAReply() == true {
+            commentHeaderView.updateColorsAccordingToStyle()
+        } else {
+            commentingContainer.backgroundColor = .spBackground0
+            commentingOnLabel.textColor = .spForeground4
+            commentingOnLabel.backgroundColor = .spBackground0
+            closeButton.backgroundColor = .spBackground0
+            closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let state = UIApplication.shared.applicationState
+        if #available(iOS 12.0, *) {
+            if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                // traitCollectionDidChange() is called multiple times, see: https://stackoverflow.com/a/63380259/583425
+                if state != .background {
+                    self.updateColorsAccordingToStyle()
+                }
+            }
+        } else {
+            if state != .background {
+                self.updateColorsAccordingToStyle()
+            }
+        }
     }
     
     @objc
     func close() {
-        if (model?.commentText.count ?? 0) >= commentCacheMinCount {
+        if (model.commentText.count) >= commentCacheMinCount {
             let actions: [UIAlertAction] = [
                 UIAlertAction(title: LocalizationManager.localizedString(key: "Leave Page"),
                               style: .destructive) { _ in
@@ -227,15 +296,198 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         navigationItem.setRightBarButton(userRightBarItem!, animated: true)
     }
     
-    func updateModelData() {}
+    func updateModelData() {
+        configureModelHandlers()
+        if model.isCommentAReply() == true {
+            updateModelDataForReply()
+        } else {
+            updateModelDataForComment()
+        }
+    }
+    
+    func configureModelHandlers() {
+        model.postCompletionHandler = {
+            [weak self] responseData in
+            guard let self = self else { return }
+
+            if responseData.status == .block || !responseData.published {
+                switch responseData.content?.first {
+                case .text(let text):
+                    self.delegate?.commentReplyDidBlock(with: text.text)
+                default: break
+                }
+                
+            } else {
+                self.delegate?.commentReplyDidCreate(responseData)
+            }
+            self.dismissController()
+        }
+        
+        model.postErrorHandler = { [weak self] error in
+            guard let self = self else { return }
+
+            self.hideLoader()
+            self.showAlert(
+                title: LocalizationManager.localizedString(key: "Oops..."),
+                message: error.localizedDescription
+            )
+        }
+    }
+    
+    
+    // MARK: - Comment Related Logic
+    func updateModelDataForComment() {
+        if SpotIm.enableCreateCommentNewDesign {
+            setupNewHeader()
+        } else {
+            setupHeader()
+        }
+
+        updateTextInputContainer(with: .comment)
+        updateAvatar()
+    }
+    
+    private func setupNewHeader() {
+        guard commentNewHeaderView.superview == nil else {
+            return
+        }
+        topContainerStack.insertArrangedSubview(commentNewHeaderView, at: 0)
+        
+        commentNewHeaderView.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.leading.equal(to: topContainerStack.leadingAnchor)
+            $0.trailing.equal(to: topContainerStack.trailingAnchor)
+            $0.height.equal(to: 60)
+        }
+        
+        commentNewHeaderView.delegate = self
+        commentNewHeaderView.configure()
+        commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+    }
+    
+    private func setupHeader() {
+        setupHeaderComponentsIfNeeded()
+        if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
+            topContainerStack.insertArrangedSubview(articleView, at: 1)
+            articleView.setTitle(model.dataModel.articleMetadata.title)
+            articleView.setImage(with: URL(string: model.dataModel.articleMetadata.thumbnailUrl))
+            articleView.setAuthor(model.dataModel.articleMetadata.subtitle)
+
+            articleView.layout {
+                $0.height.equal(to: 85.0)
+                $0.width.equal(to: topContainerStack.widthAnchor)
+            }
+            
+            topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
+            commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
+        } else {
+            emptyArticleBottomConstraint?.isActive = true
+            commentingOnLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
+        }
+    }
+    
+    private func setupHeaderComponentsIfNeeded() {
+        guard commentingOnLabel.superview == nil, closeButton.superview == nil else {
+            return
+        }
+
+        commentingContainer.addSubview(commentingOnLabel)
+
+        topContainerStack.insertArrangedSubview(commentingContainer, at: 0)
+
+        topContainerView.addSubview(closeButton)
+        
+        commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
+        commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
+        commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        commentingOnLabel.sizeToFit()
+        
+        commentingContainer.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.leading.equal(to: topContainerStack.leadingAnchor)
+            $0.trailing.equal(to: topContainerStack.trailingAnchor)
+            $0.height.equal(to: commentingOnLabel.frame.height + 41)
+        }
+        
+        commentingOnLabel.layout {
+            $0.top.equal(to: commentingContainer.topAnchor, offsetBy: 25)
+            $0.leading.equal(to: commentingContainer.leadingAnchor, offsetBy: 16)
+            $0.trailing.equal(to: commentingContainer.trailingAnchor, offsetBy: -16)
+            $0.bottom.equal(to: commentingContainer.bottomAnchor, offsetBy: -16)
+        }
+        
+        closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+        closeButton.layout {
+            $0.centerY.equal(to: topContainerView.topAnchor, offsetBy: 35)
+            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -5.0)
+            $0.width.equal(to: 40.0)
+            $0.height.equal(to: 40.0)
+        }
+        
+        closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+    }
+
+    private func shouldDisplayArticleHeader() -> Bool {
+        if UIDevice.current.screenType != .iPhones_5_5s_5c_SE,
+           SpotIm.displayArticleHeader,
+           !(showCommentLabels && showsUsernameInput) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+
+    // MARK: - Reply Related Logic
+    func updateModelDataForReply() {
+        
+        let shouldHideCommentText = showCommentLabels && showsUsernameInput
+        let commentReplyDataModel = CommentReplyDataModel(
+            author: model.dataModel.replyModel?.authorName,
+            comment: model.dataModel.replyModel?.commentText
+        )
+        
+        let headerView: UIView
+        if SpotIm.enableCreateCommentNewDesign {
+            commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+            commentNewHeaderView.delegate = self
+            commentNewHeaderView.configure(with: commentReplyDataModel)
+            if shouldHideCommentText {
+                commentNewHeaderView.hideCommentText()
+            }
+            headerView = commentNewHeaderView
+        } else {
+            commentHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+            commentHeaderView.configure(with: commentReplyDataModel)
+            if shouldHideCommentText {
+                commentHeaderView.hideCommentText()
+            }
+            headerView = commentHeaderView
+        }
+        
+        topContainerStack.insertArrangedSubview(headerView, at: 0)
+        
+        let heightWithCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 135 : 111
+        let heightWithoutCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 115 : 68
+
+        headerView.layout {
+            $0.top.equal(to: topContainerStack.topAnchor)
+            $0.height.equal(to: shouldHideCommentText ? heightWithoutCommentText : heightWithCommentText)
+            $0.width.equal(to: topContainerStack.widthAnchor)
+        }
+
+        updateTextInputContainer(with: .reply)
+        updateAvatar()
+    }
+
 
     func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
         textInputViewContainer.configureCommentType(type)
-        textInputViewContainer.updateText(model?.commentText ?? "")
+        textInputViewContainer.updateText(model.commentText)
     }
 
     func updateAvatar() {
-        model?.fetchNavigationAvatar { [weak self] image, _ in
+        model.fetchNavigationAvatar { [weak self] image, _ in
             guard
                 let self = self,
                 let image = image
@@ -264,9 +516,9 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
         Logger.verbose("FirstComment: Post clicked")
         showLoader()
         if commentLabelsContainer.selectedLabelsIds.count > 0 {
-            model?.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
+            model.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
         }
-        model?.post()
+        model.post()
         SPAnalyticsHolder.default.log(event: .commentPostClicked, source: .conversation)
     }
 
@@ -327,7 +579,7 @@ LoaderPresentable, UserAuthFlowDelegateContainable, UserPresentable {
     }
 }
 
-extension SPBaseCommentCreationViewController {
+extension SPCommentCreationViewController {
     
     private func setupUI() {
         view.addSubview(scrollView)
@@ -449,7 +701,7 @@ extension SPBaseCommentCreationViewController {
 
 // MARK: - Extensions
 
-extension SPBaseCommentCreationViewController: KeyboardHandable {
+extension SPCommentCreationViewController: KeyboardHandable {
     
     func keyboardWillShow(_ notification: Notification) {
         guard
@@ -521,7 +773,7 @@ extension SPBaseCommentCreationViewController: KeyboardHandable {
     }
 }
 
-extension SPBaseCommentCreationViewController: SPTextInputViewDelegate {
+extension SPCommentCreationViewController: SPTextInputViewDelegate {
 
     func tooLongTextWasPassed() {
         // handle too long text passing
@@ -529,7 +781,7 @@ extension SPBaseCommentCreationViewController: SPTextInputViewDelegate {
     
     func input(_ view: SPTextInputView, didChange text: String) {
         if view === textInputViewContainer {
-            model?.updateCommentText(text)
+            model.updateCommentText(text)
         } else if showsUsernameInput, view === usernameView {
             SPUserSessionHolder.update(displayName: text)
         }
@@ -538,7 +790,7 @@ extension SPBaseCommentCreationViewController: SPTextInputViewDelegate {
     }
 }
 
-extension SPBaseCommentCreationViewController: AuthenticationViewDelegate {
+extension SPCommentCreationViewController: AuthenticationViewDelegate {
     func authenticationStarted() {
         if (isValidInput()) {
             showLoader()
@@ -546,13 +798,13 @@ extension SPBaseCommentCreationViewController: AuthenticationViewDelegate {
     }
 }
 
-extension SPBaseCommentCreationViewController: SPCommentLabelsContainerViewDelegate {
+extension SPCommentCreationViewController: SPCommentLabelsContainerViewDelegate {
     func didSelectionChanged() {
         self.updatePostButtonEnabledState()
     }
 }
 
-extension SPBaseCommentCreationViewController: SPCommentCreationNewHeaderViewDelegate {
+extension SPCommentCreationViewController: SPCommentCreationNewHeaderViewDelegate {
     func customizeHeaderTitle(textView: UITextView) {
         customUIDelegate?.customizeNavigationItemTitle(textView: textView)
     }
