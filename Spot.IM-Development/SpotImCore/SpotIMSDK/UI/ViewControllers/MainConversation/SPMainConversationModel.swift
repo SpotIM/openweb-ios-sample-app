@@ -204,6 +204,21 @@ final class SPMainConversationModel {
             }
             actions.append(reportAction)
         }
+        
+        if availability.isEditable {
+            let editAction = UIAlertAction(
+                title: LocalizationManager.localizedString(key: "Edit"),
+                style: .default,
+                handler: {[weak self] _ in
+                    self?.commentsActionDelegate?.prepareFlowForAction(
+                        .edit(commentId: commentId,
+                              replyingToID: replyingToID
+                             ),
+                        sender: sender)
+                }
+            )
+            actions.append(editAction)
+        }
 
         if availability.isDeletable {
             let deleteAction = UIAlertAction(
