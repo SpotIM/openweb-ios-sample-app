@@ -886,7 +886,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             showCommentReportFlow(commentId, replyingToID: replyingToID)
             break
         case .edit(let commentId, let replyingToID):
-            model.editComment(with: commentId)
+            showCommentEditingFlow(commentId)
             break
         case .share(let commentId, let replyingToID):
             showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
@@ -967,6 +967,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             }
             SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
+    }
+    
+    private func showCommentEditingFlow(_ commentId: String) {
+        self.delegate?.editComment(with: self.model, to: commentId)
     }
 
     private func presentMessageBlockedAlert(with messageText: String?) {
