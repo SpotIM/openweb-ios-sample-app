@@ -16,6 +16,7 @@ struct SPCommentCreationDTO {
     let displayName: String
     let user: SPUser?
     let replyModel: SPReplyCommentDTO?
+    let editModel: SPEditCommentDTO?
 }
 
 struct SPReplyCommentDTO {
@@ -24,4 +25,9 @@ struct SPReplyCommentDTO {
     let commentId: String
     let rootCommentId: String?
     let parentDepth: Int?
+}
+
+struct SPEditCommentDTO {
+    let content: [SPComment.Content]
+    let commentLabels: CommentLabel
 }
