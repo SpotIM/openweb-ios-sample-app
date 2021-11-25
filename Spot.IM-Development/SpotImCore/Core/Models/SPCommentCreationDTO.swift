@@ -1,32 +1,27 @@
 //
 //  SPCommentCreationDTO.swift
-//  Spot.IM-Core
+//  SpotImCore
 //
-//  Created by Eugene on 8/1/19.
-//  Copyright © 2019 Spot.IM. All rights reserved.
+//  Created by Tomer Ben Rachel on 15/11/2021.
+//  Copyright © 2021 Spot.IM. All rights reserved.
 //
 
 import Foundation
 
+
 struct SPCommentCreationDTO {
     let articleMetadata: SpotImArticleMetadata
-    let currentUserAvatar: URL?
+    let currentUserAvatarUrl: URL?
     let postId: String
     let displayName: String
-    let converstionId: String
     let user: SPUser?
+    let replyModel: SPReplyCommentDTO?
 }
 
-struct SPReplyCreationDTO {
-    
-    let currentUserAvatar: URL?
+struct SPReplyCommentDTO {
     let authorName: String?
-    let comment: String?
+    let commentText: String?
     let commentId: String
-    let postId: String
-    let displayName: String
     let rootCommentId: String?
     let parentDepth: Int?
-    let user: SPUser?
-    
 }
