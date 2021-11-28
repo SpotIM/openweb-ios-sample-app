@@ -136,6 +136,10 @@ class SPCommentCreationModel {
         return dataModel.replyModel != nil
     }
     
+    func isCommentEdited() -> Bool {
+        return dataModel.editModel != nil
+    }
+    
     private func getCommentIdentifierForCommentType() -> String {
         if let commentIdentifier: String = dataModel.replyModel?.commentId {
             return commentIdentifier
