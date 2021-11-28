@@ -327,18 +327,31 @@ internal final class SPMainConversationDataSource {
     
     internal func editCreationModel(for id: String) -> SPCommentCreationDTO {
         let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
+        var replyModel : SPReplyCommentDTO?
+        
         guard let commentText = comment?.commentText,
               let commentImage = comment?.commentImage,
               let commentLabel = comment?.commentLabel
         else {
             return createSPCommentDTO(replyModel: nil, editModel: nil)
         }
-
+        
         let editModel = SPEditCommentDTO(commentText: commentText,
                                          commentImage: commentImage,
                                          commentLabel: commentLabel)
         
-        return createSPCommentDTO(replyModel: nil, editModel: editModel)
+        //If comment is a reply
+        if (comment?.replyingToCommentId != nil) {
+            replyModel = SPReplyCommentDTO(
+                authorName: comment?.displayName,
+                commentText: comment?.commentText,
+                commentId: id,
+                rootCommentId: comment?.rootCommentId,
+                parentDepth: comment?.depth
+            )
+        }
+        
+        return createSPCommentDTO(replyModel: replyModel, editModel: editModel)
     }
     
     internal func createSPCommentDTO(replyModel: SPReplyCommentDTO?, editModel: SPEditCommentDTO?) -> SPCommentCreationDTO {
