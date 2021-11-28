@@ -328,17 +328,7 @@ internal final class SPMainConversationDataSource {
     internal func editCreationModel(for id: String) -> SPCommentCreationDTO {
         let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
         var replyModel : SPReplyCommentDTO?
-        
-        guard let commentText = comment?.commentText,
-              let commentImage = comment?.commentImage,
-              let commentLabel = comment?.commentLabel
-        else {
-            return createSPCommentDTO(replyModel: nil, editModel: nil)
-        }
-        
-        let editModel = SPEditCommentDTO(commentText: commentText,
-                                         commentImage: commentImage,
-                                         commentLabel: commentLabel)
+        var editModel: SPEditCommentDTO?
         
         //If comment is a reply
         if (comment?.replyingToCommentId != nil) {
@@ -350,6 +340,8 @@ internal final class SPMainConversationDataSource {
                 parentDepth: comment?.depth
             )
         }
+        
+        editModel = gatherEditModelData(comment: comment)
         
         return createSPCommentDTO(replyModel: replyModel, editModel: editModel)
     }
@@ -365,6 +357,29 @@ internal final class SPMainConversationDataSource {
             replyModel: replyModel,
             editModel: editModel
         )
+    }
+    
+    private func gatherEditModelData(comment: CommentViewModel?) -> SPEditCommentDTO? {
+        
+        var commentText: String = ""
+        var commentImage: CommentImage?
+        var commentLabel: CommentLabel?
+        
+        if let text = comment?.commentText {
+            commentText = text
+        }
+        
+        if let image = comment?.commentImage {
+            commentImage = image
+        }
+
+        if let label = comment?.commentLabel {
+            commentLabel = label
+        }
+
+        return SPEditCommentDTO(commentText: commentText,
+                                     commentImage: commentImage,
+                                     commentLabel: commentLabel)
     }
     
     internal func numberOfRows(in section: Int) -> Int {
