@@ -471,8 +471,18 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
     
-    internal func editComment(with dataModel: SPMainConversationModel, to id: String) {
+    internal func editComment(with dataModel: SPMainConversationModel,
+                              to id: String) {
         
+        let model = SPCommentCreationModel(
+            commentCreationDTO: dataModel.dataSource.editCreationModel(for: id),
+            cacheService: commentsCacheService,
+            updater: conversationUpdater,
+            imageProvider: imageProvider,
+            articleMetadate: dataModel.dataSource.articleMetadata
+        )
+        
+        setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
 
     internal func setupAndPresentCommentCreation(with model: SPCommentCreationModel,
