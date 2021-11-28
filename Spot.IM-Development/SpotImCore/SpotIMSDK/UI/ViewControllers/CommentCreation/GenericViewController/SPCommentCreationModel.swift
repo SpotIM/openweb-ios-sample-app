@@ -23,13 +23,13 @@ class SPCommentCreationModel {
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
     
-    init(baseCommentCreationDTO: SPCommentCreationDTO,
+    init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageURLProvider,
          articleMetadate: SpotImArticleMetadata
     ) {
-        self.dataModel = baseCommentCreationDTO
+        self.dataModel = commentCreationDTO
         self.imageProvider = imageProvider
         self.cacheService = cacheService
         commentService = updater
