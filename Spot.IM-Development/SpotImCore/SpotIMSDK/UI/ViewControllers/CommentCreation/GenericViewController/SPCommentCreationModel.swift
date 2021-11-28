@@ -49,8 +49,17 @@ class SPCommentCreationModel {
         
         let createCommentParameters: [String: Any] = gatherParametersForCreateCommentRequest()
         
+        if self.isCommentEdited() {
+            handleEditCommentRequest(requestParameters: createCommentParameters)
+        } else {
+            handleCreateCommentRequest(requestParameters: createCommentParameters)
+        }
+    }
+    
+    func handleCreateCommentRequest(requestParameters: [String:Any]) {
+        
         commentService.createComment(
-            parameters: createCommentParameters,
+            parameters: requestParameters,
             postId: dataModel.postId,
             success: {
                 [weak self] response in
@@ -67,12 +76,29 @@ class SPCommentCreationModel {
         )
     }
     
+    func handleEditCommentRequest(requestParameters: [String:Any]) {
+        commentService.editComment(
+            parameters: requestParameters,
+            postId: dataModel.postId,
+            success: { [weak self] response in
+                guard let self = self else { return }
+
+                var responseData = self.populateResponseFields(response)
+                responseData.setIsEdited(editedStatus: true)
+
+                self.cacheService.remove(for: self.dataModel.postId)
+                self.postCompletionHandler?(responseData)
+            },
+            failure: { [weak self] error in
+                self?.postErrorHandler?(error)
+            }
+        )
+    }
+    
     func gatherParametersForCreateCommentRequest() -> [String: Any] {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         
-        var metadata: [String: Any] = [
-            SPRequestKeys.metadata: [SPRequestKeys.displayName: displayName]
-        ]
+        var metadata: [String: Any] = [SPRequestKeys.displayName: displayName]
         
         var parameters: [String: Any] = [
             SPRequestKeys.content: [[SPRequestKeys.text: commentText]]
@@ -94,6 +120,14 @@ class SPCommentCreationModel {
             }
             parameters[SPRequestKeys.conversationId] = dataModel.postId
         }
+        
+        if isCommentEdited() {
+            if let messageId = dataModel.editModel?.commentId {
+                parameters[SPRequestKeys.messageId] = messageId
+            }
+        }
+        
+        parameters[SPRequestKeys.metadata] = metadata
         
         return parameters
     }
@@ -201,6 +235,7 @@ class SPCommentCreationModel {
         static let replyId = "reply_id"
         static let parentId = "parent_id"
         static let conversationId = "conversation_id"
+        static let messageId = "message_id"
     }
 }
 
