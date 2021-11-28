@@ -12,6 +12,7 @@ protocol CommentReplyViewControllerDelegate: AnyObject {
     
     func commentReplyDidCreate(_ comment: SPComment)
     func commentReplyDidBlock(with commentText: String?)
+    func commentReplyDidEdit(with comment: SPComment)
     
 }
 
@@ -317,6 +318,8 @@ class SPCommentCreationViewController: SPBaseViewController,
                 default: break
                 }
                 
+            } else if responseData.edited {
+                self.delegate?.commentReplyDidEdit(with: responseData)
             } else {
                 self.delegate?.commentReplyDidCreate(responseData)
             }

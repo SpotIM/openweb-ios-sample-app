@@ -571,6 +571,10 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
         commentReplyCreationBlocked?(commentText)
     }
     
+    internal func commentReplyDidEdit(with comment: SPComment) {
+        conversationModel?.handleEditedComment(comment: comment)
+    }
+    
     @objc
     private func hidePresentedViewController() {
         if self.sdkNavigationDelegate != nil {

@@ -119,6 +119,12 @@ final class SPMainConversationModel {
             self?.pendingComment = nil
         }
     }
+    
+    func handleEditedComment(comment: SPComment) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.dataSource.update(with: comment)
+        }
+    }
 
     func handleMessageCreationBlockage(with messageText: String?) {
         commentsActionDelegate?.messageCreationBlocked(with: messageText)
