@@ -37,8 +37,12 @@ class SPCommentCreationModel {
         setupCommentLabels()
         
         let commentIdentifier: String = getCommentIdentifierForCommentType()
-        commentText = cacheService.comment(for: commentIdentifier)
         
+        if let text = commentCreationDTO.editModel?.commentText {
+            commentText = text
+        } else {
+            commentText = cacheService.comment(for: commentIdentifier)
+        }
     }
     
     func post() {
