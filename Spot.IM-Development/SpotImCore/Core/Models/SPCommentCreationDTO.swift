@@ -29,6 +29,6 @@ struct SPReplyCommentDTO {
 
 struct SPEditCommentDTO {
     let commentText: String
-    let commentImage: CommentImage
-    let commentLabel: CommentLabel
+    let commentImage: CommentImage?
+    let commentLabel: CommentLabel?
 }
