@@ -28,6 +28,7 @@ struct SPReplyCommentDTO {
 }
 
 struct SPEditCommentDTO {
+    let commentId: String
     let commentText: String
     let commentImage: CommentImage?
     let commentLabel: CommentLabel?
