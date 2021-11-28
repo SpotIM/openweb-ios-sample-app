@@ -37,6 +37,7 @@ internal struct CommentViewModel {
     var hasOffset: Bool = false
     var isDeleted: Bool = false
     var isReported: Bool = false
+    var isEdited: Bool = false
     // helper property for array cleaning
     var shouldBeRemoved: Bool = false
     var repliesButtonState: RepliesButtonState = .collapsed
@@ -64,6 +65,7 @@ internal struct CommentViewModel {
         commentImageURL: URL? = nil) {
 
         isDeleted = comment.deleted
+        isEdited = comment.edited
         authorId = comment.userId
         commentId = comment.id
         rootCommentId = comment.rootComment
