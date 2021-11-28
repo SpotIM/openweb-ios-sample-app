@@ -672,6 +672,9 @@ extension SPCommentCreationViewController {
         if self.signupToPostButtonIsActive() {
             postButtonTitle = LocalizationManager.localizedString(key: "Sign Up to Post")
             action = presentAuth
+        } else if self.model.isCommentEdited() {
+            postButtonTitle = LocalizationManager.localizedString(key: "Edit")
+            action = post
         } else {
             postButtonTitle = LocalizationManager.localizedString(key: "Post")
             action = post
