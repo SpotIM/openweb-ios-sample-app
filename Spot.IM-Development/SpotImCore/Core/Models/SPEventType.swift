@@ -41,5 +41,6 @@ public enum SPEventType: String {
     case commentRankUpButtonUndo
     case commentRankDownButtonUndo
     case fullConversationAdCloseClicked
+    case commentEdited
 }
 

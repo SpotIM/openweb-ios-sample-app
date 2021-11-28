@@ -935,7 +935,11 @@ extension SPMainConversationDataSource {
            (cellData[indexPath.section])[indexPath.row] = viewModel
            delegate?.reloadAt(indexPath: indexPath)
            if let commentId = comment.id {
-               
-           }
+               SPAnalyticsHolder.default.log(
+                event: .commentEdited(
+                    messageId: commentId,
+                    relatedMessageId: viewModel.rootCommentId),
+                source: .conversation)
+               }
        }
 }
