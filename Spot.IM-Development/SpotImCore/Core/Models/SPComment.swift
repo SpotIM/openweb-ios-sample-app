@@ -42,6 +42,10 @@ internal struct SPComment: Decodable, Equatable {
         }
         return id != rootComment
     }
+    
+    mutating func setIsEdited(editedStatus: Bool) {
+        edited = editedStatus
+    }
 
     var status: Status? {
         guard let rawStatus = rawStatus else { return nil }
