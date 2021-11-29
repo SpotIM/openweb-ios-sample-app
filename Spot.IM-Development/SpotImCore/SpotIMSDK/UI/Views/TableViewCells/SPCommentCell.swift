@@ -298,13 +298,16 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             messageView.setMessage(
                 "",
                 attributes: attributes(isDeleted: true),
-                isCollapsed: dataModel.commentTextCollapsed)
+                isCollapsed: dataModel.commentTextCollapsed,
+                isEdited: dataModel.isEdited
+            )
         } else {
             messageView.setMessage(dataModel.commentText ?? "",
                                    attributes: attributes(isDeleted: false),
                                    clipToLine: clipToLine,
                                    width: dataModel.textWidth(),
-                                   isCollapsed: dataModel.commentTextCollapsed)
+                                   isCollapsed: dataModel.commentTextCollapsed,
+                                   isEdited: dataModel.isEdited)
         }
     }
     
