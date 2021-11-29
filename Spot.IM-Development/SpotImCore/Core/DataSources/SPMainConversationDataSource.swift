@@ -330,8 +330,7 @@ internal final class SPMainConversationDataSource {
         var replyModel : SPReplyCommentDTO?
         var editModel: SPEditCommentDTO?
         
-        //If comment is a reply
-        if (comment?.replyingToCommentId != nil) {
+        if comment?.isAReply() == true {
             replyModel = SPReplyCommentDTO(
                 authorName: comment?.displayName,
                 commentText: comment?.commentText,
