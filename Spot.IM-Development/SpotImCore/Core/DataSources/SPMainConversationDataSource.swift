@@ -365,6 +365,7 @@ internal final class SPMainConversationDataSource {
         var commentImage: CommentImage?
         var commentLabel: CommentLabel?
         var commentId: String = ""
+        var commentGifUrl: String = ""
         
         if let id = comment?.commentId {
             commentId = id
@@ -380,11 +381,16 @@ internal final class SPMainConversationDataSource {
         if let label = comment?.commentLabel {
             commentLabel = label
         }
+        
+        if let gifUrl = comment?.commentGifUrl {
+            commentGifUrl = gifUrl
+        }
 
         return SPEditCommentDTO(commentId: commentId,
                                 commentText: commentText,
                                 commentImage: commentImage,
-                                commentLabel: commentLabel)
+                                commentLabel: commentLabel,
+                                commentGifUrl: commentGifUrl)
     }
     
     internal func numberOfRows(in section: Int) -> Int {
