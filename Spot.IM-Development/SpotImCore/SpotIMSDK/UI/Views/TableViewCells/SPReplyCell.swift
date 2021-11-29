@@ -55,7 +55,10 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         
         textViewLeadingConstraint?.constant = data.depthOffset()
         if data.isDeletedOrReported() {
-            messageView.setMessage("", attributes: attributes(isDeleted: true), isCollapsed: data.commentTextCollapsed)
+            messageView.setMessage("",
+                                   attributes: attributes(isDeleted: true),
+                                   isCollapsed: data.commentTextCollapsed,
+                                   isEdited: data.isEdited)
             replyActionsViewHeightConstraint?.constant = 0.0
             moreRepliesViewHeightConstraint?.constant = 0.0
         } else {
@@ -64,7 +67,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 attributes: attributes(isDeleted: false),
                 clipToLine: lineLimit,
                 width: data.textWidth(),
-                isCollapsed: data.commentTextCollapsed
+                isCollapsed: data.commentTextCollapsed,
+                isEdited: data.isEdited
             )
             replyActionsViewHeightConstraint?.constant = Theme.replyActionsViewHeight
             moreRepliesViewHeightConstraint?.constant = Theme.moreRepliesViewHeight

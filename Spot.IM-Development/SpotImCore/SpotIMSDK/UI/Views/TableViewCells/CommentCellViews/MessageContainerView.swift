@@ -26,7 +26,8 @@ final class MessageContainerView: BaseView {
         attributes: [NSAttributedString.Key: Any],
         clipToLine: Int = 0,
         width: CGFloat = 0.0,
-        isCollapsed: Bool) {
+        isCollapsed: Bool,
+        isEdited: Bool) {
         
         mainTextLabel.attributedText = NSAttributedString(string: "")
         activeURLs.removeAll()
@@ -35,7 +36,8 @@ final class MessageContainerView: BaseView {
             attributedString: attributedMessage.clippedToLine(
                 index: clipToLine,
                 width: width,
-                isCollapsed: isCollapsed
+                isCollapsed: isCollapsed,
+                isEdited: isEdited
             )
         )
         locateURLsInText(text: &clippedText)
