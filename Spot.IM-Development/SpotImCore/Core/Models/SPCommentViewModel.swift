@@ -191,8 +191,10 @@ internal struct CommentViewModel {
         let clippedMessage = attributedMessage.clippedToLine(
             index: lineLimit,
             width: width,
-            isCollapsed: commentTextCollapsed,
-            isEdited: isEdited
+            clippedTextSettings: SPClippedTextSettings(
+                collapsed: commentTextCollapsed,
+                edited: isEdited
+            )
         )
         let textHeight: CGFloat = clippedMessage.string.isEmpty ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
