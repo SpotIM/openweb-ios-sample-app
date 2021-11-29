@@ -10,7 +10,7 @@ import UIKit
 
 extension NSAttributedString {
     
-    func clippedToLine(index: Int, width: CGFloat, isCollapsed: Bool) -> NSAttributedString {
+    func clippedToLine(index: Int, width: CGFloat, isCollapsed: Bool, isEdited: Bool) -> NSAttributedString {
         guard width > 1 else { return self } // not to spoil everything before UI is layed out
 
         let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
@@ -20,6 +20,25 @@ extension NSAttributedString {
 
         guard let lines = linesNS as? [CTLine], !lines.isEmpty else { return self }
 
+        let collapsedText = handleCollapsingOfText(index: index,
+                               width: width,
+                               isCollapsed: isCollapsed,
+                               linesNS: linesNS,
+                                                   lines: lines)
+        if isEdited {
+            return readEditedAppended(text: collapsedText, fontPointSize: CGFloat(15.0))
+        }
+        
+        return collapsedText
+        
+        
+    }
+    
+    private func handleCollapsingOfText(index: Int,
+                                        width: CGFloat,
+                                        isCollapsed: Bool,
+                                        linesNS : NSArray,
+                                        lines: [CTLine]) -> NSAttributedString {
         if index >= linesNS.count {
             return self
         } else if isCollapsed {
@@ -81,6 +100,21 @@ extension NSAttributedString {
 
         let mutableSelf = mutableCopy() as? NSMutableAttributedString
         mutableSelf?.append(readLess)
+
+        return mutableSelf ?? self
+    }
+    
+    private func readEditedAppended(text: NSAttributedString, fontPointSize: CGFloat) -> NSAttributedString {
+        
+        let editedTextAttributes: [NSAttributedString.Key: Any] = [
+                       .foregroundColor: UIColor.gray,
+                       .font: UIFont.italicSystemFont(ofSize: fontPointSize)
+        ]
+
+        let editedText = NSAttributedString(string: " (Edited)", attributes: editedTextAttributes)
+
+        let mutableSelf = text.mutableCopy() as? NSMutableAttributedString
+        mutableSelf?.append(editedText)
 
         return mutableSelf ?? self
     }
