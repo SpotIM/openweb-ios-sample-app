@@ -821,7 +821,7 @@ extension SPMainConversationDataSource {
             pushLocalReply(reply: comment, viewModel: viewModel)
             updateRepliesButtonIfNeeded(in: parentComment)
         } else if comment.edited {
-            updateEditedComment(comment: comment, viewModel: viewModel)
+            updateEditedCommentAndSendEvent(comment: comment, viewModel: viewModel)
         } else {
             pushLocalComment(comment: comment, viewModel: viewModel)
         }
@@ -936,7 +936,7 @@ extension SPMainConversationDataSource {
         delegate?.reloadAt(indexPath: indexPath)
     }
     
-    private func updateEditedComment(comment: SPComment, viewModel: CommentViewModel) {
+    private func updateEditedCommentAndSendEvent(comment: SPComment, viewModel: CommentViewModel) {
            guard let indexPath = indexPathOfComment(with: comment.id) else { return }
            (cellData[indexPath.section])[indexPath.row] = viewModel
            delegate?.reloadAt(indexPath: indexPath)
