@@ -811,7 +811,7 @@ extension SPMainConversationDataSource {
         
         cachedCommentReply = viewModel
         
-        if comment.isReply {
+        if comment.isReply && !comment.edited {
             pushLocalReply(reply: comment, viewModel: viewModel)
             updateRepliesButtonIfNeeded(in: parentComment)
         } else if comment.edited {
