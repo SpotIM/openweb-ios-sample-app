@@ -237,6 +237,10 @@ internal struct CommentViewModel {
     func isDeletedOrReported() -> Bool {
         return isDeleted || isReported
     }
+    
+    func isAReply() -> Bool {
+        return replyingToCommentId != nil
+    }
 
     private enum Theme {
         static let fontSize: CGFloat = 16.0
