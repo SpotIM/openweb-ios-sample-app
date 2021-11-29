@@ -10,7 +10,7 @@ import UIKit
 
 extension NSAttributedString {
     
-    func clippedToLine(index: Int, width: CGFloat, isCollapsed: Bool, isEdited: Bool) -> NSAttributedString {
+    func clippedToLine(index: Int, width: CGFloat, clippedTextSettings: SPClippedTextSettings) -> NSAttributedString {
         guard width > 1 else { return self } // not to spoil everything before UI is layed out
 
         let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
@@ -20,13 +20,17 @@ extension NSAttributedString {
 
         guard let lines = linesNS as? [CTLine], !lines.isEmpty else { return self }
 
-        let collapsedText = handleCollapsingOfText(index: index,
-                               width: width,
-                               isCollapsed: isCollapsed,
-                               linesNS: linesNS,
-                                                   lines: lines)
-        if isEdited {
-            return readEditedAppended(text: collapsedText, fontPointSize: CGFloat(15.0))
+        let collapsedText = handleCollapsingOfText(
+            index: index,
+            width: width,
+            isCollapsed: clippedTextSettings.isCollapsed,
+            linesNS: linesNS,
+            lines: lines)
+        if clippedTextSettings.isEdited {
+            return readEditedAppended(
+                text: collapsedText,
+                fontPointSize: clippedTextSettings.fontPointSize
+            )
         }
         
         return collapsedText
@@ -182,5 +186,18 @@ extension NSMutableParagraphStyle {
         } else {
             alignment = .left
         }
+    }
+}
+
+struct SPClippedTextSettings {
+    var isCollapsed: Bool
+    var isEdited: Bool
+    var fontPointSize: CGFloat
+
+    init(collapsed: Bool,
+         edited: Bool) {
+        self.isCollapsed = collapsed
+        self.isEdited = edited
+        self.fontPointSize = CGFloat(0.0)
     }
 }
