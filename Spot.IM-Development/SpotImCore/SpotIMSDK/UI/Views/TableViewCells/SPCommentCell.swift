@@ -298,7 +298,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             messageView.setMessage(
                 "",
                 attributes: attributes(isDeleted: true),
-                clippedTextsettings: SPClippedTextSettings(
+                clippedTextSettings: SPClippedTextSettings(
                     collapsed: dataModel.commentTextCollapsed,
                     edited: dataModel.isEdited
                 )
@@ -308,7 +308,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
                                    attributes: attributes(isDeleted: false),
                                    clipToLine: clipToLine,
                                    width: dataModel.textWidth(),
-                                   clippedTextsettings: SPClippedTextSettings(
+                                   clippedTextSettings: SPClippedTextSettings(
                                     collapsed: dataModel.commentTextCollapsed,
                                     edited: dataModel.isEdited
                                    )

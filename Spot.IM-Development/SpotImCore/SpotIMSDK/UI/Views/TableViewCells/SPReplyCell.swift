@@ -57,7 +57,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         if data.isDeletedOrReported() {
             messageView.setMessage("",
                                    attributes: attributes(isDeleted: true),
-                                   clippedTextsettings: SPClippedTextSettings(
+                                   clippedTextSettings: SPClippedTextSettings(
                                     collapsed: data.commentTextCollapsed,
                                     edited: data.isEdited
                                    )
@@ -70,7 +70,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 attributes: attributes(isDeleted: false),
                 clipToLine: lineLimit,
                 width: data.textWidth(),
-                clippedTextsettings: SPClippedTextSettings(
+                clippedTextSettings: SPClippedTextSettings(
                     collapsed: data.commentTextCollapsed,
                     edited: data.isEdited
                 )
