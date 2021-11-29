@@ -26,9 +26,11 @@ final class MessageContainerView: BaseView {
         attributes: [NSAttributedString.Key: Any],
         clipToLine: Int = 0,
         width: CGFloat = 0.0,
-        isCollapsed: Bool,
-        isEdited: Bool) {
+        clippedTextSettings: SPClippedTextSettings) {
         
+        var settings = clippedTextSettings
+        settings.fontPointSize = mainTextLabel.font.pointSize
+            
         mainTextLabel.attributedText = NSAttributedString(string: "")
         activeURLs.removeAll()
         let attributedMessage = NSAttributedString(string: message, attributes: attributes)
@@ -36,8 +38,7 @@ final class MessageContainerView: BaseView {
             attributedString: attributedMessage.clippedToLine(
                 index: clipToLine,
                 width: width,
-                isCollapsed: isCollapsed,
-                isEdited: isEdited
+                clippedTextSettings: settings
             )
         )
         locateURLsInText(text: &clippedText)
