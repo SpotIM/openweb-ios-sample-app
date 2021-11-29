@@ -66,9 +66,7 @@ class SPCommentCreationModel {
     func gatherParametersForCreateCommentRequest() -> [String: Any] {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         
-        var metadata: [String: Any] = [
-            SPRequestKeys.metadata: [SPRequestKeys.displayName: displayName]
-        ]
+        var metadata: [String: Any] = [SPRequestKeys.displayName: displayName]
         
         var parameters: [String: Any] = [
             SPRequestKeys.content: [[SPRequestKeys.text: commentText]]
@@ -90,6 +88,8 @@ class SPCommentCreationModel {
             }
             parameters[SPRequestKeys.conversationId] = dataModel.postId
         }
+        
+        parameters[SPRequestKeys.metadata] = metadata
         
         return parameters
     }
