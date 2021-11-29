@@ -126,7 +126,7 @@ class SPCommentCreationModel {
                 parameters[SPRequestKeys.messageId] = messageId
             }
         }
-        
+
         parameters[SPRequestKeys.metadata] = metadata
         
         return parameters
