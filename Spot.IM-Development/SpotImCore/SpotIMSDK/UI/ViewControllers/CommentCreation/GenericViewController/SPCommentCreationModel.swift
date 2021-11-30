@@ -84,7 +84,7 @@ class SPCommentCreationModel {
                 guard let self = self else { return }
 
                 var responseData = self.populateResponseFields(response)
-                responseData.setIsEdited(editedStatus: true)
+                responseData.setIsEdited(true)
 
                 self.cacheService.remove(for: self.dataModel.postId)
                 self.postCompletionHandler?(responseData)
