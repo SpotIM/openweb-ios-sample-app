@@ -308,7 +308,7 @@ internal final class SPMainConversationDataSource {
     }
     
     internal func commentCreationModel() -> SPCommentCreationDTO {
-        return createSPCommentDTO(replyModel: nil, editModel: nil)
+        return createSPCommentDTO()
     }
     
     internal func replyCreationModel(for id: String) -> SPCommentCreationDTO {
@@ -322,7 +322,7 @@ internal final class SPMainConversationDataSource {
             parentDepth: comment?.depth
         )
         
-        return createSPCommentDTO(replyModel: replyModel, editModel: nil)
+        return createSPCommentDTO(replyModel: replyModel)
     }
     
     internal func editCreationModel(for id: String) -> SPCommentCreationDTO {
@@ -345,7 +345,7 @@ internal final class SPMainConversationDataSource {
         return createSPCommentDTO(replyModel: replyModel, editModel: editModel)
     }
     
-    internal func createSPCommentDTO(replyModel: SPReplyCommentDTO?, editModel: SPEditCommentDTO?) -> SPCommentCreationDTO {
+    internal func createSPCommentDTO(replyModel: SPReplyCommentDTO? = nil, editModel: SPEditCommentDTO? = nil) -> SPCommentCreationDTO {
         
         return SPCommentCreationDTO(
             articleMetadata: articleMetadata,
