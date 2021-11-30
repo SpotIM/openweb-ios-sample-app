@@ -311,7 +311,7 @@ internal struct CommentViewModel {
     private func getUserBadgeUsingConfig(user: SPUser) -> String? {
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
-           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? (translations["es-419"] ?? translations["es-ES"]) : translations[LocalizationManager.getLanguageCode()]
+           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
         {
             if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
                 return adminBadge
