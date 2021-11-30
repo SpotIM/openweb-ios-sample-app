@@ -49,7 +49,7 @@ class SPCommentCreationModel {
         
         let createCommentParameters: [String: Any] = gatherParametersForCreateCommentRequest()
         
-        if self.isCommentEdited() {
+        if self.isInEditMode() {
             handleEditCommentRequest(requestParameters: createCommentParameters)
         } else {
             handleCreateCommentRequest(requestParameters: createCommentParameters)
@@ -121,7 +121,7 @@ class SPCommentCreationModel {
             parameters[SPRequestKeys.conversationId] = dataModel.postId
         }
         
-        if isCommentEdited() {
+        if isInEditMode() {
             if let messageId = dataModel.editModel?.commentId {
                 parameters[SPRequestKeys.messageId] = messageId
             }
@@ -174,7 +174,7 @@ class SPCommentCreationModel {
         return dataModel.replyModel != nil
     }
     
-    func isCommentEdited() -> Bool {
+    func isInEditMode() -> Bool {
         return dataModel.editModel != nil
     }
     
