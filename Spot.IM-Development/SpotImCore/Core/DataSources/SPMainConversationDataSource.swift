@@ -325,7 +325,7 @@ internal final class SPMainConversationDataSource {
         return createSPCommentDTO(replyModel: replyModel)
     }
     
-    internal func editCreationModel(for id: String) -> SPCommentCreationDTO {
+    internal func editCommentModel(for id: String) -> SPCommentCreationDTO {
         let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
         var replyModel : SPReplyCommentDTO?
         var editModel: SPEditCommentDTO?
