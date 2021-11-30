@@ -340,7 +340,9 @@ internal final class SPMainConversationDataSource {
             )
         }
         
-        editModel = gatherEditModelData(comment: comment)
+        if let userComment: CommentViewModel = comment {
+            editModel = gatherEditModelData(comment: userComment)
+        }
         
         return createSPCommentDTO(replyModel: replyModel, editModel: editModel)
     }
@@ -358,38 +360,23 @@ internal final class SPMainConversationDataSource {
         )
     }
     
-    private func gatherEditModelData(comment: CommentViewModel?) -> SPEditCommentDTO? {
+    private func gatherEditModelData(comment: CommentViewModel) -> SPEditCommentDTO? {
         
         var commentText: String = ""
-        var commentImage: CommentImage?
-        var commentLabel: CommentLabel?
         var commentId: String = ""
-        var commentGifUrl: String = ""
         
-        if let id = comment?.commentId {
+        if let id = comment.commentId {
             commentId = id
         }
-        if let text = comment?.commentText {
+        if let text = comment.commentText {
             commentText = text
-        }
-        
-        if let image = comment?.commentImage {
-            commentImage = image
-        }
-
-        if let label = comment?.commentLabel {
-            commentLabel = label
-        }
-        
-        if let gifUrl = comment?.commentGifUrl {
-            commentGifUrl = gifUrl
         }
 
         return SPEditCommentDTO(commentId: commentId,
                                 commentText: commentText,
-                                commentImage: commentImage,
-                                commentLabel: commentLabel,
-                                commentGifUrl: commentGifUrl)
+                                commentImage: comment.commentImage,
+                                commentLabel: comment.commentLabel,
+                                commentGifUrl: comment.commentGifUrl)
     }
     
     internal func numberOfRows(in section: Int) -> Int {
