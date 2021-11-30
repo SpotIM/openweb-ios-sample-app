@@ -314,10 +314,11 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             commentMediaViewTopConstraint?.constant = SPCommonConstants.emptyCommentMediaTopPadding
             commentMediaWidthConstraint?.constant = 0
             commentMediaHeightConstraint?.constant = 0
+            commentMediaView.clearExistingMedia()
             return
         }
         let mediaSize = dataModel.getMediaSize()
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaSize.width), height: Float(mediaSize.height))
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl)
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
         commentMediaWidthConstraint?.constant = mediaSize.width
         commentMediaHeightConstraint?.constant = mediaSize.height

@@ -82,10 +82,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             commentMediaViewTopConstraint?.constant = dataModel.isDeletedOrReported() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding
             commentMediaViewWidthConstraint?.constant = 0
             commentMediaViewHeightConstraint?.constant = 0
+            commentMediaView.clearExistingMedia()
             return
         }
         let mediaSize = dataModel.getMediaSize()
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaSize.width), height: Float(mediaSize.height))
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl)
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
         commentMediaViewWidthConstraint?.constant = mediaSize.width
         commentMediaViewHeightConstraint?.constant = mediaSize.height
