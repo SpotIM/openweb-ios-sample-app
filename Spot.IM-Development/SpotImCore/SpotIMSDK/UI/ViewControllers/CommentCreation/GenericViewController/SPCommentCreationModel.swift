@@ -66,7 +66,8 @@ class SPCommentCreationModel {
                 guard let self = self else { return }
                 
                 let responseData = self.populateResponseFields(response)
-                
+                let commentIdentifier: String = self.getCommentIdentifierForCommentType()
+                self.cacheService.remove(for: commentIdentifier)
                 self.postCompletionHandler?(responseData)
             },
             failure: {
