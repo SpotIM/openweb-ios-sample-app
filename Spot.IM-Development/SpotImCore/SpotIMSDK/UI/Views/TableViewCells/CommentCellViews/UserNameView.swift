@@ -112,7 +112,7 @@ internal final class UserNameView: BaseView {
                     moreButton,
                     subtitleLabel,
                     dateLabel)
-        configureUserNameLabel()
+        configureNameAndBadgeStackView()
         setupMoreButton()
         configureLeaderBadge()
         configureSubtitleAndDateLabels()
@@ -142,7 +142,7 @@ internal final class UserNameView: BaseView {
         )
     }
 
-    private func configureUserNameLabel() {
+    private func configureNameAndBadgeStackView() {
         nameAndBadgeStackview.addArrangedSubview(userNameLabel)
         nameAndBadgeStackview.addArrangedSubview(badgeTagLabel)
         nameAndBadgeStackview.axis = .horizontal
