@@ -475,7 +475,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
                               to id: String) {
         
         let model = SPCommentCreationModel(
-            commentCreationDTO: dataModel.dataSource.editCreationModel(for: id),
+            commentCreationDTO: dataModel.dataSource.editCommentModel(for: id),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
