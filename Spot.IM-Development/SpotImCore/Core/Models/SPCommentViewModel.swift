@@ -131,15 +131,9 @@ internal struct CommentViewModel {
             showsOnline = user.online ?? false
             displayName = user.displayName
             userAvatar = userImageURL
-            if user.isAuthority {
-                badgeIsGamification = false
-                showsStar = false
-                badgeTitle = getUserBadgeUsingConfig(user: user)
-            } else if user.hasGamification {
-                badgeIsGamification = true
-                showsStar = true
-                badgeTitle = nil
-            }
+            badgeIsGamification = false
+            showsStar = false
+            badgeTitle = getUserBadgeUsingConfig(user: user)
         }
 
         self.replyingToCommentId = replyingToCommentId
@@ -317,7 +311,7 @@ internal struct CommentViewModel {
     private func getUserBadgeUsingConfig(user: SPUser) -> String? {
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
-           let currentLanguage = LocalizationManager.currentLanguage?.rawValue,
+           let currentLanguage = LocalizationManager.currentLanguage?.rawValue, // TODO - check 
            let currentTranslation = translations[currentLanguage]
         {
             if user.isAdmin, let adminBadge = currentTranslation["user.badges.admin"] {
