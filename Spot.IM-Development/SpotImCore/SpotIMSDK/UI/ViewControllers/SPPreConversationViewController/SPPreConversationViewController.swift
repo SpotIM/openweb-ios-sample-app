@@ -89,14 +89,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         selector: #selector(appMovedToBackground),
         name: UIApplication.willResignActiveNotification,
         object: nil)
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(overrideUserInterfaceStyleDidChange),
-            name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
-            object: nil)
 
-        
         SPAnalyticsHolder.default.log(event: .loaded, source: .launcher)
         
         loadConversation()
@@ -270,7 +263,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func updateCommunityQuestion(communityQuestionText: String?) {
         // hide when no community question or in on button mode
         if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0, !isButtonOnlyModeEnabled {
-            communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
+            communityQuestionView.setupCommunityQuestion(with: communityQuestionText)
             communityQuestionView.clipsToBounds = true
             communityQuestionView.setupPreConversationConstraints()
             communityGuidelinesView.setSeperatorVisible(isVisible: false)
@@ -475,13 +468,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         tableView.reloadData()
     }
     
-    override func checkAdsAvailability() {
-        guard
-            !disableAdsForUser(),
-            let adsConfig = SPConfigsDataSource.adsConfig,
-            let tags = adsConfig.tags
-            else { return }
-        
+    override func setupAds(for tags: [SPAdsConfigurationTag]) {
         for tag in tags {
             guard let adsId = tag.code else { break }
             switch tag.adType {
@@ -545,10 +532,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         SPAnalyticsHolder.default.log(event: .appClosed, source: .mainPage)
     }
     
-    @objc
-    private func overrideUserInterfaceStyleDidChange() {
+    @objc override func overrideUserInterfaceStyleDidChange() {
+        super.overrideUserInterfaceStyleDidChange()
         self.tableView.reloadData()
-        self.updateColorsAccordingToStyle()
     }
 }
 
