@@ -27,7 +27,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     internal var screenTargetType: SPAnScreenTargetType {
         fatalError("Implement in subclass")
     }
-
+    internal var didCheckAdsAvailability = false
     internal var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitMainConv }
 
     private var typingIndicationView: TotalTypingIndicationView?
@@ -238,7 +238,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
             actionMessage = LocalizationManager.localizedString(key: "Commenting on this article has ended")
             actionIcon = UIImage(spNamed: "emptyCommentsReadOnlyIcon")!
         } else {
-            actionMessage = LocalizationManager.localizedString(key: "Be the first to comment on this article.")
+            actionMessage = LocalizationManager.localizedString(key: "Be the first to comment")
             actionIcon = UIImage(spNamed: "emptyCommentsIcon")!
             actionButtonTitle = LocalizationManager.localizedString(key: "Write a Comment")
             action = { [weak self] in
@@ -322,6 +322,17 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     }
 
     func checkAdsAvailability() {
+        guard
+            !didCheckAdsAvailability,
+            !disableAdsForUser(),
+            let adsConfig = SPConfigsDataSource.adsConfig,
+            let tags = adsConfig.tags
+            else { return }
+        didCheckAdsAvailability = true
+        setupAds(for: tags)
+    }
+    
+    func setupAds(for tags: [SPAdsConfigurationTag]) {
         //Override this method in your VC if you need to configure advertisement
     }
     

@@ -388,8 +388,9 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         return navigationItemTextView
     }
 
-    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: SPBaseCommentCreationViewController<T>,
-                                                                           _ dataModel: SPMainConversationModel) {
+    private func presentContentCreationViewController(
+        controller: SPCommentCreationViewController,
+        _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
 
@@ -444,39 +445,39 @@ extension SpotImSDKFlowCoordinator: SPSafariWebPageDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
-
+    
     internal func createComment(with dataModel: SPMainConversationModel) {
-        let controller = SPCommentCreationViewController(customUIDelegate: self)
-        controller.delegate = self
-        controller.userAuthFlowDelegate = self
-        
         let model = SPCommentCreationModel(
-            commentCreationDTO: dataModel.dataSource.commentCreationModel(),
+            baseCommentCreationDTO: dataModel.dataSource.commentCreationModel(),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
             articleMetadate: dataModel.dataSource.articleMetadata
         )
-        controller.model = model
-        dataModel.dataSource.showReplies = true
-        presentContentCreationViewController(controller: controller, dataModel)
+        
+        setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
     
     internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
-        let controller = SPReplyCreationViewController(customUIDelegate: self)
-        controller.delegate = self
-        controller.userAuthFlowDelegate = self
         
-        let model = SPReplyCreationModel(
-            replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
+        let model = SPCommentCreationModel(
+            baseCommentCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
-            articleMetadata: dataModel.dataSource.articleMetadata
+            articleMetadate: dataModel.dataSource.articleMetadata
         )
-        controller.model = model
-        dataModel.dataSource.showReplies = true
         
+        setupAndPresentCommentCreation(with: model, dataModel: dataModel)
+    }
+
+    internal func setupAndPresentCommentCreation(with model: SPCommentCreationModel,
+                                    dataModel: SPMainConversationModel) {
+        
+        let controller = SPCommentCreationViewController(customUIDelegate: self, model: model)
+        controller.delegate = self
+        controller.userAuthFlowDelegate = self
+        dataModel.dataSource.showReplies = true
         presentContentCreationViewController(controller: controller, dataModel)
     }
 }

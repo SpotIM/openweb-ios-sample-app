@@ -109,7 +109,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             SPAnalyticsHolder.default.log(event: openedByPublisher ? .viewed : .mainViewed, source: .conversation)
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
         }
-        checkAdsAvailability()
+
         updateHeaderUI()
         configureModelHandlers()
 
@@ -125,11 +125,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             presentEmptyCommentsStateView()
         }
 
-        NotificationCenter.default.addObserver(
-           self,
-           selector: #selector(overrideUserInterfaceStyleDidChange),
-           name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
-           object: nil)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.userLoginSuccessNotification(notification:)),
@@ -224,15 +219,15 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    @objc
-    private func overrideUserInterfaceStyleDidChange() {
+    @objc override func overrideUserInterfaceStyleDidChange() {
+        super.overrideUserInterfaceStyleDidChange()
         self.tableView.reloadData()
-        self.updateColorsAccordingToStyle()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
+        checkAdsAvailability()
 
         model.delegates.add(delegate: self)
         model.commentsCounterDelegates.add(delegate: self)
@@ -461,7 +456,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         let communityQuestionText = getCommunityQuestion()
         if let communityQuestionText = communityQuestionText, communityQuestionText.length > 0 {
-            communityQuestionView.setCommunityQuestionText(question: communityQuestionText)
+            communityQuestionView.setupCommunityQuestion(with: communityQuestionText)
             communityQuestionView.clipsToBounds = true
             shouldDisplayCommunityQuestion = true
         } else {
@@ -498,14 +493,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             $0.bottom.equal(to: footer.topAnchor)
         }
     }
-
-    override func checkAdsAvailability() {
-        guard
-            !disableAdsForUser(),
-            let adsConfig = SPConfigsDataSource.adsConfig,
-            let tags = adsConfig.tags
-            else { return }
-
+    
+    override func setupAds(for tags: [SPAdsConfigurationTag]) {
         for tag in tags {
             guard let adsId = tag.code else { break }
             switch tag.adType {
@@ -719,6 +708,7 @@ extension SPMainConversationViewController { // UITableViewDataSource
 
 extension SPMainConversationViewController: SPAdBannerCellDelegate {
     func hideBanner() {
+        guard !model.dataSource.isLoading else { return }
         SPAnalyticsHolder.default.log(event: .fullConversationAdCloseClicked, source: .conversation)
         removeBannerFromConversation()
     }

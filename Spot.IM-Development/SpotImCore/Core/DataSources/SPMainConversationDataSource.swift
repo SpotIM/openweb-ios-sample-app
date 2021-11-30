@@ -301,33 +301,40 @@ internal final class SPMainConversationDataSource {
         return count
     }
     
-    internal func commentCreationModel() -> SPCommentCreationDTO {
-        return SPCommentCreationDTO(articleMetadata: articleMetadata,
-                                    currentUserAvatar: currentUserAvatarUrl,
-                                    postId: postId,
-                                    displayName: currentUserName,
-                                    converstionId: postId,
-                                    user: currentUser)
-    }
-    
     internal func commentViewModel(_ id: String) -> CommentViewModel? {
         let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
         
         return comment
     }
     
-    internal func replyCreationModel(for id: String) -> SPReplyCreationDTO {
+    internal func commentCreationModel() -> SPCommentCreationDTO {
+        return createSPCommentDTO(replyModel: nil)
+    }
+    
+    internal func replyCreationModel(for id: String) -> SPCommentCreationDTO {
         let comment = cellData.flatMap { $0 }.first { $0.commentId == id }
         
-        return SPReplyCreationDTO(currentUserAvatar: currentUserAvatarUrl,
-                                  authorName: comment?.displayName,
-                                  comment: comment?.commentText,
-                                  commentId: id,
-                                  postId: postId,
-                                  displayName: currentUserName,
-                                  rootCommentId: comment?.rootCommentId,
-                                  parentDepth: comment?.depth,
-                                  user: currentUser)
+        let replyModel = SPReplyCommentDTO(
+            authorName: comment?.displayName,
+            commentText: comment?.commentText,
+            commentId: id,
+            rootCommentId: comment?.rootCommentId,
+            parentDepth: comment?.depth
+        )
+        
+        return createSPCommentDTO(replyModel: replyModel)
+    }
+    
+    internal func createSPCommentDTO(replyModel: SPReplyCommentDTO?) -> SPCommentCreationDTO {
+        
+        return SPCommentCreationDTO(
+            articleMetadata: articleMetadata,
+            currentUserAvatarUrl: currentUserAvatarUrl,
+            postId: postId,
+            displayName: currentUserName,
+            user: currentUser,
+            replyModel: replyModel
+        )
     }
     
     internal func numberOfRows(in section: Int) -> Int {

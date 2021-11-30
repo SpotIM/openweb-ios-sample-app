@@ -22,8 +22,6 @@ internal final class SPCommunityQuestionView: BaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        setup()
     }
     
     func customizeCommunityQuestion(customUIDelegate: CustomUIDelegate) {
@@ -37,8 +35,9 @@ internal final class SPCommunityQuestionView: BaseView {
         separatorView.backgroundColor = .spSeparator2
     }
     
-    func setCommunityQuestionText(question: String) {
-        questionTextView.text = question
+    func setupCommunityQuestion(with text: String) {
+        self.setupSubviews()
+        questionTextView.text = text
     }
     
     // MARK: - Internal methods
@@ -51,7 +50,7 @@ internal final class SPCommunityQuestionView: BaseView {
     
     // MARK: - Private Methods
 
-    private func setup() {
+    private func setupSubviews() {
         addSubviews(questionTextView, separatorView)
         setupQuestionLabel()
         configureSeparatorView()
