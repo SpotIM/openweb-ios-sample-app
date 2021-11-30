@@ -133,7 +133,7 @@ internal struct CommentViewModel {
             userAvatar = userImageURL
             badgeIsGamification = false
             showsStar = false
-            badgeTitle = getUserBadgeUsingConfig(user: user)
+            badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
         }
 
         self.replyingToCommentId = replyingToCommentId
@@ -156,14 +156,14 @@ internal struct CommentViewModel {
         return textWidth
     }
     
-    // check if userName & badge should be in one row or two
+    // check if userName & badge texts should be in one row or two
     func isUsernameOneRow() -> Bool {
         let leadingOffset: CGFloat = depthOffset()
-        let width = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - 44 /*avatar width*/ - 25 /*username trailing constraint*/
+        let lineWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - 44 /*avatar width*/ - 25 /*username trailing constraint*/
         
         let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? "") , attributes: [.font: UIFont.preferred(style: .medium, of: Theme.fontSize)])
         
-        return attributedMessage.width(withConstrainedHeight: 19) < width
+        return attributedMessage.width(withConstrainedHeight: 19) < lineWidth
     }
     
     func usernameViewHeight() -> CGFloat {
@@ -311,22 +311,28 @@ internal struct CommentViewModel {
     private func getUserBadgeUsingConfig(user: SPUser) -> String? {
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
-           let currentLanguage = LocalizationManager.currentLanguage?.rawValue, // TODO - check 
-           let currentTranslation = translations[currentLanguage]
+           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? (translations["es-419"] ?? translations["es-ES"]) : translations[LocalizationManager.getLanguageCode()]
         {
-            if user.isAdmin, let adminBadge = currentTranslation["user.badges.admin"] {
+            if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
                 return adminBadge
-            } else if user.isJournalist, let jurnalistBadge = currentTranslation["user.badges.jurnalist"] {
+            } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {
                 return jurnalistBadge
-            } else if user.isModerator, let moderatorBadge = currentTranslation["user.badges.moderator"] {
+            } else if user.isModerator, let moderatorBadge = currentTranslation[BadgesOverrideKeys.moderator.rawValue] {
                 return moderatorBadge
-            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation["user.badges.community-moderator"]  {
+            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue]  {
                 return communityModeratorBadge
             }
         }
         return user.authorityTitle
     }
 
+}
+
+enum BadgesOverrideKeys: String {
+    case admin = "user.badges.admin"
+    case journalist = "user.badges.jurnalist"
+    case moderator = "user.badges.moderator"
+    case communityModerator = "user.badges.community-moderator"
 }
 
 struct CommentLabel {
