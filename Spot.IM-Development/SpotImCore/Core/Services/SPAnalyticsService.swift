@@ -145,8 +145,8 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         case .messageContextMenuClosed(let newMessageId, let relatedMessage):
             messageId = newMessageId
             relatedMessageId = relatedMessage
-        case .commentEdited(let newMessageId, let relatedMessage):
-            messageId = newMessageId
+        case .commentEdited(let currentMessageId, let relatedMessage):
+            messageId = currentMessageId
             relatedMessageId = relatedMessage
         default:
             break
