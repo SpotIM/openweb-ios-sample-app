@@ -122,10 +122,8 @@ class SPCommentCreationModel {
             parameters[SPRequestKeys.conversationId] = dataModel.postId
         }
         
-        if isInEditMode() {
-            if let messageId = dataModel.editModel?.commentId {
-                parameters[SPRequestKeys.messageId] = messageId
-            }
+        if let messageId = dataModel.editModel?.commentId {
+            parameters[SPRequestKeys.messageId] = messageId
         }
         
         parameters[SPRequestKeys.metadata] = metadata
