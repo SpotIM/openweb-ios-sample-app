@@ -447,26 +447,16 @@ extension SpotImSDKFlowCoordinator: SPSafariWebPageDelegate {
 extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func createComment(with dataModel: SPMainConversationModel) {
-        let model = SPCommentCreationModel(
-            commentCreationDTO: dataModel.dataSource.commentCreationModel(),
-            cacheService: commentsCacheService,
-            updater: conversationUpdater,
-            imageProvider: imageProvider,
-            articleMetadate: dataModel.dataSource.articleMetadata
-        )
         
+        let model = getCommentCreationModel(with: dataModel.dataSource.commentCreationModel(),
+                                            articleMetadata: dataModel.dataSource.articleMetadata)
         setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
     
     internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
         
-        let model = SPCommentCreationModel(
-            commentCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
-            cacheService: commentsCacheService,
-            updater: conversationUpdater,
-            imageProvider: imageProvider,
-            articleMetadate: dataModel.dataSource.articleMetadata
-        )
+        let model = getCommentCreationModel(with: dataModel.dataSource.replyCreationModel(for: id),
+                                            articleMetadata: dataModel.dataSource.articleMetadata)
         
         setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
@@ -474,13 +464,8 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     internal func editComment(with dataModel: SPMainConversationModel,
                               to id: String) {
         
-        let model = SPCommentCreationModel(
-            commentCreationDTO: dataModel.dataSource.editCommentModel(for: id),
-            cacheService: commentsCacheService,
-            updater: conversationUpdater,
-            imageProvider: imageProvider,
-            articleMetadate: dataModel.dataSource.articleMetadata
-        )
+        let model = getCommentCreationModel(with: dataModel.dataSource.editCommentModel(for: id),
+                                            articleMetadata: dataModel.dataSource.articleMetadata)
         
         setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
@@ -493,6 +478,16 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
         controller.userAuthFlowDelegate = self
         dataModel.dataSource.showReplies = true
         presentContentCreationViewController(controller: controller, dataModel)
+    }
+    
+    internal func getCommentCreationModel(with dto: SPCommentCreationDTO, articleMetadata : SpotImArticleMetadata) -> SPCommentCreationModel {
+        return SPCommentCreationModel(
+            commentCreationDTO: dto,
+            cacheService: commentsCacheService,
+            updater: conversationUpdater,
+            imageProvider: imageProvider,
+            articleMetadate: articleMetadata
+        )
     }
 }
 
