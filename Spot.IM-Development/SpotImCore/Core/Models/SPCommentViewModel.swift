@@ -41,9 +41,7 @@ internal struct CommentViewModel {
     var shouldBeRemoved: Bool = false
     var repliesButtonState: RepliesButtonState = .collapsed
     var isCollapsed: Bool = false
-    var showsStar: Bool = false
     var badgeTitle: String?
-    var badgeIsGamification: Bool = false
     var commentTextCollapsed: Bool = true
 
     var brandColor: UIColor = .brandColor
@@ -131,8 +129,6 @@ internal struct CommentViewModel {
             showsOnline = user.online ?? false
             displayName = user.displayName
             userAvatar = userImageURL
-            badgeIsGamification = false
-            showsStar = false
             badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
         }
 
