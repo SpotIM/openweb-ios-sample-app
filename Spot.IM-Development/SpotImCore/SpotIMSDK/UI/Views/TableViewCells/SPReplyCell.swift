@@ -117,7 +117,6 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
         userNameView.setUserName(dataModel.displayName,
                                  badgeTitle: dataModel.badgeTitle,
-                                 isLeader: dataModel.showsStar,
                                  contentType: .reply,
                                  isDeleted: dataModel.isDeletedOrReported(),
                                  isOneLine: dataModel.isUsernameOneRow())
