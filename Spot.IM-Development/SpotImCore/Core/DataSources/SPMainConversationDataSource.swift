@@ -330,21 +330,23 @@ internal final class SPMainConversationDataSource {
         var replyModel : SPReplyCommentDTO?
         var editModel: SPEditCommentDTO?
         
-        if comment?.isAReply() == true {
-            replyModel = SPReplyCommentDTO(
-                authorName: comment?.displayName,
-                commentText: comment?.commentText,
-                commentId: id,
-                rootCommentId: comment?.rootCommentId,
-                parentDepth: comment?.depth
-            )
-        }
-        
-        if let userComment: CommentViewModel = comment {
+        if let userComment = comment {
+            if userComment.isAReply() == true {
+                replyModel = SPReplyCommentDTO(
+                    authorName: userComment.displayName,
+                    commentText: userComment.commentText,
+                    commentId: id,
+                    rootCommentId: userComment.rootCommentId,
+                    parentDepth: userComment.depth
+                )
+            }
+            
             editModel = gatherEditModelData(comment: userComment)
+            return createSPCommentDTO(replyModel: replyModel, editModel: editModel)
         }
         
-        return createSPCommentDTO(replyModel: replyModel, editModel: editModel)
+        return createSPCommentDTO()
+        
     }
     
     internal func createSPCommentDTO(replyModel: SPReplyCommentDTO? = nil, editModel: SPEditCommentDTO? = nil) -> SPCommentCreationDTO {
