@@ -20,12 +20,16 @@ extension NSAttributedString {
 
         guard let lines = linesNS as? [CTLine], !lines.isEmpty else { return self }
 
-        let collapsedText = handleCollapsingOfText(
-            index: index,
-            width: width,
-            isCollapsed: clippedTextSettings.isCollapsed,
-            linesNS: linesNS,
-            lines: lines)
+        var collapsedText: NSAttributedString = NSAttributedString()
+        
+        if index >= linesNS.count {
+            collapsedText = self
+        } else if clippedTextSettings.isCollapsed {
+            collapsedText = readMoreAppended(with: index, lines, width)
+        } else {
+            collapsedText = readLessAppended()
+        }
+        
         if clippedTextSettings.isEdited {
             return readEditedAppended(
                 text: collapsedText,
