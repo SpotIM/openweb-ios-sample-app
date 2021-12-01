@@ -221,7 +221,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         userNameView.setUserName(
             dataModel.displayName,
             badgeTitle: dataModel.badgeTitle,
-            isLeader: dataModel.showsStar,
             contentType: .reply,
             isDeleted: dataModel.isDeletedOrReported(),
             isOneLine: dataModel.isUsernameOneRow())

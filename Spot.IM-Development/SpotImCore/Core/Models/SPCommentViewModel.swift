@@ -155,11 +155,11 @@ internal struct CommentViewModel {
     // check if userName & badge texts should be in one row or two
     func isUsernameOneRow() -> Bool {
         let leadingOffset: CGFloat = depthOffset()
-        let lineWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - 44 /*avatar width*/ - 25 /*username trailing constraint*/
+        let lineWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - Theme.avatarWidth - Theme.usernameTrailing
         
         let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? "") , attributes: [.font: UIFont.preferred(style: .medium, of: Theme.fontSize)])
         
-        return attributedMessage.width(withConstrainedHeight: 19) < lineWidth
+        return attributedMessage.width(withConstrainedHeight: Theme.usernameLineHeight) < lineWidth
     }
     
     func usernameViewHeight() -> CGFloat {
@@ -255,6 +255,9 @@ internal struct CommentViewModel {
         static let lastInSectionOffset: CGFloat = 19.0
         static let commentLabelViewHeight: CGFloat = 28.0
         static let commentMediaMaxHeight: Float = 226.0
+        static let avatarWidth: CGFloat = 44
+        static let usernameTrailing: CGFloat = 25
+        static let usernameLineHeight: CGFloat = 19
     }
 
     private func message() -> String {
@@ -305,6 +308,8 @@ internal struct CommentViewModel {
     
     // if user role exist in config translationTextOverrides -> return translation, else return user authorityTitle
     private func getUserBadgeUsingConfig(user: SPUser) -> String? {
+        guard user.isStaff else { return nil }
+        
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
            let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
