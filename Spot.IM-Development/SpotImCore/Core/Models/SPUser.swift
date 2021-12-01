@@ -40,6 +40,10 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
         return isAdmin || isModerator || isJournalist
     }
     
+    var isStaff: Bool {
+        return isSuperAdmin || isAdmin || isJournalist || isModerator || isCommunityModerator
+    }
+    
     var hasGamification: Bool {
         if !badgeType.isEmpty && badgeType != "newbie" {
             return true

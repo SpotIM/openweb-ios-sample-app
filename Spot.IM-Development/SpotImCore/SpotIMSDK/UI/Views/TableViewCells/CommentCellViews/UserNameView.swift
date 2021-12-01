@@ -21,7 +21,6 @@ internal final class UserNameView: BaseView {
     private let nameAndBadgeStackview = UIStackView()
     private let subtitleLabel: BaseLabel = .init()
     private let dateLabel: BaseLabel = .init()
-    private let leaderBadge: BaseUIImageView = .init()
     private let moreButton: BaseButton = .init()
     private let deletedMessageLabel: BaseLabel = .init()
 
@@ -55,7 +54,6 @@ internal final class UserNameView: BaseView {
         userNameLabel.isHidden = showDeletedLabel
         dateLabel.isHidden = showDeletedLabel
         subtitleLabel.isHidden = showDeletedLabel
-        leaderBadge.isHidden = showDeletedLabel
         moreButton.isHidden = showDeletedLabel
         badgeTagLabel.isHidden = showDeletedLabel
         configureDeletedLabel(isReported: isReported)
@@ -64,12 +62,10 @@ internal final class UserNameView: BaseView {
     func setUserName(
         _ name: String?,
         badgeTitle: String?,
-        isLeader: Bool = false,
         contentType: ContentType,
         isDeleted: Bool,
         isOneLine: Bool = true) {
 
-        leaderBadge.tintColor = .brandColor
         switch contentType {
         case .comment:
             userNameLabel.font = .preferred(style: .bold, of: Theme.fontSize)
@@ -86,7 +82,6 @@ internal final class UserNameView: BaseView {
         badgeTagLabel.isHidden = badgeTitle == nil
         badgeTagLabel.textColor = .brandColor
         badgeTagLabel.layer.borderColor = UIColor.brandColor.cgColor
-        leaderBadge.isHidden = !isLeader || isDeleted
     }
 
     /// Subtitle should contains `replying to` and `timestamp` information
@@ -108,13 +103,11 @@ internal final class UserNameView: BaseView {
         addSubviews(deletedMessageLabel,
                     userNameLabel,
                     badgeTagLabel,
-                    leaderBadge,
                     moreButton,
                     subtitleLabel,
                     dateLabel)
         configureNameAndBadgeStackView()
         setupMoreButton()
-        configureLeaderBadge()
         configureSubtitleAndDateLabels()
         updateColorsAccordingToStyle()
     }
@@ -180,17 +173,6 @@ internal final class UserNameView: BaseView {
             $0.trailing.equal(to: trailingAnchor)
         }
         moreButton.addTarget(self, action: #selector(moreTapped), for: .touchUpInside)
-    }
-
-    private func configureLeaderBadge() {
-        leaderBadge.image = UIImage(spNamed: "leader_badge_icon", for: .light)?.withRenderingMode(.alwaysTemplate)
-        leaderBadge.contentMode = .center
-        leaderBadge.isHidden = true
-        leaderBadge.layout {
-            $0.centerY.equal(to: userNameLabel.centerYAnchor)
-            $0.leading.equal(to: userNameLabel.trailingAnchor, offsetBy: 9.0)
-            $0.width.equal(to: 13.0)
-        }
     }
 
     private func configureSubtitleAndDateLabels() {
