@@ -140,12 +140,12 @@ internal final class UserNameView: BaseView {
         nameAndBadgeStackview.addArrangedSubview(badgeTagLabel)
         nameAndBadgeStackview.axis = .horizontal
         nameAndBadgeStackview.alignment = .leading
-        nameAndBadgeStackview.spacing = 4
+        nameAndBadgeStackview.spacing = Theme.badgeLeadingPadding
         
         badgeTagLabel.font = .preferred(style: .medium, of: Theme.labelFontSize)
         badgeTagLabel.layer.borderWidth = 1
         badgeTagLabel.layer.cornerRadius = 3
-        badgeTagLabel.insets = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+        badgeTagLabel.insets = UIEdgeInsets(top: Theme.badgeVerticalInset, left: Theme.badgeHorizontalInset, bottom: Theme.badgeVerticalInset, right: Theme.badgeHorizontalInset)
         badgeTagLabel.layer.masksToBounds = true
         badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -154,7 +154,7 @@ internal final class UserNameView: BaseView {
         nameAndBadgeStackview.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -25)
+            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -Theme.usernameTrailingPadding)
         }
 
         userNameLabel.isUserInteractionEnabled = true
@@ -181,7 +181,7 @@ internal final class UserNameView: BaseView {
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
         subtitleLabel.layout {
-            $0.top.equal(to: nameAndBadgeStackview.bottomAnchor, offsetBy: 6.0)
+            $0.top.equal(to: nameAndBadgeStackview.bottomAnchor, offsetBy: Theme.subtitleTopPadding)
             $0.leading.equal(to: userNameLabel.leadingAnchor)
             $0.trailing.equal(to: dateLabel.leadingAnchor)
         }
@@ -230,4 +230,10 @@ protocol UserNameViewDelegate: class {
 private enum Theme {
     static let fontSize: CGFloat = 16.0
     static let labelFontSize: CGFloat = 12.0
+    
+    static let usernameTrailingPadding: CGFloat = 25.0
+    static let badgeLeadingPadding: CGFloat = 4
+    static let badgeHorizontalInset: CGFloat = 4
+    static let badgeVerticalInset: CGFloat = 2
+    static let subtitleTopPadding: CGFloat = 6
 }
