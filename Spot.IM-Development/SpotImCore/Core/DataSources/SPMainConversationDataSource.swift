@@ -364,15 +364,10 @@ internal final class SPMainConversationDataSource {
     
     private func gatherEditModelData(comment: CommentViewModel) -> SPEditCommentDTO? {
         
-        var commentText: String = ""
-        var commentId: String = ""
+        guard let commentId = comment.commentId,
+              let commentText = comment.commentText
+        else { return nil}
         
-        if let id = comment.commentId {
-            commentId = id
-        }
-        if let text = comment.commentText {
-            commentText = text
-        }
 
         return SPEditCommentDTO(commentId: commentId,
                                 commentText: commentText,
