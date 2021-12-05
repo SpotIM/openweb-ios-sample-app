@@ -15,4 +15,5 @@ struct SPConfigurationConversation: Decodable {
     let typingAggregationTimeSeconds: Int?
     let communityGuidelinesEnabled: Bool?
     let communityGuidelinesTitle: SPCommunityGuidelinesTitle?
+    let translationTextOverrides: [String : [String : String]]? // [language: [key : text]]
 }
