@@ -37,6 +37,10 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         
         labelsViews.forEach { label in
             container.addArrangedSubview(label)
+            label.layout {
+                $0.top.equal(to: container.topAnchor)
+                $0.bottom.equal(to: container.bottomAnchor)
+            }
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
             recognizer.delegate = self
             label.addGestureRecognizer(recognizer)

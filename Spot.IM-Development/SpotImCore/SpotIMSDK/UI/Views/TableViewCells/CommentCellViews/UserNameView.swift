@@ -17,12 +17,11 @@ internal final class UserNameView: BaseView {
     weak var delegate: UserNameViewDelegate?
 
     private let userNameLabel: BaseLabel = .init()
+    private let badgeTagLabel: BaseLabel = .init()
+    private let nameAndBadgeStackview = UIStackView()
     private let subtitleLabel: BaseLabel = .init()
     private let dateLabel: BaseLabel = .init()
-    private let leaderBadge: BaseUIImageView = .init()
-    private let badgeTagLabel: BaseLabel = .init()
     private let moreButton: BaseButton = .init()
-    private let userNameButton: BaseButton = .init()
     private let deletedMessageLabel: BaseLabel = .init()
 
     private var subtitleToNameConstraint: NSLayoutConstraint?
@@ -55,9 +54,7 @@ internal final class UserNameView: BaseView {
         userNameLabel.isHidden = showDeletedLabel
         dateLabel.isHidden = showDeletedLabel
         subtitleLabel.isHidden = showDeletedLabel
-        leaderBadge.isHidden = showDeletedLabel
         moreButton.isHidden = showDeletedLabel
-        userNameButton.isHidden = showDeletedLabel
         badgeTagLabel.isHidden = showDeletedLabel
         configureDeletedLabel(isReported: isReported)
     }
@@ -65,11 +62,10 @@ internal final class UserNameView: BaseView {
     func setUserName(
         _ name: String?,
         badgeTitle: String?,
-        isLeader: Bool = false,
         contentType: ContentType,
-        isDeleted: Bool) {
+        isDeleted: Bool,
+        isOneLine: Bool = true) {
 
-        leaderBadge.tintColor = .brandColor
         switch contentType {
         case .comment:
             userNameLabel.font = .preferred(style: .bold, of: Theme.fontSize)
@@ -80,9 +76,12 @@ internal final class UserNameView: BaseView {
 
         userNameLabel.text = name
         badgeTagLabel.text = badgeTitle
+        
         subtitleToNameConstraint?.isActive = badgeTitle == nil ? true : false
-        badgeTagLabel.textColor = isLeader ? .spForeground3 : .brandColor
-        leaderBadge.isHidden = !isLeader || isDeleted
+        nameAndBadgeStackview.axis = isOneLine ? .horizontal : .vertical
+        badgeTagLabel.isHidden = badgeTitle == nil
+        badgeTagLabel.textColor = .brandColor
+        badgeTagLabel.layer.borderColor = UIColor.brandColor.cgColor
     }
 
     /// Subtitle should contains `replying to` and `timestamp` information
@@ -102,17 +101,13 @@ internal final class UserNameView: BaseView {
 
     private func setupUI() {
         addSubviews(deletedMessageLabel,
-                    userNameButton,
                     userNameLabel,
                     badgeTagLabel,
-                    leaderBadge,
                     moreButton,
                     subtitleLabel,
                     dateLabel)
-        configureUserNameLabel()
+        configureNameAndBadgeStackView()
         setupMoreButton()
-        configureLeaderBadge()
-        configureBadgeTagLabel()
         configureSubtitleAndDateLabels()
         updateColorsAccordingToStyle()
     }
@@ -140,23 +135,31 @@ internal final class UserNameView: BaseView {
         )
     }
 
-    private func configureUserNameLabel() {
+    private func configureNameAndBadgeStackView() {
+        nameAndBadgeStackview.addArrangedSubview(userNameLabel)
+        nameAndBadgeStackview.addArrangedSubview(badgeTagLabel)
+        nameAndBadgeStackview.axis = .horizontal
+        nameAndBadgeStackview.alignment = .leading
+        nameAndBadgeStackview.spacing = Theme.badgeLeadingPadding
+        
+        badgeTagLabel.font = .preferred(style: .medium, of: Theme.labelFontSize)
+        badgeTagLabel.layer.borderWidth = 1
+        badgeTagLabel.layer.cornerRadius = 3
+        badgeTagLabel.insets = UIEdgeInsets(top: Theme.badgeVerticalInset, left: Theme.badgeHorizontalInset, bottom: Theme.badgeVerticalInset, right: Theme.badgeHorizontalInset)
+        badgeTagLabel.layer.masksToBounds = true
+        badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        userNameLabel.layout {
+
+        self.addSubviews(nameAndBadgeStackview)
+        nameAndBadgeStackview.layout {
             $0.top.equal(to: topAnchor)
             $0.leading.equal(to: leadingAnchor)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -69.0)
+            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -Theme.usernameTrailingPadding)
         }
 
-        userNameLabel.isUserInteractionEnabled = false
-
-        userNameButton.addTarget(self, action: #selector(userNameTapped), for: .touchUpInside)
-        userNameButton.layout {
-            $0.top.equal(to: userNameLabel.topAnchor)
-            $0.leading.equal(to: userNameLabel.leadingAnchor)
-            $0.trailing.equal(to: userNameLabel.trailingAnchor)
-            $0.bottom.equal(to: subtitleLabel.bottomAnchor)
-        }
+        userNameLabel.isUserInteractionEnabled = true
+        let labelTap = UITapGestureRecognizer(target: self, action: #selector(userNameTapped))
+        userNameLabel.addGestureRecognizer(labelTap)
     }
 
     private func setupMoreButton() {
@@ -172,34 +175,13 @@ internal final class UserNameView: BaseView {
         moreButton.addTarget(self, action: #selector(moreTapped), for: .touchUpInside)
     }
 
-    private func configureLeaderBadge() {
-        leaderBadge.image = UIImage(spNamed: "leader_badge_icon", for: .light)?.withRenderingMode(.alwaysTemplate)
-        leaderBadge.contentMode = .center
-        leaderBadge.isHidden = true
-        leaderBadge.layout {
-            $0.centerY.equal(to: userNameLabel.centerYAnchor)
-            $0.leading.equal(to: userNameLabel.trailingAnchor, offsetBy: 9.0)
-            $0.width.equal(to: 13.0)
-        }
-    }
-
-    private func configureBadgeTagLabel() {
-        badgeTagLabel.font = .preferred(style: .medium, of: Theme.fontSize)
-        badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        badgeTagLabel.layout {
-            $0.top.equal(to: userNameLabel.bottomAnchor, offsetBy: 6.0)
-            $0.leading.equal(to: userNameLabel.leadingAnchor)
-        }
-    }
-
     private func configureSubtitleAndDateLabels() {
         subtitleLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
         subtitleLabel.layout {
-            $0.top.equal(to: badgeTagLabel.bottomAnchor, offsetBy: 6.0).priority = .defaultHigh
-            subtitleToNameConstraint = $0.top.equal(to: userNameLabel.bottomAnchor, offsetBy: 6.0)
+            $0.top.equal(to: nameAndBadgeStackview.bottomAnchor, offsetBy: Theme.subtitleTopPadding)
             $0.leading.equal(to: userNameLabel.leadingAnchor)
             $0.trailing.equal(to: dateLabel.leadingAnchor)
         }
@@ -247,4 +229,11 @@ protocol UserNameViewDelegate: class {
 
 private enum Theme {
     static let fontSize: CGFloat = 16.0
+    static let labelFontSize: CGFloat = 12.0
+    
+    static let usernameTrailingPadding: CGFloat = 25.0
+    static let badgeLeadingPadding: CGFloat = 4
+    static let badgeHorizontalInset: CGFloat = 4
+    static let badgeVerticalInset: CGFloat = 2
+    static let subtitleTopPadding: CGFloat = 6
 }
