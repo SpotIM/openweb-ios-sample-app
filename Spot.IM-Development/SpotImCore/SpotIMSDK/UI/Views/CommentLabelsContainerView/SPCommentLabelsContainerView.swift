@@ -28,7 +28,10 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         setupUI()
     }
     
-    func setLabelsContainer(labels: [CommentLabel], guidelineText: String, maxLabels: Int) {
+    func setLabelsContainer(labels: [CommentLabel],
+                            guidelineText: String,
+                            maxLabels: Int,
+                            selectedLabelInEditedComment: CommentLabel?) {
         cleanExistingLabels()
         self.maxLabels = maxLabels
         guidelineTextLabel.text = guidelineText
@@ -44,6 +47,12 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
             recognizer.delegate = self
             label.addGestureRecognizer(recognizer)
+            
+            if let selectedLabel = selectedLabelInEditedComment {
+                if label.id == selectedLabel.id {
+                    label.setState(state: .selected)
+                }
+            }
         }
     }
     
