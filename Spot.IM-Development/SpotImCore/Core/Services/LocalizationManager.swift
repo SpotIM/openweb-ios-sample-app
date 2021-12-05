@@ -57,4 +57,9 @@ final class LocalizationManager {
         currentLanguage = config.language
         locale = config.locale
     }
+    
+    static func getLanguageCode() -> String {
+        let currentLanguage = self.currentLanguage ?? SupportedLanguage.english
+        return currentLanguage.rawValue
+    }
 }

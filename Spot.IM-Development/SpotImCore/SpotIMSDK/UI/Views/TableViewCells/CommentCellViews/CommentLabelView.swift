@@ -93,7 +93,6 @@ internal final class CommentLabelView: BaseView {
 
     private func setupUI() {
         addSubviews(labelContainer)
-        self.pinEdges(to: self)
         configureLabelContainer()
         configureLabel()
         configureIconImageView()
@@ -122,7 +121,8 @@ internal final class CommentLabelView: BaseView {
     private func configureLabel() {
         label.font = .preferred(style: .medium, of: Theme.fontSize)
         label.layout {
-            $0.centerY.equal(to: labelContainer.centerYAnchor)
+            $0.top.equal(to: labelContainer.topAnchor)
+            $0.bottom.equal(to: labelContainer.bottomAnchor)
             $0.trailing.equal(to: labelContainer.trailingAnchor, offsetBy: -Theme.horizontalMargin)
         }
     }
