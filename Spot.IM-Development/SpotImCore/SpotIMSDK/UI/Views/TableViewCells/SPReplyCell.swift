@@ -117,9 +117,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
         userNameView.setUserName(dataModel.displayName,
                                  badgeTitle: dataModel.badgeTitle,
-                                 isLeader: dataModel.showsStar,
                                  contentType: .reply,
-                                 isDeleted: dataModel.isDeletedOrReported())
+                                 isDeleted: dataModel.isDeletedOrReported(),
+                                 isOneLine: dataModel.isUsernameOneRow())
         userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
@@ -131,7 +131,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 ? dataModel.timestamp
                 : " · ".appending(dataModel.timestamp ?? "")
         )
-        let userViewHeight = dataModel.badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
+        let userViewHeight = dataModel.usernameViewHeight()
         userViewHeightConstraint?.constant = userViewHeight
     }
     
@@ -188,7 +188,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         avatarView.layout {
             $0.leading.equal(to: messageView.leadingAnchor)
             $0.trailing.equal(to: userNameView.leadingAnchor, offsetBy: -Theme.avatarImageViewTrailingOffset)
-            $0.centerY.equal(to: userNameView.centerYAnchor)
+            $0.top.equal(to: userNameView.topAnchor)
             $0.height.equal(to: Theme.avatarSideSize)
             $0.width.equal(to: Theme.avatarSideSize)
         }
