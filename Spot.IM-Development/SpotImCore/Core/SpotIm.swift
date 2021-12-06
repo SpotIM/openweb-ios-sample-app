@@ -45,8 +45,8 @@ public enum SpotImLoginStatus {
 }
 
 public struct SpotImConversationCounters: Codable {
-    let comments: Int
-    let replies: Int
+    public let comments: Int
+    public let replies: Int
 }
 
 public struct SpotImArticleMetadata {
