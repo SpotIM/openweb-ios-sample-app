@@ -196,12 +196,11 @@ extension NSMutableParagraphStyle {
 struct SPClippedTextSettings {
     var isCollapsed: Bool
     var isEdited: Bool
-    var fontPointSize: CGFloat
+    var fontPointSize: CGFloat = CGFloat(0.0)
 
     init(collapsed: Bool,
          edited: Bool) {
         self.isCollapsed = collapsed
         self.isEdited = edited
-        self.fontPointSize = CGFloat(0.0)
     }
 }
