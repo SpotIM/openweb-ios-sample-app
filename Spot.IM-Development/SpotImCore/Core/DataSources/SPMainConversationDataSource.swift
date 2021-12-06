@@ -366,7 +366,7 @@ internal final class SPMainConversationDataSource {
         
         guard let commentId = comment.commentId,
               let commentText = comment.commentText
-        else { return nil}
+        else { return nil }
         
 
         return SPEditCommentDTO(commentId: commentId,
