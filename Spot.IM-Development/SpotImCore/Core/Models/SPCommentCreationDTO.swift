@@ -29,7 +29,7 @@ struct SPReplyCommentDTO {
 
 struct SPEditCommentDTO {
     let commentId: String
-    let commentText: String
+    let commentText: String?
     let commentImage: CommentImage?
     let commentLabel: CommentLabel?
     let commentGifUrl: String?
