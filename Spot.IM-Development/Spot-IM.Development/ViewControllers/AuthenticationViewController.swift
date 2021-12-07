@@ -134,6 +134,7 @@ class AuthenticstionViewController: UIViewController {
             } else {
                 self.genericAuthDone = false
             }
+            self.navigationController?.popViewController(animated: false)
         }
     }
     

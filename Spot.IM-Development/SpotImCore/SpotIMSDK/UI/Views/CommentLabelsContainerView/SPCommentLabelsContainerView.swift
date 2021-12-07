@@ -29,6 +29,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     }
     
     func setLabelsContainer(labels: [CommentLabel], guidelineText: String, maxLabels: Int) {
+        cleanExistingLabels()
         self.maxLabels = maxLabels
         guidelineTextLabel.text = guidelineText
         guidelineTextLabel.numberOfLines = 1
@@ -36,9 +37,21 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
         
         labelsViews.forEach { label in
             container.addArrangedSubview(label)
+            label.layout {
+                $0.top.equal(to: container.topAnchor)
+                $0.bottom.equal(to: container.bottomAnchor)
+            }
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
             recognizer.delegate = self
             label.addGestureRecognizer(recognizer)
+        }
+    }
+    
+    private func cleanExistingLabels() {
+        labelsViews.removeAll()
+        container.arrangedSubviews.forEach { view in
+            view.removeFromSuperview()
+            container.removeArrangedSubview(view)
         }
     }
     
