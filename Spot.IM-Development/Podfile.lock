@@ -59,7 +59,7 @@ PODS:
   - SnapKit (4.2.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 5.2)
+  - Alamofire (~> 5.4)
   - Cards
   - Crashlytics
   - Fabric
@@ -101,6 +101,6 @@ SPEC CHECKSUMS:
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: a93af8a7102754c087279572a5c7e6687e042f8f
+PODFILE CHECKSUM: 820370962b95f1dd7e075a55205703c637431aac
 
 COCOAPODS: 1.10.2
