@@ -41,9 +41,7 @@ internal struct CommentViewModel {
     var shouldBeRemoved: Bool = false
     var repliesButtonState: RepliesButtonState = .collapsed
     var isCollapsed: Bool = false
-    var showsStar: Bool = false
     var badgeTitle: String?
-    var badgeIsGamification: Bool = false
     var commentTextCollapsed: Bool = true
 
     var brandColor: UIColor = .brandColor
@@ -131,15 +129,7 @@ internal struct CommentViewModel {
             showsOnline = user.online ?? false
             displayName = user.displayName
             userAvatar = userImageURL
-            if user.isAuthority {
-                badgeIsGamification = false
-                showsStar = false
-                badgeTitle = user.authorityTitle
-            } else if user.hasGamification {
-                badgeIsGamification = true
-                showsStar = true
-                badgeTitle = nil
-            } 
+            badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
         }
 
         self.replyingToCommentId = replyingToCommentId
@@ -160,6 +150,20 @@ internal struct CommentViewModel {
         let textWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset
         
         return textWidth
+    }
+    
+    // check if userName & badge texts should be in one row or two
+    func isUsernameOneRow() -> Bool {
+        let leadingOffset: CGFloat = depthOffset()
+        let lineWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - Theme.avatarWidth - Theme.usernameTrailing
+        
+        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? "") , attributes: [.font: UIFont.preferred(style: .medium, of: Theme.fontSize)])
+        
+        return attributedMessage.width(withConstrainedHeight: Theme.usernameLineHeight) < lineWidth
+    }
+    
+    func usernameViewHeight() -> CGFloat {
+        return isUsernameOneRow() ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
     }
     
     func getMediaSize() -> CGSize {
@@ -200,7 +204,7 @@ internal struct CommentViewModel {
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
-        let userViewHeight: CGFloat = badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
+        let userViewHeight: CGFloat = usernameViewHeight()
         let commentLabelHeight: CGFloat = Theme.commentLabelViewHeight
         
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
@@ -251,6 +255,9 @@ internal struct CommentViewModel {
         static let lastInSectionOffset: CGFloat = 19.0
         static let commentLabelViewHeight: CGFloat = 28.0
         static let commentMediaMaxHeight: Float = 226.0
+        static let avatarWidth: CGFloat = 44
+        static let usernameTrailing: CGFloat = 25
+        static let usernameLineHeight: CGFloat = 19
     }
 
     private func message() -> String {
@@ -298,7 +305,35 @@ internal struct CommentViewModel {
         }
         return nil
     }
+    
+    // if user role exist in config translationTextOverrides -> return translation, else return user authorityTitle
+    private func getUserBadgeUsingConfig(user: SPUser) -> String? {
+        guard user.isStaff else { return nil }
+        
+        if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
+           let translations = conversationConfig.translationTextOverrides,
+           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
+        {
+            if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
+                return adminBadge
+            } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {
+                return jurnalistBadge
+            } else if user.isModerator, let moderatorBadge = currentTranslation[BadgesOverrideKeys.moderator.rawValue] {
+                return moderatorBadge
+            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue]  {
+                return communityModeratorBadge
+            }
+        }
+        return user.authorityTitle
+    }
 
+}
+
+enum BadgesOverrideKeys: String {
+    case admin = "user.badges.admin"
+    case journalist = "user.badges.jurnalist"
+    case moderator = "user.badges.moderator"
+    case communityModerator = "user.badges.community-moderator"
 }
 
 struct CommentLabel {

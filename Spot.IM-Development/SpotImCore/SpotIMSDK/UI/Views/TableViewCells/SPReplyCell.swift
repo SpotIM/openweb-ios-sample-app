@@ -82,10 +82,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             commentMediaViewTopConstraint?.constant = dataModel.isDeletedOrReported() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding
             commentMediaViewWidthConstraint?.constant = 0
             commentMediaViewHeightConstraint?.constant = 0
+            commentMediaView.clearExistingMedia()
             return
         }
         let mediaSize = dataModel.getMediaSize()
-        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl, width: Float(mediaSize.width), height: Float(mediaSize.height))
+        commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl)
         commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
         commentMediaViewWidthConstraint?.constant = mediaSize.width
         commentMediaViewHeightConstraint?.constant = mediaSize.height
@@ -116,9 +117,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
         userNameView.setUserName(dataModel.displayName,
                                  badgeTitle: dataModel.badgeTitle,
-                                 isLeader: dataModel.showsStar,
                                  contentType: .reply,
-                                 isDeleted: dataModel.isDeletedOrReported())
+                                 isDeleted: dataModel.isDeletedOrReported(),
+                                 isOneLine: dataModel.isUsernameOneRow())
         userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
@@ -130,7 +131,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 ? dataModel.timestamp
                 : " · ".appending(dataModel.timestamp ?? "")
         )
-        let userViewHeight = dataModel.badgeTitle == nil ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
+        let userViewHeight = dataModel.usernameViewHeight()
         userViewHeightConstraint?.constant = userViewHeight
     }
     
@@ -187,7 +188,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         avatarView.layout {
             $0.leading.equal(to: messageView.leadingAnchor)
             $0.trailing.equal(to: userNameView.leadingAnchor, offsetBy: -Theme.avatarImageViewTrailingOffset)
-            $0.centerY.equal(to: userNameView.centerYAnchor)
+            $0.top.equal(to: userNameView.topAnchor)
             $0.height.equal(to: Theme.avatarSideSize)
             $0.width.equal(to: Theme.avatarSideSize)
         }
@@ -290,12 +291,12 @@ extension SPReplyCell: CommentActionsDelegate {
         delegate?.replyTapped(for: commentId)
     }
     
-    func rankUp(_ rankChange: SPRankChange) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
+    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
     }
     
-    func rankDown(_ rankChange: SPRankChange) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
+    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
     }
 }
 

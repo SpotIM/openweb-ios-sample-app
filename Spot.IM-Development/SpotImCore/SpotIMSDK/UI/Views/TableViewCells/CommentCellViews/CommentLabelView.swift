@@ -93,9 +93,6 @@ internal final class CommentLabelView: BaseView {
 
     private func setupUI() {
         addSubviews(labelContainer)
-        self.layout {
-            $0.height.equal(to: Theme.labelHeight)
-        }
         configureLabelContainer()
         configureLabel()
         configureIconImageView()
@@ -124,8 +121,8 @@ internal final class CommentLabelView: BaseView {
     private func configureLabel() {
         label.font = .preferred(style: .medium, of: Theme.fontSize)
         label.layout {
-            $0.top.equal(to: labelContainer.topAnchor, offsetBy: Theme.verticalMargin)
-            $0.bottom.equal(to: labelContainer.bottomAnchor, offsetBy: -Theme.verticalMargin)
+            $0.top.equal(to: labelContainer.topAnchor)
+            $0.bottom.equal(to: labelContainer.bottomAnchor)
             $0.trailing.equal(to: labelContainer.trailingAnchor, offsetBy: -Theme.horizontalMargin)
         }
     }
@@ -137,7 +134,6 @@ private enum Theme {
     static let fontSize: CGFloat = 13.0
     static let iconImageHeight: CGFloat = 24.0
     static let iconImageWidth: CGFloat = 14.0
-    static let labelHeight: CGFloat = 28.0
     static let horizontalMargin: CGFloat = 10.0
     static let verticalMargin: CGFloat = 5.0
 }
