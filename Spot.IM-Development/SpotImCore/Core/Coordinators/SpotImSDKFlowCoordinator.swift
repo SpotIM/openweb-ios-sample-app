@@ -48,6 +48,8 @@ internal protocol SPSafariWebPageDelegate: AnyObject {
     func openWebPage(with urlString: String)
 }
 
+public typealias SPShowFullConversationCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
+
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
     func presentControllerForSSOFlow(with spotNavController: UIViewController) {
@@ -158,11 +160,11 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
-    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata) {
-        pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil)
+    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: SPShowFullConversationCompletionHandler? = nil) {
+        pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil, completion: completion)
     }
     
-    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?)
+    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil)
     {
         self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
@@ -171,18 +173,20 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 controller.commentIdToShowOnOpen = selectedCommentId
                 self.conversationModel!.dataSource.showReplies = true
                 self.startFlow(with: controller)
+                completion?(true, nil)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
                     self.pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
+                completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                 break
             }
         }
     }
     
     
-    public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?) {
+    public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil) {
         
         // create nav controller in code to be the container for conversationController
         let navController = PresentedContainerNavigationController()
@@ -208,11 +212,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                 conversationController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
                 
                 viewController.present(navController, animated: true, completion: nil)
+                completion?(true, nil)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
                     self.presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
+                completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                 break
             }
         }
@@ -382,8 +388,9 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
         return navigationItemTextView
     }
 
-    private func presentContentCreationViewController<T: SPBaseCommentCreationModel>(controller: SPBaseCommentCreationViewController<T>,
-                                                                           _ dataModel: SPMainConversationModel) {
+    private func presentContentCreationViewController(
+        controller: SPCommentCreationViewController,
+        _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
 
@@ -438,39 +445,39 @@ extension SpotImSDKFlowCoordinator: SPSafariWebPageDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
-
+    
     internal func createComment(with dataModel: SPMainConversationModel) {
-        let controller = SPCommentCreationViewController(customUIDelegate: self)
-        controller.delegate = self
-        controller.userAuthFlowDelegate = self
-        
         let model = SPCommentCreationModel(
-            commentCreationDTO: dataModel.dataSource.commentCreationModel(),
+            baseCommentCreationDTO: dataModel.dataSource.commentCreationModel(),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
             articleMetadate: dataModel.dataSource.articleMetadata
         )
-        controller.model = model
-        dataModel.dataSource.showReplies = true
-        presentContentCreationViewController(controller: controller, dataModel)
+        
+        setupAndPresentCommentCreation(with: model, dataModel: dataModel)
     }
     
     internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
-        let controller = SPReplyCreationViewController(customUIDelegate: self)
-        controller.delegate = self
-        controller.userAuthFlowDelegate = self
         
-        let model = SPReplyCreationModel(
-            replyCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
+        let model = SPCommentCreationModel(
+            baseCommentCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
-            articleMetadata: dataModel.dataSource.articleMetadata
+            articleMetadate: dataModel.dataSource.articleMetadata
         )
-        controller.model = model
-        dataModel.dataSource.showReplies = true
         
+        setupAndPresentCommentCreation(with: model, dataModel: dataModel)
+    }
+
+    internal func setupAndPresentCommentCreation(with model: SPCommentCreationModel,
+                                    dataModel: SPMainConversationModel) {
+        
+        let controller = SPCommentCreationViewController(customUIDelegate: self, model: model)
+        controller.delegate = self
+        controller.userAuthFlowDelegate = self
+        dataModel.dataSource.showReplies = true
         presentContentCreationViewController(controller: controller, dataModel)
     }
 }

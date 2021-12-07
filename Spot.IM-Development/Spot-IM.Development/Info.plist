@@ -24,9 +24,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6.6</string>
+	<string>1.6.9</string>
 	<key>CFBundleVersion</key>
-	<string>212</string>
+	<string>216</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -81,5 +81,7 @@
 	<string>This app wants to use your photos.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app wants to take pictures.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
