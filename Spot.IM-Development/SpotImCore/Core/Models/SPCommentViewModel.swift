@@ -24,7 +24,7 @@ internal struct CommentViewModel {
     var repliesRawCount: Int?
     var repliesCount: String?
     var depth: Int = 0
-    var commentLabel: CommentLabel?
+    var commentLabels: [CommentLabel]?
     var commentGifUrl: String?
     var commentImage: CommentImage?
     private var commentMediaOriginalHeight: Int?
@@ -78,7 +78,11 @@ internal struct CommentViewModel {
         if let commentLabelConfig = getCommentLabelFromConfig(comment: comment),
            let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
            let commentLabelIconUrl = commentLabelConfig.getIconUrl() {
-            commentLabel = CommentLabel(id: commentLabelConfig.id ,text: commentLabelConfig.text, iconUrl: commentLabelIconUrl, color: commentLabelColor)
+            commentLabels = []
+            commentLabels?.append(CommentLabel(id: commentLabelConfig.id,
+                                              text: commentLabelConfig.text,
+                                              iconUrl: commentLabelIconUrl,
+                                              color: commentLabelColor))
         }
         
         if let gif = comment.gif {
@@ -223,7 +227,7 @@ internal struct CommentViewModel {
             + (isDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
             + textHeight
             + (isCollapsed ? 0.0 : moreRepliesHeight)
-            + ((isDeletedOrReported() || commentLabel == nil) ? 0.0 : commentLabelHeight)
+            + ((isDeletedOrReported() || commentLabels == nil) ? 0.0 : commentLabelHeight)
             + (isDeletedOrReported() ? 0.0 : mediaHeight)
 
         return height
