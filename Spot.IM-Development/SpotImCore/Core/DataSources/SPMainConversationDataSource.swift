@@ -370,7 +370,7 @@ internal final class SPMainConversationDataSource {
         return SPEditCommentDTO(commentId: commentId,
                                 commentText: comment.commentText,
                                 commentImage: comment.commentImage,
-                                commentLabel: comment.commentLabel,
+                                commentLabels: comment.commentLabels,
                                 commentGifUrl: comment.commentGifUrl)
     }
     
