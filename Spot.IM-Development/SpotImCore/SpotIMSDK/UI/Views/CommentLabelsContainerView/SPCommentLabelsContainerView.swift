@@ -31,7 +31,7 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
     func setLabelsContainer(labels: [CommentLabel],
                             guidelineText: String,
                             maxLabels: Int,
-                            selectedLabelsInEditedComment: [CommentLabel]?) {
+                            selectedLabelsInEditedComment: [String]?) {
         cleanExistingLabels()
         self.maxLabels = maxLabels
         guidelineTextLabel.text = guidelineText
@@ -50,15 +50,10 @@ internal final class SPCommentLabelsContainerView: BaseView, UIGestureRecognizer
             
     
             if let selectedLabels = selectedLabelsInEditedComment {
-                let foundLabel = selectedLabels.contains { commentLabel in
-                    if commentLabel.id == label.id {
-                        return true
-                    } else {
-                        return false
-                    }
-                }
-                if foundLabel {
+                let labelId = selectedLabels.firstIndex(of: label.id)
+                if labelId != nil {
                     label.setState(state: .selected)
+                    selectedLabelsIds.append(label.id)
                 }
             }
         }
