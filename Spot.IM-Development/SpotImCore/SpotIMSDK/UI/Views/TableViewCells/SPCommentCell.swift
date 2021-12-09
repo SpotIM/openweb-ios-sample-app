@@ -238,13 +238,13 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabels = dataModel.commentLabels,
-           dataModel.isDeletedOrReported() == false {
-            let commentLabel = commentLabels[0]
+           dataModel.isDeletedOrReported() == false,
+           let selectedCommentLabel = getFirstSelectedCommentLabel(commentLabels: commentLabels) {
             commentLabelView.setLabel(
-                commentLabelIconUrl: commentLabel.iconUrl,
-                labelColor: commentLabel.color,
-                labelText: commentLabel.text,
-                labelId: commentLabel.id,
+                commentLabelIconUrl: selectedCommentLabel.iconUrl,
+                labelColor: selectedCommentLabel.color,
+                labelText: selectedCommentLabel.text,
+                labelId: selectedCommentLabel.id,
                 state: .readOnly)
             commentLabelView.isHidden = false
             commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
@@ -252,6 +252,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             commentLabelHeightConstraint?.constant = 0
             commentLabelView.isHidden = true
         }
+    }
+    
+    private func getFirstSelectedCommentLabel(commentLabels: [CommentLabel]?) -> CommentLabel? {
+        
+        return commentLabels?.first { commentLabel in
+            commentLabel.isSelected == true
+        }
+        
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
