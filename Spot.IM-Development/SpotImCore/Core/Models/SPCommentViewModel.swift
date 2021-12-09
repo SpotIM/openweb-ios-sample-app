@@ -75,15 +75,24 @@ internal struct CommentViewModel {
             isReported = SPUserSessionHolder.session.reportedComments[commentId] ?? false
         }
         
-        if let commentLabelConfig = getCommentLabelFromConfig(comment: comment),
-           let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
-           let commentLabelIconUrl = commentLabelConfig.getIconUrl() {
+        if let commentLabelsConfig = getCommentLabelsFromConfig(comment: comment) {
             commentLabels = []
-            commentLabels?.append(CommentLabel(id: commentLabelConfig.id,
-                                              text: commentLabelConfig.text,
-                                              iconUrl: commentLabelIconUrl,
-                                              color: commentLabelColor))
+            for commentLabelConfig in commentLabelsConfig {
+                if let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
+                   let commentLabelIconUrl = commentLabelConfig.getIconUrl(),
+                   let commentLabelIsSelected = isCommentLabelSelected(
+                    additonalData: comment.additionalData,
+                    commentLabelIdToFind: commentLabelConfig.id) {
+                    commentLabels?.append(CommentLabel(id: commentLabelConfig.id,
+                                                      text: commentLabelConfig.text,
+                                                      iconUrl: commentLabelIconUrl,
+                                                      color: commentLabelColor,
+                                                      isSelected: commentLabelIsSelected)
+                    )
+                }
+            }
         }
+            
         
         if let gif = comment.gif {
             commentGifUrl = gif.originalUrl
@@ -140,6 +149,20 @@ internal struct CommentViewModel {
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
+    }
+    
+    func isCommentLabelSelected(additonalData: SPComment.AdditionalData?,
+                                commentLabelIdToFind: String) -> Bool? {
+        if let commentLabels = additonalData?.labels {
+            if let commentLabelIds = commentLabels.ids {
+                let foundCommentLabel = commentLabelIds.firstIndex(of: commentLabelIdToFind)
+                if foundCommentLabel != nil {
+                    return true
+                }
+            }
+        }
+        
+        return false
     }
     
     func getCommentTextFromHtmlString(htmlString: String) -> String? {
@@ -304,7 +327,7 @@ internal struct CommentViewModel {
         return attributes
     }
     
-    private func getCommentLabelFromConfig(comment: SPComment) -> SPLabelConfiguration? {
+    private func getCommentLabelsFromConfig(comment: SPComment) -> [SPLabelConfiguration]? {
         // cross given commentLabels to appConfig labels
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
            sharedConfig.enableCommentLabels == true,
@@ -313,8 +336,7 @@ internal struct CommentViewModel {
            let section = commentLabels.section,
            let commentLabelsConfig = sharedConfig.commentLabels,
            let sectionLabels = commentLabelsConfig[section] {
-            // only the first comment label is shown
-            return sectionLabels.getLabelById(labelId: labelIds[0])
+            return sectionLabels.labels
         }
         return nil
     }
@@ -354,6 +376,7 @@ struct CommentLabel {
     var text: String
     var iconUrl: URL
     var color: UIColor
+    var isSelected: Bool = false
 }
 
 struct CommentImage {
