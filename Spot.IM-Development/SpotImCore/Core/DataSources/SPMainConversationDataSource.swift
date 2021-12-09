@@ -54,6 +54,7 @@ internal final class SPMainConversationDataSource {
     private var users = [String: SPUser]()
     private var extractData: SPConversationExtraDataRM?
     private var cachedCommentReply: CommentViewModel?
+    private var selectedLabelIds: [String]?
     
     internal var showReplies: Bool = false {
         didSet {
@@ -370,7 +371,7 @@ internal final class SPMainConversationDataSource {
         return SPEditCommentDTO(commentId: commentId,
                                 commentText: comment.commentText,
                                 commentImage: comment.commentImage,
-                                commentLabels: comment.commentLabels,
+                                commentLabels: self.selectedLabelIds,
                                 commentGifUrl: comment.commentGifUrl)
     }
     
@@ -797,6 +798,7 @@ extension SPMainConversationDataSource {
         )
         
         cachedCommentReply = viewModel
+        selectedLabelIds = comment.additionalData?.labels?.ids
         
         if comment.isReply && !comment.edited {
             pushLocalReply(reply: comment, viewModel: viewModel)
