@@ -7,7 +7,7 @@ abstract_target 'Shared' do
   # use_frameworks!
   use_modular_headers! 
 
-  pod 'Alamofire', '~> 5.2'
+  pod 'Alamofire', '~> 5.4'
   pod 'PromiseKit', '~> 6.8'
   
   target 'SpotImCore'
