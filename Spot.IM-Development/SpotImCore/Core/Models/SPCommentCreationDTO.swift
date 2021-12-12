@@ -31,6 +31,6 @@ struct SPEditCommentDTO {
     let commentId: String
     let commentText: String?
     let commentImage: CommentImage?
-    var commentLabels: [String]?
+    var commentLabelIds: [String]?
     let commentGifUrl: String?
 }
