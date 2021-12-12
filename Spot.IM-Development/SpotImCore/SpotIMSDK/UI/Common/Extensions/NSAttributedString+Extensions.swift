@@ -119,7 +119,7 @@ extension NSAttributedString {
                        .font: UIFont.italicSystemFont(ofSize: fontPointSize)
         ]
 
-        let editedText = NSAttributedString(string: " (Edited)", attributes: editedTextAttributes)
+        let editedText = NSAttributedString(string: LocalizationManager.localizedString(key: "Edited"), attributes: editedTextAttributes)
 
         let mutableSelf = text.mutableCopy() as? NSMutableAttributedString
         mutableSelf?.append(editedText)
