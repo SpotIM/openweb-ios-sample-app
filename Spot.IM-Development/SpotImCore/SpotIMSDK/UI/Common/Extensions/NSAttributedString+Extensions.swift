@@ -31,7 +31,7 @@ extension NSAttributedString {
         }
         
         if clippedTextSettings.isEdited {
-            return readEditedAppended(
+            collapsedText = readEditedAppended(
                 text: collapsedText,
                 fontPointSize: clippedTextSettings.fontPointSize
             )
