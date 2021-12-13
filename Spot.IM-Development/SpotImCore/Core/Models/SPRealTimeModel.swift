@@ -81,13 +81,14 @@ struct RealTimeDataModel: Decodable {
         return count
     }
     
-    /// Will return the current number of viewing users if it exist and throw onlineUsersViewingNotFound exception if not
-    func onlineUsersViewingCount(_ id: String) throws -> Int {
-        guard let onlineUsersViewing = onlineUsersViewing?[id] else {
+    /// Will return the model of viewing users if it exist and throw onlineUsersViewingNotFound exception if not
+    func onlineUsersViewingCount(_ id: String) throws -> RealTimeOnlineUsersViewingModel {
+        guard let onlineUsersViewingArray = onlineUsersViewing?[id],
+              let onlineUsersViewing = onlineUsersViewingArray.first else {
             throw RealTimeError.onlineUsersViewingNotFound
         }
         
-        return onlineUsersViewing.count
+        return onlineUsersViewing
     }
     
     private func getRealTimeMessagesCountModel(_ id: String) throws -> RealTimeMessagesCountModel {
