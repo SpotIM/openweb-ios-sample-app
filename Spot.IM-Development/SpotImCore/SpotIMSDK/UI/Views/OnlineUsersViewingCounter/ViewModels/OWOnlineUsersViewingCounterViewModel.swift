@@ -14,19 +14,26 @@ protocol OWOnlineUsersViewingCounterViewModelingInputs {
 }
 
 protocol OWOnlineUsersViewingCounterViewModelingOutputs {
-    var viewingCount: ((Int) -> Void)? { get }
+    var viewingCount: ((Int) -> Void)? { get set }
     var image: UIImage { get }
 }
 
 protocol OWOnlineUsersViewingCounterViewModeling {
     var inputs: OWOnlineUsersViewingCounterViewModelingInputs { get }
-    var outputs: OWOnlineUsersViewingCounterViewModelingOutputs { get }
+    var outputs: OWOnlineUsersViewingCounterViewModelingOutputs { get set }
 }
 
 class OWOnlineUsersViewingCounterViewModel: OWOnlineUsersViewingCounterViewModeling, OWOnlineUsersViewingCounterViewModelingInputs, OWOnlineUsersViewingCounterViewModelingOutputs {
-    
     var inputs: OWOnlineUsersViewingCounterViewModelingInputs { return self }
-    var outputs: OWOnlineUsersViewingCounterViewModelingOutputs { return self }
+    var outputs: OWOnlineUsersViewingCounterViewModelingOutputs {
+        get {
+            return self
+        }
+        set(value) {
+            // Do nothing
+            // Current solution because we use closures. We won't need this when we will move to RxSwift / Combine
+        }
+    }
     
     fileprivate var model: RealTimeOnlineUsersViewingModel? {
         didSet {
