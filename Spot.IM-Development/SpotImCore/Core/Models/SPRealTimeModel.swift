@@ -17,6 +17,7 @@ struct RealTimeModel: Decodable {
 internal enum RealTimeError: Error, CustomStringConvertible {
     case conversationNotFound
     case corruptedData
+    case onlineUsersViewingNotFound
     
     var description: String {
         switch self {
@@ -24,6 +25,8 @@ internal enum RealTimeError: Error, CustomStringConvertible {
             return "conversationNotFound"
         case .corruptedData:
             return "corruptedData"
+        case .onlineUsersViewingNotFound:
+            return "onlineUsersViewingNotFound"
         }
     }
 }
@@ -35,12 +38,14 @@ struct RealTimeDataModel: Decodable {
         case conversationTypingV2Count = "conversation/typing-v2-count"
         case conversationTypingV2Users = "conversation/typing-v2-users"
         case onlineUsers = "online/users"
+        case onlineUsersViewing  = "online/users-count"
     }
     
     private let conversationCountMessages: [String: [RealTimeMessagesCountModel]]?
     private let conversationTypingV2Count: [String: [[String: Int]]]?
     private let conversationTypingV2Users: [String: [RealTimeTypingUsersModel]]?
     private let onlineUsers: [String: [RealTimeOnlineUserModel]]?
+    private let onlineUsersViewing: [String: [RealTimeOnlineUsersViewingModel]]?
     
     func totalCommentsCountForConversation(_ id: String) throws -> Int {
         let commentsCounter = try commentsCountForConversation(id)
@@ -74,6 +79,15 @@ struct RealTimeDataModel: Decodable {
         }
         
         return count
+    }
+    
+    /// Will return the current number of viewing users if it exist and throw onlineUsersViewingNotFound exception if not
+    func onlineUsersViewingCount(_ id: String) throws -> Int {
+        guard let onlineUsersViewing = onlineUsersViewing?[id] else {
+            throw RealTimeError.onlineUsersViewingNotFound
+        }
+        
+        return onlineUsersViewing.count
     }
     
     private func getRealTimeMessagesCountModel(_ id: String) throws -> RealTimeMessagesCountModel {
@@ -113,4 +127,8 @@ struct RealTimeTypingUsersModel: Decodable {
     let users: [RealTimeOnlineUserModel]?
     let count: Int
     let key: String
+}
+
+struct RealTimeOnlineUsersViewingModel: Decodable {
+    let count: Int
 }
