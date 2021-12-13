@@ -15,6 +15,8 @@ class OWOnlineUsersViewingCounterView: UIView {
         static let viewersFontSize: CGFloat = 14.0
     }
     
+    fileprivate var viewModel: OWOnlineUsersViewingCounterViewModeling!
+    
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
         img.contentMode = .scaleAspectFill
@@ -27,5 +29,29 @@ class OWOnlineUsersViewingCounterView: UIView {
         lbl.textColor = .spForeground3
         return lbl
     }()
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupViews()
+    }
+
+    func configure(with viewModel: OWOnlineUsersViewingCounterViewModeling) {
+        self.viewModel = viewModel
+        configureViews()
+    }
+}
+
+fileprivate extension OWOnlineUsersViewingCounterView {
+    func setupViews() {
+        
+    }
+    
+    func configureViews() {
+        imgViewIcon.image = viewModel.outputs.image
+        viewModel.outputs.viewingCount = { [weak self] viewingCount in
+            guard let self = self else { return }
+            self.lblViewersNumber.text = "\(viewingCount)"
+        }
+    }
 }
 
