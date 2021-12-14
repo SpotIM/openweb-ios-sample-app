@@ -448,7 +448,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func createComment(with dataModel: SPMainConversationModel) {
         let model = SPCommentCreationModel(
-            baseCommentCreationDTO: dataModel.dataSource.commentCreationModel(),
+            commentCreationDTO: dataModel.dataSource.commentCreationModel(),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
@@ -461,7 +461,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     internal func createReply(with dataModel: SPMainConversationModel, to id: String) {
         
         let model = SPCommentCreationModel(
-            baseCommentCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
+            commentCreationDTO: dataModel.dataSource.replyCreationModel(for: id),
             cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
