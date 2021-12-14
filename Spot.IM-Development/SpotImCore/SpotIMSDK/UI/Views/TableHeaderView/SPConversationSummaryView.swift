@@ -8,21 +8,77 @@
 
 import UIKit
 
-internal protocol SPConversationSummaryViewDelegate: class {
-    
+internal protocol SPConversationSummaryViewDelegate: AnyObject {
+
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView)
     func newCommentsDidTap(_ summaryView: SPConversationSummaryView)
-
 }
 
 final class SPConversationSummaryView: BaseView {
 
-    private let commentsCountLabel: BaseLabel = .init()
-    private let separatorView: BaseView = .init()
-    private let sortByLabel: BaseLabel = .init()
-    private let sortButton: BaseButton = .init()
-    private let newCommentsButton: BaseButton = .init()
+    private lazy var commentsCountLabel: BaseLabel = {
+        let lbl = BaseLabel()
+        lbl.font = UIFont.preferred(style: .regular, of: Metrics.commentsFontSize)
+        return lbl
+    }()
+    
+    private lazy var sortByLabel: BaseLabel = {
+        let lbl = BaseLabel()
+        lbl.font = UIFont.preferred(style: .regular, of: Metrics.sortButtonFontSize)
+        lbl.text = LocalizationManager.localizedString(key: "Sort by")
+        return lbl
+    }()
+    
+    private lazy var sortButton: BaseButton = {
+        let btn = BaseButton()
+        btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.sortButtonFontSize)
+        let spacing: CGFloat = Metrics.insetTiny
+        var inset: CGFloat = spacing / 2
+        
+        // Update insets in order to make additional space begween title and image
+        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
+            inset = -inset
+        }
+        
+        btn.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -inset, bottom: 0.0, right: inset)
+        btn.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: -inset)
+        btn.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: inset)
+        
+        // Transform Button in order to put image to the right
+        btn.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        btn.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        btn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+        
+        btn.addTarget(self, action: #selector(selectSorting), for: .touchUpInside)
+        
+        return btn
+    }()
+    
+    private lazy var newCommentsButton: BaseButton = {
+        let btn = BaseButton()
 
+        btn.isHidden = true
+        btn.titleLabel?.font = UIFont.preferred(style: .regular, of: Metrics.newCommentsFontSize)
+        btn.contentEdgeInsets = UIEdgeInsets(
+            top: Metrics.newCommentsButtonVerticalInset,
+            left: Metrics.newCommentsButtonHorizontalInset,
+            bottom: Metrics.newCommentsButtonVerticalInset,
+            right: Metrics.newCommentsButtonHorizontalInset
+        )
+        btn.addCornerRadius(Metrics.newCommentsButtonRadius)
+        
+        btn.addTarget(self, action: #selector(selectNewComments), for: .touchUpInside)
+        
+        return btn
+    }()
+    
+    private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
+       return OWOnlineViewingUsersCounterView()
+    }()
+
+    private let bottomHorizontalSeparator = BaseView()
+    private let verticalSeparatorBetweenCommentsAndViewingUsers = BaseView()
+    
     internal var dropsShadow: Bool = false
     
     weak var delegate: SPConversationSummaryViewDelegate?
@@ -39,7 +95,6 @@ final class SPConversationSummaryView: BaseView {
         super.init(frame: frame)
         
         setupUI()
-        configureButtonsTargets()
     }
     
     // Handle dark mode \ light mode change
@@ -52,7 +107,7 @@ final class SPConversationSummaryView: BaseView {
         sortByLabel.textColor = .spForeground0
         newCommentsButton.setTitleColor(.white, for: .normal)
         newCommentsButton.backgroundColor = .brandColor
-        separatorView.backgroundColor = .spSeparator2
+        bottomHorizontalSeparator.backgroundColor = .spSeparator2
     }
     
     // MARK: - Internal methods    
@@ -65,13 +120,6 @@ final class SPConversationSummaryView: BaseView {
     
     func updateSortOption(_ title: String) {
         sortButton.setTitle(title, for: .normal)
-    }
-    
-    // MARK: - Selectors
-    
-    private func configureButtonsTargets() {
-        sortButton.addTarget(self, action: #selector(selectSorting), for: .touchUpInside)
-        newCommentsButton.addTarget(self, action: #selector(selectNewComments), for: .touchUpInside)
     }
     
     // MARK: - Actions
@@ -90,95 +138,58 @@ final class SPConversationSummaryView: BaseView {
 extension SPConversationSummaryView {
     
     private func setupUI() {
-        addSubviews(commentsCountLabel, newCommentsButton, sortByLabel, sortButton, separatorView)
+        addSubviews(newCommentsButton, sortByLabel, sortButton, bottomHorizontalSeparator)
         
-        configureCommentCountLabel()
-        configureSortByLabel()
-        configureSortButton()
-        configureNewCommentsButton()
-        configureSeparatorView()
-        updateColorsAccordingToStyle()
-    }
-    
-    private func configureCommentCountLabel() {
-        commentsCountLabel.font = UIFont.preferred(style: .regular, of: Theme.commentsFontSize)
+        // Setup comments label
+        self.addSubview(commentsCountLabel)
         commentsCountLabel.layout {
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
-                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Theme.sideOffset)
+                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Metrics.sideOffset)
             } else {
-                $0.leading.equal(to: leadingAnchor, offsetBy: Theme.sideOffset)
+                $0.leading.equal(to: leadingAnchor, offsetBy: Metrics.sideOffset)
             }
             $0.centerY.equal(to: centerYAnchor)
         }
-    }
-    
-    private func configureSortByLabel() {
-        sortByLabel.font = UIFont.preferred(style: .regular, of: Theme.sortButtonFontSize)
-        sortByLabel.text = LocalizationManager.localizedString(key: "Sort by")
         
+        // Setup sort label
+        self.addSubview(sortByLabel)
         sortByLabel.layout {
-            $0.trailing.equal(to: sortButton.leadingAnchor, offsetBy: -Theme.sortByTrailingOffset)
+            $0.trailing.equal(to: sortButton.leadingAnchor, offsetBy: -Metrics.sortByTrailingOffset)
             $0.bottom.equal(to: bottomAnchor)
             $0.top.equal(to: topAnchor)
         }
-    }
-    
-    private func configureSortButton() {
-        sortButton.titleLabel?.font = UIFont.preferred(style: .bold, of: Theme.sortButtonFontSize)
-        let spacing: CGFloat = Theme.insetTiny
-        var inset: CGFloat = spacing / 2
         
-        // Update insets in order to make additional space begween title and image
-        if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
-            inset = -inset
-        }
-        
-        sortButton.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -inset, bottom: 0.0, right: inset)
-        sortButton.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: -inset)
-        sortButton.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: inset)
-        
-        // Transform Button in order to put image to the right
-        sortButton.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        sortButton.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        sortButton.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        
+        // Setup sort button
+        self.addSubview(sortButton)
         sortButton.layout {
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
-                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.sideOffset)
+                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Metrics.sideOffset)
             } else {
-                $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.sideOffset)
+                $0.trailing.equal(to: trailingAnchor, offsetBy: -Metrics.sideOffset)
             }
             $0.bottom.equal(to: bottomAnchor)
             $0.top.equal(to: topAnchor)
         }
-    }
-    
-    private func configureNewCommentsButton() {
-        newCommentsButton.isHidden = true
-        newCommentsButton.titleLabel?.font = UIFont.preferred(style: .regular, of: Theme.newCommentsFontSize)
-        newCommentsButton.contentEdgeInsets = UIEdgeInsets(
-            top: Theme.newCommentsButtonVerticalInset,
-            left: Theme.newCommentsButtonHorizontalInset,
-            bottom: Theme.newCommentsButtonVerticalInset,
-            right: Theme.newCommentsButtonHorizontalInset
-        )
-        newCommentsButton.addCornerRadius(Theme.newCommentsButtonRadius)
         
+        // Setup new comments button
+        self.addSubview(sortButton)
         newCommentsButton.layout {
-            $0.leading.equal(to: commentsCountLabel.trailingAnchor, offsetBy: Theme.insetTiny)
+            $0.leading.equal(to: commentsCountLabel.trailingAnchor, offsetBy: Metrics.insetTiny)
             $0.centerY.equal(to: centerYAnchor)
         }
-    }
-    
-    private func configureSeparatorView() {
-        separatorView.layout {
+        
+        // Setup bottom horizontal separator
+        self.addSubview(bottomHorizontalSeparator)
+        bottomHorizontalSeparator.layout {
             $0.leading.equal(to: leadingAnchor)
             $0.bottom.equal(to: bottomAnchor)
             $0.trailing.equal(to: trailingAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+            $0.height.equal(to: Metrics.separatorHeight)
         }
+        
+        updateColorsAccordingToStyle()
     }
     
     private func dropShadowIfNeeded() {
@@ -191,12 +202,12 @@ extension SPConversationSummaryView {
         layer.masksToBounds = false
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
-        layer.shadowOpacity = Theme.viewShadowOpacity
+        layer.shadowOpacity = Metrics.viewShadowOpacity
         layer.shadowPath = shadowPath.cgPath
     }
 }
 
-private enum Theme {
+private enum Metrics {
     
     static let newCommentsButtonVerticalInset: CGFloat = 4.0
     static let newCommentsButtonHorizontalInset: CGFloat = 7.0
