@@ -22,12 +22,14 @@ final class SPConversationSummaryView: BaseView {
         return lbl
     }()
     
-    private lazy var sortByLabel: BaseLabel = {
-        let lbl = BaseLabel()
-        lbl.font = UIFont.preferred(style: .regular, of: Metrics.sortButtonFontSize)
-        lbl.text = LocalizationManager.localizedString(key: "Sort by")
-        return lbl
-    }()
+    // Product decision was to remove this label due to the online viewing users addition
+    // Still might changed so I keep this code commented until the release of the feature
+//    private lazy var sortByLabel: BaseLabel = {
+//        let lbl = BaseLabel()
+//        lbl.font = UIFont.preferred(style: .regular, of: Metrics.sortButtonFontSize)
+//        lbl.text = LocalizationManager.localizedString(key: "Sort by")
+//        return lbl
+//    }()
     
     private lazy var sortButton: BaseButton = {
         let btn = BaseButton()
@@ -54,6 +56,9 @@ final class SPConversationSummaryView: BaseView {
         return btn
     }()
     
+    // This button stay hidden, there is no part in the code which change it to be visible
+    // Understand what it was and delete it if no longer in use
+    // Will conflict with the vertical separator if in use. Therefor need to understand if it something old or we want it and then change the constraints accordingly
     private lazy var newCommentsButton: BaseButton = {
         let btn = BaseButton()
 
@@ -76,8 +81,17 @@ final class SPConversationSummaryView: BaseView {
        return OWOnlineViewingUsersCounterView()
     }()
 
-    private let bottomHorizontalSeparator = BaseView()
-    private let verticalSeparatorBetweenCommentsAndViewingUsers = BaseView()
+    private lazy var bottomHorizontalSeparator: BaseView = {
+        let separator = BaseView()
+        separator.backgroundColor = .spSeparator2
+        return separator
+    }()
+    
+    private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: BaseView = {
+        let separator = BaseView()
+        separator.backgroundColor = .spSeparator2
+        return separator
+    }()
     
     internal var dropsShadow: Bool = false
     
@@ -104,10 +118,13 @@ final class SPConversationSummaryView: BaseView {
         commentsCountLabel.backgroundColor = .spBackground0
         sortButton.setTitleColor(.spForeground0, for: .normal)
         sortButton.setImage(UIImage(spNamed: "sortingIcon"), for: .normal)
-        sortByLabel.textColor = .spForeground0
+        // Product decision was to remove this label due to the online viewing users addition
+        // Still might changed so I keep this code commented until the release of the feature
+//        sortByLabel.textColor = .spForeground0
         newCommentsButton.setTitleColor(.white, for: .normal)
         newCommentsButton.backgroundColor = .brandColor
         bottomHorizontalSeparator.backgroundColor = .spSeparator2
+        verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor = .spSeparator2
     }
     
     // MARK: - Internal methods    
@@ -120,6 +137,12 @@ final class SPConversationSummaryView: BaseView {
     
     func updateSortOption(_ title: String) {
         sortButton.setTitle(title, for: .normal)
+    }
+    
+    // Idealy this summary view will have a VM as well which will hold the online users VM
+    // I decided to wait until we will choose if to use RxSwift or Combine and then I will refactor it
+    func configure(onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling) {
+        onlineViewingUsersView.configure(with: onlineViewingUsersVM)
     }
     
     // MARK: - Actions
@@ -138,8 +161,6 @@ final class SPConversationSummaryView: BaseView {
 extension SPConversationSummaryView {
     
     private func setupUI() {
-        addSubviews(newCommentsButton, sortByLabel, sortButton, bottomHorizontalSeparator)
-        
         // Setup comments label
         self.addSubview(commentsCountLabel)
         commentsCountLabel.layout {
@@ -152,13 +173,15 @@ extension SPConversationSummaryView {
             $0.centerY.equal(to: centerYAnchor)
         }
         
-        // Setup sort label
-        self.addSubview(sortByLabel)
-        sortByLabel.layout {
-            $0.trailing.equal(to: sortButton.leadingAnchor, offsetBy: -Metrics.sortByTrailingOffset)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.top.equal(to: topAnchor)
-        }
+        // Product decision was to remove this label due to the online viewing users addition
+        // Still might changed so I keep this code commented until the release of the feature
+//        // Setup sort label
+//        self.addSubview(sortByLabel)
+//        sortByLabel.layout {
+//            $0.trailing.equal(to: sortButton.leadingAnchor, offsetBy: -Metrics.sortByTrailingOffset)
+//            $0.bottom.equal(to: bottomAnchor)
+//            $0.top.equal(to: topAnchor)
+//        }
         
         // Setup sort button
         self.addSubview(sortButton)
@@ -174,7 +197,7 @@ extension SPConversationSummaryView {
         }
         
         // Setup new comments button
-        self.addSubview(sortButton)
+        self.addSubview(newCommentsButton)
         newCommentsButton.layout {
             $0.leading.equal(to: commentsCountLabel.trailingAnchor, offsetBy: Metrics.insetTiny)
             $0.centerY.equal(to: centerYAnchor)
@@ -187,6 +210,22 @@ extension SPConversationSummaryView {
             $0.bottom.equal(to: bottomAnchor)
             $0.trailing.equal(to: trailingAnchor)
             $0.height.equal(to: Metrics.separatorHeight)
+        }
+        
+        // Setup vertical separator between comments and viewingUsers
+        self.addSubview(verticalSeparatorBetweenCommentsAndViewingUsers)
+        verticalSeparatorBetweenCommentsAndViewingUsers.layout {
+            $0.leading.equal(to: commentsCountLabel.trailingAnchor, offsetBy: Metrics.horizontalMarginBetweenSeparator)
+            $0.bottom.equal(to: bottomAnchor, offsetBy: -Metrics.topMarginBetweenSeparator)
+            $0.top.equal(to: topAnchor, offsetBy: Metrics.topMarginBetweenSeparator)
+            $0.width.equal(to: Metrics.separatorWidth)
+        }
+        
+        // Setup online viewing users
+        self.addSubview(onlineViewingUsersView)
+        onlineViewingUsersView.layout {
+            $0.leading.equal(to: verticalSeparatorBetweenCommentsAndViewingUsers.trailingAnchor, offsetBy: Metrics.horizontalMarginBetweenSeparator)
+            $0.centerY.equal(to: centerYAnchor)
         }
         
         updateColorsAccordingToStyle()
@@ -212,6 +251,7 @@ private enum Metrics {
     static let newCommentsButtonVerticalInset: CGFloat = 4.0
     static let newCommentsButtonHorizontalInset: CGFloat = 7.0
     static let separatorHeight: CGFloat = 1.0
+    static let separatorWidth: CGFloat = 1.0
     static let insetTiny: CGFloat = 9.0
     static let insetShort: CGFloat = 10.0
     static let newCommentsButtonRadius: CGFloat = 11.5
@@ -221,4 +261,6 @@ private enum Metrics {
     static let sortByTrailingOffset: CGFloat = 4.0
     static let sideOffset: CGFloat = 16.0
     static let viewShadowOpacity: Float = 0.08
+    static let horizontalMarginBetweenSeparator: CGFloat = 9.5
+    static let topMarginBetweenSeparator: CGFloat = 15.5
 }
