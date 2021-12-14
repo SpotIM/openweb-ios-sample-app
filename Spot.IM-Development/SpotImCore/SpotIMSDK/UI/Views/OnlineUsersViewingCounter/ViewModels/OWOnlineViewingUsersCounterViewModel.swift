@@ -14,7 +14,7 @@ protocol OWOnlineViewingUsersCounterViewModelingInputs {
 }
 
 protocol OWOnlineViewingUsersCounterViewModelingOutputs {
-    var viewingCount: ((Int) -> Void)? { get set }
+    var viewingCount: ((String) -> Void)? { get set }
     var image: UIImage { get }
 }
 
@@ -37,7 +37,7 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     
     fileprivate var model: RealTimeOnlineViewingUsersModel? {
         didSet {
-            viewingCount?(model!.count)
+            viewingCount?(model!.count.decimalFormatted)
         }
     }
 
@@ -51,10 +51,10 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
 
     // We will currently use closures with didSet combination until we will decide on a better soultion
     // I.e. RxSwift / Combine.
-    var viewingCount: ((Int) -> Void)?
+    var viewingCount: ((String) -> Void)?
     
     lazy var image: UIImage = {
-        return UIImage()
+        return UIImage(spNamed: "viewingUsers")!
     }()
     
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
