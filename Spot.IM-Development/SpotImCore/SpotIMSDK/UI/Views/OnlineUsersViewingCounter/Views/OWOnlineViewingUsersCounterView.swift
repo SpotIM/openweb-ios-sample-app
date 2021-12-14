@@ -19,7 +19,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
-        img.contentMode = .scaleAspectFill
+        img.contentMode = .scaleAspectFit
         return img
     }()
     
@@ -67,7 +67,7 @@ fileprivate extension OWOnlineViewingUsersCounterView {
         imgViewIcon.image = viewModel.outputs.image
         viewModel.outputs.viewingCount = { [weak self] viewingCount in
             guard let self = self else { return }
-            self.lblViewersNumber.text = "\(viewingCount)"
+            self.lblViewersNumber.text = viewingCount
         }
     }
 }
