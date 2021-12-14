@@ -13,15 +13,27 @@ protocol SPPreConversationHeaderViewDelegate: AnyObject {
 }
 
 internal final class SPPreConversationHeaderView: BaseView {
-    private lazy var titleLabel: BaseLabel = .init()
-    private lazy var counterLabel: BaseLabel = .init()
+    
+    private lazy var titleLabel: BaseLabel = {
+        let lbl = BaseLabel()
+        lbl.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
+        lbl.textColor = .spForeground0
+        return lbl
+    }()
+    
+    private lazy var counterLabel: BaseLabel = {
+        let lbl = BaseLabel()
+        lbl.font = UIFont.preferred(style: .regular, of: Theme.counterFontSize)
+        lbl.textColor = .spForeground1
+        return lbl
+    }()
     
     internal weak var delegate: SPPreConversationHeaderViewDelegate?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setup()
+        setupUI()
     }
     
     // Handle dark mode \ light mode change
@@ -52,24 +64,14 @@ internal final class SPPreConversationHeaderView: BaseView {
         updateCustomUI()
     }
 
-    private func setup() {
-        addSubviews(titleLabel, counterLabel)
-        setupTitleLabel()
-        setupCounterLabel()
-    }
-
-    private func setupTitleLabel() {
-        titleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
-        titleLabel.textColor = .spForeground0
+    private func setupUI() {
+        self.addSubview(titleLabel)
         titleLabel.layout {
             $0.centerY.equal(to: centerYAnchor)
             $0.leading.equal(to: leadingAnchor, offsetBy: Theme.margins.left)
         }
-    }
-
-    private func setupCounterLabel() {
-        counterLabel.font = UIFont.preferred(style: .regular, of: Theme.counterFontSize)
-        counterLabel.textColor = .spForeground1
+        
+        self.addSubview(counterLabel)
         counterLabel.layout {
             $0.firstBaseline.equal(to: titleLabel.firstBaselineAnchor)
             $0.leading.equal(to: titleLabel.trailingAnchor, offsetBy: Theme.counterLeading)
