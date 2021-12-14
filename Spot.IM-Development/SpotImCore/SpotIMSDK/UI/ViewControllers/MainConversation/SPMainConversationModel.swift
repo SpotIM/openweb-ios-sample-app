@@ -52,7 +52,11 @@ final class SPMainConversationModel {
     
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
     // Will refactor once we will move to MVVM
-    let onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
+    let onlineViewingUsersPreConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
+    
+    // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
+    // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
+    let onlineViewingUsersConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
     
     private(set) var dataSource: SPMainConversationDataSource
     private(set) var sortOption: SPCommentSortMode = .best {
@@ -350,7 +354,8 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             }
             
             let onlineViewingUsersModel = try data.onlineViewingUsersCount(fullConversationId)
-            onlineViewingUsersVM.inputs.configureModel(onlineViewingUsersModel)
+            onlineViewingUsersPreConversationVM.inputs.configureModel(onlineViewingUsersModel)
+            onlineViewingUsersConversationVM.inputs.configureModel(onlineViewingUsersModel)
         } catch {
             if let realtimeError = error as? RealTimeError {
                 Logger.error("Failed to update real time data: \(realtimeError)")
