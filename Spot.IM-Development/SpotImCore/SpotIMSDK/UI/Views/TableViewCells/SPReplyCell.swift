@@ -169,13 +169,15 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabels = dataModel.commentLabels,
-           dataModel.isDeletedOrReported() == false {
-            let commentLabel = commentLabels[0]
+           dataModel.isDeletedOrReported() == false,
+           let selectedCommentLabel =  commentLabels.first(where: { commentLabel in
+               commentLabel.isSelected == true
+           }) {
             commentLabelView.setLabel(
-                commentLabelIconUrl: commentLabel.iconUrl,
-                labelColor: commentLabel.color,
-                labelText: commentLabel.text,
-                labelId: commentLabel.id,
+                commentLabelIconUrl: selectedCommentLabel.iconUrl,
+                labelColor: selectedCommentLabel.color,
+                labelText: selectedCommentLabel.text,
+                labelId: selectedCommentLabel.id,
                 state: .readOnly)
             commentLabelView.isHidden = false
             commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
