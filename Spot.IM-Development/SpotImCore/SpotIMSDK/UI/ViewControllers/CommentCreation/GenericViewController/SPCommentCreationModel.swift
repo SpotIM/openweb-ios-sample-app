@@ -23,13 +23,13 @@ class SPCommentCreationModel {
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
     
-    init(baseCommentCreationDTO: SPCommentCreationDTO,
+    init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageURLProvider,
          articleMetadate: SpotImArticleMetadata
     ) {
-        self.dataModel = baseCommentCreationDTO
+        self.dataModel = commentCreationDTO
         self.imageProvider = imageProvider
         self.cacheService = cacheService
         commentService = updater
@@ -53,7 +53,8 @@ class SPCommentCreationModel {
                 guard let self = self else { return }
                 
                 let responseData = self.populateResponseFields(response)
-                
+                let commentIdentifier: String = self.getCommentIdentifierForCommentType()
+                self.cacheService.remove(for: commentIdentifier)
                 self.postCompletionHandler?(responseData)
             },
             failure: {
