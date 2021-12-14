@@ -32,6 +32,7 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
         set(value) {
             // Do nothing
             // Current solution because we use closures. We won't need this when we will move to RxSwift / Combine
+            // With the libraries above outputs can be declared as a getter only.
         }
     }
     
@@ -51,7 +52,14 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
 
     // We will currently use closures with didSet combination until we will decide on a better soultion
     // I.e. RxSwift / Combine.
-    var viewingCount: ((String) -> Void)?
+    var viewingCount: ((String) -> Void)? {
+        didSet {
+            // This is basically done in order to send the first value as soon as other part of the code "listening" to changes
+            // With any of the libraries I mentiond above this part won't be needed and everything will be much simplified
+            guard let model = self.model else { return }
+            viewingCount!(model.count.decimalFormatted)
+        }
+    }
     
     lazy var image: UIImage = {
         return UIImage(spNamed: "viewingUsers")!
