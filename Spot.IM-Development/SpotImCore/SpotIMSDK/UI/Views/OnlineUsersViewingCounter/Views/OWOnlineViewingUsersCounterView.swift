@@ -25,7 +25,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     
     fileprivate lazy var lblViewersNumber: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.preferred(style: .bold, of: Metrics.viewersFontSize)
+        lbl.font = UIFont.preferred(style: .regular, of: Metrics.viewersFontSize)
         lbl.textColor = .spForeground3
         return lbl
     }()
