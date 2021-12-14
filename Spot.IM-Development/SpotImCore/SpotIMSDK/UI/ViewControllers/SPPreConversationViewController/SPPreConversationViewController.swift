@@ -237,7 +237,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func setupHeaderView() {
         header.set(title: LocalizationManager.localizedString(key: "Conversation"))
         header.delegate = self
-        header.configure(onlineViewingUsersVM: model.onlineViewingUsersVM)
+        header.configure(onlineViewingUsersVM: model.onlineViewingUsersPreConversationVM)
 
         header.layout {
             $0.top.equal(to: adBannerView.bottomAnchor, offsetBy: actualBannerMargin)
