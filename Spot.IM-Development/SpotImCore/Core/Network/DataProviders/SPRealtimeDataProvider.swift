@@ -66,7 +66,7 @@ final class DefaultRealtimeDataProvider: NetworkDataProvider, SPRealtimeDataProv
                 RealtimeAPIKeys.conversationNewMessages: [conversationId],
                 RealtimeAPIKeys.conversationCountMessages: [conversationId],
                 RealtimeAPIKeys.onlineUsers: [conversationId],
-                RealtimeAPIKeys.onlineUsersViewingCount: [withMessageIds],
+                RealtimeAPIKeys.onlineViewingUsersCount: [withMessageIds],
                 RealtimeAPIKeys.conversationUpdatedMessages: [conversationId],
                 RealtimeAPIKeys.conversationDeletedMessages: [withMessageIds],
                 RealtimeAPIKeys.conversationTypingV2Users: [withMessageIds],
@@ -83,7 +83,7 @@ final class DefaultRealtimeDataProvider: NetworkDataProvider, SPRealtimeDataProv
         static let conversationNewMessages = "conversation/new-messages"
         static let conversationCountMessages = "conversation/count-messages"
         static let onlineUsers = "online/users"
-        static let onlineUsersViewingCount = "online/users-count"
+        static let onlineViewingUsersCount = "online/users-count"
         static let conversationUpdatedMessages = "conversation/updated-messages"
         static let conversationDeletedMessages = "conversation/deleted-messages"
         static let messageIds = "message_ids"
