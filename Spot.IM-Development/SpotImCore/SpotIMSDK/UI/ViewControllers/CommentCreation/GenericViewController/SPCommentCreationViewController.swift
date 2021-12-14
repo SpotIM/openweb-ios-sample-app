@@ -130,8 +130,8 @@ class SPCommentCreationViewController: SPBaseViewController,
         // set relevant comment labels to container
         let commentLabels = getCommentLabelsFromSectionConfig(sectionConfig: sectionLabelsConfig)
         commentLabelsContainer.setLabelsContainer(labels: commentLabels,
-                                                  guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected,
-                                                  selectedLabelIdsInEditedComment: self.model.dataModel.editModel?.commentLabelIds)
+                                                  guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
+        commentLabelsContainer.setSelectedLabels(selectedLabelIdsInEditedComment: self.model.dataModel.editModel?.commentLabelIds)
     }
     
     private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [CommentLabel] {
