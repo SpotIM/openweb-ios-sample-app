@@ -17,7 +17,7 @@ struct RealTimeModel: Decodable {
 internal enum RealTimeError: Error, CustomStringConvertible {
     case conversationNotFound
     case corruptedData
-    case onlineUsersViewingNotFound
+    case onlineViewingUsersNotFound
     
     var description: String {
         switch self {
@@ -25,7 +25,7 @@ internal enum RealTimeError: Error, CustomStringConvertible {
             return "conversationNotFound"
         case .corruptedData:
             return "corruptedData"
-        case .onlineUsersViewingNotFound:
+        case .onlineViewingUsersNotFound:
             return "onlineUsersViewingNotFound"
         }
     }
@@ -38,14 +38,14 @@ struct RealTimeDataModel: Decodable {
         case conversationTypingV2Count = "conversation/typing-v2-count"
         case conversationTypingV2Users = "conversation/typing-v2-users"
         case onlineUsers = "online/users"
-        case onlineUsersViewing  = "online/users-count"
+        case onlineViewingUsers  = "online/users-count"
     }
     
     private let conversationCountMessages: [String: [RealTimeMessagesCountModel]]?
     private let conversationTypingV2Count: [String: [[String: Int]]]?
     private let conversationTypingV2Users: [String: [RealTimeTypingUsersModel]]?
     private let onlineUsers: [String: [RealTimeOnlineUserModel]]?
-    private let onlineUsersViewing: [String: [RealTimeOnlineUsersViewingModel]]?
+    private let onlineViewingUsers: [String: [RealTimeOnlineViewingUsersModel]]?
     
     func totalCommentsCountForConversation(_ id: String) throws -> Int {
         let commentsCounter = try commentsCountForConversation(id)
@@ -82,10 +82,10 @@ struct RealTimeDataModel: Decodable {
     }
     
     /// Will return the model of viewing users if it exist and throw onlineUsersViewingNotFound exception if not
-    func onlineUsersViewingCount(_ id: String) throws -> RealTimeOnlineUsersViewingModel {
-        guard let onlineUsersViewingArray = onlineUsersViewing?[id],
+    func onlineViewingUsersCount(_ id: String) throws -> RealTimeOnlineViewingUsersModel {
+        guard let onlineUsersViewingArray = onlineViewingUsers?[id],
               let onlineUsersViewing = onlineUsersViewingArray.first else {
-            throw RealTimeError.onlineUsersViewingNotFound
+            throw RealTimeError.onlineViewingUsersNotFound
         }
         
         return onlineUsersViewing
@@ -130,6 +130,6 @@ struct RealTimeTypingUsersModel: Decodable {
     let key: String
 }
 
-struct RealTimeOnlineUsersViewingModel: Decodable {
+struct RealTimeOnlineViewingUsersModel: Decodable {
     let count: Int
 }
