@@ -11,8 +11,8 @@ import UIKit
 
 class OWOnlineViewingUsersCounterView: UIView {
     fileprivate struct Metrics {
-        static let horizontalMargin: CGFloat = 5
-        static let viewersFontSize: CGFloat = 14.0
+        static let horizontalMargin: CGFloat = 6
+        static let viewersFontSize: CGFloat = 15.0
     }
     
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
@@ -25,13 +25,18 @@ class OWOnlineViewingUsersCounterView: UIView {
     
     fileprivate lazy var lblViewersNumber: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.preferred(style: .regular, of: Metrics.viewersFontSize)
-        lbl.textColor = .spForeground3
+        lbl.font = UIFont.preferred(style: .bold, of: Metrics.viewersFontSize)
+        lbl.textColor = .spForeground0
         return lbl
     }()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        setupViews()
+    }
+    
+    init() {
+        super.init(frame: .zero)
         setupViews()
     }
 
