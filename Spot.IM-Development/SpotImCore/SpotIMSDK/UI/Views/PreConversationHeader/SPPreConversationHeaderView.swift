@@ -42,6 +42,9 @@ internal final class SPPreConversationHeaderView: BaseView {
     
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
+        titleLabel.textColor = .spForeground0
+        counterLabel.textColor = .spForeground1
         updateCustomUI()
     }
     
