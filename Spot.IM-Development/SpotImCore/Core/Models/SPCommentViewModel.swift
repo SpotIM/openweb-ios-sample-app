@@ -79,15 +79,14 @@ internal struct CommentViewModel {
             commentLabels = []
             for commentLabelConfig in commentLabelsConfig {
                 if let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
-                   let commentLabelIconUrl = commentLabelConfig.getIconUrl(),
-                   let commentLabelIsSelected = isCommentLabelSelected(
-                    additonalData: comment.additionalData,
-                    commentLabelIdToFind: commentLabelConfig.id) {
-                    commentLabels?.append(CommentLabel(id: commentLabelConfig.id,
-                                                      text: commentLabelConfig.text,
-                                                      iconUrl: commentLabelIconUrl,
-                                                      color: commentLabelColor,
-                                                      isSelected: commentLabelIsSelected)
+                   let commentLabelIconUrl = commentLabelConfig.getIconUrl()
+                {
+                    commentLabels?.append(
+                        CommentLabel(id: commentLabelConfig.id,
+                                     text: commentLabelConfig.text,
+                                     iconUrl: commentLabelIconUrl,
+                                     color: commentLabelColor
+                                    )
                     )
                 }
             }
@@ -149,20 +148,6 @@ internal struct CommentViewModel {
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
-    }
-    
-    func isCommentLabelSelected(additonalData: SPComment.AdditionalData?,
-                                commentLabelIdToFind: String) -> Bool? {
-        if let commentLabels = additonalData?.labels {
-            if let commentLabelIds = commentLabels.ids {
-                let foundCommentLabel = commentLabelIds.firstIndex(of: commentLabelIdToFind)
-                if foundCommentLabel != nil {
-                    return true
-                }
-            }
-        }
-        
-        return false
     }
     
     func getCommentTextFromHtmlString(htmlString: String) -> String? {
@@ -336,8 +321,15 @@ internal struct CommentViewModel {
            let section = commentLabels.section,
            let commentLabelsConfig = sharedConfig.commentLabels,
            let sectionLabels = commentLabelsConfig[section] {
-            return sectionLabels.labels
+            var selectedCommentLabelsConfiguration: [SPLabelConfiguration] = []
+            for labelId in labelIds {
+                if let selectedCommentLabelConfiguration = sectionLabels.getLabelById(labelId: labelId) {
+                    selectedCommentLabelsConfiguration.append(selectedCommentLabelConfiguration)
+                }
+            }
+            return selectedCommentLabelsConfiguration
         }
+        
         return nil
     }
     
@@ -376,7 +368,6 @@ struct CommentLabel {
     var text: String
     var iconUrl: URL
     var color: UIColor
-    var isSelected: Bool = false
 }
 
 struct CommentImage {
