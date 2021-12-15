@@ -9,6 +9,7 @@ abstract_target 'Shared' do
 
   pod 'Alamofire', '~> 5.4'
   pod 'PromiseKit', '~> 6.8'
+  pod 'SnapKit'
   
   target 'SpotImCore'
   target 'Spot-IM.DevelopmentTests'
