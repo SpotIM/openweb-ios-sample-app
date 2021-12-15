@@ -12,6 +12,11 @@ references:
       xcode: "13.0.0"
     working_directory: ~/project/Spot.IM-Development
 
+  ios_config_xcode_13_2: &ios_config_xcode_13_2
+    macos:
+      xcode: "13.2.0"
+    working_directory: ~/project/Spot.IM-Development
+
   ios_config_xcode_12_5: &ios_config_xcode_12_5
     macos:
       xcode: "12.5.0"
@@ -23,6 +28,53 @@ references:
       command: |
         echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $RELEASE_VERSION
+
+  release_tag_job_steps: &release_tag_job_steps
+    - checkout:
+        path: ~/project
+
+    - *define_var_release_version
+
+    - run:
+        name: start release tag build
+        command: |
+          echo "Start release tag build $RELEASE_VERSION"
+          pwd
+          ls -l
+
+    - restore_cache:
+        key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+    - restore_cache:
+        key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+    - run:
+        name: Bundle Install
+        command: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install
+          bundle info fastlane
+
+    - save_cache:
+        key: bundler_cache_{{ checksum "Gemfile.lock" }}
+        paths:
+          - 'vendor/bundle'
+
+    - run:
+       name: Before Running Fastlane Build Release
+       command: |
+           git status
+
+    - run:
+        name: Run Fastlane Build Release
+        command: |
+          bundle exec fastlane build_release_sdk
+
+    - run:
+       name: After Running Fastlane Release
+       command: |
+           ls -l Release
+           git status
 
 jobs:
   default_job:
@@ -142,59 +194,25 @@ jobs:
           command: |
             bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
 
-  release_tag_job:
+  release_tag_12_5_job:
     <<: *ios_config_xcode_12_5
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release tag build
-          command: |
-            echo "Start release tag build $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - 'vendor/bundle'
-
-      - run:
-         name: Before Running Fastlane Build Release
-         command: |
-             git status
-
-      - run:
-          name: Run Fastlane Build Release
-          command: |
-            bundle exec fastlane build_release_sdk
-
-      - run:
-         name: After Running Fastlane Release
-         command: |
-             ls -l Release
-             git status
+      <<: release_tag_job_steps
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 12.5
+
+  release_tag_13_2_job:
+    <<: *ios_config_xcode_13_2
+    steps:
+      <<: release_tag_job_steps
+
+      - run:
+          name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
+          command: |
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.2
 
   release_app_job:
     <<: *ios_config_xcode_13
@@ -248,11 +266,17 @@ workflows:
               only:
                 - /^release/sdk/.*/
 
-      - release_tag_job:
+      - release_tag_12_5_job:
           filters:
             branches:
               only:
                 - /^release/tag12.5/.*/
+
+      - release_tag_13_2_job:
+          filters:
+            branches:
+              only:
+                - /^release/tag13.2/.*/
 
       - release_app_job:
           filters:
