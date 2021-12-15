@@ -112,9 +112,9 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     private func setupSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
-            $0.leading.equal(to: leadingAnchor)
+            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.separatorVerticalPadding)
             $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.separatorVerticalPadding)
             $0.height.equal(to: Theme.separatorHeight)
         }
     }
@@ -162,4 +162,5 @@ private enum Theme {
     static let separatorHeight: CGFloat = 1.0
     static let usernameLeading: CGFloat = 10.0
     static let avatarSideSize: CGFloat = 44.0
+    static let separatorVerticalPadding: CGFloat = 15.0
 }
