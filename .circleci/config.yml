@@ -3,6 +3,30 @@
 
 version: 2.1
 
+references:
+  # Docker image configurations
+  ios_config_xcode_13: &ios_config_xcode_13
+    macos:
+      xcode: "13.0.0"
+    working_directory: ~/project/Spot.IM-Development
+
+  ios_config_xcode_13_2: &ios_config_xcode_13_2
+    macos:
+      xcode: "13.2.0"
+    working_directory: ~/project/Spot.IM-Development
+
+  ios_config_xcode_12_5: &ios_config_xcode_12_5
+    macos:
+      xcode: "12.5.0"
+    working_directory: ~/project/Spot.IM-Development
+
+  define_var_release_version: &define_var_release_version
+    run:
+      name: Export new version number to environment variable
+      command: |
+        echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
+        echo $RELEASE_VERSION
+
 commands:
   release_tag_job_steps:
     steps:
@@ -51,30 +75,6 @@ commands:
          command: |
              ls -l Release
              git status
-
-references:
-  # Docker image configurations
-  ios_config_xcode_13: &ios_config_xcode_13
-    macos:
-      xcode: "13.0.0"
-    working_directory: ~/project/Spot.IM-Development
-
-  ios_config_xcode_13_2: &ios_config_xcode_13_2
-    macos:
-      xcode: "13.2.0"
-    working_directory: ~/project/Spot.IM-Development
-
-  ios_config_xcode_12_5: &ios_config_xcode_12_5
-    macos:
-      xcode: "12.5.0"
-    working_directory: ~/project/Spot.IM-Development
-
-  define_var_release_version: &define_var_release_version
-    run:
-      name: Export new version number to environment variable
-      command: |
-        echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
-        echo $RELEASE_VERSION
 
 jobs:
   default_job:
