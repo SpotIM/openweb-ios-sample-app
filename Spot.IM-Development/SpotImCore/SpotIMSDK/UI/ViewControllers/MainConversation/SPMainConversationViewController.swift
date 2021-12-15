@@ -757,10 +757,6 @@ extension SPMainConversationViewController { // SPCommentCellDelegate
 
 extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
 
-    func newCommentsDidTap(_ summaryView: SPConversationSummaryView) {
-
-    }
-
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView) {
         SPAnalyticsHolder.default.log(event: .sortByOpened, source: .conversation)
         showActionSheet(

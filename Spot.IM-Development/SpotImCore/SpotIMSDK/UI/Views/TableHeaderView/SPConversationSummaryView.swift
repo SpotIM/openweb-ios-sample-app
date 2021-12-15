@@ -11,7 +11,6 @@ import UIKit
 internal protocol SPConversationSummaryViewDelegate: AnyObject {
 
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView)
-    func newCommentsDidTap(_ summaryView: SPConversationSummaryView)
 }
 
 final class SPConversationSummaryView: BaseView {
@@ -52,27 +51,6 @@ final class SPConversationSummaryView: BaseView {
         btn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         
         btn.addTarget(self, action: #selector(selectSorting), for: .touchUpInside)
-        
-        return btn
-    }()
-    
-    // This button stay hidden, there is no part in the code which change it to be visible
-    // Understand what it was and delete it if no longer in use
-    // Will conflict with the vertical separator if in use. Therefor need to understand if it something old or we want it and then change the constraints accordingly
-    private lazy var newCommentsButton: BaseButton = {
-        let btn = BaseButton()
-
-        btn.isHidden = true
-        btn.titleLabel?.font = UIFont.preferred(style: .regular, of: Metrics.newCommentsFontSize)
-        btn.contentEdgeInsets = UIEdgeInsets(
-            top: Metrics.newCommentsButtonVerticalInset,
-            left: Metrics.newCommentsButtonHorizontalInset,
-            bottom: Metrics.newCommentsButtonVerticalInset,
-            right: Metrics.newCommentsButtonHorizontalInset
-        )
-        btn.addCornerRadius(Metrics.newCommentsButtonRadius)
-        
-        btn.addTarget(self, action: #selector(selectNewComments), for: .touchUpInside)
         
         return btn
     }()
@@ -121,8 +99,6 @@ final class SPConversationSummaryView: BaseView {
         // Product decision was to remove this label due to the online viewing users addition
         // Still might changed so I keep this code commented until the release of the feature
 //        sortByLabel.textColor = .spForeground0
-        newCommentsButton.setTitleColor(.white, for: .normal)
-        newCommentsButton.backgroundColor = .brandColor
         bottomHorizontalSeparator.backgroundColor = .spSeparator2
         verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor = .spSeparator2
     }
@@ -150,11 +126,6 @@ final class SPConversationSummaryView: BaseView {
     @objc
     private func selectSorting() {
         delegate?.sortingDidTap(self, sender: sortButton)
-    }
-    
-    @objc
-    private func selectNewComments() {
-        delegate?.newCommentsDidTap(self)
     }
 }
 
@@ -194,13 +165,6 @@ extension SPConversationSummaryView {
             }
             $0.bottom.equal(to: bottomAnchor)
             $0.top.equal(to: topAnchor)
-        }
-        
-        // Setup new comments button
-        self.addSubview(newCommentsButton)
-        newCommentsButton.layout {
-            $0.leading.equal(to: commentsCountLabel.trailingAnchor, offsetBy: Metrics.insetTiny)
-            $0.centerY.equal(to: centerYAnchor)
         }
         
         // Setup bottom horizontal separator
@@ -248,13 +212,10 @@ extension SPConversationSummaryView {
 
 private enum Metrics {
     
-    static let newCommentsButtonVerticalInset: CGFloat = 4.0
-    static let newCommentsButtonHorizontalInset: CGFloat = 7.0
     static let separatorHeight: CGFloat = 1.0
     static let separatorWidth: CGFloat = 1.0
     static let insetTiny: CGFloat = 9.0
     static let insetShort: CGFloat = 10.0
-    static let newCommentsButtonRadius: CGFloat = 11.5
     static let sortButtonFontSize: CGFloat = 15.0
     static let commentsFontSize: CGFloat = 15.0
     static let newCommentsFontSize: CGFloat = 13.0
