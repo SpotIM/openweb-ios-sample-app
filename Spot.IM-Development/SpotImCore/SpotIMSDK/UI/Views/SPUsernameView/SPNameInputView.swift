@@ -17,6 +17,15 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
 
     var text: String? { get { usernameTextView.text }
                         set { usernameTextView.text = newValue } }
+    var isEditable: Bool {
+        get { usernameTextView.isEditable }
+        set { usernameTextView.isEditable = newValue }
+    }
+    
+    var isSelectable: Bool {
+        get { usernameTextView.isSelectable }
+        set { usernameTextView.isSelectable = newValue }
+    }
 
     var isSelected: Bool {
         usernameTextView.isFirstResponder
