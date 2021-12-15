@@ -60,14 +60,15 @@ class SPCommentCreationViewController: SPBaseViewController,
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
     
     private var shouldBeAutoPosted: Bool = true
+    
+    // user name input ("nickname") is visible only when commenting as a guest
+    // (if user entered nickname in the past it will not be editable)
     var showsUsernameInput: Bool {
         guard let config = SPConfigsDataSource.appConfig else { return true }
         let session = SPUserSessionHolder.session
 
         let shoudEnterName = config.initialization?.policyForceRegister == false && session.user?.registered == false
-        let didEnterName = session.displayNameFrozen
-
-        return shoudEnterName && !didEnterName
+        return shoudEnterName
     }
     var showCommentLabels: Bool {
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
@@ -629,6 +630,12 @@ extension SPCommentCreationViewController {
         usernameView.layout {
             $0.height.equal(to: 78)
             $0.width.equal(to: topContainerStack.widthAnchor)
+        }
+        // put existing nickname if exist
+        if (SPUserSessionHolder.session.displayNameFrozen) {
+            usernameView.text = SPUserSessionHolder.session.user?.displayName
+            usernameView.isEditable = false
+            usernameView.isSelectable = false
         }
     }
     

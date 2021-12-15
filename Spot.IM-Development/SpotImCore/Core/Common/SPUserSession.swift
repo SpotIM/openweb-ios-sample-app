@@ -20,7 +20,7 @@ internal protocol SPUserSessionType {
 
 final internal class SPUserSession: SPUserSessionType {
 
-    internal var user: SPUser?
+    var user: SPUser?
     internal var guid: String?
     internal var token: String?
     internal var openwebToken: String?
