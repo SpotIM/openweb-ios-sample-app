@@ -28,7 +28,7 @@ references:
         echo $RELEASE_VERSION
 
 commands:
-  release_tag_job_steps:
+  release_tag:
     steps:
       - checkout:
           path: ~/project
@@ -197,7 +197,7 @@ jobs:
   release_tag_12_5_job:
     <<: *ios_config_xcode_12_5
     steps:
-      - release_tag_job_steps
+      - release_tag
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
@@ -207,7 +207,7 @@ jobs:
   release_tag_13_2_job:
     <<: *ios_config_xcode_13_2
     steps:
-      - release_tag_job_steps
+      - release_tag
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
