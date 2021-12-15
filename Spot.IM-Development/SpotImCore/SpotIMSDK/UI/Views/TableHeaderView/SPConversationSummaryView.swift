@@ -21,15 +21,6 @@ final class SPConversationSummaryView: BaseView {
         return lbl
     }()
     
-    // Product decision was to remove this label due to the online viewing users addition
-    // Still might changed so I keep this code commented until the release of the feature
-//    private lazy var sortByLabel: BaseLabel = {
-//        let lbl = BaseLabel()
-//        lbl.font = UIFont.preferred(style: .regular, of: Metrics.sortButtonFontSize)
-//        lbl.text = LocalizationManager.localizedString(key: "Sort by")
-//        return lbl
-//    }()
-    
     private lazy var sortButton: BaseButton = {
         let btn = BaseButton()
         btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.sortButtonFontSize)
@@ -96,9 +87,6 @@ final class SPConversationSummaryView: BaseView {
         commentsCountLabel.backgroundColor = .spBackground0
         sortButton.setTitleColor(.spForeground0, for: .normal)
         sortButton.setImage(UIImage(spNamed: "sortingIcon"), for: .normal)
-        // Product decision was to remove this label due to the online viewing users addition
-        // Still might changed so I keep this code commented until the release of the feature
-//        sortByLabel.textColor = .spForeground0
         bottomHorizontalSeparator.backgroundColor = .spSeparator2
         verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor = .spSeparator2
     }
@@ -143,16 +131,6 @@ extension SPConversationSummaryView {
             }
             $0.centerY.equal(to: centerYAnchor)
         }
-        
-        // Product decision was to remove this label due to the online viewing users addition
-        // Still might changed so I keep this code commented until the release of the feature
-//        // Setup sort label
-//        self.addSubview(sortByLabel)
-//        sortByLabel.layout {
-//            $0.trailing.equal(to: sortButton.leadingAnchor, offsetBy: -Metrics.sortByTrailingOffset)
-//            $0.bottom.equal(to: bottomAnchor)
-//            $0.top.equal(to: topAnchor)
-//        }
         
         // Setup sort button
         self.addSubview(sortButton)
@@ -219,7 +197,6 @@ private enum Metrics {
     static let sortButtonFontSize: CGFloat = 15.0
     static let commentsFontSize: CGFloat = 15.0
     static let newCommentsFontSize: CGFloat = 13.0
-    static let sortByTrailingOffset: CGFloat = 4.0
     static let sideOffset: CGFloat = 16.0
     static let viewShadowOpacity: Float = 0.08
     static let horizontalMarginBetweenSeparator: CGFloat = 9.5
