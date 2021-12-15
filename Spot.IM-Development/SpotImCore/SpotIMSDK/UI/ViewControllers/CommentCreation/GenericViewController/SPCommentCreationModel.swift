@@ -115,11 +115,14 @@ class SPCommentCreationModel {
         }
         
         if isCommentAReply() {
-            let isRootComment = dataModel.replyModel?.commentId == dataModel.replyModel?.rootCommentId
+            let commentId = dataModel.replyModel?.commentId
+            let rootCommentId = dataModel.replyModel?.rootCommentId
+            let isRootComment = commentId == rootCommentId
             if !isRootComment {
-                metadata[SPRequestKeys.replyTo] = [SPRequestKeys.replyId: dataModel.replyModel?.commentId]
+                metadata[SPRequestKeys.replyTo] = [SPRequestKeys.replyId: commentId]
             }
             parameters[SPRequestKeys.conversationId] = dataModel.postId
+            parameters[SPRequestKeys.parentId] = rootCommentId ?? commentId
         }
         
         if let messageId = dataModel.editModel?.commentId {
