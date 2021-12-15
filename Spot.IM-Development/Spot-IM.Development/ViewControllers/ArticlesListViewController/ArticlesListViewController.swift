@@ -21,12 +21,18 @@ class ArticlesListViewController: UITableViewController {
     let addToTableView: Bool
     let shouldReinit: Bool
     
+    let customPostTextField = UITextField()
+    
     init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false, shouldReinint: Bool) {
         self.spotId = spotId
         
         self.authenticationControllerId = authenticationControllerId
         self.addToTableView = addToTableView
         self.shouldReinit = shouldReinint
+        
+        customPostTextField.placeholder = "custom postId"
+        customPostTextField.borderStyle = .roundedRect
+        customPostTextField.autocapitalizationType = .none
         
         super.init(style: .plain)
     }
@@ -93,6 +99,42 @@ class ArticlesListViewController: UITableViewController {
         if let post = self.data?.posts?[indexPath.item] {
             articleCellTapped(withPost: post)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIStackView.init(frame: CGRect.init(x: 0, y: 0, width: 40, height: 50))
+        let headerStackView = UIStackView()
+        
+        let button = UIButton()
+        button.setTitle("Custom PostId", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(customPostClicked), for: .touchUpInside)
+        
+        headerStackView.addArrangedSubview(button)
+        headerStackView.addArrangedSubview(customPostTextField)
+        headerStackView.spacing = 5
+        headerStackView.alignment = .fill
+        headerStackView.distribution = .equalSpacing
+        
+        headerView.addSubview(headerStackView)
+        headerStackView.layout {
+            $0.centerX.equal(to: headerView.centerXAnchor)
+        }
+        
+        headerView.backgroundColor = .white
+        return headerView
+    }
+    
+    @objc private func customPostClicked() {
+        if let postId = customPostTextField.text, let postForCopy = self.data?.posts?[0] {
+            var post = Post(spotId: postForCopy.spotId, conversationId: postId, publishedAt: postForCopy.publishedAt, extractData: postForCopy.extractData)
+            articleCellTapped(withPost: post)
+        }
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
 }
 
