@@ -3,10 +3,57 @@
 
 version: 2.1
 
+commands:
+  release_tag_job_steps:
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_release_version
+
+      - run:
+          name: start release tag build
+          command: |
+            echo "Start release tag build $RELEASE_VERSION"
+            pwd
+            ls -l
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - 'vendor/bundle'
+
+      - run:
+         name: Before Running Fastlane Build Release
+         command: |
+             git status
+
+      - run:
+          name: Run Fastlane Build Release
+          command: |
+            bundle exec fastlane build_release_sdk
+
+      - run:
+         name: After Running Fastlane Release
+         command: |
+             ls -l Release
+             git status
+
 references:
-
   # Docker image configurations
-
   ios_config_xcode_13: &ios_config_xcode_13
     macos:
       xcode: "13.0.0"
@@ -28,53 +75,6 @@ references:
       command: |
         echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $RELEASE_VERSION
-
-  release_tag_job_steps: &release_tag_job_steps
-    - checkout:
-        path: ~/project
-
-    - *define_var_release_version
-
-    - run:
-        name: start release tag build
-        command: |
-          echo "Start release tag build $RELEASE_VERSION"
-          pwd
-          ls -l
-
-    - restore_cache:
-        key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-    - restore_cache:
-        key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-    - run:
-        name: Bundle Install
-        command: |
-          bundle config set --local path 'vendor/bundle'
-          bundle install
-          bundle info fastlane
-
-    - save_cache:
-        key: bundler_cache_{{ checksum "Gemfile.lock" }}
-        paths:
-          - 'vendor/bundle'
-
-    - run:
-       name: Before Running Fastlane Build Release
-       command: |
-           git status
-
-    - run:
-        name: Run Fastlane Build Release
-        command: |
-          bundle exec fastlane build_release_sdk
-
-    - run:
-       name: After Running Fastlane Release
-       command: |
-           ls -l Release
-           git status
 
 jobs:
   default_job:
@@ -197,7 +197,7 @@ jobs:
   release_tag_12_5_job:
     <<: *ios_config_xcode_12_5
     steps:
-      - <<: *release_tag_job_steps
+      - release_tag_job_steps
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
@@ -207,7 +207,7 @@ jobs:
   release_tag_13_2_job:
     <<: *ios_config_xcode_13_2
     steps:
-      - <<: *release_tag_job_steps
+      - release_tag_job_steps
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
