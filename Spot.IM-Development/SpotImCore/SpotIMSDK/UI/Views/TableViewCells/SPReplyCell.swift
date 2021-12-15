@@ -169,10 +169,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         if let commentLabels = dataModel.commentLabels,
-           dataModel.isDeletedOrReported() == false,
-           let selectedCommentLabel =  commentLabels.first(where: { commentLabel in
-               commentLabel.isSelected == true
-           }) {
+           dataModel.isDeletedOrReported() == false
+        {
+            let selectedCommentLabel =  commentLabels[0]
             commentLabelView.setLabel(
                 commentLabelIconUrl: selectedCommentLabel.iconUrl,
                 labelColor: selectedCommentLabel.color,
