@@ -17,19 +17,14 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
 
     var text: String? { get { usernameTextView.text }
                         set { usernameTextView.text = newValue } }
-    var isEditable: Bool {
-        get { usernameTextView.isEditable }
-        set { usernameTextView.isEditable = newValue }
-    }
-    
-    var isSelectable: Bool {
-        get { usernameTextView.isSelectable }
-        set { usernameTextView.isSelectable = newValue }
-    }
 
     var isSelected: Bool {
         usernameTextView.isFirstResponder
     }
+    
+    let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
+    let boldFont = UIFont.preferred(style: .bold, of: Theme.fontSize)
+    
     // MARK: - Overrides
 
     deinit {
@@ -91,12 +86,10 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     }
 
     private func setupUsernameTextField() {
-        let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
-
-        usernameTextView.textColor = .spForeground0
+        usernameTextView.textColor = .spForeground1
         usernameTextView.textAlignment = LocalizationManager.getTextAlignment()
         usernameTextView.backgroundColor = .spBackground0
-        usernameTextView.font = font
+        usernameTextView.font = usernameTextView.isEditable ? font : boldFont
         usernameTextView.delegate = self
         usernameTextView.textContainer.maximumNumberOfLines = 1
         
@@ -107,6 +100,12 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
             $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.xOffset)
             $0.height.equal(to: avatarImageView.heightAnchor)
         }
+    }
+    
+    func setTextAccess(isEditable: Bool) {
+        usernameTextView.isEditable = isEditable
+        usernameTextView.isSelectable = isEditable
+        usernameTextView.font = isEditable ? font : boldFont
     }
 
     private func setupSeparatorView() {
@@ -157,7 +156,7 @@ extension SPNameInputView: UITextViewDelegate {
 // MARK: - Theme
 
 private enum Theme {
-    static let fontSize: CGFloat = 16.0
+    static let fontSize: CGFloat = 14.0
     static let xOffset: CGFloat = 14.0
     static let separatorHeight: CGFloat = 1.0
     static let usernameLeading: CGFloat = 10.0

@@ -634,8 +634,7 @@ extension SPCommentCreationViewController {
         // put existing nickname if exist
         if (SPUserSessionHolder.session.displayNameFrozen) {
             usernameView.text = SPUserSessionHolder.session.user?.displayName
-            usernameView.isEditable = false
-            usernameView.isSelectable = false
+            usernameView.setTextAccess(isEditable: false)
         }
     }
     
