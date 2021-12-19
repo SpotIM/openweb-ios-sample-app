@@ -104,7 +104,7 @@ final class SPConversationSummaryView: BaseView {
     }
     
     // Idealy this summary view will have a VM as well which will hold the online users VM
-    // I decided to wait until we will choose if to use RxSwift or Combine and then I will refactor it
+    // I decided to wait with the refactoring and do so in a more specific task for it
     func configure(onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling) {
         onlineViewingUsersView.configure(with: onlineViewingUsersVM)
     }
