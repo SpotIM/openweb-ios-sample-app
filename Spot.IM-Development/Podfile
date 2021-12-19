@@ -15,7 +15,7 @@ abstract_target 'Shared' do
   target 'Spot-IM.DevelopmentTests'
   
   abstract_target 'DemoApps' do
-    pod 'SnapKit', '~> 4.2.0'
+    pod 'SnapKit'
     pod 'Cards'
     pod 'Kingfisher'
 

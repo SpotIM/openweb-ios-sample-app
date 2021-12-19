@@ -67,7 +67,6 @@ DEPENDENCIES:
   - Kingfisher
   - PromiseKit (~> 6.8)
   - SnapKit
-  - SnapKit (~> 4.2.0)
 
 SPEC REPOS:
   trunk:
@@ -102,6 +101,6 @@ SPEC CHECKSUMS:
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: 7ff13c440055b5081fa74fa32b5672befa654184
+PODFILE CHECKSUM: 21f173917b7aec19de2f58b1cea1933f84ec7ebb
 
 COCOAPODS: 1.11.2
