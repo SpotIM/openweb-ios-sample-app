@@ -8,39 +8,27 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 protocol OWOnlineViewingUsersCounterViewModelingInputs {
     func configureModel(_ model: RealTimeOnlineViewingUsersModel)
 }
 
 protocol OWOnlineViewingUsersCounterViewModelingOutputs {
-    var viewingCount: ((String) -> Void)? { get set }
+    var viewingCount: Observable<String> { get }
     var image: UIImage { get }
 }
 
 protocol OWOnlineViewingUsersCounterViewModeling {
     var inputs: OWOnlineViewingUsersCounterViewModelingInputs { get }
-    var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { get set }
+    var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { get }
 }
 
 class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModeling, OWOnlineViewingUsersCounterViewModelingInputs, OWOnlineViewingUsersCounterViewModelingOutputs {
     var inputs: OWOnlineViewingUsersCounterViewModelingInputs { return self }
-    var outputs: OWOnlineViewingUsersCounterViewModelingOutputs {
-        get {
-            return self
-        }
-        set(value) {
-            // Do nothing
-            // Current solution because we use closures. We won't need this when we will move to RxSwift / Combine
-            // With the libraries above outputs can be declared as a getter only.
-        }
-    }
+    var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { return self }
     
-    fileprivate var model: RealTimeOnlineViewingUsersModel? {
-        didSet {
-            viewingCount?(model!.count.decimalFormatted)
-        }
-    }
+    fileprivate var model = BehaviorSubject<RealTimeOnlineViewingUsersModel?>(value: nil)
 
     init (_ model: RealTimeOnlineViewingUsersModel) {
         configureModel(model)
@@ -50,15 +38,11 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     // Idealy we will never create a VM without a model or services
     init () {}
 
-    // We will currently use closures with didSet combination until we will decide on a better soultion
-    // I.e. RxSwift / Combine.
-    var viewingCount: ((String) -> Void)? {
-        didSet {
-            // This is basically done in order to send the first value as soon as other part of the code "listening" to changes
-            // With any of the libraries I mentiond above this part won't be needed and everything will be much simplified
-            guard let model = self.model else { return }
-            viewingCount!(model.count.decimalFormatted)
-        }
+   
+    var viewingCount: Observable<String> {
+        return model.unwrap()
+            .map { $0.count }
+            .map { $0.decimalFormatted }
     }
     
     lazy var image: UIImage = {
@@ -66,6 +50,6 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     }()
     
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
-        self.model = model
+        self.model.onNext(model)
     }
 }
