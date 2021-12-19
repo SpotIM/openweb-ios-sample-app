@@ -10,11 +10,16 @@ import Foundation
 import UIKit
 import SpotImCore
 import WebKit
+import SnapKit
 
 let kSpotImDemo = "spotim.name"
 let kDemoArticleToUse = "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-secretly-living-in-brazil-reddit-selfie-sparks-conspiracy-theories/"
 
 internal final class ArticleWebViewController: UIViewController {
+    
+    fileprivate struct Metrics {
+        static let openFullConversationButtonHeight: CGFloat = 50
+    }
     
     private lazy var scrollView = UIScrollView()
     private lazy var webView = WKWebView()
@@ -82,17 +87,15 @@ internal final class ArticleWebViewController: UIViewController {
     }
     
     private func showOpenFullConversationButton() {
-        let button:UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
+        let button = UIButton()
         button.backgroundColor = .black
         button.setTitle("Open Full Conversation", for: .normal)
         button.addTarget(self, action:#selector(self.openSpotImFullConversation), for: .touchUpInside)
         self.containerView.addSubview(button)
-        button.layout {
-            $0.top.equal(to: self.containerView.topAnchor)
-            $0.leading.equal(to: self.containerView.leadingAnchor)
-            $0.bottom.equal(to: self.containerView.bottomAnchor)
-            $0.trailing.equal(to: self.containerView.trailingAnchor)
-       }
+        button.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.height.equalTo(Metrics.openFullConversationButtonHeight)
+        }
     }
 
     private func setupSpotPreConversationView() {
