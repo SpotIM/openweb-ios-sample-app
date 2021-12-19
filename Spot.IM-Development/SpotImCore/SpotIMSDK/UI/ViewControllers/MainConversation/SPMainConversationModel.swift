@@ -339,6 +339,10 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         let fullConversationId = "\(spotId)_\(dataSource.postId)"
         
         do {
+            let onlineViewingUsersModel = try data.onlineViewingUsersCount(fullConversationId)
+            onlineViewingUsersPreConversationVM.inputs.configureModel(onlineViewingUsersModel)
+            onlineViewingUsersConversationVM.inputs.configureModel(onlineViewingUsersModel)
+            
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
             self.dataSource.messageCount = totalCommentsCount
@@ -352,10 +356,6 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
                     timeOffset: Double(timeOffset) + typingVisibilityAdditionalTimeInterval
                 )
             }
-            
-            let onlineViewingUsersModel = try data.onlineViewingUsersCount(fullConversationId)
-            onlineViewingUsersPreConversationVM.inputs.configureModel(onlineViewingUsersModel)
-            onlineViewingUsersConversationVM.inputs.configureModel(onlineViewingUsersModel)
         } catch {
             if let realtimeError = error as? RealTimeError {
                 Logger.error("Failed to update real time data: \(realtimeError)")
