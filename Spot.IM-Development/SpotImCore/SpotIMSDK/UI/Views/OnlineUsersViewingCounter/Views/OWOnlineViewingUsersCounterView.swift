@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class OWOnlineViewingUsersCounterView: UIView {
     fileprivate struct Metrics {
@@ -17,6 +19,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     }
     
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
+    fileprivate var disposeBag: DisposeBag!
     
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
@@ -43,6 +46,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     
     func configure(with viewModel: OWOnlineViewingUsersCounterViewModeling) {
         self.viewModel = viewModel
+        disposeBag = DisposeBag()
         configureViews()
     }
 }
@@ -66,10 +70,9 @@ fileprivate extension OWOnlineViewingUsersCounterView {
     
     func configureViews() {
         imgViewIcon.image = viewModel.outputs.image
-        viewModel.outputs.viewingCount = { [weak self] viewingCount in
-            guard let self = self else { return }
-            self.lblViewersNumber.text = viewingCount
-        }
+        viewModel.outputs.viewingCount
+            .bind(to: lblViewersNumber.rx.text)
+            .disposed(by: disposeBag)
     }
 }
 
