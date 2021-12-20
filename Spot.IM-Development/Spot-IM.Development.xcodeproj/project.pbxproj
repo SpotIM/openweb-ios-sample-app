@@ -225,7 +225,6 @@
 		5D697A4622B65108001AD556 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D697A4522B65108001AD556 /* Assets.xcassets */; };
 		5D697A5422B65108001AD556 /* Spot_IM_DevelopmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */; };
 		5D909AB62397E1D400FF51AD /* Demo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DA75C92238D61D100FBDF19 /* Demo.storyboard */; };
-		5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		5DB97792236B25A400E9D547 /* SPNameInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB97791236B25A400E9D547 /* SPNameInputView.swift */; };
 		5DBD33E42397F98F003DE0BF /* BaseStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E22397F98F003DE0BF /* BaseStackView.swift */; };
 		5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E623980D6A003DE0BF /* BaseTextField.swift */; };
@@ -246,7 +245,6 @@
 		6D4E56ED23A7A5F7005B79B6 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D4E56EE23A7A5F7005B79B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D4E56EF23A7A5F7005B79B6 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
-		6D4E56F023A7A5F7005B79B6 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		6D4E56F123A7A5F7005B79B6 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
 		6D4E56F223A7A5F7005B79B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		6D4E56F323A7A5F7005B79B6 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
@@ -272,7 +270,6 @@
 		6D4E571A23A7B785005B79B6 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D4E571B23A7B785005B79B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D4E571C23A7B785005B79B6 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
-		6D4E571D23A7B785005B79B6 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		6D4E571E23A7B785005B79B6 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
 		6D4E571F23A7B785005B79B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		6D4E572023A7B785005B79B6 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
@@ -299,7 +296,6 @@
 		6D85E4392414E846000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D85E43A2414E846000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D85E43B2414E846000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
-		6D85E43C2414E846000265D3 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		6D85E43D2414E846000265D3 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
 		6D85E43E2414E846000265D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		6D85E43F2414E846000265D3 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
@@ -325,7 +321,6 @@
 		6D85E4652414FA4B000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D85E4662414FA4B000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D85E4672414FA4B000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
-		6D85E4682414FA4B000265D3 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		6D85E4692414FA4B000265D3 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
 		6D85E46A2414FA4B000265D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		6D85E46B2414FA4B000265D3 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
@@ -351,7 +346,6 @@
 		6D85E49124150B8A000265D3 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6D85E49224150B8A000265D3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6D85E49324150B8A000265D3 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
-		6D85E49424150B8A000265D3 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		6D85E49524150B8A000265D3 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
 		6D85E49624150B8A000265D3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		6D85E49724150B8A000265D3 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
@@ -377,7 +371,6 @@
 		6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6DA75C6F238D313600FBDF19 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
-		6DA75C70238D313600FBDF19 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		6DA75C71238D313600FBDF19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		6DA75C72238D313600FBDF19 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
 		6DA75C73238D313600FBDF19 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125DD2304C127006B1489 /* String+Extensions.swift */; };
@@ -402,7 +395,6 @@
 		6DAFEEA2239CFCCF00441E97 /* FoxAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */; };
 		6DAFEEA3239CFCCF00441E97 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A4022B65106001AD556 /* ViewController.swift */; };
 		6DAFEEA4239CFCCF00441E97 /* Date+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D72304BC29006B1489 /* Date+extensions.swift */; };
-		6DAFEEA5239CFCCF00441E97 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8B5A02327E20A0045FCFA /* Autolayout.swift */; };
 		6DAFEEA6239CFCCF00441E97 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */; };
 		6DAFEEA7239CFCCF00441E97 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
 		6DAFEEA8239CFCCF00441E97 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
@@ -817,7 +809,6 @@
 		5D697A4F22B65108001AD556 /* Spot-IM.DevelopmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Spot-IM.DevelopmentTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D697A5322B65108001AD556 /* Spot_IM_DevelopmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spot_IM_DevelopmentTests.swift; sourceTree = "<group>"; };
 		5D697A5522B65108001AD556 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5DA8B5A02327E20A0045FCFA /* Autolayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
 		5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		5DB97791236B25A400E9D547 /* SPNameInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPNameInputView.swift; sourceTree = "<group>"; };
 		5DBD33E22397F98F003DE0BF /* BaseStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseStackView.swift; sourceTree = "<group>"; };
@@ -1724,7 +1715,6 @@
 			isa = PBXGroup;
 			children = (
 				E685AC2825C97DB5008FECDB /* SpotImAdsProvider */,
-				5DA8B59C2327E2010045FCFA /* Common */,
 				0E1125DC2304BC48006B1489 /* Extension */,
 				5D4943B72302CA8C00AA7541 /* ViewControllers */,
 				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
@@ -1766,14 +1756,6 @@
 				C04F7B845AC0F137D572434F /* libPods-Shared-Spot-IM.DevelopmentTests.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		5DA8B59C2327E2010045FCFA /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				5DA8B5A02327E20A0045FCFA /* Autolayout.swift */,
-			);
-			path = Common;
 			sourceTree = "<group>";
 		};
 		5DB97790236B257000E9D547 /* SPUsernameView */ = {
@@ -2835,7 +2817,6 @@
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
-				5D9C97972327E2B3002BB6EA /* Autolayout.swift in Sources */,
 				5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */,
 				0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
@@ -2867,7 +2848,6 @@
 				6D4E56ED23A7A5F7005B79B6 /* FoxAuthenticationViewController.swift in Sources */,
 				6D4E56EE23A7A5F7005B79B6 /* ViewController.swift in Sources */,
 				6D4E56EF23A7A5F7005B79B6 /* Date+extensions.swift in Sources */,
-				6D4E56F023A7A5F7005B79B6 /* Autolayout.swift in Sources */,
 				6D4E56F123A7A5F7005B79B6 /* DemoViewController.swift in Sources */,
 				6D4E56F223A7A5F7005B79B6 /* AppDelegate.swift in Sources */,
 				6D4E56F323A7A5F7005B79B6 /* ArticlesListViewController.swift in Sources */,
@@ -2891,7 +2871,6 @@
 				6D4E571A23A7B785005B79B6 /* FoxAuthenticationViewController.swift in Sources */,
 				6D4E571B23A7B785005B79B6 /* ViewController.swift in Sources */,
 				6D4E571C23A7B785005B79B6 /* Date+extensions.swift in Sources */,
-				6D4E571D23A7B785005B79B6 /* Autolayout.swift in Sources */,
 				6D4E571E23A7B785005B79B6 /* DemoViewController.swift in Sources */,
 				6D4E571F23A7B785005B79B6 /* AppDelegate.swift in Sources */,
 				6D4E572023A7B785005B79B6 /* ArticlesListViewController.swift in Sources */,
@@ -2915,7 +2894,6 @@
 				6D85E4392414E846000265D3 /* FoxAuthenticationViewController.swift in Sources */,
 				6D85E43A2414E846000265D3 /* ViewController.swift in Sources */,
 				6D85E43B2414E846000265D3 /* Date+extensions.swift in Sources */,
-				6D85E43C2414E846000265D3 /* Autolayout.swift in Sources */,
 				6D85E43D2414E846000265D3 /* DemoViewController.swift in Sources */,
 				6D85E43E2414E846000265D3 /* AppDelegate.swift in Sources */,
 				6D85E43F2414E846000265D3 /* ArticlesListViewController.swift in Sources */,
@@ -2939,7 +2917,6 @@
 				6D85E4652414FA4B000265D3 /* FoxAuthenticationViewController.swift in Sources */,
 				6D85E4662414FA4B000265D3 /* ViewController.swift in Sources */,
 				6D85E4672414FA4B000265D3 /* Date+extensions.swift in Sources */,
-				6D85E4682414FA4B000265D3 /* Autolayout.swift in Sources */,
 				6D85E4692414FA4B000265D3 /* DemoViewController.swift in Sources */,
 				6D85E46A2414FA4B000265D3 /* AppDelegate.swift in Sources */,
 				6D85E46B2414FA4B000265D3 /* ArticlesListViewController.swift in Sources */,
@@ -2963,7 +2940,6 @@
 				6D85E49124150B8A000265D3 /* FoxAuthenticationViewController.swift in Sources */,
 				6D85E49224150B8A000265D3 /* ViewController.swift in Sources */,
 				6D85E49324150B8A000265D3 /* Date+extensions.swift in Sources */,
-				6D85E49424150B8A000265D3 /* Autolayout.swift in Sources */,
 				6D85E49524150B8A000265D3 /* DemoViewController.swift in Sources */,
 				6D85E49624150B8A000265D3 /* AppDelegate.swift in Sources */,
 				6D85E49724150B8A000265D3 /* ArticlesListViewController.swift in Sources */,
@@ -2987,7 +2963,6 @@
 				6DA75C6D238D313600FBDF19 /* FoxAuthenticationViewController.swift in Sources */,
 				6DA75C6E238D313600FBDF19 /* ViewController.swift in Sources */,
 				6DA75C6F238D313600FBDF19 /* Date+extensions.swift in Sources */,
-				6DA75C70238D313600FBDF19 /* Autolayout.swift in Sources */,
 				6DA75C91238D5A6F00FBDF19 /* DemoViewController.swift in Sources */,
 				6DA75C71238D313600FBDF19 /* AppDelegate.swift in Sources */,
 				6DA75C72238D313600FBDF19 /* ArticlesListViewController.swift in Sources */,
@@ -3011,7 +2986,6 @@
 				6DAFEEA2239CFCCF00441E97 /* FoxAuthenticationViewController.swift in Sources */,
 				6DAFEEA3239CFCCF00441E97 /* ViewController.swift in Sources */,
 				6DAFEEA4239CFCCF00441E97 /* Date+extensions.swift in Sources */,
-				6DAFEEA5239CFCCF00441E97 /* Autolayout.swift in Sources */,
 				6DAFEEA6239CFCCF00441E97 /* DemoViewController.swift in Sources */,
 				6DAFEEA7239CFCCF00441E97 /* AppDelegate.swift in Sources */,
 				6DAFEEA8239CFCCF00441E97 /* ArticlesListViewController.swift in Sources */,

@@ -74,7 +74,7 @@ DEPENDENCIES:
   - PromiseKit (~> 6.8)
   - RxCocoa
   - RxSwift
-  - SnapKit (~> 4.2.0)
+  - SnapKit
 
 SPEC REPOS:
   trunk:
