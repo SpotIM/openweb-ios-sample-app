@@ -10,17 +10,23 @@ import Foundation
 import UIKit
 import SpotImCore
 import WebKit
+import SnapKit
 
 let kSpotImDemo = "spotim.name"
 let kDemoArticleToUse = "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-secretly-living-in-brazil-reddit-selfie-sparks-conspiracy-theories/"
 
 internal final class ArticleWebViewController: UIViewController {
     
+    fileprivate struct Metrics {
+        static let openFullConversationButtonHeight: CGFloat = 50
+        static let webViewHeight: CGFloat = 1500
+    }
+    
     private lazy var scrollView = UIScrollView()
     private lazy var webView = WKWebView()
     private lazy var containerView = UIView()
 
-    private var containerHeightConstraint: NSLayoutConstraint?
+    private var containerHeightConstraint: Constraint?
 
     private lazy var loadingIndicator = UIActivityIndicatorView(style: .gray)
     
@@ -82,17 +88,15 @@ internal final class ArticleWebViewController: UIViewController {
     }
     
     private func showOpenFullConversationButton() {
-        let button:UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 50))
+        let button = UIButton()
         button.backgroundColor = .black
         button.setTitle("Open Full Conversation", for: .normal)
         button.addTarget(self, action:#selector(self.openSpotImFullConversation), for: .touchUpInside)
         self.containerView.addSubview(button)
-        button.layout {
-            $0.top.equal(to: self.containerView.topAnchor)
-            $0.leading.equal(to: self.containerView.leadingAnchor)
-            $0.bottom.equal(to: self.containerView.bottomAnchor)
-            $0.trailing.equal(to: self.containerView.trailingAnchor)
-       }
+        button.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.height.equalTo(Metrics.openFullConversationButtonHeight)
+        }
     }
 
     private func setupSpotPreConversationView() {
@@ -101,11 +105,8 @@ internal final class ArticleWebViewController: UIViewController {
             guard let self = self else { return }
             self.addChild(preConversationVC)
             self.containerView.addSubview(preConversationVC.view)
-            preConversationVC.view.layout {
-                $0.top.equal(to: self.containerView.topAnchor)
-                $0.leading.equal(to: self.containerView.leadingAnchor)
-                $0.bottom.equal(to: self.containerView.bottomAnchor)
-                $0.trailing.equal(to: self.containerView.trailingAnchor)
+            preConversationVC.view.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
             }
 
             preConversationVC.didMove(toParent: self)
@@ -143,9 +144,8 @@ extension ArticleWebViewController {
 
     private func setupLoadingIndicator() {
         webView.addSubview(loadingIndicator)
-        loadingIndicator.layout {
-            $0.centerX.equal(to: view.centerXAnchor)
-            $0.centerY.equal(to: view.centerYAnchor)
+        loadingIndicator.snp.makeConstraints { make in
+            make.center.equalTo(view.center)
         }
         loadingIndicator.startAnimating()
     }
@@ -153,11 +153,8 @@ extension ArticleWebViewController {
     private func setupScrollView() {
         view.addSubview(scrollView)
        
-        scrollView.layout {
-            $0.top.equal(to: view.topAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.bottom.equal(to: view.bottomAnchor)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
     
@@ -167,12 +164,10 @@ extension ArticleWebViewController {
 
         webView.navigationDelegate = self
         
-        webView.layout {
-            $0.top.equal(to: scrollView.topAnchor)
-            $0.leading.equal(to: scrollView.leadingAnchor)
-            $0.trailing.equal(to: scrollView.trailingAnchor)
-            $0.height.equal(to: 1500)
-            $0.width.equal(to: scrollView.widthAnchor)
+        webView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(Metrics.webViewHeight)
         }
         
         let isBadUrl = url.contains(kSpotImDemo)
@@ -187,13 +182,11 @@ extension ArticleWebViewController {
     
     private func setupContainerView() {
         scrollView.addSubview(containerView)
-  
-        containerView.layout {
-            $0.top.equal(to: webView.bottomAnchor)
-            $0.bottom.equal(to: scrollView.bottomAnchor)
-            $0.leading.equal(to: scrollView.leadingAnchor)
-            $0.trailing.equal(to: scrollView.trailingAnchor)
-            containerHeightConstraint = $0.height.greaterThanOrEqual(to: 0)
+        
+        containerView.snp.makeConstraints { make in
+            make.top.equalTo(webView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+            containerHeightConstraint = make.height.greaterThanOrEqualTo(0).constraint
         }
     }
 }
@@ -326,6 +319,6 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
 
 extension ArticleWebViewController: SpotImLayoutDelegate {
     func viewHeightDidChange(to newValue: CGFloat) {
-        containerHeightConstraint?.constant = newValue
+        containerHeightConstraint?.update(offset: newValue)
     }
 }
