@@ -20,20 +20,6 @@
 	<string>1.7.0</string>
 	<key>CFBundleVersion</key>
 	<string>217</string>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>ac77e6a593436ee200d04258b003ab92ab191339</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict/>
-				<key>KitName</key>
-				<string>Crashlytics</string>
-			</dict>
-		</array>
-	</dict>
 	<key>GADIsAdManagerApp</key>
 	<true/>
 	<key>LSRequiresIPhoneOS</key>
