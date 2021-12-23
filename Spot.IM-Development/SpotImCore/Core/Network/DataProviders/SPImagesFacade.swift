@@ -120,18 +120,20 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
     }
     
     private func signToCloudinary(publicId: String, timestamp: String, completion: @escaping (String?, Error?) -> Void) {
-        
+        guard let spotKey = SPClientSettings.main.spotKey else {
+            Logger.error("[ERROR]: No spot key for signing")
+            return
+        }
+        let headers = HTTPHeaders.basic(with: spotKey)
         let parameters: [String: Any] = [
-            "cloudinary_params": [
-                "public_id": publicId,
-                "timestamp": timestamp
-            ]
+            "query": "public_id=\(publicId)&timestamp=\(timestamp)"
         ]
         
         manager.execute(
             request: SPCloudinaryRequests.login,
             parameters: parameters,
-            parser: DecodableParser<SPSignResponse>()) { (result, _) in
+            parser: DecodableParser<SPSignResponse>(),
+            headers: headers) { (result, _) in
             switch result {
             case .success(let response):
                 completion(response.signature, nil)
