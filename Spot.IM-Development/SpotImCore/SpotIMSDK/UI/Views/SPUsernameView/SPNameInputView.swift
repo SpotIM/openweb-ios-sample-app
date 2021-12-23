@@ -93,7 +93,7 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
         usernameTextView.delegate = self
         usernameTextView.textContainer.maximumNumberOfLines = 1
         
-        usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your nickname")
+        usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your Username")
         usernameTextView.layout {
             $0.leading.equal(to: avatarImageView.trailingAnchor, offsetBy: Theme.usernameLeading)
             $0.centerY.equal(to: avatarImageView.centerYAnchor, offsetBy: usernameTextView.textContainer.lineFragmentPadding)
