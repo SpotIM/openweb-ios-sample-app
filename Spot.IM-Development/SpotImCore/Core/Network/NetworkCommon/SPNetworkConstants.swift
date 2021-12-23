@@ -11,7 +11,6 @@ import Alamofire
 
 internal struct APIConstants {
     static internal let baseURLString: String = "https://mobile-gw.spot.im"
-    static internal let spotimGatewayApiUrlString: String = "https://www.spot.im/api"
     static internal let cloudinaryUploadBaseURL: String = "https://api.cloudinary.com/v1_1/com-3pix"
     static internal let encoding = JSONEncoding.default
 }
