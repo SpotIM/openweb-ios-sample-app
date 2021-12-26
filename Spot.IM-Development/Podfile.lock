@@ -2,9 +2,6 @@ PODS:
   - Alamofire (5.4.1)
   - Cards (1.4.0):
     - Player (= 0.13.0)
-  - Crashlytics (3.14.0):
-    - Fabric (~> 1.10.2)
-  - Fabric (1.10.2)
   - Google-Mobile-Ads-SDK (8.0.0):
     - GoogleAppMeasurement (~> 7.0)
     - GoogleUserMessagingPlatform (~> 1.1)
@@ -56,24 +53,28 @@ PODS:
   - PromiseKit/UIKit (6.13.1):
     - PromiseKit/CorePromise
   - PromisesObjC (2.0.0)
+  - RxCocoa (6.2.0):
+    - RxRelay (= 6.2.0)
+    - RxSwift (= 6.2.0)
+  - RxRelay (6.2.0):
+    - RxSwift (= 6.2.0)
+  - RxSwift (6.2.0)
   - SnapKit (4.2.0)
 
 DEPENDENCIES:
   - Alamofire (~> 5.4)
   - Cards
-  - Crashlytics
-  - Fabric
   - Google-Mobile-Ads-SDK (= 8.0)
   - Kingfisher
   - PromiseKit (~> 6.8)
-  - SnapKit (~> 4.2.0)
+  - RxCocoa
+  - RxSwift
+  - SnapKit
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - Cards
-    - Crashlytics
-    - Fabric
     - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleUserMessagingPlatform
@@ -83,13 +84,14 @@ SPEC REPOS:
     - Player
     - PromiseKit
     - PromisesObjC
+    - RxCocoa
+    - RxRelay
+    - RxSwift
     - SnapKit
 
 SPEC CHECKSUMS:
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   Cards: 45ae6bd0eca7b5e8016d3b6cb30b60b04753f68f
-  Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
-  Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
   Google-Mobile-Ads-SDK: 9509c62617e8d77e2524833eed0b73dd028f0bc6
   GoogleAppMeasurement: fd19169c3034975cb934e865e5667bfdce59df7f
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
@@ -99,8 +101,11 @@ SPEC CHECKSUMS:
   Player: 968d8d07d923bcdd6f7e4091c9e306eb44a5f7a4
   PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
+  RxCocoa: 4baf94bb35f2c0ab31bc0cb9f1900155f646ba42
+  RxRelay: e72dbfd157807478401ef1982e1c61c945c94b2f
+  RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: 820370962b95f1dd7e075a55205703c637431aac
+PODFILE CHECKSUM: 59f696ccc3f83ae0a75e889a8f49d97f62e95322
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.11.2

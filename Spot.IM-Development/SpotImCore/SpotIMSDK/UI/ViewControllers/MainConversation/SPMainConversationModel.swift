@@ -40,7 +40,7 @@ final class SPMainConversationModel {
     
     private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"
     private let typingVisibilityAdditionalTimeInterval: Double = 5.0
-
+    
     private let commentUpdater: SPCommentUpdater
     private let imageProvider: SPImageURLProvider
     private let realTimeService: RealTimeService
@@ -49,6 +49,14 @@ final class SPMainConversationModel {
     private var realTimeData: RealTimeModel?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: AbTests
+    
+    // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
+    // Will refactor once we will move to MVVM
+    let onlineViewingUsersPreConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
+    
+    // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
+    // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
+    let onlineViewingUsersConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
     
     private(set) var dataSource: SPMainConversationDataSource
     private(set) var sortOption: SPCommentSortMode = .best {
@@ -103,7 +111,7 @@ final class SPMainConversationModel {
         delegates.invoke { $0.stopTypingTrack() }
         realTimeService.stopShowingRealtimeUI(for: dataSource.postId)
     }
-   
+    
     func stopRealTimeFetching() {
         realTimeService.stopRealTimeDataFetching()
     }
@@ -147,7 +155,7 @@ final class SPMainConversationModel {
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
         let avatarImageURL = self.dataSource.currentUserAvatarUrl
         if let key = avatarImageURL?.absoluteString,
-            let image = ImageCache.sdkCache.image(for: key) {
+           let image = ImageCache.sdkCache.image(for: key) {
             completion(image, nil)
         } else {
             imageProvider.image(with: avatarImageURL,
@@ -178,7 +186,7 @@ final class SPMainConversationModel {
                 }
             }
         }
-
+        
         let cancelAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Cancel"),
             style: .cancel
@@ -193,19 +201,19 @@ final class SPMainConversationModel {
         let availability = commentActionsAvailability(viewModel: viewModel)
         let replyingToID = viewModel?.rootCommentId
         var actions: [UIAlertAction] = []
-
+        
         let shareAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Share"),
             style: .default) { [weak self] _ in
-            self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId, replyingToID: replyingToID), sender: sender)
-        }
+                self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId, replyingToID: replyingToID), sender: sender)
+            }
         actions.append(shareAction)
         if availability.isReportable {
             let reportAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Report"),
                 style: .default) { [weak self] _ in
-                self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId, replyingToID: replyingToID), sender: sender)
-            }
+                    self?.commentsActionDelegate?.prepareFlowForAction(.report(commentId: commentId, replyingToID: replyingToID), sender: sender)
+                }
             actions.append(reportAction)
         }
         
@@ -228,8 +236,8 @@ final class SPMainConversationModel {
             let deleteAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Delete"),
                 style: .default) { [weak self] _ in
-                self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId, replyingToID: replyingToID), sender: sender)
-            }
+                    self?.commentsActionDelegate?.prepareFlowForAction(.delete(commentId: commentId, replyingToID: replyingToID), sender: sender)
+                }
             actions.append(deleteAction)
         }
         
@@ -252,13 +260,13 @@ final class SPMainConversationModel {
         let isDeletable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isEditable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isReportable = !viewModel.isDeleted && !(viewModel.authorId == SPUserSessionHolder.session.user?.id)
-
+        
         return (isDeletable, isEditable, isReportable)
     }
     
     func adsGroup() -> AdsABGroup {
         if let abGroup = abTestsData.tests
-        .first(where: { $0.testName == CURRENT_ADS_GROUP_TEST_NAME })?
+            .first(where: { $0.testName == CURRENT_ADS_GROUP_TEST_NAME })?
             .abTestGroup {
             return AdsABGroup(abGroup: abGroup, isUserRegistered: SPUserSessionHolder.session.user?.registered ?? false, disableInterstitialOnLogin: SPConfigsDataSource.appConfig?.mobileSdk.disableInterstitialOnLogin ?? false)
         }
@@ -350,6 +358,10 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         let fullConversationId = "\(spotId)_\(dataSource.postId)"
         
         do {
+            let onlineViewingUsersModel = try data.onlineViewingUsersCount(fullConversationId)
+            onlineViewingUsersPreConversationVM.inputs.configureModel(onlineViewingUsersModel)
+            onlineViewingUsersConversationVM.inputs.configureModel(onlineViewingUsersModel)
+            
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
             self.dataSource.messageCount = totalCommentsCount
@@ -375,7 +387,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
     /// Returns current visible typing count
     func typingCount() throws -> Int {
         guard let spotId = SPClientSettings.main.spotKey, let data = self.realTimeData?.data else { return 0 }
-
+        
         let fullConversationId = "\(spotId)_\(dataSource.postId)"
         let totalTypingCount = try data.totalTypingCountForConversation(fullConversationId)
         

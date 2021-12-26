@@ -24,7 +24,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     let adsProvider: AdsProvider
 
-    private let sortView = SPConversationSummaryView()
+    private let summaryView = SPConversationSummaryView()
 
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
@@ -120,7 +120,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         Logger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
-        sortView.updateCommentsLabel(model.dataSource.messageCount)
+        summaryView.updateCommentsLabel(model.dataSource.messageCount)
+        summaryView.configure(onlineViewingUsersVM: model.onlineViewingUsersConversationVM)
 
         if model.areCommentsEmpty() {
             presentEmptyCommentsStateView()
@@ -187,7 +188,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.footer.updateColorsAccordingToStyle()
         self.updateFooterViewCustomUI(footerView: self.footer)
         self.tableHeader.updateColorsAccordingToStyle()
-        self.sortView.updateColorsAccordingToStyle()
+        self.summaryView.updateColorsAccordingToStyle()
         self.loginPromptView.updateColorsAccordingToStyle()
         self.communityQuestionView.updateColorsAccordingToStyle()
         self.updateCommunityQuestionCustomUI(communityQuestionView: self.communityQuestionView)
@@ -244,7 +245,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
 
         if model.dataSource.messageCount > 0 {
-            sortView.updateCommentsLabel(model.dataSource.messageCount)
+            summaryView.updateCommentsLabel(model.dataSource.messageCount)
         }
 
         // scroll to pre-selected comment (tapped on the Pre-Conversation)
@@ -280,7 +281,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             Logger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
-            self.sortView.updateCommentsLabel(messageCount)
+            self.summaryView.updateCommentsLabel(messageCount)
 
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
@@ -329,7 +330,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
             let sortOption = self.model.sortOption
 
-            self.sortView.updateSortOption(sortOption.title)
+            self.summaryView.updateSortOption(sortOption.title)
             if shoudBeUpdated {
                 self.reloadConversation()
             }
@@ -364,7 +365,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 } else if success == false {
                     Logger.error("Load conversation next page request type is not `success`")
                 } else {
-                    self.sortView.updateCommentsLabel(self.model.dataSource.messageCount)
+                    self.summaryView.updateCommentsLabel(self.model.dataSource.messageCount)
                 }
 
                 self.tableView.reloadData()
@@ -373,10 +374,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupUI() {
-        view.addSubviews(footer, sortView, tableHeader, loginPromptView, collapsableContainer)
+        view.addSubviews(footer, summaryView, tableHeader, loginPromptView, collapsableContainer)
         super.setupUI()
 
-        setupSortView()
+        setupSummaryView()
         configureLoginPromptView()
         configureCollapsableContainer()
         configureCommunityGuidelinesView()
@@ -386,12 +387,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         setupRefreshControl()
     }
 
-    private func setupSortView() {
-        view.bringSubviewToFront(sortView)
-        sortView.dropsShadow = !SPUserInterfaceStyle.isDarkMode
-        sortView.delegate = self
-        sortView.updateSortOption(model.sortOption.title)
-        sortView.layout {
+    private func setupSummaryView() {
+        view.bringSubviewToFront(summaryView)
+        summaryView.dropsShadow = !SPUserInterfaceStyle.isDarkMode
+        summaryView.delegate = self
+        summaryView.updateSortOption(model.sortOption.title)
+        summaryView.layout {
             $0.top.equal(to: loginPromptView.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
             $0.leading.equal(to: view.leadingAnchor)
@@ -413,7 +414,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private func configureCollapsableContainer() {
         collapsableContainer.addSubviews(communityGuidelinesView, communityQuestionView)
         collapsableContainer.layout {
-            $0.top.equal(to: sortView.bottomAnchor)
+            $0.top.equal(to: summaryView.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
         }
@@ -603,7 +604,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     override func configureEmptyStateView() {
         super.configureEmptyStateView()
 
-        view.bringSubviewToFront(sortView)
+        view.bringSubviewToFront(summaryView)
         stateActionView?.layout {
             $0.bottom.equal(to: SpotIm.shouldConversationFooterStartFromBottomAnchor ? view.bottomAnchor : view.layoutMarginsGuide.bottomAnchor)
             $0.leading.equal(to: view.leadingAnchor)
@@ -724,7 +725,7 @@ extension SPMainConversationViewController { // SPMainConversationDataSourceDele
         if shouldBeScrolledToTop {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
-        sortView.updateCommentsLabel(model.dataSource.messageCount)
+        summaryView.updateCommentsLabel(model.dataSource.messageCount)
         tableView.reloadData()
     }
 
@@ -756,10 +757,6 @@ extension SPMainConversationViewController { // SPCommentCellDelegate
 }
 
 extension SPMainConversationViewController: SPConversationSummaryViewDelegate {
-
-    func newCommentsDidTap(_ summaryView: SPConversationSummaryView) {
-
-    }
 
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView) {
         SPAnalyticsHolder.default.log(event: .sortByOpened, source: .conversation)
@@ -893,6 +890,6 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
 
 extension SPMainConversationViewController: CommentsCounterDelegate {
     func commentsCountDidUpdate(count: Int) {
-        self.sortView.updateCommentsLabel(count)
+        self.summaryView.updateCommentsLabel(count)
     }
 }

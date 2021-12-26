@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SpotImCore
+import SnapKit
 
 internal final class ArticleViewController: UIViewController {
 
@@ -40,12 +41,10 @@ internal final class ArticleViewController: UIViewController {
                     self.addChild(preConversationVC)
                     self.containerView.addSubview(preConversationVC.view)
                     
-                    preConversationVC.view.layout {
-                        $0.top.equal(to: self.containerView.topAnchor)
-                        $0.leading.equal(to: self.containerView.leadingAnchor)
-                        $0.bottom.equal(to: self.containerView.bottomAnchor)
-                        $0.trailing.equal(to: self.containerView.trailingAnchor)
+                    preConversationVC.view.snp.makeConstraints { make in
+                        make.edges.equalToSuperview()
                     }
+                    
                     preConversationVC.didMove(toParent: self)
                 }
             case .failure(let error):
