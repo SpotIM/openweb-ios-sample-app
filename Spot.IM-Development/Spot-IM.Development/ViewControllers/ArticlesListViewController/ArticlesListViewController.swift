@@ -10,10 +10,15 @@ import UIKit
 import Foundation
 import Alamofire
 import SpotImCore
+import SnapKit
 
 let cellIdentifier = "cards"
 
 class ArticlesListViewController: UITableViewController {
+    
+    fileprivate struct Metrics {
+        static let headerHeight: CGFloat = 50
+    }
     
     let spotId : String
     let authenticationControllerId: String
@@ -102,8 +107,13 @@ class ArticlesListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIStackView.init(frame: CGRect.init(x: 0, y: 0, width: 40, height: 50))
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: Metrics.headerHeight))
+        headerView.backgroundColor = .white
+        
         let headerStackView = UIStackView()
+        headerStackView.spacing = 5
+        headerStackView.alignment = .fill
+        headerStackView.distribution = .equalSpacing
         
         let button = UIButton()
         button.setTitle("Custom PostId", for: .normal)
@@ -112,22 +122,19 @@ class ArticlesListViewController: UITableViewController {
         
         headerStackView.addArrangedSubview(button)
         headerStackView.addArrangedSubview(customPostTextField)
-        headerStackView.spacing = 5
-        headerStackView.alignment = .fill
-        headerStackView.distribution = .equalSpacing
         
         headerView.addSubview(headerStackView)
-        headerStackView.layout {
-            $0.centerX.equal(to: headerView.centerXAnchor)
+        headerStackView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
         }
         
-        headerView.backgroundColor = .white
         return headerView
     }
     
     @objc private func customPostClicked() {
         if let postId = customPostTextField.text, let postForCopy = self.data?.posts?[0] {
-            var post = Post(spotId: postForCopy.spotId, conversationId: postId, publishedAt: postForCopy.publishedAt, extractData: postForCopy.extractData)
+            let post = Post(spotId: postForCopy.spotId, conversationId: postId, publishedAt: postForCopy.publishedAt, extractData: postForCopy.extractData)
             articleCellTapped(withPost: post)
         }
         

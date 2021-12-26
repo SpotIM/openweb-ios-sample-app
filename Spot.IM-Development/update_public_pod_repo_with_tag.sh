@@ -1,7 +1,8 @@
 #!/bin/bash
 
 RELEASE_VERSION=$1
-TAG="$RELEASE_VERSION-xcode12.5"
+XCODE_VERSION=$2
+TAG="$RELEASE_VERSION-xcode$XCODE_VERSION"
 
 git clone git@github.com:SpotIM/spotim-ios-sdk-pod.git
 cd spotim-ios-sdk-pod
