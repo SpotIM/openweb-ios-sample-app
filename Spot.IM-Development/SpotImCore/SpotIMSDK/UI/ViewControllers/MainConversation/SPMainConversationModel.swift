@@ -222,11 +222,7 @@ final class SPMainConversationModel {
                 title: LocalizationManager.localizedString(key: "Edit"),
                 style: .default,
                 handler: {[weak self] _ in
-                    self?.commentsActionDelegate?.prepareFlowForAction(
-                        .edit(commentId: commentId,
-                              replyingToID: replyingToID
-                             ),
-                        sender: sender)
+                    self?.commentsActionDelegate?.prepareFlowForAction(.edit(commentId: commentId, replyingToID: replyingToID), sender: sender)
                 }
             )
             actions.append(editAction)
