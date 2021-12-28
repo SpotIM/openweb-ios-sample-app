@@ -25,10 +25,8 @@ final class CommentImagePreview: BaseView {
     var isUploadingImage: Bool {
         didSet {
             if isUploadingImage {
-                loaderView.isHidden = false
                 loaderView.startLoader()
             } else {
-                loaderView.isHidden = true
                 loaderView.stopLoader()
             }
         }
