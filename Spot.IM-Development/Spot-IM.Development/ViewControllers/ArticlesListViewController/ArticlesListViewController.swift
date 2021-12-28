@@ -10,10 +10,15 @@ import UIKit
 import Foundation
 import Alamofire
 import SpotImCore
+import SnapKit
 
 let cellIdentifier = "cards"
 
 class ArticlesListViewController: UITableViewController {
+    
+    fileprivate struct Metrics {
+        static let headerHeight: CGFloat = 50
+    }
     
     let spotId : String
     let authenticationControllerId: String
@@ -21,12 +26,18 @@ class ArticlesListViewController: UITableViewController {
     let addToTableView: Bool
     let shouldReinit: Bool
     
+    let customPostTextField = UITextField()
+    
     init(spotId:String, authenticationControllerId: String, addToTableView: Bool = false, shouldReinint: Bool) {
         self.spotId = spotId
         
         self.authenticationControllerId = authenticationControllerId
         self.addToTableView = addToTableView
         self.shouldReinit = shouldReinint
+        
+        customPostTextField.placeholder = "custom postId"
+        customPostTextField.borderStyle = .roundedRect
+        customPostTextField.autocapitalizationType = .none
         
         super.init(style: .plain)
     }
@@ -93,6 +104,44 @@ class ArticlesListViewController: UITableViewController {
         if let post = self.data?.posts?[indexPath.item] {
             articleCellTapped(withPost: post)
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: Metrics.headerHeight))
+        headerView.backgroundColor = .white
+        
+        let headerStackView = UIStackView()
+        headerStackView.spacing = 5
+        headerStackView.alignment = .fill
+        headerStackView.distribution = .equalSpacing
+        
+        let button = UIButton()
+        button.setTitle("Custom PostId", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(customPostClicked), for: .touchUpInside)
+        
+        headerStackView.addArrangedSubview(button)
+        headerStackView.addArrangedSubview(customPostTextField)
+        
+        headerView.addSubview(headerStackView)
+        headerStackView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
+        }
+        
+        return headerView
+    }
+    
+    @objc private func customPostClicked() {
+        if let postId = customPostTextField.text, let postForCopy = self.data?.posts?[0] {
+            let post = Post(spotId: postForCopy.spotId, conversationId: postId, publishedAt: postForCopy.publishedAt, extractData: postForCopy.extractData)
+            articleCellTapped(withPost: post)
+        }
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
 }
 

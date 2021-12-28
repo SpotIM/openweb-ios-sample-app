@@ -25,14 +25,14 @@ class SPCommentCreationModel {
     let cacheService: SPCommentsInMemoryCacheService
     
     private var currentUploadingImageId: String?
-    
-    init(baseCommentCreationDTO: SPCommentCreationDTO,
+
+    init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageProvider,
          articleMetadate: SpotImArticleMetadata
     ) {
-        self.dataModel = baseCommentCreationDTO
+        self.dataModel = commentCreationDTO
         self.imageProvider = imageProvider
         self.cacheService = cacheService
         commentService = updater
@@ -55,7 +55,8 @@ class SPCommentCreationModel {
                 guard let self = self else { return }
                 
                 let responseData = self.populateResponseFields(response)
-                
+                let commentIdentifier: String = self.getCommentIdentifierForCommentType()
+                self.cacheService.remove(for: commentIdentifier)
                 self.postCompletionHandler?(responseData)
             },
             failure: {
@@ -84,11 +85,14 @@ class SPCommentCreationModel {
         }
         
         if isCommentAReply() {
-            let isRootComment = dataModel.replyModel?.commentId == dataModel.replyModel?.rootCommentId
+            let commentId = dataModel.replyModel?.commentId
+            let rootCommentId = dataModel.replyModel?.rootCommentId
+            let isRootComment = commentId == rootCommentId
             if !isRootComment {
-                metadata[SPRequestKeys.replyTo] = [SPRequestKeys.replyId: dataModel.replyModel?.commentId]
+                metadata[SPRequestKeys.replyTo] = [SPRequestKeys.replyId: commentId]
             }
             parameters[SPRequestKeys.conversationId] = dataModel.postId
+            parameters[SPRequestKeys.parentId] = rootCommentId ?? commentId
         }
         
         parameters[SPRequestKeys.metadata] = metadata
