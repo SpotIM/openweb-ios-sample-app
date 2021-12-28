@@ -23,10 +23,12 @@ class SPLoaderView: BaseView {
     }
     
     func startLoader() {
+        isHidden = false
         loader.startAnimating()
     }
     
     func stopLoader() {
+        isHidden = true
         loader.stopAnimating()
     }
     
