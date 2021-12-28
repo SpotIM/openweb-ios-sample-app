@@ -369,10 +369,36 @@ Build: [unknown]</string>
                                     <action selector="showsp_mobileGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="uEF-Ec-8X5"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="dNW-kA-umB">
+                                <rect key="frame" x="90" y="538" width="195" height="34"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2z-mA-4Rd" userLabel="Custom Spot">
+                                        <rect key="frame" x="0.0" y="0.0" width="90" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="tintColor" systemColor="labelColor"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Custom Spot">
+                                            <color key="titleColor" systemColor="labelColor"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showCustomSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="cdF-Om-dWd"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="sp_" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rRC-QZ-NmV">
+                                        <rect key="frame" x="95" y="0.0" width="100" height="34"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="mO0-eS-sdK"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HBy-no-NuF"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="dNW-kA-umB" firstAttribute="top" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="8" id="4VA-qw-ZdU"/>
                             <constraint firstItem="HBy-no-NuF" firstAttribute="trailing" secondItem="ELI-s3-pbx" secondAttribute="trailing" constant="18" id="6eK-dG-9h6"/>
                             <constraint firstItem="nhj-w0-03k" firstAttribute="centerX" secondItem="0p1-DY-kYy" secondAttribute="centerX" id="CiU-Vc-af9"/>
                             <constraint firstItem="VlM-lF-gbf" firstAttribute="top" secondItem="BLK-PJ-hZQ" secondAttribute="bottom" constant="8" id="DmA-u8-xQ9"/>
@@ -383,6 +409,7 @@ Build: [unknown]</string>
                             <constraint firstItem="VlM-lF-gbf" firstAttribute="centerX" secondItem="htH-kI-1Pw" secondAttribute="centerX" id="KJX-VB-1lX"/>
                             <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="VlM-lF-gbf" secondAttribute="bottom" constant="8" id="QBH-kR-xuP"/>
                             <constraint firstItem="VlM-lF-gbf" firstAttribute="centerX" secondItem="BLK-PJ-hZQ" secondAttribute="centerX" id="QYp-sY-CvV"/>
+                            <constraint firstItem="dNW-kA-umB" firstAttribute="centerX" secondItem="BKE-Ut-tNt" secondAttribute="centerX" id="Tpe-uT-w8b"/>
                             <constraint firstItem="AZp-Pq-loo" firstAttribute="top" secondItem="Ont-uO-1R5" secondAttribute="bottom" constant="8" id="U5Q-XJ-YrC"/>
                             <constraint firstItem="BLK-PJ-hZQ" firstAttribute="top" secondItem="nhj-w0-03k" secondAttribute="bottom" constant="8" id="Zoy-cp-j2J"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="baQ-sc-dEe"/>
@@ -401,6 +428,7 @@ Build: [unknown]</string>
                     <navigationItem key="navigationItem" id="JkC-5p-26C"/>
                     <connections>
                         <outlet property="appInfoLabel" destination="TMI-UE-CFh" id="nzs-aY-YgY"/>
+                        <outlet property="customSpotTextField" destination="rRC-QZ-NmV" id="zoq-1e-bJ9"/>
                         <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
                         <segue destination="oc6-g4-D2s" kind="show" identifier="showPreConversationSegue" id="03O-tL-zah"/>
                     </connections>

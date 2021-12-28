@@ -19,6 +19,7 @@ class ViewController: UIViewController {
 
     var adLoader:GADAdLoader!
 
+    @IBOutlet weak var customSpotTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -119,6 +120,12 @@ class ViewController: UIViewController {
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
         showArticlesWithSettingsAlert(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+    }
+    
+    @IBAction func showCustomSpotConversation(_ sender: UIButton) {
+        let spotId = customSpotTextField.text ?? ""
+        setup(with: spotId, from: sender)
+        showArticles(with: spotId, authenticationControllerId: .defaultAuthenticationControllerId)
     }
     
     private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
