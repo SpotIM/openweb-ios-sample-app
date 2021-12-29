@@ -67,7 +67,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         guard let config = SPConfigsDataSource.appConfig else { return true }
         let session = SPUserSessionHolder.session
 
-        let shoudEnterName = config.initialization?.policyForceRegister == false && session.user?.registered == false
+        return config.initialization?.policyForceRegister == false && session.user?.registered == false
         return shoudEnterName
     }
     var showCommentLabels: Bool {
