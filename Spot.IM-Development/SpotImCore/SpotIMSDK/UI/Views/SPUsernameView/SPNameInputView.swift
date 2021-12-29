@@ -21,6 +21,10 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     var isSelected: Bool {
         usernameTextView.isFirstResponder
     }
+    
+    let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
+    let boldFont = UIFont.preferred(style: .bold, of: Theme.fontSize)
+    
     // MARK: - Overrides
 
     deinit {
@@ -82,16 +86,14 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
     }
 
     private func setupUsernameTextField() {
-        let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
-
-        usernameTextView.textColor = .spForeground0
+        usernameTextView.textColor = .spForeground1
         usernameTextView.textAlignment = LocalizationManager.getTextAlignment()
         usernameTextView.backgroundColor = .spBackground0
-        usernameTextView.font = font
+        usernameTextView.font = usernameTextView.isEditable ? font : boldFont
         usernameTextView.delegate = self
         usernameTextView.textContainer.maximumNumberOfLines = 1
         
-        usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your nickname")
+        usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your Username")
         usernameTextView.layout {
             $0.leading.equal(to: avatarImageView.trailingAnchor, offsetBy: Theme.usernameLeading)
             $0.centerY.equal(to: avatarImageView.centerYAnchor, offsetBy: usernameTextView.textContainer.lineFragmentPadding)
@@ -99,13 +101,19 @@ internal final class SPNameInputView: BaseView, SPTextInputView {
             $0.height.equal(to: avatarImageView.heightAnchor)
         }
     }
+    
+    func setTextAccess(isEditable: Bool) {
+        usernameTextView.isEditable = isEditable
+        usernameTextView.isSelectable = isEditable
+        usernameTextView.font = isEditable ? font : boldFont
+    }
 
     private func setupSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
         separatorView.layout {
-            $0.leading.equal(to: leadingAnchor)
+            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.separatorVerticalPadding)
             $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.separatorVerticalPadding)
             $0.height.equal(to: Theme.separatorHeight)
         }
     }
@@ -148,9 +156,10 @@ extension SPNameInputView: UITextViewDelegate {
 // MARK: - Theme
 
 private enum Theme {
-    static let fontSize: CGFloat = 16.0
+    static let fontSize: CGFloat = 14.0
     static let xOffset: CGFloat = 14.0
     static let separatorHeight: CGFloat = 1.0
     static let usernameLeading: CGFloat = 10.0
     static let avatarSideSize: CGFloat = 44.0
+    static let separatorVerticalPadding: CGFloat = 15.0
 }
