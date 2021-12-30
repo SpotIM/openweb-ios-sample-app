@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-import SnapKit
 import RxSwift
 import RxCocoa
 
@@ -54,17 +53,17 @@ class OWOnlineViewingUsersCounterView: UIView {
 fileprivate extension OWOnlineViewingUsersCounterView {
     func setupViews() {
         self.addSubview(imgViewIcon)
-        imgViewIcon.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview()
-            make.bottom.equalToSuperview()
+        imgViewIcon.layout {
+            $0.top.equal(to: self.topAnchor)
+            $0.leading.equal(to: self.leadingAnchor)
+            $0.bottom.equal(to: self.bottomAnchor)
         }
         
         self.addSubview(lblViewersNumber)
-        lblViewersNumber.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalTo(imgViewIcon.snp.trailing).offset(Metrics.horizontalMargin)
-            make.trailing.equalToSuperview()
+        lblViewersNumber.layout {
+            $0.centerY.equal(to: self.centerYAnchor)
+            $0.leading.equal(to: imgViewIcon.trailingAnchor, offsetBy: Metrics.horizontalMargin)
+            $0.trailing.equal(to: self.trailingAnchor)
         }
     }
     

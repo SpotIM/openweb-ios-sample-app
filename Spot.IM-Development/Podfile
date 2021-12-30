@@ -11,12 +11,12 @@ abstract_target 'Shared' do
   pod 'PromiseKit', '~> 6.8'
   pod 'RxSwift'
   pod 'RxCocoa'
-  pod 'SnapKit'
   
   target 'SpotImCore'
   target 'Spot-IM.DevelopmentTests'
   
   abstract_target 'DemoApps' do
+    pod 'SnapKit'
     pod 'SnapKit'
     pod 'Cards'
     pod 'Kingfisher'
