@@ -11,22 +11,25 @@ import Foundation
 class SPCommentCreationModel {
     
     var postCompletionHandler: ((SPComment) -> Void)?
-    var postErrorHandler: ((Error) -> Void)?
+    var errorHandler: ((Error) -> Void)?
     var commentText: String = ""
+    var imageContent: SPComment.Content.Image?
     var articleMetadate: SpotImArticleMetadata
     var selectedLabels: SelectedLabels?
     var commentLabelsSection: String?
     var sectionCommentLabelsConfig: SPCommentLabelsSectionConfiguration?
     var dataModel: SPCommentCreationDTO
     
-    let imageProvider: SPImageURLProvider
+    let imageProvider: SPImageProvider
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
     
+    private var currentUploadingImageId: String?
+
     init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
-         imageProvider: SPImageURLProvider,
+         imageProvider: SPImageProvider,
          articleMetadate: SpotImArticleMetadata
     ) {
         self.dataModel = commentCreationDTO
@@ -72,7 +75,7 @@ class SPCommentCreationModel {
             },
             failure: {
                 [weak self] error in
-                self?.postErrorHandler?(error)
+                self?.errorHandler?(error)
             }
         )
     }
@@ -91,7 +94,7 @@ class SPCommentCreationModel {
                 self.postCompletionHandler?(responseData)
             },
             failure: { [weak self] error in
-                self?.postErrorHandler?(error)
+                self?.errorHandler?(error)
             }
         )
     }
@@ -102,7 +105,7 @@ class SPCommentCreationModel {
         var metadata: [String: Any] = [SPRequestKeys.displayName: displayName]
         
         var parameters: [String: Any] = [
-            SPRequestKeys.content: [[SPRequestKeys.text: commentText]]
+            SPRequestKeys.content: self.getContentRequestParam()
         ]
         
         if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
@@ -187,6 +190,19 @@ class SPCommentCreationModel {
         
         return dataModel.postId
     }
+    
+    func shouldDisplayImageUploadButton() -> Bool {
+        if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
+           conversationConfig.disableImageUploadButton == true {
+            return false
+        } else if !Bundle.main.hasCameraUsageDescription ||
+                    !Bundle.main.hasPhotoLibraryUsageDescription {
+            Logger.warn("Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file")
+            return false
+        } else {
+            return true
+        }
+    }
 
     private func setupCommentLabels() {
         guard let sharedConfig = SPConfigsDataSource.appConfig?.shared,
@@ -218,15 +234,73 @@ class SPCommentCreationModel {
     }
     
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
-        imageProvider.image(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
+        imageProvider.fetchImage(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
     }
     
+    func isValidContent() -> Bool {
+        return
+            commentText.hasContent ||
+            imageContent != nil
+    }
+
+    func uploadImageToCloudinary(imageData: String, completion: @escaping (Bool) -> Void) {
+        self.imageContent = nil
+
+        let imageId = UUID().uuidString
+        self.currentUploadingImageId = imageId
+
+        imageProvider.uploadImage(imageData: imageData, imageId: imageId) { imageContent, err in
+            if self.currentUploadingImageId == imageContent?.imageId {
+                self.imageContent = imageContent
+                self.currentUploadingImageId = nil
+                completion(imageContent != nil)
+            } else if let error = err {
+                print("Failed to upload image: " + error.localizedDescription)
+                self.currentUploadingImageId = nil
+                self.errorHandler?(error)
+                completion(false)
+            }
+        }
+    }
+
+    func removeImage() {
+        self.currentUploadingImageId = nil
+        self.imageContent = nil
+    }
+
+    func getContentRequestParam() -> [[String: Any]] {
+        var content: [[String: Any]] = []
+
+        if commentText.hasContent {
+            content.append([
+                SPRequestKeys.type: SPRequestKeys.text,
+                SPRequestKeys.text: commentText
+            ])
+        }
+
+        if let imageContent = self.imageContent {
+            content.append([
+                SPRequestKeys.type: SPRequestKeys.image,
+                SPRequestKeys.imageId: imageContent.imageId,
+                SPRequestKeys.originalWidth: imageContent.originalWidth,
+                SPRequestKeys.originalHeight: imageContent.originalHeight
+            ])
+        }
+        return content
+    }
+}
     
+extension SPCommentCreationModel {
     private enum SPRequestKeys {
         static let content = "content"
+        static let type = "type"
         static let text = "text"
+        static let image = "image"
+        static let imageId = "imageId"
+        static let originalHeight = "originalHeight"
+        static let originalWidth = "originalWidth"
         static let metadata = "metadata"
         static let displayName = "display_name"
         static let additionalData = "additional_data"
@@ -239,9 +313,11 @@ class SPCommentCreationModel {
         static let conversationId = "conversation_id"
         static let messageId = "message_id"
     }
+    
+    struct SelectedLabels {
+        var section: String
+        var ids: [String]
+    }
 }
 
-struct SelectedLabels {
-    var section: String
-    var ids: [String]
-}
+

@@ -12,8 +12,10 @@ class SPLoaderView: BaseView {
 
     private let loader: UIActivityIndicatorView = .init(style: .whiteLarge)
     private let backgroundView: BaseView = .init()
+    private let backgroundOpacity: CGFloat
     
-    override init(frame: CGRect) {
+    init(frame: CGRect = .zero, backgroundOpacity: CGFloat = 0.2) {
+        self.backgroundOpacity = backgroundOpacity
         super.init(frame: frame)
         
         backgroundColor = .clear
@@ -21,10 +23,12 @@ class SPLoaderView: BaseView {
     }
     
     func startLoader() {
+        isHidden = false
         loader.startAnimating()
     }
     
     func stopLoader() {
+        isHidden = true
         loader.stopAnimating()
     }
     
@@ -35,7 +39,7 @@ class SPLoaderView: BaseView {
     }
     
     private func configureBackgroundView() {
-        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(backgroundOpacity)
         backgroundView.pinEdges(to: self)
     }
     

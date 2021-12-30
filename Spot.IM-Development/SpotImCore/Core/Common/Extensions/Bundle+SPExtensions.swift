@@ -11,8 +11,28 @@ import UIKit
 extension Bundle {
     static let spot = Bundle(for: BundleToken.self)
     
-    func shortVersion() -> String? {
+    var shortVersion: String? {
         return self.infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+    
+    var bundleIdentifier: String? {
+        return self.infoDictionary?[kCFBundleIdentifierKey as String] as? String
+    }
+    
+    var cameraUsageDescription: String? {
+        return self.infoDictionary?["NSCameraUsageDescription"] as? String
+    }
+    
+    var hasCameraUsageDescription: Bool {
+        return self.cameraUsageDescription != nil
+    }
+    
+    var photoLibraryUsageDescription: String? {
+        return self.infoDictionary?["NSPhotoLibraryUsageDescription"] as? String
+    }
+    
+    var hasPhotoLibraryUsageDescription: Bool {
+        return self.photoLibraryUsageDescription != nil
     }
 }
 
