@@ -15,5 +15,6 @@ struct SPConfigurationConversation: Decodable {
     let typingAggregationTimeSeconds: Int?
     let communityGuidelinesEnabled: Bool?
     let communityGuidelinesTitle: SPCommunityGuidelinesTitle?
+    let disableImageUploadButton: Bool?
     let translationTextOverrides: [String : [String : String]]? // [language: [key : text]]
 }

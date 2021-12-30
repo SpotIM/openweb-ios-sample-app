@@ -42,7 +42,7 @@ final class SPMainConversationModel {
     private let typingVisibilityAdditionalTimeInterval: Double = 5.0
     
     private let commentUpdater: SPCommentUpdater
-    private let imageProvider: SPImageURLProvider
+    private let imageProvider: SPImageProvider
     private let realTimeService: RealTimeService
     
     private var realTimeTimer: Timer?
@@ -82,7 +82,7 @@ final class SPMainConversationModel {
     
     init(commentUpdater: SPCommentUpdater,
          conversationDataSource: SPMainConversationDataSource,
-         imageProvider: SPImageURLProvider,
+         imageProvider: SPImageProvider,
          realTimeService: RealTimeService,
          abTestData: AbTests) {
         self.realTimeService = realTimeService
@@ -158,7 +158,7 @@ final class SPMainConversationModel {
            let image = ImageCache.sdkCache.image(for: key) {
             completion(image, nil)
         } else {
-            imageProvider.image(with: avatarImageURL,
+            imageProvider.fetchImage(with: avatarImageURL,
                                 size: navigationAvatarSize,
                                 completion: completion)
         }

@@ -29,9 +29,11 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     let topContainerView: BaseView = .init()
     let topContainerStack: BaseStackView = .init()
+    let commentContentScrollView: BaseScrollView = .init()
     var textInputViewContainer: SPCommentTextInputView = .init(
         hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
     )
+    private let imagePreviewView: CommentImagePreview = .init()
     lazy var usernameView: SPNameInputView = SPNameInputView()
 
     let activityIndicator: SPLoaderView = SPLoaderView()
@@ -47,6 +49,8 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
     private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
+    private var commentLabelsContainerBottomConstraint: NSLayoutConstraint?
+    private var commentContentScrollViewBottomConstraint: NSLayoutConstraint?
     private var mainContainerBottomConstraint: NSLayoutConstraint?
     private var topContainerTopConstraint: NSLayoutConstraint?
     private var emptyArticleBottomConstraint: NSLayoutConstraint?
@@ -59,6 +63,8 @@ class SPCommentCreationViewController: SPBaseViewController,
     private let commentingContainer: UIView = .init()
     private let commentingOnLabel: BaseLabel = .init()
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
+    
+    private var imagePicker: ImagePicker?
     
     private var shouldBeAutoPosted: Bool = true
     
@@ -80,8 +86,6 @@ class SPCommentCreationViewController: SPBaseViewController,
         return false
     }
     
-    private var inputViews = [SPTextInputView]()
-    
     deinit {
         unregisterFromKeyboardNotifications()
     }
@@ -98,10 +102,6 @@ class SPCommentCreationViewController: SPBaseViewController,
         setupUI()
         setupUserIconHandler()
         registerForKeyboardNotifications()
-        inputViews.append(textInputViewContainer)
-        if showsUsernameInput {
-            inputViews.append(usernameView)
-        }
         
         // remove keyboard when tapping outside of textView
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -148,6 +148,8 @@ class SPCommentCreationViewController: SPBaseViewController,
     private func hideCommentLabelsContainer() {
         commentLabelsContainer.isHidden = true
         commentLabelsContainerHeightConstraint?.constant = 0
+        commentLabelsContainerBottomConstraint?.constant = 0
+        commentContentScrollViewBottomConstraint?.constant = 0
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -156,6 +158,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         navigationController?.setNavigationBarHidden(true, animated: animated)
         updatePostButton()
         setupCommentLabelsContainer()
+        setFooterViewContentButtons()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -169,6 +172,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         
         // delay added for keyboard not to appear earlier than the screen
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) {
+            guard !self.imagePreviewView.isUploadingImage else { return }
             if self.showsUsernameInput {
                 self.usernameView.makeFirstResponder()
             } else {
@@ -328,7 +332,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             self.dismissController()
         }
         
-        model.postErrorHandler = { [weak self] error in
+        model.errorHandler = { [weak self] error in
             guard let self = self else { return }
 
             self.hideLoader()
@@ -543,11 +547,16 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     private func isValidInput() -> Bool {
         var isValidInput = true
-        for aView in inputViews {
-            if aView.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? false {
+        
+        // check user name input text
+        if showsUsernameInput {
+            if usernameView.text == nil || usernameView.text?.hasContent == false {
                 isValidInput = false
-                break
             }
+        }
+        
+        if !model.isValidContent() {
+            isValidInput = false
         }
         
         // check comment labels minSelected
@@ -602,14 +611,14 @@ extension SPCommentCreationViewController {
             }
         }
         scrollView.addSubview(mainContainerView)
-        mainContainerView.addSubviews(topContainerView, textInputViewContainer, commentLabelsContainer, footerView)
+        mainContainerView.addSubviews(topContainerView, commentContentScrollView, commentLabelsContainer, footerView)
         topContainerView.addSubview(topContainerStack)
         
         configureMainContainer()
         configureTopContainerStack()
         configureTopContainer()
         configureUsernameView()
-        configureInputContainerView()
+        configureContentScrollView()
         configureFooterView()
         configureCommentLabelsContainer()
         updateColorsAccordingToStyle()
@@ -642,14 +651,36 @@ extension SPCommentCreationViewController {
         }
     }
     
+    private func configureContentScrollView() {
+        commentContentScrollView.layout {
+            $0.top.equal(to: topContainerView.bottomAnchor)
+            $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
+            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewTrailingInset)
+            commentContentScrollViewBottomConstraint = $0.bottom.equal(to: commentLabelsContainer.topAnchor, offsetBy: -15)
+            $0.height.greaterThanOrEqual(to: 40.0)
+        }
+        
+        commentContentScrollView.addSubviews(textInputViewContainer, imagePreviewView)
+        self.configureInputContainerView()
+        self.configureImagePreviewView()
+    }
+    
     private func configureInputContainerView() {
         textInputViewContainer.delegate = self
         textInputViewContainer.layout {
-            $0.top.equal(to: topContainerView.bottomAnchor, offsetBy: Theme.mainOffset)
-            $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
-            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.bottom.greaterThanOrEqual(to: commentLabelsContainer.topAnchor, offsetBy: -Theme.inputViewEdgeInset)
-            $0.height.greaterThanOrEqual(to: 40.0)
+            $0.top.equal(to: commentContentScrollView.topAnchor, offsetBy: Theme.mainOffset)
+            $0.bottom.equal(to: imagePreviewView.topAnchor, offsetBy: -Theme.mainOffset)
+            $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
+            $0.trailing.equal(to: commentContentScrollView.layoutMarginsGuide.trailingAnchor)
+        }
+    }
+    
+    private func configureImagePreviewView() {
+        imagePreviewView.delegate = self
+        imagePreviewView.layout {
+            $0.bottom.equal(to: commentContentScrollView.bottomAnchor, offsetBy: -Theme.mainOffset)
+            $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
+            $0.trailing.equal(to: commentContentScrollView.layoutMarginsGuide.trailingAnchor)
         }
     }
     
@@ -692,7 +723,8 @@ extension SPCommentCreationViewController {
         footerView.configurePostButton(title: postButtonTitle, action: action)
     }
     
-    private func configureFooterView() {        
+    private func configureFooterView() {
+        footerView.delegate = self
         footerView.layout {
             mainContainerBottomConstraint = $0.bottom.equal(to: scrollView.bottomAnchor)
             $0.trailing.equal(to: mainContainerView.trailingAnchor)
@@ -704,10 +736,52 @@ extension SPCommentCreationViewController {
     private func configureCommentLabelsContainer() {
         commentLabelsContainer.delegate = self
         commentLabelsContainer.layout {
-            $0.bottom.equal(to: footerView.topAnchor, offsetBy: -15.0)
+            commentLabelsContainerBottomConstraint = $0.bottom.equal(to: footerView.topAnchor, offsetBy: -15.0)
             $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
             $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -15.0)
-            commentLabelsContainerHeightConstraint = $0.height.greaterThanOrEqual(to: 56.0)
+            commentLabelsContainerHeightConstraint = $0.height.equal(to: 56.0)
+        }
+    }
+    
+    private func setFooterViewContentButtons() {
+        var contentButtonTypes: [SPCommentFooterContentButtonType] = []
+        
+        if model.shouldDisplayImageUploadButton() {
+            self.setImagePicker()
+            contentButtonTypes.append(.image)
+        }
+        
+        footerView.setContentButtonTypes(contentButtonTypes)
+    }
+    
+    private func setImagePicker() {
+        self.imagePicker = ImagePicker(presentationController: self)
+        self.imagePicker?.delegate = self
+    }
+    
+    private func uploadImageToCloudinary(imageData: String) {
+        imagePreviewView.isUploadingImage = true
+        self.dismissKeyboard()
+        model.uploadImageToCloudinary(imageData: imageData) { isUploaded in
+            self.imagePreviewView.isUploadingImage = false
+            self.updatePostButtonEnabledState()
+            if !isUploaded {
+                self.imagePreviewView.image = nil
+            }
+        }
+    }
+    
+    private func setImage(image: UIImage?) {
+        // clean previous image in the model
+        model.removeImage()
+        self.updatePostButtonEnabledState()
+        if let image = image,
+           let imageData = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() {
+            imagePreviewView.image = image
+            uploadImageToCloudinary(imageData: imageData)
+        } else {
+            self.imagePreviewView.image = nil
+            self.imagePreviewView.isUploadingImage = false
         }
     }
 }
@@ -823,11 +897,31 @@ extension SPCommentCreationViewController: SPCommentCreationNewHeaderViewDelegat
     }
 }
 
+extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
+    func clickedOnAddContentButton(type: SPCommentFooterContentButtonType) {
+        self.imagePicker?.present(from: self.view)
+    }
+}
+
+extension SPCommentCreationViewController: CommentImagePreviewDelegate {
+    func clickedOnRemoveButton() {
+        self.setImage(image: nil)
+    }
+}
+
+extension SPCommentCreationViewController: ImagePickerDelegate {
+    func didSelect(image: UIImage?) {
+        guard image != nil else { return }
+        self.setImage(image: image)
+    }
+}
+
 // MARK: - Theme
 
 private enum Theme {
     static let mainOffset: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
     static let inputViewLeadingInset: CGFloat = 10.0
+    static let inputViewTrailingInset: CGFloat = 10.0
     static let footerViewHeight: CGFloat = 54.0
 }
