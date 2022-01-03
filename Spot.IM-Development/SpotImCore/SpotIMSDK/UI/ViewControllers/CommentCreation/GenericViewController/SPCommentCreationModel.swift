@@ -46,6 +46,13 @@ class SPCommentCreationModel {
         } else {
             commentText = cacheService.comment(for: commentIdentifier)
         }
+        
+        if let image = commentCreationDTO.editModel?.commentImage {
+            imageContent = SPComment.Content.Image(
+                originalWidth: image.width,
+                originalHeight: image.height,
+                imageId: image.id)
+        }
     }
     
     func post() {
