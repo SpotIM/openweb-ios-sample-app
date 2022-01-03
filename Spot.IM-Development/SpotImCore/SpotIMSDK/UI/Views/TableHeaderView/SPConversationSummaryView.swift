@@ -86,7 +86,7 @@ final class SPConversationSummaryView: BaseView {
         commentsCountLabel.textColor = .spForeground4
         commentsCountLabel.backgroundColor = .spBackground0
         sortButton.setTitleColor(.spForeground0, for: .normal)
-        sortButton.setImage(UIImage(spNamed: "sortingIcon"), for: .normal)
+        sortButton.setImage(UIImage(spNamed: "sortingIcon", supportDarkMode: true), for: .normal)
         bottomHorizontalSeparator.backgroundColor = .spSeparator2
         verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor = .spSeparator2
     }
