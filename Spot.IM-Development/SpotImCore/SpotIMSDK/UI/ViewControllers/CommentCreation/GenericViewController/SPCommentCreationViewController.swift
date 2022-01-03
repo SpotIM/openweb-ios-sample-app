@@ -391,7 +391,10 @@ class SPCommentCreationViewController: SPBaseViewController,
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         } else {
             emptyArticleBottomConstraint?.isActive = true
-            commentingOnLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
+            let commentHeaderText = self.model.isInEditMode() ?
+            LocalizationManager.localizedString(key: "Edit a Comment") :
+            LocalizationManager.localizedString(key: "Add a Comment")
+            commentingOnLabel.text = commentHeaderText
         }
     }
     
