@@ -30,7 +30,7 @@ internal class CommentMediaView: BaseView {
     private func configureImageView() {
         imageView.contentMode = .scaleAspectFill
         // set placeholder image
-        imageView.image = UIImage(spNamed: "imageMediaPlaceholder", for: .light)
+        imageView.image = UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false)
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = SPCommonConstants.commentMediaCornerRadius
         imageView.pinEdges(to: self)

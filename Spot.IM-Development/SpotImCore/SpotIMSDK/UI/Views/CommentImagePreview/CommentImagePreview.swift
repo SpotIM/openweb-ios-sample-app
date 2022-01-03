@@ -50,7 +50,8 @@ final class CommentImagePreview: BaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
-        self.removeButton.setImage(UIImage(spNamed: "removeImageIcon", for: .light), for: .normal)
+        
+        self.removeButton.setImage(UIImage(spNamed: "removeImageIcon", supportDarkMode: false), for: .normal)
     }
     
     override func layoutSubviews() {
