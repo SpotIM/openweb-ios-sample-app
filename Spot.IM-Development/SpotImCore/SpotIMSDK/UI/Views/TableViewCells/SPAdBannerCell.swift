@@ -29,7 +29,7 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     func updateColorsAccordingToStyle() {
         contentView.backgroundColor = .spBackground0
         self.adBannerView.updateColorsAccordingToStyle()
-        self.closeButton.setImage(UIImage(spNamed: "closeIcon"), for: .normal)
+        self.closeButton.setImage(UIImage(spNamed: "closeIcon", supportDarkMode: true), for: .normal)
     }
     
     private func setupUI() {
