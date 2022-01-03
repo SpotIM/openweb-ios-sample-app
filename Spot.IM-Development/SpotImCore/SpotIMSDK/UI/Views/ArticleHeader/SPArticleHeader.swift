@@ -70,7 +70,7 @@ internal final class SPArticleHeader: BaseView {
     }
 
     private func setupConversationImageView() {
-        conversationImageView.image = UIImage(spNamed: "imagePlaceholder", for: .light)
+        conversationImageView.image = UIImage(spNamed: "imagePlaceholder", supportDarkMode: false)
         conversationImageView.contentMode = .scaleAspectFill
         conversationImageView.clipsToBounds = true
         conversationImageView.addCornerRadius(Theme.imageCornerRadius)
