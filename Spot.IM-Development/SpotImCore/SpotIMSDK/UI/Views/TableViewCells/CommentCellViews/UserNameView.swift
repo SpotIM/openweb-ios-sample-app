@@ -163,7 +163,7 @@ internal final class UserNameView: BaseView {
     }
 
     private func setupMoreButton() {
-        let image = UIImage(spNamed: "menu_icon")
+        let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
         moreButton.setImage(image, for: .normal)
         moreButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
         moreButton.layout {

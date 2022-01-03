@@ -20,7 +20,7 @@ extension UINavigationBar {
         ]
         barTintColor = barColor ?? .almostWhite
         backgroundColor = barColor ?? .almostWhite
-        let image = UIImage(spNamed: "defaultBackButtonIcon")
+        let image = UIImage(spNamed: "defaultBackButtonIcon", supportDarkMode: true)
         backIndicatorImage = image
         backIndicatorTransitionMaskImage = image
     }
@@ -35,7 +35,7 @@ extension UINavigationBar {
         ]
         barTintColor = barColor ?? .marineBlue
         backgroundColor = barColor ?? .marineBlue
-        let image = UIImage(spNamed: "darkModeBackButtonIcon")
+        let image = UIImage(spNamed: "darkModeBackButtonIcon", supportDarkMode: true)
         backIndicatorImage = image
         backIndicatorTransitionMaskImage = image
     }

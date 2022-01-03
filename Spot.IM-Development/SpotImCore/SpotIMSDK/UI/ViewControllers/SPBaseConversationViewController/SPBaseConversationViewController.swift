@@ -222,7 +222,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
                 actionMessage: LocalizationManager.localizedString(key: "We are unable to load comments\nright now."),
-                actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
+                actionIcon: UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true)!,
                 actionButtonTitle: LocalizationManager.localizedString(key: "Retry"),
                 action: errorAction)
         )
@@ -236,10 +236,10 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         var action: EmptyActionDataModel.Action? = nil
         if (isReadOnlyModeEnabled()) {
             actionMessage = LocalizationManager.localizedString(key: "Commenting on this article has ended")
-            actionIcon = UIImage(spNamed: "emptyCommentsReadOnlyIcon")!
+            actionIcon = UIImage(spNamed: "emptyCommentsReadOnlyIcon", supportDarkMode: true)!
         } else {
             actionMessage = LocalizationManager.localizedString(key: "Be the first to comment")
-            actionIcon = UIImage(spNamed: "emptyCommentsIcon")!
+            actionIcon = UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true)!
             actionButtonTitle = LocalizationManager.localizedString(key: "Write a Comment")
             action = { [weak self] in
                 guard let self = self, let delegate = self.delegate else { return }
@@ -290,7 +290,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         stateActionView?.configure(
             actionModel: EmptyActionDataModel(
                 actionMessage: LocalizationManager.localizedString(key: "Whoops! Looks like we’re\nexperiencing some\nconnectivity issues."),
-                actionIcon: UIImage(spNamed: "emptyCommentsIcon")!,
+                actionIcon: UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true)!,
                 actionButtonTitle: LocalizationManager.localizedString(key: "Retry"),
                 action: noInternetAction
             )
