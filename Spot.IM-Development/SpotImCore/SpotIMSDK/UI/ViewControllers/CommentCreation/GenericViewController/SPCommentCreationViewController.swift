@@ -221,7 +221,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             commentingOnLabel.textColor = .spForeground4
             commentingOnLabel.backgroundColor = .spBackground0
             closeButton.backgroundColor = .spBackground0
-            closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+            closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
         }
     }
     
@@ -428,7 +428,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             $0.bottom.equal(to: commentingContainer.bottomAnchor, offsetBy: -16)
         }
         
-        closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
+        closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
         closeButton.layout {
             $0.centerY.equal(to: topContainerView.topAnchor, offsetBy: 35)
             $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -5.0)

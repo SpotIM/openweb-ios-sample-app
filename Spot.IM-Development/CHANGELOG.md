@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2022-01-02
+### Added
+- Real time viewing counter
+- New guest nickname design
+- Support M1 Apple chips
+
+### Internal
+- RxSwift and RxCocoa integration
+
 ## [1.7.0] - 2021-12-14
 ### Added
 - Staff badges
