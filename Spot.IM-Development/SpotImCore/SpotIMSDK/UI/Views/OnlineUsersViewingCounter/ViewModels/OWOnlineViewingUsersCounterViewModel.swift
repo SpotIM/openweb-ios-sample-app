@@ -46,7 +46,7 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     }
     
     lazy var image: UIImage = {
-        return UIImage(spNamed: "viewingUsers", for: .light)!
+        return UIImage(spNamed: "viewingUsers", supportDarkMode: false)!
     }()
     
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {

@@ -50,7 +50,7 @@ internal final class SPPreConversationFooter: BaseView {
         showMoreCommentsButton.backgroundColor = .brandColor
         addSpotIMButton.backgroundColor = .spBackground0
         openwebLinkView.backgroundColor = .spBackground0
-        spotIMIcon.image = UIImage(spNamed: "openwebIconSimple") // reload image for dark mode if needed
+        spotIMIcon.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true) // reload image for dark mode if needed
         delegate?.updateMoreCommentsButtonCustomUI(button: showMoreCommentsButton)
     }
 
@@ -192,7 +192,7 @@ internal final class SPPreConversationFooter: BaseView {
     }
 
     private func setupSpotIMIcon() {
-        spotIMIcon.image = UIImage(spNamed: "openwebIconSimple")
+        spotIMIcon.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true)
         spotIMIcon.layout {
             $0.width.equal(to: Theme.bottomRowSize)
             $0.height.equal(to: Theme.bottomRowSize)

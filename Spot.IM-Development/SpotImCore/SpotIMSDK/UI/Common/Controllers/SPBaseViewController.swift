@@ -15,7 +15,7 @@ internal class SPBaseViewController: UIViewController {
         button.backgroundColor = .white
         button.makeViewRound()
         button.contentMode = .scaleAspectFill
-        button.setImage(UIImage(spNamed: "userIcon"), for: .normal)
+        button.setImage(UIImage(spNamed: "userIcon", supportDarkMode: true), for: .normal)
         
         return button
     }()
@@ -57,7 +57,7 @@ internal class SPBaseViewController: UIViewController {
         if #available(iOS 13.0, *), self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
             // back button
             if let backButton = self.navigationItem.leftBarButtonItem?.customView as? UIButton {
-                backButton.setImage(UIImage(spNamed: "backButton"), for: .normal)
+                backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal)
             }
             
             // title view

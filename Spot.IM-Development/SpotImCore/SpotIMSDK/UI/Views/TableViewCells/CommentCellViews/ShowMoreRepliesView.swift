@@ -16,7 +16,7 @@ internal final class ShowMoreRepliesView: BaseView {
 
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
     private let showHideRepliesButton: BaseButton = .init()
-    private let disclosureIndicator: BaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon"))
+    private let disclosureIndicator: BaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true))
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,7 +30,7 @@ internal final class ShowMoreRepliesView: BaseView {
         backgroundColor = .spBackground0
         showHideRepliesButton.backgroundColor = .spBackground0
         showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
-        disclosureIndicator.image = UIImage(spNamed: "messageDisclosureIndicatorIcon")
+        disclosureIndicator.image = UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true)
     }
     
 

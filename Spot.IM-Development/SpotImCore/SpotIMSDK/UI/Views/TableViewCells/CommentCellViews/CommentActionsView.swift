@@ -201,8 +201,8 @@ final class CommentActionsView: BaseView {
     }
 
     private func initializeRankUpButton() -> SPAnimatedButton {
-        let rankUpNormalImage = UIImage(spNamed: "rank_up_normal", for: .light)
-        let rankUpSelectedImage = UIImage(spNamed: "rank_up_selected", for: .light)
+        let rankUpNormalImage = UIImage(spNamed: "rank_up_normal", supportDarkMode: false)
+        let rankUpSelectedImage = UIImage(spNamed: "rank_up_selected", supportDarkMode: false)
         let insets = UIEdgeInsets(
             top: Theme.rankButtonVerticalInset - Theme.rankUpButtonOffset,
             left: Theme.rankButtonHorizontalInset,
@@ -219,8 +219,8 @@ final class CommentActionsView: BaseView {
     }
 
     private func initializeRankDownButton() -> SPAnimatedButton {
-        let rankDownIconNormal = UIImage(spNamed: "rank_down_normal", for: .light)
-        let rankDownIconSelected = UIImage(spNamed: "rank_down_selected", for: .light)
+        let rankDownIconNormal = UIImage(spNamed: "rank_down_normal", supportDarkMode: false)
+        let rankDownIconSelected = UIImage(spNamed: "rank_down_selected", supportDarkMode: false)
         let insets = UIEdgeInsets(top: Theme.rankButtonVerticalInset - Theme.rankDownButtonOffset,
                                   left: Theme.rankButtonHorizontalInset,
                                   bottom: Theme.rankButtonVerticalInset + Theme.rankDownButtonOffset,
