@@ -31,7 +31,7 @@ internal enum SPCloudinaryRequests: SPRequest {
 
     internal var url: URL! {
         switch self {
-        case .fetchImage(let url): return url
+        case .fetchImage: return URL(string: APIConstants.fetchImageBaseURL)
         case .login: return URL(string: APIConstants.baseURLString.appending(pathString))
         case .upload: return URL(string: APIConstants.uploadImageBaseURL)
         }
