@@ -21,4 +21,5 @@ struct SPConfigurationSDKStatus: Decodable {
     let disableAdsForSubscribers: Bool?
     let profileEnabled: Bool?
     let imageUploadBaseUrl: String
+    let fetchImageBaseUrl: String
 }
