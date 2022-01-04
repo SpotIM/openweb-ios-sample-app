@@ -20,4 +20,5 @@ struct SPConfigurationSDKStatus: Decodable {
     let googleAdsProviderRequired: Bool?
     let disableAdsForSubscribers: Bool?
     let profileEnabled: Bool?
+    let imageUploadBaseUrl: String
 }
