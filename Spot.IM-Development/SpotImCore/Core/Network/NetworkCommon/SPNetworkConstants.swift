@@ -12,6 +12,7 @@ import Alamofire
 internal struct APIConstants {
     static internal let baseURLString: String = "https://mobile-gw.spot.im"
     static internal let uploadImageBaseURL: String = SPConfigsDataSource.appConfig?.mobileSdk.imageUploadBaseUrl ?? ""
+    static internal let fetchImageBaseURL: String = SPConfigsDataSource.appConfig?.mobileSdk.fetchImageBaseUrl ?? ""
     static internal let encoding = JSONEncoding.default
 }
 
