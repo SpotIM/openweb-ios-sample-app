@@ -11,7 +11,7 @@ import Alamofire
 
 internal struct APIConstants {
     static internal let baseURLString: String = "https://mobile-gw.spot.im"
-    static internal let cloudinaryUploadBaseURL: String = "https://api.cloudinary.com/v1_1/com-3pix"
+    static internal let uploadImageBaseURL: String = SPConfigsDataSource.appConfig?.mobileSdk.imageUploadBaseUrl ?? ""
     static internal let encoding = JSONEncoding.default
 }
 
