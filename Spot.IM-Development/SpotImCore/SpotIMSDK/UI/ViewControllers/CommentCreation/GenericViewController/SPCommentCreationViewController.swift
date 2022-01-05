@@ -373,6 +373,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         commentNewHeaderView.delegate = self
         commentNewHeaderView.configure()
         commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+        commentNewHeaderView.setupHeader(for: self.model.isInEditMode() ? HeaderMode.edit : HeaderMode.add)
     }
     
     private func setupHeader() {
@@ -392,11 +393,15 @@ class SPCommentCreationViewController: SPBaseViewController,
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         } else {
             emptyArticleBottomConstraint?.isActive = true
-            let commentHeaderText = self.model.isInEditMode() ?
-            LocalizationManager.localizedString(key: "Edit a Comment") :
-            LocalizationManager.localizedString(key: "Add a Comment")
+            let commentHeaderText = getHeaderTitleBasedOnUserFlow()
             commentingOnLabel.text = commentHeaderText
         }
+    }
+    
+    private func getHeaderTitleBasedOnUserFlow() -> String {
+        return self.model.isInEditMode() ?
+        LocalizationManager.localizedString(key: "Edit a Comment") :
+        LocalizationManager.localizedString(key: "Add a Comment")
     }
     
     private func setupHeaderComponentsIfNeeded() {

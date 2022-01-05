@@ -13,6 +13,18 @@ struct CommentReplyDataModel {
     let comment: String?
 }
 
+enum HeaderMode {
+    case add, edit
+    var title: String {
+        switch(self) {
+        case .add:
+            return LocalizationManager.localizedString(key: "Add a comment")
+        case .edit:
+            return LocalizationManager.localizedString(key: "Edit a comment")
+        }
+    }
+}
+
 protocol SPCommentCreationNewHeaderViewDelegate: AnyObject {
     func customizeHeaderTitle(textView: UITextView)
 }
@@ -60,6 +72,10 @@ final class SPCommentCreationNewHeaderView: BaseView {
         commentLabel.isHidden = true
     }
     
+    func setupHeader(for headerMode: HeaderMode) {
+        headerTitleTextView.text = headerMode.title
+    }
+    
     // MARK: - Internal methods
     
     internal func configure(with commentModel: CommentReplyDataModel? = nil) {
@@ -102,7 +118,6 @@ final class SPCommentCreationNewHeaderView: BaseView {
     }
     
     private func setupHeaderTitle() {
-        headerTitleTextView.text = LocalizationManager.localizedString(key: "Add a comment")
         headerTitleTextView.textAlignment = .center
         headerTitleTextView.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         headerTitleTextView.isEditable = false
