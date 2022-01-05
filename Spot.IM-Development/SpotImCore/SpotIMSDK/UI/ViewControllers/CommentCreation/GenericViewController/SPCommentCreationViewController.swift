@@ -353,6 +353,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         }
 
         updateTextInputContainer(with: .comment)
+        updateImageContainer()
         updateAvatar()
     }
     
@@ -489,6 +490,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         }
 
         updateTextInputContainer(with: .reply)
+        updateImageContainer()
         updateAvatar()
     }
 
@@ -496,6 +498,16 @@ class SPCommentCreationViewController: SPBaseViewController,
     func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
         textInputViewContainer.configureCommentType(type)
         textInputViewContainer.updateText(model.commentText)
+    }
+    
+    func updateImageContainer() {
+        guard let imageId = model.imageContent?.imageId else { return }
+        let imageUrl = self.model.imageProvider.imageURL(with: imageId, size: nil)
+        model.imageProvider.fetchImage(with: imageUrl,
+                                       size: nil,
+                                       completion:{ image, _ in
+            self.imagePreviewView.image = image
+        })
     }
 
     func updateAvatar() {
