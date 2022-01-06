@@ -332,7 +332,7 @@ internal final class SPMainConversationDataSource {
         var editModel: SPEditCommentDTO?
         
         if let userComment = comment {
-            if userComment.isAReply() == true {
+            if userComment.isAReply() {
                 replyModel = SPReplyCommentDTO(
                     authorName: userComment.displayName,
                     commentText: userComment.commentText,
