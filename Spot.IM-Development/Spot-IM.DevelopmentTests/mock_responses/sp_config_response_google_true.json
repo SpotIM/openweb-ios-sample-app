@@ -720,7 +720,9 @@
 		},
 		"realtime_enabled": true,
 		"typing_enabled": true,
-		"web_ads_enabled": true
+		"web_ads_enabled": true,
+        "fetch_image_base_url": "https://images.spot.im/image/upload",
+        "image_upload_base_url": "https://api.cloudinary.com/v1_1/com-3pix/image/upload"
 	},
 	"moderation": {
 		"approve_message_v2_enabled": true,
