@@ -258,7 +258,9 @@ class SPCommentCreationModel {
         let imageId = UUID().uuidString
         self.currentUploadingImageId = imageId
 
-        imageProvider.uploadImage(imageData: imageData, imageId: imageId) { imageContent, err in
+        imageProvider.uploadImage(imageData: imageData, imageId: imageId) {
+            [weak self] imageContent, err in
+            guard let self = self else { return }
             if self.currentUploadingImageId == imageContent?.imageId {
                 self.imageContent = imageContent
                 self.currentUploadingImageId = nil
