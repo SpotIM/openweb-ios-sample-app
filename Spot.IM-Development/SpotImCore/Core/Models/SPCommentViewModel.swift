@@ -77,13 +77,13 @@ internal struct CommentViewModel {
         
         if let commentLabelsConfig = getCommentLabelsFromConfig(comment: comment) {
             commentLabels = []
-            for commentLabelConfig in commentLabelsConfig {
-                if let commentLabelColor = UIColor.color(rgb: commentLabelConfig.color),
-                   let commentLabelIconUrl = commentLabelConfig.getIconUrl()
+            for config in commentLabelsConfig {
+                if let commentLabelColor = UIColor.color(rgb: config.color),
+                   let commentLabelIconUrl = config.getIconUrl()
                 {
                     commentLabels?.append(
-                        CommentLabel(id: commentLabelConfig.id,
-                                     text: commentLabelConfig.text,
+                        CommentLabel(id: config.id,
+                                     text: config.text,
                                      iconUrl: commentLabelIconUrl,
                                      color: commentLabelColor
                                     )
