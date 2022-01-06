@@ -241,7 +241,7 @@ class SPCommentCreationModel {
     }
     
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
-        imageProvider.fetchImage(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
+        imageProvider.image(from: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
     }
