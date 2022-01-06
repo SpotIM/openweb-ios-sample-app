@@ -117,19 +117,19 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     func imageURL(size: CGSize) -> URL? {
         guard var id = imageId else { return nil }
         
-        if id.hasPrefix(Constants.placeholderImagePrefix) {
-            id.removeFirst(Constants.placeholderImagePrefix.count)
-            id = Constants.avatarPathComponent.appending(id)
+        if id.hasPrefix(SPImageRequestConstants.placeholderImagePrefix) {
+            id.removeFirst(SPImageRequestConstants.placeholderImagePrefix.count)
+            id = SPImageRequestConstants.avatarPathComponent.appending(id)
         }
         
         return URL(string: cloudinaryURLString(size).appending(id))
     }
     
     private func cloudinaryURLString(_ imageSize: CGSize) -> String {
-        var result = APIConstants.fetchImageBaseURL.appending(Constants.cloudinaryParamString)
-        result.append("\(Constants.cloudinaryWidthPrefix)" +
+        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryParamString)
+        result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
             "\(Int(imageSize.width))" +
-            "\(Constants.cloudinaryHeightPrefix)" +
+            "\(SPImageRequestConstants.cloudinaryHeightPrefix)" +
             "\(Int(imageSize.height))"
         )
         
@@ -145,12 +145,4 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
         result += "DEBUG: Token Expiration: \(String(describing: Date(timeIntervalSince1970: TimeInterval(tokenExpiration ?? 0))))"
         return result
     }
-}
-
-private enum Constants {
-    static let cloudinaryParamString = "dpr_3,c_thumb,g_face"
-    static let cloudinaryWidthPrefix = ",w_"
-    static let cloudinaryHeightPrefix = ",h_"
-    static let placeholderImagePrefix = "#"
-    static let avatarPathComponent = "avatars/"
 }
