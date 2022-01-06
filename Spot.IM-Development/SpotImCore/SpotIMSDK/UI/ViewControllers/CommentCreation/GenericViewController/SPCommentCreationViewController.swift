@@ -508,7 +508,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     func updateImageContainer() {
         guard let imageId = model.imageContent?.imageId else { return }
         let imageUrl = self.model.imageProvider.imageURL(with: imageId, size: nil)
-        model.imageProvider.fetchImage(with: imageUrl,
+        model.imageProvider.image(from: imageUrl,
                                        size: nil,
                                        completion:{ image, _ in
             self.imagePreviewView.image = image
