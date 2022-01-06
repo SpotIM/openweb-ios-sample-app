@@ -156,7 +156,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
     }
 
     private func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
-        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryParamString)
+        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
         
         if let imageSize = imageSize {
             result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
@@ -178,10 +178,12 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
 
 internal enum SPImageRequestConstants {
     static let cloudinaryApiKey = "281466446316913"
-    static let cloudinaryParamString = "dpr_3,c_thumb,g_face"
+    static let cloudinaryImageParamString = "dpr_3,c_thumb,g_face"
     static let cloudinaryWidthPrefix = ",w_"
     static let cloudinaryHeightPrefix = ",h_"
     static let placeholderImagePrefix = "#"
     static let avatarPathComponent = "avatars/"
     static let imageFileJpegBase64Prefix = "data:image/jpeg;base64,"
+    static let cloudinaryIconParamString = "f_png/"
+    static let iconPathComponent = "font-awesome/"
 }

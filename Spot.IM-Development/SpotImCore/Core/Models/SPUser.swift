@@ -126,7 +126,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     }
     
     private func cloudinaryURLString(_ imageSize: CGSize) -> String {
-        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryParamString)
+        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
         result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
             "\(Int(imageSize.width))" +
             "\(SPImageRequestConstants.cloudinaryHeightPrefix)" +
