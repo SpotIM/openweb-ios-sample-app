@@ -75,7 +75,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
     }
     
     func uploadImage(imageData: String, imageId: String, completion: @escaping ImageUploadCompletionHandler) {
-        let timestamp = String(round(NSDate().timeIntervalSince1970 * 1000) / 1000.0)
+        let timestamp = String(format: "%.3f", NSDate().timeIntervalSince1970)
         
         signToCloudinary(publicId: imageId, timestamp: timestamp) { signature, err in
             guard let signature = signature else {
