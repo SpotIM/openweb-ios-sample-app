@@ -17,13 +17,12 @@ struct SPLabelConfiguration: Decodable {
     let iconType: String
     
     func getIconUrl() -> URL? {
-        var result = Constants.cloudinaryBaseURL.appending(Constants.cloudinaryIconParamString)
+        var result = APIConstants.fetchImageBaseURL.appending(Constants.cloudinaryIconParamString)
         result.append("\(Constants.iconPathComponent)\(iconType)-\(iconName).png")
         return URL(string: result)
     }
     
     private enum Constants {
-        static let cloudinaryBaseURL = "https://images.spot.im/image/upload/"
         static let cloudinaryIconParamString = "f_png/"
         static let iconPathComponent = "font-awesome/"
     }

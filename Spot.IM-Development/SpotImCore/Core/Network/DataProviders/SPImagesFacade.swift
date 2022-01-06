@@ -156,7 +156,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
     }
 
     private func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
-        var result = Constants.cloudinaryBaseURL.appending(Constants.cloudinaryParamString)
+        var result = APIConstants.fetchImageBaseURL.appending(Constants.cloudinaryParamString)
         
         if let imageSize = imageSize {
             result.append("\(Constants.cloudinaryWidthPrefix)" +
@@ -178,7 +178,6 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
 
 private enum Constants {
     static let cloudinaryApiKey = "281466446316913"
-    static let cloudinaryBaseURL = "https://images.spot.im/image/upload/"
     static let cloudinaryParamString = "dpr_3,c_thumb,g_face"
     static let cloudinaryWidthPrefix = ",w_"
     static let cloudinaryHeightPrefix = ",h_"
