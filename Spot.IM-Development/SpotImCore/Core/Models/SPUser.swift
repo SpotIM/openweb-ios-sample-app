@@ -126,7 +126,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
     }
     
     private func cloudinaryURLString(_ imageSize: CGSize) -> String {
-        var result = Constants.cloudinaryBaseURL.appending(Constants.cloudinaryParamString)
+        var result = APIConstants.fetchImageBaseURL.appending(Constants.cloudinaryParamString)
         result.append("\(Constants.cloudinaryWidthPrefix)" +
             "\(Int(imageSize.width))" +
             "\(Constants.cloudinaryHeightPrefix)" +
@@ -148,7 +148,6 @@ internal class SPUser: Codable, CustomDebugStringConvertible {
 }
 
 private enum Constants {
-    static let cloudinaryBaseURL = "https://images.spot.im/image/upload/"
     static let cloudinaryParamString = "dpr_3,c_thumb,g_face"
     static let cloudinaryWidthPrefix = ",w_"
     static let cloudinaryHeightPrefix = ",h_"
