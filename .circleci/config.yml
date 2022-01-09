@@ -222,6 +222,12 @@ jobs:
 
       - *define_var_release_version
 
+      - run:
+          name: start release app
+          command: |
+            echo "Start release app version: $RELEASE_VERSION"
+            pwd
+            ls -l
 
       - run:
           name: Configure Apple Key
@@ -249,7 +255,7 @@ jobs:
       - run:
           name: Run Fastlane Release Sample App
           command: |
-            bundle exec fastlane release_demo_app
+            bundle exec fastlane release_demo_app:$RELEASE_VERSION
 
 workflows:
   version: 2
