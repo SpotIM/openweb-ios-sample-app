@@ -255,7 +255,7 @@ jobs:
       - run:
           name: Run Fastlane Release Sample App
           command: |
-            bundle exec fastlane release_demo_app:$RELEASE_VERSION
+            bundle exec fastlane release_demo_app version:$RELEASE_VERSION
 
 workflows:
   version: 2
