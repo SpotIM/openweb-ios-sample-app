@@ -42,6 +42,7 @@ final class CommentImagePreview: BaseView {
  
     override init(frame: CGRect) {
         isUploadingImage = false
+        loaderView.stopLoader()
         super.init(frame: frame)
         setup()
         updateColorsAccordingToStyle()
