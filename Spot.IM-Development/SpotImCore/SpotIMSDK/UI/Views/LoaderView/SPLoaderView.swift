@@ -19,11 +19,13 @@ class SPLoaderView: BaseView {
         super.init(frame: frame)
         
         backgroundColor = .clear
+        backgroundView.backgroundColor = .clear
         setupUI()
     }
     
     func startLoader() {
         isHidden = false
+        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(backgroundOpacity)
         loader.startAnimating()
     }
     
@@ -39,7 +41,6 @@ class SPLoaderView: BaseView {
     }
     
     private func configureBackgroundView() {
-        backgroundView.backgroundColor = UIColor.black.withAlphaComponent(backgroundOpacity)
         backgroundView.pinEdges(to: self)
     }
     
