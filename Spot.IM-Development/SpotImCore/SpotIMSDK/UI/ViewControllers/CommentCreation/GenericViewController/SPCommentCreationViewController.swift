@@ -925,7 +925,7 @@ extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
     }
     
     func updatePostCommentButtonCustomUI(button: BaseButton) {
-        customUIDelegate?.customizePostCommentButton(button: button)
+        customUIDelegate?.customizeCommentCreationActionButton(button: button)
     }
 }
 
