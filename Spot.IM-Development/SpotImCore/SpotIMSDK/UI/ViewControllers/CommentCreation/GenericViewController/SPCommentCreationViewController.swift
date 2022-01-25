@@ -202,6 +202,8 @@ class SPCommentCreationViewController: SPBaseViewController,
         }
         
         updateAvatar() // placeholder is adjusted to theme
+        
+        
     }
     
     private func configureCommentDesign(_ shouldEnableCreateCommentNewDesign: Bool) {
@@ -920,6 +922,10 @@ extension SPCommentCreationViewController: SPCommentCreationNewHeaderViewDelegat
 extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
     func clickedOnAddContentButton(type: SPCommentFooterContentButtonType) {
         self.imagePicker?.present(from: self.view)
+    }
+    
+    func updatePostCommentButtonCustomUI(button: BaseButton) {
+        customUIDelegate?.customizePostCommentButton(button: button)
     }
 }
 

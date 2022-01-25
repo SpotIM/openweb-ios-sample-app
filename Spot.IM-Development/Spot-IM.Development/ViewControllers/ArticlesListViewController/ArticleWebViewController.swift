@@ -258,6 +258,9 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
             titleLabel.text = "Comments"
             counterLabel.isHidden = true
             break
+        case .postCommentButton(let button):
+            button.backgroundColor = isDarkMode ? .black : .red
+            button.setTitleColor(.white, for: .normal)
         default:
             break
         }

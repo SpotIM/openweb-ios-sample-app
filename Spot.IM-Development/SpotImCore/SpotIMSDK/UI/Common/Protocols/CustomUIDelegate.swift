@@ -17,4 +17,5 @@ protocol CustomUIDelegate: AnyObject {
     func customizeNavigationItemTitle(textView: UITextView)
     func customizeShowCommentsButton(button: SPShowCommentsButton)
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
+    func customizePostCommentButton(button: BaseButton)
 }
