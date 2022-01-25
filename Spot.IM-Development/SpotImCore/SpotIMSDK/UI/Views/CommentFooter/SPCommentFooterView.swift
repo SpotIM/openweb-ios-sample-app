@@ -10,6 +10,7 @@ import UIKit
 
 protocol SPCommentFooterViewDelegate: AnyObject {
     func clickedOnAddContentButton(type: SPCommentFooterContentButtonType)
+    func updatePostCommentButtonCustomUI(button: BaseButton)
 }
 
 enum SPCommentFooterContentButtonType {
@@ -41,6 +42,7 @@ final class SPCommentFooterView: BaseView {
         footerSeperator.backgroundColor = .spSeparator2
         postButton.setBackgroundColor(color: .spInactiveButtonBG, forState: .disabled)
         postButton.backgroundColor = .brandColor
+        delegate?.updatePostCommentButtonCustomUI(button: postButton)
     }
     
     func setIsPostButtonEnabled(_ isEnabled: Bool) {
