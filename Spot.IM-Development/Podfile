@@ -4,8 +4,7 @@ inhibit_all_warnings!
 
 
 abstract_target 'Shared' do
-  # use_frameworks!
-  use_modular_headers! 
+  use_frameworks!
 
   pod 'Alamofire', '~> 5.4'
   pod 'PromiseKit', '~> 6.8'
