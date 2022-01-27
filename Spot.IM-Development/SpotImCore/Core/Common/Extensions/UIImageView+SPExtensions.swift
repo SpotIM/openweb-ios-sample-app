@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+import RxSwift
+import RxCocoa
 
 typealias ImageLoadingCompletion = (_ image: UIImage?, _ error: Error?) -> Void
 
@@ -53,6 +55,25 @@ internal extension UIImage {
                         completion?(nil, error)
                     }
                 }
+        }
+    }
+    
+    static func load(with url: URL?) -> Observable<UIImage> {
+        return Observable.create { observer in
+            let dataRequest = UIImage.load(with: url, completion: {
+                image, error in
+                if let error = error {
+                    observer.onError(error)
+                }
+                if let image = image {
+                    observer.onNext(image)
+                    observer.onCompleted()
+                }
+            })
+            
+            return Disposables.create {
+                dataRequest?.cancel()
+            }
         }
     }
 }
