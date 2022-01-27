@@ -422,6 +422,8 @@
 		6DAFEEC9239D022400441E97 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
 		6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
 		733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733170EF2742530000728324 /* SPCommentCreationDTO.swift */; };
+		73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */; };
+		73C0750427A16D61000FD80D /* OWSubscriberBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */; };
 		B951A967B6C8DCE3B9BAF7AA /* libPods-Shared-DemoApps-Spot-IM.Development.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B672D9C8420C06ACF08E4ACA /* libPods-Shared-DemoApps-Spot-IM.Development.a */; };
 		E666D02525E39F0C009F04D4 /* BigShouldersDisplay-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02025E39F0B009F04D4 /* BigShouldersDisplay-Light.ttf */; };
 		E666D02625E39F0C009F04D4 /* BigShouldersDisplay-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02125E39F0B009F04D4 /* BigShouldersDisplay-SemiBold.ttf */; };
@@ -849,6 +851,8 @@
 		6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoConfiguration.swift; sourceTree = "<group>"; };
 		6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewFooterTesterViewController.swift; sourceTree = "<group>"; };
 		733170EF2742530000728324 /* SPCommentCreationDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationDTO.swift; sourceTree = "<group>"; };
+		73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserSubscriberBadgeViewModel.swift; sourceTree = "<group>"; };
+		73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberBadge.swift; sourceTree = "<group>"; };
 		7406707252157CD408A30755 /* Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		74A38EF32BF52746E6C4F8C1 /* Pods-Shared-SpotImNoAds.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		7621290A39274FD5E2FA0A64 /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
@@ -1235,8 +1239,6 @@
 			isa = PBXGroup;
 			children = (
 				16BD5F85270C3FB600066505 /* ImagePicker */,
-				445417C823685144001D0ED0 /* Comment */,
-				445417CB23685144001D0ED0 /* Reply */,
 				445417CE23685144001D0ED0 /* GenericViewController */,
 			);
 			path = CommentCreation;
@@ -1289,6 +1291,7 @@
 		445417DA23685144001D0ED0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				73C074FE27A16AB8000FD80D /* UserSubscriberBadge */,
 				3DFBF0CB27676D350049CF1C /* OnlineUsersViewingCounter */,
 				244FD0A226661A0D00BFBC8F /* CommunityQuestionView */,
 				1656EEFC2636AE0C000043A2 /* CommentLabelsContainerView */,
@@ -1544,6 +1547,7 @@
 				4416C65C237B119200D3F7B9 /* SPRealTimeModel.swift */,
 				2440DD0526A6B01300001462 /* SPEventType.swift */,
 				733170EF2742530000728324 /* SPCommentCreationDTO.swift */,
+				73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1820,6 +1824,30 @@
 				6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */,
 			);
 			path = TableViewFooterTesterViewController;
+			sourceTree = "<group>";
+		};
+		73C074FE27A16AB8000FD80D /* UserSubscriberBadge */ = {
+			isa = PBXGroup;
+			children = (
+				73C074FF27A16AE7000FD80D /* ViewModels */,
+				73C0750027A16AF0000FD80D /* Views */,
+			);
+			path = UserSubscriberBadge;
+			sourceTree = "<group>";
+		};
+		73C074FF27A16AE7000FD80D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		73C0750027A16AF0000FD80D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
@@ -2639,7 +2667,6 @@
 			files = (
 				4454180523685144001D0ED0 /* BaseView.swift in Sources */,
 				4454181023685144001D0ED0 /* SPPreConversationViewController.swift in Sources */,
-				4454180923685144001D0ED0 /* SPCommentCreationModel.swift in Sources */,
 				16BD5F84270C3FB000066505 /* ImagePicker.swift in Sources */,
 				44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */,
 				445418A723685154001D0ED0 /* UILabel+SPExtensions.swift in Sources */,
@@ -2669,6 +2696,7 @@
 				24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */,
 				4454188423685154001D0ED0 /* SPDefaultDecoder.swift in Sources */,
 				E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */,
+				73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */,
 				4454181223685144001D0ED0 /* SPMainConversationModel.swift in Sources */,
 				4454189E23685154001D0ED0 /* SPConversationReadRM.swift in Sources */,
 				445418B723685154001D0ED0 /* AuthenticationHandler.swift in Sources */,
@@ -2758,6 +2786,7 @@
 				4454181D23685144001D0ED0 /* UserNameView.swift in Sources */,
 				4416C65D237B119200D3F7B9 /* SPRealTimeModel.swift in Sources */,
 				44F247A32379B0F900B36F12 /* BaseUIImageView.swift in Sources */,
+				73C0750427A16D61000FD80D /* OWSubscriberBadge.swift in Sources */,
 				4454189423685154001D0ED0 /* SPConfigurationInitialization.swift in Sources */,
 				16BD5F82270B3AAC00066505 /* SPCommentFooterView.swift in Sources */,
 				4416C661237B16C800D3F7B9 /* SPRealtimeDataRequest.swift in Sources */,
