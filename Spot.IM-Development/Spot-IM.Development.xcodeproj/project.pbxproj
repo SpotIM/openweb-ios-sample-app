@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		01CB7667DEBA428AAD0D2869 /* Pods_Shared_SpotImCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65FC1517B655B9E4EB72771F /* Pods_Shared_SpotImCore.framework */; };
+		0A36D6391A06ECFCC61D74CF /* Pods_Shared_DemoApps_YentSpot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EF1ECFBF7BD810E83B39F98 /* Pods_Shared_DemoApps_YentSpot.framework */; };
 		0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */; };
 		0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */; };
 		0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E1125D42304A043006B1489 /* ArticleModel.swift */; };
@@ -31,7 +33,6 @@
 		0EAFED7A22E505A900B57E29 /* fastlane in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7922E505A900B57E29 /* fastlane */; };
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
-		1234E50D6291AF3A3A6DF3E1 /* libPods-Shared-DemoApps-MarketWatch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C527BA33409DF386F0374AA /* libPods-Shared-DemoApps-MarketWatch.a */; };
 		16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */; };
 		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
 		168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */; };
@@ -48,7 +49,6 @@
 		16BD5F8A27144F2C00066505 /* CommentImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BD5F8927144F2C00066505 /* CommentImagePreview.swift */; };
 		16D7F55026CE996800A06693 /* SPAdBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */; };
 		16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55226D282E100A06693 /* SPAdBannerView.swift */; };
-		182BE3B9B67AB394B8892E1C /* libPods-Shared-SpotImCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */; };
 		24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24000A34268AEADD004C2A78 /* CommentMediaView.swift */; };
 		241B07572643CCA000253944 /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 241B07562643CCA000253944 /* image_placeholder.png */; };
 		241B075C2643D99200253944 /* GifWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B075B2643D99200253944 /* GifWebView.swift */; };
@@ -64,12 +64,11 @@
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
 		24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */; };
-		2A185E713E9BAF4830A77AA1 /* libPods-Shared-DemoApps-Focus.de.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
 		3DFBF0CF27676D860049CF1C /* OWOnlineViewingUsersCounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBF0CE27676D860049CF1C /* OWOnlineViewingUsersCounterView.swift */; };
 		3DFBF0D127676D940049CF1C /* OWOnlineViewingUsersCounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBF0D027676D940049CF1C /* OWOnlineViewingUsersCounterViewModel.swift */; };
-		42244A3BCAFF8EB82476DA9B /* libPods-Shared-Spot-IM.DevelopmentTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C04F7B845AC0F137D572434F /* libPods-Shared-Spot-IM.DevelopmentTests.a */; };
+		437112E6339E316CFCE0BE22 /* Pods_Shared_DemoApps_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8402D264041AC683FDDBC35B /* Pods_Shared_DemoApps_DailyCaller.framework */; };
 		440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */; };
 		440E0DB3237D7E3200757554 /* TotalTypingIndicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440E0DB2237D7E3200757554 /* TotalTypingIndicationView.swift */; };
 		4411659D2375822900B781F3 /* Arial Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 44689B87237473E60024EFC1 /* Arial Bold.ttf */; };
@@ -220,7 +219,6 @@
 		44F247A32379B0F900B36F12 /* BaseUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A22379B0F900B36F12 /* BaseUIImageView.swift */; };
 		44F247A52379B23100B36F12 /* BaseScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A42379B23100B36F12 /* BaseScrollView.swift */; };
 		44F247A72379B75300B36F12 /* BaseTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F247A62379B75300B36F12 /* BaseTableView.swift */; };
-		45ACAA321C8AA846AB227F1C /* libPods-Shared-DemoApps-YentSpot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8D5B8B7D1C65527549F984 /* libPods-Shared-DemoApps-YentSpot.a */; };
 		5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D00B74322E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift */; };
 		5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4943BB2302CAA800AA7541 /* ArticleViewController.swift */; };
 		5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D697A3E22B65106001AD556 /* AppDelegate.swift */; };
@@ -233,6 +231,7 @@
 		5DBD33E723980D6A003DE0BF /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBD33E623980D6A003DE0BF /* BaseTextField.swift */; };
 		5DE42E2E2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
 		5DE42E2F2383FFDC00A3AE64 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */; };
+		6BCF0028E54C23B95C135D81 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */; };
 		6D0A3314247D44DC003B11C6 /* ViewVisibilityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */; };
 		6D22A40B23AF79D800DCE08A /* SpotIm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D22A40A23AF79D800DCE08A /* SpotIm.swift */; };
 		6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D22A46223BA51CA00DCE08A /* SpotImAuthenticationProvider.swift */; };
@@ -422,10 +421,12 @@
 		6DAFEEC9239D022400441E97 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
 		6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
 		733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733170EF2742530000728324 /* SPCommentCreationDTO.swift */; };
+		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
+		C55FFDD956CF2B04486A7B6B /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */; };
+		CF10353BF0E5382EECB6C245 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF46FFCDEEF7CC8F890157F7 /* Pods_Shared_DemoApps_MarketWatch.framework */; };
 		73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */; };
 		73C0750427A16D61000FD80D /* OWSubscriberBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */; };
 		73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */; };
-		B951A967B6C8DCE3B9BAF7AA /* libPods-Shared-DemoApps-Spot-IM.Development.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B672D9C8420C06ACF08E4ACA /* libPods-Shared-DemoApps-Spot-IM.Development.a */; };
 		E666D02525E39F0C009F04D4 /* BigShouldersDisplay-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02025E39F0B009F04D4 /* BigShouldersDisplay-Light.ttf */; };
 		E666D02625E39F0C009F04D4 /* BigShouldersDisplay-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02125E39F0B009F04D4 /* BigShouldersDisplay-SemiBold.ttf */; };
 		E666D02725E39F0C009F04D4 /* BigShouldersDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02225E39F0B009F04D4 /* BigShouldersDisplay-Bold.ttf */; };
@@ -436,7 +437,6 @@
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
 		E685ACD125CAEE84008FECDB /* sp_config_response_google_true.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACD025CAEE84008FECDB /* sp_config_response_google_true.json */; };
 		E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A1EC75263169C4006E1517 /* SPLoginPromptView.swift */; };
-		F363BC5F7DF4399171E348F1 /* libPods-Shared-DemoApps-DailyCaller.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09AC2BCC7463D11A8C4413B3 /* libPods-Shared-DemoApps-DailyCaller.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -598,7 +598,6 @@
 
 /* Begin PBXFileReference section */
 		032FF66BD0A4075941B89FB8 /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; sourceTree = "<group>"; };
-		09AC2BCC7463D11A8C4413B3 /* libPods-Shared-DemoApps-DailyCaller.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-DailyCaller.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
 		0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 		0E1125D42304A043006B1489 /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
@@ -626,7 +625,6 @@
 		16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerCell.swift; sourceTree = "<group>"; };
 		16D7F55226D282E100A06693 /* SPAdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerView.swift; sourceTree = "<group>"; };
 		16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
-		1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-Focus.de.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
 		241B07562643CCA000253944 /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = image_placeholder.png; path = SPAssets.xcassets/image_placeholder.imageset/image_placeholder.png; sourceTree = "<group>"; };
 		241B075B2643D99200253944 /* GifWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifWebView.swift; sourceTree = "<group>"; };
@@ -643,8 +641,6 @@
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
 		24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLabelConfiguration.swift; sourceTree = "<group>"; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
-		2C527BA33409DF386F0374AA /* libPods-Shared-DemoApps-MarketWatch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-MarketWatch.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-SpotImCore.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		377DD973617E9820A88EE7A0 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		395BD17827841FD0BC6FFD64 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		3BA412CB4B682D95D3929020 /* Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -824,7 +820,10 @@
 		5DBD33E623980D6A003DE0BF /* BaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
 		5DE42E2D2383FFDC00A3AE64 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		5F3FC4B023872DCFAC1C5071 /* Pods-Shared-DemoApps-MarketWatch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.release.xcconfig"; sourceTree = "<group>"; };
+		60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_Spot_IM_DevelopmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6394E7A86C9ADEE394495AC3 /* Pods-Shared-DemoApps-DailyCaller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; sourceTree = "<group>"; };
+		648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Focus_de.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		65FC1517B655B9E4EB72771F /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewVisibilityTracker.swift; sourceTree = "<group>"; };
 		6D22A40A23AF79D800DCE08A /* SpotIm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotIm.swift; sourceTree = "<group>"; };
 		6D22A46223BA51CA00DCE08A /* SpotImAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotImAuthenticationProvider.swift; sourceTree = "<group>"; };
@@ -859,12 +858,13 @@
 		74A38EF32BF52746E6C4F8C1 /* Pods-Shared-SpotImNoAds.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		7621290A39274FD5E2FA0A64 /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
 		779908AB0FFA39CA76C63B3B /* Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		7EF1ECFBF7BD810E83B39F98 /* Pods_Shared_DemoApps_YentSpot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_YentSpot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8402D264041AC683FDDBC35B /* Pods_Shared_DemoApps_DailyCaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_DailyCaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD06A753856558311FC9849 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; sourceTree = "<group>"; };
-		8C8D5B8B7D1C65527549F984 /* libPods-Shared-DemoApps-YentSpot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-YentSpot.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D50BEF955866E10D93D3985 /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; sourceTree = "<group>"; };
-		B672D9C8420C06ACF08E4ACA /* libPods-Shared-DemoApps-Spot-IM.Development.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-DemoApps-Spot-IM.Development.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
-		C04F7B845AC0F137D572434F /* libPods-Shared-Spot-IM.DevelopmentTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Shared-Spot-IM.DevelopmentTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF46FFCDEEF7CC8F890157F7 /* Pods_Shared_DemoApps_MarketWatch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_MarketWatch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBFF8396B466B5E0D511CDBE /* Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		CFF8D88452FA83C53AAA1CB5 /* Pods-Shared-SpotImNoAds.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.release.xcconfig"; sourceTree = "<group>"; };
 		D24D7F344001B4E697A4718E /* Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig"; sourceTree = "<group>"; };
@@ -903,7 +903,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				182BE3B9B67AB394B8892E1C /* libPods-Shared-SpotImCore.a in Frameworks */,
+				01CB7667DEBA428AAD0D2869 /* Pods_Shared_SpotImCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,7 +912,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				44C8789423608BC100E0E662 /* SpotImCore.framework in Frameworks */,
-				B951A967B6C8DCE3B9BAF7AA /* libPods-Shared-DemoApps-Spot-IM.Development.a in Frameworks */,
+				6BCF0028E54C23B95C135D81 /* Pods_Shared_DemoApps_Spot_IM_Development.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -920,7 +920,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42244A3BCAFF8EB82476DA9B /* libPods-Shared-Spot-IM.DevelopmentTests.a in Frameworks */,
+				7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -929,7 +929,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D4E56FE23A7A5F7005B79B6 /* SpotImCore.framework in Frameworks */,
-				2A185E713E9BAF4830A77AA1 /* libPods-Shared-DemoApps-Focus.de.a in Frameworks */,
+				C55FFDD956CF2B04486A7B6B /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -938,7 +938,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D4E572B23A7B785005B79B6 /* SpotImCore.framework in Frameworks */,
-				1234E50D6291AF3A3A6DF3E1 /* libPods-Shared-DemoApps-MarketWatch.a in Frameworks */,
+				CF10353BF0E5382EECB6C245 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -971,7 +971,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DA75C7C238D313600FBDF19 /* SpotImCore.framework in Frameworks */,
-				45ACAA321C8AA846AB227F1C /* libPods-Shared-DemoApps-YentSpot.a in Frameworks */,
+				0A36D6391A06ECFCC61D74CF /* Pods_Shared_DemoApps_YentSpot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -980,7 +980,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DAFEEB2239CFCCF00441E97 /* SpotImCore.framework in Frameworks */,
-				F363BC5F7DF4399171E348F1 /* libPods-Shared-DemoApps-DailyCaller.a in Frameworks */,
+				437112E6339E316CFCE0BE22 /* Pods_Shared_DemoApps_DailyCaller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1780,13 +1780,13 @@
 			isa = PBXGroup;
 			children = (
 				FA6BF31548693DB019E7E2E6 /* Pods_Shared_SpotImNoAds.framework */,
-				09AC2BCC7463D11A8C4413B3 /* libPods-Shared-DemoApps-DailyCaller.a */,
-				1E6BBDAC8EFCB8D457CAAAC0 /* libPods-Shared-DemoApps-Focus.de.a */,
-				2C527BA33409DF386F0374AA /* libPods-Shared-DemoApps-MarketWatch.a */,
-				B672D9C8420C06ACF08E4ACA /* libPods-Shared-DemoApps-Spot-IM.Development.a */,
-				8C8D5B8B7D1C65527549F984 /* libPods-Shared-DemoApps-YentSpot.a */,
-				2FE758AA2114A2F030309666 /* libPods-Shared-SpotImCore.a */,
-				C04F7B845AC0F137D572434F /* libPods-Shared-Spot-IM.DevelopmentTests.a */,
+				8402D264041AC683FDDBC35B /* Pods_Shared_DemoApps_DailyCaller.framework */,
+				648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */,
+				BF46FFCDEEF7CC8F890157F7 /* Pods_Shared_DemoApps_MarketWatch.framework */,
+				9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */,
+				7EF1ECFBF7BD810E83B39F98 /* Pods_Shared_DemoApps_YentSpot.framework */,
+				60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */,
+				65FC1517B655B9E4EB72771F /* Pods_Shared_SpotImCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1978,6 +1978,7 @@
 				5D697A3822B65106001AD556 /* Frameworks */,
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
+				6B52B25123474FB34B11CDB0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1985,8 +1986,6 @@
 				44C8789323608BC100E0E662 /* PBXTargetDependency */,
 			);
 			name = "Spot-IM.Development";
-			packageProductDependencies = (
-			);
 			productName = "Spot-IM.Development";
 			productReference = 5D697A3B22B65106001AD556 /* Spot-IM.Development.app */;
 			productType = "com.apple.product-type.application";
@@ -1999,6 +1998,7 @@
 				5D697A4B22B65108001AD556 /* Sources */,
 				5D697A4C22B65108001AD556 /* Frameworks */,
 				5D697A4D22B65108001AD556 /* Resources */,
+				5BC5FF298750EEA843B83C45 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2020,6 +2020,7 @@
 				6D4E570023A7A5F7005B79B6 /* Resources */,
 				6D4E570823A7A5F7005B79B6 /* Embed Frameworks */,
 				6D4E570A23A7A5F7005B79B6 /* Run Script */,
+				F50F31D549A31D97D5D77A70 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2041,6 +2042,7 @@
 				6D4E572D23A7B785005B79B6 /* Resources */,
 				6D4E573523A7B785005B79B6 /* Embed Frameworks */,
 				6D4E573723A7B785005B79B6 /* Run Script */,
+				210194EF23F3A21F141413DA /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2122,6 +2124,7 @@
 				6DA75C7E238D313600FBDF19 /* Resources */,
 				6DA75C86238D313600FBDF19 /* Embed Frameworks */,
 				6DA75C88238D313600FBDF19 /* Run Script */,
+				52D8AD6D13C3FF25EFD98290 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2143,6 +2146,7 @@
 				6DAFEEB4239CFCCF00441E97 /* Resources */,
 				6DAFEEBC239CFCCF00441E97 /* Embed Frameworks */,
 				6DAFEEBE239CFCCF00441E97 /* Run Script */,
+				ED7A7B73A08CAF1F1DE26882 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2189,8 +2193,6 @@
 				"ar-001",
 			);
 			mainGroup = 5D697A3222B65106001AD556;
-			packageReferences = (
-			);
 			productRefGroup = 5D697A3C22B65106001AD556 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2364,6 +2366,74 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		210194EF23F3A21F141413DA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		52D8AD6D13C3FF25EFD98290 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5BC5FF298750EEA843B83C45 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6B52B25123474FB34B11CDB0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6D4E56E923A7A5F7005B79B6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2659,6 +2729,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ED7A7B73A08CAF1F1DE26882 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F50F31D549A31D97D5D77A70 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3327,6 +3431,7 @@
 			baseConfigurationReference = 41A5212AF88F30BB35D6468C /* Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -3358,6 +3463,7 @@
 			baseConfigurationReference = 7621290A39274FD5E2FA0A64 /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
