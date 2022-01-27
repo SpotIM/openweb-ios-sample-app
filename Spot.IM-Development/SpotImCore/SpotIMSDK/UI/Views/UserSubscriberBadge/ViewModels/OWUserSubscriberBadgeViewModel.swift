@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import UIKit
 
 protocol OWUserSubscriberBadgeViewModelingInputs {
     func configureModel(_ model: OWSubscriberBadge)
@@ -16,6 +17,7 @@ protocol OWUserSubscriberBadgeViewModelingInputs {
 
 protocol OWUserSubscriberBadgeViewModelingOutputs {
     var image: UIImage { get }
+    var isSubscriber: Bool { get }
 }
 
 protocol OWUserSubscriberBadgeViewModeling {
@@ -48,8 +50,10 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
         configureModel(model)
     }
     
-    lazy var image: UIImage = {
-        return UIImage()
+    lazy var image: UIImage = { return UIImage() }()
+    
+    lazy var isSubscriber: Bool = {
+        return SPUserSessionHolder.session.user?.ssoData?.isSubscriber ?? false
     }()
     
     func configureModel(_ model: OWSubscriberBadge) {
