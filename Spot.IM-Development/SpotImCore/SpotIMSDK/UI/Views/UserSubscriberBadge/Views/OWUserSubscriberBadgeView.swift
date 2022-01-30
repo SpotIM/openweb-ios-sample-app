@@ -19,6 +19,7 @@ class OWUserSubscriberBadgeView: UIView {
     }
     
     fileprivate var viewModel: OWUserSubscriberBadgeViewModeling!
+    fileprivate var disposeBag: DisposeBag!
     
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
@@ -38,6 +39,7 @@ class OWUserSubscriberBadgeView: UIView {
     
     func configure(with viewModel: OWUserSubscriberBadgeViewModeling) {
         self.viewModel = viewModel
+        disposeBag = DisposeBag()
         configureViews()
     }
 }
@@ -56,7 +58,9 @@ fileprivate extension OWUserSubscriberBadgeView {
     
     
     func configureViews() {
-        imgViewIcon.image = viewModel.outputs.image
+        viewModel.outputs.image.subscribe(
+            onNext: { [weak self] image in
+                self?.imgViewIcon.image = image
+            }).disposed(by: disposeBag)
     }
-
 }
