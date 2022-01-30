@@ -14,7 +14,7 @@ import RxCocoa
 
 class OWUserSubscriberBadgeView: UIView {
     
-    fileprivate var viewModel: OWUserSubscriberBadgeViewModel!
+    fileprivate var viewModel: OWUserSubscriberBadgeViewModeling!
     fileprivate var disposeBag: DisposeBag!
     
     fileprivate lazy var imgViewIcon: UIImageView = {
@@ -33,7 +33,7 @@ class OWUserSubscriberBadgeView: UIView {
         setupViews()
     }
     
-    func configure(with viewModel: OWUserSubscriberBadgeViewModel) {
+    func configure(with viewModel: OWUserSubscriberBadgeViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         configureViews()
