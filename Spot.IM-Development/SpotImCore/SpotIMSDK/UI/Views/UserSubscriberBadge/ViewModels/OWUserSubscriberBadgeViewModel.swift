@@ -46,8 +46,10 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
             }
     }
     
-    init (_ model: OWSubscriberBadge) {
-        configureModel(model)
+    init (_ model: OWSubscriberBadge?) {
+        if let subscriberBadgeModel = model {
+            configureModel(subscriberBadgeModel)
+        }
     }
     
     lazy var image: UIImage = { return UIImage() }()
