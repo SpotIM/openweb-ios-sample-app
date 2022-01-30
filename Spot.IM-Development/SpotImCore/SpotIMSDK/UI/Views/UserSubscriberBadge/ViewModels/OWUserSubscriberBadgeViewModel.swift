@@ -16,7 +16,7 @@ protocol OWUserSubscriberBadgeViewModelingInputs {
 }
 
 protocol OWUserSubscriberBadgeViewModelingOutputs {
-    var image: UIImage { get }
+    var image: Observable<UIImage> { get }
     var isSubscriber: Bool { get }
 }
 
@@ -36,15 +36,7 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     
     fileprivate let subscriberBadgeBaseUrl: String = "\(APIConstants.fetchImageBaseURL) \(SPImageRequestConstants.cloudinaryIconParamString) \(SPImageRequestConstants.iconPathComponent)"
     
-    var iconUrl: Observable<URL?> {
-        return model
-            .unwrap()
-            .map {
-                return URL(
-                    string: "\(self.subscriberBadgeBaseUrl) \($0.type) - \($0.name) .png"
-                    )
-            }
-    }
+    var iconUrl: URL?
     
     init (_ model: OWSubscriberBadge?) {
         if let subscriberBadgeModel = model {
@@ -52,7 +44,9 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
         }
     }
     
-    lazy var image: UIImage = { return UIImage() }()
+    lazy var image: Observable<UIImage> = {
+        return UIImage.load(with: iconUrl)
+    }()
     
     lazy var isSubscriber: Bool = {
         return SPUserSessionHolder.session.user?.ssoData?.isSubscriber ?? false
@@ -60,6 +54,7 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     
     func configureModel(_ model: OWSubscriberBadge) {
         self.model.onNext(model)
+        iconUrl = URL(string: "\(self.subscriberBadgeBaseUrl) \(model.type) - \(model.name) .png")
     }
     
 }
