@@ -51,6 +51,11 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var imageRequest: DataRequest?
+    
+    private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
+        return OWUserSubscriberBadgeView()
+    }()
+
 
     // MARK: - Init
 
@@ -95,6 +100,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit, windowWidth: windowWidth)
         updateCommentLabelView(with: data)
+        updateSubscriberBadge(with: data)
     }
 
     // MARK: - Private Methods - View setup
@@ -337,6 +343,13 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         commentMediaWidthConstraint?.constant = mediaSize.width
         commentMediaHeightConstraint?.constant = mediaSize.height
     }
+    
+    private func updateSubscriberBadge(with dataModel: CommentViewModel) {
+        if dataModel.subscriberBadgeVM.outputs.isSubscriber {
+            subscriberBadgeView.configure(with: dataModel.subscriberBadgeVM)
+        }
+    }
+
     
     private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()
