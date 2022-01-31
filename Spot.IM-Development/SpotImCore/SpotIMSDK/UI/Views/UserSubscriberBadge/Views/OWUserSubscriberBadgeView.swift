@@ -60,9 +60,10 @@ fileprivate extension OWUserSubscriberBadgeView {
     
     
     func configureViews() {
-        viewModel.outputs.image.subscribe(
-            onNext: { [weak self] image in
+        viewModel.outputs.image
+            .bind { [weak self] image in
                 self?.imgViewIcon.image = image
-            }).disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
     }
 }
