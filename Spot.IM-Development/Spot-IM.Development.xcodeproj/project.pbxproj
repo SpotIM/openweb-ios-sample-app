@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -1057,6 +1057,14 @@
 			path = CommunityQuestionView;
 			sourceTree = "<group>";
 		};
+		3D20A2D627A803F2003F8513 /* SdkAPI */ = {
+			isa = PBXGroup;
+			children = (
+				6D22A40A23AF79D800DCE08A /* SpotIm.swift */,
+			);
+			path = SdkAPI;
+			sourceTree = "<group>";
+		};
 		3DFBF0CB27676D350049CF1C /* OnlineUsersViewingCounter */ = {
 			isa = PBXGroup;
 			children = (
@@ -1093,11 +1101,13 @@
 		4454179D236850C0001D0ED0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				44C879DF23608E3600E0E662 /* Info.plist */,
+				44C8793B23608E3500E0E662 /* SpotImCore.h */,
+				4454179E236850C0001D0ED0 /* SPAssets.xcassets */,
+				4416C65A237ABE3D00D3F7B9 /* Localizable.strings */,
+				4454179F236850C0001D0ED0 /* Fonts */,
 				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
 				241B07562643CCA000253944 /* image_placeholder.png */,
-				4454179E236850C0001D0ED0 /* SPAssets.xcassets */,
-				4454179F236850C0001D0ED0 /* Fonts */,
-				4416C65A237ABE3D00D3F7B9 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1130,14 +1140,6 @@
 				445417A5236850C0001D0ED0 /* OpenSans-RegularItalic.ttf */,
 			);
 			path = OpenSans;
-			sourceTree = "<group>";
-		};
-		445417AB23685144001D0ED0 /* SpotIMSDK */ = {
-			isa = PBXGroup;
-			children = (
-				445417AC23685144001D0ED0 /* UI */,
-			);
-			path = SpotIMSDK;
 			sourceTree = "<group>";
 		};
 		445417AC23685144001D0ED0 /* UI */ = {
@@ -1395,20 +1397,6 @@
 			path = LoaderView;
 			sourceTree = "<group>";
 		};
-		4454182523685153001D0ED0 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				4454182623685153001D0ED0 /* DataSources */,
-				4454182923685153001D0ED0 /* Coordinators */,
-				4454182C23685153001D0ED0 /* Network */,
-				4454185423685154001D0ED0 /* Models */,
-				4454185D23685154001D0ED0 /* Common */,
-				4454187123685154001D0ED0 /* Services */,
-				6D22A40A23AF79D800DCE08A /* SpotIm.swift */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
 		4454182623685153001D0ED0 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1546,11 +1534,10 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		4454185D23685154001D0ED0 /* Common */ = {
+		4454185D23685154001D0ED0 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				44689B7323718CF80024EFC1 /* Logger.swift */,
-				4454185E23685154001D0ED0 /* Extensions */,
 				4454186D23685154001D0ED0 /* SPConstants.swift */,
 				4454186E23685154001D0ED0 /* SPClientSettings.swift */,
 				4454186F23685154001D0ED0 /* AuthenticationHandler.swift */,
@@ -1559,7 +1546,7 @@
 				441165A22375C3E700B781F3 /* Result.swift */,
 				449F5F73237C5D7300F81EA3 /* MulticastDelegate.swift */,
 			);
-			path = Common;
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		4454185E23685154001D0ED0 /* Extensions */ = {
@@ -1649,11 +1636,16 @@
 		44C8788E23608BC100E0E662 /* SpotImCore */ = {
 			isa = PBXGroup;
 			children = (
-				4454182523685153001D0ED0 /* Core */,
-				445417AB23685144001D0ED0 /* SpotIMSDK */,
+				3D20A2D627A803F2003F8513 /* SdkAPI */,
+				4454182923685153001D0ED0 /* Coordinators */,
+				4454182C23685153001D0ED0 /* Network */,
+				4454187123685154001D0ED0 /* Services */,
+				4454185423685154001D0ED0 /* Models */,
+				4454182623685153001D0ED0 /* DataSources */,
+				445417AC23685144001D0ED0 /* UI */,
+				4454185E23685154001D0ED0 /* Extensions */,
+				4454185D23685154001D0ED0 /* Helpers */,
 				4454179D236850C0001D0ED0 /* Resources */,
-				44C879DF23608E3600E0E662 /* Info.plist */,
-				44C8793B23608E3500E0E662 /* SpotImCore.h */,
 			);
 			path = SpotImCore;
 			sourceTree = "<group>";
