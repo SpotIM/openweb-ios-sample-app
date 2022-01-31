@@ -100,6 +100,10 @@ internal final class UserNameView: BaseView {
         moreButton.isHidden = hidden
     }
 
+    func setSubscriberBadgeVM(viewModel: OWUserSubscriberBadgeViewModeling) {
+        subscriberBadgeView.configure(with: viewModel)
+    }
+    
     // MARK: - Private
 
     private func setupUI() {

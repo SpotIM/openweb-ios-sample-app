@@ -51,11 +51,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     private var userViewHeightConstraint: NSLayoutConstraint?
     private var imageRequest: DataRequest?
-    
-    private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
-        return OWUserSubscriberBadgeView()
-    }()
-
 
     // MARK: - Init
 
@@ -239,7 +234,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         userViewHeightConstraint?.constant = userViewHeight
         userNameViewTopConstraint?.constant = dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset
         
-        subscriberBadgeView.configure(with: dataModel.subscriberBadgeVM)
+        userNameView.setSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
