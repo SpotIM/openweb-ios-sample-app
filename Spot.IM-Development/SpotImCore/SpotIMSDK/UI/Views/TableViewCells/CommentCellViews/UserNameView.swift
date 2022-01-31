@@ -108,8 +108,7 @@ internal final class UserNameView: BaseView {
                     badgeTagLabel,
                     moreButton,
                     subtitleLabel,
-                    dateLabel,
-                    subscriberBadgeView)
+                    dateLabel)
         configureNameAndBadgeStackView()
         setupMoreButton()
         configureSubtitleAndDateLabels()
@@ -168,11 +167,10 @@ internal final class UserNameView: BaseView {
     }
     
     private func configureSubscriberBadgeView() {
-        subscriberBadgeView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubviews(subscriberBadgeView)
         subscriberBadgeView.layout {
-            $0.top.equal(to: self.topAnchor)
-            $0.height.equal(to: 10.0)
-            $0.width.equal(to: 10.0)
+            $0.top.equal(to: topAnchor)
+            $0.leading.equal(to: nameAndBadgeStackview.trailingAnchor, offsetBy: 100.0)
         }
     }
 
