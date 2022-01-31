@@ -15,7 +15,7 @@ import RxCocoa
 class OWUserSubscriberBadgeView: UIView {
     
     fileprivate struct Metrics {
-        static let subscriberBadgeIconSize: CGFloat = 9.0
+        static let subscriberBadgeIconSize: CGFloat = 20.0
     }
     
     fileprivate var viewModel: OWUserSubscriberBadgeViewModeling!
@@ -52,15 +52,16 @@ fileprivate extension OWUserSubscriberBadgeView {
             $0.top.equal(to: self.topAnchor)
             $0.leading.equal(to: self.leadingAnchor)
             $0.bottom.equal(to: self.bottomAnchor)
+            $0.width.equal(to: Metrics.subscriberBadgeIconSize)
+            $0.height.equal(to: Metrics.subscriberBadgeIconSize)
         }
-        
     }
     
     
     func configureViews() {
         viewModel.outputs.image.subscribe(
-            onNext: { [weak self] image in
-                self?.imgViewIcon.image = image
+            onNext: { image in
+                self.imgViewIcon.image = image
             }).disposed(by: disposeBag)
     }
 }
