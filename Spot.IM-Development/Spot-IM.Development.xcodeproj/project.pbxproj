@@ -3198,7 +3198,7 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				INFOPLIST_FILE = SpotImCore/Info.plist;
+				INFOPLIST_FILE = SpotImCore/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3239,7 +3239,7 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				INFOPLIST_FILE = SpotImCore/Info.plist;
+				INFOPLIST_FILE = SpotImCore/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
