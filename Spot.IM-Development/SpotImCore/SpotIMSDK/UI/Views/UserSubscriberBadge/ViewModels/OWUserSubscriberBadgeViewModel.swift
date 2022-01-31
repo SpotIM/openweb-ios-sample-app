@@ -39,7 +39,7 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     fileprivate let customSubscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL) \(SPImageRequestConstants.iconsPathComponent) \(SPImageRequestConstants.customPathComponent)"
 
     
-    enum urlToFetchBadgeIcon {
+    enum SubscriberBadgeIconType {
         case fontAwesome, custom
         func buildUrl(iconType: String, iconName: String, baseURL: String) -> URL? {
             switch(self) {
@@ -71,12 +71,12 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
         self.model.onNext(model)
         
         if model.type == "custom" {
-            iconUrl = urlToFetchBadgeIcon.custom.buildUrl(
+            iconUrl = SubscriberBadgeIconType.custom.buildUrl(
                 iconType: model.type,
                 iconName: model.name,
                 baseURL: customSubscriberBadgeBaseUrl)
         } else {
-            iconUrl = urlToFetchBadgeIcon.fontAwesome.buildUrl(
+            iconUrl = SubscriberBadgeIconType.fontAwesome.buildUrl(
                 iconType: model.type,
                 iconName: model.name,
                 baseURL: defaultSubscriberBadgeBaseUrl)
