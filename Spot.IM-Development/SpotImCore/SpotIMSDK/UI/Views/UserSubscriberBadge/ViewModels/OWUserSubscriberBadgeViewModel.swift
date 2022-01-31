@@ -34,9 +34,9 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     
     fileprivate var model = BehaviorSubject<OWSubscriberBadge?>(value: nil)
     
-    fileprivate let defaultSubscriberBadgeBaseUrl: String = "\(APIConstants.fetchImageBaseURL) \(SPImageRequestConstants.cloudinaryIconParamString) \(SPImageRequestConstants.iconPathComponent)"
+    fileprivate let defaultSubscriberBadgeBaseUrl: String = "\(APIConstants.fetchImageBaseURL)\(SPImageRequestConstants.cloudinaryIconParamString)\(SPImageRequestConstants.iconPathComponent)"
 
-    fileprivate let customSubscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL) \(SPImageRequestConstants.iconsPathComponent) \(SPImageRequestConstants.customPathComponent)"
+    fileprivate let customSubscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL)\(SPImageRequestConstants.iconsPathComponent)\(SPImageRequestConstants.customPathComponent)"
 
     
     enum SubscriberBadgeIconType {
@@ -44,9 +44,9 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
         func buildUrl(iconType: String, iconName: String, baseURL: String) -> URL? {
             switch(self) {
             case .fontAwesome:
-                return URL(string: "\(baseURL) \(iconType) - \(iconName).png")
+                return URL(string:"\(baseURL)\(iconType)-\(iconName).png")
             case .custom:
-                return URL(string: "\(baseURL) \(iconName).png")
+                return URL(string:"\(baseURL)\(iconName).png")
             }
         }
     }
