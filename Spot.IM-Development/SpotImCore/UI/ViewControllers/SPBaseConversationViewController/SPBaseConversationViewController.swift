@@ -210,7 +210,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     }
 
     internal func setupTableView() {
-        fatalError("For now Let's overridde this function, the plan is to remove this base class completely")
+        fatalError("For now Let's override this function, the plan is to remove this base class completely")
     }
 
     func configureEmptyStateView() {
