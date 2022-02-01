@@ -62,7 +62,8 @@ fileprivate extension OWUserSubscriberBadgeView {
     func configureViews() {
         viewModel.outputs.image
             .bind { [weak self] image in
-                self?.imgViewIcon.image = image
+                self?.imgViewIcon.image = image.withRenderingMode(.alwaysTemplate)
+                self?.imgViewIcon.tintColor = UIColor.brandColor
                 if (self?.viewModel.outputs.isSubscriber == false) {
                     self?.imgViewIcon.isHidden = true
                 }
