@@ -53,7 +53,7 @@ internal struct CommentViewModel {
         return id == rootCommentId
     }
     
-    let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel(SPConfigsDataSource.appConfig?.conversation?.subscriberBadge)
+    let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel(SPConfigsDataSource.appConfig?.conversation?.subscriberBadgeV2)
 
     init(
         with comment: SPComment,
