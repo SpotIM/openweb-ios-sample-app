@@ -64,6 +64,7 @@
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
 		24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */; };
+		3D20A2D827A805BE003F8513 /* EasyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A2D727A805BE003F8513 /* EasyViews.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
 		3DFBF0CF27676D860049CF1C /* OWOnlineViewingUsersCounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBF0CE27676D860049CF1C /* OWOnlineViewingUsersCounterView.swift */; };
@@ -645,6 +646,7 @@
 		377DD973617E9820A88EE7A0 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		395BD17827841FD0BC6FFD64 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		3BA412CB4B682D95D3929020 /* Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3D20A2D727A805BE003F8513 /* EasyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyViews.swift; sourceTree = "<group>"; };
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
@@ -1065,6 +1067,24 @@
 			path = CommunityQuestionView;
 			sourceTree = "<group>";
 		};
+		3D20A2D627A803F2003F8513 /* SdkAPI */ = {
+			isa = PBXGroup;
+			children = (
+				6D22A40A23AF79D800DCE08A /* SpotIm.swift */,
+			);
+			path = SdkAPI;
+			sourceTree = "<group>";
+		};
+		3D20A2D927A8252C003F8513 /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				4454186723685154001D0ED0 /* UIColor+SPExtensions.swift */,
+				445417B523685144001D0ED0 /* UIColor+Hex.swift */,
+				4454186123685154001D0ED0 /* UIFont+Extensions.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
 		3DFBF0CB27676D350049CF1C /* OnlineUsersViewingCounter */ = {
 			isa = PBXGroup;
 			children = (
@@ -1101,11 +1121,13 @@
 		4454179D236850C0001D0ED0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				44C879DF23608E3600E0E662 /* Info.plist */,
+				44C8793B23608E3500E0E662 /* SpotImCore.h */,
+				4454179E236850C0001D0ED0 /* SPAssets.xcassets */,
+				4416C65A237ABE3D00D3F7B9 /* Localizable.strings */,
+				4454179F236850C0001D0ED0 /* Fonts */,
 				2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */,
 				241B07562643CCA000253944 /* image_placeholder.png */,
-				4454179E236850C0001D0ED0 /* SPAssets.xcassets */,
-				4454179F236850C0001D0ED0 /* Fonts */,
-				4416C65A237ABE3D00D3F7B9 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1140,14 +1162,6 @@
 			path = OpenSans;
 			sourceTree = "<group>";
 		};
-		445417AB23685144001D0ED0 /* SpotIMSDK */ = {
-			isa = PBXGroup;
-			children = (
-				445417AC23685144001D0ED0 /* UI */,
-			);
-			path = SpotIMSDK;
-			sourceTree = "<group>";
-		};
 		445417AC23685144001D0ED0 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -1162,31 +1176,10 @@
 			isa = PBXGroup;
 			children = (
 				445417AE23685144001D0ED0 /* Autolayout.swift */,
-				445417AF23685144001D0ED0 /* Extensions */,
 				445417BA23685144001D0ED0 /* Controllers */,
 				445417BC23685144001D0ED0 /* Views */,
-				445417C223685144001D0ED0 /* Protocols */,
 			);
 			path = Common;
-			sourceTree = "<group>";
-		};
-		445417AF23685144001D0ED0 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				445417B023685144001D0ED0 /* String+Sizes.swift */,
-				445417B123685144001D0ED0 /* UIButton+Extensions.swift */,
-				445417B223685144001D0ED0 /* Notification+Keyboard.swift */,
-				445417B323685144001D0ED0 /* UIView+Roundings.swift */,
-				445417B423685144001D0ED0 /* UIView+Utils.swift */,
-				445417B523685144001D0ED0 /* UIColor+Hex.swift */,
-				445417B623685144001D0ED0 /* UIBarButton+UIImage.swift */,
-				445417B723685144001D0ED0 /* NavigationController+Appearance.swift */,
-				445417B823685144001D0ED0 /* NSAttributedString+Extensions.swift */,
-				445417B923685144001D0ED0 /* Int+Formatting.swift */,
-				440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */,
-				6D4E56B023A178DF005B79B6 /* UIView+Animations.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 		445417BA23685144001D0ED0 /* Controllers */ = {
@@ -1404,20 +1397,6 @@
 			path = LoaderView;
 			sourceTree = "<group>";
 		};
-		4454182523685153001D0ED0 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				4454182623685153001D0ED0 /* DataSources */,
-				4454182923685153001D0ED0 /* Coordinators */,
-				4454182C23685153001D0ED0 /* Network */,
-				4454185423685154001D0ED0 /* Models */,
-				4454185D23685154001D0ED0 /* Common */,
-				4454187123685154001D0ED0 /* Services */,
-				6D22A40A23AF79D800DCE08A /* SpotIm.swift */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
 		4454182623685153001D0ED0 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1556,11 +1535,10 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		4454185D23685154001D0ED0 /* Common */ = {
+		4454185D23685154001D0ED0 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				44689B7323718CF80024EFC1 /* Logger.swift */,
-				4454185E23685154001D0ED0 /* Extensions */,
 				4454186D23685154001D0ED0 /* SPConstants.swift */,
 				4454186E23685154001D0ED0 /* SPClientSettings.swift */,
 				4454186F23685154001D0ED0 /* AuthenticationHandler.swift */,
@@ -1569,7 +1547,7 @@
 				441165A22375C3E700B781F3 /* Result.swift */,
 				449F5F73237C5D7300F81EA3 /* MulticastDelegate.swift */,
 			);
-			path = Common;
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		4454185E23685154001D0ED0 /* Extensions */ = {
@@ -1577,13 +1555,11 @@
 			children = (
 				4454185F23685154001D0ED0 /* UILabel+SPExtensions.swift */,
 				4454186023685154001D0ED0 /* Dictionary+JSONString.swift */,
-				4454186123685154001D0ED0 /* UIFont+Extensions.swift */,
 				4454186223685154001D0ED0 /* UITableView+SetupExtensions.swift */,
 				4454186323685154001D0ED0 /* Int+SPExtensions.swift */,
 				4454186423685154001D0ED0 /* UIDevice+Extensions.swift */,
 				4454186523685154001D0ED0 /* UIImage+SPExtensions.swift */,
 				4454186623685154001D0ED0 /* JSONDecoder+SPExtensions.swift */,
-				4454186723685154001D0ED0 /* UIColor+SPExtensions.swift */,
 				4454186823685154001D0ED0 /* WeakRef+Generic.swift */,
 				4454186923685154001D0ED0 /* Date+SPExtensions.swift */,
 				4454186A23685154001D0ED0 /* UIImageView+SPExtensions.swift */,
@@ -1591,6 +1567,18 @@
 				4454186C23685154001D0ED0 /* IndexPath+SPExtensions.swift */,
 				16A12A642601188100A7B3F6 /* URL+QueryParams.swift */,
 				16A12A892608E49500A7B3F6 /* String+SPExtentions.swift */,
+				445417B023685144001D0ED0 /* String+Sizes.swift */,
+				445417B123685144001D0ED0 /* UIButton+Extensions.swift */,
+				445417B223685144001D0ED0 /* Notification+Keyboard.swift */,
+				445417B323685144001D0ED0 /* UIView+Roundings.swift */,
+				445417B623685144001D0ED0 /* UIBarButton+UIImage.swift */,
+				445417B723685144001D0ED0 /* NavigationController+Appearance.swift */,
+				445417B823685144001D0ED0 /* NSAttributedString+Extensions.swift */,
+				445417B923685144001D0ED0 /* Int+Formatting.swift */,
+				440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */,
+				6D4E56B023A178DF005B79B6 /* UIView+Animations.swift */,
+				445417B423685144001D0ED0 /* UIView+Utils.swift */,
+				3D20A2D727A805BE003F8513 /* EasyViews.swift */,
 				3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */,
 				3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */,
 			);
@@ -1660,11 +1648,18 @@
 		44C8788E23608BC100E0E662 /* SpotImCore */ = {
 			isa = PBXGroup;
 			children = (
-				4454182523685153001D0ED0 /* Core */,
-				445417AB23685144001D0ED0 /* SpotIMSDK */,
+				3D20A2D627A803F2003F8513 /* SdkAPI */,
+				4454182923685153001D0ED0 /* Coordinators */,
+				4454182C23685153001D0ED0 /* Network */,
+				4454187123685154001D0ED0 /* Services */,
+				4454185423685154001D0ED0 /* Models */,
+				4454182623685153001D0ED0 /* DataSources */,
+				445417AC23685144001D0ED0 /* UI */,
+				4454185E23685154001D0ED0 /* Extensions */,
+				445417C223685144001D0ED0 /* Protocols */,
+				4454185D23685154001D0ED0 /* Helpers */,
+				3D20A2D927A8252C003F8513 /* Style */,
 				4454179D236850C0001D0ED0 /* Resources */,
-				44C879DF23608E3600E0E662 /* Info.plist */,
-				44C8793B23608E3500E0E662 /* SpotImCore.h */,
 			);
 			path = SpotImCore;
 			sourceTree = "<group>";
@@ -2791,6 +2786,7 @@
 				445418AD23685154001D0ED0 /* UIImage+SPExtensions.swift in Sources */,
 				441165A12375BBC100B781F3 /* ApiManager.swift in Sources */,
 				4454181723685144001D0ED0 /* SPLoaderCell.swift in Sources */,
+				3D20A2D827A805BE003F8513 /* EasyViews.swift in Sources */,
 				4454180423685144001D0ED0 /* InputTextView.swift in Sources */,
 				4454180023685144001D0ED0 /* SPBaseViewController.swift in Sources */,
 				4454188A23685154001D0ED0 /* SPConversationRequests.swift in Sources */,
@@ -3242,7 +3238,7 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				INFOPLIST_FILE = SpotImCore/Info.plist;
+				INFOPLIST_FILE = SpotImCore/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3283,7 +3279,7 @@
 					GoogleAdsV7Provider.swift,
 					GoogleAdsProvider.swift,
 				);
-				INFOPLIST_FILE = SpotImCore/Info.plist;
+				INFOPLIST_FILE = SpotImCore/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (

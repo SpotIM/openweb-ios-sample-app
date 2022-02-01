@@ -22,14 +22,16 @@ class OWOnlineViewingUsersCounterView: UIView {
     
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
-        img.contentMode = .scaleAspectFit
+            .contentMode(.scaleAspectFit)
+        
         return img
     }()
     
     fileprivate lazy var lblViewersNumber: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.preferred(style: .regular, of: Metrics.viewersFontSize)
-        lbl.textColor = .spForeground3
+            .font(UIFont.preferred(style: .regular, of: Metrics.viewersFontSize))
+            .textColor(.spForeground3)
+
         return lbl
     }()
     
