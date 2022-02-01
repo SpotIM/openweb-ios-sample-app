@@ -6,7 +6,6 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 private struct AssociatedCells {
