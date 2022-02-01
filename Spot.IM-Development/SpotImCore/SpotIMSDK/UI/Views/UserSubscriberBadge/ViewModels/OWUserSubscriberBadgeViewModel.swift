@@ -34,33 +34,21 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     
     fileprivate var model = BehaviorSubject<OWSubscriberBadge?>(value: nil)
     
-    fileprivate let defaultSubscriberBadgeBaseUrl: String = "\(APIConstants.fetchImageBaseURL)\(SPImageRequestConstants.cloudinaryIconParamString)\(SPImageRequestConstants.iconPathComponent)"
-
-    fileprivate let customSubscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL)\(SPImageRequestConstants.iconsPathComponent)\(SPImageRequestConstants.customPathComponent)"
-
+    fileprivate var subscriberBadgeService: SubscriberBadgeServicing!
     
-    enum SubscriberBadgeIconType {
-        case fontAwesome, custom
-        func buildUrl(iconType: String, iconName: String, baseURL: String) -> URL? {
-            switch(self) {
-            case .fontAwesome:
-                return URL(string:"\(baseURL)\(iconType)-\(iconName).png")
-            case .custom:
-                return URL(string:"\(baseURL)\(iconName).png")
-            }
-        }
-    }
-    
-    var iconUrl: URL?
-    
-    init (_ model: OWSubscriberBadge?) {
+    init (_ model: OWSubscriberBadge?, _ subscriberBadgeService: SubscriberBadgeServicing = SubscriberBadgeService()) {
         if let subscriberBadgeModel = model {
             configureModel(subscriberBadgeModel)
+            self.subscriberBadgeService = subscriberBadgeService
         }
     }
     
     lazy var image: Observable<UIImage> = {
-        return UIImage.load(with: iconUrl)
+        self.model
+            .unwrap()
+            .flatMap {
+                return self.subscriberBadgeService.badgeImage(model: $0)
+            }
     }()
     
     lazy var isSubscriber: Bool = {
@@ -69,17 +57,5 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     
     func configureModel(_ model: OWSubscriberBadge) {
         self.model.onNext(model)
-        
-        if model.type == "custom" {
-            iconUrl = SubscriberBadgeIconType.custom.buildUrl(
-                iconType: model.type,
-                iconName: model.name,
-                baseURL: customSubscriberBadgeBaseUrl)
-        } else {
-            iconUrl = SubscriberBadgeIconType.fontAwesome.buildUrl(
-                iconType: model.type,
-                iconName: model.name,
-                baseURL: defaultSubscriberBadgeBaseUrl)
-        }
     }
 }
