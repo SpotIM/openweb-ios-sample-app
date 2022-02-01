@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -421,12 +421,13 @@
 		6DAFEEC9239D022400441E97 /* DemoConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */; };
 		6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */; };
 		733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733170EF2742530000728324 /* SPCommentCreationDTO.swift */; };
-		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
-		C55FFDD956CF2B04486A7B6B /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */; };
-		CF10353BF0E5382EECB6C245 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF46FFCDEEF7CC8F890157F7 /* Pods_Shared_DemoApps_MarketWatch.framework */; };
+		73B0DE8127A90EC4008EBCE7 /* SubscriberBadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B0DE8027A90EC4008EBCE7 /* SubscriberBadgeService.swift */; };
 		73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */; };
 		73C0750427A16D61000FD80D /* OWSubscriberBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */; };
 		73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */; };
+		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
+		C55FFDD956CF2B04486A7B6B /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */; };
+		CF10353BF0E5382EECB6C245 /* Pods_Shared_DemoApps_MarketWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF46FFCDEEF7CC8F890157F7 /* Pods_Shared_DemoApps_MarketWatch.framework */; };
 		E666D02525E39F0C009F04D4 /* BigShouldersDisplay-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02025E39F0B009F04D4 /* BigShouldersDisplay-Light.ttf */; };
 		E666D02625E39F0C009F04D4 /* BigShouldersDisplay-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02125E39F0B009F04D4 /* BigShouldersDisplay-SemiBold.ttf */; };
 		E666D02725E39F0C009F04D4 /* BigShouldersDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E666D02225E39F0B009F04D4 /* BigShouldersDisplay-Bold.ttf */; };
@@ -851,6 +852,7 @@
 		6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoConfiguration.swift; sourceTree = "<group>"; };
 		6DF3A6F42386BD7200419B30 /* TableViewFooterTesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewFooterTesterViewController.swift; sourceTree = "<group>"; };
 		733170EF2742530000728324 /* SPCommentCreationDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationDTO.swift; sourceTree = "<group>"; };
+		73B0DE8027A90EC4008EBCE7 /* SubscriberBadgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriberBadgeService.swift; sourceTree = "<group>"; };
 		73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserSubscriberBadgeViewModel.swift; sourceTree = "<group>"; };
 		73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberBadge.swift; sourceTree = "<group>"; };
 		73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserSubscriberBadgeView.swift; sourceTree = "<group>"; };
@@ -1609,6 +1611,7 @@
 				16BD5F86270C694F00066505 /* SPPermissionsProvider.swift */,
 				6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */,
 				16A12A5F260115BE00A7B3F6 /* SPWebSDKProvider.swift */,
+				73B0DE8027A90EC4008EBCE7 /* SubscriberBadgeService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2780,6 +2783,7 @@
 				4454180123685144001D0ED0 /* BaseTextView.swift in Sources */,
 				6D520D9D23D9E60E00A5418F /* SPConversationCounters.swift in Sources */,
 				4454181623685144001D0ED0 /* SPCommentCell.swift in Sources */,
+				73B0DE8127A90EC4008EBCE7 /* SubscriberBadgeService.swift in Sources */,
 				2421B8FD2670A69200B0C9FF /* SPProfileRequest.swift in Sources */,
 				73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */,
 				445418A123685154001D0ED0 /* SPConversation.swift in Sources */,
