@@ -174,7 +174,7 @@ internal final class UserNameView: BaseView {
         self.addSubviews(subscriberBadgeView)
         subscriberBadgeView.layout {
             $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: nameAndBadgeStackview.trailingAnchor, offsetBy: 100.0)
+            $0.leading.equal(to: nameAndBadgeStackview.trailingAnchor, offsetBy: 5.0)
         }
     }
 
