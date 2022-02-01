@@ -63,6 +63,9 @@ fileprivate extension OWUserSubscriberBadgeView {
         viewModel.outputs.image
             .bind { [weak self] image in
                 self?.imgViewIcon.image = image
+                if (self?.viewModel.outputs.isSubscriber == false) {
+                    self?.imgViewIcon.isHidden = true
+                }
             }
             .disposed(by: disposeBag)
     }
