@@ -424,7 +424,7 @@
 		733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733170EF2742530000728324 /* SPCommentCreationDTO.swift */; };
 		73B0DE8127A90EC4008EBCE7 /* SubscriberBadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B0DE8027A90EC4008EBCE7 /* SubscriberBadgeService.swift */; };
 		73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */; };
-		73C0750427A16D61000FD80D /* OWSubscriberBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */; };
+		73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */; };
 		73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */; };
 		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
 		C55FFDD956CF2B04486A7B6B /* Pods_Shared_DemoApps_Focus_de.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */; };
@@ -856,7 +856,7 @@
 		733170EF2742530000728324 /* SPCommentCreationDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationDTO.swift; sourceTree = "<group>"; };
 		73B0DE8027A90EC4008EBCE7 /* SubscriberBadgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriberBadgeService.swift; sourceTree = "<group>"; };
 		73C0750127A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserSubscriberBadgeViewModel.swift; sourceTree = "<group>"; };
-		73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberBadge.swift; sourceTree = "<group>"; };
+		73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSubscriberBadgeConfiguration.swift; sourceTree = "<group>"; };
 		73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserSubscriberBadgeView.swift; sourceTree = "<group>"; };
 		7406707252157CD408A30755 /* Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		74A38EF32BF52746E6C4F8C1 /* Pods-Shared-SpotImNoAds.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.debugwithads.xcconfig"; sourceTree = "<group>"; };
@@ -1530,7 +1530,7 @@
 				4416C65C237B119200D3F7B9 /* SPRealTimeModel.swift */,
 				2440DD0526A6B01300001462 /* SPEventType.swift */,
 				733170EF2742530000728324 /* SPCommentCreationDTO.swift */,
-				73C0750327A16D61000FD80D /* OWSubscriberBadge.swift */,
+				73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2894,7 +2894,7 @@
 				4454181D23685144001D0ED0 /* UserNameView.swift in Sources */,
 				4416C65D237B119200D3F7B9 /* SPRealTimeModel.swift in Sources */,
 				44F247A32379B0F900B36F12 /* BaseUIImageView.swift in Sources */,
-				73C0750427A16D61000FD80D /* OWSubscriberBadge.swift in Sources */,
+				73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */,
 				4454189423685154001D0ED0 /* SPConfigurationInitialization.swift in Sources */,
 				16BD5F82270B3AAC00066505 /* SPCommentFooterView.swift in Sources */,
 				4416C661237B16C800D3F7B9 /* SPRealtimeDataRequest.swift in Sources */,
