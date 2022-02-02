@@ -7,47 +7,37 @@
 //
 
 import Foundation
-import RxCocoa
 import RxSwift
 
 
 protocol SubscriberBadgeServicing {
-    func badgeImage(model: OWSubscriberBadge) -> Observable<UIImage>
+    func badgeImage(config: OWSubscriberBadgeConfiguration) -> Observable<UIImage>
 }
 
 class SubscriberBadgeService: SubscriberBadgeServicing {
     
-    fileprivate let defaultSubscriberBadgeBaseUrl: String = "\(APIConstants.fetchImageBaseURL)\(SPImageRequestConstants.cloudinaryIconParamString)\(SPImageRequestConstants.iconPathComponent)"
+    fileprivate struct URLS {
+        static let defaultSubscriberBadgeBaseUrl: String = "\(APIConstants.fetchImageBaseURL)\(SPImageRequestConstants.cloudinaryIconParamString)\(SPImageRequestConstants.iconPathComponent)"
 
-    fileprivate let customSubscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL)\(SPImageRequestConstants.iconsPathComponent)\(SPImageRequestConstants.customPathComponent)"
+        static let customSubscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL)\(SPImageRequestConstants.iconsPathComponent)\(SPImageRequestConstants.customPathComponent)"
+    }
     
-    fileprivate var iconUrl: URL?
-    
-    enum SubscriberBadgeIconType {
+    fileprivate enum SubscriberBadgeIconType: String {
         case fontAwesome, custom
-        func buildUrl(iconType: String, iconName: String, baseURL: String) -> URL? {
+        func buildUrl(config: OWSubscriberBadgeConfiguration) -> URL {
             switch(self) {
             case .fontAwesome:
-                return URL(string:"\(baseURL)\(iconType)-\(iconName).png")
+                return URL(string:"\(URLS.defaultSubscriberBadgeBaseUrl)\(config.type)-\(config.name).png")!
             case .custom:
-                return URL(string:"\(baseURL)\(iconName).png")
+                return URL(string:"\(URLS.customSubscriberBadgeBaseUrl)\(config.name).png")!
             }
         }
     }
     
-    func badgeImage(model: OWSubscriberBadge) -> Observable<UIImage> {
+    func badgeImage(config: OWSubscriberBadgeConfiguration) -> Observable<UIImage> {
         
-        if model.type == "custom" {
-            iconUrl = SubscriberBadgeIconType.custom.buildUrl(
-                iconType: model.type,
-                iconName: model.name,
-                baseURL: customSubscriberBadgeBaseUrl)
-        } else {
-            iconUrl = SubscriberBadgeIconType.fontAwesome.buildUrl(
-                iconType: model.type,
-                iconName: model.name,
-                baseURL: defaultSubscriberBadgeBaseUrl)
-        }
+        let iconType = SubscriberBadgeIconType(rawValue: config.type) ?? SubscriberBadgeIconType.fontAwesome
+        let iconUrl = iconType.buildUrl(config: config)
         
         return UIImage.load(with: iconUrl)
     }
