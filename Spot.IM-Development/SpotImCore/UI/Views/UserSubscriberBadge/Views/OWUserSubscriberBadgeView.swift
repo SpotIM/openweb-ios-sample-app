@@ -23,7 +23,8 @@ class OWUserSubscriberBadgeView: UIView {
     
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
-        img.contentMode = .scaleAspectFit
+            .contentMode(.scaleAspectFit)
+            .tintColor(UIColor.brandColor)
         return img
     }()
     
@@ -60,14 +61,14 @@ fileprivate extension OWUserSubscriberBadgeView {
     
     
     func configureViews() {
+        viewModel.outputs.isSubscriber
+            .map { !$0 } // Reverse
+            .bind(to: self.rx.isHidden)
+            .disposed(by: disposeBag)
+        
         viewModel.outputs.image
-            .bind { [weak self] image in
-                self?.imgViewIcon.image = image.withRenderingMode(.alwaysTemplate)
-                self?.imgViewIcon.tintColor = UIColor.brandColor
-                if (self?.viewModel.outputs.isSubscriber == false) {
-                    self?.imgViewIcon.isHidden = true
-                }
-            }
+            .map { $0.withRenderingMode(.alwaysTemplate) }
+            .bind(to: self.imgViewIcon.rx.image)
             .disposed(by: disposeBag)
     }
 }
