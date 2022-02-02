@@ -46,7 +46,11 @@ extension UIView {
     @discardableResult func border(width: CGFloat, color: UIColor) -> Self {
         self.layer.borderWidth = width
         self.layer.borderColor = color.cgColor
-        
+        return self
+    }
+    
+    @discardableResult func tintColor(_ color: UIColor) -> Self {
+        self.tintColor = color
         return self
     }
 }
@@ -143,11 +147,6 @@ extension UIButton {
     
     @discardableResult func withPadding(_ padding: CGFloat) -> Self {
         self.contentEdgeInsets = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
-        return self
-    }
-    
-    @discardableResult func tintColor(_ color: UIColor) -> Self {
-        self.tintColor = color
         return self
     }
     
