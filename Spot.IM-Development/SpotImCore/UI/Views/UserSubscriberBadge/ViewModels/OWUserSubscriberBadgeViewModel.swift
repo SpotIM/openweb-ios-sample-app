@@ -12,12 +12,12 @@ import RxCocoa
 import UIKit
 
 protocol OWUserSubscriberBadgeViewModelingInputs {
-    func configureModel(_ model: OWSubscriberBadge)
+    func configureUser(user: SPUser)
 }
 
 protocol OWUserSubscriberBadgeViewModelingOutputs {
     var image: Observable<UIImage> { get }
-    var isSubscriber: Bool { get }
+    var isSubscriber: Observable<Bool> { get }
 }
 
 protocol OWUserSubscriberBadgeViewModeling {
@@ -28,34 +28,49 @@ protocol OWUserSubscriberBadgeViewModeling {
 class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
                                       OWUserSubscriberBadgeViewModelingInputs,
                                       OWUserSubscriberBadgeViewModelingOutputs {
-
+    
     var inputs: OWUserSubscriberBadgeViewModelingInputs { return self }
     var outputs: OWUserSubscriberBadgeViewModelingOutputs { return self }
     
-    fileprivate var model = BehaviorSubject<OWSubscriberBadge?>(value: nil)
-    
+    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    fileprivate var subscriberBadgeConfig: OWSubscriberBadgeConfiguration?
     fileprivate var subscriberBadgeService: SubscriberBadgeServicing!
     
-    init (_ model: OWSubscriberBadge?, _ subscriberBadgeService: SubscriberBadgeServicing = SubscriberBadgeService()) {
-        if let subscriberBadgeModel = model {
-            configureModel(subscriberBadgeModel)
-            self.subscriberBadgeService = subscriberBadgeService
+    init (user: SPUser? = nil,
+          subscriberBadgeConfig: OWSubscriberBadgeConfiguration? = SPConfigsDataSource.appConfig?.conversation?.subscriberBadge,
+          subscriberBadgeService: SubscriberBadgeServicing = SubscriberBadgeService()) {
+        self.subscriberBadgeService = subscriberBadgeService
+        self.subscriberBadgeConfig = subscriberBadgeConfig
+        
+        if let user = user {
+            configureUser(user: user)
         }
     }
     
-    lazy var image: Observable<UIImage> = {
-        self.model
+    fileprivate lazy var user: Observable<SPUser> = {
+        self._user
             .unwrap()
-            .flatMap {
-                return self.subscriberBadgeService.badgeImage(model: $0)
+    }()
+    
+    var image: Observable<UIImage> {
+        user
+            .map { [weak self] _ -> OWSubscriberBadgeConfiguration? in
+                guard let self = self else { return nil }
+                return self.subscriberBadgeConfig
             }
-    }()
+            .unwrap()
+            .flatMap { [weak self] config -> Observable<UIImage> in
+                guard let self = self else { return Observable.empty() }
+                return self.subscriberBadgeService.badgeImage(config: config)
+            }
+    }
     
-    lazy var isSubscriber: Bool = {
-        return SPUserSessionHolder.session.user?.ssoData?.isSubscriber ?? false
-    }()
+    var isSubscriber: Observable<Bool> {
+        return user
+            .map { $0.ssoData?.isSubscriber ?? false}
+    }
     
-    func configureModel(_ model: OWSubscriberBadge) {
-        self.model.onNext(model)
+    func configureUser(user: SPUser) {
+        self._user.onNext(user)
     }
 }
