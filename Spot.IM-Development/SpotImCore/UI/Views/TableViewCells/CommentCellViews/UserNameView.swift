@@ -100,7 +100,7 @@ internal final class UserNameView: BaseView {
         moreButton.isHidden = hidden
     }
 
-    func setSubscriberBadgeVM(viewModel: OWUserSubscriberBadgeViewModeling) {
+    func configureSubscriberBadgeVM(viewModel: OWUserSubscriberBadgeViewModeling) {
         subscriberBadgeView.configure(with: viewModel)
     }
     
@@ -173,7 +173,7 @@ internal final class UserNameView: BaseView {
     private func configureSubscriberBadgeView() {
         self.addSubviews(subscriberBadgeView)
         subscriberBadgeView.layout {
-            $0.top.equal(to: topAnchor)
+            $0.top.equal(to: nameAndBadgeStackview.topAnchor)
             $0.leading.equal(to: nameAndBadgeStackview.trailingAnchor, offsetBy: 5.0)
         }
     }
