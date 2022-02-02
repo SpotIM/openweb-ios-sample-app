@@ -37,7 +37,7 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     fileprivate var subscriberBadgeService: SubscriberBadgeServicing!
     
     init (user: SPUser? = nil,
-          subscriberBadgeConfig: OWSubscriberBadgeConfiguration? = SPConfigsDataSource.appConfig?.conversation?.subscriberBadge,
+          subscriberBadgeConfig: OWSubscriberBadgeConfiguration? = SPConfigsDataSource.appConfig?.conversation?.subscriberBadgeConfig,
           subscriberBadgeService: SubscriberBadgeServicing = SubscriberBadgeService()) {
         self.subscriberBadgeService = subscriberBadgeService
         self.subscriberBadgeConfig = subscriberBadgeConfig
