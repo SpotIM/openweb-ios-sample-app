@@ -8,9 +8,9 @@
 
 import UIKit
 
-internal class SPBaseConversationViewController: SPBaseViewController, AlertPresentable, OWLoaderPresentable, UserAuthFlowDelegateContainable {
+internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, UserAuthFlowDelegateContainable {
     
-    weak var userAuthFlowDelegate: UserAuthFlowDelegate?
+    weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     private var authHandler: OWAuthenticationHandler?
     
     weak var webPageDelegate: SPSafariWebPageDelegate?

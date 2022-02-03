@@ -16,7 +16,7 @@ internal protocol SPConfigProvider {
 
 internal struct SpotConfig {
     let appConfig: SPSpotConfiguration
-    let abConfig: AbTests
+    let abConfig: OWAbTests
     let adsConfig: SPAdsConfiguration?
 }
 
@@ -30,11 +30,11 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                 return seal.reject(SPNetworkError.custom(message))
             }
             
-            getConfig(spotId: spotKey).then { config -> Promise<(SPSpotConfiguration, AbTests)> in
+            getConfig(spotId: spotKey).then { config -> Promise<(SPSpotConfiguration, OWAbTests)> in
                 if config.mobileSdk.enabled ?? false {
                     return self.getAbTests(spotId: spotKey, config: config).map { (config, $0) }
                 } else {
-                    return Promise.value((config, AbTests(tests: [])))
+                    return Promise.value((config, OWAbTests(tests: [])))
                 }
             }.then { configAndAbTest -> Promise<SpotConfig> in
                 if configAndAbTest.0.mobileSdk.enabled ?? false && configAndAbTest.0.initialization?.monetized ?? false {
@@ -111,14 +111,14 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
         }
     }
     
-    private func getAbTests(spotId: String, config: SPSpotConfiguration) -> Promise<AbTests> {
-        return Promise<AbTests> { seal in
+    private func getAbTests(spotId: String, config: SPSpotConfiguration) -> Promise<OWAbTests> {
+        return Promise<OWAbTests> { seal in
             // THIS IS THE FINAL RESULT OF THE ONLY TEST WE HAD ON IOS
             var tests = [SPABData(testName: "33", group: "D")]
             if let monetized = config.initialization?.monetized, monetized {
                 tests = [SPABData(testName: "33", group: "B")]
             }
-            seal.fulfill(AbTests(tests: tests))
+            seal.fulfill(OWAbTests(tests: tests))
             
             // REMOVING THIS CALL UNTIL WE WILL HAVE ACTIVE TESTS BACK ON IOS TO REDUCE STRESS FROM BE
 //            let spRequest = SPConfigRequests.abTestData
