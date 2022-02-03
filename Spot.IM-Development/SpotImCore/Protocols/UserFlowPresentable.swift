@@ -21,7 +21,7 @@ protocol UserAuthFlowDelegate: class {
 
 protocol UserPresentable: class {
     
-    var userIcon: BaseButton { get }
+    var userIcon: OWBaseButton { get }
     /// Setup selector and target for `userIcon` here! Call it on the start of the flow.
     func setupUserIconHandler()
 }

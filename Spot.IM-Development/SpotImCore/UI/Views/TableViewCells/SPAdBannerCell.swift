@@ -17,7 +17,7 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     weak var delegate: SPAdBannerCellDelegate?
     
     private lazy var adBannerView: SPAdBannerView = .init()
-    private lazy var closeButton: BaseButton = .init(type: .custom)
+    private lazy var closeButton: OWBaseButton = .init(type: .custom)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         

@@ -12,17 +12,17 @@ protocol SPPreConversationHeaderViewDelegate: AnyObject {
     func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel)
 }
 
-internal final class SPPreConversationHeaderView: BaseView {
+internal final class SPPreConversationHeaderView: OWBaseView {
     
-    private lazy var titleLabel: BaseLabel = {
-        let lbl = BaseLabel()
+    private lazy var titleLabel: OWBaseLabel = {
+        let lbl = OWBaseLabel()
         lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
         lbl.textColor = .spForeground0
         return lbl
     }()
     
-    private lazy var counterLabel: BaseLabel = {
-        let lbl = BaseLabel()
+    private lazy var counterLabel: OWBaseLabel = {
+        let lbl = OWBaseLabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.counterFontSize)
         lbl.textColor = .spForeground1
         return lbl

@@ -27,9 +27,9 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var authHandler: AuthenticationHandler?
     private var model: SPCommentCreationModel
 
-    let topContainerView: BaseView = .init()
-    let topContainerStack: BaseStackView = .init()
-    let commentContentScrollView: BaseScrollView = .init()
+    let topContainerView: OWBaseView = .init()
+    let topContainerStack: OWBaseStackView = .init()
+    let commentContentScrollView: OWBaseScrollView = .init()
     var textInputViewContainer: SPCommentTextInputView = .init(
         hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
     )
@@ -39,11 +39,11 @@ class SPCommentCreationViewController: SPBaseViewController,
     let activityIndicator: SPLoaderView = SPLoaderView()
     var showsUserAvatarInTextInput: Bool { !showsUsernameInput }
     
-    private let mainContainerView: BaseView = .init()
+    private let mainContainerView: OWBaseView = .init()
     
     private let footerView: SPCommentFooterView = .init()
     
-    private let scrollView: BaseScrollView = .init()
+    private let scrollView: OWBaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
     private var commentLabelsSection: String?
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
@@ -56,12 +56,12 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var emptyArticleBottomConstraint: NSLayoutConstraint?
 
     
-    private let closeButton: BaseButton = .init()
+    private let closeButton: OWBaseButton = .init()
     
     private lazy var commentHeaderView = SPCommentReplyHeaderView()
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
     private let commentingContainer: UIView = .init()
-    private let commentingOnLabel: BaseLabel = .init()
+    private let commentingOnLabel: OWBaseLabel = .init()
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
     
     private var imagePicker: ImagePicker?
@@ -924,7 +924,7 @@ extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
         self.imagePicker?.present(from: self.view)
     }
     
-    func updatePostCommentButtonCustomUI(button: BaseButton) {
+    func updatePostCommentButtonCustomUI(button: OWBaseButton) {
         customUIDelegate?.customizeCommentCreationActionButton(button: button)
     }
 }

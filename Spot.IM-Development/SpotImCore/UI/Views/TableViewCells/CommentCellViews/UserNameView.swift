@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal final class UserNameView: BaseView {
+internal final class UserNameView: OWBaseView {
 
     enum ContentType {
         case comment, reply
@@ -16,13 +16,13 @@ internal final class UserNameView: BaseView {
 
     weak var delegate: UserNameViewDelegate?
 
-    private let userNameLabel: BaseLabel = .init()
-    private let badgeTagLabel: BaseLabel = .init()
+    private let userNameLabel: OWBaseLabel = .init()
+    private let badgeTagLabel: OWBaseLabel = .init()
     private let nameAndBadgeStackview = UIStackView()
-    private let subtitleLabel: BaseLabel = .init()
-    private let dateLabel: BaseLabel = .init()
-    private let moreButton: BaseButton = .init()
-    private let deletedMessageLabel: BaseLabel = .init()
+    private let subtitleLabel: OWBaseLabel = .init()
+    private let dateLabel: OWBaseLabel = .init()
+    private let moreButton: OWBaseButton = .init()
+    private let deletedMessageLabel: OWBaseLabel = .init()
 
     private var subtitleToNameConstraint: NSLayoutConstraint?
 

@@ -8,15 +8,15 @@
 
 import UIKit
 
-internal final class ShowMoreRepliesView: BaseView {
+internal final class ShowMoreRepliesView: OWBaseView {
 
     weak var delegate: ShowMoreRepliesViewDelegate?
     var collapsedTitle: String?
     var expandedTitle: String?
 
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
-    private let showHideRepliesButton: BaseButton = .init()
-    private let disclosureIndicator: BaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true))
+    private let showHideRepliesButton: OWBaseButton = .init()
+    private let disclosureIndicator: OWBaseUIImageView = .init(image: UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true))
 
     override init(frame: CGRect) {
         super.init(frame: frame)

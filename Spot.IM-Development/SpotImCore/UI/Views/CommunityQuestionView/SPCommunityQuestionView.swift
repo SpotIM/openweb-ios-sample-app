@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-internal final class SPCommunityQuestionView: BaseView {
+internal final class SPCommunityQuestionView: OWBaseView {
     
-    private lazy var questionTextView: BaseTextView = .init()
-    private lazy var separatorView: BaseView = .init()
+    private lazy var questionTextView: OWBaseTextView = .init()
+    private lazy var separatorView: OWBaseView = .init()
     
     private var questionBottomConstraint: NSLayoutConstraint?
     private var separatorLeadingConstraint: NSLayoutConstraint?

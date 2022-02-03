@@ -31,14 +31,14 @@ public protocol SpotImLoginDelegate: AnyObject {
 public enum CustomizableView {
     case loginPrompt(textView: UITextView)
     case communityQuestion(textView: UITextView)
-    case sayControlInPreConversation(labelContainer: BaseView, label: BaseLabel)
-    case sayControlInMainConversation(labelContainer: BaseView, label: BaseLabel)
+    case sayControlInPreConversation(labelContainer: OWBaseView, label: OWBaseLabel)
+    case sayControlInMainConversation(labelContainer: OWBaseView, label: OWBaseLabel)
     case conversationFooter(view: UIView)
     case communityGuidelines(textView: UITextView)
     case navigationItemTitle(textView: UITextView)
     case showCommentsButton(button: SPShowCommentsButton)
     case preConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
-    case commentCreationActionButton(button: BaseButton)
+    case commentCreationActionButton(button: OWBaseButton)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -610,7 +610,7 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     func customizeCommunityQuestionTextView(textView: UITextView) {
         customUIDelegate?.customizeView(view: .communityQuestion(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
-    func customizeSayControl(labelContainer: BaseView, label: BaseLabel, isPreConversation: Bool) {
+    func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool) {
         let view: CustomizableView = isPreConversation ? .sayControlInPreConversation(labelContainer: labelContainer, label: label) : .sayControlInMainConversation(labelContainer: labelContainer, label: label)
         customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
@@ -628,7 +628,7 @@ extension SpotImSDKFlowCoordinator: CustomUIDelegate {
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
         customUIDelegate?.customizeView(view: .preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel), isDarkMode:  SPUserInterfaceStyle.isDarkMode)
     }
-    func customizeCommentCreationActionButton(button: BaseButton) {
+    func customizeCommentCreationActionButton(button: OWBaseButton) {
         customUIDelegate?.customizeView(view: .commentCreationActionButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
 }

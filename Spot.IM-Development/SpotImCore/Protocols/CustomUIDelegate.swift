@@ -11,11 +11,11 @@ import UIKit
 protocol CustomUIDelegate: AnyObject {
     func customizeLoginPromptTextView(textView: UITextView)
     func customizeCommunityQuestionTextView(textView: UITextView)
-    func customizeSayControl(labelContainer: BaseView, label: BaseLabel, isPreConversation: Bool)
+    func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool)
     func customizeConversationFooter(view: UIView)
     func customizeCommunityGuidelines(textView: UITextView)
     func customizeNavigationItemTitle(textView: UITextView)
     func customizeShowCommentsButton(button: SPShowCommentsButton)
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
-    func customizeCommentCreationActionButton(button: BaseButton)
+    func customizeCommentCreationActionButton(button: OWBaseButton)
 }
