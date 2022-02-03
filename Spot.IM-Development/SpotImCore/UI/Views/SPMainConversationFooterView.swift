@@ -16,19 +16,19 @@ internal protocol SPMainConversationFooterViewDelegate: AnyObject {
     
 }
 
-final class SPMainConversationFooterView: BaseView {
+final class SPMainConversationFooterView: OWBaseView {
     private let cache = NSCache<NSString, UIImage>()
-    private let callToActionLabel: BaseLabel = .init()
+    private let callToActionLabel: OWBaseLabel = .init()
     private let userAvatarView: SPAvatarView = .init()
-    private let labelContainer: BaseView = .init()
+    private let labelContainer: OWBaseView = .init()
     
-    private lazy var separatorView: BaseView = .init()
-    private lazy var bannerContainerView: BaseView = .init()
+    private lazy var separatorView: OWBaseView = .init()
+    private lazy var bannerContainerView: OWBaseView = .init()
     
     private var bannerView: UIView?
     private var bannerContainerHeight: NSLayoutConstraint?
     
-    private var readOnlyLabel: BaseLabel?
+    private var readOnlyLabel: OWBaseLabel?
 
     internal weak var delegate: SPMainConversationFooterViewDelegate?
     
@@ -104,7 +104,7 @@ final class SPMainConversationFooterView: BaseView {
         labelContainer.isHidden = true
         userAvatarView.isHidden = true
         
-        readOnlyLabel = BaseLabel()
+        readOnlyLabel = OWBaseLabel()
         setupReadOnlyLabel(isPreConversation: isPreConversation)
     }
     

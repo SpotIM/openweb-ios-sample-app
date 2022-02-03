@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-internal class CommentMediaView: BaseView {
+internal class CommentMediaView: OWBaseView {
     private let gifWebView: GifWebView = .init()
-    private let imageView: BaseUIImageView = .init()
+    private let imageView: OWBaseUIImageView = .init()
     
     private var imageViewHeightConstraint: NSLayoutConstraint?
     private var imageViewWidthConstraint: NSLayoutConstraint?

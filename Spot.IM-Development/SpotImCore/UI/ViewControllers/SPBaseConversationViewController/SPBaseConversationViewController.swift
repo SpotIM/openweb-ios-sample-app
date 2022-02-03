@@ -15,7 +15,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     
     weak var webPageDelegate: SPSafariWebPageDelegate?
 
-    internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
+    internal lazy var tableView = OWBaseTableView(frame: .zero, style: .grouped)
     internal weak var delegate: SPCommentsCreationDelegate?
     internal var stateActionView: SPEmptyConversationActionView?
     

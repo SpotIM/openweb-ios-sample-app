@@ -1,24 +1,22 @@
 //
-//  BaseTextField.swift
+//  BaseScrollView.swift
 //  SpotImCore
 //
-//  Created by Andriy Fedin on 04/12/19.
+//  Created by Eugene on 11.11.2019.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-class BaseTextField: UITextField {
-
+class OWBaseScrollView: UIScrollView {
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
-            ?? semanticContentAttribute
-        textAlignment = (semanticContentAttribute == .forceRightToLeft) ? .right : .left
+        ?? semanticContentAttribute
     }
-
+    
     @available(*,
     unavailable,
     message: "Loading this view from a nib is unsupported in this project"
@@ -27,5 +25,4 @@ class BaseTextField: UITextField {
     public init?(coder aDecoder: NSCoder) {
         fatalError("Loading this view from a nib is unsupported in this project")
     }
-
 }
