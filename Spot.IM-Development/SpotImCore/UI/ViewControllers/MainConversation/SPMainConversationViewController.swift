@@ -486,8 +486,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupTableView() {
-        super.setupTableView()
-
         tableView.layout {
             $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : collapsableContainer.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
@@ -644,12 +642,9 @@ extension SPMainConversationViewController { // UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
-            let identifier = String(describing: SPAdBannerCell.self)
-            guard let adBannerCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                 for: indexPath) as? SPAdBannerCell,
-                  let bannerView = self.bannerView else {
-                                                                    return UITableViewCell()
-            }
+            let adBannerCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPAdBannerCell.self, for: indexPath)
+
+            guard let bannerView = self.bannerView else { return adBannerCell }
             adBannerCell.updateBannerView(bannerView, height: 250.0)
             adBannerCell.delegate = self
 
