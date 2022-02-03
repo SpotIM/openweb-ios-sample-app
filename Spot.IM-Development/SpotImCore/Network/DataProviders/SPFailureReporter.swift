@@ -98,7 +98,7 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
     static let shared = SPDefaultFailureReporter()
     
     private init() {
-        super.init(apiManager: ApiManager())
+        super.init(apiManager: OWApiManager())
     }
     
     func report(error: SPError, postId: String = "default") {
@@ -109,12 +109,12 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         manager.execute(
             request: SPFailureReportRequest.error,
             parameters: error.parameters(),
-            parser: EmptyParser(),
+            parser: OWEmptyParser(),
             headers: headers
         ) { (result, response) in
             guard case let .failure(error) = result else { return }
             
-            Logger.error(error)
+            OWLogger.error(error)
         }
     }
 }

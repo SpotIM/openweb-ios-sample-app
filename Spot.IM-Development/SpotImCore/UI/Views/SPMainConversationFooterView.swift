@@ -53,7 +53,7 @@ final class SPMainConversationFooterView: OWBaseView {
         setup()
     }
     
-    func handleUICustomizations(customUIDelegate: CustomUIDelegate, isPreConversation: Bool) {
+    func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {
         customUIDelegate.customizeSayControl(labelContainer: labelContainer, label: callToActionLabel, isPreConversation: isPreConversation)
         if (!isPreConversation) {
             customUIDelegate.customizeConversationFooter(view: self)
@@ -77,7 +77,7 @@ final class SPMainConversationFooterView: OWBaseView {
     }
     
     /// Updates user's online status, `nil` will hide status view
-    func updateOnlineStatus(_ status: OnlineStatus) {
+    func updateOnlineStatus(_ status: OWOnlineStatus) {
         userAvatarView.updateOnlineStatus(status)
     }
 
@@ -235,7 +235,7 @@ final class SPMainConversationFooterView: OWBaseView {
     }
 }
 
-extension SPMainConversationFooterView: AvatarViewDelegate {
+extension SPMainConversationFooterView: OWAvatarViewDelegate {
     func avatarDidTapped() {
         delegate?.userAvatarDidTap(self)
     }

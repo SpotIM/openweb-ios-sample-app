@@ -51,7 +51,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             return manager.execute(
                 request: request,
                 encoding: URLEncoding.default,
-                parser: DecodableParser<Data>()) { (result, _) in
+                parser: OWDecodableParser<Data>()) { (result, _) in
                     switch result {
                     case .success(let data):
                         let image = UIImage(data: data)
@@ -102,7 +102,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
         manager.execute(
             request: SPCloudinaryRequests.upload,
             parameters: parameters,
-            parser: DecodableParser<CloudinaryUploadResponse>()) { (result, _) in
+            parser: OWDecodableParser<CloudinaryUploadResponse>()) { (result, _) in
             switch result {
             case .success(let response):
                 let image = SPComment.Content.Image(
@@ -121,7 +121,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
     
     private func signToCloudinary(publicId: String, timestamp: String, completion: @escaping (String?, Error?) -> Void) {
         guard let spotKey = SPClientSettings.main.spotKey else {
-            Logger.error("[ERROR]: No spot key for signing")
+            OWLogger.error("[ERROR]: No spot key for signing")
             return
         }
         let headers = HTTPHeaders.basic(with: spotKey)
@@ -132,7 +132,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
         manager.execute(
             request: SPCloudinaryRequests.login,
             parameters: parameters,
-            parser: DecodableParser<SPSignResponse>(),
+            parser: OWDecodableParser<SPSignResponse>(),
             headers: headers) { (result, _) in
             switch result {
             case .success(let response):
