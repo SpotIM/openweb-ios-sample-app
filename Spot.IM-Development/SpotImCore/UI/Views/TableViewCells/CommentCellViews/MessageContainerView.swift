@@ -8,10 +8,10 @@
 
 import UIKit
 
-final class MessageContainerView: BaseView {
+final class MessageContainerView: OWBaseView {
     
     weak var delegate: MessageContainerViewDelegate?
-    private let mainTextLabel: BaseLabel = .init()
+    private let mainTextLabel: OWBaseLabel = .init()
     private var activeURLs: [NSRange: URL] = [:]
     
     override init(frame: CGRect) {

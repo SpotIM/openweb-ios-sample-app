@@ -1,5 +1,5 @@
 //
-//  BaseTableView.swift
+//  BaseButton.swift
 //  SpotImCore
 //
 //  Created by Eugene on 11.11.2019.
@@ -8,10 +8,10 @@
 
 import UIKit
 
-class BaseTableView: UITableView {
+public class OWBaseButton: UIButton {
     
-    override init(frame: CGRect, style: UITableView.Style) {
-        super.init(frame: frame, style: style)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute

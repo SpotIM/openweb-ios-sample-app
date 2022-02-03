@@ -1,5 +1,5 @@
 //
-//  BaseScrollView.swift
+//  BaseTableView.swift
 //  SpotImCore
 //
 //  Created by Eugene on 11.11.2019.
@@ -8,10 +8,10 @@
 
 import UIKit
 
-class BaseScrollView: UIScrollView {
+class OWBaseTableView: UITableView {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
         
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute

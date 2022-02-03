@@ -9,14 +9,14 @@
 import UIKit
 
 /// aka Engagement view
-final class CommentActionsView: BaseView {
+final class CommentActionsView: OWBaseView {
 
     weak var delegate: CommentActionsDelegate?
 
     private let replyDefaultTitle: String
-    private let replyButton: BaseButton = .init()
-    private let rankUpLabel: BaseLabel = .init()
-    private let rankDownLabel: BaseLabel = .init()
+    private let replyButton: OWBaseButton = .init()
+    private let rankUpLabel: OWBaseLabel = .init()
+    private let rankDownLabel: OWBaseLabel = .init()
 
     private lazy var rankUpButton: SPAnimatedButton = initializeRankUpButton()
     private lazy var rankDownButton: SPAnimatedButton = initializeRankDownButton()

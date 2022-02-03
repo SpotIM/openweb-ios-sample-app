@@ -21,13 +21,13 @@ protocol AvatarViewDelegate: class {
     
 }
 
-final class SPAvatarView: BaseView {
+final class SPAvatarView: OWBaseView {
 
     weak var delegate: AvatarViewDelegate?
     
-    private let avatarImageView: BaseUIImageView = .init()
-    private let onlineIndicatorView: BaseView = .init()
-    private let avatarButton: BaseButton = .init()
+    private let avatarImageView: OWBaseUIImageView = .init()
+    private let onlineIndicatorView: OWBaseView = .init()
+    private let avatarButton: OWBaseButton = .init()
 
     private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", supportDarkMode: true) }
 
