@@ -8,11 +8,11 @@
 
 import Foundation
 
-protocol ParametersPresentable {
+protocol OWParametersPresentable {
     func parameters() -> [String: Any]?
 }
 
-extension ParametersPresentable where Self: Encodable {
+extension OWParametersPresentable where Self: Encodable {
 
     func parameters() -> [String: Any]? {
         guard
@@ -25,37 +25,37 @@ extension ParametersPresentable where Self: Encodable {
     
 }
 
-struct GeneralFailureReportDataModel: Encodable, ParametersPresentable {
+struct OWGeneralFailureReportDataModel: Encodable, OWParametersPresentable {
     let reason: String
     
     var commentId: String? = nil
     var parentCommentId: String? = nil
 }
 
-struct NetworkFailureReportDataModel: Encodable, ParametersPresentable {
+struct OWNetworkFailureReportDataModel: Encodable, OWParametersPresentable {
     let errorSource: String
-    let httpPayload: FailureHttpPayload
+    let httpPayload: OWFailureHttpPayload
     let isRegistered: Bool
     let platform: String
     let userId: String
 }
 
-struct MonetizationFailureModel: Encodable, ParametersPresentable {
-    let source: MonetizationSource
+struct OWMonetizationFailureModel: Encodable, OWParametersPresentable {
+    let source: OWMonetizationSource
     let reason: String
     let bannerType: AdType
 }
 
-struct RealTimeFailureModel: Encodable, ParametersPresentable {
+struct OWRealTimeFailureModel: Encodable, OWParametersPresentable {
     let reason: String
 }
 
-enum MonetizationSource: String, Encodable {
+enum OWMonetizationSource: String, Encodable {
     case preConversation = "pre_converstaion"
     case mainConversation = "main_conversation"
 }
 
-struct FailureHttpPayload: Encodable {
+struct OWFailureHttpPayload: Encodable {
     let body: String
     let outputParameters: String
     let url: String

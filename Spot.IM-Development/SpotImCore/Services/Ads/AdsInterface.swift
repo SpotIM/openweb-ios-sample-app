@@ -22,11 +22,11 @@ public protocol AdsProviderInterstitialDelegate: AnyObject {
 }
 
 internal struct AdsABGroup {
-    let abGroup: ABGroup
+    let abGroup: OWABGroup
     let isUserRegistered: Bool
     let disableInterstitialOnLogin: Bool
     
-    init(abGroup: ABGroup = ABGroup.fourth, isUserRegistered: Bool = false, disableInterstitialOnLogin: Bool = false) {
+    init(abGroup: OWABGroup = OWABGroup.fourth, isUserRegistered: Bool = false, disableInterstitialOnLogin: Bool = false) {
         self.abGroup = abGroup
         self.isUserRegistered = isUserRegistered
         self.disableInterstitialOnLogin = disableInterstitialOnLogin
