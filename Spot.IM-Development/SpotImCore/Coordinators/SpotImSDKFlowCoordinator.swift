@@ -521,7 +521,7 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 
 }
 
-extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
+extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
     internal func presentAuth() {
         SpotIm.authProvider.ssoAuthDelegate = self
         if let loginDelegate = self.loginDelegate {

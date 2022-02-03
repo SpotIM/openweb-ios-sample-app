@@ -10,11 +10,11 @@ import UIKit
 
 protocol UserAuthFlowDelegateContainable: class {
     
-    var userAuthFlowDelegate: UserAuthFlowDelegate? { get set }
+    var userAuthFlowDelegate: OWUserAuthFlowDelegate? { get set }
     
 }
 
-protocol UserAuthFlowDelegate: class {
+protocol OWUserAuthFlowDelegate: class {
     func presentAuth()
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
@@ -26,7 +26,7 @@ protocol UserPresentable: class {
     func setupUserIconHandler()
 }
 
-extension UserPresentable where Self: UIViewController & AlertPresentable & UserAuthFlowDelegateContainable {
+extension UserPresentable where Self: UIViewController & OWAlertPresentable & UserAuthFlowDelegateContainable {
     
     func updateUserIcon(image: UIImage) {
         let scale = UIScreen.main.scale

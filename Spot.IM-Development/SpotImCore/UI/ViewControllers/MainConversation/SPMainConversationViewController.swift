@@ -70,7 +70,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var collapsableContainerMinHeight: CGFloat = 0.0
     private var collapsableContainerHeightConstraint: NSLayoutConstraint?
 
-    weak override var userAuthFlowDelegate: UserAuthFlowDelegate? {
+    weak override var userAuthFlowDelegate: OWUserAuthFlowDelegate? {
         didSet {
             self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
         }
