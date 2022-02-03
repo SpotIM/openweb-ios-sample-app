@@ -314,8 +314,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     override func setupTableView() {
-        super.setupTableView()
-
         tableView.isScrollEnabled = false
         tableView.layout {
             $0.top.equal(to: whatYouThinkView.bottomAnchor)
