@@ -11,8 +11,8 @@ import Alamofire
 
 internal class DemoAuthenticationProvider {
 
-    private static let loginURLString = "https://ow-sso-server.now.sh/api/login"
-    private static let codeBURLString = "https://ow-sso-server.now.sh/api/spotim-sso"
+    private static let loginURLString = "https://api.spot.im/sso-mock-server/api/login"
+    private static let codeBURLString = "https://api.spot.im/sso-mock-server/api/spotim-sso"
 
     internal static func logIn(with username: String,
                                password: String,
