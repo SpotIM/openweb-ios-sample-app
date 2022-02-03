@@ -18,13 +18,13 @@ protocol CommentReplyViewControllerDelegate: AnyObject {
 
 class SPCommentCreationViewController: SPBaseViewController,
                                        AlertPresentable,
-                                       LoaderPresentable,
+                                       OWLoaderPresentable,
                                        UserAuthFlowDelegateContainable,
                                        UserPresentable {
     
     weak var userAuthFlowDelegate: UserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
-    private var authHandler: AuthenticationHandler?
+    private var authHandler: OWAuthenticationHandler?
     private var model: SPCommentCreationModel
 
     let topContainerView: OWBaseView = .init()
@@ -33,7 +33,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     var textInputViewContainer: SPCommentTextInputView = .init(
         hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
     )
-    private let imagePreviewView: CommentImagePreview = .init()
+    private let imagePreviewView: OWCommentImagePreview = .init()
     lazy var usernameView: SPNameInputView = SPNameInputView()
 
     let activityIndicator: SPLoaderView = SPLoaderView()
@@ -64,7 +64,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     private let commentingOnLabel: OWBaseLabel = .init()
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
     
-    private var imagePicker: ImagePicker?
+    private var imagePicker: OWImagePicker?
     
     private var shouldBeAutoPosted: Bool = true
     
@@ -90,7 +90,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         unregisterFromKeyboardNotifications()
     }
     
-    init(customUIDelegate: CustomUIDelegate?, model: SPCommentCreationModel) {
+    init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel) {
         self.model = model
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
@@ -264,7 +264,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     func dismissController() {
-        Logger.verbose("FirstComment: Dismissing creation view controller")
+        OWLogger.verbose("FirstComment: Dismissing creation view controller")
         let transition = CATransition()
         transition.duration = 0.5
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
@@ -274,8 +274,8 @@ class SPCommentCreationViewController: SPBaseViewController,
         navigationController?.popViewController(animated: false)
     }
     
-    func userDidSignInHandler() -> AuthenticationHandler? {
-        authHandler = AuthenticationHandler()
+    func userDidSignInHandler() -> OWAuthenticationHandler? {
+        authHandler = OWAuthenticationHandler()
         authHandler?.authHandler = { [weak self] isAuthenticated in
             guard let self = self else { return }
             
@@ -544,7 +544,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     private func post() {
         view.endEditing(true)
-        Logger.verbose("FirstComment: Post clicked")
+        OWLogger.verbose("FirstComment: Post clicked")
         showLoader()
         if commentLabelsContainer.selectedLabelsIds.count > 0 {
             model.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
@@ -555,7 +555,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     private func presentAuth() {
         view.endEditing(true)
-        Logger.verbose("FirstComment: Signup to post clicked")
+        OWLogger.verbose("FirstComment: Signup to post clicked")
         shouldBeAutoPosted = false
         userAuthFlowDelegate?.presentAuth()
 
@@ -777,7 +777,7 @@ extension SPCommentCreationViewController {
     }
     
     private func setImagePicker() {
-        self.imagePicker = ImagePicker(presentationController: self)
+        self.imagePicker = OWImagePicker(presentationController: self)
         self.imagePicker?.delegate = self
     }
     
@@ -810,7 +810,7 @@ extension SPCommentCreationViewController {
 
 // MARK: - Extensions
 
-extension SPCommentCreationViewController: KeyboardHandable {
+extension SPCommentCreationViewController: OWKeyboardHandable {
     
     func keyboardWillShow(_ notification: Notification) {
         guard
@@ -834,13 +834,13 @@ extension SPCommentCreationViewController: KeyboardHandable {
     
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
         
-        Logger.verbose("Current constraints is \(mainContainerBottomConstraint!.constant)")
+        OWLogger.verbose("Current constraints is \(mainContainerBottomConstraint!.constant)")
         // set bottom margin according to orientations
         if !UIDevice.current.isPortrait() {
             // landscape - keep content behind keyboard and scroll to selected textView
             mainContainerBottomConstraint?.constant = 0
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: constant, right: 0)
-            Logger.verbose("Updating constraints to \(0)")
+            OWLogger.verbose("Updating constraints to \(0)")
             setScrollView(
                 toView: usernameView.isSelected ? usernameView : textInputViewContainer,
                 toTop: constant == 0)
@@ -848,7 +848,7 @@ extension SPCommentCreationViewController: KeyboardHandable {
             // portrait - push content on top of keyboard
             mainContainerBottomConstraint?.constant = -constant
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            Logger.verbose("Updating constraints to \(-constant)")
+            OWLogger.verbose("Updating constraints to \(-constant)")
             scrollToTop()
         }
 
@@ -929,13 +929,13 @@ extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
     }
 }
 
-extension SPCommentCreationViewController: CommentImagePreviewDelegate {
+extension SPCommentCreationViewController: OWCommentImagePreviewDelegate {
     func clickedOnRemoveButton() {
         self.setImage(image: nil)
     }
 }
 
-extension SPCommentCreationViewController: ImagePickerDelegate {
+extension SPCommentCreationViewController: OWImagePickerDelegate {
     func didSelect(image: UIImage?) {
         guard image != nil else { return }
         self.setImage(image: image)

@@ -24,7 +24,7 @@ internal final class SPCommunityQuestionView: OWBaseView {
         super.init(frame: frame)
     }
     
-    func customizeCommunityQuestion(customUIDelegate: CustomUIDelegate) {
+    func customizeCommunityQuestion(customUIDelegate: OWCustomUIDelegate) {
         customUIDelegate.customizeCommunityQuestionTextView(textView: questionTextView)
     }
     

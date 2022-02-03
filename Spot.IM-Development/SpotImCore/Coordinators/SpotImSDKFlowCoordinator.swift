@@ -76,7 +76,7 @@ private class PresentedContainerNavigationController: UINavigationController {
 
 public let SPOTIM_NAV_CONTROL_TAG = 11223344;
 
-final public class SpotImSDKFlowCoordinator: Coordinator {
+final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     weak var containerViewController: UIViewController?
     
@@ -94,13 +94,13 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     
     private var localCommentReplyDidCreate: ((SPComment) -> Void)?
     private var commentReplyCreationBlocked: ((String?) -> Void)?
-    private var authHandlers: [WeakRef<AuthenticationHandler>] = []
+    private var authHandlers: [WeakRef<OWAuthenticationHandler>] = []
     private var configCompletion: ((UIViewController) -> Void)?
     private var postId: String?
     private var shouldAddMain: Bool = false
     private weak var conversationModel: SPMainConversationModel?
     private let adsManager: AdsManager
-    private let apiManager: ApiManager
+    private let apiManager: OWApiManager
     private let imageProvider: SPImageProvider
     private weak var realTimeService: RealTimeService?
     private let spotConfig: SpotConfig
@@ -112,7 +112,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
         sdkNavigationDelegate = delegate
         adsManager = AdsManager(spotId: spotId)
-        apiManager = ApiManager()
+        apiManager = OWApiManager()
         conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
@@ -127,7 +127,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
     internal init(spotConfig: SpotConfig, loginDelegate: SpotImLoginDelegate, spotId: String, localeId: String?) {
         self.loginDelegate = loginDelegate
         adsManager = AdsManager(spotId: spotId)
-        apiManager = ApiManager()
+        apiManager = OWApiManager()
         conversationUpdater = SPCommentFacade(apiManager: apiManager)
         self.spotConfig = spotConfig
         imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
@@ -298,7 +298,7 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
                     completion(.failure(error))
                 } else if success == false {
                     completion(.failure(SPNetworkError.requestFailed))
-                    Logger.error("Load conversation request type is not `success`")
+                    OWLogger.error("Load conversation request type is not `success`")
                 } else {
                     
                     let messageCount = model.dataSource.messageCount
@@ -363,10 +363,10 @@ final public class SpotImSDKFlowCoordinator: Coordinator {
             controller.title = navigationItemTitleText
         }
         
-        Logger.verbose("FirstComment: localCommentReplayDidCreate SET")
+        OWLogger.verbose("FirstComment: localCommentReplayDidCreate SET")
         localCommentReplyDidCreate = { comment in
-            Logger.verbose("FirstComment: localCommentReplayDidCreate CALLED")
-            Logger.verbose("FirstComment: setting the pending comment to the model")
+            OWLogger.verbose("FirstComment: localCommentReplayDidCreate CALLED")
+            OWLogger.verbose("FirstComment: setting the pending comment to the model")
             model.pendingComment = comment
         }
         commentReplyCreationBlocked = { commentText in
@@ -555,9 +555,9 @@ extension SpotImSDKFlowCoordinator: UserAuthFlowDelegate {
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     internal func commentReplyDidCreate(_ comment: SPComment) {
-        Logger.verbose("FirstComment: Did received comment in delegate")
+        OWLogger.verbose("FirstComment: Did received comment in delegate")
         if let model = conversationModel, shouldAddMain {
-            Logger.verbose("FirstComment: Adding main conversation screen before we continue")
+            OWLogger.verbose("FirstComment: Adding main conversation screen before we continue")
             insertMainConversationToNavigation(model)
         }
         localCommentReplyDidCreate?(comment)
@@ -599,7 +599,7 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     }
 }
 
-extension SpotImSDKFlowCoordinator: CustomUIDelegate {
+extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {
     func customizeShowCommentsButton(button: SPShowCommentsButton) {
         customUIDelegate?.customizeView(view: .showCommentsButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }

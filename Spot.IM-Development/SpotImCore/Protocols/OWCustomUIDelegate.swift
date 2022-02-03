@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol CustomUIDelegate: AnyObject {
+protocol OWCustomUIDelegate: AnyObject {
     func customizeLoginPromptTextView(textView: UITextView)
     func customizeCommunityQuestionTextView(textView: UITextView)
     func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool)
