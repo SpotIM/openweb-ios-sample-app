@@ -392,7 +392,7 @@ extension SPCommentCell: UserNameViewDelegate {
     }
 }
 
-extension SPCommentCell: AvatarViewDelegate {
+extension SPCommentCell: OWAvatarViewDelegate {
     
     func avatarDidTapped() {
         delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)

@@ -58,7 +58,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
             
             manager.execute(
                 request: spRequest,
-                parser: DecodableParser<SPSpotConfiguration>(),
+                parser: OWDecodableParser<SPSpotConfiguration>(),
                 headers: headers
             ) { result, response in
                 switch result {
@@ -90,7 +90,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
             manager.execute(
                 request: spRequest,
                 parameters: params,
-                parser: DecodableParser<SPAdsConfiguration>(),
+                parser: OWDecodableParser<SPAdsConfiguration>(),
                 headers: headers
             ) { result, response in
                 switch result {
