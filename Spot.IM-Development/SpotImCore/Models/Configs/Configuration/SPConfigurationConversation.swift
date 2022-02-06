@@ -20,7 +20,7 @@ struct SPConfigurationConversation: Decodable {
     let subscriberBadgeConfig: OWSubscriberBadgeConfiguration?
     
     enum CodingKeys: String, CodingKey {
-        case subscriberBadgeConfig = "subscriberBadgev2"
+        case subscriberBadgeConfig = "subscriberBadgeV2"
         case readBatchSize,
              socialEnable,
              typingAggregationTimeSeconds,
