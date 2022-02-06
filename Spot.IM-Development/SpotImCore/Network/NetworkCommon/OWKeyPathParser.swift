@@ -7,13 +7,13 @@ import Foundation
 
 public typealias JSON = [String: Any]
 
-public enum ParserError: Error {
+public enum OWParserError: Error {
     
     case keyNotFound
     
 }
 
-internal class KeyPathParser {
+internal class OWKeyPathParser {
     
     private let keyPath: String?
     
@@ -26,7 +26,7 @@ internal class KeyPathParser {
             if let value = dictionary[keyPath] {
                 return value
             }
-            throw ParserError.keyNotFound
+            throw OWParserError.keyNotFound
         } else {
             return object
         }

@@ -28,7 +28,7 @@ enum SPGeneralError {
 }
 
 enum SPMonetizationError {
-    case bannerFailedToLoad(source: MonetizationSource, error: Error)
+    case bannerFailedToLoad(source: OWMonetizationSource, error: Error)
     case interstitialFailedToLoad(error: Error)
 }
 
@@ -53,35 +53,35 @@ extension SPError {
         }
     }
     
-    private func prepareGeneralFailureModel(_ generalError: SPGeneralError) -> GeneralFailureReportDataModel {
+    private func prepareGeneralFailureModel(_ generalError: SPGeneralError) -> OWGeneralFailureReportDataModel {
         switch generalError {
         case .encodingHtmlError(let commentId,let parentId):
-            return GeneralFailureReportDataModel(reason: generalError.description, commentId: commentId, parentCommentId: parentId)
+            return OWGeneralFailureReportDataModel(reason: generalError.description, commentId: commentId, parentCommentId: parentId)
         }
     }
     
-    private func prepareRealTimeFailureModel(_ realTimeError: RealTimeError) -> RealTimeFailureModel {
-        return RealTimeFailureModel(reason: realTimeError.description)
+    private func prepareRealTimeFailureModel(_ realTimeError: RealTimeError) -> OWRealTimeFailureModel {
+        return OWRealTimeFailureModel(reason: realTimeError.description)
     }
     
-    private func prepareMonetizationFailureModel(_ monetizationError: SPMonetizationError) -> MonetizationFailureModel {
+    private func prepareMonetizationFailureModel(_ monetizationError: SPMonetizationError) -> OWMonetizationFailureModel {
         switch monetizationError {
         case .bannerFailedToLoad(let source, let error):
-            return MonetizationFailureModel(source: source, reason: error.localizedDescription, bannerType: .banner)
+            return OWMonetizationFailureModel(source: source, reason: error.localizedDescription, bannerType: .banner)
         case .interstitialFailedToLoad(let error):
-            return MonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .interstitial)
+            return OWMonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .interstitial)
         }
     }
     
-    private func prepareNetworkReportDataModel(_ rawReport: RawReportModel) -> NetworkFailureReportDataModel {
+    private func prepareNetworkReportDataModel(_ rawReport: RawReportModel) -> OWNetworkFailureReportDataModel {
         var bodyString: String = rawReport.errorMessage
         if let data = rawReport.errorData, let dataString = String(data: data, encoding: .utf8) {
             bodyString = dataString
         }
         
-        return NetworkFailureReportDataModel(
+        return OWNetworkFailureReportDataModel(
             errorSource: "HTTP",
-            httpPayload: FailureHttpPayload(
+            httpPayload: OWFailureHttpPayload(
                 body: bodyString,
                 outputParameters: rawReport.parameters?.jsonString() ?? "",
                 url: rawReport.url
@@ -98,7 +98,7 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
     static let shared = SPDefaultFailureReporter()
     
     private init() {
-        super.init(apiManager: ApiManager())
+        super.init(apiManager: OWApiManager())
     }
     
     func report(error: SPError, postId: String = "default") {
@@ -109,12 +109,12 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         manager.execute(
             request: SPFailureReportRequest.error,
             parameters: error.parameters(),
-            parser: EmptyParser(),
+            parser: OWEmptyParser(),
             headers: headers
         ) { (result, response) in
             guard case let .failure(error) = result else { return }
             
-            Logger.error(error)
+            OWLogger.error(error)
         }
     }
 }

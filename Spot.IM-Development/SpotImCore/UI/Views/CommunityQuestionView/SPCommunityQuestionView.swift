@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-internal final class SPCommunityQuestionView: BaseView {
+internal final class SPCommunityQuestionView: OWBaseView {
     
-    private lazy var questionTextView: BaseTextView = .init()
-    private lazy var separatorView: BaseView = .init()
+    private lazy var questionTextView: OWBaseTextView = .init()
+    private lazy var separatorView: OWBaseView = .init()
     
     private var questionBottomConstraint: NSLayoutConstraint?
     private var separatorLeadingConstraint: NSLayoutConstraint?
@@ -24,7 +24,7 @@ internal final class SPCommunityQuestionView: BaseView {
         super.init(frame: frame)
     }
     
-    func customizeCommunityQuestion(customUIDelegate: CustomUIDelegate) {
+    func customizeCommunityQuestion(customUIDelegate: OWCustomUIDelegate) {
         customUIDelegate.customizeCommunityQuestionTextView(textView: questionTextView)
     }
     
