@@ -12,6 +12,7 @@ protocol TotalTypingIndicationViewDelegate: class {
     
     func horisontalPositionChangeDidEnd()
     func horisontalPositionDidChange(transition: CGFloat)
+    func indicationViewClicked()
 }
 
 final class TotalTypingIndicationView: BaseView {
@@ -62,6 +63,8 @@ final class TotalTypingIndicationView: BaseView {
     private func setup() {
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(detectPan(recognizer:)))
         addGestureRecognizer(panGesture!)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(detectTap))
+        addGestureRecognizer(tapGesture)
         addSubviews(animationImageView, typingLabel, newCommentsArrowImageView)
         configureAnimatedView()
         configureTypingLabel()
@@ -126,6 +129,12 @@ final class TotalTypingIndicationView: BaseView {
         default:
             break
         }
+    }
+    
+    @objc
+    private func detectTap() {
+        // TODO - check if its blitz
+        delegate?.indicationViewClicked()
     }
     
     private func dropShadowIfNeeded() {
