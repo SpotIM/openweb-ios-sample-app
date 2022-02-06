@@ -1,22 +1,24 @@
 //
-//  BaseButton.swift
+//  BaseTextField.swift
 //  SpotImCore
 //
-//  Created by Eugene on 11.11.2019.
+//  Created by Andriy Fedin on 04/12/19.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
-public class BaseButton: UIButton {
-    
+class OWBaseTextField: UITextField {
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
-        ?? semanticContentAttribute
+            ?? semanticContentAttribute
+        textAlignment = (semanticContentAttribute == .forceRightToLeft) ? .right : .left
     }
-    
+
     @available(*,
     unavailable,
     message: "Loading this view from a nib is unsupported in this project"
@@ -25,4 +27,5 @@ public class BaseButton: UIButton {
     public init?(coder aDecoder: NSCoder) {
         fatalError("Loading this view from a nib is unsupported in this project")
     }
+
 }

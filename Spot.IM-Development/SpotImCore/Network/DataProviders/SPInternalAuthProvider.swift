@@ -34,7 +34,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
 
         manager.execute(
             request: spRequest,
-            parser: DecodableParser<SPUser>(),
+            parser: OWDecodableParser<SPUser>(),
             headers: headers
         ) { result, response in
             let token = response.response?.allHeaderFields.authorizationHeader ?? SPUserSessionHolder.session.token
@@ -86,7 +86,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
 
             manager.execute(
                 request: spRequest,
-                parser: EmptyParser(),
+                parser: OWEmptyParser(),
                 headers: headers
             ) { result, response in
                 switch result {
@@ -135,7 +135,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
             
             manager.execute(
                 request: spRequest,
-                parser: DecodableParser<SPUser>(),
+                parser: OWDecodableParser<SPUser>(),
                 headers: headers
             ) { result, response in
                 switch result {

@@ -7,11 +7,11 @@ import UIKit
 
 internal class SPBaseViewController: UIViewController {
     
-    internal weak var customUIDelegate: CustomUIDelegate?
+    internal weak var customUIDelegate: OWCustomUIDelegate?
     
     var userRightBarItem: UIBarButtonItem?
-    var userIcon: BaseButton = {
-        let button = BaseButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+    var userIcon: OWBaseButton = {
+        let button = OWBaseButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
         button.backgroundColor = .white
         button.makeViewRound()
         button.contentMode = .scaleAspectFill
@@ -20,7 +20,7 @@ internal class SPBaseViewController: UIViewController {
         return button
     }()
     
-    init(customUIDelegate: CustomUIDelegate?) {
+    init(customUIDelegate: OWCustomUIDelegate?) {
         super.init(nibName: nil, bundle: nil)
         self.customUIDelegate = customUIDelegate
         view.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute

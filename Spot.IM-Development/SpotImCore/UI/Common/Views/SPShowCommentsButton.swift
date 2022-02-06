@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public class SPShowCommentsButton: BaseButton {
+public class SPShowCommentsButton: OWBaseButton {
     private var commentsCount: String?
     
     override init(frame: CGRect) {

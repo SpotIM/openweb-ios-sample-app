@@ -14,7 +14,7 @@ internal protocol SPCommentsCreationDelegate: AnyObject {
     func editComment(with dataModel: SPMainConversationModel, to id: String)
 }
 
-final class SPMainConversationViewController: SPBaseConversationViewController, UserPresentable {
+final class SPMainConversationViewController: SPBaseConversationViewController, OWUserPresentable {
 
     enum ScrollingDirection {
         case up, down, `static`
@@ -29,7 +29,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var refreshControl = UIRefreshControl()
     private lazy var tableHeader = SPArticleHeader()
     private lazy var loginPromptView = SPLoginPromptView()
-    private lazy var collapsableContainer = BaseView()
+    private lazy var collapsableContainer = OWBaseView()
     private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
@@ -70,7 +70,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var collapsableContainerMinHeight: CGFloat = 0.0
     private var collapsableContainerHeightConstraint: NSLayoutConstraint?
 
-    weak override var userAuthFlowDelegate: UserAuthFlowDelegate? {
+    weak override var userAuthFlowDelegate: OWUserAuthFlowDelegate? {
         didSet {
             self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
         }
@@ -91,8 +91,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
     }
 
-    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?, openedByPublisher: Bool = false) {
-        Logger.verbose("FirstComment: Main view controller created")
+    init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?, openedByPublisher: Bool = false) {
+        OWLogger.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
         self.openedByPublisher = openedByPublisher
@@ -105,7 +105,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Logger.verbose("FirstComment: Main view did load")
+        OWLogger.verbose("FirstComment: Main view did load")
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
             SPAnalyticsHolder.default.log(event: openedByPublisher ? .viewed : .mainViewed, source: .conversation)
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
@@ -118,7 +118,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             setupUserIconHandler()
         }
 
-        Logger.verbose("FirstComment: Have some comments in the data source")
+        OWLogger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         summaryView.updateCommentsLabel(model.dataSource.messageCount)
         summaryView.configure(onlineViewingUsersVM: model.onlineViewingUsersConversationVM)
@@ -262,7 +262,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
-        Logger.verbose("FirstComment: API did finish with \(success)")
+        OWLogger.verbose("FirstComment: API did finish with \(success)")
         self.hideLoader()
         self.refreshControl.endRefreshing()
 
@@ -276,9 +276,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 )
             }
         } else if success == false {
-            Logger.error("Load conversation request type is not `success`")
+            OWLogger.error("Load conversation request type is not `success`")
         } else {
-            Logger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
+            OWLogger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
             self.summaryView.updateCommentsLabel(messageCount)
@@ -287,7 +287,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             self.stateActionView = nil
             self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
         }
-        Logger.verbose("FirstComment: Calling reload on table view")
+        OWLogger.verbose("FirstComment: Calling reload on table view")
         self.tableView.reloadData()
         self.updateHeaderUI()
         self.updateFooterView()
@@ -340,7 +340,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private func loadCommentsNextPage() {
         guard !model.dataSource.isLoading else { return }
 
-        Logger.warn("DEBUG: Loading next page")
+        OWLogger.warn("DEBUG: Loading next page")
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         let mode = model.sortOption
         model.dataSource.comments(
@@ -348,12 +348,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             page: .next,
             loadingStarted: {
                 // showing loader section
-                Logger.warn("DEBUG: Loading started called")
+                OWLogger.warn("DEBUG: Loading started called")
                 self.tableView.reloadData()
             },
             loadingFinished: {
                 // Removing loader section
-                Logger.warn("DEBUG: Loading finished called")
+                OWLogger.warn("DEBUG: Loading finished called")
                 self.tableView.reloadData()
             },
             completion: { (success, _, error) in
@@ -363,7 +363,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                         message: error.localizedDescription
                     )
                 } else if success == false {
-                    Logger.error("Load conversation next page request type is not `success`")
+                    OWLogger.error("Load conversation next page request type is not `success`")
                 } else {
                     self.summaryView.updateCommentsLabel(self.model.dataSource.messageCount)
                 }
@@ -486,8 +486,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupTableView() {
-        super.setupTableView()
-
         tableView.layout {
             $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : collapsableContainer.bottomAnchor)
             $0.trailing.equal(to: view.trailingAnchor)
@@ -644,12 +642,9 @@ extension SPMainConversationViewController { // UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
-            let identifier = String(describing: SPAdBannerCell.self)
-            guard let adBannerCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                 for: indexPath) as? SPAdBannerCell,
-                  let bannerView = self.bannerView else {
-                                                                    return UITableViewCell()
-            }
+            let adBannerCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPAdBannerCell.self, for: indexPath)
+
+            guard let bannerView = self.bannerView else { return adBannerCell }
             adBannerCell.updateBannerView(bannerView, height: 250.0)
             adBannerCell.delegate = self
 
@@ -882,7 +877,7 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     }
 
     func bannerFailedToLoad(error: Error) {
-        Logger.error("error bannerFailedToLoad - \(error)")
+        OWLogger.error("error bannerFailedToLoad - \(error)")
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .mainConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }

@@ -8,9 +8,9 @@
 
 import UIKit
 
-protocol AlertPresentable {}
+protocol OWAlertPresentable {}
 
-extension AlertPresentable where Self: UIViewController {
+extension OWAlertPresentable where Self: UIViewController {
     
     func showActionSheet(
         title: String? = nil,
