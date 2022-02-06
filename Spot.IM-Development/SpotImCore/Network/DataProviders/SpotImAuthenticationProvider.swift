@@ -44,9 +44,9 @@ internal class SpotImAuthenticationProvider {
         public weak var ssoAuthDelegate: SSOAthenticationDelegate?
 
         private let internalAuthProvider: SPInternalAuthProvider
-        private let manager: ApiManager
+        private let manager: OWApiManager
 
-        public init(manager: ApiManager, internalProvider: SPInternalAuthProvider) {
+        public init(manager: OWApiManager, internalProvider: SPInternalAuthProvider) {
             self.manager = manager
             self.internalAuthProvider = internalProvider
         }
@@ -103,7 +103,7 @@ internal class SpotImAuthenticationProvider {
             manager.execute(
                 request: spRequest,
                 parameters: requestParams,
-                parser: DecodableParser<SSOStartResponseInternal>(),
+                parser: OWDecodableParser<SSOStartResponseInternal>(),
                 headers: headers
             ) { result, response in
                 switch result {
@@ -163,7 +163,7 @@ internal class SpotImAuthenticationProvider {
         self.manager.execute(
             request: spRequest,
             parameters: params,
-            parser: DecodableParser<SSOCompleteResponseInternal>(),
+            parser: OWDecodableParser<SSOCompleteResponseInternal>(),
             headers: headers
         ) { (result, response) in
             switch result {

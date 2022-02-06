@@ -41,7 +41,7 @@ final class DefaultRealtimeDataProvider: NetworkDataProvider, SPRealtimeDataProv
         currentRequest = manager.execute(
             request: spRequest,
             parameters: parameters,
-            parser: DecodableParser<RealTimeModel>(),
+            parser: OWDecodableParser<RealTimeModel>(),
             headers: headers
         ) { [weak self] result, _ in
             self?.isFetching = false

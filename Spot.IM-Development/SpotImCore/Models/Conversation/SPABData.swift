@@ -8,14 +8,14 @@
 
 import Foundation
 
-internal enum ABGroup: String, CaseIterable {
+internal enum OWABGroup: String, CaseIterable {
     case first = "A"
     case second = "B"
     case third = "C"
     case fourth = "D"
 }
 
-struct AbTests: Decodable {
+struct OWAbTests: Decodable {
     private let activeTests: [String] = ["33"]
     enum CodingKeys: String, CodingKey {
         case abData
@@ -45,19 +45,19 @@ struct SPABData: Decodable {
     }
     
     let testName: String
-    let abTestGroup: ABGroup?
+    let abTestGroup: OWABGroup?
     let group: String
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         testName = try container.decode(String.self, forKey: .testName)
         group = try container.decode(String.self, forKey: .group)
-        abTestGroup = ABGroup(rawValue: group)
+        abTestGroup = OWABGroup(rawValue: group)
     }
     
     init(testName: String, group: String) {
         self.testName = testName
         self.group = group
-        self.abTestGroup = ABGroup(rawValue: group)
+        self.abTestGroup = OWABGroup(rawValue: group)
     }
 }

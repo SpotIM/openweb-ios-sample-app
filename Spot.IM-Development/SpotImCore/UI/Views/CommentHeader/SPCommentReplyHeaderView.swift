@@ -8,14 +8,14 @@
 
 import UIKit
 
-final class SPCommentReplyHeaderView: BaseView {
+final class SPCommentReplyHeaderView: OWBaseView {
     
-    let closeButton: BaseButton = .init()
+    let closeButton: OWBaseButton = .init()
 
-    private let replyingLabel: BaseLabel = .init()
-    private let commentAuthorLabel: BaseLabel = .init()
-    private let commentLabel: BaseLabel = .init()
-    private let separatorView: BaseView = .init()
+    private let replyingLabel: OWBaseLabel = .init()
+    private let commentAuthorLabel: OWBaseLabel = .init()
+    private let commentLabel: OWBaseLabel = .init()
+    private let separatorView: OWBaseView = .init()
     
     private var commentLabelTopConstraint: NSLayoutConstraint? = nil
     
