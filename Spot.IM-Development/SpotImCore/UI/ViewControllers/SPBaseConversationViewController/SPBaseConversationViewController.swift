@@ -15,8 +15,8 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     
     weak var webPageDelegate: SPSafariWebPageDelegate?
 
-    internal lazy var tableView: OWBaseTableView = {
-        let tableView = OWBaseTableView(frame: .zero, style: .grouped)
+    internal lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
             .enforceSemanticAttribute()
             .backgroundColor(.spBackground0)
             .separatorStyle(.none)
