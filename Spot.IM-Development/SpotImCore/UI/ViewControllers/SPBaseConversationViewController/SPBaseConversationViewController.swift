@@ -434,6 +434,13 @@ private extension SPBaseConversationViewController {
 }
 
 extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
+    func indicationViewClicked() {
+        // TODO - check against model that we are in blitz mode
+        // TODO - change sort to be "newest"
+        self.reloadConversation()
+        // TODO - close blitz
+    }
+    
     
     func horisontalPositionChangeDidEnd() {
         guard
