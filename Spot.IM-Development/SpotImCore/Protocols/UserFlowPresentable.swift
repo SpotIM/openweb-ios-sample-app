@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol UserAuthFlowDelegateContainable: class {
+protocol OWUserAuthFlowDelegateContainable: class {
     
     var userAuthFlowDelegate: OWUserAuthFlowDelegate? { get set }
     
@@ -19,14 +19,14 @@ protocol OWUserAuthFlowDelegate: class {
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
 
-protocol UserPresentable: class {
+protocol OWUserPresentable: class {
     
     var userIcon: OWBaseButton { get }
     /// Setup selector and target for `userIcon` here! Call it on the start of the flow.
     func setupUserIconHandler()
 }
 
-extension UserPresentable where Self: UIViewController & OWAlertPresentable & UserAuthFlowDelegateContainable {
+extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & OWUserAuthFlowDelegateContainable {
     
     func updateUserIcon(image: UIImage) {
         let scale = UIScreen.main.scale
