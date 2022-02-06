@@ -163,6 +163,23 @@ extension UIImageView {
     }
 }
 
+extension UITableView {
+    @discardableResult func separatorStyle(_ separatorStyle: UITableViewCell.SeparatorStyle) -> Self {
+        self.separatorStyle = separatorStyle
+        return self
+    }
+    
+    @discardableResult func dataSource(_ dataSource: UITableViewDataSource) -> Self {
+        self.dataSource = dataSource
+        return self
+    }
+    
+    @discardableResult func delegate(_ delegate: UITableViewDelegate) -> Self {
+        self.delegate = delegate
+        return self
+    }
+}
+
 extension String {
     var label: UILabel {
         let label = UILabel()
