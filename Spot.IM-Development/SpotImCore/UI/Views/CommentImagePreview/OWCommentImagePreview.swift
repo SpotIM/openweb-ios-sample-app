@@ -8,19 +8,19 @@
 
 import UIKit
 
-protocol CommentImagePreviewDelegate: AnyObject {
+protocol OWCommentImagePreviewDelegate: AnyObject {
     func clickedOnRemoveButton()
 }
 
-final class CommentImagePreview: BaseView {
+final class OWCommentImagePreview: OWBaseView {
     
-    private let imageView: BaseUIImageView = .init()
+    private let imageView: OWBaseUIImageView = .init()
     private var heightConstraint: NSLayoutConstraint?
     private let loaderView: SPLoaderView = .init(backgroundOpacity: 0.4)
     
-    private lazy var removeButton: BaseButton = .init(type: .custom)
+    private lazy var removeButton: OWBaseButton = .init(type: .custom)
     
-    weak var delegate: CommentImagePreviewDelegate?
+    weak var delegate: OWCommentImagePreviewDelegate?
     
     var isUploadingImage: Bool {
         didSet {
@@ -116,7 +116,7 @@ final class CommentImagePreview: BaseView {
     }
 }
 
-extension CommentImagePreview {
+extension OWCommentImagePreview {
     // MARK: - Theme
 
     private enum Theme {

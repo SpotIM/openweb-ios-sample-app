@@ -9,48 +9,48 @@
 import Foundation
 import Alamofire
 
-protocol ResponseParser {
+protocol OWResponseParser {
     
     associatedtype Representation
     
     /// Parses synchronous
-    func parse(object: Any) -> Result<Representation>
-    func parse(data: Data) -> Result<Representation>
+    func parse(object: Any) -> OWResult<Representation>
+    func parse(data: Data) -> OWResult<Representation>
     
     
 }
 
-public struct EmptyParser: ResponseParser {
+public struct OWEmptyParser: OWResponseParser {
     
     init() {}
     
-    func parse(object: Any) -> Result<Bool> {
+    func parse(object: Any) -> OWResult<Bool> {
         return .success(true)
     }
     
-    func parse(data: Data) -> Result<Bool> {
+    func parse(data: Data) -> OWResult<Bool> {
         return .success(true)
     }
 }
 
-public struct JSONParser: ResponseParser {
+public struct OWJSONParser: OWResponseParser {
     
     struct JSONParserError: Error {}
     
     init() {}
     
-    func parse(object: Any) -> Result<[String: Any]> {
+    func parse(object: Any) -> OWResult<[String: Any]> {
         guard let json = object as? [String: Any] else { return .failure(JSONParserError()) }
         
         return .success(json)
     }
     
-    func parse(data: Data) -> Result<[String: Any]> {
+    func parse(data: Data) -> OWResult<[String: Any]> {
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: [.mutableContainers])
             return parse(object: json)
         } catch let error {
-            Logger.error(error)
+            OWLogger.error(error)
             return .failure(error)
         }
         
@@ -59,7 +59,7 @@ public struct JSONParser: ResponseParser {
 }
 
 
-struct JsonWithoutEscapingSlashesEncoding: ParameterEncoding {
+struct OWJsonWithoutEscapingSlashesEncoding: ParameterEncoding {
     func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
         guard var urlRequest = urlRequest.urlRequest, let params = parameters else { throw Errors.emptyURLRequest }
         guard let jsonData = try? JSONSerialization.data(withJSONObject: params), let jsonString = String(data: jsonData, encoding: .utf8) else { throw Errors.encodingProblem }
@@ -71,14 +71,14 @@ struct JsonWithoutEscapingSlashesEncoding: ParameterEncoding {
     }
 }
 
-extension JsonWithoutEscapingSlashesEncoding {
+extension OWJsonWithoutEscapingSlashesEncoding {
     enum Errors: Error {
         case emptyURLRequest
         case encodingProblem
     }
 }
 
-extension JsonWithoutEscapingSlashesEncoding.Errors: LocalizedError {
+extension OWJsonWithoutEscapingSlashesEncoding.Errors: LocalizedError {
     var errorDescription: String? {
         switch self {
             case .emptyURLRequest: return "Empty url request"
@@ -87,7 +87,7 @@ extension JsonWithoutEscapingSlashesEncoding.Errors: LocalizedError {
     }
 }
 
-final class ApiManager {
+final class OWApiManager {
     
     typealias APIResponse = (response: HTTPURLResponse?, data: Data?)
     
@@ -109,7 +109,7 @@ final class ApiManager {
                     encoding: ParameterEncoding = JSONEncoding.default,
                     parser: T,
                     headers: HTTPHeaders? = nil,
-                    completion: @escaping (_ result: Result<T.Representation>, _ response: APIResponse) -> Void) -> DataRequest where T: ResponseParser {
+                    completion: @escaping (_ result: OWResult<T.Representation>, _ response: APIResponse) -> Void) -> DataRequest where T: OWResponseParser {
         
         return session.request(request.url,
                                  method: request.method,

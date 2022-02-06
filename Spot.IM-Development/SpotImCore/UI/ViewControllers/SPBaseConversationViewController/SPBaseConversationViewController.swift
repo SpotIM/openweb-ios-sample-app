@@ -8,14 +8,29 @@
 
 import UIKit
 
-internal class SPBaseConversationViewController: SPBaseViewController, AlertPresentable, LoaderPresentable, UserAuthFlowDelegateContainable {
+internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, OWUserAuthFlowDelegateContainable {
     
-    weak var userAuthFlowDelegate: UserAuthFlowDelegate?
-    private var authHandler: AuthenticationHandler?
+    weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
+    private var authHandler: OWAuthenticationHandler?
     
     weak var webPageDelegate: SPSafariWebPageDelegate?
 
-    internal lazy var tableView = BaseTableView(frame: .zero, style: .grouped)
+    internal lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+            .enforceSemanticAttribute()
+            .backgroundColor(.spBackground0)
+            .separatorStyle(.none)
+            .dataSource(self)
+            .delegate(self)
+        
+        tableView.register(cellClass: SPReplyCell.self)
+        tableView.register(cellClass: SPCommentCell.self)
+        tableView.register(cellClass: SPLoaderCell.self)
+        tableView.register(cellClass: SPAdBannerCell.self)
+
+        return tableView
+    }()
+    
     internal weak var delegate: SPCommentsCreationDelegate?
     internal var stateActionView: SPEmptyConversationActionView?
     
@@ -37,7 +52,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     
     // MARK: - Internal methods
 
-    internal init(model: SPMainConversationModel, customUIDelegate: CustomUIDelegate? = nil) {
+    internal init(model: SPMainConversationModel, customUIDelegate: OWCustomUIDelegate? = nil) {
         self.model = model
         
         super.init(customUIDelegate: customUIDelegate)
@@ -73,8 +88,8 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         // Override this method in your VC to handle
     }
     
-    func userDidSignInHandler() -> AuthenticationHandler? {
-        authHandler = AuthenticationHandler()
+    func userDidSignInHandler() -> OWAuthenticationHandler? {
+        authHandler = OWAuthenticationHandler()
         authHandler?.authHandler = { [weak self] isAuthenticated in
             self?.handleUserSignedIn(isAuthenticated: isAuthenticated)
         }
@@ -91,13 +106,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     internal func reloadConversation() {
         guard !model.dataSource.isLoading else { return }
         let mode = model.sortOption
-        Logger.verbose("FirstComment: Calling conversation API")
+        OWLogger.verbose("FirstComment: Calling conversation API")
         model.dataSource.conversation(
             mode,
             page: .first,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
-                Logger.verbose("FirstComment: API did finish with \(success)")
+                OWLogger.verbose("FirstComment: API did finish with \(success)")
                 self.handleConversationReloaded(success: success, error: error)
             }
         )
@@ -181,7 +196,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
                 SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
             }
             .catch { error in
-                Logger.verbose("Failed to get single use token: \(error)")
+                OWLogger.verbose("Failed to get single use token: \(error)")
             }
         } else {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
@@ -195,7 +210,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     }
 
     internal func setupTableView() {
-        tableView.setupForConversation(with: self)
+        fatalError("For now Let's override this function, the plan is to remove this base class completely")
     }
 
     func configureEmptyStateView() {
@@ -518,22 +533,14 @@ extension SPBaseConversationViewController: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        Logger.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
+        OWLogger.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
         if shouldShowLoader(forRowAt: indexPath) {
-            let identifier = String(describing: SPLoaderCell.self)
-            guard let loaderCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                 for: indexPath) as? SPLoaderCell else {
-                                                                    return UITableViewCell()
-            }
+            let loaderCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPLoaderCell.self, for: indexPath)
             loaderCell.startAnimating()
 
             return loaderCell
         } else if indexPath.row == 0 {
-            let identifier = String(describing: SPCommentCell.self)
-            guard let commentCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                  for: indexPath) as? SPCommentCell else {
-                                                                    return UITableViewCell()
-            }
+            let commentCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPCommentCell.self, for: indexPath)
             if let data = cellData(for: indexPath) {
                 commentCell.setup(with: data,
                                   shouldShowHeader: indexPath.section != 0,
@@ -546,16 +553,12 @@ extension SPBaseConversationViewController: UITableViewDataSource {
 
             return commentCell
         } else {
-            let identifier = String(describing: SPReplyCell.self)
-            guard let commentCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                  for: indexPath) as? SPReplyCell else {
-                                                                    return UITableViewCell()
-            }
-            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
+            let replyCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPReplyCell.self, for: indexPath)
+            replyCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
                                   windowWidth: self.view.window?.frame.width)
-            commentCell.delegate = self
+            replyCell.delegate = self
             
-            return commentCell
+            return replyCell
         }
     }
     
@@ -867,7 +870,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func localCommentWasCreated() {
-        Logger.verbose("FirstComment:")
+        OWLogger.verbose("FirstComment:")
         model.handlePendingComment()
     }
 

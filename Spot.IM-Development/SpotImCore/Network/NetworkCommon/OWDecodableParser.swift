@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class DecodableParser<T: Decodable>: KeyPathParser, ResponseParser {
+final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
     
     typealias Representation = T
     
@@ -20,25 +20,25 @@ final class DecodableParser<T: Decodable>: KeyPathParser, ResponseParser {
         super.init(keyPath: keyPath)
     }
     
-    func parse(data: Data) -> Result<Representation> {
+    func parse(data: Data) -> OWResult<Representation> {
         do {
             let item = try decoder.decode(Representation.self, from: data)
             return .success(item)
         } catch let error {
-            Logger.error(error)
+            OWLogger.error(error)
             
             return .failure(error)
         }
     }
     
-    func parse(object: Any) -> Result<Representation> {
+    func parse(object: Any) -> OWResult<Representation> {
         do {
             let value = try valueForKeyPath(in: object)
             let data = try JSONSerialization.data(withJSONObject: value)
             let decoded = try decoder.decode(Representation.self, from: data)
             return .success(decoded)
         } catch let error {
-            Logger.error(error)
+            OWLogger.error(error)
             return .failure(error)
         }
     }
