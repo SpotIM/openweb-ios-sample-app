@@ -415,13 +415,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
             hideTypingIndicationView()
         } else if let typingIndicationView = typingIndicationView {
             if shouldShowBlitz {
-                typingIndicationView.setNewCommentsCount(newCommentsCount)
+                typingIndicationView.setCount(count: newCommentsCount, isBlitz: true)
             } else {
-                typingIndicationView.setTypingCount(typingCount)
+                typingIndicationView.setCount(count: typingCount, isBlitz: false)
             }
         } else {
             createAndShowTypingIndicationView()
-            typingIndicationView?.setTypingCount(typingCount)
+            typingIndicationView?.setCount(count: typingCount, isBlitz: false)
         }
     }
 }
