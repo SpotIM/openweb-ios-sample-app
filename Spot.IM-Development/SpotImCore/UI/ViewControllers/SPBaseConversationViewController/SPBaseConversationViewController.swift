@@ -410,11 +410,15 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         }
     }
     
-    private func handleTypingIndicationViewUpdate(typingCount: Int) {
+    private func handleTypingIndicationViewUpdate(typingCount: Int, newCommentsCount: Int, shouldShowBlitz: Bool) {
         if typingCount <= 0 {
             hideTypingIndicationView()
         } else if let typingIndicationView = typingIndicationView {
-            typingIndicationView.setTypingCount(typingCount)
+            if shouldShowBlitz {
+                typingIndicationView.setNewCommentsCount(newCommentsCount)
+            } else {
+                typingIndicationView.setTypingCount(typingCount)
+            }
         } else {
             createAndShowTypingIndicationView()
             typingIndicationView?.setTypingCount(typingCount)
@@ -831,8 +835,9 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
         dismissTypingViewToTheSide()
     }
     
-    func totalTypingCountDidUpdate(count: Int) {
-        handleTypingIndicationViewUpdate(typingCount: count)
+    func totalTypingCountDidUpdate(count: Int, newCommentsCount: Int) {
+        let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
+        handleTypingIndicationViewUpdate(typingCount: count, newCommentsCount: newCommentsCount, shouldShowBlitz: isBlitsEnabled && (newCommentsCount > 0))
     }
     
 }

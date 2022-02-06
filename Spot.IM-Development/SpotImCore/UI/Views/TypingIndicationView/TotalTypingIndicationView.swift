@@ -41,6 +41,10 @@ final class TotalTypingIndicationView: BaseView {
         typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: "Typing")
     }
     
+    func setNewCommentsCount(_ count: Int) {
+        typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: "New Comments")
+    }
+    
     private func setup() {
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(detectPan(recognizer:)))
         addGestureRecognizer(panGesture!)

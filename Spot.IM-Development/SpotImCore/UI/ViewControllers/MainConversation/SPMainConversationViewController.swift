@@ -236,7 +236,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         do {
             let typingCount = try model.typingCount()
-            totalTypingCountDidUpdate(count: typingCount)
+            let newCommentsCount = try model.newMessagesCount()
+            totalTypingCountDidUpdate(count: typingCount, newCommentsCount: newCommentsCount)
         } catch {
             if let realtimeError = error as? RealTimeError {
                 model.stopRealTimeFetching()
