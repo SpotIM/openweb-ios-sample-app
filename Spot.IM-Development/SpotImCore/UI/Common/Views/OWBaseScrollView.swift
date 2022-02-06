@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BaseScrollView: UIScrollView {
+class OWBaseScrollView: UIScrollView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)

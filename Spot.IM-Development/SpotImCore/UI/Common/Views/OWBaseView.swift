@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class BaseView: UIView {
+public class OWBaseView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)

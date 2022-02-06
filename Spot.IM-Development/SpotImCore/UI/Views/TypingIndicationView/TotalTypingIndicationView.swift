@@ -14,12 +14,12 @@ protocol TotalTypingIndicationViewDelegate: class {
     func horisontalPositionDidChange(transition: CGFloat)
 }
 
-final class TotalTypingIndicationView: BaseView {
+final class TotalTypingIndicationView: OWBaseView {
     
     weak var delegate: TotalTypingIndicationViewDelegate?
     
-    private let animationImageView: BaseUIImageView = .init()
-    private let typingLabel: BaseLabel = .init()
+    private let animationImageView: OWBaseUIImageView = .init()
+    private let typingLabel: OWBaseLabel = .init()
     
     private var panGesture: UIPanGestureRecognizer?
     
