@@ -29,7 +29,7 @@ internal final class SPProfileProvider: NetworkDataProvider {
             manager.execute(
                 request: spRequest,
                 parameters: requestParams,
-                parser: DecodableParser<[String: String]>(),
+                parser: OWDecodableParser<[String: String]>(),
                 headers: headers
             ) { result, response in
                 switch result {

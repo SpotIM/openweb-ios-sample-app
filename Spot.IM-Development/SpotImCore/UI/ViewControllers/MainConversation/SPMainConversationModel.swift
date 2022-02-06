@@ -35,8 +35,8 @@ final class SPMainConversationModel {
     
     /// MulticastDelegate for events that should be handled simultaneously in different places
     /// Beware of `SPMainConversationDataSource` data changings in this way
-    var delegates: MulticastDelegate<MainConversationModelDelegate> = .init()
-    var commentsCounterDelegates: MulticastDelegate<CommentsCounterDelegate> = .init()
+    var delegates: OWMulticastDelegate<MainConversationModelDelegate> = .init()
+    var commentsCounterDelegates: OWMulticastDelegate<CommentsCounterDelegate> = .init()
     
     private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"
     private let typingVisibilityAdditionalTimeInterval: Double = 5.0
@@ -48,7 +48,7 @@ final class SPMainConversationModel {
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
     private var shouldUserBeNotified: Bool = false
-    private let abTestsData: AbTests
+    private let abTestsData: OWAbTests
     
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
     // Will refactor once we will move to MVVM
@@ -84,7 +84,7 @@ final class SPMainConversationModel {
          conversationDataSource: SPMainConversationDataSource,
          imageProvider: SPImageProvider,
          realTimeService: RealTimeService,
-         abTestData: AbTests) {
+         abTestData: OWAbTests) {
         self.realTimeService = realTimeService
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
@@ -373,7 +373,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             }
         } catch {
             if let realtimeError = error as? RealTimeError {
-                Logger.error("Failed to update real time data: \(realtimeError)")
+                OWLogger.error("Failed to update real time data: \(realtimeError)")
                 stopRealTimeFetching()
                 SPDefaultFailureReporter.shared.report(error: .realTimeError(realtimeError))
             }

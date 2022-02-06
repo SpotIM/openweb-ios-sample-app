@@ -17,16 +17,16 @@ protocol SPPreConversationFooterDelegate: AnyObject {
     func updateMoreCommentsButtonCustomUI(button: SPShowCommentsButton)
 }
 
-internal final class SPPreConversationFooter: BaseView {
+internal final class SPPreConversationFooter: OWBaseView {
     
-    private lazy var separatorView: BaseView = .init()
+    private lazy var separatorView: OWBaseView = .init()
     private lazy var showMoreCommentsButton: SPShowCommentsButton = .init()
-    private lazy var termsButton: BaseButton = .init()
-    private lazy var dotLabel: BaseLabel = .init()
-    private lazy var privacyButton: BaseButton = .init()
-    private lazy var spotIMIcon: BaseUIImageView = .init()
-    private lazy var addSpotIMButton: BaseButton = .init()
-    private lazy var openwebLinkView: BaseView = .init()
+    private lazy var termsButton: OWBaseButton = .init()
+    private lazy var dotLabel: OWBaseLabel = .init()
+    private lazy var privacyButton: OWBaseButton = .init()
+    private lazy var spotIMIcon: OWBaseUIImageView = .init()
+    private lazy var addSpotIMButton: OWBaseButton = .init()
+    private lazy var openwebLinkView: OWBaseView = .init()
     
     private var moreCommentsHeightConstraint: NSLayoutConstraint?
     private var moreCommentsTopConstraint: NSLayoutConstraint?

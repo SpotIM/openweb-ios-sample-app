@@ -8,14 +8,14 @@
 
 import UIKit
 
-public protocol ImagePickerDelegate: AnyObject {
+public protocol OWImagePickerDelegate: AnyObject {
     func didSelect(image: UIImage?)
 }
 
-internal class ImagePicker: NSObject {
+internal class OWImagePicker: NSObject {
     private let pickerController: UIImagePickerController
     private weak var presentationController: UIViewController?
-    weak var delegate: ImagePickerDelegate?
+    weak var delegate: OWImagePickerDelegate?
 
     public init(presentationController: UIViewController) {
         self.pickerController = UIImagePickerController()
@@ -82,7 +82,7 @@ internal class ImagePicker: NSObject {
     }
 }
 
-extension ImagePicker: UIImagePickerControllerDelegate {
+extension OWImagePicker: UIImagePickerControllerDelegate {
 
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.pickerController(picker, didSelect: nil)
@@ -97,6 +97,6 @@ extension ImagePicker: UIImagePickerControllerDelegate {
     }
 }
 
-extension ImagePicker: UINavigationControllerDelegate {
+extension OWImagePicker: UINavigationControllerDelegate {
 
 }
