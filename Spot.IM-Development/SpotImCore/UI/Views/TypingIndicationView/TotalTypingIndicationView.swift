@@ -20,8 +20,11 @@ final class TotalTypingIndicationView: BaseView {
     
     private let animationImageView: BaseUIImageView = .init()
     private let typingLabel: BaseLabel = .init()
+    private let newCommentsArrowImageView: BaseUIImageView = .init()
     
     private var panGesture: UIPanGestureRecognizer?
+    private var animationImageWidthConstraint: NSLayoutConstraint?
+    private var arrowImageWidthConstraint: NSLayoutConstraint?
     
     override var bounds: CGRect {
         didSet {
@@ -37,20 +40,32 @@ final class TotalTypingIndicationView: BaseView {
         setup()
     }
     
-    func setTypingCount(_ count: Int) {
-        typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: "Typing")
-    }
-    
-    func setNewCommentsCount(_ count: Int) {
-        typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: "New Comments")
+    func setCount(count: Int, isBlitz: Bool) {
+        if isBlitz {
+            typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: count > 1 ? "New Comments" : "New Comment")
+        } else {
+            typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: "Typing")
+        }
+        typingLabel.font = UIFont.preferred(style: isBlitz ? .bold : .regular, of: 15.0)
+        newCommentsArrowImageView.isHidden = !isBlitz
+        animationImageView.isHidden = isBlitz
+        animationImageWidthConstraint?.constant = isBlitz ? 0 : 23
+        arrowImageWidthConstraint?.constant = isBlitz ? 8.8 : 0
+        
+        UIView.animate(
+            withDuration: 0.3,
+            animations: {
+                self.layoutIfNeeded()
+            })
     }
     
     private func setup() {
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(detectPan(recognizer:)))
         addGestureRecognizer(panGesture!)
-        addSubviews(animationImageView, typingLabel)
+        addSubviews(animationImageView, typingLabel, newCommentsArrowImageView)
         configureAnimatedView()
         configureTypingLabel()
+        configureArrowImage()
     }
     
     private func configureTypingLabel() {
@@ -63,7 +78,7 @@ final class TotalTypingIndicationView: BaseView {
         typingLabel.layout {
             $0.centerY.equal(to: centerYAnchor)
             $0.leading.equal(to: animationImageView.trailingAnchor, offsetBy: 10.0)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -29.0)
+//            $0.trailing.equal(to: trailingAnchor, offsetBy: -29.0)
         }
     }
     
@@ -77,8 +92,23 @@ final class TotalTypingIndicationView: BaseView {
             $0.centerY.equal(to: centerYAnchor)
             $0.leading.equal(to: leadingAnchor, offsetBy: 29.0)
             $0.height.equal(to: 5.0)
-            $0.width.equal(to: 23.0)
+            animationImageWidthConstraint = $0.width.equal(to: 23.0)
         }
+    }
+    
+    private func configureArrowImage() {
+        newCommentsArrowImageView.image = UIImage(spNamed: "newCommentsArrow")
+        newCommentsArrowImageView.contentMode = .scaleAspectFill
+        
+        newCommentsArrowImageView.layout {
+            $0.centerY.equal(to: centerYAnchor)
+            $0.leading.equal(to: typingLabel.trailingAnchor, offsetBy: 5)
+            $0.height.equal(to: 12.8)
+            arrowImageWidthConstraint = $0.width.equal(to: 8.8)
+            $0.trailing.equal(to: trailingAnchor, offsetBy: -29.0)
+        }
+        
+        newCommentsArrowImageView.isHidden = true
     }
     
     @objc
