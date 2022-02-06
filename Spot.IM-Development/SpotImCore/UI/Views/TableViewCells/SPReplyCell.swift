@@ -295,7 +295,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
 // MARK: - Extensions
 
-extension SPReplyCell: AvatarViewDelegate {
+extension SPReplyCell: OWAvatarViewDelegate {
     
     func avatarDidTapped() {
         delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
