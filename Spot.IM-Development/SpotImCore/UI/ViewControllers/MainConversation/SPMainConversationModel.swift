@@ -23,7 +23,7 @@ typealias BooleanCompletion = (Bool, Error?) -> Void
 let navigationAvatarSize: CGSize = CGSize(width: 25.0, height: 25.0)
 
 protocol MainConversationModelDelegate: AnyObject {
-    func totalTypingCountDidUpdate(count: Int)
+    func totalTypingCountDidUpdate(count: Int, newCommentsCount: Int)
     func stopTypingTrack()
 }
 
@@ -360,9 +360,10 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
+            let newComments: Int = try data.totalNewCommentsForConversation(fullConversationId)
             self.dataSource.messageCount = totalCommentsCount
             if shouldUserBeNotified {
-                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount) }
+                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: newComments) }
                 if totalCommentsCount > 0 {
                     commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
                 }
@@ -390,6 +391,16 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         return shouldUserBeNotified ? totalTypingCount : 0
     }
     
+    /// Returns current visible new messages count
+    func newMessagesCount() throws -> Int {
+        guard let spotId = SPClientSettings.main.spotKey, let data = self.realTimeData?.data else { return 0 }
+        
+        let fullConversationId = "\(spotId)_\(dataSource.postId)"
+        let totalNewCommentsCount = try data.totalNewCommentsForConversation(fullConversationId)
+        
+        return shouldUserBeNotified ? totalNewCommentsCount : 0
+    }
+    
     /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''
     private func scheduleTypingCleaningTimer(timeOffset: Double) {
         realTimeTimer?.invalidate()
@@ -398,7 +409,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             withTimeInterval: timeOffset,
             repeats: false
         ) { [weak self] _ in
-            self?.delegates.invoke { $0.totalTypingCountDidUpdate(count: 0) }
+            self?.delegates.invoke { $0.totalTypingCountDidUpdate(count: 0, newCommentsCount: 0) }
         }
     }
 }
