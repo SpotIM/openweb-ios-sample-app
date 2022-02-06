@@ -32,7 +32,7 @@ internal class OWLayoutProperty<Anchor: OWLayoutAnchor> {
     }
 }
 
-internal class OWLayoutAttribute<Dimension: OWLayoutDimension>: OWLayoutProperty<Dimension> {
+internal class OWLayoutAttributeOld<Dimension: OWLayoutDimension>: OWLayoutProperty<Dimension> {
     
     fileprivate let dimension: Dimension
     
@@ -68,12 +68,12 @@ internal final class OWLayoutProxy {
         return OWLayoutProperty(anchor: anchor, kind: kind)
     }
     
-    private func attribute<D: OWLayoutDimension>(with dimension: D, kind: OWLayoutProperty<D>.Kind) -> OWLayoutAttribute<D> {
-        return OWLayoutAttribute(dimension: dimension, kind: kind)
+    private func attribute<D: OWLayoutDimension>(with dimension: D, kind: OWLayoutProperty<D>.Kind) -> OWLayoutAttributeOld<D> {
+        return OWLayoutAttributeOld(dimension: dimension, kind: kind)
     }
 }
 
-internal extension OWLayoutAttribute {
+internal extension OWLayoutAttributeOld {
     
     @discardableResult
     func equal(to constant: CGFloat, priority: UILayoutPriority? = nil, isActive: Bool = true) -> NSLayoutConstraint {
@@ -245,33 +245,33 @@ internal func <=<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: A) -> NSLayou
 }
 
 @discardableResult
-internal func <=<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
+internal func <=<D: OWLayoutDimension>(lhs: OWLayoutAttributeOld<D>, rhs: CGFloat) -> NSLayoutConstraint {
     return lhs.lessThanOrEqual(to: rhs)
 }
 
 @discardableResult
-internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
+internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttributeOld<D>, rhs: CGFloat) -> NSLayoutConstraint {
     return lhs.equal(to: rhs)
 }
 
 @discardableResult
-internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: (CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
+internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttributeOld<D>, rhs: (CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.0, priority: rhs.1)
 }
 
 @discardableResult
-internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: OWLayoutAttribute<D>) -> NSLayoutConstraint {
+internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttributeOld<D>, rhs: OWLayoutAttributeOld<D>) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.dimension)
 }
 
 @discardableResult
-internal func *=<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>,
-                                     rhs: (OWLayoutAttribute<D>, CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
+internal func *=<D: OWLayoutDimension>(lhs: OWLayoutAttributeOld<D>,
+                                     rhs: (OWLayoutAttributeOld<D>, CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.0.dimension, multiplier: rhs.1, priority: rhs.2)
 }
 
 @discardableResult
-internal func >=<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
+internal func >=<D: OWLayoutDimension>(lhs: OWLayoutAttributeOld<D>, rhs: CGFloat) -> NSLayoutConstraint {
     return lhs.greaterThanOrEqual(to: rhs)
 }
 
