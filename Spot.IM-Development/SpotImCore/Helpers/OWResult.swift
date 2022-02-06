@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum Result<T> {
+public enum OWResult<T> {
     
     case success(T)
     case failure(Error)
@@ -28,10 +28,10 @@ public enum Result<T> {
     }
 }
 
-extension Result {
+extension OWResult {
     
     @discardableResult
-    public func map<U>(_ function: (T) -> U) -> Result<U> {
+    public func map<U>(_ function: (T) -> U) -> OWResult<U> {
         switch self {
         case .success(let value): return .success(function(value))
         case .failure(let error): return .failure(error)
@@ -39,7 +39,7 @@ extension Result {
     }
     
     @discardableResult
-    public func map<U>(_ function: () -> U) -> Result<U> {
+    public func map<U>(_ function: () -> U) -> OWResult<U> {
         switch self {
         case .success: return .success(function())
         case .failure(let error): return .failure(error)
@@ -47,7 +47,7 @@ extension Result {
     }
     
     @discardableResult
-    public func next<U>(_ function: (T) -> Result<U>) -> Result<U> {
+    public func next<U>(_ function: (T) -> OWResult<U>) -> OWResult<U> {
         switch self {
         case .success(let value): return function(value)
         case .failure(let error): return .failure(error)
@@ -55,7 +55,7 @@ extension Result {
     }
     
     @discardableResult
-    public func next<U>(_ function: () -> Result<U>) -> Result<U> {
+    public func next<U>(_ function: () -> OWResult<U>) -> OWResult<U> {
         switch self {
         case .success: return function()
         case .failure(let error): return .failure(error)
@@ -63,7 +63,7 @@ extension Result {
     }
     
     @discardableResult
-    public func onError(_ function: (Error) -> Error) -> Result<T> {
+    public func onError(_ function: (Error) -> Error) -> OWResult<T> {
         switch self {
         case .success(let value): return .success(value)
         case .failure(let error): return .failure(function(error))

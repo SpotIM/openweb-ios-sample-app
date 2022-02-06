@@ -31,8 +31,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: CommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
-    private let headerView: BaseView = .init()
-    private let separatorView: BaseView = .init()
+    private let headerView: OWBaseView = .init()
+    private let separatorView: OWBaseView = .init()
     private let commentMediaView: CommentMediaView = .init()
     
     private var commentId: String?
@@ -392,7 +392,7 @@ extension SPCommentCell: UserNameViewDelegate {
     }
 }
 
-extension SPCommentCell: AvatarViewDelegate {
+extension SPCommentCell: OWAvatarViewDelegate {
     
     func avatarDidTapped() {
         delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)

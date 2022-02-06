@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-protocol Coordinator: class {
+protocol OWCoordinator: class {
     
     // should be weak in realization
     var containerViewController: UIViewController? { get set }
     
 }
 
-extension Coordinator {
+extension OWCoordinator {
     
     var navigationController: UINavigationController? {
         return containerViewController as? UINavigationController
