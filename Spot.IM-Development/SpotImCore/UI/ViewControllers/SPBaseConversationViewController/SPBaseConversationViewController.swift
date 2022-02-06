@@ -15,7 +15,22 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     
     weak var webPageDelegate: SPSafariWebPageDelegate?
 
-    internal lazy var tableView = OWBaseTableView(frame: .zero, style: .grouped)
+    internal lazy var tableView: OWBaseTableView = {
+        let tableView = OWBaseTableView(frame: .zero, style: .grouped)
+            .enforceSemanticAttribute()
+            .backgroundColor(.spBackground0)
+            .separatorStyle(.none)
+            .dataSource(self)
+            .delegate(self)
+        
+        tableView.register(cellClass: SPReplyCell.self)
+        tableView.register(cellClass: SPCommentCell.self)
+        tableView.register(cellClass: SPLoaderCell.self)
+        tableView.register(cellClass: SPAdBannerCell.self)
+
+        return tableView
+    }()
+    
     internal weak var delegate: SPCommentsCreationDelegate?
     internal var stateActionView: SPEmptyConversationActionView?
     
@@ -195,7 +210,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     }
 
     internal func setupTableView() {
-        tableView.setupForConversation(with: self)
+        fatalError("For now Let's override this function, the plan is to remove this base class completely")
     }
 
     func configureEmptyStateView() {
@@ -520,20 +535,12 @@ extension SPBaseConversationViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         OWLogger.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
         if shouldShowLoader(forRowAt: indexPath) {
-            let identifier = String(describing: SPLoaderCell.self)
-            guard let loaderCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                 for: indexPath) as? SPLoaderCell else {
-                                                                    return UITableViewCell()
-            }
+            let loaderCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPLoaderCell.self, for: indexPath)
             loaderCell.startAnimating()
 
             return loaderCell
         } else if indexPath.row == 0 {
-            let identifier = String(describing: SPCommentCell.self)
-            guard let commentCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                  for: indexPath) as? SPCommentCell else {
-                                                                    return UITableViewCell()
-            }
+            let commentCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPCommentCell.self, for: indexPath)
             if let data = cellData(for: indexPath) {
                 commentCell.setup(with: data,
                                   shouldShowHeader: indexPath.section != 0,
@@ -546,16 +553,12 @@ extension SPBaseConversationViewController: UITableViewDataSource {
 
             return commentCell
         } else {
-            let identifier = String(describing: SPReplyCell.self)
-            guard let commentCell = tableView.dequeueReusableCell(withIdentifier: identifier,
-                                                                  for: indexPath) as? SPReplyCell else {
-                                                                    return UITableViewCell()
-            }
-            commentCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
+            let replyCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPReplyCell.self, for: indexPath)
+            replyCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
                                   windowWidth: self.view.window?.frame.width)
-            commentCell.delegate = self
+            replyCell.delegate = self
             
-            return commentCell
+            return replyCell
         }
     }
     
