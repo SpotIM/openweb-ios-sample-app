@@ -14,7 +14,7 @@ internal protocol SPCommentsCreationDelegate: AnyObject {
     func editComment(with dataModel: SPMainConversationModel, to id: String)
 }
 
-final class SPMainConversationViewController: SPBaseConversationViewController, UserPresentable {
+final class SPMainConversationViewController: SPBaseConversationViewController, OWUserPresentable {
 
     enum ScrollingDirection {
         case up, down, `static`
