@@ -142,6 +142,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         )
         let userViewHeight = dataModel.usernameViewHeight()
         userViewHeightConstraint?.constant = userViewHeight
+        userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
