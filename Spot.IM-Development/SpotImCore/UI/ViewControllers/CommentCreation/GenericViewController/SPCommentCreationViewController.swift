@@ -19,8 +19,8 @@ protocol CommentReplyViewControllerDelegate: AnyObject {
 class SPCommentCreationViewController: SPBaseViewController,
                                        OWAlertPresentable,
                                        OWLoaderPresentable,
-                                       UserAuthFlowDelegateContainable,
-                                       UserPresentable {
+                                       OWUserAuthFlowDelegateContainable,
+                                       OWUserPresentable {
     
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
