@@ -9,7 +9,7 @@
 import Foundation
 import WebKit
 
-internal final class GifWebView: BaseView, WKUIDelegate {
+internal final class GifWebView: OWBaseView, WKUIDelegate {
     let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
     
     override init(frame: CGRect) {

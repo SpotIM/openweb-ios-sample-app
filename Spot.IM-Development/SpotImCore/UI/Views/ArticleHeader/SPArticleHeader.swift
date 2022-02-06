@@ -8,13 +8,13 @@
 
 import UIKit
 
-internal final class SPArticleHeader: BaseView {
+internal final class SPArticleHeader: OWBaseView {
     
-    private lazy var conversationImageView: BaseUIImageView = .init()
-    private lazy var conversationTitleLabel: BaseLabel = .init()
-    private lazy var conversationAuthorLabel: BaseLabel = .init()
-    private lazy var separatorView: BaseView = .init()
-    private lazy var titlesContainer: BaseView = .init()
+    private lazy var conversationImageView: OWBaseUIImageView = .init()
+    private lazy var conversationTitleLabel: OWBaseLabel = .init()
+    private lazy var conversationAuthorLabel: OWBaseLabel = .init()
+    private lazy var separatorView: OWBaseView = .init()
+    private lazy var titlesContainer: OWBaseView = .init()
 
     // MARK: - Overrides
     

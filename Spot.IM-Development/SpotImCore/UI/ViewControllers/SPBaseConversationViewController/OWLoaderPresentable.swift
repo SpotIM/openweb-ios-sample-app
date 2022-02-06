@@ -8,11 +8,11 @@
 
 import UIKit
 
-protocol LoaderPresentable {
+protocol OWLoaderPresentable {
     var activityIndicator: SPLoaderView { get }
 }
 
-extension LoaderPresentable where Self: UIViewController {
+extension OWLoaderPresentable where Self: UIViewController {
     
     func showLoader() {
         view.addSubview(activityIndicator)
