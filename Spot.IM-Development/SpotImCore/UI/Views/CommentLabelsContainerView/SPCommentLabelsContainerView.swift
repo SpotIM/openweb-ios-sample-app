@@ -39,9 +39,8 @@ internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecogniz
         
         labelsViews.forEach { label in
             container.addArrangedSubview(label)
-            label.layout {
-                $0.top.equal(to: container.topAnchor)
-                $0.bottom.equal(to: container.bottomAnchor)
+            label.OWSnp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
             }
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
             recognizer.delegate = self
@@ -77,10 +76,8 @@ internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecogniz
     private func configureGuidelineText() {
         guidelineTextLabel.textColor = .spForeground4
         guidelineTextLabel.font = UIFont.preferred(style: .medium, of: Theme.guidelineTextFontSize)
-        guidelineTextLabel.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+        guidelineTextLabel.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
         }
     }
     
@@ -98,12 +95,12 @@ internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecogniz
         container.distribution = .equalSpacing
         container.spacing = Theme.labelsContainerStackViewSpacing
         container.backgroundColor = .clear
-        
-        container.layout {
-            $0.top.equal(to: guidelineTextLabel.bottomAnchor, offsetBy: Theme.labelsContainerStackViewTopOffset)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor)
-            $0.height.equal(to: Theme.labelsContainerStackViewHeight)
+  
+        container.OWSnp.makeConstraints { make in
+            make.top.equalTo(guidelineTextLabel.OWSnp.bottom).offset(Theme.labelsContainerStackViewTopOffset)
+            make.leading.equalToSuperview()
+            make.trailing.lessThanOrEqualToSuperview()
+            make.height.equalTo(Theme.labelsContainerStackViewHeight)
         }
     }
     
