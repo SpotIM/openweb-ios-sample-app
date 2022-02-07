@@ -46,6 +46,8 @@ internal final class GifWebView: OWBaseView, WKUIDelegate {
         gifWebView.layer.masksToBounds = true
         gifWebView.scrollView.isScrollEnabled = false
         gifWebView.isUserInteractionEnabled = false
-        gifWebView.pinEdges(to: self)
+        gifWebView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 }
