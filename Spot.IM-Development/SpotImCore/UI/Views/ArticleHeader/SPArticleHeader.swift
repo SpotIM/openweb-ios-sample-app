@@ -39,10 +39,12 @@ internal final class SPArticleHeader: OWBaseView {
     // MARK: - Internal methods
 
     internal func setImage(with url: URL?) {
-        conversationImageView.setImage(with: url) { image, error in
+        conversationImageView.setImage(with: url) { [weak self] image, error in
+            guard let self = self else { return }
+            
             if error != nil {
-                self.conversationImageView.layout {
-                    $0.width.equal(to: 0)
+                self.conversationImageView.OWSnp.updateConstraints { make in
+                    make.width.equalTo(0)
                 }
             }
             else if let image = image {
@@ -75,30 +77,28 @@ internal final class SPArticleHeader: OWBaseView {
         conversationImageView.clipsToBounds = true
         conversationImageView.addCornerRadius(Theme.imageCornerRadius)
         
-        conversationImageView.layout {
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.imageLeadingOffset)
-            $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.imageBottomOffset)
-            $0.height.equal(to: Theme.imageSize)
-            $0.width.equal(to: Theme.imageSize)
+        conversationImageView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Theme.imageLeadingOffset)
+            make.bottom.equalToSuperview().offset(-Theme.imageBottomOffset)
+            make.size.equalTo(Theme.imageSize)
         }
     }
 
     private func configureSeparatorView() {
-        separatorView.layout {
-            $0.leading.equal(to: leadingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
         }
     }
     
     private func setupConversationTitleContainer() {
         titlesContainer.addSubviews(conversationTitleLabel, conversationAuthorLabel)
-        titlesContainer.layout {
-            $0.leading.equal(to: conversationImageView.trailingAnchor, offsetBy: Theme.insetShort)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.titlesTrailingOffset)
-            $0.centerY.equal(to: conversationImageView.centerYAnchor)
+        titlesContainer.OWSnp.makeConstraints { make in
+            make.leading.equalTo(conversationImageView.OWSnp.trailing).offset(Theme.insetShort)
+            make.trailing.equalToSuperview().offset(-Theme.titlesTrailingOffset)
+            make.centerY.equalTo(conversationImageView)
         }
+
         setupConversationTitleLabel()
         setupConversationAuthorLabel()
     }
@@ -108,10 +108,8 @@ internal final class SPArticleHeader: OWBaseView {
         conversationTitleLabel.numberOfLines = 2
         conversationTitleLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
 
-        conversationTitleLabel.layout {
-            $0.top.equal(to: titlesContainer.topAnchor)
-            $0.leading.equal(to: titlesContainer.leadingAnchor)
-            $0.trailing.equal(to: titlesContainer.trailingAnchor)
+        conversationTitleLabel.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
         }
     }
     
@@ -119,11 +117,9 @@ internal final class SPArticleHeader: OWBaseView {
         conversationAuthorLabel.numberOfLines = 1
         conversationAuthorLabel.font = UIFont.preferred(style: .regular, of: Theme.subTitleFontSize)
         
-        conversationAuthorLabel.layout {
-            $0.bottom.equal(to: titlesContainer.bottomAnchor)
-            $0.top.equal(to: conversationTitleLabel.bottomAnchor, offsetBy: Theme.insetTiny)
-            $0.leading.equal(to: titlesContainer.leadingAnchor)
-            $0.trailing.equal(to: titlesContainer.trailingAnchor)
+        conversationAuthorLabel.OWSnp.makeConstraints { make in
+            make.bottom.leading.trailing.equalToSuperview()
+            make.top.equalTo(conversationTitleLabel.OWSnp.bottom).offset(Theme.insetTiny)
         }
     }
     

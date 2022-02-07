@@ -126,7 +126,6 @@
 		445417A8236850C0001D0ED0 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445417A2236850C0001D0ED0 /* Roboto-Regular.ttf */; };
 		445417A9236850C0001D0ED0 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445417A3236850C0001D0ED0 /* Roboto-Bold.ttf */; };
 		445417AA236850C0001D0ED0 /* OpenSans-RegularItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445417A5236850C0001D0ED0 /* OpenSans-RegularItalic.ttf */; };
-		445417F523685144001D0ED0 /* Autolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417AE23685144001D0ED0 /* Autolayout.swift */; };
 		445417F623685144001D0ED0 /* String+Sizes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B023685144001D0ED0 /* String+Sizes.swift */; };
 		445417F723685144001D0ED0 /* UIButton+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B123685144001D0ED0 /* UIButton+Extensions.swift */; };
 		445417F823685144001D0ED0 /* Notification+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417B223685144001D0ED0 /* Notification+Keyboard.swift */; };
@@ -734,7 +733,6 @@
 		445417A2236850C0001D0ED0 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		445417A3236850C0001D0ED0 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		445417A5236850C0001D0ED0 /* OpenSans-RegularItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-RegularItalic.ttf"; sourceTree = "<group>"; };
-		445417AE23685144001D0ED0 /* Autolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autolayout.swift; sourceTree = "<group>"; };
 		445417B023685144001D0ED0 /* String+Sizes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Sizes.swift"; sourceTree = "<group>"; };
 		445417B123685144001D0ED0 /* UIButton+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extensions.swift"; sourceTree = "<group>"; };
 		445417B223685144001D0ED0 /* Notification+Keyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Notification+Keyboard.swift"; sourceTree = "<group>"; };
@@ -1268,7 +1266,6 @@
 			isa = PBXGroup;
 			children = (
 				3D20A35D27AA90CD003F8513 /* OWSnapKit */,
-				445417AE23685144001D0ED0 /* Autolayout.swift */,
 				445417BA23685144001D0ED0 /* Controllers */,
 				445417BC23685144001D0ED0 /* Views */,
 			);
@@ -3011,7 +3008,6 @@
 				3D20A37B27B01B0C003F8513 /* OWConstraintMakerEditable.swift in Sources */,
 				16BD5F87270C694F00066505 /* SPPermissionsProvider.swift in Sources */,
 				3D20A37527B01756003F8513 /* OWConstraintLayoutGuide+Extensions.swift in Sources */,
-				445417F523685144001D0ED0 /* Autolayout.swift in Sources */,
 				445418AE23685154001D0ED0 /* JSONDecoder+SPExtensions.swift in Sources */,
 				6D22A46623BBA26700DCE08A /* DataRequest+Logging.swift in Sources */,
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,

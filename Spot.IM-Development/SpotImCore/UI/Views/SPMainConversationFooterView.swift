@@ -26,7 +26,7 @@ final class SPMainConversationFooterView: OWBaseView {
     private lazy var bannerContainerView: OWBaseView = .init()
     
     private var bannerView: UIView?
-    private var bannerContainerHeight: NSLayoutConstraint?
+    private var bannerContainerHeight: OWConstraint?
     
     private var readOnlyLabel: OWBaseLabel?
 
@@ -116,12 +116,12 @@ final class SPMainConversationFooterView: OWBaseView {
         readOnlyLabel.textColor = .spForeground3
         readOnlyLabel.text = LocalizationManager.localizedString(key: "Commenting on this article has ended")
         
-        readOnlyLabel.layout {
-            $0.centerY.equal(to: labelContainer.centerYAnchor)
+        readOnlyLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(labelContainer)
             if (isPreConversation) {
-                $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.readOnlyLabelLeading)
+                make.leading.equalToSuperview().offset(Theme.readOnlyLabelLeading)
             } else {
-                $0.centerX.equal(to: self.centerXAnchor)
+                make.centerX.equalToSuperview()
             }
         }
     }
@@ -130,30 +130,32 @@ final class SPMainConversationFooterView: OWBaseView {
         self.bannerView?.removeFromSuperview()
         self.bannerView = bannerView
         bannerContainerView.addSubview(bannerView)
-        bannerView.layout {
-            $0.height.equal(to: height)
-            $0.centerX.equal(to: bannerContainerView.centerXAnchor)
-            $0.bottom.equal(to: bannerContainerView.bottomAnchor)
+        bannerView.OWSnp.makeConstraints { make in
+            make.height.equalTo(height)
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
-        bannerContainerHeight?.constant = height + 16.0
+        
+        bannerContainerHeight?.deactivate()
+        bannerContainerView.OWSnp.updateConstraints { make in
+            bannerContainerHeight = make.height.equalTo(height + 16.0).constraint
+        }
     }
     
     private func setupBannerView() {
-        bannerContainerView.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            bannerContainerHeight = $0.height.equal(to: 0.0)
+        bannerContainerView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            bannerContainerHeight = make.height.equalTo(0.0).constraint
         }
     }
     
     private func setupCallToActionLabel() {
         labelContainer.backgroundColor = .spBackground1
-        labelContainer.layout {
-            $0.top.equal(to: bannerContainerView.bottomAnchor, offsetBy: 16.0)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -15.0)
-            $0.leading.equal(to: userAvatarView.trailingAnchor, offsetBy: 12.0)
-            $0.height.equal(to: 48.0)
+        labelContainer.OWSnp.makeConstraints { make in
+            make.top.equalTo(bannerContainerView.OWSnp.bottom).offset(16.0)
+            make.trailing.equalToSuperview().offset(-15)
+            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(12.0)
+            make.height.equalTo(48.0)
         }
         labelContainer.layer.borderColor = UIColor.spBorder.cgColor
         labelContainer.layer.borderWidth = 1.0
@@ -163,31 +165,28 @@ final class SPMainConversationFooterView: OWBaseView {
         callToActionLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
         callToActionLabel.text = LocalizationManager.localizedString(key: "What do you think?")
         
-        callToActionLabel.layout {
-            $0.centerY.equal(to: labelContainer.centerYAnchor)
-            $0.leading.equal(to: labelContainer.leadingAnchor, offsetBy: Theme.callToActionLeading)
-            $0.height.equal(to: Theme.callToActionHeight)
+        callToActionLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(Theme.callToActionLeading)
+            make.height.equalTo(Theme.callToActionHeight)
         }
     }
     
     private func setupUserAvatarView() {
         userAvatarView.delegate = self
         userAvatarView.backgroundColor = .clear
-        userAvatarView.layout {
-            $0.centerY.equal(to: labelContainer.centerYAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.userAvatarLeading)
-            $0.height.equal(to: Theme.userAvatarSize)
-            $0.width.equal(to: Theme.userAvatarSize)
+        userAvatarView.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(labelContainer)
+            make.leading.equalToSuperview().offset(Theme.userAvatarLeading)
+            make.size.equalTo(Theme.userAvatarSize)
         }
     }
 
     private func configureSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
-        separatorView.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
         }
     }
     
