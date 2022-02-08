@@ -65,7 +65,7 @@ final class SPMainConversationModel {
     let onlineViewingUsersConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
     
     private(set) var dataSource: SPMainConversationDataSource
-    private(set) var sortOption: SPCommentSortMode = .best {
+    var sortOption: SPCommentSortMode = .best {
         didSet {
             if oldValue != sortOption {
                 
