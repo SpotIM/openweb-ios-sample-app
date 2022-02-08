@@ -48,11 +48,7 @@ final class SPMainConversationModel {
     
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
-    var realtimeViewType: RealTimeViewType = .typing {
-        didSet {
-            delegates.invoke {$0.realtimeViewTypeDidUpdate()}
-        }
-    }
+    private(set) var realtimeViewType: RealTimeViewType?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: AbTests
     
@@ -120,6 +116,11 @@ final class SPMainConversationModel {
     
     func stopRealTimeFetching() {
         realTimeService.stopRealTimeDataFetching()
+    }
+    
+    func setReltimeViewType(type: RealTimeViewType) {
+        realtimeViewType = type
+        delegates.invoke {$0.realtimeViewTypeDidUpdate()}
     }
     
     func handlePendingComment() {
@@ -368,7 +369,8 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
             let newComments: Int = try data.totalNewCommentsForConversation(fullConversationId)
             let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
-            realtimeViewType = (isBlitsEnabled && newComments > 0) ? .blitz : .typing
+            // make sure first time is always "typing"
+            realtimeViewType = (realtimeViewType != nil) ? ((isBlitsEnabled && newComments > 0) ? .blitz : .typing) : .typing
             self.dataSource.messageCount = totalCommentsCount
             if shouldUserBeNotified {
                 delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: newComments) }
