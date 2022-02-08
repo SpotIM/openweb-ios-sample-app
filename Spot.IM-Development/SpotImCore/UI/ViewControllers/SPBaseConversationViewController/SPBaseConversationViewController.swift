@@ -434,11 +434,10 @@ private extension SPBaseConversationViewController {
 }
 
 extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
+    @objc
     func indicationViewClicked() {
         guard model.realtimeViewType == .blitz else { return }
-
-        // TODO - move to full-conv if in pre-conv
-        // TODO - change sort to be "newest"
+        model.sortOption = .newest
         self.reloadConversation()
         model.realtimeViewType = .typing
     }
