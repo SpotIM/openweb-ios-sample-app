@@ -414,14 +414,10 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
         if typingCount <= 0 && !shouldShowBlitz {
             hideTypingIndicationView()
         } else if let typingIndicationView = typingIndicationView {
-            if shouldShowBlitz {
-                typingIndicationView.setCount(count: newCommentsCount, isBlitz: true)
-            } else {
-                typingIndicationView.setCount(count: typingCount, isBlitz: false)
-            }
+            typingIndicationView.setCount(count: shouldShowBlitz ? newCommentsCount : typingCount, isBlitz: shouldShowBlitz)
         } else {
             createAndShowTypingIndicationView()
-            typingIndicationView?.setCount(count: typingCount, isBlitz: false)
+            typingIndicationView?.setCount(count: shouldShowBlitz ? newCommentsCount : typingCount, isBlitz: shouldShowBlitz)
         }
     }
 }
@@ -439,7 +435,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
         guard model.realtimeViewType == .blitz else { return }
         model.sortOption = .newest
         self.reloadConversation()
-        model.realtimeViewType = .typing
+        model.setReltimeViewType(type: .typing)
     }
     
     
