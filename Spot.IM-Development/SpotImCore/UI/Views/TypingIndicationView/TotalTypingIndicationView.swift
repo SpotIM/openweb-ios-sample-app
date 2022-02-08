@@ -133,7 +133,6 @@ final class TotalTypingIndicationView: BaseView {
     
     @objc
     private func detectTap() {
-        // TODO - check if its blitz
         delegate?.indicationViewClicked()
     }
     

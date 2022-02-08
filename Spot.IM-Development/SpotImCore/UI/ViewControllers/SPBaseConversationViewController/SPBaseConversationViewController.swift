@@ -411,7 +411,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, AlertPres
     }
     
     private func handleTypingIndicationViewUpdate(typingCount: Int, newCommentsCount: Int, shouldShowBlitz: Bool) {
-        if typingCount <= 0 {
+        if typingCount <= 0 && !shouldShowBlitz {
             hideTypingIndicationView()
         } else if let typingIndicationView = typingIndicationView {
             if shouldShowBlitz {
@@ -435,10 +435,12 @@ private extension SPBaseConversationViewController {
 
 extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
     func indicationViewClicked() {
-        // TODO - check against model that we are in blitz mode
+        guard model.realtimeViewType == .blitz else { return }
+
+        // TODO - move to full-conv if in pre-conv
         // TODO - change sort to be "newest"
         self.reloadConversation()
-        // TODO - close blitz
+        model.realtimeViewType = .typing
     }
     
     
@@ -843,8 +845,18 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
     }
     
     func totalTypingCountDidUpdate(count: Int, newCommentsCount: Int) {
-        let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
-        handleTypingIndicationViewUpdate(typingCount: count, newCommentsCount: newCommentsCount, shouldShowBlitz: isBlitsEnabled && (newCommentsCount > 0))
+        handleTypingIndicationViewUpdate(typingCount: count, newCommentsCount: newCommentsCount, shouldShowBlitz: model.realtimeViewType == .blitz)
+    }
+    
+    func realtimeViewTypeDidUpdate() {
+        do {
+            handleTypingIndicationViewUpdate(typingCount: try model.typingCount(), newCommentsCount: try model.newMessagesCount(), shouldShowBlitz: model.realtimeViewType == .blitz)
+        } catch {
+            if let realtimeError = error as? RealTimeError {
+                model.stopRealTimeFetching()
+                SPDefaultFailureReporter.shared.report(error: .realTimeError(realtimeError))
+            }
+        }
     }
     
 }
