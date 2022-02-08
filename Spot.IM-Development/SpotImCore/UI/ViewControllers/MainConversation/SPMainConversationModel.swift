@@ -25,6 +25,7 @@ let navigationAvatarSize: CGSize = CGSize(width: 25.0, height: 25.0)
 protocol MainConversationModelDelegate: AnyObject {
     func totalTypingCountDidUpdate(count: Int, newCommentsCount: Int)
     func stopTypingTrack()
+    func realtimeViewTypeDidUpdate()
 }
 
 protocol CommentsCounterDelegate: AnyObject {
@@ -47,6 +48,11 @@ final class SPMainConversationModel {
     
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
+    var realtimeViewType: RealTimeViewType = .typing {
+        didSet {
+            delegates.invoke {$0.realtimeViewTypeDidUpdate()}
+        }
+    }
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: AbTests
     
@@ -361,6 +367,8 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
             let newComments: Int = try data.totalNewCommentsForConversation(fullConversationId)
+            let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
+            realtimeViewType = (isBlitsEnabled && newComments > 0) ? .blitz : .typing
             self.dataSource.messageCount = totalCommentsCount
             if shouldUserBeNotified {
                 delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: newComments) }
@@ -427,4 +435,9 @@ enum ActionType {
     case report(commentId: String, replyingToID: String?)
     case edit(commentId: String, replyingToID: String?)
     case share(commentId: String, replyingToID: String?)
+}
+
+enum RealTimeViewType {
+    case typing
+    case blitz
 }
