@@ -525,6 +525,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         self.updateTableViewData()
     }
+   
+    @objc
+    override func indicationViewClicked() {
+        guard model.realtimeViewType == .blitz else { return }
+        self.moveToFullConversation(selectedCommentId: nil)
+        super.indicationViewClicked()
+    }
     
     @objc
     private func appMovedToBackground() {
