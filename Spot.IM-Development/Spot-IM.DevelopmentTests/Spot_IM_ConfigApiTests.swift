@@ -32,15 +32,15 @@ class Spot_IM_ConfigApiTests: XCTestCase {
     }
     
     func testSPSpotConfigurationParsing() {
-        let spotConfig = DecodableParser<SPSpotConfiguration>().parse(object: self.configJson).value
+        let spotConfig = OWDecodableParser<SPSpotConfiguration>().parse(object: self.configJson).value
         XCTAssertNotNil(spotConfig)
         XCTAssertTrue(spotConfig?.mobileSdk.enabled as! Bool)
         XCTAssertEqual(spotConfig?.mobileSdk.openwebPrivacyUrl, "https://www.openweb.com/legal-and-privacy/privacy?utm_source=Product\u{0026}utm_medium=Footer", "")
     }
     
     func testGoogleAdsProviderKey() {
-        let spotConfig = DecodableParser<SPSpotConfiguration>().parse(object: self.configJson).value
-        let spotConfigGoogleTrue = DecodableParser<SPSpotConfiguration>().parse(object: self.configJsonGoogleTrue).value
+        let spotConfig = OWDecodableParser<SPSpotConfiguration>().parse(object: self.configJson).value
+        let spotConfigGoogleTrue = OWDecodableParser<SPSpotConfiguration>().parse(object: self.configJsonGoogleTrue).value
         
         XCTAssertNotNil(spotConfig)
         XCTAssertNotNil(spotConfigGoogleTrue)

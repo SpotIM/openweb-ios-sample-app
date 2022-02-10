@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal final class UserNameView: BaseView {
+internal final class UserNameView: OWBaseView {
 
     enum ContentType {
         case comment, reply
@@ -16,13 +16,16 @@ internal final class UserNameView: BaseView {
 
     weak var delegate: UserNameViewDelegate?
 
-    private let userNameLabel: BaseLabel = .init()
-    private let badgeTagLabel: BaseLabel = .init()
+    private let userNameLabel: OWBaseLabel = .init()
+    private let badgeTagLabel: OWBaseLabel = .init()
     private let nameAndBadgeStackview = UIStackView()
-    private let subtitleLabel: BaseLabel = .init()
-    private let dateLabel: BaseLabel = .init()
-    private let moreButton: BaseButton = .init()
-    private let deletedMessageLabel: BaseLabel = .init()
+    private let subtitleLabel: OWBaseLabel = .init()
+    private let dateLabel: OWBaseLabel = .init()
+    private let moreButton: OWBaseButton = .init()
+    private let deletedMessageLabel: OWBaseLabel = .init()
+    private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
+        return OWUserSubscriberBadgeView()
+    }()
 
     private var subtitleToNameConstraint: NSLayoutConstraint?
 
@@ -97,6 +100,10 @@ internal final class UserNameView: BaseView {
         moreButton.isHidden = hidden
     }
 
+    func configureSubscriberBadgeVM(viewModel: OWUserSubscriberBadgeViewModeling) {
+        subscriberBadgeView.configure(with: viewModel)
+    }
+    
     // MARK: - Private
 
     private func setupUI() {
@@ -109,6 +116,7 @@ internal final class UserNameView: BaseView {
         configureNameAndBadgeStackView()
         setupMoreButton()
         configureSubtitleAndDateLabels()
+        configureSubscriberBadgeView()
         updateColorsAccordingToStyle()
     }
 
@@ -160,6 +168,14 @@ internal final class UserNameView: BaseView {
         userNameLabel.isUserInteractionEnabled = true
         let labelTap = UITapGestureRecognizer(target: self, action: #selector(userNameTapped))
         userNameLabel.addGestureRecognizer(labelTap)
+    }
+    
+    private func configureSubscriberBadgeView() {
+        self.addSubviews(subscriberBadgeView)
+        subscriberBadgeView.layout {
+            $0.top.equal(to: nameAndBadgeStackview.topAnchor)
+            $0.leading.equal(to: nameAndBadgeStackview.trailingAnchor, offsetBy: 5.0)
+        }
     }
 
     private func setupMoreButton() {

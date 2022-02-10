@@ -8,8 +8,8 @@
 
 import UIKit
 
-internal final class SPAdBannerView: BaseView {
-    private lazy var bannerContainerView: BaseView = .init()
+internal final class SPAdBannerView: OWBaseView {
+    private lazy var bannerContainerView: OWBaseView = .init()
     private var bannerView: UIView?
     private var bannerContainerHeight: NSLayoutConstraint?
     

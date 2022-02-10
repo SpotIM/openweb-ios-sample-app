@@ -1,13 +1,13 @@
 import UIKit
 
-internal protocol LayoutAnchor {
+internal protocol OWLayoutAnchor {
     
     func constraint(equalTo anchor: Self, constant: CGFloat) -> NSLayoutConstraint
     func constraint(greaterThanOrEqualTo anchor: Self, constant: CGFloat) -> NSLayoutConstraint
     func constraint(lessThanOrEqualTo anchor: Self, constant: CGFloat) -> NSLayoutConstraint
 }
 
-internal protocol LayoutDimension: LayoutAnchor {
+internal protocol OWLayoutDimension: OWLayoutAnchor {
     
     func constraint(equalToConstant constant: CGFloat) -> NSLayoutConstraint
     func constraint(greaterThanOrEqualToConstant constant: CGFloat) -> NSLayoutConstraint
@@ -16,10 +16,10 @@ internal protocol LayoutDimension: LayoutAnchor {
     func constraint(equalTo anchor: Self, multiplier: CGFloat) -> NSLayoutConstraint
 }
 
-extension NSLayoutAnchor: LayoutAnchor {}
-extension NSLayoutDimension: LayoutDimension {}
+extension NSLayoutAnchor: OWLayoutAnchor {}
+extension NSLayoutDimension: OWLayoutDimension {}
 
-internal class LayoutProperty<Anchor: LayoutAnchor> {
+internal class OWLayoutProperty<Anchor: OWLayoutAnchor> {
     
     fileprivate let anchor: Anchor
     fileprivate let kind: Kind
@@ -32,7 +32,7 @@ internal class LayoutProperty<Anchor: LayoutAnchor> {
     }
 }
 
-internal class LayoutAttribute<Dimension: LayoutDimension>: LayoutProperty<Dimension> {
+internal class OWLayoutAttribute<Dimension: OWLayoutDimension>: OWLayoutProperty<Dimension> {
     
     fileprivate let dimension: Dimension
     
@@ -43,7 +43,7 @@ internal class LayoutAttribute<Dimension: LayoutDimension>: LayoutProperty<Dimen
     }
 }
 
-internal final class LayoutProxy {
+internal final class OWLayoutProxy {
     
     public lazy var leading = property(with: view.leadingAnchor, kind: .leading)
     public lazy var trailing = property(with: view.trailingAnchor, kind: .trailing)
@@ -64,16 +64,16 @@ internal final class LayoutProxy {
         self.view = view
     }
     
-    private func property<A: LayoutAnchor>(with anchor: A, kind: LayoutProperty<A>.Kind) -> LayoutProperty<A> {
-        return LayoutProperty(anchor: anchor, kind: kind)
+    private func property<A: OWLayoutAnchor>(with anchor: A, kind: OWLayoutProperty<A>.Kind) -> OWLayoutProperty<A> {
+        return OWLayoutProperty(anchor: anchor, kind: kind)
     }
     
-    private func attribute<D: LayoutDimension>(with dimension: D, kind: LayoutProperty<D>.Kind) -> LayoutAttribute<D> {
-        return LayoutAttribute(dimension: dimension, kind: kind)
+    private func attribute<D: OWLayoutDimension>(with dimension: D, kind: OWLayoutProperty<D>.Kind) -> OWLayoutAttribute<D> {
+        return OWLayoutAttribute(dimension: dimension, kind: kind)
     }
 }
 
-internal extension LayoutAttribute {
+internal extension OWLayoutAttribute {
     
     @discardableResult
     func equal(to constant: CGFloat, priority: UILayoutPriority? = nil, isActive: Bool = true) -> NSLayoutConstraint {
@@ -123,7 +123,7 @@ internal extension LayoutAttribute {
     }
 }
 
-internal extension LayoutProperty {
+internal extension OWLayoutProperty {
     
     @discardableResult
     func equal(
@@ -174,9 +174,9 @@ internal extension LayoutProperty {
 
 internal extension UIView {
     
-    func layout(using closure: (LayoutProxy) -> Void) {
+    func layout(using closure: (OWLayoutProxy) -> Void) {
         translatesAutoresizingMaskIntoConstraints = false
-        closure(LayoutProxy(view: self))
+        closure(OWLayoutProxy(view: self))
     }
     
     func layout(in superview: UIView, with insets: UIEdgeInsets = .zero) {
@@ -196,82 +196,82 @@ internal extension UIView {
 
 //swiftlint:disable large_tuple
 
-internal func +<A: LayoutAnchor>(lhs: A, rhs: CGFloat) -> (A, CGFloat) {
+internal func +<A: OWLayoutAnchor>(lhs: A, rhs: CGFloat) -> (A, CGFloat) {
     return (lhs, rhs)
 }
 
-internal func -<A: LayoutAnchor>(lhs: A, rhs: CGFloat) -> (A, CGFloat) {
+internal func -<A: OWLayoutAnchor>(lhs: A, rhs: CGFloat) -> (A, CGFloat) {
     return (lhs, -rhs)
 }
 
 @discardableResult
-internal func ==<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: (A, CGFloat)) -> NSLayoutConstraint {
+internal func ==<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: (A, CGFloat)) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.0, offsetBy: rhs.1)
 }
 
 @discardableResult
-internal func ==<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: ((A, CGFloat), UILayoutPriority)) -> NSLayoutConstraint {
+internal func ==<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: ((A, CGFloat), UILayoutPriority)) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.0.0, offsetBy: rhs.0.1, priority: rhs.1)
 }
 
 @discardableResult
-internal func ==<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: (A, UILayoutPriority)) -> NSLayoutConstraint {
+internal func ==<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: (A, UILayoutPriority)) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.0, priority: rhs.1)
 }
 
 @discardableResult
-internal func ==<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: A) -> NSLayoutConstraint {
+internal func ==<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: A) -> NSLayoutConstraint {
     return lhs.equal(to: rhs)
 }
 
 @discardableResult
-internal func >=<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: (A, CGFloat)) -> NSLayoutConstraint {
+internal func >=<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: (A, CGFloat)) -> NSLayoutConstraint {
     return lhs.greaterThanOrEqual(to: rhs.0, offsetBy: rhs.1)
 }
 
 @discardableResult
-internal func >=<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: A) -> NSLayoutConstraint {
+internal func >=<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: A) -> NSLayoutConstraint {
     return lhs.greaterThanOrEqual(to: rhs)
 }
 
 @discardableResult
-internal func <=<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: (A, CGFloat)) -> NSLayoutConstraint {
+internal func <=<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: (A, CGFloat)) -> NSLayoutConstraint {
     return lhs.lessThanOrEqual(to: rhs.0, offsetBy: rhs.1)
 }
 
 @discardableResult
-internal func <=<A: LayoutAnchor>(lhs: LayoutProperty<A>, rhs: A) -> NSLayoutConstraint {
+internal func <=<A: OWLayoutAnchor>(lhs: OWLayoutProperty<A>, rhs: A) -> NSLayoutConstraint {
     return lhs.lessThanOrEqual(to: rhs)
 }
 
 @discardableResult
-internal func <=<D: LayoutDimension>(lhs: LayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
+internal func <=<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
     return lhs.lessThanOrEqual(to: rhs)
 }
 
 @discardableResult
-internal func ==<D: LayoutDimension>(lhs: LayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
+internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
     return lhs.equal(to: rhs)
 }
 
 @discardableResult
-internal func ==<D: LayoutDimension>(lhs: LayoutAttribute<D>, rhs: (CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
+internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: (CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.0, priority: rhs.1)
 }
 
 @discardableResult
-internal func ==<D: LayoutDimension>(lhs: LayoutAttribute<D>, rhs: LayoutAttribute<D>) -> NSLayoutConstraint {
+internal func ==<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: OWLayoutAttribute<D>) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.dimension)
 }
 
 @discardableResult
-internal func *=<D: LayoutDimension>(lhs: LayoutAttribute<D>,
-                                     rhs: (LayoutAttribute<D>, CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
+internal func *=<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>,
+                                     rhs: (OWLayoutAttribute<D>, CGFloat, UILayoutPriority)) -> NSLayoutConstraint {
     return lhs.equal(to: rhs.0.dimension, multiplier: rhs.1, priority: rhs.2)
 }
 
 @discardableResult
-internal func >=<D: LayoutDimension>(lhs: LayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
+internal func >=<D: OWLayoutDimension>(lhs: OWLayoutAttribute<D>, rhs: CGFloat) -> NSLayoutConstraint {
     return lhs.greaterThanOrEqual(to: rhs)
 }
 
@@ -283,14 +283,14 @@ internal extension UIView {
         static var layout = "layout"
     }
     
-    var layout: Layout {
+    var layout: OWLayout {
         get {
-            var layout: Layout!
-            let lookup = objc_getAssociatedObject(self, &AssociatedKeys.layout) as? Layout
+            var layout: OWLayout!
+            let lookup = objc_getAssociatedObject(self, &AssociatedKeys.layout) as? OWLayout
             if let lookup = lookup {
                 layout = lookup
             } else {
-                let newLayout = Layout()
+                let newLayout = OWLayout()
                 self.layout = newLayout
                 layout = newLayout
             }
@@ -303,7 +303,7 @@ internal extension UIView {
     
 }
 
-internal final class Layout: NSObject {
+internal final class OWLayout: NSObject {
     
     public weak var top: NSLayoutConstraint?
     public weak var bottom: NSLayoutConstraint?
@@ -316,7 +316,7 @@ internal final class Layout: NSObject {
     public weak var left: NSLayoutConstraint?
     public weak var right: NSLayoutConstraint?
     
-    fileprivate func update<A: LayoutAnchor>(constraint: NSLayoutConstraint, kind: LayoutProperty<A>.Kind) {
+    fileprivate func update<A: OWLayoutAnchor>(constraint: NSLayoutConstraint, kind: OWLayoutProperty<A>.Kind) {
         switch kind {
         case .top: top = constraint
         case .bottom: bottom = constraint

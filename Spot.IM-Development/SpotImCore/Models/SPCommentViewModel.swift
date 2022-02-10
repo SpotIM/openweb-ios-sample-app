@@ -52,6 +52,8 @@ internal struct CommentViewModel {
 
         return id == rootCommentId
     }
+    
+    let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
 
     init(
         with comment: SPComment,
@@ -144,6 +146,7 @@ internal struct CommentViewModel {
             displayName = user.displayName
             userAvatar = userImageURL
             badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
+            subscriberBadgeVM.inputs.configureUser(user: user)
         }
 
         self.replyingToCommentId = replyingToCommentId

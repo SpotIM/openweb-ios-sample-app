@@ -122,7 +122,7 @@ public typealias InitizlizeCompletionHandler = (_ success: Bool, _ error: SpotIm
 public class SpotIm {
     private static var configurationPromise: Promise<SpotConfig>?
     private static var userPromise: Promise<SPUser>?
-    private static let apiManager: ApiManager = ApiManager()
+    private static let apiManager: OWApiManager = OWApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     internal static let profileProvider: SPProfileProvider = SPProfileProvider(apiManager: SpotIm.apiManager)
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
@@ -173,7 +173,7 @@ public class SpotIm {
                 SPClientSettings.main.sendAppInitEvent()
                 completion?(true, nil)
             }.catch { error in
-                Logger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
+                OWLogger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
                 completion?(false, SpotImError.internalError(error.localizedDescription))
             }
         } else {
@@ -434,7 +434,7 @@ public class SpotIm {
                     getUserPromise().done { user in
                         call(config)
                     }.catch { error in
-                        Logger.verbose("FAILED!!!!")
+                        OWLogger.verbose("FAILED!!!!")
                         if let spotError = error as? SpotImError {
                             failure(spotError)
                         } else {
@@ -442,11 +442,11 @@ public class SpotIm {
                         }
                     }
                 } else {
-                    Logger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
+                    OWLogger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
                 }
             }.catch { error in
-                Logger.verbose("FAILED!!!!")
+                OWLogger.verbose("FAILED!!!!")
                 if let spotError = error as? SpotImError {
                     failure(spotError)
                 } else {
@@ -454,7 +454,7 @@ public class SpotIm {
                 }
             }
         } else {
-            Logger.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
+            OWLogger.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
             failure(SpotImError.notInitialized)
         }
     }

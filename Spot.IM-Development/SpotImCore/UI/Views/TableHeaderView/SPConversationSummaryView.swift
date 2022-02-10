@@ -13,16 +13,16 @@ internal protocol SPConversationSummaryViewDelegate: AnyObject {
     func sortingDidTap(_ summaryView: SPConversationSummaryView, sender: UIView)
 }
 
-final class SPConversationSummaryView: BaseView {
+final class SPConversationSummaryView: OWBaseView {
 
-    private lazy var commentsCountLabel: BaseLabel = {
-        let lbl = BaseLabel()
+    private lazy var commentsCountLabel: OWBaseLabel = {
+        let lbl = OWBaseLabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.commentsFontSize)
         return lbl
     }()
     
-    private lazy var sortButton: BaseButton = {
-        let btn = BaseButton()
+    private lazy var sortButton: OWBaseButton = {
+        let btn = OWBaseButton()
         btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.sortButtonFontSize)
         let spacing: CGFloat = Metrics.insetTiny
         var inset: CGFloat = spacing / 2
@@ -50,14 +50,14 @@ final class SPConversationSummaryView: BaseView {
        return OWOnlineViewingUsersCounterView()
     }()
 
-    private lazy var bottomHorizontalSeparator: BaseView = {
-        let separator = BaseView()
+    private lazy var bottomHorizontalSeparator: OWBaseView = {
+        let separator = OWBaseView()
         separator.backgroundColor = .spSeparator2
         return separator
     }()
     
-    private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: BaseView = {
-        let separator = BaseView()
+    private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: OWBaseView = {
+        let separator = OWBaseView()
         separator.backgroundColor = .spSeparator2
         return separator
     }()

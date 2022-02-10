@@ -8,11 +8,11 @@
 
 import UIKit
 
-internal final class CommentLabelView: BaseView {
+internal final class CommentLabelView: OWBaseView {
     
-    private let labelContainer: BaseView = .init()
-    private let iconImageView: BaseUIImageView = .init()
-    private let label: BaseLabel = .init()
+    private let labelContainer: OWBaseView = .init()
+    private let iconImageView: OWBaseUIImageView = .init()
+    private let label: OWBaseLabel = .init()
     
     private var commentLabelColor: UIColor = .clear
     private var state: LabelState = .readOnly 
