@@ -66,7 +66,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: CustomUIDelegate?) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?) {
         
         self.adsProvider = adsProvider
         // when buttonOnlyMode is on, show no comments
@@ -354,7 +354,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         )
                     }
                 } else if success == false {
-                    Logger.error("Load conversation request type is not `success`")
+                    OWLogger.error("Load conversation request type is not `success`")
                 } else {
                     self.checkAdsAvailability()
                     
@@ -615,7 +615,7 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     }
     
     func bannerFailedToLoad(error: Error) {
-        Logger.error("error bannerFailedToLoad - \(error)")
+        OWLogger.error("error bannerFailedToLoad - \(error)")
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .preConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }

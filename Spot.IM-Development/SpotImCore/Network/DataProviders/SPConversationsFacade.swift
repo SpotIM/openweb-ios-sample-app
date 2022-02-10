@@ -12,9 +12,9 @@ import PromiseKit
 
 class NetworkDataProvider {
 
-    let manager: ApiManager
+    let manager: OWApiManager
 
-    init(apiManager: ApiManager) {
+    init(apiManager: OWApiManager) {
         self.manager = apiManager
     }
 }
@@ -113,7 +113,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         let headers = HTTPHeaders.basic(
             with: spotKey,
             postId: id)
-        Logger.warn("DEBUG: Is loading = true")
+        OWLogger.warn("DEBUG: Is loading = true")
         isLoading = true
 
         loadingStarted?()
@@ -121,11 +121,11 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         manager.execute(
             request: spRequest,
             parameters: parameters,
-            parser: DecodableParser<SPConversationReadRM>(),
+            parser: OWDecodableParser<SPConversationReadRM>(),
             headers: headers
         ) { (result, response) in
             DispatchQueue.main.async {
-                Logger.warn("DEBUG: Is loading = false")
+                OWLogger.warn("DEBUG: Is loading = false")
                 self.isLoading = false
                 loadingFinished?()
 
@@ -170,7 +170,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             manager.execute(
                 request: spRequest,
                 parameters: parameters,
-                parser: DecodableParser<[String:[String: SPConversationCounters]]>(),
+                parser: OWDecodableParser<[String:[String: SPConversationCounters]]>(),
                 headers: headers
             ) { (result, response) in
                 switch result {
@@ -208,13 +208,13 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         manager.execute(
             request: spRequest,
             parameters: parameters,
-            encoding: JsonWithoutEscapingSlashesEncoding(),
-            parser: EmptyParser(),
+            encoding: OWJsonWithoutEscapingSlashesEncoding(),
+            parser: OWEmptyParser(),
             headers: headers
         ) { (result, response) in
             switch result {
             case .success:
-                Logger.verbose("Succesfully sent conversation async")
+                OWLogger.verbose("Succesfully sent conversation async")
             case .failure(let error):
                 let rawReport = RawReportModel(
                     url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,

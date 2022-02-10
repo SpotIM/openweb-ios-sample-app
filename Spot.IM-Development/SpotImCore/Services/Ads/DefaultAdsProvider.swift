@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 final class DefaultAdsProvider: AdsProvider {
-    let bannerView: BaseView = .init()
+    let bannerView: OWBaseView = .init()
     weak var bannerDelegate: AdsProviderBannerDelegate?
     weak var interstitialDelegate: AdsProviderInterstitialDelegate?
     

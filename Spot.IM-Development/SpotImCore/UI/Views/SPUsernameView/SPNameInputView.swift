@@ -8,9 +8,9 @@
 
 import UIKit
 
-internal final class SPNameInputView: BaseView, SPTextInputView {
+internal final class SPNameInputView: OWBaseView, SPTextInputView {
     private lazy var avatarImageView: SPAvatarView = .init()
-    private lazy var usernameTextView: InputTextView = .init()
+    private lazy var usernameTextView: OWInputTextView = .init()
     private lazy var separatorView: UIView = .init()
 
     internal weak var delegate: SPTextInputViewDelegate?

@@ -25,12 +25,12 @@ struct EmptyActionDataModel {
     }
 }
 
-final class SPEmptyConversationActionView: BaseView {
+final class SPEmptyConversationActionView: OWBaseView {
 
-    private let iconView: BaseUIImageView = .init()
-    private let messageLabel: BaseLabel = .init()
-    private let actionButton: BaseButton = .init()
-    private let containerView: BaseView = .init()
+    private let iconView: OWBaseUIImageView = .init()
+    private let messageLabel: OWBaseLabel = .init()
+    private let actionButton: OWBaseButton = .init()
+    private let containerView: OWBaseView = .init()
     private var action: (() -> Void)?
     
     override init(frame: CGRect) {

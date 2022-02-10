@@ -21,7 +21,7 @@ internal protocol SPTextInputViewDelegate: AnyObject {
     
 }
 
-final class SPCommentTextInputView: BaseView, SPTextInputView {
+final class SPCommentTextInputView: OWBaseView, SPTextInputView {
 
     enum CommentType {
         case comment, reply
@@ -32,7 +32,7 @@ final class SPCommentTextInputView: BaseView, SPTextInputView {
     var text: String? { get { textInputView.text }
                         set { textInputView.text = newValue } }
 
-    private let textInputView: InputTextView = InputTextView()
+    private let textInputView: OWInputTextView = OWInputTextView()
     private lazy var avatarImageView: SPAvatarView = SPAvatarView()
     
     private var textToAvatarConstraint: NSLayoutConstraint?

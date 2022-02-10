@@ -15,13 +15,12 @@ protocol TotalTypingIndicationViewDelegate: class {
     func indicationViewClicked()
 }
 
-final class TotalTypingIndicationView: BaseView {
+final class TotalTypingIndicationView: OWBaseView {
     
     weak var delegate: TotalTypingIndicationViewDelegate?
-    
-    private let animationImageView: BaseUIImageView = .init()
-    private let typingLabel: BaseLabel = .init()
-    private let newCommentsArrowImageView: BaseUIImageView = .init()
+    private let animationImageView: OWBaseUIImageView = .init()
+    private let typingLabel: OWBaseLabel = .init()
+    private let newCommentsArrowImageView: OWBaseUIImageView = .init()
     
     private var panGesture: UIPanGestureRecognizer?
     private var animationImageWidthConstraint: NSLayoutConstraint?

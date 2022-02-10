@@ -13,7 +13,7 @@ public class SPClientSettings {
     
     public static let main: SPClientSettings = {
         let settings = SPClientSettings()
-        let apiManager = ApiManager()
+        let apiManager = OWApiManager()
         settings.configProvider = SPDefaultConfigProvider(apiManager: apiManager)
         
         return settings
