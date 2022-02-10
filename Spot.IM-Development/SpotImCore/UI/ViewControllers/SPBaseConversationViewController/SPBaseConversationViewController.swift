@@ -45,7 +45,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal var didCheckAdsAvailability = false
     internal var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitMainConv }
 
-    private var typingIndicationView: TotalTypingIndicationView?
+    internal var typingIndicationView: TotalTypingIndicationView?
     private var typingViewBottomConstraint: NSLayoutConstraint?
     private var typingViewCenterConstraint: NSLayoutConstraint?
     private var typingViewCenterInitialConstraintConstant: CGFloat?
