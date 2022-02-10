@@ -24,7 +24,9 @@ internal class CommentMediaView: OWBaseView {
     }
     
     private func configureGifWebView() {
-        gifWebView.pinEdges(to: self)
+        gifWebView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     private func configureImageView() {
@@ -33,7 +35,9 @@ internal class CommentMediaView: OWBaseView {
         imageView.image = UIImage(spNamed: "imageMediaPlaceholder", supportDarkMode: false)
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = SPCommonConstants.commentMediaCornerRadius
-        imageView.pinEdges(to: self)
+        imageView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     func clearExistingMedia() {
