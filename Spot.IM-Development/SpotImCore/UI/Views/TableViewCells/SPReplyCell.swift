@@ -142,6 +142,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         )
         let userViewHeight = dataModel.usernameViewHeight()
         userViewHeightConstraint?.constant = userViewHeight
+        userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
@@ -294,7 +295,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
 // MARK: - Extensions
 
-extension SPReplyCell: AvatarViewDelegate {
+extension SPReplyCell: OWAvatarViewDelegate {
     
     func avatarDidTapped() {
         delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)

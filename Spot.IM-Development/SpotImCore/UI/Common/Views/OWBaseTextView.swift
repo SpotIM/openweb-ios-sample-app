@@ -5,7 +5,7 @@
 
 import UIKit
 
-class BaseTextView: UITextView {
+class OWBaseTextView: UITextView {
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)

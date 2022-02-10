@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MulticastDelegate<T> {
+class OWMulticastDelegate<T> {
     private let delegates: NSHashTable<AnyObject> = NSHashTable.weakObjects()
     
     func contains(delegate: T) -> Bool {

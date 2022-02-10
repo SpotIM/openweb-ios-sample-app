@@ -8,26 +8,26 @@
 
 import UIKit
 
-enum OnlineStatus {
+enum OWOnlineStatus {
     
     case online
     case offline
     
 }
 
-protocol AvatarViewDelegate: class {
+protocol OWAvatarViewDelegate: class {
     
     func avatarDidTapped()
     
 }
 
-final class SPAvatarView: BaseView {
+final class SPAvatarView: OWBaseView {
 
-    weak var delegate: AvatarViewDelegate?
+    weak var delegate: OWAvatarViewDelegate?
     
-    private let avatarImageView: BaseUIImageView = .init()
-    private let onlineIndicatorView: BaseView = .init()
-    private let avatarButton: BaseButton = .init()
+    private let avatarImageView: OWBaseUIImageView = .init()
+    private let onlineIndicatorView: OWBaseView = .init()
+    private let avatarButton: OWBaseButton = .init()
 
     private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", supportDarkMode: true) }
 
@@ -100,7 +100,7 @@ final class SPAvatarView: BaseView {
     }
     
     /// Updates user's online status, `nil` will hide status view
-    func updateOnlineStatus(_ status: OnlineStatus) {
+    func updateOnlineStatus(_ status: OWOnlineStatus) {
         onlineIndicatorView.backgroundColor = .mediumGreen
         switch status {
         case .online:

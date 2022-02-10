@@ -10,7 +10,7 @@ import UIKit
 
 protocol SPCommentFooterViewDelegate: AnyObject {
     func clickedOnAddContentButton(type: SPCommentFooterContentButtonType)
-    func updatePostCommentButtonCustomUI(button: BaseButton)
+    func updatePostCommentButtonCustomUI(button: OWBaseButton)
 }
 
 enum SPCommentFooterContentButtonType {
@@ -18,12 +18,12 @@ enum SPCommentFooterContentButtonType {
     case gif // Not supported yet
 }
 
-final class SPCommentFooterView: BaseView {
+final class SPCommentFooterView: OWBaseView {
     
-    private let postButton: BaseButton = .init()
-    private let footerSeperator: BaseView = .init()
+    private let postButton: OWBaseButton = .init()
+    private let footerSeperator: OWBaseView = .init()
     
-    private let addImageButton: BaseButton = .init()
+    private let addImageButton: OWBaseButton = .init()
     
     typealias PostButtonAction = () -> Void
     private var postButtonAction: PostButtonAction?
@@ -115,7 +115,7 @@ final class SPCommentFooterView: BaseView {
         }
     }
     
-    private func addInsentsToActionButton(_ button: BaseButton) {
+    private func addInsentsToActionButton(_ button: OWBaseButton) {
         button.imageEdgeInsets = UIEdgeInsets(top: Theme.actionButtonVerticalInset, left: Theme.actionButtonHorizontalInset, bottom: Theme.actionButtonVerticalInset, right: Theme.actionButtonHorizontalInset)
     }
     

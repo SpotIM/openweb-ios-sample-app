@@ -13,10 +13,10 @@ internal protocol SPCommunityGuidelinesViewDelegate {
     func customizeTextView(textView: UITextView)
 }
 
-internal final class SPCommunityGuidelinesView: BaseView {
+internal final class SPCommunityGuidelinesView: OWBaseView {
     
-    private lazy var titleTextView: BaseTextView = .init()
-    private lazy var separatorView: BaseView = .init()
+    private lazy var titleTextView: OWBaseTextView = .init()
+    private lazy var separatorView: OWBaseView = .init()
 
     private var titleBottomConstraint: NSLayoutConstraint?
     private var separatorLeadingConstraint: NSLayoutConstraint?

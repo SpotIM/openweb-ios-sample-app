@@ -33,7 +33,8 @@ platform :ios do
 
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    match(type: "appstore")
+    match(type: "appstore", readonly: true)
+    match(type: "development", readonly: true)
     increment_build_number(build_number: Time.now.to_i.to_s[0..7])
     build_app(workspace: "Spot-IM.Development.xcworkspace", scheme: "Spot-IM.Development")
     upload_to_testflight
@@ -67,6 +68,7 @@ platform :ios do
 
   lane :prepare_demo_app do
     match(type: "appstore", readonly: true)
+    match(type: "development", readonly: true)
     increment_build_number_in_xcodeproj
 
     build_app(workspace: "Spot-IM.Development.xcworkspace",
@@ -87,6 +89,7 @@ platform :ios do
         readonly: true,
         api_key_path: "apple_api_key.json"
     )
+    match(type: "development", readonly: true)
     cocoapods(use_bundle_exec: false)
     gym(
         scheme: "Spot-IM.Development",

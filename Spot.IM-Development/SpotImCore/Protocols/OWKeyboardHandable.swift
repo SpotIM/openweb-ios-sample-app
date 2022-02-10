@@ -5,7 +5,7 @@
 
 import UIKit
 
-protocol KeyboardHandable {
+protocol OWKeyboardHandable {
     
     func keyboardWillShow(_ notification: Notification)
     func keyboardDidShow(_ notification: Notification)
@@ -19,7 +19,7 @@ protocol KeyboardHandable {
     
 }
 
-extension KeyboardHandable where Self: UIViewController {
+extension OWKeyboardHandable where Self: UIViewController {
     
     func keyboardWillShow(_ notification: Notification) {}
     func keyboardDidShow(_ notification: Notification) {}

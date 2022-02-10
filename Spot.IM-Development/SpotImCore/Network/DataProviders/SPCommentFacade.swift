@@ -38,9 +38,9 @@ internal protocol SPCommentUpdater {
 
 internal final class SPCommentFacade: SPCommentUpdater {
     
-    let apiManager: ApiManager
+    let apiManager: OWApiManager
     
-    init(apiManager: ApiManager) {
+    init(apiManager: OWApiManager) {
         self.apiManager = apiManager
     }
 
@@ -83,7 +83,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         apiManager.execute(request: spRequest,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
-                           parser: EmptyParser(),
+                           parser: OWEmptyParser(),
                            headers: headers) { (result, response) in
                             switch result {
                             case .success:
@@ -110,7 +110,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
-                           parser: DecodableParser<SPCommentDelete>(),
+                           parser: OWDecodableParser<SPCommentDelete>(),
                            headers: headers) { (result, response) in
                             switch result {
                             case .success(let deletionData):
@@ -143,7 +143,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
-                           parser: DecodableParser<SPComment>(),
+                           parser: OWDecodableParser<SPComment>(),
                            headers: headers) { (result, response) in
                             switch result {
                             case .success(let comment):
@@ -178,7 +178,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
-                           parser: EmptyParser(),
+                           parser: OWEmptyParser(),
                            headers: headers) { (result, response) in
                             switch result {
                             case .success:
@@ -203,7 +203,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
-                           parser: DecodableParser<SPShareLink>(),
+                           parser: OWDecodableParser<SPShareLink>(),
                            headers: headers) { (result, response) in
                             switch result {
                             case .success(let link):
@@ -229,7 +229,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
-                           parser: DecodableParser<SPComment>(),
+                           parser: OWDecodableParser<SPComment>(),
                            headers: headers) { (result, response) in
                             switch result {
                             case .success(let comment):
