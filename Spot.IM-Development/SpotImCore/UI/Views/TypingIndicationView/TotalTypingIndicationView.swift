@@ -68,19 +68,25 @@ final class TotalTypingIndicationView: OWBaseView {
         configureAnimatedView()
         configureTypingLabel()
         configureArrowImage()
+        updateColorsAccordingToStyle()
+    }
+    
+    func updateColorsAccordingToStyle() {
+        typingLabel.textColor = .spForeground1
+        typingLabel.backgroundColor = .spBackground0
+        self.backgroundColor = .spBackground0
+        newCommentsArrowImageView.image = UIImage(spNamed: "newCommentsArrow", supportDarkMode: true)
+        dropShadowIfNeeded()
     }
     
     private func configureTypingLabel() {
         typingLabel.text = LocalizationManager.localizedString(key: "Typing")
-        typingLabel.textColor = .spForeground1
         typingLabel.textAlignment = .center
         typingLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        typingLabel.backgroundColor = .spBackground0
         typingLabel.font = UIFont.preferred(style: .regular, of: 15.0)
         typingLabel.layout {
             $0.centerY.equal(to: centerYAnchor)
             $0.leading.equal(to: animationImageView.trailingAnchor, offsetBy: 10.0)
-//            $0.trailing.equal(to: trailingAnchor, offsetBy: -29.0)
         }
     }
     
@@ -99,7 +105,6 @@ final class TotalTypingIndicationView: OWBaseView {
     }
     
     private func configureArrowImage() {
-        newCommentsArrowImageView.image = UIImage(spNamed: "newCommentsArrow")
         newCommentsArrowImageView.contentMode = .scaleAspectFill
         
         newCommentsArrowImageView.layout {
@@ -139,7 +144,7 @@ final class TotalTypingIndicationView: OWBaseView {
         let shadowRect = CGRect(x: 2.0, y: 7.0, width: bounds.width, height: bounds.height-7)
         let shadowPath = UIBezierPath(rect: shadowRect)
         layer.masksToBounds = false
-        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowColor = SPUserInterfaceStyle.isDarkMode ? UIColor.white.cgColor : UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         layer.shadowOpacity = 0.10
         layer.shadowRadius = 17.5

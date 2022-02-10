@@ -33,7 +33,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
-    private var typingIndicationView: TotalTypingIndicationView?
     
     private var bannerView: UIView?
 
@@ -197,7 +196,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
         self.updateEmptyStateViewAccordingToStyle()
-        
+        self.typingIndicationView?.updateColorsAccordingToStyle()
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
         self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
     }
