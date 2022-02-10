@@ -434,6 +434,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
     func indicationViewClicked() {
         guard model.realtimeViewType == .blitz else { return }
         model.sortOption = .newest
+        model.clearNewMessages()
         self.reloadConversation()
         model.setReltimeViewType(type: .typing)
     }

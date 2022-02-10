@@ -84,12 +84,12 @@ struct RealTimeDataModel: Decodable {
     }
     
     /// Will return typing count in conversation if it exists and throw conversationNotFound exception if not
-    func totalNewCommentsForConversation(_ id: String) throws -> Int {
+    func newCommentsForConversation(_ id: String) throws -> [SPComment] {
         guard let newComments = conversationNewMessages?[id] else {
             throw RealTimeError.conversationNotFound
         }
         
-        return newComments.count
+        return newComments
     }
     
     /// Will return the model of viewing users if it exist and throw onlineUsersViewingNotFound exception if not
