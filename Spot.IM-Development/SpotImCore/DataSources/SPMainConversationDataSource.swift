@@ -931,4 +931,16 @@ extension SPMainConversationDataSource {
                 source: .conversation)
                }
        }
+    
+    func isCommentInConversation(commentId: String) -> Bool {
+        var res = false
+        cellData.forEach { section in
+            section.forEach { comment in
+                if comment.commentId == commentId {
+                    res = true
+                }
+            }
+        }
+        return res
+    }
 }
