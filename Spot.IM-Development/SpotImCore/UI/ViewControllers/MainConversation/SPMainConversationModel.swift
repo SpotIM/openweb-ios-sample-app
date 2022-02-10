@@ -48,6 +48,7 @@ final class SPMainConversationModel {
     
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
+    private var realTimeNewMessages = [String: SPComment]()
     private(set) var realtimeViewType: RealTimeViewType?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: AbTests
@@ -367,13 +368,19 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
-            let newComments: Int = try data.totalNewCommentsForConversation(fullConversationId)
+            let newComments: [SPComment] = try data.newCommentsForConversation(fullConversationId)
+            newComments.forEach{ comment in
+                // make sure comment is not reply and not already in conversation
+                if (comment.parentId == nil || comment.parentId == "") && !dataSource.isCommentInConversation(commentId: comment.id ?? ""){
+                    self.realTimeNewMessages[comment.id ?? ""] = comment
+                }
+            }
             let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
             // make sure first time is always "typing"
-            realtimeViewType = (realtimeViewType != nil) ? ((isBlitsEnabled && newComments > 0) ? .blitz : .typing) : .typing
+            realtimeViewType = (realtimeViewType != nil) ? ((isBlitsEnabled && realTimeNewMessages.keys.count > 0) ? .blitz : .typing) : .typing
             self.dataSource.messageCount = totalCommentsCount
             if shouldUserBeNotified {
-                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: newComments) }
+                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: realTimeNewMessages.keys.count) }
                 if totalCommentsCount > 0 {
                     commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
                 }
@@ -403,12 +410,11 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
     
     /// Returns current visible new messages count
     func newMessagesCount() throws -> Int {
-        guard let spotId = SPClientSettings.main.spotKey, let data = self.realTimeData?.data else { return 0 }
-        
-        let fullConversationId = "\(spotId)_\(dataSource.postId)"
-        let totalNewCommentsCount = try data.totalNewCommentsForConversation(fullConversationId)
-        
-        return shouldUserBeNotified ? totalNewCommentsCount : 0
+        return self.realTimeNewMessages.keys.count
+    }
+    
+    func clearNewMessages() {
+        self.realTimeNewMessages.removeAll()
     }
     
     /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''
