@@ -46,9 +46,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitMainConv }
 
     private var typingIndicationView: TotalTypingIndicationView?
-    private var typingViewBottomConstraint: NSLayoutConstraint?
-    private var typingViewCenterConstraint: NSLayoutConstraint?
-    private var typingViewCenterInitialConstraintConstant: CGFloat?
+    private var typingViewBottomConstraint: OWConstraint?
+    private var typingViewCenterConstraint: OWConstraint?
+    private var typingViewCenterCurrentOffset: CGFloat?
     
     // MARK: - Internal methods
 
@@ -433,7 +433,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
     
     func horisontalPositionChangeDidEnd() {
         guard
-            let currentCenterConstant = typingViewCenterConstraint?.constant
+            let currentCenterConstant = typingViewCenterCurrentOffset
             else { return }
         
         if currentCenterConstant > (view.bounds.width / 4) ||
@@ -445,42 +445,34 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
     }
     
     func horisontalPositionDidChange(transition: CGFloat) {
-        guard
-            let centerConstraintConstant = typingViewCenterInitialConstraintConstant
-            else { return }
-        
-        typingViewCenterConstraint?.constant = centerConstraintConstant + transition
+        typingViewCenterCurrentOffset = transition
+        typingViewCenterConstraint?.update(offset: transition)
     }
     
     private func dismissTypingViewToTheSide() {
         guard
-            let currentCenterConstant = typingViewCenterConstraint?.constant
+            let currentCenterConstant = typingViewCenterCurrentOffset
             else { return }
         
-        typingViewCenterConstraint?.constant = currentCenterConstant > 0 ?
-            view.bounds.width :
-            -view.bounds.width
+        typingViewCenterConstraint?.update(offset: currentCenterConstant > 0 ? view.bounds.width : -view.bounds.width)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
         }, completion: { _ in
             self.typingIndicationView?.removeFromSuperview()
             self.typingIndicationView = nil
+            self.typingViewCenterCurrentOffset = 0
         })
     }
     
     private func returnTypingViewToTheCenter() {
-        guard
-        let centerConstraintConstant = typingViewCenterInitialConstraintConstant
-        else { return }
-        
-        typingViewCenterConstraint?.constant = centerConstraintConstant
+        typingViewCenterConstraint?.update(offset: 0)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
     }
     
     private func hideTypingIndicationView() {
-        typingViewBottomConstraint?.constant = 100.0
+        typingViewBottomConstraint?.update(offset: 100.0)
         UIView.animate(
             withDuration: 0.3,
             animations: {
@@ -500,15 +492,15 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
         typingIndicationView?.alpha = 0
         view.insertSubview(typingIndicationView!, aboveSubview: tableView)
         
-        typingIndicationView!.layout {
-            typingViewBottomConstraint = $0.bottom.equal(to: tableView.bottomAnchor, offsetBy: 100.0)
-            typingViewCenterConstraint = $0.centerX.equal(to: view.centerXAnchor)
-            typingViewCenterInitialConstraintConstant = typingViewCenterConstraint?.constant
-            $0.height.equal(to: 34.0)
-        }
+        typingIndicationView?.OWSnp.makeConstraints({ make in
+            typingViewBottomConstraint = make.bottom.equalTo(tableView).offset(100.0).constraint
+            typingViewCenterConstraint = make.centerX.equalToSuperview().constraint
+            typingViewCenterCurrentOffset = 0.0
+            make.height.equalTo(34.0)
+        })
         view.layoutIfNeeded()
         
-        typingViewBottomConstraint?.constant = -25.0
+        typingViewBottomConstraint?.update(offset: -25.0)
         UIView.animate(
             withDuration: 0.3,
             delay: 0.0,
@@ -888,7 +880,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         case .report(let commentId, let replyingToID):
             showCommentReportFlow(commentId, replyingToID: replyingToID)
             break
-        case .edit(let commentId, let replyingToID):
+        case .edit(let commentId, _):
             showCommentEditingFlow(commentId)
             break
         case .share(let commentId, let replyingToID):

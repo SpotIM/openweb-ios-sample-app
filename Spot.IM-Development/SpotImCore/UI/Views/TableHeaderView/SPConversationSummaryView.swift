@@ -122,52 +122,49 @@ extension SPConversationSummaryView {
     private func setupUI() {
         // Setup comments label
         self.addSubview(commentsCountLabel)
-        commentsCountLabel.layout {
+        commentsCountLabel.OWSnp.makeConstraints { make in
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
-                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Metrics.sideOffset)
+                make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.sideOffset)
             } else {
-                $0.leading.equal(to: leadingAnchor, offsetBy: Metrics.sideOffset)
+                make.leading.equalToSuperview().offset(Metrics.sideOffset)
             }
-            $0.centerY.equal(to: centerYAnchor)
+            make.centerY.equalToSuperview()
         }
         
         // Setup sort button
         self.addSubview(sortButton)
-        sortButton.layout {
+        sortButton.OWSnp.makeConstraints { make in
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
-                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Metrics.sideOffset)
+                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.sideOffset)
             } else {
-                $0.trailing.equal(to: trailingAnchor, offsetBy: -Metrics.sideOffset)
+                make.trailing.equalToSuperview().offset(-Metrics.sideOffset)
             }
-            $0.bottom.equal(to: bottomAnchor)
-            $0.top.equal(to: topAnchor)
+            make.top.bottom.equalToSuperview()
         }
         
         // Setup bottom horizontal separator
         self.addSubview(bottomHorizontalSeparator)
-        bottomHorizontalSeparator.layout {
-            $0.leading.equal(to: leadingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            $0.height.equal(to: Metrics.separatorHeight)
+        bottomHorizontalSeparator.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(Metrics.separatorHeight)
         }
         
         // Setup vertical separator between comments and viewingUsers
         self.addSubview(verticalSeparatorBetweenCommentsAndViewingUsers)
-        verticalSeparatorBetweenCommentsAndViewingUsers.layout {
-            $0.leading.equal(to: commentsCountLabel.trailingAnchor, offsetBy: Metrics.horizontalMarginBetweenSeparator)
-            $0.bottom.equal(to: bottomAnchor, offsetBy: -Metrics.topMarginBetweenSeparator)
-            $0.top.equal(to: topAnchor, offsetBy: Metrics.topMarginBetweenSeparator)
-            $0.width.equal(to: Metrics.separatorWidth)
+        verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.makeConstraints { make in
+            make.leading.equalTo(commentsCountLabel.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenSeparator)
+            make.bottom.equalToSuperview().offset(-Metrics.topMarginBetweenSeparator)
+            make.top.equalToSuperview().offset(Metrics.topMarginBetweenSeparator)
+            make.width.equalTo(Metrics.separatorWidth)
         }
         
         // Setup online viewing users
         self.addSubview(onlineViewingUsersView)
-        onlineViewingUsersView.layout {
-            $0.leading.equal(to: verticalSeparatorBetweenCommentsAndViewingUsers.trailingAnchor, offsetBy: Metrics.horizontalMarginBetweenSeparator)
-            $0.centerY.equal(to: centerYAnchor)
+        onlineViewingUsersView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenSeparator)
+            make.centerY.equalToSuperview()
         }
         
         updateColorsAccordingToStyle()
