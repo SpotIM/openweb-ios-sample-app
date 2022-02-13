@@ -25,12 +25,9 @@ final class SPLoaderCell: SPBaseTableViewCell {
         activityIndicator.startAnimating()
         activityIndicator.contentMode = .center
 
-        activityIndicator.layout {
-            $0.top.equal(to: contentView.topAnchor)
-            $0.bottom.equal(to: contentView.bottomAnchor)
-            $0.leading.equal(to: contentView.leadingAnchor)
-            $0.trailing.equal(to: contentView.trailingAnchor)
-            $0.height.equal(to: Theme.loaderHeight)
+        activityIndicator.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.height.equalTo(Theme.loaderHeight)
         }
     }
 

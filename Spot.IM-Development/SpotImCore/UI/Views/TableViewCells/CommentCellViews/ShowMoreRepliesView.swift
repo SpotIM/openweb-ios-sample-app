@@ -76,11 +76,8 @@ internal final class ShowMoreRepliesView: OWBaseView {
         showHideRepliesButton.addTarget(self, action: #selector(showHideReplies), for: .touchUpInside)
         showHideRepliesButton.titleLabel?.font = .preferred(style: .bold, of: Theme.fontSize)
         showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
-        showHideRepliesButton.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+        showHideRepliesButton.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         
         if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
@@ -92,17 +89,14 @@ internal final class ShowMoreRepliesView: OWBaseView {
     
     private func configureActivityIndicator() {
         activityIndicator.style = SPUserInterfaceStyle.isDarkMode ? .white : .gray
-        activityIndicator.layout {
-            $0.centerY.equal(to: showHideRepliesButton.centerYAnchor)
-            $0.trailing.equal(to: showHideRepliesButton.trailingAnchor)
+        activityIndicator.OWSnp.makeConstraints { make in
+            make.centerY.trailing.equalToSuperview()
         }
     }
 
     private func configureDisclosureIndicator() {
-
-        disclosureIndicator.layout {
-            $0.centerX.equal(to: activityIndicator.centerXAnchor)
-            $0.centerY.equal(to: activityIndicator.centerYAnchor)
+        disclosureIndicator.OWSnp.makeConstraints { make in
+            make.center.equalTo(activityIndicator)
         }
     }
 
