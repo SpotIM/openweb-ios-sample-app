@@ -17,9 +17,9 @@ internal final class SPLoginPromptView: OWBaseView {
     private lazy var titleTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
 
-    private var titleBottomConstraint: NSLayoutConstraint?
-    private var separatorLeadingConstraint: NSLayoutConstraint?
-    private var separatorTrailingConstraint: NSLayoutConstraint?
+    private var titleBottomConstraint: OWConstraint?
+    private var separatorLeadingConstraint: OWConstraint?
+    private var separatorTrailingConstraint: OWConstraint?
     
     var delegate: SPLoginPromptViewDelegate?
 
@@ -44,9 +44,9 @@ internal final class SPLoginPromptView: OWBaseView {
 
     
     internal func setupPreConversationConstraints() {
-        separatorLeadingConstraint?.constant = Theme.separatorHorizontalOffsetPreConversation
-        separatorTrailingConstraint?.constant = -Theme.separatorHorizontalOffsetPreConversation
-        titleBottomConstraint?.constant = -Theme.titleBottomOffsetPreConversation
+        separatorLeadingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
+        separatorTrailingConstraint?.update(offset: -Theme.separatorHorizontalOffsetPreConversation)
+        titleBottomConstraint?.update(offset: -Theme.titleBottomOffsetPreConversation)
     }
     
     // MARK: - Private Methods
@@ -67,11 +67,11 @@ internal final class SPLoginPromptView: OWBaseView {
         titleTextView.dataDetectorTypes = [.link]
         titleTextView.backgroundColor = .spBackground0
 
-        titleTextView.layout {
-            $0.top.equal(to: self.topAnchor, offsetBy: 4.0)
-            titleBottomConstraint = $0.bottom.equal(to: self.bottomAnchor, offsetBy: -4.0)
-            $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
-            $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
+        titleTextView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(4.0)
+            titleBottomConstraint = make.bottom.equalToSuperview().offset(-4.0).constraint
+            make.leading.equalToSuperview().offset(Theme.titleHorizontalOffset)
+            make.trailing.equalToSuperview().offset(-Theme.titleHorizontalOffset)
         }
     }
     
@@ -83,11 +83,11 @@ internal final class SPLoginPromptView: OWBaseView {
     
     private func configureSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
-        separatorView.layout {
-            separatorLeadingConstraint = $0.leading.equal(to: leadingAnchor)
-            separatorTrailingConstraint = $0.trailing.equal(to: trailingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            separatorLeadingConstraint = make.leading.equalToSuperview().constraint
+            separatorTrailingConstraint = make.trailing.equalToSuperview().constraint
+            make.bottom.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
         }
     }
 

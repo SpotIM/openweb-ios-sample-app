@@ -18,9 +18,9 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     private lazy var titleTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
 
-    private var titleBottomConstraint: NSLayoutConstraint?
-    private var separatorLeadingConstraint: NSLayoutConstraint?
-    private var separatorTrailingConstraint: NSLayoutConstraint?
+    private var titleBottomConstraint: OWConstraint?
+    private var separatorLeadingConstraint: OWConstraint?
+    private var separatorTrailingConstraint: OWConstraint?
     
     var delegate: SPCommunityGuidelinesViewDelegate?
 
@@ -54,9 +54,9 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     }
     
     internal func setupPreConversationConstraints() {
-        separatorLeadingConstraint?.constant = Theme.separatorHorizontalOffsetPreConversation
-        separatorTrailingConstraint?.constant = -Theme.separatorHorizontalOffsetPreConversation
-        titleBottomConstraint?.constant = -Theme.titleBottomOffsetPreConversation
+        separatorLeadingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
+        separatorTrailingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
+        titleBottomConstraint?.update(offset: -Theme.titleBottomOffsetPreConversation)
     }
     
     // MARK: - Private Methods
@@ -98,27 +98,27 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
         titleTextView.dataDetectorTypes = [.link]
         titleTextView.backgroundColor = .spBackground0
 
-        titleTextView.layout {
-            $0.top.equal(to: self.topAnchor)
-            titleBottomConstraint = $0.bottom.equal(to: self.bottomAnchor)
+        titleTextView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+            titleBottomConstraint = make.bottom.equalToSuperview().constraint
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
-                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
-                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
+                make.leading.equalTo(safeAreaLayoutGuide).offset(Theme.titleHorizontalOffset)
+                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Theme.titleHorizontalOffset)
             } else {
-                $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.titleHorizontalOffset)
-                $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.titleHorizontalOffset)
+                make.leading.equalToSuperview().offset(Theme.titleHorizontalOffset)
+                make.trailing.equalToSuperview().offset(-Theme.titleHorizontalOffset)
             }
         }
     }
     
     private func configureSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
-        separatorView.layout {
-            separatorLeadingConstraint = $0.leading.equal(to: leadingAnchor)
-            separatorTrailingConstraint = $0.trailing.equal(to: trailingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            separatorLeadingConstraint = make.leading.equalToSuperview().constraint
+            separatorTrailingConstraint = make.trailing.equalToSuperview().constraint
+            make.bottom.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
         }
     }
 

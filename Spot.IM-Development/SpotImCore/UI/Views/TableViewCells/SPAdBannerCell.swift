@@ -46,15 +46,14 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
         closeButton.contentHorizontalAlignment = .right
         closeButton.contentVerticalAlignment = .top
         
-        closeButton.layout {
-            $0.top.equal(to: topAnchor, offsetBy: Theme.bannerTopOffset)
+        closeButton.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Theme.bannerTopOffset)
             if #available(iOS 11.0, *) {
-                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.closeButtonTrailingOffset)
+                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Theme.closeButtonTrailingOffset)
             } else {
-                $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.closeButtonTrailingOffset)
+                make.trailing.equalToSuperview().offset(-Theme.closeButtonTrailingOffset)
             }
-            $0.height.equal(to: Theme.closeButtonHeight)
-            $0.width.equal(to: Theme.closeButtonWidth)
+            make.size.equalTo(Theme.closeButtonSize)
         }
     }
     
@@ -68,11 +67,9 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     }
     
     private func setupBannerView() {
-        adBannerView.layout {
-            $0.top.equal(to: topAnchor, offsetBy: Theme.bannerTopOffset)
-            $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bannerBottomOffset)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+        adBannerView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Theme.bannerTopOffset)
+            make.leading.trailing.bottom.equalToSuperview()
         }
     }
 }
@@ -82,9 +79,7 @@ extension SPAdBannerCell {
 
     private enum Theme {
         static let bannerTopOffset: CGFloat = 16.0
-        static let bannerBottomOffset: CGFloat = 0.0
         static let closeButtonTrailingOffset: CGFloat = 16.0
-        static let closeButtonWidth: CGFloat = 35.0
-        static let closeButtonHeight: CGFloat = 35.0
+        static let closeButtonSize: CGFloat = 35.0
     }
 }

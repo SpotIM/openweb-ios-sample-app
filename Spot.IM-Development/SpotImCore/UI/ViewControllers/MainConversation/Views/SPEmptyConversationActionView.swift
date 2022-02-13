@@ -80,22 +80,21 @@ final class SPEmptyConversationActionView: OWBaseView {
     
     private func configureContainerView() {
         containerView.addSubviews(iconView, messageLabel, actionButton)
-        containerView.layout {
-            $0.leading.greaterThanOrEqual(to: leadingAnchor, offsetBy: Theme.containerLeadingTrailingOffset)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -Theme.containerLeadingTrailingOffset)
-            $0.top.greaterThanOrEqual(to: topAnchor)
-            $0.bottom.lessThanOrEqual(to: bottomAnchor)
-            $0.centerX.equal(to: centerXAnchor)
-            $0.centerY.equal(to: centerYAnchor)
+        containerView.OWSnp.makeConstraints { make in
+            make.leading.greaterThanOrEqualToSuperview().offset(Theme.horizontalOffset)
+            make.trailing.lessThanOrEqualToSuperview().offset(Theme.horizontalOffset)
+            make.top.greaterThanOrEqualToSuperview()
+            make.bottom.lessThanOrEqualToSuperview()
+            make.center.equalToSuperview()
         }
     }
     
     private func configureImageView() {
-        iconView.layout {
-            $0.centerX.equal(to: containerView.centerXAnchor)
-            $0.top.equal(to: containerView.topAnchor)
-            $0.height.equal(to: Theme.imageViewHeight)
-            $0.width.equal(to: Theme.imageViewWidth)
+        iconView.OWSnp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview()
+            make.height.equalTo(Theme.imageViewHeight)
+            make.width.equalTo(Theme.imageViewWidth)
         }
     }
     
@@ -103,16 +102,15 @@ final class SPEmptyConversationActionView: OWBaseView {
         messageLabel.numberOfLines = 0
         messageLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
         messageLabel.textAlignment = .center
-        messageLabel.layout {
-            $0.leading.equal(to: containerView.leadingAnchor)
-            $0.trailing.equal(to: containerView.trailingAnchor)
+        messageLabel.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
             if relativeToIcon {
-                $0.top.equal(to: iconView.bottomAnchor, offsetBy: Theme.messageTopBottomOffset)
+                make.top.equalTo(iconView.OWSnp.bottom).offset(Theme.messageTopBottomOffset)
             } else {
-                $0.top.equal(to: containerView.topAnchor)
+                make.top.equalToSuperview()
             }
-            $0.bottom.equal(to: actionButton.topAnchor)
-            $0.height.greaterThanOrEqual(to: Theme.messageMinHeight)
+            make.bottom.equalTo(actionButton.OWSnp.top)
+            make.height.greaterThanOrEqualTo(Theme.messageMinHeight)
         }
     }
     
@@ -120,12 +118,10 @@ final class SPEmptyConversationActionView: OWBaseView {
         actionButton.addTarget(self, action: #selector(handleAction), for: .touchUpInside)
         actionButton.setTitleColor(.white, for: .normal)
         actionButton.titleLabel?.font = UIFont.preferred(style: .medium, of: Theme.actionButtonTitleFontSize)
-        
-        actionButton.layout {
-            $0.height.equal(to: Theme.actionButtonHeight)
-            $0.centerX.equal(to: containerView.centerXAnchor)
-            $0.bottom.equal(to: containerView.bottomAnchor)
-            $0.width.greaterThanOrEqual(to: Theme.actionButtonMinWidth)
+        actionButton.OWSnp.makeConstraints { make in
+            make.height.equalTo(Theme.actionButtonHeight)
+            make.centerX.bottom.equalToSuperview()
+            make.width.greaterThanOrEqualTo(Theme.actionButtonMinWidth)
         }
         actionButton.addCornerRadius(Theme.actionButtonCornerRadius)
         actionButton.contentEdgeInsets = UIEdgeInsets(
@@ -144,7 +140,7 @@ final class SPEmptyConversationActionView: OWBaseView {
 
 private enum Theme {
     
-    static let containerLeadingTrailingOffset: CGFloat = 44.0
+    static let horizontalOffset: CGFloat = 44.0
     static let titleFontSize: CGFloat = 16.0
     static let actionButtonMinWidth: CGFloat = 137.0
     static let actionButtonHeight: CGFloat = 32.0

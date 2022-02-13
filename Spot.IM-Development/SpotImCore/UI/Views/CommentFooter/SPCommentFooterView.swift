@@ -87,19 +87,17 @@ final class SPCommentFooterView: OWBaseView {
         )
         
         postButton.addCornerRadius(Theme.postButtonRadius)
-        postButton.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.postButtonTrailing)
-            $0.height.equal(to: Theme.postButtonHeight)
+        postButton.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-Theme.postButtonTrailing)
+            make.height.equalTo(Theme.postButtonHeight)
         }
     }
     
     private func configureFooterSeperator() {
-        footerSeperator.layout {
-            $0.top.equal(to: topAnchor)
-            $0.height.equal(to: 1.0)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+        footerSeperator.OWSnp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(1.0)
         }
     }
     
@@ -107,11 +105,11 @@ final class SPCommentFooterView: OWBaseView {
         addImageButton.setImage(UIImage(spNamed: "addImageIcon"), for: .normal)
         addImageButton.addTarget(self, action: #selector(onClickOnAddImageButton(_:)), for: .touchUpInside)
         addInsentsToActionButton(addImageButton)
-        addImageButton.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.actionIconsLeading)
-            $0.height.equal(to: Theme.actionIconHeight)
-            $0.width.equal(to: Theme.actionIconWidth)
+        addImageButton.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(Theme.actionIconsLeading)
+            make.height.equalTo(Theme.actionIconHeight)
+            make.width.equalTo(Theme.actionIconWidth)
         }
     }
     

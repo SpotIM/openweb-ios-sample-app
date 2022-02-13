@@ -115,7 +115,9 @@ internal final class UserNameView: OWBaseView {
     private func configureDeletedLabel(isReported: Bool = false) {
         deletedMessageLabel.backgroundColor = .spBackground0
 
-        deletedMessageLabel.pinEdges(to: self)
+        deletedMessageLabel.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
 
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
@@ -151,10 +153,9 @@ internal final class UserNameView: OWBaseView {
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         self.addSubviews(nameAndBadgeStackview)
-        nameAndBadgeStackview.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -Theme.usernameTrailingPadding)
+        nameAndBadgeStackview.OWSnp.makeConstraints { make in
+            make.top.leading.equalToSuperview()
+            make.trailing.lessThanOrEqualToSuperview().offset(-Theme.usernameTrailingPadding)
         }
 
         userNameLabel.isUserInteractionEnabled = true
@@ -166,11 +167,10 @@ internal final class UserNameView: OWBaseView {
         let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
         moreButton.setImage(image, for: .normal)
         moreButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
-        moreButton.layout {
-            $0.height.equal(to: 44.0)
-            $0.width.equal(to: 44.0)
-            $0.centerY.equal(to: userNameLabel.centerYAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+        moreButton.OWSnp.makeConstraints { make in
+            make.size.equalTo(44.0)
+            make.centerY.equalTo(userNameLabel)
+            make.trailing.equalToSuperview()
         }
         moreButton.addTarget(self, action: #selector(moreTapped), for: .touchUpInside)
     }
@@ -180,18 +180,18 @@ internal final class UserNameView: OWBaseView {
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
-        subtitleLabel.layout {
-            $0.top.equal(to: nameAndBadgeStackview.bottomAnchor, offsetBy: Theme.subtitleTopPadding)
-            $0.leading.equal(to: userNameLabel.leadingAnchor)
-            $0.trailing.equal(to: dateLabel.leadingAnchor)
+        subtitleLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(nameAndBadgeStackview.OWSnp.bottom).offset(Theme.subtitleTopPadding)
+            make.leading.equalTo(userNameLabel)
+            make.trailing.equalTo(dateLabel.OWSnp.leading)
         }
 
         dateLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         dateLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         dateLabel.isUserInteractionEnabled = false
-        dateLabel.layout {
-            $0.top.equal(to: subtitleLabel.topAnchor)
-            $0.trailing.lessThanOrEqual(to: moreButton.leadingAnchor, offsetBy: 0.0)
+        dateLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(subtitleLabel)
+            make.trailing.lessThanOrEqualTo(moreButton.OWSnp.leading)
         }
     }
 

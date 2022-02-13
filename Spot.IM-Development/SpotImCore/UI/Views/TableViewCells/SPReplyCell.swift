@@ -26,14 +26,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private var replyingToId: String?
     private var repliesButtonState: RepliesButtonState = .collapsed
     
-    private var replyActionsViewHeightConstraint: NSLayoutConstraint?
-    private var moreRepliesViewHeightConstraint: NSLayoutConstraint?
-    private var userViewHeightConstraint: NSLayoutConstraint?
-    private var textViewLeadingConstraint: NSLayoutConstraint?
-    private var commentLabelHeightConstraint: NSLayoutConstraint?
-    private var commentMediaViewTopConstraint: NSLayoutConstraint?
-    private var commentMediaViewHeightConstraint: NSLayoutConstraint?
-    private var commentMediaViewWidthConstraint: NSLayoutConstraint?
+    private var textViewLeadingConstraint: OWConstraint?
+    private var commentMediaViewTopConstraint: OWConstraint?
     
     private var imageRequest: DataRequest?
 
@@ -53,7 +47,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateCommentLabelView(with: data)
         messageView.delegate = self
         
-        textViewLeadingConstraint?.constant = data.depthOffset()
+        textViewLeadingConstraint?.update(offset: data.depthOffset())
+        let replyActionsViewHeight: CGFloat
         if data.isDeletedOrReported() {
             messageView.setMessage("",
                                    attributes: attributes(isDeleted: true),
@@ -62,8 +57,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                                     edited: data.isEdited
                                    )
                                   )
-            replyActionsViewHeightConstraint?.constant = 0.0
-            moreRepliesViewHeightConstraint?.constant = 0.0
+            replyActionsViewHeight = 0.0
         } else {
             messageView.setMessage(
                 data.commentText ?? "",
@@ -75,12 +69,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                     edited: data.isEdited
                 )
             )
-            replyActionsViewHeightConstraint?.constant = Theme.replyActionsViewHeight
-            moreRepliesViewHeightConstraint?.constant = Theme.moreRepliesViewHeight
+            replyActionsViewHeight = Theme.replyActionsViewHeight
         }
-        moreRepliesViewHeightConstraint?.constant = data.repliesButtonState == .hidden ?
-            0.0 :
-            Theme.moreRepliesViewHeight
+        replyActionsView.OWSnp.updateConstraints { make in
+            make.height.equalTo(replyActionsViewHeight)
+        }
+        moreRepliesView.OWSnp.updateConstraints { make in
+            make.height.equalTo(data.repliesButtonState == .hidden ? 0.0 : Theme.moreRepliesViewHeight)
+        }
         updateRepliesButtonTitle(with: data.repliesRawCount)
         moreRepliesView.updateView(with: data.repliesButtonState)
         updateCommentMediaView(with: data)
@@ -88,17 +84,21 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
         guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
-            commentMediaViewTopConstraint?.constant = dataModel.isDeletedOrReported() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding
-            commentMediaViewWidthConstraint?.constant = 0
-            commentMediaViewHeightConstraint?.constant = 0
+            commentMediaViewTopConstraint?.update(offset: dataModel.isDeletedOrReported() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding)
+            commentMediaView.OWSnp.updateConstraints { make in
+                make.height.equalTo(0)
+                make.width.equalTo(0)
+            }
             commentMediaView.clearExistingMedia()
             return
         }
         let mediaSize = dataModel.getMediaSize()
         commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl)
-        commentMediaViewTopConstraint?.constant = SPCommonConstants.commentMediaTopPadding
-        commentMediaViewWidthConstraint?.constant = mediaSize.width
-        commentMediaViewHeightConstraint?.constant = mediaSize.height
+        commentMediaViewTopConstraint?.update(offset: SPCommonConstants.commentMediaTopPadding)
+        commentMediaView.OWSnp.updateConstraints { make in
+            make.height.equalTo(mediaSize.height)
+            make.width.equalTo(mediaSize.width)
+        }
     }
     
     // Handle dark mode \ light mode change
@@ -141,7 +141,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 : " · ".appending(dataModel.timestamp ?? "")
         )
         let userViewHeight = dataModel.usernameViewHeight()
-        userViewHeightConstraint?.constant = userViewHeight
+        userNameView.OWSnp.updateConstraints { make in
+            make.height.equalTo(userViewHeight)
+        }
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
@@ -168,6 +170,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
+        let height: CGFloat
         if let commentLabels = dataModel.commentLabels,
            dataModel.isDeletedOrReported() == false
         {
@@ -179,10 +182,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 labelId: selectedCommentLabel.id,
                 state: .readOnly)
             commentLabelView.isHidden = false
-            commentLabelHeightConstraint?.constant = Theme.commentLabelHeight
+            height = Theme.commentLabelHeight
         } else {
             commentLabelView.isHidden = true
-            commentLabelHeightConstraint?.constant = 0
+            height = 0
+        }
+        
+        commentLabelView.OWSnp.updateConstraints { make in
+            make.height.equalTo(height)
         }
     }
     
@@ -201,68 +208,65 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func configureAvatarView() {
         avatarView.delegate = self
-        avatarView.layout {
-            $0.leading.equal(to: messageView.leadingAnchor)
-            $0.trailing.equal(to: userNameView.leadingAnchor, offsetBy: -Theme.avatarImageViewTrailingOffset)
-            $0.top.equal(to: userNameView.topAnchor)
-            $0.height.equal(to: Theme.avatarSideSize)
-            $0.width.equal(to: Theme.avatarSideSize)
+        avatarView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(messageView)
+            make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Theme.avatarImageViewTrailingOffset)
+            make.top.equalTo(userNameView)
+            make.size.equalTo(Theme.avatarSideSize)
         }
     }
     
     private func configureCommentMediaView() {
-        commentMediaView.layout {
-            commentMediaViewTopConstraint = $0.top.equal(to: messageView.bottomAnchor, offsetBy: SPCommonConstants.emptyCommentMediaTopPadding)
-            $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
-            $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
-            commentMediaViewHeightConstraint = $0.height.equal(to: 0)
-            commentMediaViewWidthConstraint = $0.width.equal(to: 0)
+        commentMediaView.OWSnp.makeConstraints { make in
+            commentMediaViewTopConstraint = make.top.equalTo(messageView.OWSnp.bottom).offset(SPCommonConstants.emptyCommentMediaTopPadding).constraint
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
+            make.trailing.lessThanOrEqualToSuperview().offset(-Theme.trailingOffset)
+            make.height.width.equalTo(0)
         }
     }
     
     private func configureUserNameView() {
         userNameView.delegate = self
-        userNameView.layout {
-            $0.top.equal(to: contentView.topAnchor, offsetBy: Theme.topOffset)
-            $0.trailing.equal(to: contentView.trailingAnchor)
-            userViewHeightConstraint = $0.height.equal(to: Theme.userViewCollapsedHeight)
+        userNameView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Theme.topOffset)
+            make.trailing.equalToSuperview()
+            make.height.equalTo(Theme.userViewCollapsedHeight)
         }
     }
     
     private func configureCommentLabelView() {
-        commentLabelView.layout {
-            $0.top.equal(to: userNameView.bottomAnchor, offsetBy: 10)
-            $0.leading.equal(to: messageView.leadingAnchor)
-            commentLabelHeightConstraint = $0.height.equal(to: Theme.commentLabelHeight)
+        commentLabelView.OWSnp.makeConstraints { make in
+            make.top.equalTo(userNameView.OWSnp.bottom).offset(10)
+            make.leading.equalTo(messageView)
+            make.height.equalTo(Theme.commentLabelHeight)
         }
     }
     
     private func configureMessageView() {
-        messageView.layout {
-            $0.top.equal(to: commentLabelView.bottomAnchor, offsetBy: Theme.messageContainerTopOffset)
-            textViewLeadingConstraint = $0.leading.equal(to: contentView.leadingAnchor, offsetBy: Theme.leadingOffset)
-            $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
+        messageView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Theme.messageContainerTopOffset)
+            textViewLeadingConstraint = make.leading.equalToSuperview().offset(Theme.leadingOffset).constraint
+            make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
         }
     }
     
     private func configureReplyActionsView() {
         replyActionsView.delegate = self
-        
-        replyActionsView.layout {
-            $0.top.equal(to: commentMediaView.bottomAnchor)
-            $0.leading.equal(to: messageView.leadingAnchor)
-            $0.trailing.equal(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
-            replyActionsViewHeightConstraint = $0.height.equal(to: Theme.replyActionsViewHeight)
+        replyActionsView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentMediaView.OWSnp.bottom)
+            make.leading.equalTo(messageView)
+            make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
+            make.height.equalTo(Theme.replyActionsViewHeight)
         }
     }
     
     private func configureMoreRepliesView() {
         moreRepliesView.delegate = self
-        moreRepliesView.layout {
-            $0.top.equal(to: replyActionsView.bottomAnchor, offsetBy: Theme.moreRepliesTopOffset)
-            $0.leading.equal(to: messageView.leadingAnchor)
-            $0.trailing.lessThanOrEqual(to: contentView.trailingAnchor, offsetBy: -Theme.trailingOffset)
-            moreRepliesViewHeightConstraint = $0.height.equal(to: Theme.moreRepliesViewHeight)
+        moreRepliesView.OWSnp.makeConstraints { make in
+            make.top.equalTo(replyActionsView.OWSnp.bottom).offset(Theme.moreRepliesTopOffset)
+            make.leading.equalTo(messageView)
+            make.trailing.lessThanOrEqualToSuperview().offset(-Theme.trailingOffset)
+            make.height.equalTo(Theme.moreRepliesViewHeight)
         }
     }
     
