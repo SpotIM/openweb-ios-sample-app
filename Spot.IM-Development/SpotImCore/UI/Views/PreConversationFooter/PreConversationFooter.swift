@@ -77,7 +77,7 @@ internal final class SPPreConversationFooter: OWBaseView {
     }
 
     func hideShowMoreCommentsButton() {
-        showMoreCommentsButton.OWSnp.makeConstraints { make in
+        showMoreCommentsButton.OWSnp.updateConstraints { make in
             make.height.equalTo(0)
         }
         showMoreCommentsButton.isHidden = true
@@ -85,7 +85,7 @@ internal final class SPPreConversationFooter: OWBaseView {
     }
 
     func showShowMoreCommentsButton() {
-        showMoreCommentsButton.OWSnp.makeConstraints { make in
+        showMoreCommentsButton.OWSnp.updateConstraints { make in
             make.height.equalTo(Theme.showMoreCommentsButtonHeight)
         }
         showMoreCommentsButton.isHidden = false
