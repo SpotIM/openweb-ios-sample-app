@@ -264,7 +264,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateHeaderView(with dataModel: CommentViewModel, shouldShowHeader: Bool) {
-        headerView.OWSnp.makeConstraints { make in
+        headerView.OWSnp.updateConstraints { make in
             make.height.equalTo(shouldShowHeader ? 7.0 : 0.0)
         }
         separatorView.OWSnp.updateConstraints { make in
@@ -330,7 +330,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
         guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
             commentMediaViewTopConstraint?.update(offset: SPCommonConstants.emptyCommentMediaTopPadding)
-            commentMediaView.OWSnp.makeConstraints { make in
+            commentMediaView.OWSnp.updateConstraints { make in
                 make.height.equalTo(0)
                 make.width.equalTo(0)
             }
@@ -340,7 +340,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         let mediaSize = dataModel.getMediaSize()
         commentMediaView.configureMedia(imageUrl: dataModel.commentImage?.imageUrl, gifUrl: dataModel.commentGifUrl)
         commentMediaViewTopConstraint?.update(offset: SPCommonConstants.commentMediaTopPadding)
-        commentMediaView.OWSnp.makeConstraints { make in
+        commentMediaView.OWSnp.updateConstraints { make in
             make.height.equalTo(mediaSize.height)
             make.width.equalTo(mediaSize.width)
         }
