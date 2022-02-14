@@ -23,6 +23,9 @@ internal final class UserNameView: OWBaseView {
     private let dateLabel: OWBaseLabel = .init()
     private let moreButton: OWBaseButton = .init()
     private let deletedMessageLabel: OWBaseLabel = .init()
+    private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
+        return OWUserSubscriberBadgeView()
+    }()
 
     private var subtitleToNameConstraint: NSLayoutConstraint?
 
@@ -97,6 +100,10 @@ internal final class UserNameView: OWBaseView {
         moreButton.isHidden = hidden
     }
 
+    func configureSubscriberBadgeVM(viewModel: OWUserSubscriberBadgeViewModeling) {
+        subscriberBadgeView.configure(with: viewModel)
+    }
+    
     // MARK: - Private
 
     private func setupUI() {
@@ -109,6 +116,7 @@ internal final class UserNameView: OWBaseView {
         configureNameAndBadgeStackView()
         setupMoreButton()
         configureSubtitleAndDateLabels()
+        configureSubscriberBadgeView()
         updateColorsAccordingToStyle()
     }
 
@@ -161,6 +169,14 @@ internal final class UserNameView: OWBaseView {
         userNameLabel.isUserInteractionEnabled = true
         let labelTap = UITapGestureRecognizer(target: self, action: #selector(userNameTapped))
         userNameLabel.addGestureRecognizer(labelTap)
+    }
+    
+    private func configureSubscriberBadgeView() {
+        self.addSubviews(subscriberBadgeView)
+        subscriberBadgeView.OWSnp.makeConstraints { make in
+            make.top.equalTo(nameAndBadgeStackview)
+            make.leading.equalTo(nameAndBadgeStackview.OWSnp.trailing).offset(5.0)
+        }
     }
 
     private func setupMoreButton() {

@@ -13,6 +13,7 @@ internal struct APIConstants {
     static internal let baseURLString: String = "https://mobile-gw.spot.im"
     static internal let uploadImageBaseURL: String = SPConfigsDataSource.appConfig?.mobileSdk.imageUploadBaseUrl ?? "https://api.cloudinary.com/v1_1/com-3pix/image/upload/"
     static internal let fetchImageBaseURL: String = SPConfigsDataSource.appConfig?.mobileSdk.fetchImageBaseUrl ?? "https://images.spot.im/image/upload/"
+    static internal let cdnBaseURL: String = "https://static-cdn.spot.im/production/"
     static internal let encoding = JSONEncoding.default
 }
 

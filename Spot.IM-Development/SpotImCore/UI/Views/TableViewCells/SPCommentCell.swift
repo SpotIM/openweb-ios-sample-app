@@ -224,6 +224,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
         userNameViewTopConstraint?.update(offset: dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
 
+        userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
