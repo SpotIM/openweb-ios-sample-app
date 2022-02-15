@@ -11,7 +11,7 @@ import UIKit
 extension OWConstraintMakerRelatable {
   
     @discardableResult
-    public func equalToSuperview<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
+    func equalToSuperview<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
         guard let other = self.description.item.superview else {
             fatalError("OWSnapKit - Expected superview but found nil when attempting make constraint `equalToSuperview`.")
         }
@@ -19,7 +19,7 @@ extension OWConstraintMakerRelatable {
     }
   
     @discardableResult
-    public func lessThanOrEqualToSuperview<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
+    func lessThanOrEqualToSuperview<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
         guard let other = self.description.item.superview else {
             fatalError("OWSnapKit - Expected superview but found nil when attempting make constraint `lessThanOrEqualToSuperview`.")
         }
@@ -27,11 +27,10 @@ extension OWConstraintMakerRelatable {
     }
   
     @discardableResult
-    public func greaterThanOrEqualTo<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
+    func greaterThanOrEqualTo<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
         guard let other = self.description.item.superview else {
             fatalError("OWSnapKit - Expected superview but found nil when attempting make constraint `greaterThanOrEqualToSuperview`.")
         }
         return self.relatedTo(closure(other), relation: .greaterThanOrEqual, file: file, line: line)
     }
-  
 }

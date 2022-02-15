@@ -15,24 +15,23 @@ struct OWConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     init(rawValue: UInt) {
         self.rawValue = rawValue
     }
-    init(_ rawValue: UInt) {
-        self.init(rawValue: rawValue)
-    }
-    init(nilLiteral: ()) {
-        self.rawValue = 0
-    }
     init(integerLiteral rawValue: IntegerLiteralType) {
         self.init(rawValue: rawValue)
     }
-    
+    private init(_ rawValue: UInt) {
+        self.init(rawValue: rawValue)
+    }
+    private init(nilLiteral: ()) {
+        self.rawValue = 0
+    }
     private(set) var rawValue: UInt
-    static var allZeros: OWConstraintAttributes { return 0 }
-    static func convertFromNilLiteral() -> OWConstraintAttributes { return 0 }
-    var boolValue: Bool { return self.rawValue != 0 }
+    private static var allZeros: OWConstraintAttributes { return 0 }
+    private static func convertFromNilLiteral() -> OWConstraintAttributes { return 0 }
+    private var boolValue: Bool { return self.rawValue != 0 }
     
-    func toRaw() -> UInt { return self.rawValue }
-    static func fromRaw(_ raw: UInt) -> OWConstraintAttributes? { return self.init(raw) }
-    static func fromMask(_ raw: UInt) -> OWConstraintAttributes { return self.init(raw) }
+    private func toRaw() -> UInt { return self.rawValue }
+    private static func fromRaw(_ raw: UInt) -> OWConstraintAttributes? { return self.init(raw) }
+    private static func fromMask(_ raw: UInt) -> OWConstraintAttributes { return self.init(raw) }
     
     // normal
     static let none: OWConstraintAttributes = 0
@@ -47,7 +46,6 @@ struct OWConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     static let centerX: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 8)
     static let centerY: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 9)
     static let lastBaseline: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 10)
-    
     static let firstBaseline: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 11)
     
     static let leftMargin: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 12)

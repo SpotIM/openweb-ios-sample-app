@@ -35,7 +35,7 @@ struct OWConstraintLayoutGuideDSL: OWConstraintAttributesDSL {
         return self.guide
     }
     
-    let guide: OWConstraintLayoutGuide
+    private let guide: OWConstraintLayoutGuide
     
     init(guide: OWConstraintLayoutGuide) {
         self.guide = guide

@@ -102,7 +102,6 @@ extension OWConstraintBasicAttributesDSL {
     var center: OWConstraintItem {
         return OWConstraintItem(target: self.target, attributes: OWConstraintAttributes.center)
     }
-    
 }
 
 protocol OWConstraintAttributesDSL : OWConstraintBasicAttributesDSL {}
@@ -161,5 +160,4 @@ extension OWConstraintAttributesDSL {
     var centerWithinMargins: OWConstraintItem {
         return OWConstraintItem(target: self.target, attributes: OWConstraintAttributes.centerWithinMargins)
     }
-    
 }

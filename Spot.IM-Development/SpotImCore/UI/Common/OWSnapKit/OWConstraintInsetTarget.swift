@@ -23,7 +23,7 @@ extension CGFloat: OWConstraintInsetTarget {}
 extension UIEdgeInsets: OWConstraintInsetTarget {}
 
 extension OWConstraintInsetTarget {
-    internal var constraintInsetTargetValue: UIEdgeInsets {
+    var constraintInsetTargetValue: UIEdgeInsets {
         if let amount = self as? UIEdgeInsets {
             return amount
         } else if let amount = self as? Float {

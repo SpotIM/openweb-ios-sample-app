@@ -92,5 +92,4 @@ extension OWConstraintConstantTarget {
       
         return 0.0
     }
-    
 }

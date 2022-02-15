@@ -14,7 +14,7 @@ struct OWConstraintLayoutSupportDSL: OWConstraintDSL {
         return self.support
     }
     
-    let support: OWLayoutSupport
+    private let support: OWLayoutSupport
     
     init(support: OWLayoutSupport) {
         self.support = support
