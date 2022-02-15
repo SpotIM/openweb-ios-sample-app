@@ -10,15 +10,15 @@ import UIKit
 
 class OWConstraintItem {
     
-    internal weak var target: AnyObject?
-    internal let attributes: OWConstraintAttributes
+    weak var target: AnyObject?
+    let attributes: OWConstraintAttributes
     
-    internal init(target: AnyObject?, attributes: OWConstraintAttributes) {
+    init(target: AnyObject?, attributes: OWConstraintAttributes) {
         self.target = target
         self.attributes = attributes
     }
     
-    internal var layoutConstraintItem: OWLayoutConstraintItem? {
+    var layoutConstraintItem: OWLayoutConstraintItem? {
         return self.target as? OWLayoutConstraintItem
     }
     
