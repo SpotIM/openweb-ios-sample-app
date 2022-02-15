@@ -40,11 +40,9 @@ class OWConstraintDescription {
     }()
     
     // MARK: Initialization
-    
     init(item: OWLayoutConstraintItem, attributes: OWConstraintAttributes) {
         self.item = item
         self.attributes = attributes
     }
-    
 }
 

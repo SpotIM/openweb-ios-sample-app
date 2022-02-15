@@ -130,12 +130,12 @@ class OWConstraintMaker {
     let item: OWLayoutConstraintItem
     private var descriptions = [OWConstraintDescription]()
     
-    init(item: OWLayoutConstraintItem) {
+    private init(item: OWLayoutConstraintItem) {
         self.item = item
         self.item.prepare()
     }
     
-    func makeExtendableWithAttributes(_ attributes: OWConstraintAttributes) -> OWConstraintMakerExtendable {
+    private func makeExtendableWithAttributes(_ attributes: OWConstraintAttributes) -> OWConstraintMakerExtendable {
         let description = OWConstraintDescription(item: self.item, attributes: attributes)
         self.descriptions.append(description)
         return OWConstraintMakerExtendable(description)
@@ -184,5 +184,4 @@ class OWConstraintMaker {
             constraint.deactivateIfNeeded()
         }
     }
-    
 }

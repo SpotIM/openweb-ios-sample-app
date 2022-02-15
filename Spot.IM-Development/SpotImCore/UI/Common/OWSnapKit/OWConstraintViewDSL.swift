@@ -72,7 +72,7 @@ struct OWConstraintViewDSL: OWConstraintAttributesDSL {
         return self.view
     }
     
-    let view: UIView
+    private let view: UIView
     
     init(view: UIView) {
         self.view = view

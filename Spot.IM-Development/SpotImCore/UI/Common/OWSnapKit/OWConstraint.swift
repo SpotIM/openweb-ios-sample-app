@@ -11,8 +11,8 @@ import UIKit
 
 class OWConstraint {
     let sourceLocation: (String, UInt)
-    let label: String?
-
+    
+    private let label: String?
     private let from: OWConstraintItem
     private let to: OWConstraintItem
     private let relation: OWConstraintRelation
@@ -215,7 +215,7 @@ class OWConstraint {
         return self
     }
 
-    func updateConstantAndPriorityIfNeeded() {
+    private func updateConstantAndPriorityIfNeeded() {
         for layoutConstraint in self.layoutConstraints {
             let attribute = (layoutConstraint.secondAttribute == .notAnAttribute) ? layoutConstraint.firstAttribute : layoutConstraint.secondAttribute
             layoutConstraint.constant = self.constant.constraintConstantTargetValueFor(layoutAttribute: attribute)
