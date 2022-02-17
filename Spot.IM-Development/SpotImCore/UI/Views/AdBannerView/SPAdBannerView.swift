@@ -11,7 +11,7 @@ import UIKit
 internal final class SPAdBannerView: OWBaseView {
     private lazy var bannerContainerView: OWBaseView = .init()
     private var bannerView: UIView?
-    private var bannerContainerHeight: NSLayoutConstraint?
+    private var bannerContainerHeight: OWConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,24 +33,23 @@ internal final class SPAdBannerView: OWBaseView {
         self.bannerView?.removeFromSuperview()
         self.bannerView = bannerView
         bannerContainerView.addSubview(bannerView)
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        bannerView.layout {
-            $0.height.equal(to: height)
-            $0.top.equal(to: bannerContainerView.topAnchor)
-            $0.centerX.equal(to: bannerContainerView.centerXAnchor)
+        bannerView.OWSnp.makeConstraints { make in
+            make.height.equalTo(height)
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
         }
-        bannerContainerHeight?.constant = height
+        bannerContainerView.OWSnp.updateConstraints { make in
+            make.height.equalTo(height)
+        }
         
         setNeedsLayout()
         layoutIfNeeded()
     }
     
     private func setupBannerContainerView() {
-        bannerContainerView.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            bannerContainerHeight = $0.height.equal(to: 0.0)
+        bannerContainerView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(0.0)
         }
     }
 }

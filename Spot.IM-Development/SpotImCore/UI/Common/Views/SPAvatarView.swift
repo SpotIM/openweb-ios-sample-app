@@ -60,13 +60,17 @@ final class SPAvatarView: OWBaseView {
     
     private func setupAvatarButton() {
         avatarButton.addTarget(self, action: #selector(avatarTapped), for: .touchUpInside)
-        avatarButton.pinEdges(to: self)
+        avatarButton.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     private func setupAvatarImageView() {
         avatarImageView.backgroundColor = .spAvatarBG
         avatarImageView.contentMode = .scaleAspectFill
-        avatarImageView.pinEdges(to: self)
+        avatarImageView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     private func setupOnlineIndicatorView() {
@@ -75,11 +79,9 @@ final class SPAvatarView: OWBaseView {
         onlineIndicatorView.layer.borderColor = UIColor.spBackground0.cgColor
         onlineIndicatorView.layer.shouldRasterize = true
         onlineIndicatorView.layer.rasterizationScale = UIScreen.main.scale
-        onlineIndicatorView.layout {
-            $0.height.equal(to: 11.0)
-            $0.width.equal(to: 11.0)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+        onlineIndicatorView.OWSnp.makeConstraints { make in
+            make.trailing.bottom.equalToSuperview()
+            make.size.equalTo(11.0)
         }
     }
     

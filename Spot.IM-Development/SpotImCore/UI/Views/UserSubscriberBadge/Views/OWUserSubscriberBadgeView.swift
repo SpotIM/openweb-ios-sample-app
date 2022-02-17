@@ -49,13 +49,9 @@ fileprivate extension OWUserSubscriberBadgeView {
     
     func setupViews() {
         self.addSubview(imgViewIcon)
-        imgViewIcon.layout {
-            $0.top.equal(to: self.topAnchor)
-            $0.leading.equal(to: self.leadingAnchor)
-            $0.trailing.equal(to: self.trailingAnchor)
-            $0.bottom.equal(to: self.bottomAnchor)
-            $0.width.equal(to: Metrics.subscriberBadgeIconSize)
-            $0.height.equal(to: Metrics.subscriberBadgeIconSize)
+        imgViewIcon.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.size.equalTo(Metrics.subscriberBadgeIconSize)
         }
     }
     

@@ -28,10 +28,8 @@ internal final class SPPreConversationFooter: OWBaseView {
     private lazy var addSpotIMButton: OWBaseButton = .init()
     private lazy var openwebLinkView: OWBaseView = .init()
     
-    private var moreCommentsHeightConstraint: NSLayoutConstraint?
-    private var moreCommentsTopConstraint: NSLayoutConstraint?
-    private var termsHeightConstraint: NSLayoutConstraint?
-    private var termsBottomConstraint: NSLayoutConstraint?
+    private var moreCommentsTopConstraint: OWConstraint?
+    private var termsBottomConstraint: OWConstraint?
     
     private var buttonOnlyMode: Bool = false
     
@@ -55,7 +53,7 @@ internal final class SPPreConversationFooter: OWBaseView {
     }
 
     func setShowMoreCommentsButtonColor(color: UIColor, withSeparator: Bool = false) {
-        moreCommentsTopConstraint?.constant = withSeparator ? 20.0 : 0.0
+        moreCommentsTopConstraint?.update(offset: withSeparator ? 20.0 : 0.0)
         showMoreCommentsButton.backgroundColor = color
         separatorView.isHidden = !withSeparator
     }
@@ -79,13 +77,17 @@ internal final class SPPreConversationFooter: OWBaseView {
     }
 
     func hideShowMoreCommentsButton() {
-        moreCommentsHeightConstraint?.constant = 0
+        showMoreCommentsButton.OWSnp.updateConstraints { make in
+            make.height.equalTo(0)
+        }
         showMoreCommentsButton.isHidden = true
         separatorView.isHidden = true
     }
 
     func showShowMoreCommentsButton() {
-        moreCommentsHeightConstraint?.constant = Theme.showMoreCommentsButtonHeight
+        showMoreCommentsButton.OWSnp.updateConstraints { make in
+            make.height.equalTo(Theme.showMoreCommentsButtonHeight)
+        }
         showMoreCommentsButton.isHidden = false
         separatorView.isHidden = false
     }
@@ -109,8 +111,10 @@ internal final class SPPreConversationFooter: OWBaseView {
         openwebLinkView.isHidden = buttonOnlyMode
         separatorView.isHidden = buttonOnlyMode
         if (buttonOnlyMode) {
-            termsHeightConstraint?.constant = 0
-            termsBottomConstraint?.constant = 0
+            termsButton.OWSnp.updateConstraints { make in
+                make.height.equalTo(0)
+            }
+            termsBottomConstraint?.update(offset: 0)
             
             var title: String
             if SpotIm.buttonOnlyMode == .withTitle {
@@ -128,13 +132,12 @@ internal final class SPPreConversationFooter: OWBaseView {
 
     private func setupShowMoreCommentsButton() {
         separatorView.backgroundColor = .spSeparator5
-        separatorView.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: 15.0)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -15.0)
-            $0.height.equal(to: 1.0)
+        separatorView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(15.0)
+            make.trailing.equalToSuperview().offset(-15.0)
+            make.height.equalTo(1.0)
         }
-        
         
         let title = LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
 
@@ -145,11 +148,12 @@ internal final class SPPreConversationFooter: OWBaseView {
         showMoreCommentsButton.layer.cornerRadius = Theme.showMoreCommentsButtonCornerRadius
         showMoreCommentsButton.addTarget(self, action: #selector(showMoreComments), for: .touchUpInside)
 
-        showMoreCommentsButton.layout {
-            moreCommentsTopConstraint = $0.top.equal(to: topAnchor, offsetBy: 0.0)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.horisontalMargin)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.horisontalMargin)
-            moreCommentsHeightConstraint = $0.height.equal(to: Theme.showMoreCommentsButtonHeight)
+        showMoreCommentsButton.OWSnp.makeConstraints { make in
+            moreCommentsTopConstraint = make.top.equalToSuperview().constraint
+            make.leading.equalToSuperview().offset(Theme.horizontalMargin)
+            make.trailing.equalToSuperview().offset(-Theme.horizontalMargin)
+            make.height.equalTo(Theme.showMoreCommentsButtonHeight)
+
         }
     }
     
@@ -160,11 +164,11 @@ internal final class SPPreConversationFooter: OWBaseView {
         termsButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
         termsButton.addTarget(self, action: #selector(showTerms), for: .touchUpInside)
 
-        termsButton.layout {
-            $0.top.equal(to: showMoreCommentsButton.bottomAnchor, offsetBy: Theme.showMoreCommentsButtonBottomMargin)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.horisontalMargin)
-            termsBottomConstraint = $0.bottom.equal(to: bottomAnchor, offsetBy: -Theme.bottomMargin)
-            termsHeightConstraint = $0.height.equal(to: 15)
+        termsButton.OWSnp.makeConstraints { make in
+            make.top.equalTo(showMoreCommentsButton.OWSnp.bottom).offset(Theme.showMoreCommentsButtonBottomMargin)
+            make.leading.equalToSuperview().offset(Theme.horizontalMargin)
+            termsBottomConstraint = make.bottom.equalToSuperview().offset(-Theme.bottomMargin).constraint
+            make.height.equalTo(15)
         }
     }
 
@@ -172,10 +176,10 @@ internal final class SPPreConversationFooter: OWBaseView {
         dotLabel.text = "·"
         dotLabel.textColor = .coolGrey
         dotLabel.font = .preferred(style: .regular, of: Theme.bottomRowSize)
-        dotLabel.layout {
-            $0.leading.equal(to: termsButton.trailingAnchor, offsetBy: 5.0)
-            $0.trailing.equal(to: privacyButton.leadingAnchor, offsetBy: -5.0)
-            $0.centerY.equal(to: termsButton.centerYAnchor)
+        dotLabel.OWSnp.makeConstraints { make in
+            make.leading.equalTo(termsButton.OWSnp.trailing).offset(5.0)
+            make.trailing.equalTo(privacyButton.OWSnp.leading).offset(-5.0)
+            make.centerY.equalTo(termsButton)
         }
     }
 
@@ -186,18 +190,18 @@ internal final class SPPreConversationFooter: OWBaseView {
         privacyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
         privacyButton.addTarget(self, action: #selector(showPrivacy), for: .touchUpInside)
 
-        privacyButton.layout {
-            $0.centerY.equal(to: termsButton.centerYAnchor)
+        privacyButton.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(termsButton)
         }
     }
 
     private func setupSpotIMIcon() {
         spotIMIcon.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true)
-        spotIMIcon.layout {
-            $0.width.equal(to: Theme.bottomRowSize)
-            $0.height.equal(to: Theme.bottomRowSize)
-            $0.centerY.equal(to: addSpotIMButton.centerYAnchor)
-            $0.left.equal(to: openwebLinkView.leftAnchor)
+        
+        spotIMIcon.OWSnp.makeConstraints { make in
+            make.size.equalTo(Theme.bottomRowSize)
+            make.centerY.equalTo(addSpotIMButton)
+            make.left.equalTo(openwebLinkView)
         }
     }
 
@@ -208,20 +212,20 @@ internal final class SPPreConversationFooter: OWBaseView {
         addSpotIMButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
         addSpotIMButton.addTarget(self, action: #selector(showAddSpotIM), for: .touchUpInside)
 
-        addSpotIMButton.layout {
-            $0.centerY.equal(to: privacyButton.centerYAnchor)
-            $0.right.equal(to: openwebLinkView.rightAnchor)
+        addSpotIMButton.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(privacyButton)
+            make.right.equalTo(openwebLinkView)
         }
     }
 
     private func setupOpenWebLinkView() {
         addSpotIMButton.sizeToFit()
-        openwebLinkView.layout {
-            $0.width.equal(to: Theme.bottomRowSize + Theme.iconOffset + addSpotIMButton.frame.width)
-            $0.height.equal(to: addSpotIMButton.heightAnchor)
-            $0.centerY.equal(to: privacyButton.centerYAnchor)
-            $0.leading.greaterThanOrEqual(to: privacyButton.trailingAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.horisontalMargin)
+        openwebLinkView.OWSnp.makeConstraints { make in
+            make.width.equalTo(Theme.bottomRowSize + Theme.iconOffset + addSpotIMButton.frame.width)
+            make.height.equalTo(addSpotIMButton)
+            make.centerY.equalTo(privacyButton)
+            make.leading.greaterThanOrEqualTo(privacyButton.OWSnp.trailing)
+            make.trailing.equalToSuperview().offset(-Theme.horizontalMargin)
         }
     }
     
@@ -248,7 +252,7 @@ internal final class SPPreConversationFooter: OWBaseView {
 private extension SPPreConversationFooter {
     private enum Theme {
         static let bottomRowSize: CGFloat = 13
-        static let horisontalMargin: CGFloat = 16
+        static let horizontalMargin: CGFloat = 16
         static let bottomMargin: CGFloat = 23
         static let iconOffset: CGFloat = 5
         static let showMoreCommentsButtonHeight: CGFloat = 46
