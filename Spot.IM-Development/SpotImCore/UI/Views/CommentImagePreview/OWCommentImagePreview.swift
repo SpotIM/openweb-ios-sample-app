@@ -15,7 +15,6 @@ protocol OWCommentImagePreviewDelegate: AnyObject {
 final class OWCommentImagePreview: OWBaseView {
     
     private let imageView: OWBaseUIImageView = .init()
-    private var heightConstraint: NSLayoutConstraint?
     private let loaderView: SPLoaderView = .init(backgroundOpacity: 0.4)
     
     private lazy var removeButton: OWBaseButton = .init(type: .custom)
@@ -61,17 +60,21 @@ final class OWCommentImagePreview: OWBaseView {
     
     func resizeViewToFitImageSize() {
         guard let image = imageView.image else {
-            heightConstraint?.constant = 0
+            self.OWSnp.updateConstraints { make in
+                make.height.equalTo(0)
+            }
             return
         }
         let ratio = image.size.width / image.size.height
         let newHeight = imageView.frame.width / ratio
-        heightConstraint?.constant = newHeight
+        self.OWSnp.updateConstraints { make in
+            make.height.equalTo(newHeight)
+        }
     }
     
     private func setup() {
-        layout {
-            heightConstraint = $0.height.equal(to: 0)
+        self.OWSnp.makeConstraints { make in
+            make.height.equalTo(0)
         }
         
         addSubviews(imageView, removeButton, loaderView)
@@ -81,16 +84,15 @@ final class OWCommentImagePreview: OWBaseView {
     }
     
     private func setupLoaderView() {
-        loaderView.pinEdges(to: imageView)
+        loaderView.OWSnp.makeConstraints { make in
+            make.edges.equalTo(imageView)
+        }
     }
     
     private func setupImageView() {
         imageView.contentMode = .scaleAspectFit
-        imageView.layout {
-            $0.top.equal(to: topAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
+        imageView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
     
@@ -100,11 +102,10 @@ final class OWCommentImagePreview: OWBaseView {
         removeButton.addTarget(self, action: #selector(self.removeImage), for: .touchUpInside)
         removeButton.contentHorizontalAlignment = .right
         removeButton.contentVerticalAlignment = .top
-        removeButton.layout {
-            $0.top.equal(to: topAnchor, offsetBy: Theme.removeButtonTopOffset)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.removeButtonTrailingOffset)
-            $0.height.equal(to: Theme.removeButtonHeight)
-            $0.width.equal(to: Theme.removeButtonWidth)
+        removeButton.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Theme.removeButtonTopOffset)
+            make.trailing.equalToSuperview().offset(-Theme.removeButtonTrailingOffset)
+            make.size.equalTo(Theme.removeButtonWidth)
         }
     }
     

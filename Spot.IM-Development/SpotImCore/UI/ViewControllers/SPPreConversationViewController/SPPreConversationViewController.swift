@@ -22,8 +22,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
     
-    private var tableViewHeightConstraint: NSLayoutConstraint?
-
     private var checkTableViewHeight: CGFloat = 0
     private let maxSectionCount: Int
     private let readingTracker = SPReadingTracker()
@@ -186,12 +184,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     private func updateTableViewHeightIfNeeded() {
-        guard let heightConstraint = tableViewHeightConstraint,
-            heightConstraint.constant != tableView.contentSize.height
-            else { return }
-
-        tableViewHeightConstraint?.constant = tableView.contentSize.height
-        view.layoutIfNeeded()
+        if (tableView.frame.size.height != tableView.contentSize.height) {
+            tableView.OWSnp.updateConstraints { make in
+                make.height.equalTo(tableView.contentSize.height)
+            }
+            view.layoutIfNeeded()
+        }
     }
     
     // MARK: - Private methods
@@ -227,10 +225,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     private func setupBannerView() {
-        adBannerView.layout {
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.top.equal(to: view.topAnchor)
+        adBannerView.OWSnp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
         }
     }
 
@@ -238,12 +234,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         header.set(title: LocalizationManager.localizedString(key: "Conversation"))
         header.delegate = self
         header.configure(onlineViewingUsersVM: model.onlineViewingUsersPreConversationVM)
-
-        header.layout {
-            $0.top.equal(to: adBannerView.bottomAnchor, offsetBy: actualBannerMargin)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.height.equal(to: SpotIm.buttonOnlyMode == .withoutTitle ? 0 : Theme.headerHeight)
+        let headerHeight = SpotIm.buttonOnlyMode == .withoutTitle ? 0 : Theme.headerHeight
+        
+        header.OWSnp.makeConstraints { make in
+            make.top.equalTo(adBannerView.OWSnp.bottom).offset(actualBannerMargin)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(headerHeight)
         }
         
         if SpotIm.buttonOnlyMode == .withoutTitle {
@@ -254,10 +250,10 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func configureCommunityQuestionView() {
         communityQuestionView.clipsToBounds = true
         updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
-        communityQuestionView.layout {
-            $0.top.equal(to: communityGuidelinesView.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
+        
+        communityQuestionView.OWSnp.makeConstraints { make in
+            make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
         }
     }
     
@@ -270,8 +266,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             communityGuidelinesView.setSeperatorVisible(isVisible: false)
         } else {
             communityQuestionView.isHidden = true
-            communityQuestionView.layout {
-                $0.height.equal(to: 0.0)
+            communityQuestionView.OWSnp.makeConstraints { make in
+                make.height.equalTo(0.0)
             }
             communityGuidelinesView.setSeperatorVisible(isVisible: true)
         }
@@ -279,11 +275,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     private func setupCommunityGuidelinesView() {
-        communityGuidelinesView.layout {
-            $0.top.equal(to: header.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
+        communityGuidelinesView.OWSnp.makeConstraints { make in
+            make.top.equalTo(header.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
         }
+        
         // hide when no community guidelines or in button only mode
         if let htmlString = getCommunityGuidelinesTextIfExists() {
             communityGuidelinesHtmlString = htmlString
@@ -292,8 +288,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             communityGuidelinesView.setupPreConversationConstraints()
         } else {
             communityGuidelinesView.isHidden = true
-            communityGuidelinesView.layout {
-                $0.height.equal(to: 0.0)
+            communityGuidelinesView.OWSnp.makeConstraints { make in
+                make.height.equalTo(0.0)
             }
         }
     }
@@ -304,22 +300,20 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         whatYouThinkView.dropsShadow = false
         whatYouThinkView.showsSeparator = false
         whatYouThinkView.delegate = self
-        whatYouThinkView.layout {
-            $0.top.equal(to: communityQuestionView.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.height.equal(to: Theme.whatYouThinkHeight)
+        whatYouThinkView.OWSnp.makeConstraints { make in
+            make.top.equalTo(communityQuestionView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Theme.whatYouThinkHeight)
         }
         self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
     }
     
     override func setupTableView() {
         tableView.isScrollEnabled = false
-        tableView.layout {
-            $0.top.equal(to: whatYouThinkView.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            tableViewHeightConstraint = $0.height.equal(to: 0)
+        tableView.OWSnp.makeConstraints { make in
+            make.top.equalTo(whatYouThinkView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(0.0)
         }
     }
 
@@ -327,10 +321,11 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         view.bringSubviewToFront(footerView)
         footerView.delegate = self
         footerView.set(buttonOnlyMode: isButtonOnlyModeEnabled)
-        footerView.layout {
-            $0.top.equal(to: isButtonOnlyModeEnabled ? (SpotIm.buttonOnlyMode == .withoutTitle ? adBannerView.bottomAnchor : header.bottomAnchor) :  tableView.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
+        
+        let topConstraint = isButtonOnlyModeEnabled ? (SpotIm.buttonOnlyMode == .withoutTitle ? adBannerView.OWSnp.bottom : header.OWSnp.bottom) :  tableView.OWSnp.bottom
+        footerView.OWSnp.makeConstraints { make in
+            make.top.equalTo(topConstraint)
+            make.leading.trailing.equalToSuperview()
         }
     }
 
@@ -381,12 +376,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func configureEmptyStateView() {
         super.configureEmptyStateView()
         stateActionView?.backgroundColor = .white
-        stateActionView?.layout {
-            $0.top.equal(to: header.bottomAnchor, offsetBy: 10)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.bottom.equal(to: footerView.topAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-        }
+        
+        stateActionView?.OWSnp.makeConstraints({ make in
+            make.top.equalTo(header.OWSnp.bottom).offset(10.0)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(footerView.OWSnp.top)
+        })
     }
 
     override func createEmptyConversationActionView() -> SPEmptyConversationActionView {
@@ -598,13 +593,13 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
  
-        self.adBannerView.layout {
-            $0.height.equal(to: adBannerSize.height)
+        adBannerView.OWSnp.makeConstraints { make in
+            make.height.equalTo(adBannerSize.height)
         }
         
-        self.adBannerView.update(bannerView, height: adBannerSize.height)
+        adBannerView.update(bannerView, height: adBannerSize.height)
         
-        self.bannerVisisilityTracker.startTracking()
+        bannerVisisilityTracker.startTracking()
     }
     
     func bannerFailedToLoad(error: Error) {
