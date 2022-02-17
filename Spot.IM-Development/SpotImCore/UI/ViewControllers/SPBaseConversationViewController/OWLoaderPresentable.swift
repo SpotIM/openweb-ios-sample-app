@@ -16,7 +16,9 @@ extension OWLoaderPresentable where Self: UIViewController {
     
     func showLoader() {
         view.addSubview(activityIndicator)
-        activityIndicator.pinEdges(to: view)
+        activityIndicator.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         activityIndicator.startLoader()
     }
     

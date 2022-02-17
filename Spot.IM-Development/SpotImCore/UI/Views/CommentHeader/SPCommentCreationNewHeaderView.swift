@@ -41,8 +41,8 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     private let commentLabel: OWBaseLabel = .init()
     private let separatorView: OWBaseView = .init()
     
-    private var replyingLabelTopConstraint: NSLayoutConstraint? = nil
-    private var commentLabelTopConstraint: NSLayoutConstraint? = nil
+    private var replyingLabelTopConstraint: OWConstraint? = nil
+    private var commentLabelTopConstraint: OWConstraint? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -68,7 +68,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     
     func hideCommentText() {
         commentLabel.text = ""
-        commentLabelTopConstraint?.constant = 0
+        commentLabelTopConstraint?.update(offset: 0)
         commentLabel.isHidden = true
     }
     
@@ -96,7 +96,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
     
     private func hideReplyingLabel() {
-        replyingLabelTopConstraint?.constant = 0
+        replyingLabelTopConstraint?.update(offset: 0)
         replyingLabel.text = ""
         replyingLabel.isHidden = true
     }
@@ -122,61 +122,57 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         headerTitleTextView.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         headerTitleTextView.isEditable = false
         headerTitleTextView.isSelectable = false
-        headerTitleTextView.layout {
-            $0.height.equal(to: Theme.headerTitleHeight)
-            $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.trailingOffset)
+        headerTitleTextView.OWSnp.makeConstraints { make in
+            make.height.equalTo(Theme.headerTitleHeight)
+            make.top.equalToSuperview().offset(Theme.topOffset)
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
+            make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
         }
     }
     
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIconNew", supportDarkMode: true), for: .normal)
-        closeButton.layout {
-            $0.centerY.equal(to: headerTitleTextView.centerYAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -6.0)
-            $0.width.equal(to: 45.0)
-            $0.height.equal(to: 45.0)
+        closeButton.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(headerTitleTextView)
+            make.trailing.equalToSuperview().offset(-6.0)
+            make.size.equalTo(45.0)
         }
     }
     
     private func setupSeparatorView() {
-        separatorView.layout {
-            $0.top.equal(to: headerTitleTextView.bottomAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            make.top.equalTo(headerTitleTextView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
         }
     }
     
     private func setupReplyingLabel() {
         replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.replyingToFontSize)
-        replyingLabel.layout {
-            replyingLabelTopConstraint = $0.top.equal(to: separatorView.bottomAnchor, offsetBy: Theme.replyingTopOffset)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
+        replyingLabel.OWSnp.makeConstraints { make in
+            replyingLabelTopConstraint = make.top.equalTo(separatorView.OWSnp.bottom).offset(Theme.replyingTopOffset).constraint
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
         }
     }
     
     private func setupCommentAuthorLabel() {
         commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.replyingToFontSize)
-        commentAuthorLabel.layout {
-            $0.firstBaseline.equal(to: replyingLabel.firstBaselineAnchor)
-            $0.lastBaseline.equal(to: replyingLabel.lastBaselineAnchor)
-            $0.leading.equal(to: replyingLabel.trailingAnchor)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor, offsetBy: -Theme.trailingOffset)
+        commentAuthorLabel.OWSnp.makeConstraints { make in
+            make.firstBaseline.lastBaseline.equalTo(replyingLabel)
+            make.leading.equalTo(replyingLabel.OWSnp.trailing)
+            make.trailing.lessThanOrEqualToSuperview().offset(-Theme.trailingOffset)
         }
     }
     
     private func setupCommentLabel() {
         commentLabel.numberOfLines = 3
         commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
-        
-        commentLabel.layout {
-            commentLabelTopConstraint = $0.top.equal(to: replyingLabel.bottomAnchor, offsetBy: Theme.commentTopOffset)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.trailingOffset)
-            $0.bottom.greaterThanOrEqual(to: bottomAnchor)
+        commentLabel.OWSnp.makeConstraints { make in
+            commentLabelTopConstraint = make.top.equalTo(replyingLabel.OWSnp.bottom).offset(Theme.commentTopOffset).constraint
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
+            make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
+            make.bottom.greaterThanOrEqualToSuperview()
         }
     }
 }

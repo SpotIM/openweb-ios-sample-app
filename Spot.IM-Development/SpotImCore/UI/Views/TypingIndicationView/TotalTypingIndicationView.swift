@@ -56,10 +56,10 @@ final class TotalTypingIndicationView: OWBaseView {
         typingLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         typingLabel.backgroundColor = .spBackground0
         typingLabel.font = UIFont.preferred(style: .regular, of: 15.0)
-        typingLabel.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: animationImageView.trailingAnchor, offsetBy: 10.0)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -29.0)
+        typingLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(animationImageView.OWSnp.trailing).offset(10.0)
+            make.trailing.equalToSuperview().offset(-29.0)
         }
     }
     
@@ -69,11 +69,11 @@ final class TotalTypingIndicationView: OWBaseView {
         animationImageView.animationDuration = 1.5
         animationImageView.animationRepeatCount = 0
         animationImageView.startAnimating()
-        animationImageView.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: 29.0)
-            $0.height.equal(to: 5.0)
-            $0.width.equal(to: 23.0)
+        animationImageView.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(29.0)
+            make.height.equalTo(5.0)
+            make.width.equalTo(23.0)
         }
     }
     

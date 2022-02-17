@@ -17,7 +17,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
     private let commentLabel: OWBaseLabel = .init()
     private let separatorView: OWBaseView = .init()
     
-    private var commentLabelTopConstraint: NSLayoutConstraint? = nil
+    private var commentLabelTopConstraint: OWConstraint? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,7 +41,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
     
     func hideCommentText() {
         commentLabel.text = ""
-        commentLabelTopConstraint?.constant = 0
+        commentLabelTopConstraint?.update(offset: 0)
         commentLabel.isHidden = true
     }
     
@@ -67,51 +67,46 @@ final class SPCommentReplyHeaderView: OWBaseView {
     private func setupReplyingLabel() {
         replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
-        replyingLabel.layout {
-            $0.top.equal(to: topAnchor, offsetBy: Theme.topOffset)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
+        replyingLabel.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Theme.topOffset)
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
         }
     }
     
     private func setupCommentAuthorLabel() {
         commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
-        
-        commentAuthorLabel.layout {
-            $0.firstBaseline.equal(to: replyingLabel.firstBaselineAnchor)
-            $0.lastBaseline.equal(to: replyingLabel.lastBaselineAnchor)
-            $0.leading.equal(to: replyingLabel.trailingAnchor)
-            $0.trailing.lessThanOrEqual(to: closeButton.leadingAnchor, offsetBy: -Theme.trailingOffset)
+        commentAuthorLabel.OWSnp.makeConstraints { make in
+            make.firstBaseline.equalTo(replyingLabel)
+            make.lastBaseline.equalTo(replyingLabel)
+            make.leading.equalTo(replyingLabel.OWSnp.trailing)
+            make.trailing.lessThanOrEqualTo(closeButton.OWSnp.leading).offset(-Theme.trailingOffset)
         }
     }
     
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
-        closeButton.layout {
-            $0.centerY.equal(to: commentAuthorLabel.centerYAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -6.0)
-            $0.width.equal(to: 40.0)
-            $0.height.equal(to: 40.0)
+        closeButton.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(commentAuthorLabel)
+            make.trailing.equalToSuperview().offset(-Theme.closeButtonTrailingOffset)
+            make.size.equalTo(Theme.closeButtonSize)
         }
     }
     
     private func setupCommentLabel() {
         commentLabel.numberOfLines = 3
         commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
-        
-        commentLabel.layout {
-            commentLabelTopConstraint = $0.top.equal(to: replyingLabel.bottomAnchor, offsetBy: Theme.commentTopOffset)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.leadingOffset)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.trailingOffset)
-            $0.bottom.equal(to: separatorView.topAnchor, offsetBy: -Theme.commentBottomOffset)
+        commentLabel.OWSnp.makeConstraints { make in
+            commentLabelTopConstraint = make.top.equalTo(replyingLabel.OWSnp.bottom).offset(Theme.commentTopOffset).constraint
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
+            make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
+            make.bottom.equalTo(separatorView.OWSnp.top).offset(-Theme.commentBottomOffset)
         }
     }
     
     private func setupSeparatorView() {
-        separatorView.layout {
-            $0.leading.equal(to: leadingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
         }
     }
 }
@@ -126,5 +121,7 @@ private enum Theme {
     static let separatorHeight: CGFloat = 1.0
     static let titleFontSize: CGFloat = 16.0
     static let commentFontSize: CGFloat = 16.0
+    static let closeButtonSize: CGFloat = 40.0
+    static let closeButtonTrailingOffset: CGFloat = 6.0
     
 }
