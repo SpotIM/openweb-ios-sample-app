@@ -48,7 +48,7 @@ final class SPMainConversationModel {
     
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
-    private var realTimeNewMessages = [String: SPComment]()
+    private var realTimeNewMessagesCache = [String: SPComment]()
     private(set) var realtimeViewType: RealTimeViewType?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: OWAbTests
@@ -372,17 +372,17 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             newComments.forEach{ comment in
                 // make sure comment is not reply and not already in conversation
                 if (comment.parentId == nil || comment.parentId == "") && !dataSource.isCommentInConversation(commentId: comment.id ?? ""){
-                    self.realTimeNewMessages[comment.id ?? ""] = comment
+                    self.realTimeNewMessagesCache[comment.id ?? ""] = comment
                 }
             }
             let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
-            let newCommentsExist = realTimeNewMessages.keys.count > 0
+            let newCommentsExist = realTimeNewMessagesCache.keys.count > 0
             let shouldShowBlitz = (realtimeViewType != nil) && newCommentsExist && isBlitsEnabled
             // make sure first time is always "typing"
             realtimeViewType = shouldShowBlitz ? .blitz : .typing
             self.dataSource.messageCount = totalCommentsCount
             if shouldUserBeNotified {
-                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: realTimeNewMessages.keys.count) }
+                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: realTimeNewMessagesCache.keys.count) }
                 if totalCommentsCount > 0 {
                     commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
                 }
@@ -412,15 +412,15 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
     
     // Returns current visible new messages count
     func newMessagesCount() -> Int {
-        return self.realTimeNewMessages.keys.count
+        return self.realTimeNewMessagesCache.keys.count
     }
     
-    func clearNewMessages() {
-        self.realTimeNewMessages.removeAll()
+    func clearNewMessagesCache() {
+        self.realTimeNewMessagesCache.removeAll()
     }
     
     func addNewCommentsToConversation() {
-        let comments = Array(self.realTimeNewMessages.values)
+        let comments = Array(self.realTimeNewMessagesCache.values)
         dataSource.addNewComments(comments: comments)
     }
     
