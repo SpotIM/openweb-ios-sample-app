@@ -75,13 +75,12 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
     }
 
     private func setupAvatarImageView() {
-        avatarImageView.layout {
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.xOffset)
-            $0.top.greaterThanOrEqual(to: topAnchor)
-            $0.bottom.lessThanOrEqual(to: bottomAnchor)
-            $0.centerY.equal(to: centerYAnchor)
-            $0.height.equal(to: Theme.avatarSideSize)
-            $0.width.equal(to: Theme.avatarSideSize)
+        avatarImageView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Theme.xOffset)
+            make.top.greaterThanOrEqualToSuperview()
+            make.bottom.lessThanOrEqualToSuperview()
+            make.centerY.equalToSuperview()
+            make.size.equalTo(Theme.avatarSideSize)
         }
     }
 
@@ -94,11 +93,11 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         usernameTextView.textContainer.maximumNumberOfLines = 1
         
         usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your Username")
-        usernameTextView.layout {
-            $0.leading.equal(to: avatarImageView.trailingAnchor, offsetBy: Theme.usernameLeading)
-            $0.centerY.equal(to: avatarImageView.centerYAnchor, offsetBy: usernameTextView.textContainer.lineFragmentPadding)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.xOffset)
-            $0.height.equal(to: avatarImageView.heightAnchor)
+        usernameTextView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(Theme.usernameLeading)
+            make.centerY.equalTo(avatarImageView).offset(usernameTextView.textContainer.lineFragmentPadding)
+            make.trailing.equalToSuperview().offset(-Theme.xOffset)
+            make.height.equalTo(avatarImageView)
         }
     }
     
@@ -110,11 +109,12 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
 
     private func setupSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
-        separatorView.layout {
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.separatorVerticalPadding)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Theme.separatorVerticalPadding)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Theme.separatorVerticalPadding)
+            make.trailing.equalToSuperview().offset(-Theme.separatorVerticalPadding)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
+
         }
     }
 

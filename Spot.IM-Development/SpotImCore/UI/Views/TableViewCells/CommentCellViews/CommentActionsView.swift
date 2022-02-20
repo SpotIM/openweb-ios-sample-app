@@ -20,8 +20,8 @@ final class CommentActionsView: OWBaseView {
 
     private lazy var rankUpButton: SPAnimatedButton = initializeRankUpButton()
     private lazy var rankDownButton: SPAnimatedButton = initializeRankDownButton()
-    private var replyActionViewWidthConstraint: NSLayoutConstraint?
-    private var replyButtonTrailingConstraint: NSLayoutConstraint?
+    private var replyActionViewWidthConstraint: OWConstraint?
+    private var replyButtonTrailingConstraint: OWConstraint?
     
     private var isReadOnlyMode: Bool = false
 
@@ -119,8 +119,8 @@ final class CommentActionsView: OWBaseView {
     // MARK: - Private
     
     private func setShowReplyButton(_ showButton: Bool) {
-        replyActionViewWidthConstraint?.isActive = !showButton
-        replyButtonTrailingConstraint?.constant = showButton ? -Theme.baseOffset : 0.0
+        showButton ? replyActionViewWidthConstraint?.deactivate() : replyActionViewWidthConstraint?.activate()
+        replyButtonTrailingConstraint?.update(offset: showButton ? -Theme.baseOffset : 0.0)
     }
 
     private func updateRankButtonState() {
@@ -151,13 +151,12 @@ final class CommentActionsView: OWBaseView {
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
         replyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.fontSize)
         replyButton.setTitle(replyDefaultTitle, for: .normal)
-        replyButton.layout {
-            $0.top.equal(to: topAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.leading.equal(to: leadingAnchor)
-            replyButtonTrailingConstraint = $0.trailing.equal(to: rankUpButton.leadingAnchor,
-                                                              offsetBy: -Theme.baseOffset)
-            replyActionViewWidthConstraint = $0.width.equal(to: 0.0, isActive: false)
+        
+        replyButton.OWSnp.makeConstraints { make in
+            make.top.bottom.leading.equalToSuperview()
+            replyButtonTrailingConstraint = make.trailing.equalTo(rankUpButton.OWSnp.leading).offset(-Theme.baseOffset).constraint
+            replyActionViewWidthConstraint = make.width.equalTo(0.0).constraint
+            replyActionViewWidthConstraint?.deactivate()
         }
     }
 
@@ -165,19 +164,19 @@ final class CommentActionsView: OWBaseView {
         rankUpButton.addTarget(self, action: #selector(rankUp), for: .touchUpInside)
         rankUpButton.setContentHuggingPriority(.required, for: .horizontal)
         let width = Theme.engagementStackHeight - Theme.rankButtonHorizontalInset * 2
-        rankUpButton.layout {
-            $0.centerY.equal(to: replyButton.centerYAnchor)
-            $0.height.equal(to: Theme.engagementStackHeight)
-            $0.width.equal(to: width)
-            $0.trailing.equal(to: rankUpLabel.leadingAnchor)
+        rankUpButton.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(replyButton)
+            make.height.equalTo(Theme.engagementStackHeight)
+            make.width.equalTo(width)
+            make.trailing.equalTo(rankUpLabel.OWSnp.leading)
         }
 
         rankUpLabel.textAlignment = .center
         rankUpLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         rankUpLabel.setContentHuggingPriority(.required, for: .horizontal)
-        rankUpLabel.layout {
-            $0.centerY.equal(to: replyButton.centerYAnchor)
-            $0.trailing.equal(to: rankDownButton.leadingAnchor, offsetBy: -11.0)
+        rankUpLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(replyButton)
+            make.trailing.equalTo(rankDownButton.OWSnp.leading).offset(-11.0)
         }
     }
 
@@ -185,18 +184,19 @@ final class CommentActionsView: OWBaseView {
         rankDownButton.addTarget(self, action: #selector(rankDown), for: .touchUpInside)
         rankDownButton.setContentHuggingPriority(.required, for: .horizontal)
         let width = Theme.engagementStackHeight - Theme.rankButtonHorizontalInset * 2
-        rankDownButton.layout {
-            $0.centerY.equal(to: replyButton.centerYAnchor, offsetBy: -4)
-            $0.height.equal(to: Theme.engagementStackHeight)
-            $0.width.equal(to: width)
-            $0.trailing.equal(to: rankDownLabel.leadingAnchor)
+        rankDownButton.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(replyButton).offset(-4.0)
+            make.height.equalTo(Theme.engagementStackHeight)
+            make.width.equalTo(width)
+            make.trailing.equalTo(rankDownLabel.OWSnp.leading)
         }
+        
 
         rankDownLabel.textAlignment = .center
         rankDownLabel.font = .preferred(style: .regular, of: Theme.fontSize)
         rankDownLabel.setContentHuggingPriority(.required, for: .horizontal)
-        rankDownLabel.layout {
-            $0.centerY.equal(to: replyButton.centerYAnchor)
+        rankDownLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(replyButton)
         }
     }
 

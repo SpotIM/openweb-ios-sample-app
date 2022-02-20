@@ -48,8 +48,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private let articleHeaderMaxHeight: CGFloat = 85.0
     private let articleHeaderMinHeight: CGFloat = 0.0
 
-    private var footerHeightConstraint: NSLayoutConstraint?
-    private var headerHeightConstraint: NSLayoutConstraint?
     private var currentHeightConstant: CGFloat = 0.0
     private var initialOffsetY: CGFloat = 0.0
     private var lastOffsetY: CGFloat = 0.0
@@ -67,7 +65,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private var collapsableContainerMaxHeight: CGFloat = 0.0  // Being update in viewDidLayoutSubviews
     private var collapsableContainerMinHeight: CGFloat = 0.0
-    private var collapsableContainerHeightConstraint: NSLayoutConstraint?
+    private var collapsableContainerHeightConstraint: OWConstraint?
 
     weak override var userAuthFlowDelegate: OWUserAuthFlowDelegate? {
         didSet {
@@ -84,7 +82,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
             if oldValue != scrollingDirection {
-                currentHeightConstant = headerHeightConstraint?.constant ?? 0.0
+                currentHeightConstant = tableHeader.frame.height
                 initialOffsetY = lastOffsetY
             }
         }
@@ -137,8 +135,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.viewDidLayoutSubviews()
         if shouldDisplayCollapsableContainer && collapsableContainerHeightConstraint == nil {
             collapsableContainerMaxHeight = collapsableContainer.frame.height
-            collapsableContainer.layout {
-                collapsableContainerHeightConstraint = $0.height.equal(to: collapsableContainer.frame.height)
+            collapsableContainer.OWSnp.makeConstraints { make in
+                collapsableContainerHeightConstraint = make.height.equalTo(collapsableContainer.frame.height).constraint
             }
         }
     }
@@ -168,8 +166,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
         else {
             loginPromptView.isHidden = true
-            loginPromptView.layout {
-                $0.height.equal(to: 0.0)
+            loginPromptView.OWSnp.makeConstraints { make in
+                make.height.equalTo(0)
             }
         }
     }
@@ -257,8 +255,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         }
         commentIdToShowOnOpen = nil
-        
-        self.resetCollapsableContainerHeight()
     }
 
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
@@ -308,20 +304,18 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     
     private func resetCollapsableContainerHeight() {
         guard shouldDisplayCollapsableContainer else { return }
-        let isCollapsableContainerVisible = collapsableContainerHeightConstraint?.constant != 0
-        
-        // remove previous constraint
-        if let collapsableContainerHeightConstraint = collapsableContainerHeightConstraint {
-            collapsableContainer.removeConstraint(collapsableContainerHeightConstraint)
+
+        // remove previous height constraint
+        if let heightConstraint = collapsableContainerHeightConstraint {
+            heightConstraint.deactivate()
+            collapsableContainerHeightConstraint = nil
         }
+        
         // recalculate height of subviews
+        // This will trigger `viewDidLayoutSubviews` method after orientation change, in which
+        // the frame of the collapsableContainer will update and we will re-make the height constarint
         collapsableContainer.setNeedsLayout()
         collapsableContainer.layoutIfNeeded()
-        
-        collapsableContainerMaxHeight = collapsableContainer.frame.height
-        collapsableContainer.layout {
-            collapsableContainerHeightConstraint = $0.height.equal(to: isCollapsableContainerVisible ? collapsableContainer.frame.height : 0)
-        }
     }
 
     private func configureModelHandlers() {
@@ -392,19 +386,17 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         summaryView.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         summaryView.delegate = self
         summaryView.updateSortOption(model.sortOption.title)
-        summaryView.layout {
-            $0.top.equal(to: loginPromptView.bottomAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.height.equal(to: 44.0)
+        summaryView.OWSnp.makeConstraints { make in
+            make.top.equalTo(loginPromptView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(44.0)
         }
     }
 
     private func configureLoginPromptView() {
-        loginPromptView.layout {
-            $0.top.equal(to: topLayoutGuide.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
+        loginPromptView.OWSnp.makeConstraints { make in
+            make.top.equalTo(topLayoutGuide.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
         }
         loginPromptView.delegate = self
         view.bringSubviewToFront(loginPromptView)
@@ -413,21 +405,19 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func configureCollapsableContainer() {
         collapsableContainer.addSubviews(communityGuidelinesView, communityQuestionView)
-        collapsableContainer.layout {
-            $0.top.equal(to: summaryView.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
+        collapsableContainer.OWSnp.makeConstraints { make in
+            make.top.equalTo(summaryView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
         }
     }
 
     private func configureCommunityGuidelinesView() {
         communityGuidelinesView.backgroundColor = .red
         // set constratings with priority for the community guideline to collaps properly when scrolling
-        communityGuidelinesView.layout {
-            $0.top.equal(to: collapsableContainer.topAnchor, priority: UILayoutPriority(300))
-            $0.leading.equal(to: collapsableContainer.leadingAnchor)
-            $0.trailing.equal(to: collapsableContainer.trailingAnchor)
-            $0.bottom.equal(to: communityQuestionView.topAnchor, priority: UILayoutPriority(500))
+        communityGuidelinesView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().priority(300)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(communityQuestionView.OWSnp.top).priority(500)
         }
         if let htmlString = getCommunityGuidelinesTextIfExists() {
             communityGuidelinesHtmlString = htmlString
@@ -439,8 +429,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         } else {
             communityGuidelinesView.isHidden = true
             shouldDisplayCommunityGuidelines = false
-            communityGuidelinesView.layout {
-                $0.height.equal(to: 0.0)
+            communityGuidelinesView.OWSnp.makeConstraints { make in
+                make.height.equalTo(0.0)
             }
         }
     }
@@ -449,11 +439,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         communityQuestionView.clipsToBounds = true
         updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
         // set constratings with priority for the community question to collaps properly when scrolling
-        communityQuestionView.layout {
-            $0.top.equal(to: communityGuidelinesView.bottomAnchor, priority: UILayoutPriority(500))
-            $0.bottom.equal(to: collapsableContainer.bottomAnchor, priority: UILayoutPriority(1000))
-            $0.leading.equal(to: collapsableContainer.leadingAnchor)
-            $0.trailing.equal(to: collapsableContainer.trailingAnchor)
+        communityQuestionView.OWSnp.makeConstraints { make in
+            make.top.equalTo(communityGuidelinesView.OWSnp.bottom).priority(500)
+            make.bottom.equalToSuperview().priority(1000)
+            make.leading.trailing.equalToSuperview()
         }
 
         let communityQuestionText = getCommunityQuestion()
@@ -463,8 +452,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             shouldDisplayCommunityQuestion = true
         } else {
             communityQuestionView.isHidden = true
-            communityQuestionView.layout {
-                $0.height.equal(to: 0.0)
+            communityQuestionView.OWSnp.makeConstraints { make in
+                make.height.equalTo(0.0)
             }
             shouldDisplayCommunityQuestion = false
         }
@@ -477,20 +466,18 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
         view.bringSubviewToFront(tableHeader)
         tableHeader.clipsToBounds = true
-        tableHeader.layout {
-            $0.top.equal(to: collapsableContainer.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            headerHeightConstraint = $0.height.equal(to: 0.0)
+        tableHeader.OWSnp.makeConstraints { make in
+            make.top.equalTo(collapsableContainer.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(0.0)
         }
     }
 
     override func setupTableView() {
-        tableView.layout {
-            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : collapsableContainer.bottomAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.bottom.equal(to: footer.topAnchor)
+        tableView.OWSnp.makeConstraints { make in
+            make.top.equalTo(displayArticleHeader ? tableHeader.OWSnp.bottom : collapsableContainer.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(footer.OWSnp.top)
         }
     }
     
@@ -532,11 +519,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if (isReadOnlyModeEnabled()) {
             footer.setReadOnlyMode()
         }
-        footer.layout {
-            footerHeightConstraint = $0.height.equal(to: 80.0 + bottomPadding)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.bottom.equal(to: SpotIm.shouldConversationFooterStartFromBottomAnchor ? view.bottomAnchor : view.layoutMarginsGuide.bottomAnchor)
+        footer.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(SpotIm.shouldConversationFooterStartFromBottomAnchor ? view : view.layoutMarginsGuide)
+            make.height.equalTo(80.0 + bottomPadding)
         }
     }
 
@@ -584,7 +570,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             return
         }
         isHeaderVisible = true
-        headerHeightConstraint?.constant = articleHeaderMaxHeight
+        tableHeader.OWSnp.updateConstraints { make in
+            make.height.equalTo(articleHeaderMaxHeight)
+        }
         tableHeader.setAuthor(model.dataSource.articleMetadata.subtitle)
         tableHeader.setImage(with: URL(string: model.dataSource.articleMetadata.thumbnailUrl))
         tableHeader.setTitle(model.dataSource.articleMetadata.title)
@@ -603,12 +591,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.configureEmptyStateView()
 
         view.bringSubviewToFront(summaryView)
-        stateActionView?.layout {
-            $0.bottom.equal(to: SpotIm.shouldConversationFooterStartFromBottomAnchor ? view.bottomAnchor : view.layoutMarginsGuide.bottomAnchor)
-            $0.leading.equal(to: view.leadingAnchor)
-            $0.trailing.equal(to: view.trailingAnchor)
-            $0.top.equal(to: self.displayArticleHeader ? tableHeader.bottomAnchor : collapsableContainer.bottomAnchor)
-        }
+        stateActionView?.OWSnp.makeConstraints({ make in
+            make.bottom.equalTo(SpotIm.shouldConversationFooterStartFromBottomAnchor ? view : view.layoutMarginsGuide)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(displayArticleHeader ? tableHeader.OWSnp.bottom : collapsableContainer.OWSnp.bottom)
+        })
     }
 
     override func configureErrorAction() -> ConversationStateAction {
@@ -781,7 +768,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
     /// Instantly updates article header height when scrollView is scrolling
     private func updateCollapsableContainerHeightInstantly() {
         guard shouldDisplayCollapsableContainer else { return }
-        if scrollingDirection == .down && collapsableContainerHeightConstraint?.constant == collapsableContainerMaxHeight {
+        if scrollingDirection == .down && collapsableContainer.frame.height == collapsableContainerMaxHeight {
             return
         }
         if lastOffsetY > 0 {
@@ -792,9 +779,9 @@ extension SPMainConversationViewController { // Article header scrolling logic
             let calculatedHeight = collapsableContainerMaxHeight - lastOffsetY
             let newHeight: CGFloat = max(calculatedHeight, 0)
 
-            collapsableContainerHeightConstraint?.constant = newHeight
+            collapsableContainerHeightConstraint?.update(offset: newHeight)
         } else {
-            collapsableContainerHeightConstraint?.constant = collapsableContainerMaxHeight
+            collapsableContainerHeightConstraint?.update(offset: collapsableContainerMaxHeight)
         }
     }
 
@@ -802,8 +789,9 @@ extension SPMainConversationViewController { // Article header scrolling logic
     private func updateHeaderHeightInstantly() {
         guard isHeaderVisible else { return }
 
-        guard !shouldDisplayCollapsableContainer || collapsableContainerHeightConstraint?.constant == collapsableContainerMinHeight else { return }
+        guard !shouldDisplayCollapsableContainer || collapsableContainer.frame.height == collapsableContainerMinHeight else { return }
 
+        let height: CGFloat
         if lastOffsetY > 0 {
             var calculatedHeight = currentHeightConstant - (lastOffsetY - initialOffsetY)
             if shouldDisplayCollapsableContainer {
@@ -812,9 +800,13 @@ extension SPMainConversationViewController { // Article header scrolling logic
 
             let newHeight: CGFloat = max(min(calculatedHeight, articleHeaderMaxHeight), articleHeaderMinHeight)
 
-            headerHeightConstraint?.constant = newHeight
+            height = newHeight
         } else {
-            headerHeightConstraint?.constant = articleHeaderMaxHeight
+            height = articleHeaderMaxHeight
+        }
+        
+        tableHeader.OWSnp.updateConstraints { make in
+            make.height.equalTo(height)
         }
     }
 
@@ -827,15 +819,17 @@ extension SPMainConversationViewController { // Article header scrolling logic
             if (scrollViewContentOffset.y <= collapsableContainerMaxHeight * 0.8) {
                 finaleHeightCommunityGuidelines = collapsableContainerMaxHeight
             } else {
-                finaleHeightCommunityGuidelines = (collapsableContainerHeightConstraint?.constant ?? 0) < collapsableContainerMaxHeight * 0.5 ? collapsableContainerMinHeight : collapsableContainerMaxHeight
+                finaleHeightCommunityGuidelines = collapsableContainer.frame.height < collapsableContainerMaxHeight * 0.5 ? collapsableContainerMinHeight : collapsableContainerMaxHeight
             }
 
-            collapsableContainerHeightConstraint?.constant = finaleHeightCommunityGuidelines
+            collapsableContainerHeightConstraint?.update(offset: finaleHeightCommunityGuidelines)
         }
 
         if (isHeaderVisible) {
-            let finaleHeight: CGFloat = (headerHeightConstraint?.constant ?? 0) < articleHeaderMaxHeight * 0.5 ? articleHeaderMinHeight: articleHeaderMaxHeight
-            headerHeightConstraint?.constant = finaleHeight
+            let finaleHeight: CGFloat = tableHeader.frame.height < articleHeaderMaxHeight * 0.5 ? articleHeaderMinHeight: articleHeaderMaxHeight
+            tableHeader.OWSnp.updateConstraints { make in
+                make.height.equalTo(finaleHeight)
+            }
         }
 
         UIView.animate(withDuration: 0.3) {
@@ -845,7 +839,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
     }
 
     private func canAnimateHeader(_ scrollView: UIScrollView) -> Bool {
-        let scrollViewMaxHeight = scrollView.frame.height + (self.headerHeightConstraint?.constant ?? 0) + articleHeaderMaxHeight
+        let scrollViewMaxHeight = scrollView.frame.height + self.tableHeader.frame.height + articleHeaderMaxHeight
         return scrollView.contentSize.height > scrollViewMaxHeight
     }
 

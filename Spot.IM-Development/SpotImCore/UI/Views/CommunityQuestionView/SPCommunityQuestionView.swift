@@ -14,9 +14,9 @@ internal final class SPCommunityQuestionView: OWBaseView {
     private lazy var questionTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
     
-    private var questionBottomConstraint: NSLayoutConstraint?
-    private var separatorLeadingConstraint: NSLayoutConstraint?
-    private var separatorTrailingConstraint: NSLayoutConstraint?
+    private var questionBottomConstraint: OWConstraint?
+    private var separatorLeadingConstraint: OWConstraint?
+    private var separatorTrailingConstraint: OWConstraint?
     
     // MARK: - Overrides
     
@@ -43,9 +43,9 @@ internal final class SPCommunityQuestionView: OWBaseView {
     // MARK: - Internal methods
     
     internal func setupPreConversationConstraints() {
-        questionBottomConstraint?.constant = -Theme.QuestionBottomOffsetPreConversation
-        separatorLeadingConstraint?.constant = Theme.separatorHorizontalOffsetPreConversation
-        separatorTrailingConstraint?.constant = -Theme.separatorHorizontalOffsetPreConversation
+        questionBottomConstraint?.update(offset: -Theme.QuestionBottomOffsetPreConversation)
+        separatorLeadingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
+        separatorTrailingConstraint?.update(offset: -Theme.separatorHorizontalOffsetPreConversation)
     }
     
     // MARK: - Private Methods
@@ -62,26 +62,26 @@ internal final class SPCommunityQuestionView: OWBaseView {
         questionTextView.isEditable = false
         questionTextView.isScrollEnabled = false
         questionTextView.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
-        questionTextView.layout {
-            $0.top.equal(to: self.topAnchor)
-            questionBottomConstraint = $0.bottom.equal(to: separatorView.topAnchor, offsetBy: -Theme.QuestionBottomOffsetFullConversation)
+        questionTextView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+            questionBottomConstraint = make.bottom.equalTo(separatorView.OWSnp.top).offset(-Theme.QuestionBottomOffsetFullConversation).constraint
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
-                $0.leading.equal(to: safeAreaLayoutGuide.leadingAnchor, offsetBy: Theme.questionHorizontalOffset)
-                $0.trailing.equal(to: safeAreaLayoutGuide.trailingAnchor, offsetBy: -Theme.questionHorizontalOffset)
+                make.leading.equalTo(safeAreaLayoutGuide).offset(Theme.questionHorizontalOffset)
+                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Theme.questionHorizontalOffset)
             } else {
-                $0.leading.equal(to: self.leadingAnchor, offsetBy: Theme.questionHorizontalOffset)
-                $0.trailing.equal(to: self.trailingAnchor, offsetBy: -Theme.questionHorizontalOffset)
+                make.leading.equalToSuperview().offset(Theme.questionHorizontalOffset)
+                make.trailing.equalToSuperview().offset(-Theme.questionHorizontalOffset)
             }
         }
     }
     
     private func configureSeparatorView() {
-        separatorView.layout {
-            separatorLeadingConstraint = $0.leading.equal(to: leadingAnchor)
-            separatorTrailingConstraint = $0.trailing.equal(to: trailingAnchor)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.height.equal(to: Theme.separatorHeight)
+        separatorView.OWSnp.makeConstraints { make in
+            separatorLeadingConstraint = make.leading.equalToSuperview().constraint
+            separatorTrailingConstraint = make.trailing.equalToSuperview().constraint
+            make.bottom.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
         }
     }
 

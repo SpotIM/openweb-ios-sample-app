@@ -23,8 +23,8 @@ final class TotalTypingIndicationView: OWBaseView {
     private let newCommentsArrowImageView: OWBaseUIImageView = .init()
     
     private var panGesture: UIPanGestureRecognizer?
-    private var animationImageWidthConstraint: NSLayoutConstraint?
-    private var arrowImageWidthConstraint: NSLayoutConstraint?
+    private var animationImageWidthConstraint: OWConstraint?
+    private var arrowImageWidthConstraint: OWConstraint?
     
     override var bounds: CGRect {
         didSet {
@@ -49,8 +49,8 @@ final class TotalTypingIndicationView: OWBaseView {
         typingLabel.font = UIFont.preferred(style: isBlitz ? .bold : .regular, of: 15.0)
         newCommentsArrowImageView.isHidden = !isBlitz
         animationImageView.isHidden = isBlitz
-        animationImageWidthConstraint?.constant = isBlitz ? 0 : 23
-        arrowImageWidthConstraint?.constant = isBlitz ? 8.8 : 0
+        animationImageWidthConstraint?.update(offset: isBlitz ? 0 : 23)
+        arrowImageWidthConstraint?.update(offset: isBlitz ? 8.8 : 0)
         
         UIView.animate(
             withDuration: 0.3,
@@ -84,9 +84,9 @@ final class TotalTypingIndicationView: OWBaseView {
         typingLabel.textAlignment = .center
         typingLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         typingLabel.font = UIFont.preferred(style: .regular, of: 15.0)
-        typingLabel.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: animationImageView.trailingAnchor, offsetBy: 10.0)
+        typingLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(animationImageView.OWSnp.trailing).offset(10.0)
         }
     }
     
@@ -96,25 +96,24 @@ final class TotalTypingIndicationView: OWBaseView {
         animationImageView.animationDuration = 1.5
         animationImageView.animationRepeatCount = 0
         animationImageView.startAnimating()
-        animationImageView.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: 29.0)
-            $0.height.equal(to: 5.0)
-            animationImageWidthConstraint = $0.width.equal(to: 23.0)
+
+        animationImageView.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(29.0)
+            make.height.equalTo(5.0)
+            animationImageWidthConstraint = make.width.equalTo(23.0).constraint
         }
     }
     
     private func configureArrowImage() {
         newCommentsArrowImageView.contentMode = .scaleAspectFill
-        
-        newCommentsArrowImageView.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: typingLabel.trailingAnchor, offsetBy: 5)
-            $0.height.equal(to: 12.8)
-            arrowImageWidthConstraint = $0.width.equal(to: 8.8)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -29.0)
+        newCommentsArrowImageView.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(typingLabel.OWSnp.trailing).offset(5)
+            make.height.equalTo(12.8)
+            arrowImageWidthConstraint = make.width.equalTo(8.8).constraint
+            make.trailing.equalToSuperview().offset(-29)
         }
-        
         newCommentsArrowImageView.isHidden = true
     }
     
