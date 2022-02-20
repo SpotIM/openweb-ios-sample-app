@@ -166,7 +166,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
     
     private func setupCommentLabel() {
-        commentLabel.numberOfLines = 3
+        commentLabel.numberOfLines = 2
         commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
         commentLabel.OWSnp.makeConstraints { make in
             commentLabelTopConstraint = make.top.equalTo(replyingLabel.OWSnp.bottom).offset(Theme.commentTopOffset).constraint
