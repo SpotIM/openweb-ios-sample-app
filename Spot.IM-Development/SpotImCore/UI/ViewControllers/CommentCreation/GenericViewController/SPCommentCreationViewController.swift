@@ -453,7 +453,6 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     // MARK: - Reply Related Logic
     func updateModelDataForReply() {
-        
         let shouldHideCommentText = showCommentLabels && showsUsernameInput
         let commentReplyDataModel = CommentReplyDataModel(
             author: model.dataModel.replyModel?.authorName,
@@ -468,6 +467,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             if shouldHideCommentText {
                 commentNewHeaderView.hideCommentText()
             }
+            commentNewHeaderView.setupHeader(for: self.model.isInEditMode() ? HeaderMode.edit : HeaderMode.add)
             headerView = commentNewHeaderView
         } else {
             commentHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
@@ -477,7 +477,6 @@ class SPCommentCreationViewController: SPBaseViewController,
             }
             headerView = commentHeaderView
         }
-        
         topContainerStack.insertArrangedSubview(headerView, at: 0)
         
         let heightWithCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 135 : 111
