@@ -419,6 +419,11 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         self.realTimeNewMessages.removeAll()
     }
     
+    func addNewCommentsToConversation() {
+        let comments = Array(self.realTimeNewMessages.values)
+        dataSource.addNewComments(comments: comments)
+    }
+    
     /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''
     private func scheduleTypingCleaningTimer(timeOffset: Double) {
         realTimeTimer?.invalidate()

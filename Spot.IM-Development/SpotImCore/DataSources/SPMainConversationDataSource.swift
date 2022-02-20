@@ -942,4 +942,9 @@ extension SPMainConversationDataSource {
         }
         return false
     }
+    
+    func addNewComments(comments: [SPComment]) {
+        let processedComments = self.processed(comments)
+        self.cellData.insert(contentsOf: processedComments, at: self.shouldShowBanner ? 1 : 0)
+    }
 }
