@@ -35,8 +35,8 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     private let textInputView: OWInputTextView = OWInputTextView()
     private lazy var avatarImageView: SPAvatarView = SPAvatarView()
     
-    private var textToAvatarConstraint: NSLayoutConstraint?
-    private var textToLeadingConstraint: NSLayoutConstraint?
+    private var textToAvatarConstraint: OWConstraint?
+    private var textToLeadingConstraint: OWConstraint?
     private var showingAvatar: Bool = false
 
     // MARK: - Init
@@ -87,12 +87,12 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
             avatarImageView.updateAvatar(avatarUrl: avatar)
             avatarImageView.updateOnlineStatus(.online)
             avatarImageView.isHidden = false
-            textToLeadingConstraint?.isActive = false
-            textToAvatarConstraint?.isActive = true
+            textToLeadingConstraint?.deactivate()
+            textToAvatarConstraint?.activate()
         } else {
             avatarImageView.isHidden = true
-            textToAvatarConstraint?.isActive = false
-            textToLeadingConstraint?.isActive = true
+            textToAvatarConstraint?.deactivate()
+            textToLeadingConstraint?.activate()
         }
     }
     
@@ -105,24 +105,24 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     
     private func configureAvatarView() {
         avatarImageView.isHidden = true
-        avatarImageView.layout {
-            $0.top.equal(to: topAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Theme.avatarImageViewLeading)
-            $0.height.equal(to: Theme.avatarImageViewSize)
-            $0.width.equal(to: Theme.avatarImageViewSize)
+        avatarImageView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(Theme.avatarImageViewLeading)
+            make.size.equalTo(Theme.avatarImageViewSize)
         }
     }
     
     private func configureTextInputView() {
-        textInputView.layout {
-            $0.top.equal(to: topAnchor, offsetBy: Theme.textInputViewTopOffset)
-            $0.bottom.equal(to: bottomAnchor)
-            $0.trailing.equal(to: trailingAnchor)
-            textToLeadingConstraint = $0.leading.equal(to: leadingAnchor, isActive: false)
-            textToAvatarConstraint = $0.leading.equal(to: avatarImageView.trailingAnchor,
-                                                      offsetBy: Theme.commentLeadingOffset,
-                                                      isActive: false)
+        textInputView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Theme.textInputViewTopOffset)
+            make.bottom.trailing.equalToSuperview()
+            textToLeadingConstraint = make.leading.equalToSuperview().constraint
+            textToAvatarConstraint = make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(Theme.commentLeadingOffset).constraint
         }
+        textToLeadingConstraint?.deactivate()
+        textToAvatarConstraint?.deactivate()
+        
+        
         textInputView.delegate = self
         textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textAlignment = LocalizationManager.getTextAlignment()

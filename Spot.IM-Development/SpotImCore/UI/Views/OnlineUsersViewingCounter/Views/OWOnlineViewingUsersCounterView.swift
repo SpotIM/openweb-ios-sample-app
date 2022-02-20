@@ -55,17 +55,14 @@ class OWOnlineViewingUsersCounterView: UIView {
 fileprivate extension OWOnlineViewingUsersCounterView {
     func setupViews() {
         self.addSubview(imgViewIcon)
-        imgViewIcon.layout {
-            $0.top.equal(to: self.topAnchor)
-            $0.leading.equal(to: self.leadingAnchor)
-            $0.bottom.equal(to: self.bottomAnchor)
+        imgViewIcon.OWSnp.makeConstraints { make in
+            make.top.leading.bottom.equalToSuperview()
         }
         
         self.addSubview(lblViewersNumber)
-        lblViewersNumber.layout {
-            $0.centerY.equal(to: self.centerYAnchor)
-            $0.leading.equal(to: imgViewIcon.trailingAnchor, offsetBy: Metrics.horizontalMargin)
-            $0.trailing.equal(to: self.trailingAnchor)
+        lblViewersNumber.OWSnp.makeConstraints { make in
+            make.centerY.trailing.equalToSuperview()
+            make.leading.equalTo(imgViewIcon.OWSnp.trailing).offset(Metrics.horizontalMargin)
         }
     }
     

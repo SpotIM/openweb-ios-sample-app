@@ -41,14 +41,15 @@ class SPLoaderView: OWBaseView {
     }
     
     private func configureBackgroundView() {
-        backgroundView.pinEdges(to: self)
+        backgroundView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     private func configureActivityView() {
         loader.tintColor = .black
-        loader.layout {
-            $0.centerX.equal(to: centerXAnchor)
-            $0.centerY.equal(to: centerYAnchor)
+        loader.OWSnp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
     }
     
