@@ -48,13 +48,9 @@ class SPCommentCreationViewController: SPBaseViewController,
     private var commentLabelsSection: String?
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
-    private var commentLabelsContainerHeightConstraint: NSLayoutConstraint?
-    private var commentLabelsContainerBottomConstraint: NSLayoutConstraint?
-    private var commentContentScrollViewBottomConstraint: NSLayoutConstraint?
-    private var mainContainerBottomConstraint: NSLayoutConstraint?
-    private var topContainerTopConstraint: NSLayoutConstraint?
-    private var emptyArticleBottomConstraint: NSLayoutConstraint?
-
+    private var commentLabelsContainerBottomConstraint: OWConstraint?
+    private var commentContentScrollViewBottomConstraint: OWConstraint?
+    private var mainContainerBottomConstraint: OWConstraint?
     
     private let closeButton: OWBaseButton = .init()
     
@@ -147,9 +143,11 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     private func hideCommentLabelsContainer() {
         commentLabelsContainer.isHidden = true
-        commentLabelsContainerHeightConstraint?.constant = 0
-        commentLabelsContainerBottomConstraint?.constant = 0
-        commentContentScrollViewBottomConstraint?.constant = 0
+        commentLabelsContainerBottomConstraint?.update(offset: 0)
+        commentContentScrollViewBottomConstraint?.update(offset: 0)
+        commentLabelsContainer.OWSnp.updateConstraints { make in
+            make.height.equalTo(0)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -365,11 +363,9 @@ class SPCommentCreationViewController: SPBaseViewController,
         }
         topContainerStack.insertArrangedSubview(commentNewHeaderView, at: 0)
         
-        commentNewHeaderView.layout {
-            $0.top.equal(to: topContainerStack.topAnchor)
-            $0.leading.equal(to: topContainerStack.leadingAnchor)
-            $0.trailing.equal(to: topContainerStack.trailingAnchor)
-            $0.height.equal(to: 60)
+        commentNewHeaderView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(60)
         }
         
         commentNewHeaderView.delegate = self
@@ -386,15 +382,14 @@ class SPCommentCreationViewController: SPBaseViewController,
             articleView.setImage(with: URL(string: model.dataModel.articleMetadata.thumbnailUrl))
             articleView.setAuthor(model.dataModel.articleMetadata.subtitle)
 
-            articleView.layout {
-                $0.height.equal(to: 85.0)
-                $0.width.equal(to: topContainerStack.widthAnchor)
+            articleView.OWSnp.makeConstraints { make in
+                make.height.equalTo(85.0)
+                make.width.equalToSuperview()
             }
             
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         } else {
-            emptyArticleBottomConstraint?.isActive = true
             let commentHeaderText = getHeaderTitleBasedOnUserFlow()
             commentingOnLabel.text = commentHeaderText
         }
@@ -422,26 +417,24 @@ class SPCommentCreationViewController: SPBaseViewController,
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.sizeToFit()
         
-        commentingContainer.layout {
-            $0.top.equal(to: topContainerStack.topAnchor)
-            $0.leading.equal(to: topContainerStack.leadingAnchor)
-            $0.trailing.equal(to: topContainerStack.trailingAnchor)
-            $0.height.equal(to: commentingOnLabel.frame.height + 41)
+        commentingContainer.OWSnp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(commentingOnLabel.frame.height + 41)
         }
         
-        commentingOnLabel.layout {
-            $0.top.equal(to: commentingContainer.topAnchor, offsetBy: 25)
-            $0.leading.equal(to: commentingContainer.leadingAnchor, offsetBy: 16)
-            $0.trailing.equal(to: commentingContainer.trailingAnchor, offsetBy: -16)
-            $0.bottom.equal(to: commentingContainer.bottomAnchor, offsetBy: -16)
+        commentingOnLabel.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(25)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview().offset(-16)
+
         }
         
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
-        closeButton.layout {
-            $0.centerY.equal(to: topContainerView.topAnchor, offsetBy: 35)
-            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -5.0)
-            $0.width.equal(to: 40.0)
-            $0.height.equal(to: 40.0)
+        closeButton.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(topContainerView.OWSnp.top).offset(35.0)
+            make.trailing.equalToSuperview().offset(-5.0)
+            make.size.equalTo(40.0)
         }
         
         closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
@@ -490,10 +483,10 @@ class SPCommentCreationViewController: SPBaseViewController,
         let heightWithCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 135 : 111
         let heightWithoutCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 115 : 68
 
-        headerView.layout {
-            $0.top.equal(to: topContainerStack.topAnchor)
-            $0.height.equal(to: shouldHideCommentText ? heightWithoutCommentText : heightWithCommentText)
-            $0.width.equal(to: topContainerStack.widthAnchor)
+        headerView.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.height.equalTo(shouldHideCommentText ? heightWithoutCommentText : heightWithCommentText)
+            make.width.equalToSuperview()
         }
 
         updateTextInputContainer(with: .reply)
@@ -619,17 +612,13 @@ extension SPCommentCreationViewController {
     
     private func setupUI() {
         view.addSubview(scrollView)
-        scrollView.layout {
-            $0.top.equal(to: view.layoutMarginsGuide.topAnchor)
-            // avoide device notch in landscape
+        scrollView.OWSnp.makeConstraints { make in
+            make.top.equalTo(view.layoutMarginsGuide)
             if #available(iOS 11.0, *) {
-                $0.leading.equal(to: view.safeAreaLayoutGuide.leadingAnchor)
-                $0.trailing.equal(to: view.safeAreaLayoutGuide.trailingAnchor)
-                $0.bottom.equal(to: view.safeAreaLayoutGuide.bottomAnchor)
+                make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             } else {
-                $0.leading.equal(to: view.leadingAnchor)
-                $0.trailing.equal(to: view.trailingAnchor)
-                $0.bottom.equal(to: view.bottomAnchor)
+                make.leading.trailing.bottom.equalTo(view)
+
             }
         }
         scrollView.addSubview(mainContainerView)
@@ -647,13 +636,9 @@ extension SPCommentCreationViewController {
     }
     
     private func configureMainContainer() {
-        mainContainerView.layout {
-            $0.top.equal(to: scrollView.topAnchor)
-            $0.bottom.equal(to: scrollView.bottomAnchor)
-            $0.leading.equal(to: scrollView.leadingAnchor)
-            $0.trailing.equal(to: scrollView.trailingAnchor)
-            $0.height.equal(to: scrollView.heightAnchor)
-            $0.width.equal(to: scrollView.widthAnchor)
+        mainContainerView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.height.width.equalToSuperview()
         }
     }
 
@@ -662,9 +647,9 @@ extension SPCommentCreationViewController {
 
         topContainerStack.addArrangedSubview(usernameView)
         usernameView.delegate = self
-        usernameView.layout {
-            $0.height.equal(to: 78)
-            $0.width.equal(to: topContainerStack.widthAnchor)
+        usernameView.OWSnp.makeConstraints { make in
+            make.height.equalTo(78)
+            make.width.equalToSuperview()
         }
         // put existing nickname if exist
         if (SPUserSessionHolder.session.displayNameFrozen) {
@@ -674,12 +659,13 @@ extension SPCommentCreationViewController {
     }
     
     private func configureContentScrollView() {
-        commentContentScrollView.layout {
-            $0.top.equal(to: topContainerView.bottomAnchor)
-            $0.leading.equal(to: mainContainerView.leadingAnchor, offsetBy: Theme.inputViewLeadingInset)
-            $0.trailing.equal(to: mainContainerView.trailingAnchor, offsetBy: -Theme.inputViewTrailingInset)
-            commentContentScrollViewBottomConstraint = $0.bottom.equal(to: commentLabelsContainer.topAnchor, offsetBy: -15)
-            $0.height.greaterThanOrEqual(to: 40.0)
+        commentContentScrollView.OWSnp.makeConstraints { make in
+            make.top.equalTo(topContainerView.OWSnp.bottom)
+            make.leading.equalToSuperview().offset(Theme.inputViewHorizontalOffset)
+            make.trailing.equalToSuperview().offset(-Theme.inputViewHorizontalOffset)
+            commentContentScrollViewBottomConstraint = make.bottom.equalTo(commentLabelsContainer.OWSnp.top).offset(-15).constraint
+            make.height.greaterThanOrEqualTo(40.0)
+
         }
         
         commentContentScrollView.addSubviews(textInputViewContainer, imagePreviewView)
@@ -689,40 +675,33 @@ extension SPCommentCreationViewController {
     
     private func configureInputContainerView() {
         textInputViewContainer.delegate = self
-        textInputViewContainer.layout {
-            $0.top.equal(to: commentContentScrollView.topAnchor, offsetBy: Theme.mainOffset)
-            $0.bottom.equal(to: imagePreviewView.topAnchor, offsetBy: -Theme.mainOffset)
-            $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
-            $0.trailing.equal(to: commentContentScrollView.layoutMarginsGuide.trailingAnchor)
+        textInputViewContainer.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Theme.mainOffset)
+            make.bottom.equalTo(imagePreviewView.OWSnp.top).offset(-Theme.mainOffset)
+            make.leading.trailing.equalTo(commentContentScrollView.layoutMarginsGuide)
         }
     }
     
     private func configureImagePreviewView() {
         imagePreviewView.delegate = self
-        imagePreviewView.layout {
-            $0.bottom.equal(to: commentContentScrollView.bottomAnchor, offsetBy: -Theme.mainOffset)
-            $0.leading.equal(to: commentContentScrollView.layoutMarginsGuide.leadingAnchor)
-            $0.trailing.equal(to: commentContentScrollView.layoutMarginsGuide.trailingAnchor)
+        imagePreviewView.OWSnp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-Theme.mainOffset)
+            make.leading.trailing.equalTo(commentContentScrollView.layoutMarginsGuide)
         }
     }
     
     private func configureTopContainer() {
         topContainerView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        topContainerView.layout {
-            $0.top.equal(to: mainContainerView.topAnchor)
-            $0.leading.equal(to: mainContainerView.leadingAnchor)
-            $0.trailing.equal(to: mainContainerView.trailingAnchor)
-            $0.height.greaterThanOrEqual(to: 40.0)
+        topContainerView.OWSnp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.greaterThanOrEqualTo(40.0)
         }
     }
 
     private func configureTopContainerStack() {
         topContainerStack.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        topContainerStack.layout {
-            $0.top.equal(to: topContainerView.topAnchor)
-            $0.leading.equal(to: topContainerView.leadingAnchor)
-            $0.bottom.equal(to: topContainerView.bottomAnchor)
-            $0.trailing.equal(to: topContainerView.trailingAnchor)
+        topContainerStack.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         topContainerStack.alignment = .leading
         topContainerStack.distribution = .equalSpacing
@@ -747,21 +726,21 @@ extension SPCommentCreationViewController {
     
     private func configureFooterView() {
         footerView.delegate = self
-        footerView.layout {
-            mainContainerBottomConstraint = $0.bottom.equal(to: scrollView.bottomAnchor)
-            $0.trailing.equal(to: mainContainerView.trailingAnchor)
-            $0.leading.equal(to: mainContainerView.leadingAnchor)
-            $0.height.equal(to: Theme.footerViewHeight)
+        footerView.OWSnp.makeConstraints { make in
+            mainContainerBottomConstraint = make.bottom.equalTo(scrollView).constraint
+            make.trailing.leading.equalToSuperview()
+            make.height.equalTo(Theme.footerViewHeight)
         }
     }
     
     private func configureCommentLabelsContainer() {
         commentLabelsContainer.delegate = self
-        commentLabelsContainer.layout {
-            commentLabelsContainerBottomConstraint = $0.bottom.equal(to: footerView.topAnchor, offsetBy: -15.0)
-            $0.leading.equal(to: topContainerView.leadingAnchor, offsetBy: 15.0)
-            $0.trailing.equal(to: topContainerView.trailingAnchor, offsetBy: -15.0)
-            commentLabelsContainerHeightConstraint = $0.height.equal(to: 56.0)
+        commentLabelsContainer.OWSnp.makeConstraints { make in
+            commentLabelsContainerBottomConstraint = make.bottom.equalTo(footerView.OWSnp.top).offset(-15.0).constraint
+            make.leading.equalTo(topContainerView).offset(15.0)
+            make.trailing.equalTo(topContainerView).offset(-15.0)
+            make.height.equalTo(56.0)
+
         }
     }
     
@@ -834,21 +813,20 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
     
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
         
-        OWLogger.verbose("Current constraints is \(mainContainerBottomConstraint!.constant)")
         // set bottom margin according to orientations
         if !UIDevice.current.isPortrait() {
             // landscape - keep content behind keyboard and scroll to selected textView
-            mainContainerBottomConstraint?.constant = 0
+            mainContainerBottomConstraint?.update(offset: 0)
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: constant, right: 0)
-            OWLogger.verbose("Updating constraints to \(0)")
+            OWLogger.verbose("Updating \"mainContainerBottomConstraint\" constraints to \(0)")
             setScrollView(
                 toView: usernameView.isSelected ? usernameView : textInputViewContainer,
                 toTop: constant == 0)
         } else {
             // portrait - push content on top of keyboard
-            mainContainerBottomConstraint?.constant = -constant
+            mainContainerBottomConstraint?.update(offset: -constant)
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            OWLogger.verbose("Updating constraints to \(-constant)")
+            OWLogger.verbose("Updating \"mainContainerBottomConstraint\" constraints to \(-constant)")
             scrollToTop()
         }
 
@@ -947,7 +925,6 @@ extension SPCommentCreationViewController: OWImagePickerDelegate {
 private enum Theme {
     static let mainOffset: CGFloat = 16.0
     static let inputViewEdgeInset: CGFloat = 25.0
-    static let inputViewLeadingInset: CGFloat = 10.0
-    static let inputViewTrailingInset: CGFloat = 10.0
+    static let inputViewHorizontalOffset: CGFloat = 10.0
     static let footerViewHeight: CGFloat = 54.0
 }

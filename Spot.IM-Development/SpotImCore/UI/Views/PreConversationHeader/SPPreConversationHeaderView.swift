@@ -77,22 +77,22 @@ internal final class SPPreConversationHeaderView: OWBaseView {
 
     private func setupUI() {
         self.addSubview(titleLabel)
-        titleLabel.layout {
-            $0.centerY.equal(to: centerYAnchor)
-            $0.leading.equal(to: leadingAnchor, offsetBy: Metrics.margins.left)
+        titleLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(Metrics.margins.left)
         }
         
         self.addSubview(counterLabel)
-        counterLabel.layout {
-            $0.firstBaseline.equal(to: titleLabel.firstBaselineAnchor)
-            $0.leading.equal(to: titleLabel.trailingAnchor, offsetBy: Metrics.counterLeading)
-            $0.trailing.lessThanOrEqual(to: trailingAnchor)
+        counterLabel.OWSnp.makeConstraints { make in
+            make.firstBaseline.equalTo(titleLabel)
+            make.leading.equalTo(titleLabel.OWSnp.trailing).offset(Metrics.counterLeading)
+            make.trailing.lessThanOrEqualToSuperview()
         }
         
         self.addSubview(onlineViewingUsersView)
-        onlineViewingUsersView.layout {
-            $0.centerY.equal(to: titleLabel.centerYAnchor)
-            $0.trailing.equal(to: trailingAnchor, offsetBy: -Metrics.margins.right)
+        onlineViewingUsersView.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(titleLabel)
+            make.trailing.equalToSuperview().offset(-Metrics.margins.right)
         }
     }
 }

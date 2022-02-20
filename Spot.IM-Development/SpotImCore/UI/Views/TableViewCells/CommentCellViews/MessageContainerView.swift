@@ -120,7 +120,9 @@ final class MessageContainerView: OWBaseView {
         mainTextLabel.backgroundColor = .spBackground0
         mainTextLabel.numberOfLines = 0
         mainTextLabel.font = .preferred(style: .regular, of: Theme.fontSize)
-        mainTextLabel.pinEdges(to: self)
+        mainTextLabel.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     private func setupGestureRecognizer() {
