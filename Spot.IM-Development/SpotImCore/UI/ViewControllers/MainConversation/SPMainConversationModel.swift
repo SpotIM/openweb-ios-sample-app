@@ -119,8 +119,8 @@ final class SPMainConversationModel {
         realTimeService.stopRealTimeDataFetching()
     }
     
-    func setReltimeViewType(type: RealTimeViewType) {
-        realtimeViewType = type
+    func setReltime(viewType: RealTimeViewType) {
+        realtimeViewType = viewType
         delegates.invoke {$0.realtimeViewTypeDidUpdate()}
     }
     
@@ -368,7 +368,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
-            let newComments: [SPComment] = try data.newCommentsForConversation(fullConversationId)
+            let newComments: [SPComment] = try data.newComments(forConversation: fullConversationId)
             newComments.forEach{ comment in
                 // make sure comment is not reply and not already in conversation
                 if (comment.parentId == nil || comment.parentId == "") && !dataSource.isCommentInConversation(commentId: comment.id ?? ""){
@@ -376,8 +376,10 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
                 }
             }
             let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
+            let newCommentsExist = realTimeNewMessages.keys.count > 0
+            let shouldShowBlitz = (realtimeViewType != nil) && newCommentsExist && isBlitsEnabled
             // make sure first time is always "typing"
-            realtimeViewType = (realtimeViewType != nil) ? ((isBlitsEnabled && realTimeNewMessages.keys.count > 0) ? .blitz : .typing) : .typing
+            realtimeViewType = shouldShowBlitz ? .blitz : .typing
             self.dataSource.messageCount = totalCommentsCount
             if shouldUserBeNotified {
                 delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: realTimeNewMessages.keys.count) }
@@ -408,8 +410,8 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         return shouldUserBeNotified ? totalTypingCount : 0
     }
     
-    /// Returns current visible new messages count
-    func newMessagesCount() throws -> Int {
+    // Returns current visible new messages count
+    func newMessagesCount() -> Int {
         return self.realTimeNewMessages.keys.count
     }
     
