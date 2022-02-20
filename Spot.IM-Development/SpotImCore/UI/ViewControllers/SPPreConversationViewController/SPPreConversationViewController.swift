@@ -524,8 +524,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     @objc
     override func indicationViewClicked() {
         guard model.realtimeViewType == .blitz else { return }
-        self.moveToFullConversation(selectedCommentId: nil)
         super.indicationViewClicked()
+        self.moveToFullConversation(selectedCommentId: nil)
     }
     
     @objc
