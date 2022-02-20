@@ -84,7 +84,7 @@ struct RealTimeDataModel: Decodable {
     }
     
     /// Will return new comments in conversation if it exists and throw conversationNotFound exception if not
-    func newCommentsForConversation(_ id: String) throws -> [SPComment] {
+    func newComments(forConversation id: String) throws -> [SPComment] {
         guard let newComments = conversationNewMessages?[id] else {
             throw RealTimeError.conversationNotFound
         }

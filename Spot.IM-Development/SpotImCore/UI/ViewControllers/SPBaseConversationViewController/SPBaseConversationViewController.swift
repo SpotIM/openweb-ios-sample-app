@@ -436,7 +436,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
         model.sortOption = .newest
         model.clearNewMessages()
         self.reloadConversation()
-        model.setReltimeViewType(type: .typing)
+        model.setReltime(viewType: .typing)
     }
     
     
