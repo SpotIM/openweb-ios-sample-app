@@ -130,6 +130,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             selector: #selector(self.userLoginSuccessNotification(notification:)),
             name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION),
             object: nil)
+        
+        startRealtimeService()
     }
 
     override func viewDidLayoutSubviews() {
@@ -584,6 +586,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             model.dataSource.shouldShowBanner = false
             tableView.deleteSections(IndexSet(integer: model.dataSource.isLoading ? 1 : 0), with: .none)
             tableView.endUpdates()
+        }
+    }
+    
+    private func startRealtimeService() {
+        let delay = (SPConfigsDataSource.appConfig?.realtime?.startTimeoutMilliseconds ?? 5000) / 1000
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+            self.model.startTypingTracking()
         }
     }
 
