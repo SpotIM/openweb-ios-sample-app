@@ -63,6 +63,8 @@ fileprivate extension OWUserSubscriberBadgeView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.image
+            .asDriver(onErrorJustReturn: UIImage())
+            .asObservable()
             .map { $0.withRenderingMode(.alwaysTemplate) }
             .bind(to: self.imgViewIcon.rx.image)
             .disposed(by: disposeBag)
