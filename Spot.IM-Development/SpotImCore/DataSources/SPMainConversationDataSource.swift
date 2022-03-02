@@ -516,8 +516,10 @@ internal final class SPMainConversationDataSource {
         var user: SPUser?
         if let userId = comment.userId {
             user = users[userId]
+            if user == nil, let commentUsers = comment.users {
+                user = commentUsers[userId]
+            }
         }
-
         return CommentViewModel(
             with: comment,
             replyingToCommentId: replyingToCommentId,

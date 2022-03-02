@@ -32,7 +32,7 @@ internal struct SPComment: Decodable, Equatable {
 
     var rank: Rank?
     var content: [Content]?
-    var users: [String: CommentUser]?
+    var users: [String: SPUser]?
     var replies: [SPComment]?
     var additionalData: AdditionalData?
 
@@ -95,7 +95,7 @@ internal struct SPComment: Decodable, Equatable {
                 }
             }
         }
-        users = try? container.decode([String: CommentUser].self, forKey: .users)
+        users = try? container.decode([String: SPUser].self, forKey: .users)
         replies = try? container.decode([SPComment].self, forKey: .replies)
         additionalData = try? container.decode(AdditionalData.self, forKey: .additionalData)
     }
