@@ -946,7 +946,15 @@ extension SPMainConversationDataSource {
     }
     
     func addNewComments(comments: [SPComment]) {
-        let processedComments = self.processed(comments)
+        var sortedComments = comments
+        sortedComments.sort {
+            if let date1 = $0.writtenAt, let date2 = $1.writtenAt {
+                return Date(timeIntervalSince1970: date1).timeAgo() > Date(timeIntervalSince1970: date2).timeAgo()
+            } else {
+                return true
+            }
+        }
+        let processedComments = self.processed(sortedComments)
         self.cellData.insert(contentsOf: processedComments, at: self.shouldShowBanner ? 1 : 0)
     }
 }
