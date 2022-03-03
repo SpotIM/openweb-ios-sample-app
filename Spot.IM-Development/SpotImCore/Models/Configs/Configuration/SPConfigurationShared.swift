@@ -12,4 +12,5 @@ struct SPConfigurationShared: Decodable {
     
     let enableCommentLabels: Bool?
     let commentLabels: Dictionary<String, SPCommentLabelsSectionConfiguration>?
+    let votesType: OWVotesType
 }
