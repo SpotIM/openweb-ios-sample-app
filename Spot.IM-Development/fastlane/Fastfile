@@ -84,6 +84,7 @@ platform :ios do
   lane :release_demo_app do |options|
     increment_build_number()
     increment_version_number(version_number: options[:version]) # Set a specific version number
+    increment_version_number_in_xcodeproj(version_number: options[:version])
     match(
         type: "appstore",
         readonly: true,
