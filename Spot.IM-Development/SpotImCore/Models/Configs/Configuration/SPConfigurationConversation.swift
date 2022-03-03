@@ -18,6 +18,8 @@ struct SPConfigurationConversation: Decodable {
     let disableImageUploadButton: Bool?
     let translationTextOverrides: [String : [String : String]]? // [language: [key : text]]
     let subscriberBadgeConfig: OWSubscriberBadgeConfiguration?
+    let disableVoteDown: Bool?
+    let disableVoteUp: Bool?
     
     enum CodingKeys: String, CodingKey {
         case subscriberBadgeConfig = "subscriberBadgeV2"
@@ -27,7 +29,8 @@ struct SPConfigurationConversation: Decodable {
              communityGuidelinesEnabled,
              communityGuidelinesTitle,
              disableImageUploadButton,
-             translationTextOverrides
-        
+             translationTextOverrides,
+             disableVoteDown,
+             disableVoteUp
     }
 }
