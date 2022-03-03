@@ -178,8 +178,7 @@ class SPCommentCreationModel {
     
     func updateCommentText(_ text: String) {
         commentText = text
-        let commentIdentifier: String = getCommentIdentifierForCommentType()
-        cacheService.update(comment: text, with: commentIdentifier)
+        saveCommentTextInCache()
     }
     
     func isCommentAReply() -> Bool {
@@ -188,6 +187,12 @@ class SPCommentCreationModel {
     
     func isInEditMode() -> Bool {
         return dataModel.editModel != nil
+    }
+    
+    private func saveCommentTextInCache() {
+        guard !isInEditMode() else { return } // do not save edited message in cache
+        let commentIdentifier: String = getCommentIdentifierForCommentType()
+        cacheService.update(comment: commentText, with: commentIdentifier)
     }
     
     private func getCommentIdentifierForCommentType() -> String {
