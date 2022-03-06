@@ -29,7 +29,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let avatarImageView: SPAvatarView = SPAvatarView()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
-    private let replyActionsView: CommentActionsView = .init()
+    private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: OWBaseView = .init()
     private let separatorView: OWBaseView = .init()
