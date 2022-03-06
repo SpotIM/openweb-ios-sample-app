@@ -18,7 +18,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private let avatarView: SPAvatarView = .init()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
-    private let replyActionsView: CommentActionsView = .init()
+    private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let commentMediaView: CommentMediaView = .init()
     

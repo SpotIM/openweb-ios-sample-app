@@ -1,5 +1,5 @@
 //
-//  CommentActionsView.swift
+//  OWCommentActionsView.swift
 //  Spot.IM-Core
 //
 //  Created by Andriy Fedin on 27/09/19.
@@ -9,7 +9,7 @@
 import UIKit
 
 /// aka Engagement view
-final class CommentActionsView: OWBaseView {
+final class OWCommentActionsView: OWBaseView {
 
     weak var delegate: CommentActionsDelegate?
 
@@ -282,7 +282,7 @@ final class CommentActionsView: OWBaseView {
 
 // MARK: Accessibility
 
-extension CommentActionsView {
+extension OWCommentActionsView {
   func applyAccessibility() {
     rankUpButton.accessibilityTraits = .button
     rankUpButton.accessibilityLabel = LocalizationManager.localizedString(key: "Up vote button")
