@@ -1081,6 +1081,27 @@
 			path = CommentLabelsContainerView;
 			sourceTree = "<group>";
 		};
+		169D58E427D4E425009936F3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				445417E523685144001D0ED0 /* CommentActionsView.swift */,
+				445417E623685144001D0ED0 /* MessageContainerView.swift */,
+				445417E723685144001D0ED0 /* UserNameView.swift */,
+				24B88434261C922900EB7BCB /* CommentLabelView.swift */,
+				445417E823685144001D0ED0 /* ShowMoreRepliesView.swift */,
+				241B075B2643D99200253944 /* GifWebView.swift */,
+				24000A34268AEADD004C2A78 /* CommentMediaView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		169D58E527D4E43E009936F3 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		16A12A6B2608DCB100A7B3F6 /* CommunityGuidelinesView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1435,13 +1456,8 @@
 		445417E423685144001D0ED0 /* CommentCellViews */ = {
 			isa = PBXGroup;
 			children = (
-				445417E523685144001D0ED0 /* CommentActionsView.swift */,
-				445417E623685144001D0ED0 /* MessageContainerView.swift */,
-				445417E723685144001D0ED0 /* UserNameView.swift */,
-				24B88434261C922900EB7BCB /* CommentLabelView.swift */,
-				445417E823685144001D0ED0 /* ShowMoreRepliesView.swift */,
-				241B075B2643D99200253944 /* GifWebView.swift */,
-				24000A34268AEADD004C2A78 /* CommentMediaView.swift */,
+				169D58E527D4E43E009936F3 /* ViewModels */,
+				169D58E427D4E425009936F3 /* Views */,
 			);
 			path = CommentCellViews;
 			sourceTree = "<group>";
