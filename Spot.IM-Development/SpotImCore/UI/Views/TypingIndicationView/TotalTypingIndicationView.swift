@@ -35,7 +35,7 @@ final class TotalTypingIndicationView: OWBaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        addCornerRadius(18.0)
+        addCornerRadius(Metrics.viewCornerRadius)
         clipsToBounds = false
         setup()
     }
@@ -46,11 +46,11 @@ final class TotalTypingIndicationView: OWBaseView {
         } else {
             typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: "Typing")
         }
-        typingLabel.font = UIFont.preferred(style: isBlitz ? .bold : .regular, of: 15.0)
+        typingLabel.font = UIFont.preferred(style: isBlitz ? .bold : .regular, of: Metrics.labelTextSize)
         newCommentsArrowImageView.isHidden = !isBlitz
         animationImageView.isHidden = isBlitz
-        animationImageWidthConstraint?.update(offset: isBlitz ? 0 : 23)
-        arrowImageWidthConstraint?.update(offset: isBlitz ? 8.8 : 0)
+        animationImageWidthConstraint?.update(offset: isBlitz ? 0 : Metrics.animationImageWidth)
+        arrowImageWidthConstraint?.update(offset: isBlitz ? Metrics.arrowImageWidth : 0)
         
         UIView.animate(
             withDuration: 0.3,
@@ -83,10 +83,10 @@ final class TotalTypingIndicationView: OWBaseView {
         typingLabel.text = LocalizationManager.localizedString(key: "Typing")
         typingLabel.textAlignment = .center
         typingLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-        typingLabel.font = UIFont.preferred(style: .regular, of: 15.0)
+        typingLabel.font = UIFont.preferred(style: .regular, of: Metrics.labelTextSize)
         typingLabel.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(animationImageView.OWSnp.trailing).offset(10.0)
+            make.leading.equalTo(animationImageView.OWSnp.trailing).offset(Metrics.typingLabelLeadingOffset)
         }
     }
     
@@ -99,9 +99,9 @@ final class TotalTypingIndicationView: OWBaseView {
 
         animationImageView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(29.0)
-            make.height.equalTo(5.0)
-            animationImageWidthConstraint = make.width.equalTo(23.0).constraint
+            make.leading.equalToSuperview().offset(Metrics.animationImageLeadingOffset)
+            make.height.equalTo(Metrics.animationImageHeight)
+            animationImageWidthConstraint = make.width.equalTo(Metrics.animationImageWidth).constraint
         }
     }
     
@@ -109,10 +109,10 @@ final class TotalTypingIndicationView: OWBaseView {
         newCommentsArrowImageView.contentMode = .scaleAspectFill
         newCommentsArrowImageView.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(typingLabel.OWSnp.trailing).offset(5)
-            make.height.equalTo(12.8)
-            arrowImageWidthConstraint = make.width.equalTo(8.8).constraint
-            make.trailing.equalToSuperview().offset(-29)
+            make.leading.equalTo(typingLabel.OWSnp.trailing).offset(Metrics.arrowImageLeadingOffset)
+            make.height.equalTo(Metrics.arrowImageHeight)
+            arrowImageWidthConstraint = make.width.equalTo(Metrics.arrowImageWidth).constraint
+            make.trailing.equalToSuperview().offset(-Metrics.arrowImageTrailingOffset)
         }
         newCommentsArrowImageView.isHidden = true
     }
@@ -140,13 +140,31 @@ final class TotalTypingIndicationView: OWBaseView {
     }
     
     private func dropShadowIfNeeded() {
-        let shadowRect = CGRect(x: 2.0, y: 7.0, width: bounds.width, height: bounds.height-7)
+        let shadowRect = CGRect(x: Metrics.shadowRectX, y: Metrics.shadowRectY, width: bounds.width, height: bounds.height-7)
         let shadowPath = UIBezierPath(rect: shadowRect)
         layer.masksToBounds = false
         layer.shadowColor = SPUserInterfaceStyle.isDarkMode ? UIColor.white.cgColor : UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-        layer.shadowOpacity = 0.10
-        layer.shadowRadius = 17.5
+        layer.shadowOpacity = Metrics.shadowOpacity
+        layer.shadowRadius = Metrics.shadowRadius
         layer.shadowPath = shadowPath.cgPath
     }
+}
+
+fileprivate struct Metrics {
+    static let viewCornerRadius: CGFloat = 18
+    static let labelTextSize: CGFloat = 15
+    static let shadowRectX: CGFloat = 2
+    static let shadowRectY: CGFloat = 7
+    static let shadowOpacity: Float = 0.10
+    static let shadowRadius: CGFloat = 17.5
+
+    static let typingLabelLeadingOffset: CGFloat = 10
+    static let animationImageWidth: CGFloat = 23
+    static let animationImageHeight: CGFloat = 5
+    static let animationImageLeadingOffset: CGFloat = 29
+    static let arrowImageWidth: CGFloat = 8.8
+    static let arrowImageHeight: CGFloat = 12.8
+    static let arrowImageLeadingOffset: CGFloat = 5
+    static let arrowImageTrailingOffset: CGFloat = 29
 }
