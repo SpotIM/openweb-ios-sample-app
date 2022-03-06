@@ -4,7 +4,7 @@ inhibit_all_warnings!
 
 
 abstract_target 'Shared' do
-  use_frameworks!
+  use_frameworks! :linkage => :static
 
   pod 'Alamofire', '~> 5.4'
   pod 'PromiseKit', '~> 6.8'
@@ -15,7 +15,6 @@ abstract_target 'Shared' do
   target 'Spot-IM.DevelopmentTests'
   
   abstract_target 'DemoApps' do
-    pod 'SnapKit'
     pod 'SnapKit'
     pod 'Cards'
     pod 'Kingfisher'
