@@ -149,6 +149,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
+        replyActionsView.configure(with: dataModel.commentActionsVM)
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setBrandColor(.brandColor)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
