@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -2074,7 +2074,6 @@
 				5D697A3822B65106001AD556 /* Frameworks */,
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
-				6B52B25123474FB34B11CDB0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2094,7 +2093,6 @@
 				5D697A4B22B65108001AD556 /* Sources */,
 				5D697A4C22B65108001AD556 /* Frameworks */,
 				5D697A4D22B65108001AD556 /* Resources */,
-				5BC5FF298750EEA843B83C45 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2116,7 +2114,6 @@
 				6D4E570023A7A5F7005B79B6 /* Resources */,
 				6D4E570823A7A5F7005B79B6 /* Embed Frameworks */,
 				6D4E570A23A7A5F7005B79B6 /* Run Script */,
-				F50F31D549A31D97D5D77A70 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2138,7 +2135,6 @@
 				6D4E572D23A7B785005B79B6 /* Resources */,
 				6D4E573523A7B785005B79B6 /* Embed Frameworks */,
 				6D4E573723A7B785005B79B6 /* Run Script */,
-				210194EF23F3A21F141413DA /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2220,7 +2216,6 @@
 				6DA75C7E238D313600FBDF19 /* Resources */,
 				6DA75C86238D313600FBDF19 /* Embed Frameworks */,
 				6DA75C88238D313600FBDF19 /* Run Script */,
-				52D8AD6D13C3FF25EFD98290 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2242,7 +2237,6 @@
 				6DAFEEB4239CFCCF00441E97 /* Resources */,
 				6DAFEEBC239CFCCF00441E97 /* Embed Frameworks */,
 				6DAFEEBE239CFCCF00441E97 /* Run Script */,
-				ED7A7B73A08CAF1F1DE26882 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2462,74 +2456,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		210194EF23F3A21F141413DA /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		52D8AD6D13C3FF25EFD98290 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5BC5FF298750EEA843B83C45 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6B52B25123474FB34B11CDB0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		6D4E56E923A7A5F7005B79B6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2825,40 +2751,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ED7A7B73A08CAF1F1DE26882 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F50F31D549A31D97D5D77A70 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
