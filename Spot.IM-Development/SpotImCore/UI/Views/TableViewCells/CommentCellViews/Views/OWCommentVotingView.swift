@@ -32,6 +32,8 @@ final class OWCommentVotingView: OWBaseView {
         }
     }
     
+    private let stackView: OWBaseStackView = .init()
+    
     private let rankUpLabel: OWBaseLabel = .init()
     private let rankDownLabel: OWBaseLabel = .init()
 
@@ -40,14 +42,14 @@ final class OWCommentVotingView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        applyAccessibility()
+        setupUI()
     }
     
     func configure(with viewModel: OWCommentVotingViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
-
-        applyAccessibility()
-        setupUI()
     }
     
     // Handle dark mode \ light mode change
@@ -95,10 +97,19 @@ final class OWCommentVotingView: OWBaseView {
     }
     
     private func setupUI() {
-        self.addSubviews(rankUpLabel, rankUpButton, rankDownLabel, rankDownButton)
+        self.addSubviews(stackView)
         
+        configureStackView()
         configureRankUpButton()
         configureRankDownButton()
+    }
+    
+    private func configureStackView() {
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.OWSnp.makeConstraints { make in
+            make.top.bottom.leading.equalToSuperview()
+        }
     }
     
     private func initializeRankUpButton() -> SPAnimatedButton {
@@ -136,43 +147,35 @@ final class OWCommentVotingView: OWBaseView {
     }
     
     private func configureRankUpButton() {
+        
+        stackView.addArrangedSubview(rankUpButton)
+        
         rankUpButton.addTarget(self, action: #selector(rankUp), for: .touchUpInside)
         rankUpButton.setContentHuggingPriority(.required, for: .horizontal)
-        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
-        rankUpButton.OWSnp.makeConstraints { make in
-            make.centerY.leading.equalToSuperview()
-            make.height.equalTo(Metrics.height)
-            make.width.equalTo(width)
-            make.trailing.equalTo(rankUpLabel.OWSnp.leading)
-        }
 
+        stackView.addArrangedSubview(rankUpLabel)
+        
         rankUpLabel.textAlignment = .center
         rankUpLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
         rankUpLabel.setContentHuggingPriority(.required, for: .horizontal)
-        rankUpLabel.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.trailing.equalTo(rankDownButton.OWSnp.leading).offset(-11.0)
-        }
     }
 
     private func configureRankDownButton() {
+        let view = UIView()
+        view.backgroundColor = .lightPink
+        stackView.addArrangedSubview(view)
+        view.OWSnp.makeConstraints { make in
+            make.width.equalTo(10)
+        }
+        stackView.addArrangedSubview(rankDownButton)
         rankDownButton.addTarget(self, action: #selector(rankDown), for: .touchUpInside)
         rankDownButton.setContentHuggingPriority(.required, for: .horizontal)
-        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
-        rankDownButton.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview().offset(-4.0)
-            make.height.equalTo(Metrics.height)
-            make.width.equalTo(width)
-            make.trailing.equalTo(rankDownLabel.OWSnp.leading)
-        }
         
-
+        stackView.addArrangedSubview(rankDownLabel)
+        
         rankDownLabel.textAlignment = .center
         rankDownLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
         rankDownLabel.setContentHuggingPriority(.required, for: .horizontal)
-        rankDownLabel.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-        }
     }
     
     @objc
