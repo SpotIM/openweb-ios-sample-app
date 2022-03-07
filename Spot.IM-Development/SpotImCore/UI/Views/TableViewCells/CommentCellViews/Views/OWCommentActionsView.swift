@@ -23,11 +23,11 @@ final class OWCommentActionsView: OWBaseView {
     }
 
     private let replyDefaultTitle: String
+    
+    private let stackView: OWBaseStackView = .init()
+    
     private let replyButton: OWBaseButton = .init()
     private let votingView: OWCommentVotingView = .init()
-    
-    private var replyActionViewWidthConstraint: OWConstraint?
-    private var replyButtonTrailingConstraint: OWConstraint?
     
     private var isReadOnlyMode: Bool = false
 
@@ -118,37 +118,43 @@ final class OWCommentActionsView: OWBaseView {
     // MARK: - Private
     
     private func setShowReplyButton(_ showButton: Bool) {
-        showButton ? replyActionViewWidthConstraint?.deactivate() : replyActionViewWidthConstraint?.activate()
-        replyButtonTrailingConstraint?.update(offset: showButton ? -Theme.baseOffset : 0.0)
+        if showButton {
+            stackView.insertArrangedSubview(replyButton, at: 0)
+        } else {
+            stackView.removeArrangedSubview(replyButton)
+        }
     }
 
     // MARK: - Private configurations
 
     private func setupUI() {
-        addSubviews(replyButton, votingView)
+        self.addSubview(stackView)
+        configureStackView()
+        
         configureReplyButton()
         configureVotingView()
+        
         updateColorsAccordingToStyle()
+    }
+    
+    private func configureStackView() {
+        stackView.axis = .horizontal
+        stackView.spacing = Theme.baseOffset
+        stackView.alignment = .center
+        stackView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     private func configureReplyButton() {
+        stackView.addArrangedSubview(replyButton)
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
         replyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.fontSize)
         replyButton.setTitle(replyDefaultTitle, for: .normal)
-        
-        replyButton.OWSnp.makeConstraints { make in
-            make.top.bottom.leading.equalToSuperview()
-            replyButtonTrailingConstraint = make.trailing.equalTo(votingView.OWSnp.leading).offset(-Theme.baseOffset).constraint
-            replyActionViewWidthConstraint = make.width.equalTo(0.0).constraint
-            replyActionViewWidthConstraint?.deactivate()
-        }
     }
     
     private func configureVotingView() {
-        votingView.OWSnp.makeConstraints { make in
-            make.centerY.equalTo(replyButton)
-            make.top.bottom.trailing.equalToSuperview()
-        }
+        stackView.addArrangedSubview(votingView)
     }
 
     // MARK: - Actions
@@ -173,6 +179,5 @@ protocol CommentActionsDelegate: AnyObject {
 
 private enum Theme {
     static let fontSize: CGFloat = 16.0
-    static let engagementStackHeight: CGFloat = 33
     static let baseOffset: CGFloat = 14
 }
