@@ -101,6 +101,7 @@
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
+		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DF95BD327CE546A0008A380 /* OWPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF95BD227CE546A0008A380 /* OWPresentable.swift */; };
 		3DF95BD527CE54C30008A380 /* OWDeepLinkOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF95BD427CE54C30008A380 /* OWDeepLinkOptions.swift */; };
 		3DF95BD727CE55C40008A380 /* OWBaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF95BD627CE55C40008A380 /* OWBaseCoordinator.swift */; };
@@ -718,6 +719,7 @@
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
+		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DF95BD227CE546A0008A380 /* OWPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPresentable.swift; sourceTree = "<group>"; };
 		3DF95BD427CE54C30008A380 /* OWDeepLinkOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWDeepLinkOptions.swift; sourceTree = "<group>"; };
 		3DF95BD627CE55C40008A380 /* OWBaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBaseCoordinator.swift; sourceTree = "<group>"; };
@@ -1196,6 +1198,7 @@
 			children = (
 				3DF95BD227CE546A0008A380 /* OWPresentable.swift */,
 				3DF95BD927CE5DDD0008A380 /* OWShowable.swift */,
+				3DE0FE3827D618840097B17B /* OWRouter.swift */,
 				3DF95BD427CE54C30008A380 /* OWDeepLinkOptions.swift */,
 				3DF95BD627CE55C40008A380 /* OWBaseCoordinator.swift */,
 			);
@@ -2884,6 +2887,7 @@
 				3D20A39527B022B8003F8513 /* OWConstraintViewDSL.swift in Sources */,
 				24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */,
 				3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */,
+				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
 				445418A623685154001D0ED0 /* SPShareLink.swift in Sources */,
 				24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */,
 				4454181423685144001D0ED0 /* SPMainConversationFooterView.swift in Sources */,
