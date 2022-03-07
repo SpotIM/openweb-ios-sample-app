@@ -14,7 +14,7 @@ protocol OWPresentable {
 }
 
 extension UIViewController: OWPresentable {
-    public func toPresentable() -> UIViewController {
+    func toPresentable() -> UIViewController {
         return self
     }
 }
