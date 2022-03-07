@@ -34,11 +34,64 @@ final class OWCommentVotingView: OWBaseView {
     
     private let stackView: OWBaseStackView = .init()
     
-    private let rankUpLabel: OWBaseLabel = .init()
-    private let rankDownLabel: OWBaseLabel = .init()
+    fileprivate lazy var rankUpButton: SPAnimatedButton = {
+        let rankUpNormalImage = UIImage(spNamed: "rank_up_normal", supportDarkMode: false)
+        let rankUpSelectedImage = UIImage(spNamed: "rank_up_selected", supportDarkMode: false)
+        let insets = UIEdgeInsets(
+            top: Metrics.rankButtonVerticalInset - Metrics.rankUpButtonOffset,
+            left: Metrics.rankButtonHorizontalInset,
+            bottom: Metrics.rankButtonVerticalInset + Metrics.rankUpButtonOffset,
+            right: Metrics.rankButtonHorizontalInset
+        )
+        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
+        let frame = CGRect(x: 0, y: 0, width: width, height: Metrics.height)
 
-    private lazy var rankUpButton: SPAnimatedButton = initializeRankUpButton()
-    private lazy var rankDownButton: SPAnimatedButton = initializeRankDownButton()
+        let button = SPAnimatedButton(frame: frame,
+                                image: rankUpNormalImage,
+                                selectedImage: rankUpSelectedImage,
+                                buttonInset: insets)
+        
+        button.addTarget(self, action: #selector(rankUp), for: .touchUpInside)
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        
+        return button
+    }()
+    
+    fileprivate lazy var rankDownButton: SPAnimatedButton = {
+        let rankDownIconNormal = UIImage(spNamed: "rank_down_normal", supportDarkMode: false)
+        let rankDownIconSelected = UIImage(spNamed: "rank_down_selected", supportDarkMode: false)
+        let insets = UIEdgeInsets(top: Metrics.rankButtonVerticalInset - Metrics.rankDownButtonOffset,
+                                  left: Metrics.rankButtonHorizontalInset,
+                                  bottom: Metrics.rankButtonVerticalInset + Metrics.rankDownButtonOffset,
+                                  right: Metrics.rankButtonHorizontalInset)
+        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
+        let frame = CGRect(x: 0, y: 0, width: width, height: Metrics.height)
+
+        let button = SPAnimatedButton(frame: frame,
+                                image: rankDownIconNormal,
+                                selectedImage: rankDownIconSelected,
+                                buttonInset: insets)
+        
+        button.addTarget(self, action: #selector(rankDown), for: .touchUpInside)
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        return button
+    }()
+    
+    fileprivate lazy var rankUpLabel: OWBaseLabel = {
+        let label = OWBaseLabel()
+        label.textAlignment = .center
+        label.font = .preferred(style: .regular, of: Metrics.fontSize)
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        return label
+    }()
+    
+    fileprivate lazy var rankDownLabel: OWBaseLabel = {
+        let label = OWBaseLabel()
+        label.textAlignment = .center
+        label.font = .preferred(style: .regular, of: Metrics.fontSize)
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        return label
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -112,52 +165,9 @@ final class OWCommentVotingView: OWBaseView {
         }
     }
     
-    private func initializeRankUpButton() -> SPAnimatedButton {
-        let rankUpNormalImage = UIImage(spNamed: "rank_up_normal", supportDarkMode: false)
-        let rankUpSelectedImage = UIImage(spNamed: "rank_up_selected", supportDarkMode: false)
-        let insets = UIEdgeInsets(
-            top: Metrics.rankButtonVerticalInset - Metrics.rankUpButtonOffset,
-            left: Metrics.rankButtonHorizontalInset,
-            bottom: Metrics.rankButtonVerticalInset + Metrics.rankUpButtonOffset,
-            right: Metrics.rankButtonHorizontalInset
-        )
-        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
-        let frame = CGRect(x: 0, y: 0, width: width, height: Metrics.height)
-
-        return SPAnimatedButton(frame: frame,
-                                image: rankUpNormalImage,
-                                selectedImage: rankUpSelectedImage,
-                                buttonInset: insets)
-    }
-
-    private func initializeRankDownButton() -> SPAnimatedButton {
-        let rankDownIconNormal = UIImage(spNamed: "rank_down_normal", supportDarkMode: false)
-        let rankDownIconSelected = UIImage(spNamed: "rank_down_selected", supportDarkMode: false)
-        let insets = UIEdgeInsets(top: Metrics.rankButtonVerticalInset - Metrics.rankDownButtonOffset,
-                                  left: Metrics.rankButtonHorizontalInset,
-                                  bottom: Metrics.rankButtonVerticalInset + Metrics.rankDownButtonOffset,
-                                  right: Metrics.rankButtonHorizontalInset)
-        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
-        let frame = CGRect(x: 0, y: 0, width: width, height: Metrics.height)
-
-        return SPAnimatedButton(frame: frame,
-                                image: rankDownIconNormal,
-                                selectedImage: rankDownIconSelected,
-                                buttonInset: insets)
-    }
-    
     private func configureRankUpButton() {
-        
         stackView.addArrangedSubview(rankUpButton)
-        
-        rankUpButton.addTarget(self, action: #selector(rankUp), for: .touchUpInside)
-        rankUpButton.setContentHuggingPriority(.required, for: .horizontal)
-
         stackView.addArrangedSubview(rankUpLabel)
-        
-        rankUpLabel.textAlignment = .center
-        rankUpLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
-        rankUpLabel.setContentHuggingPriority(.required, for: .horizontal)
     }
 
     private func configureRankDownButton() {
@@ -167,15 +177,9 @@ final class OWCommentVotingView: OWBaseView {
         view.OWSnp.makeConstraints { make in
             make.width.equalTo(10)
         }
+        
         stackView.addArrangedSubview(rankDownButton)
-        rankDownButton.addTarget(self, action: #selector(rankDown), for: .touchUpInside)
-        rankDownButton.setContentHuggingPriority(.required, for: .horizontal)
-        
         stackView.addArrangedSubview(rankDownLabel)
-        
-        rankDownLabel.textAlignment = .center
-        rankDownLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
-        rankDownLabel.setContentHuggingPriority(.required, for: .horizontal)
     }
     
     @objc
