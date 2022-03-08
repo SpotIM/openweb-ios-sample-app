@@ -9,6 +9,7 @@
 import Foundation
 
 protocol OWSharedServicesProviding {
+    func themeStyleService() -> OWThemeStyleServicing
     
 }
 
@@ -19,5 +20,13 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     private init() {
         
+    }
+
+    fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
+        return OWThemeStyleService()
+    }()
+    
+    func themeStyleService() -> OWThemeStyleServicing {
+        return _themeStyleService
     }
 }
