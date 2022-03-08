@@ -53,16 +53,19 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     }()
     
     var image: Observable<UIImage> {
-        user
+        isSubscriber
+            .filter { $0 } // Only start the download of the image (or caching retrieve) if the user is a subscriber
             .map { [weak self] _ -> OWSubscriberBadgeConfiguration? in
                 guard let self = self else { return nil }
                 return self.subscriberBadgeConfig
             }
-            .unwrap()
+            .unwrap() // Continue only if a configuration exist
             .flatMap { [weak self] config -> Observable<UIImage> in
                 guard let self = self else { return Observable.empty() }
-                return self.subscriberBadgeService.badgeImage(config: config)
+                return self.subscriberBadgeService.badgeImage(config: config) // Fetch image from service
             }
+            .asDriver(onErrorJustReturn: UIImage(spNamed: "star", supportDarkMode: false)!) // Default local image to return in case of an error
+            .asObservable()
     }
     
     var isSubscriber: Observable<Bool> {
