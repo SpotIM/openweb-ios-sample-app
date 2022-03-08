@@ -185,7 +185,8 @@ internal enum SPImageRequestConstants {
     static let avatarPathComponent = "avatars/"
     static let imageFileJpegBase64Prefix = "data:image/jpeg;base64,"
     static let cloudinaryIconParamString = "f_png/"
-    static let iconPathComponent = "font-awesome/"
+    static let fontAwesomePathComponent = "font-awesome/"
+    static let fontAwesomeVersionPathComponent = "v5.15.2/";
     static let iconsPathComponent = "icons/"
     static let customPathComponent = "custom/"
 }
