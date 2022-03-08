@@ -105,6 +105,7 @@
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
 		3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */; };
 		3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */; };
+		3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */; };
 		3DF95BD327CE546A0008A380 /* OWPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF95BD227CE546A0008A380 /* OWPresentable.swift */; };
 		3DF95BD527CE54C30008A380 /* OWDeepLinkOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF95BD427CE54C30008A380 /* OWDeepLinkOptions.swift */; };
 		3DF95BD727CE55C40008A380 /* OWBaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF95BD627CE55C40008A380 /* OWBaseCoordinator.swift */; };
@@ -726,6 +727,7 @@
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
 		3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSharedServicesProvider.swift; sourceTree = "<group>"; };
 		3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCacheService.swift; sourceTree = "<group>"; };
+		3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleService.swift; sourceTree = "<group>"; };
 		3DF95BD227CE546A0008A380 /* OWPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPresentable.swift; sourceTree = "<group>"; };
 		3DF95BD427CE54C30008A380 /* OWDeepLinkOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWDeepLinkOptions.swift; sourceTree = "<group>"; };
 		3DF95BD627CE55C40008A380 /* OWBaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBaseCoordinator.swift; sourceTree = "<group>"; };
@@ -1213,6 +1215,7 @@
 			children = (
 				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
+				3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */,
 			);
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
@@ -3023,6 +3026,7 @@
 				24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */,
 				3D20A36B27B01153003F8513 /* OWConstraintDescription.swift in Sources */,
 				3D20A36927B01078003F8513 /* OWConstraintConfig.swift in Sources */,
+				3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
 				441165A92379720500B781F3 /* SPCloudinaryRequests.swift in Sources */,
 				44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */,
