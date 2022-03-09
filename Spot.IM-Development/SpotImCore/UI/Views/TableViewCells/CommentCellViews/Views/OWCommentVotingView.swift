@@ -26,11 +26,7 @@ final class OWCommentVotingView: OWBaseView {
     
     weak var delegate: CommentActionsDelegate?
     
-    var rankedByUser: Int = 0 {
-        didSet {
-            updateRankButtonState()
-        }
-    }
+    var rankedByUser: Int = 0
     
     fileprivate lazy var stackView: OWBaseStackView = {
         let stackView = OWBaseStackView()
@@ -123,20 +119,6 @@ final class OWCommentVotingView: OWBaseView {
         rankDownButton.imageColorOff = .buttonTitle
         rankDownLabel.backgroundColor = .spBackground0
         rankDownLabel.textColor = .buttonTitle
-    }
-    
-    func updateRankButtonState() {
-        switch rankedByUser {
-        case -1:
-            rankUpButton.isSelected = false
-            rankDownButton.isSelected = true
-        case 1:
-            rankUpButton.isSelected = true
-            rankDownButton.isSelected = false
-        default:
-            rankUpButton.isSelected = false
-            rankDownButton.isSelected = false
-        }
     }
     
     private func setupUI() {
@@ -238,7 +220,17 @@ fileprivate extension OWCommentVotingView {
         viewModel.outputs.rankedByUser
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
-                self.rankedByUser = ranked
+                switch ranked {
+                case -1:
+                    self.rankUpButton.isSelected = false
+                    self.rankDownButton.isSelected = true
+                case 1:
+                    self.rankUpButton.isSelected = true
+                    self.rankDownButton.isSelected = false
+                default:
+                    self.rankUpButton.isSelected = false
+                    self.rankDownButton.isSelected = false
+                }
             })
             .disposed(by: disposeBag)
     }
