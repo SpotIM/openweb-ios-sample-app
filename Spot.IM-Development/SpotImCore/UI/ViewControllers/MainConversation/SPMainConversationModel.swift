@@ -23,8 +23,9 @@ typealias BooleanCompletion = (Bool, Error?) -> Void
 let navigationAvatarSize: CGSize = CGSize(width: 25.0, height: 25.0)
 
 protocol MainConversationModelDelegate: AnyObject {
-    func totalTypingCountDidUpdate(count: Int)
+    func totalTypingCountDidUpdate(count: Int, newCommentsCount: Int)
     func stopTypingTrack()
+    func realtimeViewTypeDidUpdate()
 }
 
 protocol CommentsCounterDelegate: AnyObject {
@@ -47,6 +48,8 @@ final class SPMainConversationModel {
     
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
+    private var realTimeNewMessagesCache = [String: SPComment]()
+    private(set) var realtimeViewType: RealTimeViewType?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: OWAbTests
     
@@ -59,7 +62,7 @@ final class SPMainConversationModel {
     let onlineViewingUsersConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
     
     private(set) var dataSource: SPMainConversationDataSource
-    private(set) var sortOption: SPCommentSortMode = .best {
+    var sortOption: SPCommentSortMode = .best {
         didSet {
             if oldValue != sortOption {
                 
@@ -114,6 +117,11 @@ final class SPMainConversationModel {
     
     func stopRealTimeFetching() {
         realTimeService.stopRealTimeDataFetching()
+    }
+    
+    func setReltime(viewType: RealTimeViewType) {
+        realtimeViewType = viewType
+        delegates.invoke {$0.realtimeViewTypeDidUpdate()}
     }
     
     func handlePendingComment() {
@@ -360,9 +368,21 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
+            let newComments: [SPComment] = try data.newComments(forConversation: fullConversationId)
+            newComments.forEach{ comment in
+                // make sure comment is not reply and not already in conversation
+                if (comment.parentId == nil || comment.parentId == "") && !dataSource.isCommentInConversation(commentId: comment.id ?? ""){
+                    self.realTimeNewMessagesCache[comment.id ?? ""] = comment
+                }
+            }
+            let isBlitsEnabled = SPConfigsDataSource.appConfig?.mobileSdk.blitzEnabled ?? false
+            let newCommentsExist = realTimeNewMessagesCache.keys.count > 0
+            let shouldShowBlitz = (realtimeViewType != nil) && newCommentsExist && isBlitsEnabled
+            // make sure first time is always "typing"
+            realtimeViewType = shouldShowBlitz ? .blitz : .typing
             self.dataSource.messageCount = totalCommentsCount
             if shouldUserBeNotified {
-                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount) }
+                delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: realTimeNewMessagesCache.keys.count) }
                 if totalCommentsCount > 0 {
                     commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
                 }
@@ -390,6 +410,20 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         return shouldUserBeNotified ? totalTypingCount : 0
     }
     
+    // Returns current visible new messages count
+    func newMessagesCount() -> Int {
+        return self.realTimeNewMessagesCache.keys.count
+    }
+    
+    func clearNewMessagesCache() {
+        self.realTimeNewMessagesCache.removeAll()
+    }
+    
+    func addNewCommentsToConversation() {
+        let comments = Array(self.realTimeNewMessagesCache.values)
+        dataSource.addNewComments(comments: comments)
+    }
+    
     /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''
     private func scheduleTypingCleaningTimer(timeOffset: Double) {
         realTimeTimer?.invalidate()
@@ -398,7 +432,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             withTimeInterval: timeOffset,
             repeats: false
         ) { [weak self] _ in
-            self?.delegates.invoke { $0.totalTypingCountDidUpdate(count: 0) }
+            self?.delegates.invoke { $0.totalTypingCountDidUpdate(count: 0, newCommentsCount: 0) }
         }
     }
 }
@@ -416,4 +450,9 @@ enum ActionType {
     case report(commentId: String, replyingToID: String?)
     case edit(commentId: String, replyingToID: String?)
     case share(commentId: String, replyingToID: String?)
+}
+
+enum RealTimeViewType {
+    case typing
+    case blitz
 }

@@ -517,8 +517,10 @@ internal final class SPMainConversationDataSource {
         var user: SPUser?
         if let userId = comment.userId {
             user = users[userId]
+            if user == nil, let commentUsers = comment.users {
+                user = commentUsers[userId]
+            }
         }
-
         return CommentViewModel(
             with: comment,
             replyingToCommentId: replyingToCommentId,
@@ -932,4 +934,28 @@ extension SPMainConversationDataSource {
                 source: .conversation)
                }
        }
+    
+    func isCommentInConversation(commentId: String) -> Bool {
+        for section in cellData {
+            for comment in section {
+                if comment.commentId == commentId {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func addNewComments(comments: [SPComment]) {
+        var sortedComments = comments
+        sortedComments.sort {
+            if let date1 = $0.writtenAt, let date2 = $1.writtenAt {
+                return Date(timeIntervalSince1970: date1).timeAgo() > Date(timeIntervalSince1970: date2).timeAgo()
+            } else {
+                return true
+            }
+        }
+        let processedComments = self.processed(sortedComments)
+        self.cellData.insert(contentsOf: processedComments, at: self.shouldShowBanner ? 1 : 0)
+    }
 }
