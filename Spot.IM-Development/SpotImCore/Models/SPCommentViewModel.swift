@@ -153,6 +153,8 @@ internal struct CommentViewModel {
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
+            
+        updateCommentActionsVM()
     }
     
     func getCommentTextFromHtmlString(htmlString: String) -> String? {
@@ -261,6 +263,12 @@ internal struct CommentViewModel {
     
     func isAReply() -> Bool {
         return replyingToCommentId != nil
+    }
+    
+    func updateCommentActionsVM() {
+        self.commentActionsVM.inputs.configureRankUp(rankUp)
+        self.commentActionsVM.inputs.configureRankDown(rankDown)
+        self.commentActionsVM.inputs.configureRankedByUser(rankedByUser)
     }
 
     private enum Theme {

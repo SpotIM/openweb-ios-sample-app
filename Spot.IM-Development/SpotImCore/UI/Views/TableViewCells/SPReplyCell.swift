@@ -150,12 +150,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
         replyActionsView.configure(with: dataModel.commentActionsVM)
+        dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
-        replyActionsView.setBrandColor(.brandColor)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
-        replyActionsView.setRankUp(dataModel.rankUp)
-        replyActionsView.setRankDown(dataModel.rankDown)
-        replyActionsView.setRanked(with: dataModel.rankedByUser)
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
