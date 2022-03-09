@@ -253,12 +253,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
         replyActionsView.configure(with: dataModel.commentActionsVM)
+        dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
-        replyActionsView.setBrandColor(.brandColor)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount)
-        replyActionsView.setRankUp(dataModel.rankUp)
-        replyActionsView.setRankDown(dataModel.rankDown)
-        replyActionsView.setRanked(with: dataModel.rankedByUser)
         replyActionsView.OWSnp.updateConstraints { make in
             make.height.equalTo(dataModel.isDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
         }

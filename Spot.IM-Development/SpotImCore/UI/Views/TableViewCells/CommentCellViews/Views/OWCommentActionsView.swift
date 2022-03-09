@@ -31,12 +31,6 @@ final class OWCommentActionsView: OWBaseView {
     
     private var isReadOnlyMode: Bool = false
 
-    private var rankedByUser: Int = 0 {
-        didSet {
-            votingView.rankedByUser = rankedByUser
-        }
-    }
-
     override init(frame: CGRect) {
         replyDefaultTitle = LocalizationManager.localizedString(key: "Reply")
         super.init(frame: frame)
@@ -92,26 +86,6 @@ final class OWCommentActionsView: OWBaseView {
             replyButton.setTitle(replyButtonTitle, for: .normal)
         } else {
             setShowReplyButton(false)
-        }
-    }
-
-    func setBrandColor(_ color: UIColor) {
-        votingView.setBrandColor(color)
-    }
-
-    func setRankUp(_ rank: Int) {
-        votingView.setRankUp(rank)
-    }
-
-    func setRankDown(_ rank: Int) {
-        votingView.setRankDown(rank)
-    }
-
-    func setRanked(with rankedByUser: Int?) {
-        if let ranked = rankedByUser, ranked <= 1, ranked >= -1 {
-            self.rankedByUser = ranked
-        } else {
-            self.rankedByUser = 0
         }
     }
 
