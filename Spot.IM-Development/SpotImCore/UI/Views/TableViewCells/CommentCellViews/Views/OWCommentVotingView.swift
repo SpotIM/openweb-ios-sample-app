@@ -24,6 +24,7 @@ final class OWCommentVotingView: OWBaseView {
     fileprivate var viewModel: OWCommentVotingViewModeling!
     fileprivate var disposeBag: DisposeBag!
     
+    // TODO - use RX
     weak var delegate: CommentActionsDelegate?
     
     var rankedByUser: Int = 0
@@ -94,6 +95,11 @@ final class OWCommentVotingView: OWBaseView {
         return label
     }()
     
+    fileprivate lazy var seperetorView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -125,8 +131,6 @@ final class OWCommentVotingView: OWBaseView {
         self.addSubviews(stackView)
         
         configureStackView()
-        configureRankUpButton()
-        configureRankDownButton()
     }
     
     private func configureStackView() {
@@ -139,15 +143,15 @@ final class OWCommentVotingView: OWBaseView {
         stackView.addArrangedSubview(rankUpButton)
         stackView.addArrangedSubview(rankUpLabel)
     }
-
-    private func configureRankDownButton() {
-        let view = UIView()
-        view.backgroundColor = .lightPink
-        stackView.addArrangedSubview(view)
-        view.OWSnp.makeConstraints { make in
+    
+    private func configureSeperatorView() {
+        stackView.addArrangedSubview(seperetorView)
+        seperetorView.OWSnp.makeConstraints { make in
             make.width.equalTo(10)
         }
-        
+    }
+
+    private func configureRankDownButton() {
         stackView.addArrangedSubview(rankDownButton)
         stackView.addArrangedSubview(rankDownLabel)
     }
@@ -220,6 +224,7 @@ fileprivate extension OWCommentVotingView {
         viewModel.outputs.rankedByUser
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
+                self.rankedByUser = ranked
                 switch ranked {
                 case -1:
                     self.rankUpButton.isSelected = false
@@ -230,6 +235,19 @@ fileprivate extension OWCommentVotingView {
                 default:
                     self.rankUpButton.isSelected = false
                     self.rankDownButton.isSelected = false
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.voteTypes
+            .subscribe(onNext: { [weak self] voteTypes in
+                guard let self = self else { return }
+                if (voteTypes.contains(.voteUp)) {
+                    self.configureRankUpButton()
+                    self.configureSeperatorView()
+                }
+                if (voteTypes.contains(.voteDown)) {
+                    self.configureRankDownButton()
                 }
             })
             .disposed(by: disposeBag)
