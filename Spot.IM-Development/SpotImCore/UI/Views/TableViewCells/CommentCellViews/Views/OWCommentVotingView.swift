@@ -32,7 +32,12 @@ final class OWCommentVotingView: OWBaseView {
         }
     }
     
-    private let stackView: OWBaseStackView = .init()
+    fileprivate lazy var stackView: OWBaseStackView = {
+        let stackView = OWBaseStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        return stackView
+    }()
     
     fileprivate lazy var rankUpButton: SPAnimatedButton = {
         let rankUpNormalImage = UIImage(spNamed: "rank_up_normal", supportDarkMode: false)
@@ -103,6 +108,8 @@ final class OWCommentVotingView: OWBaseView {
     func configure(with viewModel: OWCommentVotingViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
+        
+        confiureViews()
     }
     
     // Handle dark mode \ light mode change
@@ -116,23 +123,6 @@ final class OWCommentVotingView: OWBaseView {
         rankDownButton.imageColorOff = .buttonTitle
         rankDownLabel.backgroundColor = .spBackground0
         rankDownLabel.textColor = .buttonTitle
-    }
-    
-    func setBrandColor(_ color: UIColor) {
-        rankUpButton.imageColorOn = color
-        rankUpButton.circleColor = color
-        rankUpButton.lineColor = color
-        rankDownButton.imageColorOn = color
-        rankDownButton.circleColor = color
-        rankDownButton.lineColor = color
-    }
-
-    func setRankUp(_ rank: Int) {
-        rankUpLabel.text = rank.kmFormatted
-    }
-
-    func setRankDown(_ rank: Int) {
-        rankDownLabel.text = rank.kmFormatted
     }
     
     func updateRankButtonState() {
@@ -158,8 +148,6 @@ final class OWCommentVotingView: OWBaseView {
     }
     
     private func configureStackView() {
-        stackView.axis = .horizontal
-        stackView.alignment = .center
         stackView.OWSnp.makeConstraints { make in
             make.top.bottom.leading.equalToSuperview()
         }
@@ -221,9 +209,44 @@ final class OWCommentVotingView: OWBaseView {
     }
 }
 
+fileprivate extension OWCommentVotingView {
+    func confiureViews() {
+        viewModel.outputs.rankUpCount
+            .bind(to: rankUpLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.rankDownCount
+            .bind(to: rankDownLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.brandColor
+            .bind(to: rankUpButton.rx.imageColorOn)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.brandColor
+            .subscribe(onNext: { [weak self] color in
+                guard let self = self else { return }
+                self.rankUpButton.imageColorOn = color
+                self.rankUpButton.circleColor = color
+                self.rankUpButton.lineColor = color
+                self.rankDownButton.imageColorOn = color
+                self.rankDownButton.circleColor = color
+                self.rankDownButton.lineColor = color
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.rankedByUser
+            .subscribe(onNext: { [weak self] ranked in
+                guard let self = self else { return }
+                self.rankedByUser = ranked
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
 // MARK: Accessibility
 
-extension OWCommentVotingView {
+fileprivate extension OWCommentVotingView {
     func applyAccessibility() {
         rankUpButton.accessibilityTraits = .button
         rankUpButton.accessibilityLabel = LocalizationManager.localizedString(key: "Up vote button")
