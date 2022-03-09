@@ -22,11 +22,17 @@ protocol OWCommentVotingViewModelingOutputs {
     var rankDownCount: Observable<String> { get }
     var rankedByUser: Observable<Int> { get }
     var brandColor: Observable<UIColor> { get }
+    var voteTypes: Observable<[VoteType]> { get }
 }
 
 protocol OWCommentVotingViewModeling {
     var inputs: OWCommentVotingViewModelingInputs { get }
     var outputs: OWCommentVotingViewModelingOutputs { get }
+}
+
+enum VoteType {
+    case voteUp
+    case voteDown
 }
 
 class OWCommentVotingViewModel: OWCommentVotingViewModeling,
@@ -41,8 +47,33 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
     fileprivate let _rankDown = BehaviorSubject<Int?>(value: nil)
     fileprivate let _rankedByUser = BehaviorSubject<Int?>(value: nil)
     
+    fileprivate let _voteTypesToShow = BehaviorSubject<[VoteType]?>(value: nil)
+    
     init () {
         _brandColor.onNext(UIColor.brandColor)
+        
+        self.handleVotesTypeToShow()
+    }
+    
+    private func handleVotesTypeToShow() {
+        var voteTypesToShow: [VoteType] = [.voteUp, .voteDown]
+        
+        if let convConfig = SPConfigsDataSource.appConfig?.conversation {
+            if (convConfig.disableVoteUp == true) {
+                voteTypesToShow.removeAll { $0 == .voteUp }
+            }
+            if (convConfig.disableVoteDown == true) {
+                voteTypesToShow.removeAll { $0 == .voteDown }
+            }
+        }
+        
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared {
+            if [OWVotesType.heart, OWVotesType.recommend].contains( sharedConfig.votesType) {
+                voteTypesToShow.removeAll { $0 == .voteDown }
+            }
+        }
+        
+        _voteTypesToShow.onNext(voteTypesToShow)
     }
     
     var rankUpCount: Observable<String> {
@@ -77,5 +108,10 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
     
     func configureRankedByUser(_ value: Int) {
         _rankedByUser.onNext(value)
+    }
+    
+    var voteTypes: Observable<[VoteType]> {
+        _voteTypesToShow
+            .unwrap()
     }
 }
