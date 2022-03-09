@@ -45,7 +45,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal var didCheckAdsAvailability = false
     internal var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitMainConv }
 
-    private var typingIndicationView: TotalTypingIndicationView?
+    internal var typingIndicationView: TotalTypingIndicationView?
     private var typingViewBottomConstraint: OWConstraint?
     private var typingViewCenterConstraint: OWConstraint?
     private var typingViewCenterCurrentOffset: CGFloat?
@@ -410,14 +410,14 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         }
     }
     
-    private func handleTypingIndicationViewUpdate(typingCount: Int) {
-        if typingCount <= 0 {
+    private func handleTypingIndicationViewUpdate(typingCount: Int, newCommentsCount: Int, shouldShowBlitz: Bool) {
+        if typingCount <= 0 && !shouldShowBlitz {
             hideTypingIndicationView()
         } else if let typingIndicationView = typingIndicationView {
-            typingIndicationView.setTypingCount(typingCount)
+            typingIndicationView.setCount(count: shouldShowBlitz ? newCommentsCount : typingCount, isBlitz: shouldShowBlitz)
         } else {
             createAndShowTypingIndicationView()
-            typingIndicationView?.setTypingCount(typingCount)
+            typingIndicationView?.setCount(count: shouldShowBlitz ? newCommentsCount : typingCount, isBlitz: shouldShowBlitz)
         }
     }
 }
@@ -430,6 +430,16 @@ private extension SPBaseConversationViewController {
 }
 
 extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
+    @objc
+    func indicationViewClicked() {
+        guard model.realtimeViewType == .blitz else { return }
+        // add new messages to the top of conversation
+        model.addNewCommentsToConversation()
+        model.clearNewMessagesCache()
+        self.handleConversationReloaded(success: true, error: nil)
+        model.setReltime(viewType: .typing)
+    }
+    
     
     func horisontalPositionChangeDidEnd() {
         guard
@@ -823,8 +833,19 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
         dismissTypingViewToTheSide()
     }
     
-    func totalTypingCountDidUpdate(count: Int) {
-        handleTypingIndicationViewUpdate(typingCount: count)
+    func totalTypingCountDidUpdate(count: Int, newCommentsCount: Int) {
+        handleTypingIndicationViewUpdate(typingCount: count, newCommentsCount: newCommentsCount, shouldShowBlitz: model.realtimeViewType == .blitz)
+    }
+    
+    func realtimeViewTypeDidUpdate() {
+        do {
+            handleTypingIndicationViewUpdate(typingCount: try model.typingCount(), newCommentsCount: try model.newMessagesCount(), shouldShowBlitz: model.realtimeViewType == .blitz)
+        } catch {
+            if let realtimeError = error as? RealTimeError {
+                model.stopRealTimeFetching()
+                SPDefaultFailureReporter.shared.report(error: .realTimeError(realtimeError))
+            }
+        }
     }
     
 }

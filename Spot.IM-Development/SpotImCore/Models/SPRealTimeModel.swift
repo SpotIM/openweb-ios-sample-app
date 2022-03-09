@@ -38,7 +38,8 @@ struct RealTimeDataModel: Decodable {
         case conversationTypingV2Count = "conversation/typing-v2-count"
         case conversationTypingV2Users = "conversation/typing-v2-users"
         case onlineUsers = "online/users"
-        case onlineViewingUsers  = "online/users-count"
+        case onlineViewingUsers = "online/users-count"
+        case conversationNewMessages = "conversation/new-messages"
     }
     
     private let conversationCountMessages: [String: [RealTimeMessagesCountModel]]?
@@ -46,6 +47,7 @@ struct RealTimeDataModel: Decodable {
     private let conversationTypingV2Users: [String: [RealTimeTypingUsersModel]]?
     private let onlineUsers: [String: [RealTimeOnlineUserModel]]?
     private let onlineViewingUsers: [String: [RealTimeOnlineViewingUsersModel]]?
+    private let conversationNewMessages: [String: [SPComment]]?
     
     func totalCommentsCountForConversation(_ id: String) throws -> Int {
         let commentsCounter = try commentsCountForConversation(id)
@@ -79,6 +81,15 @@ struct RealTimeDataModel: Decodable {
         }
         
         return count
+    }
+    
+    /// Will return new comments in conversation if it exists and throw conversationNotFound exception if not
+    func newComments(forConversation id: String) throws -> [SPComment] {
+        guard let newComments = conversationNewMessages?[id] else {
+            throw RealTimeError.conversationNotFound
+        }
+        
+        return newComments
     }
     
     /// Will return the model of viewing users if it exist and throw onlineUsersViewingNotFound exception if not
