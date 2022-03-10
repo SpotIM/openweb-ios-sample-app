@@ -50,6 +50,12 @@ internal protocol SPSafariWebPageDelegate: AnyObject {
 }
 
 public typealias SPShowFullConversationCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
+public typealias SPOpenNewCommentCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
+
+public enum SPViewControllerPresentationalMode {
+    case present
+    case push
+}
 
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
@@ -161,10 +167,25 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
+    public func openFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode = .present, selectedCommentId: String? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
+        switch presentationalMode {
+        case .present:
+            presentFullConversationViewController(inViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
+        case .push:
+            pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
+        }
+    }
+    
+    public func openNewCommentViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode = .present, completion: SPOpenNewCommentCompletionHandler? = nil) {
+        
+    }
+    
+    // DEPRECATED - please use `openFullConversationViewController` instead
     public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: SPShowFullConversationCompletionHandler? = nil) {
         pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil, completion: completion)
     }
     
+    // DEPRECATED - please use `openFullConversationViewController` instead
     public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil)
     {
         self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
@@ -186,7 +207,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         }
     }
     
-    
+    // DEPRECATED - please use `openFullConversationViewController` instead
     public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil) {
         
         // create nav controller in code to be the container for conversationController
