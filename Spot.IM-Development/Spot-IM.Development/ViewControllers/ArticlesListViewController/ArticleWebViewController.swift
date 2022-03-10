@@ -263,10 +263,10 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
             button.setTitleColor(.white, for: .normal)
             break
         case .emptyStateReadOnlyLabel(let label):
-            label.text = "custom1"
+            label.text = "custom empty read only"
             break
         case .readOnlyLabel(let label):
-            label.text = "custom2"
+            label.text = "custom read only"
             break
         default:
             break
