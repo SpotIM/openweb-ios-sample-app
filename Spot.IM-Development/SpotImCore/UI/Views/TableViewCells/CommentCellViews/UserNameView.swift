@@ -59,6 +59,7 @@ internal final class UserNameView: OWBaseView {
         subtitleLabel.isHidden = showDeletedLabel
         moreButton.isHidden = showDeletedLabel
         badgeTagLabel.isHidden = showDeletedLabel
+        subscriberBadgeView.isHidden = showDeletedLabel
         configureDeletedLabel(isReported: isReported)
     }
 
