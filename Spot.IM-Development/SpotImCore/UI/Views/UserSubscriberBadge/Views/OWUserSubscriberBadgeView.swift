@@ -49,22 +49,22 @@ fileprivate extension OWUserSubscriberBadgeView {
     
     func setupViews() {
         self.addSubview(imgViewIcon)
+        
         imgViewIcon.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.size.equalTo(Metrics.subscriberBadgeIconSize)
         }
     }
     
-    
     func configureViews() {
         viewModel.outputs.isSubscriber
             .map { !$0 } // Reverse
-            .bind(to: self.rx.isHidden)
+            .bind(to: imgViewIcon.rx.isHidden)
             .disposed(by: disposeBag)
         
         viewModel.outputs.image
             .map { $0.withRenderingMode(.alwaysTemplate) }
-            .bind(to: self.imgViewIcon.rx.image)
+            .bind(to: imgViewIcon.rx.image)
             .disposed(by: disposeBag)
     }
 }
