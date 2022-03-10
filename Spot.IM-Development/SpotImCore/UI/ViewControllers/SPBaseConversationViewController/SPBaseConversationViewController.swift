@@ -270,6 +270,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
                 action: action
             )
         )
+        if isReadOnlyModeEnabled(), let label = stateActionView?.messageLabel {
+            customUIDelegate?.customizeEmptyStateReadOnlyLabel(label: label)
+        }
     }
     
     internal func updateEmptyStateViewAccordingToStyle() {
