@@ -37,8 +37,8 @@ final class OWCommentVotingView: OWBaseView {
     }()
     
     fileprivate lazy var rankUpButton: SPAnimatedButton = {
-        let rankUpNormalImage = UIImage(spNamed: "rank_up_normal", supportDarkMode: false)
-        let rankUpSelectedImage = UIImage(spNamed: "rank_up_selected", supportDarkMode: false)
+        let rankUpNormalImage = UIImage(spNamed: "rank_like_up", supportDarkMode: false)
+        let rankUpSelectedImage = UIImage(spNamed: "rank_like_up_selected", supportDarkMode: false)
         let insets = UIEdgeInsets(
             top: Metrics.rankButtonVerticalInset - Metrics.rankUpButtonOffset,
             left: Metrics.rankButtonHorizontalInset,
@@ -60,8 +60,8 @@ final class OWCommentVotingView: OWBaseView {
     }()
     
     fileprivate lazy var rankDownButton: SPAnimatedButton = {
-        let rankDownIconNormal = UIImage(spNamed: "rank_down_normal", supportDarkMode: false)
-        let rankDownIconSelected = UIImage(spNamed: "rank_down_selected", supportDarkMode: false)
+        let rankDownIconNormal = UIImage(spNamed: "rank_like_down", supportDarkMode: false)
+        let rankDownIconSelected = UIImage(spNamed: "rank_like_down_selected", supportDarkMode: false)
         let insets = UIEdgeInsets(top: Metrics.rankButtonVerticalInset - Metrics.rankDownButtonOffset,
                                   left: Metrics.rankButtonHorizontalInset,
                                   bottom: Metrics.rankButtonVerticalInset + Metrics.rankDownButtonOffset,
