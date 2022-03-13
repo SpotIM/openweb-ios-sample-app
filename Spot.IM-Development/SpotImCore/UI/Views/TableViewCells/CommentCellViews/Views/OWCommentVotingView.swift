@@ -206,15 +206,11 @@ fileprivate extension OWCommentVotingView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.brandColor
-            .subscribe(onNext: { [weak self] color in
-                guard let self = self else { return }
-                self.rankUpButton.imageColorOn = color
-                self.rankUpButton.circleColor = color
-                self.rankUpButton.lineColor = color
-                self.rankDownButton.imageColorOn = color
-                self.rankDownButton.circleColor = color
-                self.rankDownButton.lineColor = color
-            })
+            .bind(to: self.rankUpButton.rx.brandColor)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.brandColor
+            .bind(to: self.rankDownButton.rx.brandColor)
             .disposed(by: disposeBag)
         
         viewModel.outputs.rankedByUser
