@@ -176,7 +176,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         }
     }
     
-    public func openNewCommentViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode = .present, completion: SPOpenNewCommentCompletionHandler? = nil) {
+    public func openNewCommentViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode = .push, completion: SPOpenNewCommentCompletionHandler? = nil) {
         
     }
     
@@ -211,11 +211,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil) {
         
         // create nav controller in code to be the container for conversationController
-        let navController = PresentedContainerNavigationController()
-        navController.view.tag = SPOTIM_NAV_CONTROL_TAG
-        navController.modalPresentationStyle = .fullScreen
-        navController.navigationBar.barTintColor = .spBackground0
-        navController.navigationBar.backgroundColor = .spBackground0
+        let navController = createNavController()
         self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
@@ -225,13 +221,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 navController.viewControllers = [conversationController]
                 
                 // back button
-                let backButton = UIButton(type: .custom)
-                backButton.frame.size = CGSize(width: 44,height: 44) // set button size to enlarge hit area
-                backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
-                backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal) // Image can be downloaded from here below link
-                backButton.contentHorizontalAlignment = .left
-                backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
-                conversationController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+                let backBarButtonItem = self.createBackButtonForConversationVC()
+                conversationController.navigationItem.leftBarButtonItem = backBarButtonItem
                 
                 viewController.present(navController, animated: true, completion: nil)
                 completion?(true, nil)
@@ -253,6 +244,26 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
         self.conversationModel = conversationModel
         self.loadConversation(model: conversationModel, completion: completion)
+    }
+    
+    
+    private func createBackButtonForConversationVC(): UIBarButtonItem {
+        let backButton = UIButton(type: .custom)
+        backButton.frame.size = CGSize(width: 44,height: 44) // set button size to enlarge hit area
+        backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
+        backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal) // Image can be downloaded from here below link
+        backButton.contentHorizontalAlignment = .left
+        backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
+        return UIBarButtonItem(customView: backButton)
+    }
+    
+    private func createNavController(): UINavigationController {
+        let navController = PresentedContainerNavigationController()
+        navController.view.tag = SPOTIM_NAV_CONTROL_TAG
+        navController.modalPresentationStyle = .fullScreen
+        navController.navigationBar.barTintColor = .spBackground0
+        navController.navigationBar.backgroundColor = .spBackground0
+        return navController
     }
     
     @IBAction func onClickCloseFullConversation(_ sender: UIButton) {
