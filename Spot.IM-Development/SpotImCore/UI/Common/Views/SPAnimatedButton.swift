@@ -14,9 +14,19 @@ internal class SPAnimatedButton: OWBaseButton {
     
     fileprivate var imageShape: CAShapeLayer!
     fileprivate var selectedImageShape: CAShapeLayer!
-    var image: UIImage!
-    var selectedImage: UIImage!
-    var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
+    fileprivate var image: UIImage!
+    fileprivate var selectedImage: UIImage!
+    
+    
+    var brandColor: UIColor! {
+        didSet {
+            lineColor = brandColor
+            circleColor = brandColor
+            imageColorOn = brandColor
+        }
+    }
+    
+    fileprivate var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             if (isSelected) {
                 selectedImageShape.fillColor = imageColorOn.cgColor
@@ -33,14 +43,14 @@ internal class SPAnimatedButton: OWBaseButton {
     
     fileprivate var circleShape: CAShapeLayer!
     fileprivate var circleMask: CAShapeLayer!
-    var circleColor: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
+    fileprivate var circleColor: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             circleShape.fillColor = circleColor.cgColor
         }
     }
     
     fileprivate var lines: [CAShapeLayer]!
-    var lineColor: UIColor! = UIColor(red: 250/255, green: 120/255, blue: 68/255, alpha: 1.0) {
+    fileprivate var lineColor: UIColor! = UIColor(red: 250/255, green: 120/255, blue: 68/255, alpha: 1.0) {
         didSet {
             for line in lines {
                 line.strokeColor = lineColor.cgColor
@@ -55,7 +65,7 @@ internal class SPAnimatedButton: OWBaseButton {
     fileprivate let lineOpacity = CAKeyframeAnimation(keyPath: "opacity")
     fileprivate let imageTransform = CAKeyframeAnimation(keyPath: "transform")
     
-    var duration: Double = 1.0 {
+    fileprivate var duration: Double = 1.0 {
         didSet {
             circleTransform.duration = 0.333 * duration // 0.0333 * 10
             circleMaskTransform.duration = 0.333 * duration // 0.0333 * 10
