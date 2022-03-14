@@ -168,7 +168,11 @@ internal struct CommentViewModel {
 
     func textWidth() -> CGFloat {
         let leadingOffset: CGFloat = depthOffset()
-        let textWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset
+        var notchOffset = 0
+        if #available(iOS 11.0, *), UIDevice.current.orientation.isLandscape {
+            notchOffset = Int((UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0) + (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0))
+        }
+        let textWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - CGFloat(notchOffset)
         
         return textWidth
     }

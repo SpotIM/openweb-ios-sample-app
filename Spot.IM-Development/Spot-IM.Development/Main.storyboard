@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -250,81 +249,159 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="htH-kI-1Pw">
-                                <rect key="frame" x="97" y="500" width="181" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Enw-qr-7Yp"/>
-                                </constraints>
-                                <state key="normal" title="Authentication Playground">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="show" id="K30-vi-Uta"/>
-                                </connections>
-                            </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="spot_logo" translatesAutoresizingMaskIntoConstraints="NO" id="pTy-M9-4cH">
                                 <rect key="frame" x="142.5" y="116" width="90" height="90"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0p1-DY-kYy">
-                                <rect key="frame" x="116" y="348" width="143" height="30"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="pQi-6l-4ah">
+                                <rect key="frame" x="0.0" y="234" width="375" height="433"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ont-uO-1R5">
+                                        <rect key="frame" x="107.5" y="0.0" width="160" height="30"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="table"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Xff-6B-YBx"/>
+                                        </constraints>
+                                        <state key="normal" title="Show Demo Table View">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="yiT-6s-KbC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZp-Pq-loo">
+                                        <rect key="frame" x="100.5" y="38" width="174" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="zYi-OH-ba9"/>
+                                        </constraints>
+                                        <state key="normal" title="Show Demo Spot Articles">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showDemoSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kt7-rq-mfA"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0p1-DY-kYy">
+                                        <rect key="frame" x="116" y="114" width="143" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="vof-Hc-A7m"/>
+                                        </constraints>
+                                        <state key="normal" title="Show sp_mobileSSO">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showsp_mobileSSO:" destination="COS-Sr-MbI" eventType="touchUpInside" id="bFJ-0u-qnB"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLK-PJ-hZQ">
+                                        <rect key="frame" x="110.5" y="190" width="154" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="RoJ-27-Jxo"/>
+                                        </constraints>
+                                        <state key="normal" title="Show sp_mobileSocial">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showsp_mobileSocial:" destination="COS-Sr-MbI" eventType="touchUpInside" id="LZK-i6-YMk"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VlM-lF-gbf">
+                                        <rect key="frame" x="90.5" y="228" width="194" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="2lq-tq-Ls8"/>
+                                        </constraints>
+                                        <state key="normal" title="Show sp_mobileSocialGuest">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="show_spmobileSocialGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="YDn-7x-T72"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hsr-To-3uz">
+                                        <rect key="frame" x="92" y="76" width="191" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="7Jf-eq-pKe"/>
+                                        </constraints>
+                                        <state key="normal" title="Show Fox News (New login)">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kdg-Eo-W3h"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhj-w0-03k">
+                                        <rect key="frame" x="111" y="152" width="153" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="oZl-57-cHJ"/>
+                                        </constraints>
+                                        <state key="normal" title="Show sp_mobileGuest">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showsp_mobileGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="uEF-Ec-8X5"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="htH-kI-1Pw">
+                                        <rect key="frame" x="97" y="266" width="181" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="Enw-qr-7Yp"/>
+                                        </constraints>
+                                        <state key="normal" title="Authentication Playground">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="BYZ-38-t0r" kind="show" id="K30-vi-Uta"/>
+                                        </connections>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="dNW-kA-umB">
+                                        <rect key="frame" x="90" y="304" width="195" height="34"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2z-mA-4Rd" userLabel="Custom Spot">
+                                                <rect key="frame" x="0.0" y="0.0" width="90" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <color key="tintColor" systemColor="labelColor"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" title="Custom Spot">
+                                                    <color key="titleColor" systemColor="labelColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="showCustomSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="cdF-Om-dWd"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="sp_" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rRC-QZ-NmV">
+                                                <rect key="frame" x="95" y="0.0" width="100" height="34"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="mO0-eS-sdK"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="vof-Hc-A7m"/>
+                                    <constraint firstAttribute="bottom" secondItem="dNW-kA-umB" secondAttribute="bottom" constant="20" id="29N-EW-y0j"/>
+                                    <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="VlM-lF-gbf" secondAttribute="bottom" constant="8" id="4Id-a0-l8u"/>
+                                    <constraint firstItem="Hsr-To-3uz" firstAttribute="top" secondItem="AZp-Pq-loo" secondAttribute="bottom" constant="8" id="4af-qS-ulc"/>
+                                    <constraint firstItem="0p1-DY-kYy" firstAttribute="top" secondItem="Hsr-To-3uz" secondAttribute="bottom" constant="8" id="6Fl-i8-XnD"/>
+                                    <constraint firstItem="dNW-kA-umB" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="776-t4-vsn"/>
+                                    <constraint firstItem="nhj-w0-03k" firstAttribute="top" secondItem="0p1-DY-kYy" secondAttribute="bottom" constant="8" id="86j-Lc-zMs"/>
+                                    <constraint firstItem="VlM-lF-gbf" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="A7Q-cB-0dZ"/>
+                                    <constraint firstItem="htH-kI-1Pw" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="DYe-rM-Ygh"/>
+                                    <constraint firstItem="Ont-uO-1R5" firstAttribute="top" secondItem="pQi-6l-4ah" secondAttribute="top" id="E8H-su-82y"/>
+                                    <constraint firstItem="dNW-kA-umB" firstAttribute="top" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="8" id="LND-Ht-DOA"/>
+                                    <constraint firstItem="VlM-lF-gbf" firstAttribute="top" secondItem="BLK-PJ-hZQ" secondAttribute="bottom" constant="8" id="OH9-ma-Wdt"/>
+                                    <constraint firstItem="BLK-PJ-hZQ" firstAttribute="top" secondItem="nhj-w0-03k" secondAttribute="bottom" constant="8" id="W6P-5B-lgT"/>
+                                    <constraint firstItem="Ont-uO-1R5" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="Y15-dy-k6X"/>
+                                    <constraint firstItem="0p1-DY-kYy" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="Zcs-qU-oQf"/>
+                                    <constraint firstItem="nhj-w0-03k" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="azZ-8V-wXB"/>
+                                    <constraint firstItem="AZp-Pq-loo" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="bn7-mg-Yxa"/>
+                                    <constraint firstItem="AZp-Pq-loo" firstAttribute="top" secondItem="Ont-uO-1R5" secondAttribute="bottom" constant="8" id="dep-oz-YYE"/>
+                                    <constraint firstItem="BLK-PJ-hZQ" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="pBv-Uj-HdC"/>
+                                    <constraint firstItem="Hsr-To-3uz" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="uZG-rX-l1v"/>
                                 </constraints>
-                                <state key="normal" title="Show sp_mobileSSO">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="showsp_mobileSSO:" destination="COS-Sr-MbI" eventType="touchUpInside" id="bFJ-0u-qnB"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLK-PJ-hZQ">
-                                <rect key="frame" x="110.5" y="424" width="154" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="RoJ-27-Jxo"/>
-                                </constraints>
-                                <state key="normal" title="Show sp_mobileSocial">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="showsp_mobileSocial:" destination="COS-Sr-MbI" eventType="touchUpInside" id="LZK-i6-YMk"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VlM-lF-gbf">
-                                <rect key="frame" x="90.5" y="462" width="194" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="2lq-tq-Ls8"/>
-                                </constraints>
-                                <state key="normal" title="Show sp_mobileSocialGuest">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="show_spmobileSocialGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="YDn-7x-T72"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hsr-To-3uz">
-                                <rect key="frame" x="92" y="310" width="191" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="7Jf-eq-pKe"/>
-                                </constraints>
-                                <state key="normal" title="Show Fox News (New login)">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kdg-Eo-W3h"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZp-Pq-loo">
-                                <rect key="frame" x="100" y="272" width="175" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="zYi-OH-ba9"/>
-                                </constraints>
-                                <state key="normal" title="Show Demo Spot Articles">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="showDemoSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="Kt7-rq-mfA"/>
-                                </connections>
-                            </button>
+                                <viewLayoutGuide key="contentLayoutGuide" id="caL-dx-lJF"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="8ZC-0J-N59"/>
+                            </scrollView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMI-UE-CFh">
                                 <rect key="frame" x="16" y="60" width="93" height="24"/>
                                 <string key="text">Version: [unknown]
@@ -344,85 +421,22 @@ Build: [unknown]</string>
                                     <segue destination="afI-iB-Nmt" kind="show" id="HUT-J0-M8W"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ont-uO-1R5">
-                                <rect key="frame" x="107.5" y="234" width="160" height="30"/>
-                                <accessibility key="accessibilityConfiguration" identifier="table"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Xff-6B-YBx"/>
-                                </constraints>
-                                <state key="normal" title="Show Demo Table View">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="showFoxMainConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="yiT-6s-KbC"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhj-w0-03k">
-                                <rect key="frame" x="111" y="386" width="153" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="oZl-57-cHJ"/>
-                                </constraints>
-                                <state key="normal" title="Show sp_mobileGuest">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="showsp_mobileGuest:" destination="COS-Sr-MbI" eventType="touchUpInside" id="uEF-Ec-8X5"/>
-                                </connections>
-                            </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="dNW-kA-umB">
-                                <rect key="frame" x="90" y="538" width="195" height="34"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a2z-mA-4Rd" userLabel="Custom Spot">
-                                        <rect key="frame" x="0.0" y="0.0" width="90" height="34"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <color key="tintColor" systemColor="labelColor"/>
-                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" title="Custom Spot">
-                                            <color key="titleColor" systemColor="labelColor"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="showCustomSpotConversation:" destination="COS-Sr-MbI" eventType="touchUpInside" id="cdF-Om-dWd"/>
-                                        </connections>
-                                    </button>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="sp_" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rRC-QZ-NmV">
-                                        <rect key="frame" x="95" y="0.0" width="100" height="34"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="100" id="mO0-eS-sdK"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                </subviews>
-                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HBy-no-NuF"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="dNW-kA-umB" firstAttribute="top" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="8" id="4VA-qw-ZdU"/>
+                            <constraint firstAttribute="trailing" secondItem="pQi-6l-4ah" secondAttribute="trailing" id="1kr-6w-R4f"/>
                             <constraint firstItem="HBy-no-NuF" firstAttribute="trailing" secondItem="ELI-s3-pbx" secondAttribute="trailing" constant="18" id="6eK-dG-9h6"/>
-                            <constraint firstItem="nhj-w0-03k" firstAttribute="centerX" secondItem="0p1-DY-kYy" secondAttribute="centerX" id="CiU-Vc-af9"/>
-                            <constraint firstItem="VlM-lF-gbf" firstAttribute="top" secondItem="BLK-PJ-hZQ" secondAttribute="bottom" constant="8" id="DmA-u8-xQ9"/>
-                            <constraint firstItem="AZp-Pq-loo" firstAttribute="centerX" secondItem="Ont-uO-1R5" secondAttribute="centerX" id="EQV-ho-L2G"/>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="16" id="F43-p3-jhL"/>
-                            <constraint firstItem="Ont-uO-1R5" firstAttribute="centerX" secondItem="BKE-Ut-tNt" secondAttribute="centerX" id="FDe-NR-C8B"/>
-                            <constraint firstItem="BLK-PJ-hZQ" firstAttribute="centerX" secondItem="nhj-w0-03k" secondAttribute="centerX" id="KJM-FL-izY"/>
-                            <constraint firstItem="VlM-lF-gbf" firstAttribute="centerX" secondItem="htH-kI-1Pw" secondAttribute="centerX" id="KJX-VB-1lX"/>
-                            <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="VlM-lF-gbf" secondAttribute="bottom" constant="8" id="QBH-kR-xuP"/>
-                            <constraint firstItem="VlM-lF-gbf" firstAttribute="centerX" secondItem="BLK-PJ-hZQ" secondAttribute="centerX" id="QYp-sY-CvV"/>
-                            <constraint firstItem="dNW-kA-umB" firstAttribute="centerX" secondItem="BKE-Ut-tNt" secondAttribute="centerX" id="Tpe-uT-w8b"/>
-                            <constraint firstItem="AZp-Pq-loo" firstAttribute="top" secondItem="Ont-uO-1R5" secondAttribute="bottom" constant="8" id="U5Q-XJ-YrC"/>
-                            <constraint firstItem="BLK-PJ-hZQ" firstAttribute="top" secondItem="nhj-w0-03k" secondAttribute="bottom" constant="8" id="Zoy-cp-j2J"/>
+                            <constraint firstItem="pQi-6l-4ah" firstAttribute="top" secondItem="pTy-M9-4cH" secondAttribute="bottom" constant="28" id="HmN-1p-Spt"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="baQ-sc-dEe"/>
-                            <constraint firstItem="Ont-uO-1R5" firstAttribute="top" secondItem="pTy-M9-4cH" secondAttribute="bottom" constant="28" id="kGa-aU-1BH"/>
-                            <constraint firstItem="0p1-DY-kYy" firstAttribute="centerX" secondItem="Hsr-To-3uz" secondAttribute="centerX" id="leu-jW-fwv"/>
-                            <constraint firstItem="nhj-w0-03k" firstAttribute="top" secondItem="0p1-DY-kYy" secondAttribute="bottom" constant="8" id="mbE-Kj-RQ5"/>
+                            <constraint firstAttribute="bottom" secondItem="pQi-6l-4ah" secondAttribute="bottom" id="jWH-lG-h9a"/>
                             <constraint firstItem="ELI-s3-pbx" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="14" id="oiJ-MA-b61"/>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="leading" secondItem="BKE-Ut-tNt" secondAttribute="leadingMargin" id="oyg-fO-PeG"/>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="centerY" secondItem="ELI-s3-pbx" secondAttribute="centerY" id="rcY-cT-MWI"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="top" secondItem="ELI-s3-pbx" secondAttribute="bottom" constant="30" id="rh7-Qf-8O1"/>
-                            <constraint firstItem="0p1-DY-kYy" firstAttribute="top" secondItem="Hsr-To-3uz" secondAttribute="bottom" constant="8" id="rwX-MY-tDK"/>
-                            <constraint firstItem="Ont-uO-1R5" firstAttribute="centerX" secondItem="Hsr-To-3uz" secondAttribute="centerX" id="snm-kA-WK4"/>
-                            <constraint firstItem="Hsr-To-3uz" firstAttribute="top" secondItem="AZp-Pq-loo" secondAttribute="bottom" constant="8" id="tNG-3o-hLD"/>
+                            <constraint firstItem="pQi-6l-4ah" firstAttribute="width" secondItem="BKE-Ut-tNt" secondAttribute="width" id="wGZ-Da-YeX"/>
+                            <constraint firstItem="pQi-6l-4ah" firstAttribute="leading" secondItem="BKE-Ut-tNt" secondAttribute="leading" id="xix-4A-ODI"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="JkC-5p-26C"/>
@@ -430,6 +444,7 @@ Build: [unknown]</string>
                         <outlet property="appInfoLabel" destination="TMI-UE-CFh" id="nzs-aY-YgY"/>
                         <outlet property="customSpotTextField" destination="rRC-QZ-NmV" id="zoq-1e-bJ9"/>
                         <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
+                        <outlet property="optionsScrollView" destination="pQi-6l-4ah" id="d78-Is-hkY"/>
                         <segue destination="oc6-g4-D2s" kind="show" identifier="showPreConversationSegue" id="03O-tL-zah"/>
                     </connections>
                 </viewController>
@@ -519,7 +534,7 @@ Build: [unknown]</string>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hide article header" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fki-wM-TQv">
-                                <rect key="frame" x="30" y="121" width="123" height="17"/>
+                                <rect key="frame" x="30" y="121" width="122.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </label>

@@ -58,6 +58,10 @@ final class SPMainConversationFooterView: OWBaseView {
         if (!isPreConversation) {
             customUIDelegate.customizeConversationFooter(view: self)
         }
+        
+        if let readOnlyLabel = readOnlyLabel {
+            customUIDelegate.customizeReadOnlyLabel(label: readOnlyLabel)
+        }
     }
     
     // Handle dark mode \ light mode change
