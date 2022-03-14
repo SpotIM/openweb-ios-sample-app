@@ -14,9 +14,18 @@ internal class SPAnimatedButton: OWBaseButton {
     
     fileprivate var imageShape: CAShapeLayer!
     fileprivate var selectedImageShape: CAShapeLayer!
-    fileprivate var image: UIImage!
-    fileprivate var selectedImage: UIImage!
     
+    var image: UIImage? {
+        didSet {
+            imageShape?.mask?.contents = image?.cgImage
+        }
+    }
+
+    var selectedImage: UIImage? {
+        didSet {
+            selectedImageShape?.mask?.contents = selectedImage?.cgImage
+        }
+    }
     
     var brandColor: UIColor! {
         didSet {
@@ -96,19 +105,23 @@ internal class SPAnimatedButton: OWBaseButton {
         self.init(frame: frame, image: UIImage())
     }
     
-    convenience init(frame: CGRect, image: UIImage!) {
+    convenience init(frame: CGRect, image: UIImage) {
         self.init(frame: frame, image:image, selectedImage: UIImage())
     }
     
-    init(frame: CGRect, image: UIImage!, selectedImage:UIImage!, buttonInset insets: UIEdgeInsets = .zero) {
+    convenience init(frame: CGRect, buttonInset insets: UIEdgeInsets = .zero) {
+        self.init(frame: frame, image: UIImage(), selectedImage: UIImage(), buttonInset: insets)
+    }
+    
+    init(frame: CGRect, image: UIImage?, selectedImage: UIImage?, buttonInset insets: UIEdgeInsets = .zero) {
         super.init(frame: frame)
+        createLayers(buttonInset: insets)
         self.image = image
         self.selectedImage = selectedImage
-        createLayers(image: image, selectedImage:selectedImage, buttonInset: insets)
         addTargets()
     }
     
-    fileprivate func createLayers(image: UIImage, selectedImage: UIImage!, buttonInset insets: UIEdgeInsets ) {
+    fileprivate func createLayers(buttonInset insets: UIEdgeInsets) {
         self.layer.sublayers = nil
         let imageFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height).inset(by: insets)
         
@@ -177,10 +190,8 @@ internal class SPAnimatedButton: OWBaseButton {
         self.layer.addSublayer(imageShape)
         
         imageShape.mask = CALayer()
-        imageShape.mask?.contents = image.cgImage
         imageShape.mask?.bounds = imageFrame
         imageShape.mask?.position = imgCenterPoint
-        
         
         //===============
         // Selected image layer
@@ -195,7 +206,6 @@ internal class SPAnimatedButton: OWBaseButton {
         self.layer.addSublayer(selectedImageShape)
         
         selectedImageShape.mask = CALayer()
-        selectedImageShape.mask!.contents = selectedImage.cgImage
         selectedImageShape.mask!.bounds = imageFrame
         selectedImageShape.mask!.position = imgCenterPoint
         

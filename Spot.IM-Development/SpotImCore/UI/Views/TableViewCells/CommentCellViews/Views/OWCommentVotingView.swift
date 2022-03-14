@@ -13,12 +13,9 @@ import RxCocoa
 final class OWCommentVotingView: OWBaseView {
     
     fileprivate struct Metrics {
-        static let height: CGFloat = 33
+        static let voteButtonSize: CGFloat = 32.0
+        static let voteButtonInset: CGFloat = 4.0
         static let fontSize: CGFloat = 16.0
-        static let rankButtonVerticalInset: CGFloat = 6.0
-        static let rankButtonHorizontalInset: CGFloat = 3.0
-        static let rankUpButtonOffset: CGFloat = 3.0
-        static let rankDownButtonOffset: CGFloat = -3.0
     }
     
     fileprivate var viewModel: OWCommentVotingViewModeling!
@@ -34,42 +31,27 @@ final class OWCommentVotingView: OWBaseView {
     }()
     
     fileprivate lazy var rankUpButton: SPAnimatedButton = {
-        let rankUpNormalImage = UIImage(spNamed: "rank_like_up", supportDarkMode: false)
-        let rankUpSelectedImage = UIImage(spNamed: "rank_like_up_selected", supportDarkMode: false)
         let insets = UIEdgeInsets(
-            top: Metrics.rankButtonVerticalInset - Metrics.rankUpButtonOffset,
-            left: Metrics.rankButtonHorizontalInset,
-            bottom: Metrics.rankButtonVerticalInset + Metrics.rankUpButtonOffset,
-            right: Metrics.rankButtonHorizontalInset
+            top: Metrics.voteButtonInset,
+            left: Metrics.voteButtonInset,
+            bottom: Metrics.voteButtonInset,
+            right: Metrics.voteButtonInset
         )
-        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
-        let frame = CGRect(x: 0, y: 0, width: width, height: Metrics.height)
-
-        let button = SPAnimatedButton(frame: frame,
-                                image: rankUpNormalImage,
-                                selectedImage: rankUpSelectedImage,
-                                buttonInset: insets)
-        
+        let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
+        let button = SPAnimatedButton(frame: frame, buttonInset: insets)
         button.setContentHuggingPriority(.required, for: .horizontal)
-        
         return button
     }()
     
     fileprivate lazy var rankDownButton: SPAnimatedButton = {
-        let rankDownIconNormal = UIImage(spNamed: "rank_like_down", supportDarkMode: false)
-        let rankDownIconSelected = UIImage(spNamed: "rank_like_down_selected", supportDarkMode: false)
-        let insets = UIEdgeInsets(top: Metrics.rankButtonVerticalInset - Metrics.rankDownButtonOffset,
-                                  left: Metrics.rankButtonHorizontalInset,
-                                  bottom: Metrics.rankButtonVerticalInset + Metrics.rankDownButtonOffset,
-                                  right: Metrics.rankButtonHorizontalInset)
-        let width = Metrics.height - Metrics.rankButtonHorizontalInset * 2
-        let frame = CGRect(x: 0, y: 0, width: width, height: Metrics.height)
-
-        let button = SPAnimatedButton(frame: frame,
-                                image: rankDownIconNormal,
-                                selectedImage: rankDownIconSelected,
-                                buttonInset: insets)
-        
+        let insets = UIEdgeInsets(
+            top: Metrics.voteButtonInset,
+            left: Metrics.voteButtonInset,
+            bottom: Metrics.voteButtonInset,
+            right: Metrics.voteButtonInset
+        )
+        let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
+        let button = SPAnimatedButton(frame: frame, buttonInset: insets)
         button.setContentHuggingPriority(.required, for: .horizontal)
         return button
     }()
@@ -116,11 +98,11 @@ final class OWCommentVotingView: OWBaseView {
         backgroundColor = .spBackground0
         rankUpButton.backgroundColor = .spBackground0
         rankUpButton.imageColorOff = .buttonTitle
-        rankUpLabel.backgroundColor = .spBackground0
+        rankUpLabel.backgroundColor = .clear
         rankUpLabel.textColor = .buttonTitle
         rankDownButton.backgroundColor = .spBackground0
         rankDownButton.imageColorOff = .buttonTitle
-        rankDownLabel.backgroundColor = .spBackground0
+        rankDownLabel.backgroundColor = .clear
         rankDownLabel.textColor = .buttonTitle
     }
     
@@ -225,6 +207,23 @@ fileprivate extension OWCommentVotingView {
                 self.rankedByUser = ranked
             })
             .disposed(by: disposeBag)
+        
+        viewModel.outputs.votingUpImages
+            .subscribe(onNext: { [weak self] (regular: UIImage?, selected: UIImage?) in
+                guard let self = self else { return }
+                self.rankUpButton.image = regular
+                self.rankUpButton.selectedImage = selected
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.votingDownImages
+            .subscribe(onNext: { [weak self] (regular: UIImage?, selected: UIImage?) in
+                guard let self = self else { return }
+                self.rankDownButton.image = regular
+                self.rankDownButton.selectedImage = selected
+            })
+            .disposed(by: disposeBag)
+            
         
         rankUpButton.rx.tap
             .bind(to: viewModel.inputs.tapRankUp)

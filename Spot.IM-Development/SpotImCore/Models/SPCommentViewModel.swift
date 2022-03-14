@@ -283,7 +283,7 @@ internal struct CommentViewModel {
         static let messageContainerTopOffset: CGFloat = 14.0
         static let userViewCollapsedHeight: CGFloat = 44.0
         static let userViewExpandedHeight: CGFloat = 69.0
-        static let replyActionsViewHeight: CGFloat = 49.0
+        static let replyActionsViewHeight: CGFloat = 32.0
         static let moreRepliesViewHeight: CGFloat = 31.0
         static let moreRepliesTopOffset: CGFloat = 12.0
         static let lastInSectionOffset: CGFloat = 19.0
@@ -403,7 +403,7 @@ private enum Theme {
     static let messageContainerTopOffset: CGFloat = 14.0
     static let userViewCollapsedHeight: CGFloat = 44.0
     static let userViewExpandedHeight: CGFloat = 69.0
-    static let replyActionsViewHeight: CGFloat = 49.0
+    static let replyActionsViewHeight: CGFloat = 32.0
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let moreRepliesTopOffset: CGFloat = 12.0
 }
