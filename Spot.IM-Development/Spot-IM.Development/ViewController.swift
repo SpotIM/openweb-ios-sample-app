@@ -111,7 +111,7 @@ class ViewController: UIViewController {
     
     @IBAction func showsp_mobileGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileGuest, from: sender)
-        showArticles(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationControllerId)
     }
     
     @IBAction func showsp_mobileSocial(_ sender: UIButton) {

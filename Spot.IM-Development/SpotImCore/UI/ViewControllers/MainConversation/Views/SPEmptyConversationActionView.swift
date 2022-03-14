@@ -28,7 +28,7 @@ struct EmptyActionDataModel {
 final class SPEmptyConversationActionView: OWBaseView {
 
     private let iconView: OWBaseUIImageView = .init()
-    private let messageLabel: OWBaseLabel = .init()
+    let messageLabel: OWBaseLabel = .init()
     private let actionButton: OWBaseButton = .init()
     private let containerView: OWBaseView = .init()
     private var action: (() -> Void)?
