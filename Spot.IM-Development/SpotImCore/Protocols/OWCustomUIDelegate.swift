@@ -18,4 +18,6 @@ protocol OWCustomUIDelegate: AnyObject {
     func customizeShowCommentsButton(button: SPShowCommentsButton)
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
     func customizeCommentCreationActionButton(button: OWBaseButton)
+    func customizeReadOnlyLabel(label: UILabel)
+    func customizeEmptyStateReadOnlyLabel(label: UILabel)
 }
