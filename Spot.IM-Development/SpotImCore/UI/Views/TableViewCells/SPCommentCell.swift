@@ -466,7 +466,7 @@ private enum Theme {
     static let leadingOffset: CGFloat = 16.0
     static let trailingOffset: CGFloat = 16.0
     static let messageContainerTopOffset: CGFloat = 5.0
-    static let replyActionsViewHeight: CGFloat = 49.0
+    static let replyActionsViewHeight: CGFloat = 32
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let userViewCollapsedHeight: CGFloat = 44.0
     static let userViewExpandedHeight: CGFloat = 69.0

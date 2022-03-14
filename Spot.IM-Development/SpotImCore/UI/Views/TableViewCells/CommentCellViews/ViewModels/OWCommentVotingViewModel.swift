@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 import UIKit
 
+typealias VotingImages = (regular: UIImage?, selected: UIImage?)
+
 protocol OWCommentVotingViewModelingInputs {
     func configureRankUp(_ count: Int)
     func configureRankDown(_ count: Int)
@@ -28,6 +30,9 @@ protocol OWCommentVotingViewModelingOutputs {
     var voteTypes: Observable<[VoteType]> { get }
     var rankUpSelected: Observable<Bool> { get }
     var rankDownSelected: Observable<Bool> { get }
+    
+    var votingUpImages: Observable<VotingImages> { get }
+    var votingDownImages: Observable<VotingImages> { get }
 }
 
 protocol OWCommentVotingViewModeling {
@@ -67,10 +72,14 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
     
     fileprivate let _voteTypesToShow = BehaviorSubject<[VoteType]?>(value: nil)
     
+    fileprivate let _votingUpImages = BehaviorSubject<VotingImages?>(value: nil)
+    fileprivate let _votingDownImages = BehaviorSubject<VotingImages?>(value: nil)
+    
     init () {
         _brandColor.onNext(UIColor.brandColor)
         
         self.handleVotesTypeToShow()
+        self.handleVotingImages()
         self.setupObservers()
     }
     
@@ -93,6 +102,50 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
         }
         
         _voteTypesToShow.onNext(voteTypesToShow)
+    }
+    
+    private func handleVotingImages() {
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared {
+            let votesType = sharedConfig.votesType
+            let votingUpImages: VotingImages
+            var votingDownImages: VotingImages? = nil
+            switch votesType {
+            case .like:
+                votingUpImages = (
+                    regular: UIImage(spNamed: "rank_like_up"),
+                    selected: UIImage(spNamed: "rank_like_up_selected")
+                )
+                votingDownImages = (
+                    regular: UIImage(spNamed: "rank_like_down"),
+                    selected: UIImage(spNamed: "rank_like_down_selected")
+                )
+                break
+            case .updown:
+                votingUpImages = (
+                    regular: UIImage(spNamed: "rank_arrow_up"),
+                    selected: UIImage(spNamed: "rank_arrow_up_selected")
+                )
+                votingDownImages = (
+                    regular: UIImage(spNamed: "rank_arrow_down"),
+                    selected: UIImage(spNamed: "rank_arrow_down_selected")
+                )
+                break
+            case .recommend:
+                votingUpImages = (
+                    regular: UIImage(spNamed: "rank_star"),
+                    selected: UIImage(spNamed: "rank_star_selected")
+                )
+                break
+            case .heart:
+                votingUpImages = (
+                    regular: UIImage(spNamed: "rank_heart"),
+                    selected: UIImage(spNamed: "rank_heart_selected")
+                )
+                break
+            }
+            _votingUpImages.onNext(votingUpImages)
+            _votingDownImages.onNext(votingDownImages)
+        }
     }
     
     var rankUpCount: Observable<String> {
@@ -146,6 +199,16 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
             .unwrap()
             .map { $0 == -1 }
             .distinctUntilChanged()
+    }
+    
+    var votingUpImages: Observable<VotingImages> {
+        _votingUpImages
+            .unwrap()
+    }
+    
+    var votingDownImages: Observable<VotingImages> {
+        _votingDownImages
+            .unwrap()
     }
     
     private func setupObservers() {
