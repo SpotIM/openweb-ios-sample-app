@@ -24,9 +24,6 @@ final class OWCommentVotingView: OWBaseView {
     fileprivate var viewModel: OWCommentVotingViewModeling!
     fileprivate var disposeBag: DisposeBag!
     
-    // TODO - use RX
-    weak var delegate: CommentActionsDelegate?
-    
     var rankedByUser: Int = 0
     
     fileprivate lazy var stackView: OWBaseStackView = {
@@ -53,7 +50,6 @@ final class OWCommentVotingView: OWBaseView {
                                 selectedImage: rankUpSelectedImage,
                                 buttonInset: insets)
         
-        button.addTarget(self, action: #selector(rankUp), for: .touchUpInside)
         button.setContentHuggingPriority(.required, for: .horizontal)
         
         return button
@@ -74,7 +70,6 @@ final class OWCommentVotingView: OWBaseView {
                                 selectedImage: rankDownIconSelected,
                                 buttonInset: insets)
         
-        button.addTarget(self, action: #selector(rankDown), for: .touchUpInside)
         button.setContentHuggingPriority(.required, for: .horizontal)
         return button
     }()
@@ -107,11 +102,13 @@ final class OWCommentVotingView: OWBaseView {
         setupUI()
     }
     
-    func configure(with viewModel: OWCommentVotingViewModeling) {
+    func configure(with viewModel: OWCommentVotingViewModeling, delegate: CommentActionsDelegate) {
+        
         self.viewModel = viewModel
+        self.viewModel.delegate = delegate
         disposeBag = DisposeBag()
         
-        confiureViews()
+        setupObservers()
     }
     
     // Handle dark mode \ light mode change
@@ -155,48 +152,10 @@ final class OWCommentVotingView: OWBaseView {
         stackView.addArrangedSubview(rankDownButton)
         stackView.addArrangedSubview(rankDownLabel)
     }
-    
-    @objc
-    private func rankUp() {
-        let from: SPRank = SPRank(rawValue: rankedByUser) ?? .unrank
-        let to: SPRank = (rankedByUser == 0 || rankedByUser == -1) ? .up : .unrank
-        
-        delegate?.rankUp(SPRankChange(from: from, to: to), updateRankLocal: rankUpLocal)
-    }
-    
-    private func rankUpLocal() {
-        switch rankedByUser {
-        case -1, 0:
-            rankUpButton.select()
-            rankedByUser = 1
-        default:
-            rankUpButton.deselect()
-            rankedByUser = 0
-        }
-    }
-
-    @objc
-    private func rankDown() {
-        let from: SPRank = SPRank(rawValue: rankedByUser) ?? .unrank
-        let to: SPRank = (rankedByUser == 0 || rankedByUser == 1) ? .down : .unrank
-        
-        delegate?.rankDown(SPRankChange(from: from, to: to), updateRankLocal: rankDownLocal)
-    }
-    
-    private func rankDownLocal() {
-        switch rankedByUser {
-        case 0, 1:
-            rankDownButton.select()
-            rankedByUser = -1
-        default:
-            rankDownButton.deselect()
-            rankedByUser = 0
-        }
-    }
 }
 
 fileprivate extension OWCommentVotingView {
-    func confiureViews() {
+    func setupObservers() {
         viewModel.outputs.rankUpCount
             .bind(to: rankUpLabel.rx.text)
             .disposed(by: disposeBag)
@@ -213,20 +172,36 @@ fileprivate extension OWCommentVotingView {
             .bind(to: self.rankDownButton.rx.brandColor)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.rankedByUser
-            .subscribe(onNext: { [weak self] ranked in
+        viewModel.outputs.rankUpSelected
+            .take(1)
+            .bind(to: self.rankUpButton.rx.isSelected)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.rankUpSelected
+            .skip(1)
+            .subscribe(onNext: { [weak self] selected in
                 guard let self = self else { return }
-                self.rankedByUser = ranked
-                switch ranked {
-                case -1:
-                    self.rankUpButton.isSelected = false
-                    self.rankDownButton.isSelected = true
-                case 1:
-                    self.rankUpButton.isSelected = true
-                    self.rankDownButton.isSelected = false
-                default:
-                    self.rankUpButton.isSelected = false
-                    self.rankDownButton.isSelected = false
+                if (selected) {
+                    self.rankUpButton.select()
+                } else {
+                    self.rankUpButton.deselect()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.rankDownSelected
+            .take(1)
+            .bind(to: self.rankDownButton.rx.isSelected)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.rankDownSelected
+            .skip(1)
+            .subscribe(onNext: { [weak self] selected in
+                guard let self = self else { return }
+                if (selected) {
+                    self.rankDownButton.select()
+                } else {
+                    self.rankDownButton.deselect()
                 }
             })
             .disposed(by: disposeBag)
@@ -242,6 +217,21 @@ fileprivate extension OWCommentVotingView {
                     self.configureRankDownButton()
                 }
             })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.rankedByUser
+            .subscribe(onNext: { [weak self] ranked in
+                guard let self = self else {return}
+                self.rankedByUser = ranked
+            })
+            .disposed(by: disposeBag)
+        
+        rankUpButton.rx.tap
+            .bind(to: viewModel.inputs.tapRankUp)
+            .disposed(by: disposeBag)
+        
+        rankDownButton.rx.tap
+            .bind(to: viewModel.inputs.tapRankDown)
             .disposed(by: disposeBag)
     }
 }

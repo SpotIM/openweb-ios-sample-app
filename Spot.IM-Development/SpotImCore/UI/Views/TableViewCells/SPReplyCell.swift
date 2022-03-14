@@ -149,7 +149,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
-        replyActionsView.configure(with: dataModel.commentActionsVM)
+        replyActionsView.configure(with: dataModel.commentActionsVM, delegate: self)
         dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
@@ -251,7 +251,6 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func configureReplyActionsView() {
-        replyActionsView.delegate = self
         replyActionsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentMediaView.OWSnp.bottom)
             make.leading.equalTo(messageView)
@@ -311,12 +310,12 @@ extension SPReplyCell: CommentActionsDelegate {
         delegate?.replyTapped(for: commentId)
     }
     
-    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankUp(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
     
-    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankDown(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
 }
 

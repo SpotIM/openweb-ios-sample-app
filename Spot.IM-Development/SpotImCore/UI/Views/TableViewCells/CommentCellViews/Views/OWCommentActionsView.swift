@@ -16,11 +16,7 @@ final class OWCommentActionsView: OWBaseView {
     fileprivate var viewModel: OWCommentActionsViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    weak var delegate: CommentActionsDelegate? {
-        didSet {
-            votingView.delegate = delegate
-        }
-    }
+    weak var delegate: CommentActionsDelegate? = nil
 
     private let replyDefaultTitle: String
     
@@ -39,11 +35,12 @@ final class OWCommentActionsView: OWBaseView {
         setupUI()
     }
     
-    func configure(with viewModel: OWCommentActionsViewModeling) {
+    func configure(with viewModel: OWCommentActionsViewModeling, delegate: CommentActionsDelegate) {
+        self.delegate = delegate
         self.viewModel = viewModel
         disposeBag = DisposeBag()
 
-        votingView.configure(with: viewModel.outputs.votingVM)
+        votingView.configure(with: viewModel.outputs.votingVM, delegate: delegate)
     }
     
     func setReadOnlyMode(enabled: Bool) {
@@ -144,8 +141,8 @@ final class OWCommentActionsView: OWBaseView {
 protocol CommentActionsDelegate: AnyObject {
 
     func reply()
-    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void)
-    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void)
+    func rankUp(_ rankChange: SPRankChange)
+    func rankDown(_ rankChange: SPRankChange)
 
 }
 
