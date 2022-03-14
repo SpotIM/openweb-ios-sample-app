@@ -8,7 +8,11 @@
 
 import UIKit
 
-internal class SPUser: Codable, CustomDebugStringConvertible {
+internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
+    static func == (lhs: SPUser, rhs: SPUser) -> Bool {
+        return lhs.userId == rhs.userId
+    }
+    
     
     enum CodingKeys: String, CodingKey {
         case id, userId, displayName, userName, imageId, registered,
