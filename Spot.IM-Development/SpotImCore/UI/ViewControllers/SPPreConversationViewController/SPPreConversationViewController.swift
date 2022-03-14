@@ -363,6 +363,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
                     if (self.isReadOnlyModeEnabled()) {
                         self.whatYouThinkView.setReadOnlyMode(isPreConversation: true)
+                        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView, isPreConversation: true)
                     }
                     self.updateWhatYouThinkView()
                     self.updateTableViewData()
@@ -519,6 +520,13 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         self.updateTableViewData()
+    }
+   
+    @objc
+    override func indicationViewClicked() {
+        guard model.realtimeViewType == .blitz else { return }
+        super.indicationViewClicked()
+        self.moveToFullConversation(selectedCommentId: nil)
     }
     
     @objc

@@ -33,7 +33,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
-    private var typingIndicationView: TotalTypingIndicationView?
     
     private var bannerView: UIView?
 
@@ -197,7 +196,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             communityGuidelinesView.setHtmlText(htmlString: htmlString)
         }
         self.updateEmptyStateViewAccordingToStyle()
-        
+        self.typingIndicationView?.updateColorsAccordingToStyle()
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
         self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
     }
@@ -236,7 +235,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         do {
             let typingCount = try model.typingCount()
-            totalTypingCountDidUpdate(count: typingCount)
+            let newCommentsCount = try model.newMessagesCount()
+            totalTypingCountDidUpdate(count: typingCount, newCommentsCount: newCommentsCount)
         } catch {
             if let realtimeError = error as? RealTimeError {
                 model.stopRealTimeFetching()
@@ -511,7 +511,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         footer.updateOnlineStatus(.online)
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
-        updateFooterViewCustomUI(footerView: footer)
         let bottomPadding: CGFloat
         if #available(iOS 11.0, *), SpotIm.shouldConversationFooterStartFromBottomAnchor {
             bottomPadding = UIApplication.shared.windows[0].safeAreaInsets.bottom
@@ -521,6 +520,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if (isReadOnlyModeEnabled()) {
             footer.setReadOnlyMode()
         }
+        updateFooterViewCustomUI(footerView: footer)
         footer.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(SpotIm.shouldConversationFooterStartFromBottomAnchor ? view : view.layoutMarginsGuide)

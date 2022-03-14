@@ -148,11 +148,10 @@ class SPCommentCreationModel {
         var responseData = response
         responseData.writtenAt = Date().timeIntervalSince1970
         
-        let userId = SPUserSessionHolder.session.user?.id
-        responseData.userId = userId
+        let user = SPUserSessionHolder.session.user
+        responseData.userId = user?.id
         
-        if let userId = responseData.userId {
-            let user = SPComment.CommentUser(id: userId)
+        if let user = user, let userId = responseData.userId {
             responseData.users = [userId: user]
         }
         
