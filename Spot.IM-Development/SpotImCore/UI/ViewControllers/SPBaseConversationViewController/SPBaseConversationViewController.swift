@@ -697,7 +697,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         fatalError("Implement in subclass")
     }
 
-    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?, updateRankLocal: () -> Void) {
+    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?) {
         guard let config = SPConfigsDataSource.appConfig,
               config.initialization?.policyAllowGuestsToLike == true ||
                 SPUserSessionHolder.session.user?.registered == true
@@ -705,7 +705,6 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             self.startLoginFlow()
             return
         }
-        updateRankLocal()
         // track event
         switch change.operation {
         case "like":

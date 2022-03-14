@@ -172,9 +172,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func configureReplyActionsView() {
-        replyActionsView.delegate = self
-        
+    private func configureReplyActionsView() {        
         replyActionsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentMediaView.OWSnp.bottom)
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
@@ -252,7 +250,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
-        replyActionsView.configure(with: dataModel.commentActionsVM)
+        replyActionsView.configure(with: dataModel.commentActionsVM, delegate: self)
         dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount)
@@ -377,12 +375,12 @@ extension SPCommentCell: CommentActionsDelegate {
         delegate?.replyTapped(for: commentId)
     }
     
-    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankUp(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
     
-    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankDown(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
     
 }
@@ -448,7 +446,7 @@ enum RepliesButtonState {
 protocol SPCommentCellDelegate: AnyObject {
     func showMoreReplies(for commentId: String?)
     func hideReplies(for commentId: String?)
-    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?, updateRankLocal: () -> Void)
+    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?)
     func replyTapped(for commentId: String?)
     func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton)
     func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool)
