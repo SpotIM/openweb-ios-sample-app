@@ -138,11 +138,11 @@ final class OWCommentVotingView: OWBaseView {
 
 fileprivate extension OWCommentVotingView {
     func setupObservers() {
-        viewModel.outputs.rankUpCount
+        viewModel.outputs.rankUpText
             .bind(to: rankUpLabel.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.rankDownCount
+        viewModel.outputs.rankDownText
             .bind(to: rankDownLabel.rx.text)
             .disposed(by: disposeBag)
         
@@ -217,6 +217,7 @@ fileprivate extension OWCommentVotingView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.votingDownImages
+            .unwrap()
             .subscribe(onNext: { [weak self] (regular: UIImage?, selected: UIImage?) in
                 guard let self = self else { return }
                 self.rankDownButton.image = regular
