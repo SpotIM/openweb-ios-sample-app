@@ -148,6 +148,16 @@ class ViewController: UIViewController {
             UserDefaults.standard.setValue(true, forKey: "shouldPresentInNewNavStack")
             showArticles()
         }))
+        alert.addAction(UIAlertAction(title: "Comment - (Conversation Push)", style: .default, handler: { action in
+            UserDefaults.standard.setValue(true, forKey: "shouldOpenComment")
+            UserDefaults.standard.setValue(false, forKey: "shouldPresentInNewNavStack")
+            showArticles()
+        }))
+        alert.addAction(UIAlertAction(title: "Comment - (Conversation Present)", style: .default, handler: { action in
+            UserDefaults.standard.setValue(true, forKey: "shouldOpenComment")
+            UserDefaults.standard.setValue(true, forKey: "shouldPresentInNewNavStack")
+            showArticles()
+        }))
         
         self.present(alert, animated: true, completion: nil)
     }
