@@ -363,6 +363,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                     self.updateCommunityQuestion(communityQuestionText: self.getCommunityQuestion())
                     if (self.isReadOnlyModeEnabled()) {
                         self.whatYouThinkView.setReadOnlyMode(isPreConversation: true)
+                        self.updateFooterViewCustomUI(footerView: self.whatYouThinkView, isPreConversation: true)
                     }
                     self.updateWhatYouThinkView()
                     self.updateTableViewData()
