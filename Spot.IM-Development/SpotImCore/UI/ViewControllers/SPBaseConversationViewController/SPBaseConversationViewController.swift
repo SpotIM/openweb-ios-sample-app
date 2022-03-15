@@ -146,10 +146,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     }
     
     internal func isReadOnlyModeEnabled() -> Bool {
-        let readOnlyMode = model.dataSource.articleMetadata.readOnlyMode
-        return
-            (readOnlyMode == .default && model.dataSource.isReadOnly) ||
-            readOnlyMode == .enable
+        return model.isReadOnlyMode()
     }
     
     private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
