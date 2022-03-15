@@ -184,14 +184,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
                 switch result {
                 case .success( _):
-                    let conversationController = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
-                    self.conversationModel!.dataSource.showReplies = true
-                    // back button
-                    let backBarButtonItem = self.createBackBarButtonItem()
-                    conversationController.navigationItem.leftBarButtonItem = backBarButtonItem
-                    
-                    navController.viewControllers = [conversationController]
-                    navigationController.present(navController, animated: true)
+                    self.presentConversationInternal(presentationalController: navigationController, internalNavController: navController, selectedCommentId: nil, animated: true)
                     self.createComment(with: self.conversationModel!)
                     completion?(true, nil)
                 case .failure(let spNetworkError):
@@ -208,9 +201,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
                 switch result {
                 case .success( _):
-                    let controller = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
-                    self.conversationModel!.dataSource.showReplies = true
-                    self.startFlow(with: controller, animated: false)
+                    self.showConversationInternal(selectedCommentId: nil, animated: false)
                     self.createComment(with: self.conversationModel!)
                     completion?(true, nil)
                 case .failure(let spNetworkError):
@@ -236,10 +227,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let controller = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
-                controller.commentIdToShowOnOpen = selectedCommentId
-                self.conversationModel!.dataSource.showReplies = true
-                self.startFlow(with: controller)
+                self.showConversationInternal(selectedCommentId: selectedCommentId, animated: true)
                 completion?(true, nil)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
@@ -260,16 +248,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
-                let conversationController = self.conversationController(with: self.conversationModel!, openedByPublisher: true)
-                conversationController.commentIdToShowOnOpen = selectedCommentId
-                self.conversationModel!.dataSource.showReplies = true
-                navController.viewControllers = [conversationController]
-                
-                // back button
-                let backBarButtonItem = self.createBackBarButtonItem()
-                conversationController.navigationItem.leftBarButtonItem = backBarButtonItem
-                
-                viewController.present(navController, animated: true, completion: nil)
+                self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: selectedCommentId, animated: true)
                 completion?(true, nil)
             case .failure(let spNetworkError):
                 print("spNetworkError: \(spNetworkError.localizedDescription)")
@@ -291,6 +270,25 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         self.loadConversation(model: conversationModel, completion: completion)
     }
     
+    private func showConversationInternal(selectedCommentId: String?, animated: Bool) {
+        let controller = conversationController(with: self.conversationModel!, openedByPublisher: true)
+        controller.commentIdToShowOnOpen = selectedCommentId
+        conversationModel!.dataSource.showReplies = true
+        startFlow(with: controller, animated: animated)
+    }
+    
+    private func presentConversationInternal(presentationalController: UIViewController, internalNavController: UINavigationController,  selectedCommentId: String?, animated: Bool) {
+        let conversationController = conversationController(with: conversationModel!, openedByPublisher: true)
+        conversationController.commentIdToShowOnOpen = selectedCommentId
+        self.conversationModel!.dataSource.showReplies = true
+        
+        // back button
+        let backBarButtonItem = self.createBackBarButtonItem()
+        conversationController.navigationItem.leftBarButtonItem = backBarButtonItem
+        
+        internalNavController.viewControllers = [conversationController]
+        presentationalController.present(internalNavController, animated: animated)
+    }
     
     private func createBackBarButtonItem() -> UIBarButtonItem {
         let backButton = UIButton(type: .custom)
