@@ -151,7 +151,7 @@ class ViewController: UIViewController {
         
         let readOnlyMode = SpotImReadOnlyMode.parseSampleAppManualConfig()
         
-        if (readOnlyMode != .disable) {
+        if (readOnlyMode != .enable) {
             alert.addAction(UIAlertAction(title: "Comment - (Conversation Push)", style: .default, handler: { action in
                 UserDefaults.standard.setValue(true, forKey: "shouldOpenComment")
                 UserDefaults.standard.setValue(false, forKey: "shouldPresentInNewNavStack")
