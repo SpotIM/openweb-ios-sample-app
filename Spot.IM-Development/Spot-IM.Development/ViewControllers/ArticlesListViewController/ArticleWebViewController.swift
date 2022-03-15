@@ -301,6 +301,13 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .commentCreationActionButton(let button):
             button.backgroundColor = isDarkMode ? .black : .red
             button.setTitleColor(.white, for: .normal)
+            break
+        case .emptyStateReadOnlyLabel(let label):
+            label.text = "custom empty read only"
+            break
+        case .readOnlyLabel(let label):
+            label.text = "custom read only"
+            break
         default:
             break
         }

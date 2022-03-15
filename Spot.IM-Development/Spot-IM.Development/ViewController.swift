@@ -9,6 +9,7 @@
 import UIKit
 import SpotImCore
 import GoogleMobileAds
+import RxSwift
 
 class ViewController: UIViewController {
 
@@ -20,6 +21,9 @@ class ViewController: UIViewController {
     var adLoader:GADAdLoader!
 
     @IBOutlet weak var customSpotTextField: UITextField!
+    @IBOutlet weak var optionsScrollView: UIScrollView!
+    
+    fileprivate let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +37,8 @@ class ViewController: UIViewController {
         self.adLoader?.delegate = self
         self.adLoader?.load(GADRequest())
         SpotIm.setAnalyticsEventDelegate(delegate: self)
+        
+        setupObservers()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -52,6 +58,7 @@ class ViewController: UIViewController {
         setupNavigationBar()
         logo.clipsToBounds = true
         logo.layer.cornerRadius = 8
+        customSpotTextField.returnKeyType = .done
     }
 
     private func setupNavigationBar() {
@@ -104,7 +111,7 @@ class ViewController: UIViewController {
     
     @IBAction func showsp_mobileGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileGuest, from: sender)
-        showArticles(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationControllerId)
     }
     
     @IBAction func showsp_mobileSocial(_ sender: UIButton) {
@@ -227,5 +234,39 @@ extension ViewController: SPAnalyticsEventDelegate {
         default:
             print("Spot.IM Analytics Event - " + event.eventType)
         }
+    }
+}
+
+
+fileprivate extension ViewController {
+    func setupObservers() {
+        customSpotTextField.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
+            .subscribe(onNext: { [weak self] _ in
+                self?.customSpotTextField.endEditing(true)
+            })
+            .disposed(by: disposeBag)
+        
+        let keyboardShowHeight = NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillShowNotification)
+            .map { notification -> CGFloat in
+                let height = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height
+                return height ?? 0
+            }
+        
+        let keyboardHideHeight = NotificationCenter.default.rx
+            .notification(UIResponder.keyboardWillHideNotification)
+            .map { _ -> CGFloat in
+                0
+            }
+        
+        let keyboardHeight = Observable.from([keyboardShowHeight, keyboardHideHeight])
+            .merge()
+            
+        keyboardHeight
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self else { return }
+                self.optionsScrollView.contentOffset = CGPoint(x: 0, y: height/2)
+            })
+            .disposed(by: disposeBag)
     }
 }
