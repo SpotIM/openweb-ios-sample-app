@@ -207,9 +207,10 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
                 switch result {
                 case .success( _):
-                    self.showConversationInternal(selectedCommentId: nil, animated: false)
-                    
                     let model = self.conversationModel!
+                    let shouldAnimateConversation = model.isReadOnlyMode() ? true : false
+                    self.showConversationInternal(selectedCommentId: nil, animated: shouldAnimateConversation)
+                    
                     if (!model.isReadOnlyMode()) {
                         self.createComment(with: model)
                     }
