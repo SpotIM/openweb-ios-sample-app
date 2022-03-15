@@ -185,7 +185,11 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 switch result {
                 case .success( _):
                     self.presentConversationInternal(presentationalController: navigationController, internalNavController: navController, selectedCommentId: nil, animated: true)
-                    self.createComment(with: self.conversationModel!)
+                    
+                    let model = self.conversationModel!
+                    if (!model.isReadOnlyMode()) {
+                        self.createComment(with: model)
+                    }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
                     print("spNetworkError: \(spNetworkError.localizedDescription)")
@@ -202,7 +206,11 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 switch result {
                 case .success( _):
                     self.showConversationInternal(selectedCommentId: nil, animated: false)
-                    self.createComment(with: self.conversationModel!)
+                    
+                    let model = self.conversationModel!
+                    if (!model.isReadOnlyMode()) {
+                        self.createComment(with: model)
+                    }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
                     print("spNetworkError: \(spNetworkError.localizedDescription)")

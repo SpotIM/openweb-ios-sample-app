@@ -278,6 +278,10 @@ final class SPMainConversationModel {
         return AdsABGroup()
     }
     
+    func isReadOnlyMode() -> Bool {
+        let readOnlyMode = dataSource.articleMetadata.readOnlyMode
+        return (readOnlyMode == .default && dataSource.isReadOnly) || readOnlyMode == .enable
+    }
 }
 
 extension SPMainConversationModel {
