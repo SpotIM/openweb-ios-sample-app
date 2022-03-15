@@ -14,6 +14,11 @@ references:
     macos:
       xcode: "13.2.0"
     working_directory: ~/project/Spot.IM-Development
+    
+  ios_config_xcode_13_3: &ios_config_xcode_13_3
+    macos:
+      xcode: "13.3.0"
+    working_directory: ~/project/Spot.IM-Development
 
   ios_config_xcode_12_5: &ios_config_xcode_12_5
     macos:
@@ -213,6 +218,16 @@ jobs:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
             bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.2
+            
+  release_tag_13_3_job:
+    <<: *ios_config_xcode_13_3
+    steps:
+      - release_tag
+
+      - run:
+          name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
+          command: |
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.3
 
   release_app_job:
     <<: *ios_config_xcode_13
@@ -283,6 +298,12 @@ workflows:
             branches:
               only:
                 - /^release/tag13.2/.*/
+                
+      - release_tag_13_3_job:
+          filters:
+            branches:
+              only:
+                - /^release/tag13.3/.*/
 
       - release_app_job:
           filters:
