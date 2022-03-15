@@ -466,23 +466,21 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         return navigationItemTextView
     }
     
-    private func presentContentCreationViewController(
-        controller: SPCommentCreationViewController,
-        _ dataModel: SPMainConversationModel) {
-            let lastViewController = navigationController?.viewControllers.last
-            shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
-            
-            let transition = CATransition()
-            transition.duration = 0.5
-            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            transition.type = .moveIn
-            transition.subtype = .fromTop
-            
-            navigationController?.view.layer.add(transition, forKey: kCATransition)
-            navigationController?.pushViewController(controller, animated: false)
-            authHandlers.append(WeakRef(value: controller.userDidSignInHandler()))
-            authenticationViewDelegate = controller
-        }
+    private func presentContentCreationViewController(controller: SPCommentCreationViewController, _ dataModel: SPMainConversationModel) {
+        let lastViewController = navigationController?.viewControllers.last
+        shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
+        
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        transition.type = .moveIn
+        transition.subtype = .fromTop
+        
+        navigationController?.view.layer.add(transition, forKey: kCATransition)
+        navigationController?.pushViewController(controller, animated: false)
+        authHandlers.append(WeakRef(value: controller.userDidSignInHandler()))
+        authenticationViewDelegate = controller
+    }
     
     private func insertMainConversationToNavigation(_ dataModel: SPMainConversationModel) {
         let controller = conversationController(with: dataModel)
