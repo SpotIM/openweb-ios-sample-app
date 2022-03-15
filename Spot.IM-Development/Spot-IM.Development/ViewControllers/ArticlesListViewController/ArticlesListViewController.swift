@@ -11,6 +11,7 @@ import Foundation
 import Alamofire
 import SpotImCore
 import SnapKit
+import RxSwift
 
 let cellIdentifier = "cards"
 
@@ -19,6 +20,8 @@ class ArticlesListViewController: UITableViewController {
     fileprivate struct Metrics {
         static let headerHeight: CGFloat = 50
     }
+    
+    fileprivate let disposeBag = DisposeBag()
     
     let spotId : String
     let authenticationControllerId: String
@@ -38,6 +41,7 @@ class ArticlesListViewController: UITableViewController {
         customPostTextField.placeholder = "custom postId"
         customPostTextField.borderStyle = .roundedRect
         customPostTextField.autocapitalizationType = .none
+        customPostTextField.returnKeyType = .done
         
         super.init(style: .plain)
     }
@@ -64,6 +68,7 @@ class ArticlesListViewController: UITableViewController {
         
         setup()
         loadData()
+        setupObservers()
 
         title = "Articles"
     }
@@ -274,5 +279,15 @@ extension ArticlesListViewController: SpotImSDKNavigationDelegate {
         let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
         
         return controller
+    }
+}
+
+fileprivate extension ArticlesListViewController {
+    func setupObservers() {
+        customPostTextField.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
+            .subscribe(onNext: { [weak self] _ in
+                self?.customPostTextField.endEditing(true)
+            })
+            .disposed(by: disposeBag)
     }
 }

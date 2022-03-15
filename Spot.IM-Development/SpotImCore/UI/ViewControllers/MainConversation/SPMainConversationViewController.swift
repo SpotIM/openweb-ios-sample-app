@@ -511,7 +511,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         footer.updateOnlineStatus(.online)
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
-        updateFooterViewCustomUI(footerView: footer)
         let bottomPadding: CGFloat
         if #available(iOS 11.0, *), SpotIm.shouldConversationFooterStartFromBottomAnchor {
             bottomPadding = UIApplication.shared.windows[0].safeAreaInsets.bottom
@@ -521,6 +520,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if (isReadOnlyModeEnabled()) {
             footer.setReadOnlyMode()
         }
+        updateFooterViewCustomUI(footerView: footer)
         footer.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(SpotIm.shouldConversationFooterStartFromBottomAnchor ? view : view.layoutMarginsGuide)

@@ -39,6 +39,8 @@ public enum CustomizableView {
     case showCommentsButton(button: SPShowCommentsButton)
     case preConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
     case commentCreationActionButton(button: OWBaseButton)
+    case readOnlyLabel(label: UILabel)
+    case emptyStateReadOnlyLabel(label: UILabel)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
@@ -711,6 +713,13 @@ extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {
     }
     func customizeCommentCreationActionButton(button: OWBaseButton) {
         customUIDelegate?.customizeView(view: .commentCreationActionButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    
+    func customizeReadOnlyLabel(label: UILabel) {
+        customUIDelegate?.customizeView(view: .readOnlyLabel(label: label), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+    }
+    func customizeEmptyStateReadOnlyLabel(label: UILabel) {
+        customUIDelegate?.customizeView(view: .emptyStateReadOnlyLabel(label: label), isDarkMode: SPUserInterfaceStyle.isDarkMode)
     }
 }
 
