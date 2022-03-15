@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
         UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
+        UserDefaults.standard.removeObject(forKey: "shouldOpenComment")
         
         return true
     }

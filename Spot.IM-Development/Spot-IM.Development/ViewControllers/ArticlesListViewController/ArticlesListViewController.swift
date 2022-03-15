@@ -76,6 +76,7 @@ class ArticlesListViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         if self.isMovingFromParent {
             UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
+            UserDefaults.standard.removeObject(forKey: "shouldOpenComment")
             UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
         }
     }
@@ -158,18 +159,8 @@ extension ArticlesListViewController : ArticleTableViewCellDelegate {
             "page_type": "test2",
             "product_id": "test3"
         ]
-        let readOnlyModeRawValue = UserDefaults.standard.integer(forKey: "demo.isReadOnlyEnabled")
-        let readOnlyMode: SpotImReadOnlyMode
-        switch readOnlyModeRawValue {
-        case 1:
-            readOnlyMode = .enable
-            break
-        case 2:
-            readOnlyMode = .disable
-            break
-        default:
-            readOnlyMode = .default
-        }
+        let readOnlyMode = SpotImReadOnlyMode.parseSampleAppManualConfig()
+
         let metadata = SpotImArticleMetadata(url: post.extractData.url, title: post.extractData.title, subtitle: post.extractData.description, thumbnailUrl: post.extractData.thumbnailUrl, customBIData: customBIData, readOnlyMode: readOnlyMode)
         if addToTableView {
             let tableViewController = TableViewFooterTesterViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: authenticationControllerId)

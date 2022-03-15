@@ -18,7 +18,7 @@ let kDemoArticleToUse = "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-se
 internal final class ArticleWebViewController: UIViewController {
     
     fileprivate struct Metrics {
-        static let openFullConversationButtonHeight: CGFloat = 50
+        static let modeButtonHeight: CGFloat = 50
         static let webViewHeight: CGFloat = 1500
     }
     
@@ -36,6 +36,7 @@ internal final class ArticleWebViewController: UIViewController {
     let authenticationControllerId: String
     let metadata: SpotImArticleMetadata
     let shouldShowOpenFullConversationButton:Bool
+    let shouldShowOpenCommentButton:Bool
     let shouldPresentFullConInNewNavStack:Bool
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     
@@ -46,6 +47,7 @@ internal final class ArticleWebViewController: UIViewController {
         self.url = url
         self.authenticationControllerId = authenticationControllerId
         self.shouldShowOpenFullConversationButton = UserDefaults.standard.bool(forKey: "shouldShowOpenFullConversation")
+        self.shouldShowOpenCommentButton = UserDefaults.standard.bool(forKey: "shouldOpenComment")
         self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
         
         super.init(nibName: nil, bundle: nil)
@@ -72,6 +74,8 @@ internal final class ArticleWebViewController: UIViewController {
                 coordinator.setCustomUIDelegate(delegate: self)
                 if self.shouldShowOpenFullConversationButton {
                     self.showOpenFullConversationButton()
+                } else if self.shouldShowOpenCommentButton {
+                    self.showOpenCoomentButton()
                 }
                 else {
                     self.setupSpotPreConversationView()
@@ -88,14 +92,22 @@ internal final class ArticleWebViewController: UIViewController {
     }
     
     private func showOpenFullConversationButton() {
+        setupModeButton(text: "Open Full Conversation", selector: #selector(self.openSpotImFullConversation))
+    }
+    
+    private func showOpenCoomentButton() {
+        setupModeButton(text: "Create Comment", selector: #selector(self.openSpotImCreateComment))
+    }
+    
+    private func setupModeButton(text: String, selector: Selector) {
         let button = UIButton()
         button.backgroundColor = .black
-        button.setTitle("Open Full Conversation", for: .normal)
-        button.addTarget(self, action:#selector(self.openSpotImFullConversation), for: .touchUpInside)
+        button.setTitle(text, for: .normal)
+        button.addTarget(self, action: selector, for: .touchUpInside)
         self.containerView.addSubview(button)
         button.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.height.equalTo(Metrics.openFullConversationButtonHeight)
+            make.height.equalTo(Metrics.modeButtonHeight)
         }
     }
 
@@ -124,12 +136,40 @@ internal final class ArticleWebViewController: UIViewController {
                 print("Error show full conversation - \(error.localizedDescription)")
             }
         }
+        
+        let mode: SPViewControllerPresentationalMode
         if (self.shouldPresentFullConInNewNavStack) {
-            coordinator.presentFullConversationViewController(inViewController: self, withPostId: self.postId, articleMetadata: self.metadata, selectedCommentId: nil, completion: completionHandler)
+            mode = .present
         }
         else {
-            coordinator.pushFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, completion: completionHandler)
+            mode = .push
         }
+        
+        coordinator.openFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, presentationalMode: mode, completion: completionHandler)
+    }
+    
+    
+    @objc private func openSpotImCreateComment() {
+        guard let coordinator = self.spotIMCoordinator else {
+            return
+        }
+        let completionHandler: SPOpenNewCommentCompletionHandler = { success, error in
+            if success {
+                print("Successfully show create comment")
+            } else if let error = error {
+                print("Error show create comment - \(error.localizedDescription)")
+            }
+        }
+        
+        let mode: SPViewControllerPresentationalMode
+        if (self.shouldPresentFullConInNewNavStack) {
+            mode = .present
+        }
+        else {
+            mode = .push
+        }
+        
+        coordinator.openNewCommentViewController(navigationController: navigationController!, withPostId: postId, articleMetadata: metadata, fullConversationPresentationalMode: mode, completion: completionHandler)
     }
 }
 
