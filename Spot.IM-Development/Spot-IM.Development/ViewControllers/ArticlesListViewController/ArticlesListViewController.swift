@@ -71,6 +71,7 @@ class ArticlesListViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         if self.isMovingFromParent {
             UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
+            UserDefaults.standard.removeObject(forKey: "shouldOpenComment")
             UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
         }
     }
