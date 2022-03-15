@@ -101,6 +101,7 @@
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
+		3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */; };
 		3DFBF0CF27676D860049CF1C /* OWOnlineViewingUsersCounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBF0CE27676D860049CF1C /* OWOnlineViewingUsersCounterView.swift */; };
 		3DFBF0D127676D940049CF1C /* OWOnlineViewingUsersCounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBF0D027676D940049CF1C /* OWOnlineViewingUsersCounterViewModel.swift */; };
 		437112E6339E316CFCE0BE22 /* Pods_Shared_DemoApps_DailyCaller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8402D264041AC683FDDBC35B /* Pods_Shared_DemoApps_DailyCaller.framework */; };
@@ -714,6 +715,7 @@
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
+		3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpotImReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
 		3DFBF0CE27676D860049CF1C /* OWOnlineViewingUsersCounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOnlineViewingUsersCounterView.swift; sourceTree = "<group>"; };
 		3DFBF0D027676D940049CF1C /* OWOnlineViewingUsersCounterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOnlineViewingUsersCounterViewModel.swift; sourceTree = "<group>"; };
 		413B2255206C3693B4D68FAF /* Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; sourceTree = "<group>"; };
@@ -1067,6 +1069,7 @@
 			children = (
 				0E1125D72304BC29006B1489 /* Date+extensions.swift */,
 				0E1125DD2304C127006B1489 /* String+Extensions.swift */,
+				3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2989,6 +2992,7 @@
 				5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */,
 				0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
+				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
 				5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */,
 				0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */,
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
