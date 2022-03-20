@@ -139,13 +139,13 @@ internal final class ArticleWebViewController: UIViewController {
         
         let mode: SPViewControllerPresentationalMode
         if (self.shouldPresentFullConInNewNavStack) {
-            mode = .present
+            mode = .present(viewController: self)
         }
         else {
-            mode = .push
+            mode = .push(navigationController: self.navigationController!)
         }
         
-        coordinator.openFullConversationViewController(navigationController: self.navigationController!, withPostId: self.postId, articleMetadata: self.metadata, presentationalMode: mode, completion: completionHandler)
+        coordinator.openFullConversationViewController(postId: self.postId, articleMetadata: self.metadata, presentationalMode: mode, completion: completionHandler)
     }
     
     
@@ -163,13 +163,13 @@ internal final class ArticleWebViewController: UIViewController {
         
         let mode: SPViewControllerPresentationalMode
         if (self.shouldPresentFullConInNewNavStack) {
-            mode = .present
+            mode = .present(viewController: self)
         }
         else {
-            mode = .push
+            mode = .push(navigationController: self.navigationController!)
         }
         
-        coordinator.openNewCommentViewController(navigationController: navigationController!, withPostId: postId, articleMetadata: metadata, fullConversationPresentationalMode: mode, completion: completionHandler)
+        coordinator.openNewCommentViewController(postId: postId, articleMetadata: metadata, fullConversationPresentationalMode: mode, completion: completionHandler)
     }
 }
 
