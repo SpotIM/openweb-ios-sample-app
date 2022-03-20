@@ -55,8 +55,8 @@ public typealias SPShowFullConversationCompletionHandler = (_ success: Bool, _ e
 public typealias SPOpenNewCommentCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
 
 public enum SPViewControllerPresentationalMode {
-    case present
-    case push
+    case present(viewController: UIViewController)
+    case push(navigationController: UINavigationController)
 }
 
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
@@ -169,24 +169,24 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
-    public func openFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode = .push, selectedCommentId: String? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
+    public func openFullConversationViewController(postId postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
         switch presentationalMode {
-        case .present:
-            presentFullConversationViewController(inViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
-        case .push:
+        case .present(let viewController):
+            presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
+        case .push(let navigationController):
             pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
         }
     }
     
-    public func openNewCommentViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode = .push, completion: SPOpenNewCommentCompletionHandler? = nil) {
+    public func openNewCommentViewController(postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode, completion: SPOpenNewCommentCompletionHandler? = nil) {
         switch fullConversationPresentationalMode {
-        case .present:
+        case .present(let viewController):
             // create nav controller in code to be the container for conversationController
             let navController = createNavController()
             self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
                 switch result {
                 case .success( _):
-                    self.presentConversationInternal(presentationalController: navigationController, internalNavController: navController, selectedCommentId: nil, animated: true)
+                    self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: nil, animated: true)
                     
                     let model = self.conversationModel!
                     if (!model.isReadOnlyMode()) {
@@ -196,14 +196,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 case .failure(let spNetworkError):
                     print("spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
-                    self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
-                        self.openNewCommentViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
+                    self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
+                        self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
                     }
                     break
                 }
             }
             break
-        case .push:
+        case .push(let navigationController):
             prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
                 switch result {
                 case .success( _):
@@ -219,7 +219,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     print("spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
-                        self.openNewCommentViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
+                        self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
                     }
                     break
                 }
