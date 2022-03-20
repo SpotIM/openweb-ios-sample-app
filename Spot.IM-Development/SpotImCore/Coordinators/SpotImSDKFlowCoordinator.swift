@@ -169,7 +169,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
-    public func openFullConversationViewController(postId postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
+    public func openFullConversationViewController(postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
         switch presentationalMode {
         case .present(let viewController):
             presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
