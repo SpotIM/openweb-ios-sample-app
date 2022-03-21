@@ -10,20 +10,17 @@ import Foundation
 
 let commentCacheMinCount: Int = 10
 
-final class SPCommentsInMemoryCacheService {
-    
-    private var cachedComments: [String: String] = [:]
-    
-    func update(comment: String, with id: String) {
-        cachedComments[id] = comment.count >= commentCacheMinCount ? comment : ""
+final class SPCommentsInMemoryCacheService: OWCacheService<String, String> {
         
+    func update(comment: String, with id: String) {
+        self[id] = comment.count >= commentCacheMinCount ? comment : ""
     }
     
     func remove(for id: String) {
-        cachedComments[id] = nil
+        self.remove(forKey: id)
     }
     
     func comment(for id: String) -> String {
-        return cachedComments[id] ?? ""
+        return self[id] ?? ""
     }
 }
