@@ -90,9 +90,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     static let USER_LOGIN_SUCCESS_NOTIFICATION = "USER_LOGIN_SUCCESS_NOTIFICATION"
     
-    // MARK: - Services
-    private lazy var commentsCacheService: SPCommentsInMemoryCacheService = .init()
-    
+    // MARK: - Services    
     private let conversationUpdater: SPCommentUpdater
     
     private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
@@ -568,7 +566,6 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     internal func getCommentCreationModel(with dto: SPCommentCreationDTO, articleMetadata : SpotImArticleMetadata) -> SPCommentCreationModel {
         return SPCommentCreationModel(
             commentCreationDTO: dto,
-            cacheService: commentsCacheService,
             updater: conversationUpdater,
             imageProvider: imageProvider,
             articleMetadate: articleMetadata
