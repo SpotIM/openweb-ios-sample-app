@@ -34,7 +34,9 @@ internal extension UIImage {
             completion?(nil, SPNetworkError.custom("No image URL"))
             return nil
         }
-        if let image = OWSharedServicesProvider.shared.imageCacheService()[url.absoluteString] {
+        
+        let imageCacheService = OWSharedServicesProvider.shared.imageCacheService()
+        if let image = imageCacheService[url.absoluteString] {
             completion?(image, nil)
             
             return nil
@@ -46,7 +48,7 @@ internal extension UIImage {
                     case .success(let data):
                         let image = UIImage(data: data)
                         
-                        OWSharedServicesProvider.shared.imageCacheService()[url.absoluteString] = image
+                        imageCacheService[url.absoluteString] = image
                         if let completion = completion {
                             completion(image, nil)
                         }
