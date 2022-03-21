@@ -242,7 +242,6 @@
 		445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187523685154001D0ED0 /* DefaultAdsProvider.swift */; };
 		445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187723685154001D0ED0 /* SPAnalyticsService.swift */; };
 		445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187823685154001D0ED0 /* SPReadingTracker.swift */; };
-		445418BF23685154001D0ED0 /* SPCommentsInMemoryCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */; };
 		44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B6F237070F30024EFC1 /* InputConfiguration.swift */; };
 		44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B71237185090024EFC1 /* LocalizationManager.swift */; };
 		44689B7423718CF90024EFC1 /* OWLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7323718CF80024EFC1 /* OWLogger.swift */; };
@@ -862,7 +861,6 @@
 		4454187523685154001D0ED0 /* DefaultAdsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultAdsProvider.swift; sourceTree = "<group>"; };
 		4454187723685154001D0ED0 /* SPAnalyticsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAnalyticsService.swift; sourceTree = "<group>"; };
 		4454187823685154001D0ED0 /* SPReadingTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReadingTracker.swift; sourceTree = "<group>"; };
-		4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentsInMemoryCacheService.swift; sourceTree = "<group>"; };
 		44689B6F237070F30024EFC1 /* InputConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputConfiguration.swift; sourceTree = "<group>"; };
 		44689B71237185090024EFC1 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		44689B7323718CF80024EFC1 /* OWLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWLogger.swift; sourceTree = "<group>"; };
@@ -1741,7 +1739,6 @@
 				4454187323685154001D0ED0 /* Ads */,
 				4454187723685154001D0ED0 /* SPAnalyticsService.swift */,
 				4454187823685154001D0ED0 /* SPReadingTracker.swift */,
-				4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */,
 				448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */,
 				44689B71237185090024EFC1 /* LocalizationManager.swift */,
 				449F5F71237C064F00F81EA3 /* RealTimeService.swift */,
@@ -2909,7 +2906,6 @@
 				440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */,
 				4454181C23685144001D0ED0 /* MessageContainerView.swift in Sources */,
 				4454181523685144001D0ED0 /* SPArticleHeader.swift in Sources */,
-				445418BF23685154001D0ED0 /* SPCommentsInMemoryCacheService.swift in Sources */,
 				4454182123685144001D0ED0 /* SPCommentTextInputView.swift in Sources */,
 				440E0DB3237D7E3200757554 /* TotalTypingIndicationView.swift in Sources */,
 				3D20A39527B022B8003F8513 /* OWConstraintViewDSL.swift in Sources */,
