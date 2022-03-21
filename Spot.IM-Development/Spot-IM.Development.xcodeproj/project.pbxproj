@@ -238,7 +238,6 @@
 		445418B623685154001D0ED0 /* SPClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454186E23685154001D0ED0 /* SPClientSettings.swift */; };
 		445418B723685154001D0ED0 /* OWAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454186F23685154001D0ED0 /* OWAuthenticationHandler.swift */; };
 		445418B823685154001D0ED0 /* SPUserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187023685154001D0ED0 /* SPUserSession.swift */; };
-		445418B923685154001D0ED0 /* OWImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187223685154001D0ED0 /* OWImageCache.swift */; };
 		445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187423685154001D0ED0 /* AdsInterface.swift */; };
 		445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187523685154001D0ED0 /* DefaultAdsProvider.swift */; };
 		445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187723685154001D0ED0 /* SPAnalyticsService.swift */; };
@@ -859,7 +858,6 @@
 		4454186E23685154001D0ED0 /* SPClientSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPClientSettings.swift; sourceTree = "<group>"; };
 		4454186F23685154001D0ED0 /* OWAuthenticationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWAuthenticationHandler.swift; sourceTree = "<group>"; };
 		4454187023685154001D0ED0 /* SPUserSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPUserSession.swift; sourceTree = "<group>"; };
-		4454187223685154001D0ED0 /* OWImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWImageCache.swift; sourceTree = "<group>"; };
 		4454187423685154001D0ED0 /* AdsInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdsInterface.swift; sourceTree = "<group>"; };
 		4454187523685154001D0ED0 /* DefaultAdsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultAdsProvider.swift; sourceTree = "<group>"; };
 		4454187723685154001D0ED0 /* SPAnalyticsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPAnalyticsService.swift; sourceTree = "<group>"; };
@@ -1741,7 +1739,6 @@
 			children = (
 				3DE0FE3D27D649720097B17B /* Infra - Currently not in used */,
 				4454187323685154001D0ED0 /* Ads */,
-				4454187223685154001D0ED0 /* OWImageCache.swift */,
 				4454187723685154001D0ED0 /* SPAnalyticsService.swift */,
 				4454187823685154001D0ED0 /* SPReadingTracker.swift */,
 				4454187923685154001D0ED0 /* SPCommentsInMemoryCacheService.swift */,
@@ -2982,7 +2979,6 @@
 				16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */,
 				246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */,
 				44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */,
-				445418B923685154001D0ED0 /* OWImageCache.swift in Sources */,
 				4454182223685144001D0ED0 /* SPCommentReplyHeaderView.swift in Sources */,
 				445417F923685144001D0ED0 /* UIView+Roundings.swift in Sources */,
 				44F247A12379ADC500B36F12 /* OWBaseButton.swift in Sources */,
