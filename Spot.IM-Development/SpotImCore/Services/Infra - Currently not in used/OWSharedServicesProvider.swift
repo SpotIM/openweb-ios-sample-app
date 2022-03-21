@@ -19,9 +19,9 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     // Singleton
     static let shared: OWSharedServicesProviding = OWSharedServicesProvider()
-    private var spotId: String?
+
     private init() {
-        spotId = SPClientSettings.main.spotKey
+
     }
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
@@ -46,11 +46,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }
     
     func commentsInMemoryCacheService() -> OWCacheService<String, String> {
-        // reset cache for new spotId
-        if self.spotId != SPClientSettings.main.spotKey {
-            self.spotId = SPClientSettings.main.spotKey
-            _commentsInMemoryCacheService = OWCacheService<String, String>()
-        }
         return _commentsInMemoryCacheService
     }
 }
