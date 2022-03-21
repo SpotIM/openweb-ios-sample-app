@@ -48,6 +48,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func commentsInMemoryCacheService() -> OWCacheService<String, String> {
         // reset cache for new spotId
         if self.spotId != SPClientSettings.main.spotKey {
+            self.spotId = SPClientSettings.main.spotKey
             _commentsInMemoryCacheService = OWCacheService<String, String>()
         }
         return _commentsInMemoryCacheService
