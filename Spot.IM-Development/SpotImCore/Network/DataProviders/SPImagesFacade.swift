@@ -41,7 +41,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
                completion: @escaping ImageLoadingCompletion) -> DataRequest? {
         guard let url = url else { return nil }
         
-        if let image = OWImageCache.sdkCache.image(for: url.absoluteString) {
+        if let image = OWSharedServicesProvider.shared.imageCacheService()[url.absoluteString] {
             completion(image, nil)
             
             return nil
@@ -61,10 +61,10 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
                             image.draw(in: CGRect(origin: .zero, size: size))
                             let newIM = UIGraphicsGetImageFromCurrentImageContext()
                             UIGraphicsEndImageContext()
-                            OWImageCache.sdkCache.setImage(image: newIM, for: url.absoluteString)
+                            OWSharedServicesProvider.shared.imageCacheService()[url.absoluteString] = newIM
                             completion(newIM, nil)
                         } else {
-                            OWImageCache.sdkCache.setImage(image: image, for: url.absoluteString)
+                            OWSharedServicesProvider.shared.imageCacheService()[url.absoluteString] = image
                             completion(image, nil)
                         }
                     case .failure(let error):

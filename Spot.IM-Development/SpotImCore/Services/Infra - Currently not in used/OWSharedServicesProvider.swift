@@ -7,10 +7,11 @@
 //
 
 import Foundation
+import UIKit
 
 protocol OWSharedServicesProviding {
     func themeStyleService() -> OWThemeStyleServicing
-    
+    func imageCacheService() -> OWCacheService<String, UIImage>
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -26,7 +27,15 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWThemeStyleService()
     }()
     
+    fileprivate lazy var _imageCacheService: OWCacheService<String, UIImage> = {
+        return OWCacheService<String, UIImage>()
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
+    }
+    
+    func imageCacheService() -> OWCacheService<String, UIImage> {
+        return _imageCacheService
     }
 }
