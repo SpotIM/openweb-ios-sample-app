@@ -21,8 +21,6 @@ final class OWCommentVotingView: OWBaseView {
     fileprivate var viewModel: OWCommentVotingViewModeling!
     fileprivate var disposeBag: DisposeBag!
     
-    var rankedByUser: Int = 0
-    
     fileprivate lazy var stackView: OWBaseStackView = {
         let stackView = OWBaseStackView()
         stackView.axis = .horizontal
@@ -87,7 +85,7 @@ final class OWCommentVotingView: OWBaseView {
     func configure(with viewModel: OWCommentVotingViewModeling, delegate: CommentActionsDelegate) {
         
         self.viewModel = viewModel
-        self.viewModel.delegate = delegate
+        self.viewModel.inputs.setDelegate(delegate)
         disposeBag = DisposeBag()
         
         setupObservers()
@@ -109,10 +107,7 @@ final class OWCommentVotingView: OWBaseView {
     private func setupUI() {
         self.addSubviews(stackView)
         
-        configureStackView()
-    }
-    
-    private func configureStackView() {
+        // stackView
         stackView.OWSnp.makeConstraints { make in
             make.top.bottom.leading.equalToSuperview()
         }
@@ -163,11 +158,7 @@ fileprivate extension OWCommentVotingView {
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
                 guard let self = self else { return }
-                if (selected) {
-                    self.rankUpButton.select()
-                } else {
-                    self.rankUpButton.deselect()
-                }
+                selected ? self.rankUpButton.select() : self.rankUpButton.deselect()
             })
             .disposed(by: disposeBag)
         
@@ -180,11 +171,7 @@ fileprivate extension OWCommentVotingView {
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
                 guard let self = self else { return }
-                if (selected) {
-                    self.rankDownButton.select()
-                } else {
-                    self.rankDownButton.deselect()
-                }
+                selected ? self.rankDownButton.select() : self.rankDownButton.deselect()
             })
             .disposed(by: disposeBag)
         
@@ -201,13 +188,6 @@ fileprivate extension OWCommentVotingView {
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.rankedByUser
-            .subscribe(onNext: { [weak self] ranked in
-                guard let self = self else {return}
-                self.rankedByUser = ranked
-            })
-            .disposed(by: disposeBag)
-        
         viewModel.outputs.votingUpImages
             .subscribe(onNext: { [weak self] (regular: UIImage?, selected: UIImage?) in
                 guard let self = self else { return }
@@ -217,7 +197,6 @@ fileprivate extension OWCommentVotingView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.votingDownImages
-            .unwrap()
             .subscribe(onNext: { [weak self] (regular: UIImage?, selected: UIImage?) in
                 guard let self = self else { return }
                 self.rankDownButton.image = regular
