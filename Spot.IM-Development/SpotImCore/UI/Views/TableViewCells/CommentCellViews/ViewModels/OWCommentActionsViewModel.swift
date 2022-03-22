@@ -34,10 +34,6 @@ class OWCommentActionsViewModel: OWCommentActionsViewModeling,
     var outputs: OWCommentActionsViewModelingOutputs { return self }
     
     let votingVM: OWCommentVotingViewModeling = OWCommentVotingViewModel()
-        
-    init () {
-
-    }
     
     func configureRankUp(_ count: Int) {
         self.votingVM.inputs.configureRankUp(count)
