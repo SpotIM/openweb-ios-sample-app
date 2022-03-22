@@ -141,20 +141,24 @@ fileprivate extension OWCommentVotingView {
             .bind(to: rankDownLabel.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.brandColor
+        let brandColorObservable = viewModel.outputs.brandColor.share(replay: 1)
+        
+        brandColorObservable
             .bind(to: self.rankUpButton.rx.brandColor)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.brandColor
+        brandColorObservable
             .bind(to: self.rankDownButton.rx.brandColor)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.rankUpSelected
+        let rankUpSelectedObservable = viewModel.outputs.rankUpSelected.share(replay: 1)
+        
+        rankUpSelectedObservable
             .take(1)
             .bind(to: self.rankUpButton.rx.isSelected)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.rankUpSelected
+        rankUpSelectedObservable
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
                 guard let self = self else { return }
@@ -162,12 +166,14 @@ fileprivate extension OWCommentVotingView {
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.rankDownSelected
+        let rankDownSelectedObservable = viewModel.outputs.rankDownSelected.share(replay: 1)
+        
+        rankDownSelectedObservable
             .take(1)
             .bind(to: self.rankDownButton.rx.isSelected)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.rankDownSelected
+        rankDownSelectedObservable
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
                 guard let self = self else { return }
