@@ -34,6 +34,7 @@
 		0EAFED8322E51ED600B57E29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */; };
 		0EEF283B22EE52A400667A86 /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */; };
 		16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */; };
+		16229EDD27EA22DA000AA832 /* OWCommentVotingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16229EDC27EA22DA000AA832 /* OWCommentVotingModel.swift */; };
 		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
 		168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */; };
 		169D58E227D11925009936F3 /* OWVotesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169D58E127D11924009936F3 /* OWVotesType.swift */; };
@@ -654,6 +655,7 @@
 		0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		14539DD1C64F6F1AF9F9ECA8 /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationNewHeaderView.swift; sourceTree = "<group>"; };
+		16229EDC27EA22DA000AA832 /* OWCommentVotingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentVotingModel.swift; sourceTree = "<group>"; };
 		16670C6F25E68EEE00822D2D /* SPSSOData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPSSOData.swift; sourceTree = "<group>"; };
 		169D58E127D11924009936F3 /* OWVotesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWVotesType.swift; sourceTree = "<group>"; };
 		169D58E627D4E4E9009936F3 /* OWCommentActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentActionsViewModel.swift; sourceTree = "<group>"; };
@@ -1096,6 +1098,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		16229EDB27EA22A0000AA832 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				16229EDC27EA22DA000AA832 /* OWCommentVotingModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		1656EEFC2636AE0C000043A2 /* CommentLabelsContainerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1513,6 +1523,7 @@
 		445417E423685144001D0ED0 /* CommentCellViews */ = {
 			isa = PBXGroup;
 			children = (
+				16229EDB27EA22A0000AA832 /* Model */,
 				169D58E527D4E43E009936F3 /* ViewModels */,
 				169D58E427D4E425009936F3 /* Views */,
 			);
@@ -2930,6 +2941,7 @@
 				4454188123685154001D0ED0 /* SPAnalyticsFacade.swift in Sources */,
 				3D20A36127B00A3D003F8513 /* OWConstraintLayoutSupportDSL.swift in Sources */,
 				3D20A37327B01674003F8513 /* OWConstraintItem.swift in Sources */,
+				16229EDD27EA22DA000AA832 /* OWCommentVotingModel.swift in Sources */,
 				169D58EB27D4EECB009936F3 /* OWCommentVotingView.swift in Sources */,
 				4454188623685154001D0ED0 /* SPCommentFacade.swift in Sources */,
 				4454189923685154001D0ED0 /* SPConfigurationSSO.swift in Sources */,
