@@ -17,6 +17,7 @@ protocol OWCommentVotingViewModelingInputs {
     func configureRankUp(_ count: Int)
     func configureRankDown(_ count: Int)
     func configureRankedByUser(_ value: Int)
+    func setDelegate(_ delegate: CommentActionsDelegate)
     
     var tapRankUp: PublishSubject<Void> { get }
     var tapRankDown: PublishSubject<Void> { get }
@@ -25,22 +26,18 @@ protocol OWCommentVotingViewModelingInputs {
 protocol OWCommentVotingViewModelingOutputs {
     var rankUpText: Observable<String> { get }
     var rankDownText: Observable<String> { get }
-    var rankedByUser: Observable<Int> { get }
     var brandColor: Observable<UIColor> { get }
     var voteTypes: Observable<[VoteType]> { get }
     var rankUpSelected: Observable<Bool> { get }
     var rankDownSelected: Observable<Bool> { get }
     
     var votingUpImages: Observable<VotingImages> { get }
-    var votingDownImages: Observable<VotingImages?> { get }
+    var votingDownImages: Observable<VotingImages> { get }
 }
 
 protocol OWCommentVotingViewModeling {
     var inputs: OWCommentVotingViewModelingInputs { get }
     var outputs: OWCommentVotingViewModelingOutputs { get }
-    
-    // TODO - use RX
-    var delegate: CommentActionsDelegate? { get set }
 }
 
 enum VoteType {
@@ -52,7 +49,8 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
                                 OWCommentVotingViewModelingInputs,
                                 OWCommentVotingViewModelingOutputs {
     
-    var delegate: CommentActionsDelegate?
+    // TODO - use RX
+    fileprivate var delegate: CommentActionsDelegate?
 
     var inputs: OWCommentVotingViewModelingInputs { return self }
     var outputs: OWCommentVotingViewModelingOutputs { return self }
@@ -74,8 +72,8 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
     
     fileprivate let _voteTypesToShow = BehaviorSubject<[VoteType]?>(value: nil)
     
-    fileprivate let _votingUpImages = BehaviorSubject<VotingImages?>(value: nil)
-    fileprivate let _votingDownImages = BehaviorSubject<VotingImages?>(value: nil)
+    fileprivate let _votingUpImages = BehaviorSubject<VotingImages>(value: (nil, nil))
+    fileprivate let _votingDownImages = BehaviorSubject<VotingImages>(value: (nil, nil))
     
     init () {
         _brandColor.onNext(UIColor.brandColor)
@@ -133,9 +131,8 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
             .unwrap()
     }
     
-    var rankedByUser: Observable<Int> {
-        _rankedByUser
-            .unwrap()
+    func setDelegate(_ delegate: CommentActionsDelegate) {
+        self.delegate = delegate
     }
     
     func configureRankUp(_ count: Int) {
@@ -198,7 +195,7 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
             }
     }
     
-    var votingDownImages: Observable<VotingImages?> {
+    var votingDownImages: Observable<VotingImages> {
         _votesType
             .unwrap()
             .map { votesType in
@@ -214,13 +211,13 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
                         selected: UIImage(spNamed: "rank_arrow_down_selected")
                     )
                 default:
-                    return nil
+                    return (nil, nil)
                 }
             }
     }
     
     private func setupObservers() {
-        tapRankUp.withLatestFrom(rankedByUser)
+        tapRankUp.withLatestFrom(_rankedByUser.unwrap())
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
@@ -230,7 +227,7 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
             })
             .disposed(by: disposeBag)
         
-        tapRankDown.withLatestFrom(rankedByUser)
+        tapRankDown.withLatestFrom(_rankedByUser.unwrap())
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank

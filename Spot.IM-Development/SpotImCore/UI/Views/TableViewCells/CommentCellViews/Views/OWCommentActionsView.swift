@@ -13,6 +13,11 @@ import RxCocoa
 /// aka Engagement view
 final class OWCommentActionsView: OWBaseView {
     
+    fileprivate struct Metrics {
+        static let fontSize: CGFloat = 16.0
+        static let baseOffset: CGFloat = 14
+    }
+    
     fileprivate var viewModel: OWCommentActionsViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
@@ -110,7 +115,7 @@ final class OWCommentActionsView: OWBaseView {
     
     private func configureStackView() {
         stackView.axis = .horizontal
-        stackView.spacing = Theme.baseOffset
+        stackView.spacing = Metrics.baseOffset
         stackView.alignment = .center
         stackView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -120,7 +125,7 @@ final class OWCommentActionsView: OWBaseView {
     private func configureReplyButton() {
         stackView.addArrangedSubview(replyButton)
         replyButton.addTarget(self, action: #selector(reply), for: .touchUpInside)
-        replyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.fontSize)
+        replyButton.titleLabel?.font = .preferred(style: .regular, of: Metrics.fontSize)
         replyButton.setTitle(replyDefaultTitle, for: .normal)
     }
     
@@ -144,11 +149,4 @@ protocol CommentActionsDelegate: AnyObject {
     func rankUp(_ rankChange: SPRankChange)
     func rankDown(_ rankChange: SPRankChange)
 
-}
-
-// MARK: - Theme
-
-private enum Theme {
-    static let fontSize: CGFloat = 16.0
-    static let baseOffset: CGFloat = 14
 }
