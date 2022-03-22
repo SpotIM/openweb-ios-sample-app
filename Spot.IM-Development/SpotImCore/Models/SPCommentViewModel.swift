@@ -271,9 +271,8 @@ internal struct CommentViewModel {
     }
     
     func updateCommentActionsVM() {
-        self.commentActionsVM.inputs.configureRankUp(rankUp)
-        self.commentActionsVM.inputs.configureRankDown(rankDown)
-        self.commentActionsVM.inputs.configureRankedByUser(rankedByUser)
+        let model = OWCommentVotingModel(rankUpCount: rankUp, rankDownCount: rankDown, rankedByUserValue: rankedByUser)
+        self.commentActionsVM.inputs.configure(with: model)
     }
 
     private enum Theme {
