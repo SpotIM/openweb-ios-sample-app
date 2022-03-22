@@ -8,6 +8,8 @@
 
 import Foundation
 
+let commentCacheMinCount: Int = 10
+
 class SPCommentCreationModel {
     
     var postCompletionHandler: ((SPComment) -> Void)?
@@ -22,19 +24,16 @@ class SPCommentCreationModel {
     
     let imageProvider: SPImageProvider
     let commentService: SPCommentUpdater
-    let cacheService: SPCommentsInMemoryCacheService
     
     private var currentUploadingImageId: String?
 
     init(commentCreationDTO: SPCommentCreationDTO,
-         cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageProvider,
          articleMetadate: SpotImArticleMetadata
     ) {
         self.dataModel = commentCreationDTO
         self.imageProvider = imageProvider
-        self.cacheService = cacheService
         commentService = updater
         self.articleMetadate = articleMetadate
         setupCommentLabels()
@@ -44,7 +43,7 @@ class SPCommentCreationModel {
         if let text = commentCreationDTO.editModel?.commentText {
             commentText = text
         } else {
-            commentText = cacheService.comment(for: commentIdentifier)
+            commentText = OWSharedServicesProvider.shared.commentsInMemoryCacheService()[commentIdentifier] ?? ""
         }
         
         if let image = commentCreationDTO.editModel?.commentImage {
@@ -77,7 +76,7 @@ class SPCommentCreationModel {
                 
                 let responseData = self.populateResponseFields(response)
                 let commentIdentifier: String = self.getCommentIdentifierForCommentType()
-                self.cacheService.remove(for: commentIdentifier)
+                OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
                 self.postCompletionHandler?(responseData)
             },
             failure: {
@@ -96,8 +95,7 @@ class SPCommentCreationModel {
 
                 var responseData = self.populateResponseFields(response)
                 responseData.setIsEdited(true)
-
-                self.cacheService.remove(for: self.dataModel.postId)
+                OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: self.dataModel.postId)
                 self.postCompletionHandler?(responseData)
             },
             failure: { [weak self] error in
@@ -170,7 +168,7 @@ class SPCommentCreationModel {
         }
         
         let commentIdentifier: String = self.getCommentIdentifierForCommentType()
-        self.cacheService.remove(for: commentIdentifier)
+        OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
         
         return responseData
     }
@@ -189,9 +187,10 @@ class SPCommentCreationModel {
     }
     
     private func saveCommentTextInCache() {
-        guard !isInEditMode() else { return } // do not save edited message in cache
+        guard !isInEditMode() && commentText.count >= commentCacheMinCount else { return } // do not save edited message in cache
+        
         let commentIdentifier: String = getCommentIdentifierForCommentType()
-        cacheService.update(comment: commentText, with: commentIdentifier)
+        OWSharedServicesProvider.shared.commentsInMemoryCacheService()[commentIdentifier] = commentText
     }
     
     private func getCommentIdentifierForCommentType() -> String {
