@@ -12,9 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentActionsViewModelingInputs {
-    func configureRankUp(_ count: Int)
-    func configureRankDown(_ count: Int)
-    func configureRankedByUser(_ value: Int)
+    func configure(with model: OWCommentVotingModel)
 }
 
 protocol OWCommentActionsViewModelingOutputs {
@@ -35,15 +33,7 @@ class OWCommentActionsViewModel: OWCommentActionsViewModeling,
     
     let votingVM: OWCommentVotingViewModeling = OWCommentVotingViewModel()
     
-    func configureRankUp(_ count: Int) {
-        self.votingVM.inputs.configureRankUp(count)
-    }
-    
-    func configureRankDown(_ count: Int) {
-        self.votingVM.inputs.configureRankDown(count)
-    }
-    
-    func configureRankedByUser(_ value: Int) {
-        self.votingVM.inputs.configureRankedByUser(value)
+    func configure(with model: OWCommentVotingModel) {
+        self.votingVM.inputs.configure(with: model)
     }
 }

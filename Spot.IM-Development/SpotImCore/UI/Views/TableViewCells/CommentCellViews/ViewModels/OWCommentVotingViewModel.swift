@@ -14,9 +14,8 @@ import UIKit
 typealias VotingImages = (regular: UIImage?, selected: UIImage?)
 
 protocol OWCommentVotingViewModelingInputs {
-    func configureRankUp(_ count: Int)
-    func configureRankDown(_ count: Int)
-    func configureRankedByUser(_ value: Int)
+    func configure(with model: OWCommentVotingModel)
+    
     func setDelegate(_ delegate: CommentActionsDelegate)
     
     var tapRankUp: PublishSubject<Void> { get }
@@ -135,16 +134,10 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
         self.delegate = delegate
     }
     
-    func configureRankUp(_ count: Int) {
-        _rankUp.onNext(count)
-    }
-    
-    func configureRankDown(_ count: Int) {
-        _rankDown.onNext(count)
-    }
-    
-    func configureRankedByUser(_ value: Int) {
-        _rankedByUser.onNext(value)
+    func configure(with model: OWCommentVotingModel) {
+        _rankUp.onNext(model.rankUpCount)
+        _rankDown.onNext(model.rankDownCount)
+        _rankedByUser.onNext(model.rankedByUserValue)
     }
     
     var voteTypes: Observable<[VoteType]> {
