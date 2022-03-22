@@ -223,11 +223,12 @@ internal struct CommentViewModel {
                 edited: isEdited
             )
         )
-        let textHeight: CGFloat = clippedMessage.string.isEmpty ?
+        let isEmptyComment = clippedMessage.string.isEmpty
+        let textHeight: CGFloat = isEmptyComment ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
         // media extra height includes - media acual heigh + media extra padding
-        let mediaHeight = CGFloat(Float(getMediaSize().height) + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
+        let mediaHeight = CGFloat(Float(getMediaSize().height) + (isEmptyComment ? Float(SPCommonConstants.emptyCommentMediaTopPadding) : Float(SPCommonConstants.commentMediaTopPadding)))
         
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
