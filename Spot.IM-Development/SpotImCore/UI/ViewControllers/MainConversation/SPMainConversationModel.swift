@@ -163,7 +163,7 @@ final class SPMainConversationModel {
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
         let avatarImageURL = self.dataSource.currentUserAvatarUrl
         if let key = avatarImageURL?.absoluteString,
-           let image = ImageCache.sdkCache.image(for: key) {
+           let image = OWSharedServicesProvider.shared.imageCacheService()[key] {
             completion(image, nil)
         } else {
             imageProvider.image(from: avatarImageURL,
