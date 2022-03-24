@@ -77,7 +77,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
         
-        whatYouThinkView.userAvatarView.configure(with: OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: model.imageProvider))
+        whatYouThinkView.userAvatarView.configure(with: model.avatarViewVM)
     }
     
     override func viewDidLoad() {
@@ -424,7 +424,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     private func updateWhatYouThinkView() {
-        whatYouThinkView.updateAvatar(model.dataSource.currentUserAvatarUrl)
+//        whatYouThinkView.updateAvatar(model.dataSource.currentUserAvatarUrl)
     }
 
     override func isLastSection(with section: Int) -> Bool {

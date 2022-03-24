@@ -76,13 +76,13 @@ final class SPMainConversationFooterView: OWBaseView {
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
-    func updateAvatar(_ avatarUrl: URL?) {
-        userAvatarView.updateAvatar(avatarUrl: avatarUrl)
-    }
+//    func updateAvatar(_ avatarUrl: URL?) {
+//        userAvatarView.updateAvatar(avatarUrl: avatarUrl)
+//    }
     
     /// Updates user's online status, `nil` will hide status view
     func updateOnlineStatus(_ status: OWOnlineStatus) {
-        userAvatarView.updateOnlineStatus(status)
+//        userAvatarView.updateOnlineStatus(status)
     }
 
     func setCallToAction(text: String) {

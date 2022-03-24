@@ -117,6 +117,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         OWLogger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
+        footer.userAvatarView.configure(with: model.avatarViewVM)
         summaryView.updateCommentsLabel(model.dataSource.messageCount)
         summaryView.configure(onlineViewingUsersVM: model.onlineViewingUsersConversationVM)
 
@@ -531,7 +532,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
         updateFooterViewCustomUI(footerView: footer)
-        footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard
                 let self = self,
