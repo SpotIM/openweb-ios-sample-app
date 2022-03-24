@@ -29,7 +29,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let avatarImageView: SPAvatarView = SPAvatarView()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
-    private let replyActionsView: CommentActionsView = .init()
+    private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let headerView: OWBaseView = .init()
     private let separatorView: OWBaseView = .init()
@@ -172,9 +172,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func configureReplyActionsView() {
-        replyActionsView.delegate = self
-        
+    private func configureReplyActionsView() {        
         replyActionsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentMediaView.OWSnp.bottom)
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
@@ -252,12 +250,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
+        replyActionsView.configure(with: dataModel.commentActionsVM, delegate: self)
+        dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
-        replyActionsView.setBrandColor(.brandColor)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount)
-        replyActionsView.setRankUp(dataModel.rankUp)
-        replyActionsView.setRankDown(dataModel.rankDown)
-        replyActionsView.setRanked(with: dataModel.rankedByUser)
         replyActionsView.OWSnp.updateConstraints { make in
             make.height.equalTo(dataModel.isDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
         }
@@ -379,12 +375,12 @@ extension SPCommentCell: CommentActionsDelegate {
         delegate?.replyTapped(for: commentId)
     }
     
-    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankUp(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
     
-    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankDown(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
     
 }
@@ -450,7 +446,7 @@ enum RepliesButtonState {
 protocol SPCommentCellDelegate: AnyObject {
     func showMoreReplies(for commentId: String?)
     func hideReplies(for commentId: String?)
-    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?, updateRankLocal: () -> Void)
+    func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?)
     func replyTapped(for commentId: String?)
     func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton)
     func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool)
@@ -470,7 +466,7 @@ private enum Theme {
     static let leadingOffset: CGFloat = 16.0
     static let trailingOffset: CGFloat = 16.0
     static let messageContainerTopOffset: CGFloat = 5.0
-    static let replyActionsViewHeight: CGFloat = 49.0
+    static let replyActionsViewHeight: CGFloat = 32
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let userViewCollapsedHeight: CGFloat = 44.0
     static let userViewExpandedHeight: CGFloat = 69.0

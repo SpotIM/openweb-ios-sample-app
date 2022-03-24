@@ -54,6 +54,8 @@ internal struct CommentViewModel {
     }
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
+    
+    let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
 
     init(
         with comment: SPComment,
@@ -151,6 +153,8 @@ internal struct CommentViewModel {
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
+            
+        updateCommentActionsVM()
     }
     
     func getCommentTextFromHtmlString(htmlString: String) -> String? {
@@ -219,11 +223,12 @@ internal struct CommentViewModel {
                 edited: isEdited
             )
         )
-        let textHeight: CGFloat = clippedMessage.string.isEmpty ?
+        let isEmptyComment = clippedMessage.string.isEmpty
+        let textHeight: CGFloat = isEmptyComment ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
         
         // media extra height includes - media acual heigh + media extra padding
-        let mediaHeight = CGFloat(Float(getMediaSize().height) + Float(SPCommonConstants.commentMediaTopPadding - SPCommonConstants.emptyCommentMediaTopPadding))
+        let mediaHeight = CGFloat(Float(getMediaSize().height) + (isEmptyComment ? Float(SPCommonConstants.emptyCommentMediaTopPadding) : Float(SPCommonConstants.commentMediaTopPadding)))
         
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
@@ -264,6 +269,11 @@ internal struct CommentViewModel {
     func isAReply() -> Bool {
         return replyingToCommentId != nil
     }
+    
+    func updateCommentActionsVM() {
+        let model = OWCommentVotingModel(rankUpCount: rankUp, rankDownCount: rankDown, rankedByUserValue: rankedByUser)
+        self.commentActionsVM.inputs.configure(with: model)
+    }
 
     private enum Theme {
         static let fontSize: CGFloat = 16.0
@@ -277,7 +287,7 @@ internal struct CommentViewModel {
         static let messageContainerTopOffset: CGFloat = 14.0
         static let userViewCollapsedHeight: CGFloat = 44.0
         static let userViewExpandedHeight: CGFloat = 69.0
-        static let replyActionsViewHeight: CGFloat = 49.0
+        static let replyActionsViewHeight: CGFloat = 32.0
         static let moreRepliesViewHeight: CGFloat = 31.0
         static let moreRepliesTopOffset: CGFloat = 12.0
         static let lastInSectionOffset: CGFloat = 19.0
@@ -397,7 +407,7 @@ private enum Theme {
     static let messageContainerTopOffset: CGFloat = 14.0
     static let userViewCollapsedHeight: CGFloat = 44.0
     static let userViewExpandedHeight: CGFloat = 69.0
-    static let replyActionsViewHeight: CGFloat = 49.0
+    static let replyActionsViewHeight: CGFloat = 32.0
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let moreRepliesTopOffset: CGFloat = 12.0
 }
