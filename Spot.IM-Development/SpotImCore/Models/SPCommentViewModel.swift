@@ -33,7 +33,7 @@ internal struct CommentViewModel {
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
 
-    var showsOnline: Bool = false
+    private (set) var showsOnline: Bool = false
     var hasOffset: Bool = false
     var isDeleted: Bool = false
     var isReported: Bool = false
@@ -54,6 +54,7 @@ internal struct CommentViewModel {
     }
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
+    let avatarViewVM: OWAvatarViewModel
 
     init(
         with comment: SPComment,
@@ -62,8 +63,10 @@ internal struct CommentViewModel {
         color: UIColor? = nil,
         user: SPUser? = nil,
         userImageURL: URL? = nil,
-        commentImageURL: URL? = nil) {
+        commentImageURL: URL? = nil,
+        imageProvider: SPImageProvider? = nil) {
 
+        avatarViewVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         isDeleted = comment.deleted
         isEdited = comment.edited
         authorId = comment.userId
