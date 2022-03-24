@@ -84,8 +84,6 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         }
 
         if showingAvatar {
-//            avatarImageView.updateAvatar(avatarUrl: avatar)
-//            avatarImageView.updateOnlineStatus(.online)
             avatarImageView.isHidden = false
             textToLeadingConstraint?.deactivate()
             textToAvatarConstraint?.activate()
