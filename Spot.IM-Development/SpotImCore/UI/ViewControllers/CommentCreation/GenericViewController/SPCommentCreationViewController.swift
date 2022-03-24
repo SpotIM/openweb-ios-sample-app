@@ -30,9 +30,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     let topContainerView: OWBaseView = .init()
     let topContainerStack: OWBaseStackView = .init()
     let commentContentScrollView: OWBaseScrollView = .init()
-    var textInputViewContainer: SPCommentTextInputView = .init(
-        hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
-    )
+    var textInputViewContainer: SPCommentTextInputView = .init()
     private let imagePreviewView: OWCommentImagePreview = .init()
     lazy var usernameView: SPNameInputView = SPNameInputView()
 
@@ -497,7 +495,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
 
     func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
-        textInputViewContainer.configureCommentType(type)
+        textInputViewContainer.configureCommentType(type, showAvatar: SPUserSessionHolder.session.user?.registered ?? false)
         textInputViewContainer.updateText(model.commentText)
     }
     
@@ -521,11 +519,11 @@ class SPCommentCreationViewController: SPBaseViewController,
             self.setAvatar(image: image)
         }
         model.avatarViewVM.configureUser(user: SPUserSessionHolder.session.user)
+        textInputViewContainer.setShowAvatar(showAvatar: SPUserSessionHolder.session.user?.registered ?? false)
     }
 
     private func setAvatar(image: UIImage) {
         self.updateUserIcon(image: image)
-        textInputViewContainer.updateAvatar(image)
     }
 
     @objc
