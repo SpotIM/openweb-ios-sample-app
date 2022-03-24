@@ -19,7 +19,7 @@ internal protocol SPMainConversationFooterViewDelegate: AnyObject {
 final class SPMainConversationFooterView: OWBaseView {
     private let cache = NSCache<NSString, UIImage>()
     private let callToActionLabel: OWBaseLabel = .init()
-    private let userAvatarView: SPAvatarView = .init()
+    let userAvatarView: SPAvatarView = .init()
     private let labelContainer: OWBaseView = .init()
     
     private lazy var separatorView: OWBaseView = .init()

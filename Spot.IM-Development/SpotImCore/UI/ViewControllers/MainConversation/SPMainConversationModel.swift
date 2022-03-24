@@ -43,7 +43,7 @@ final class SPMainConversationModel {
     private let typingVisibilityAdditionalTimeInterval: Double = 5.0
     
     private let commentUpdater: SPCommentUpdater
-    private let imageProvider: SPImageProvider
+    let imageProvider: SPImageProvider
     private let realTimeService: RealTimeService
     
     private var realTimeTimer: Timer?
