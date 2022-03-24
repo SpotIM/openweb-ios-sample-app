@@ -37,14 +37,6 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         setup()
     }
 
-//    func updateAvatar(_ image: UIImage?) {
-//        avatarImageView.updateAvatar(image: image)
-//    }
-
-    func updateAvatar(_ url: URL?) {
-//        avatarImageView.updateAvatar(avatarUrl: url)
-    }
-
     func makeFirstResponder() {
         usernameTextView.becomeFirstResponder()
     }
