@@ -37,13 +37,10 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     
     private var textToAvatarConstraint: OWConstraint?
     private var textToLeadingConstraint: OWConstraint?
-    private var showingAvatar: Bool = false
-
     // MARK: - Init
     
-    init(frame: CGRect = .zero, hasAvatar: Bool) {
+    override init(frame: CGRect = .zero) {
         super.init(frame: frame)
-        showingAvatar = hasAvatar
         setupUI()
     }
     
@@ -64,18 +61,12 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         textInputView.becomeFirstResponder()
     }
     
-    func updateAvatar(_ image: UIImage?) {
-        showingAvatar = image != nil
-//        avatarImageView.updateAvatar(image: image)
-    }
-    
     func updateText(_ text: String) {
         textInputView.text = text
         delegate?.input(self, didChange: text)
     }
 
-    func configureCommentType(_ type: CommentType, avatar: URL? = nil) {
-        
+    func configureCommentType(_ type: CommentType, avatar: URL? = nil, showAvatar: Bool = false) {
         switch type {
         case .comment:
             textInputView.placeholder = LocalizationManager.localizedString(key: "What do you think?")
@@ -83,8 +74,12 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         case .reply:
             textInputView.placeholder = LocalizationManager.localizedString(key: "Type your reply…")
         }
-
-        if showingAvatar {
+        
+        setShowAvatar(showAvatar: showAvatar)
+    }
+    
+    func setShowAvatar(showAvatar: Bool) {
+        if showAvatar {
             avatarImageView.isHidden = false
             textToLeadingConstraint?.deactivate()
             textToAvatarConstraint?.activate()
