@@ -33,7 +33,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
                         set { textInputView.text = newValue } }
 
     private let textInputView: OWInputTextView = OWInputTextView()
-    private lazy var avatarImageView: SPAvatarView = SPAvatarView()
+    private (set) lazy var avatarImageView: SPAvatarView = SPAvatarView()
     
     private var textToAvatarConstraint: OWConstraint?
     private var textToLeadingConstraint: OWConstraint?
@@ -65,7 +65,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     }
     
     func updateAvatar(_ image: UIImage?) {
-        avatarImageView.updateAvatar(image: image)
+//        avatarImageView.updateAvatar(image: image)
     }
     
     func updateText(_ text: String) {
@@ -84,8 +84,8 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         }
 
         if showingAvatar {
-            avatarImageView.updateAvatar(avatarUrl: avatar)
-            avatarImageView.updateOnlineStatus(.online)
+//            avatarImageView.updateAvatar(avatarUrl: avatar)
+//            avatarImageView.updateOnlineStatus(.online)
             avatarImageView.isHidden = false
             textToLeadingConstraint?.deactivate()
             textToAvatarConstraint?.activate()

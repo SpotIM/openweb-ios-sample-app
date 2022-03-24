@@ -88,6 +88,8 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel) {
         self.model = model
+        let avatarModel = OWAvatarViewModel(user: model.dataModel.user, imageURLProvider: model.imageProvider)
+        textInputViewContainer.avatarImageView.configure(with: avatarModel)
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
     }
