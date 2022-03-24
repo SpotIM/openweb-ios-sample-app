@@ -74,16 +74,6 @@ final class SPMainConversationFooterView: OWBaseView {
         dropsShadow = !SPUserInterfaceStyle.isDarkMode
         self.readOnlyLabel?.textColor = .spForeground3
     }
-    
-    /// Updates user's avatar, `nil` will set default placeholder
-//    func updateAvatar(_ avatarUrl: URL?) {
-//        userAvatarView.updateAvatar(avatarUrl: avatarUrl)
-//    }
-    
-    /// Updates user's online status, `nil` will hide status view
-    func updateOnlineStatus(_ status: OWOnlineStatus) {
-//        userAvatarView.updateOnlineStatus(status)
-    }
 
     func setCallToAction(text: String) {
         callToActionLabel.text = text
