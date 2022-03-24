@@ -14,10 +14,8 @@ enum OWOnlineStatus {
     case offline
 }
 
-protocol OWAvatarViewDelegate: class {
-    
+protocol OWAvatarViewDelegate: AnyObject {
     func avatarDidTapped()
-    
 }
 
 final class SPAvatarView: OWBaseView {
