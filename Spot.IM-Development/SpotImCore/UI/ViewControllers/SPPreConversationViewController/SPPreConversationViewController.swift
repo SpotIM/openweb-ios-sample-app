@@ -77,6 +77,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
         
+        whatYouThinkView.userAvatarView.configure(with: OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: model.imageProvider))
     }
     
     override func viewDidLoad() {
