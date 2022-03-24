@@ -60,6 +60,7 @@ final class SPMainConversationModel {
     // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
     // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
     let onlineViewingUsersConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
+    let avatarViewVM: OWAvatarViewModel
     
     private(set) var dataSource: SPMainConversationDataSource
     var sortOption: SPCommentSortMode = .best {
@@ -92,6 +93,7 @@ final class SPMainConversationModel {
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
         self.abTestsData = abTestData
+        avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         dataSource = conversationDataSource
         
         dataSource.messageCounterUpdated = { [weak self] count in

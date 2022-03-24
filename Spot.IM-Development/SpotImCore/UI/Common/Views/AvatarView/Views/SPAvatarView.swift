@@ -106,7 +106,7 @@ final class SPAvatarView: OWBaseView {
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
-    func updateAvatar(avatarUrl: URL?) {
+    private func updateAvatar(avatarUrl: URL?) {
         if avatarUrl == nil {
             setAvatarOrDefault(image: nil)
         } else {
@@ -116,28 +116,10 @@ final class SPAvatarView: OWBaseView {
         }
     }
     
-    /// Updates user's avatar, `nil` will set default placeholder
-    func updateAvatar(image: UIImage?) {
-        setAvatarOrDefault(image: image)
-    }
-    
-    /// Updates user's online status, `nil` will hide status view
-    func updateOnlineStatus(_ status: OWOnlineStatus) {
-        let disableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
-        guard disableOnlineIndicator == false else {
-            onlineIndicatorView.isHidden = true
-            return
-        }
-        
-        onlineIndicatorView.backgroundColor = .mediumGreen
-        switch status {
-        case .online:
-            onlineIndicatorView.isHidden = false
-        
-        case .offline:
-            onlineIndicatorView.isHidden = true
-        }
-    }
+//    /// Updates user's avatar, `nil` will set default placeholder
+//    private func updateAvatar(image: UIImage?) {
+//        setAvatarOrDefault(image: image)
+//    }
 
     /// Sets the image to the avatar image view, adds rasterization thereafter.
     /// If the image is nil, tries to set default image.
