@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWAvatarViewModelingInputs {
-    func configureUser(user: SPUser?) // ??
+    func configureUser(user: SPUser?)
 }
 
 protocol OWAvatarViewModelingOutputs {

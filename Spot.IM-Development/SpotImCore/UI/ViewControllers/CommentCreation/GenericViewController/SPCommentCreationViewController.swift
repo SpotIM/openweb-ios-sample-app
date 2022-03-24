@@ -525,6 +525,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     private func setAvatar(image: UIImage) {
         self.updateUserIcon(image: image)
+        textInputViewContainer.updateAvatar(image)
     }
 
     @objc
