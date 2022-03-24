@@ -520,15 +520,11 @@ class SPCommentCreationViewController: SPBaseViewController,
 
             self.setAvatar(image: image)
         }
+        model.avatarViewVM.configureUser(user: SPUserSessionHolder.session.user)
     }
 
     private func setAvatar(image: UIImage) {
         self.updateUserIcon(image: image)
-//        if self.showsUserAvatarInTextInput {
-//            self.textInputViewContainer.updateAvatar(image)
-//        } else {
-//            self.usernameView.updateAvatar(image)
-//        }
     }
 
     @objc
