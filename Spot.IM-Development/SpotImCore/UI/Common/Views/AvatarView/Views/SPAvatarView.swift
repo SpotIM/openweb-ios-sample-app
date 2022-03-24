@@ -7,12 +7,11 @@
 //
 
 import UIKit
+import RxSwift
 
 enum OWOnlineStatus {
-    
     case online
     case offline
-    
 }
 
 protocol OWAvatarViewDelegate: class {
@@ -30,12 +29,34 @@ final class SPAvatarView: OWBaseView {
     private let avatarButton: OWBaseButton = .init()
 
     private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", supportDarkMode: true) }
-
+    
+    fileprivate var viewModel: OWAvatarViewModel!
+    fileprivate var disposeBag: DisposeBag!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setup()
         applyAccessibility()
+    }
+    
+    func configure(with viewModel: OWAvatarViewModel) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        configureViews()
+    }
+    
+    func configureViews() {
+        viewModel.outputs.showOnlineIndicator
+            .map { !$0 } // Reverse
+            .bind(to: onlineIndicatorView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.imageUrl
+            .subscribe(onNext: { [weak self] url in
+                self?.updateAvatar(avatarUrl: url)
+            })
+            .disposed(by: disposeBag)
     }
     
     // Handle dark mode \ light mode change
@@ -78,6 +99,7 @@ final class SPAvatarView: OWBaseView {
         onlineIndicatorView.layer.borderWidth = 2.0
         onlineIndicatorView.layer.borderColor = UIColor.spBackground0.cgColor
         onlineIndicatorView.layer.shouldRasterize = true
+        onlineIndicatorView.isHidden = true
         onlineIndicatorView.layer.rasterizationScale = UIScreen.main.scale
         onlineIndicatorView.OWSnp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview()
@@ -103,6 +125,12 @@ final class SPAvatarView: OWBaseView {
     
     /// Updates user's online status, `nil` will hide status view
     func updateOnlineStatus(_ status: OWOnlineStatus) {
+        let disableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
+        guard disableOnlineIndicator == false else {
+            onlineIndicatorView.isHidden = true
+            return
+        }
+        
         onlineIndicatorView.backgroundColor = .mediumGreen
         switch status {
         case .online:
