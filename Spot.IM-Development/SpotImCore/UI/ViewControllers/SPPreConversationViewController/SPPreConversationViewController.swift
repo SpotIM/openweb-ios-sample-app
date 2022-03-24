@@ -120,6 +120,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
         }
+        model.avatarViewVM.configureUser(user: SPUserSessionHolder.session.user)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
