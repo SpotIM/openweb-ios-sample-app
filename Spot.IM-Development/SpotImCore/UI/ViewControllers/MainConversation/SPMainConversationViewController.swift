@@ -509,7 +509,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func setupFooterView() {
         view.bringSubviewToFront(footer)
-        footer.updateOnlineStatus(.online)
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         let bottomPadding: CGFloat

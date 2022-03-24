@@ -297,7 +297,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     private func setupWhatYouThinkView() {
         view.bringSubviewToFront(whatYouThinkView)
-        whatYouThinkView.updateOnlineStatus(.online)
         whatYouThinkView.dropsShadow = false
         whatYouThinkView.showsSeparator = false
         whatYouThinkView.delegate = self
