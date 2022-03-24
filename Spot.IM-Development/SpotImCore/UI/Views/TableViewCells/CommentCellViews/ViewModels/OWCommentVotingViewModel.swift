@@ -81,30 +81,6 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
         self.setupObservers()
     }
     
-    private func handleVotesType() {
-        var voteTypesToShow: [VoteType] = [.voteUp, .voteDown]
-        
-        if let convConfig = SPConfigsDataSource.appConfig?.conversation {
-            if (convConfig.disableVoteUp == true) {
-                voteTypesToShow.removeAll { $0 == .voteUp }
-            }
-            if (convConfig.disableVoteDown == true) {
-                voteTypesToShow.removeAll { $0 == .voteDown }
-            }
-        }
-        
-        if let sharedConfig = SPConfigsDataSource.appConfig?.shared {
-            if [OWVotesType.heart, OWVotesType.recommend].contains( sharedConfig.votesType) {
-                voteTypesToShow.removeAll { $0 == .voteDown }
-            }
-            _votesType.onNext(sharedConfig.votesType)
-        } else {
-            _votesType.onNext(.like) // default
-        }
-        
-        _voteTypesToShow.onNext(voteTypesToShow)
-    }
-    
     var rankUpText: Observable<String> {
         _rankUp
             .unwrap()
@@ -128,16 +104,6 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
     var brandColor: Observable<UIColor> {
         _brandColor
             .unwrap()
-    }
-    
-    func setDelegate(_ delegate: CommentActionsDelegate) {
-        self.delegate = delegate
-    }
-    
-    func configure(with model: OWCommentVotingModel) {
-        _rankUp.onNext(model.rankUpCount)
-        _rankDown.onNext(model.rankDownCount)
-        _rankedByUser.onNext(model.rankedByUserValue)
     }
     
     var voteTypes: Observable<[VoteType]> {
@@ -209,7 +175,43 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
             }
     }
     
-    private func setupObservers() {
+    func setDelegate(_ delegate: CommentActionsDelegate) {
+        self.delegate = delegate
+    }
+    
+    func configure(with model: OWCommentVotingModel) {
+        _rankUp.onNext(model.rankUpCount)
+        _rankDown.onNext(model.rankDownCount)
+        _rankedByUser.onNext(model.rankedByUserValue)
+    }
+}
+
+fileprivate extension OWCommentVotingViewModel {
+    func handleVotesType() {
+        var voteTypesToShow: [VoteType] = [.voteUp, .voteDown]
+        
+        if let convConfig = SPConfigsDataSource.appConfig?.conversation {
+            if (convConfig.disableVoteUp == true) {
+                voteTypesToShow.removeAll { $0 == .voteUp }
+            }
+            if (convConfig.disableVoteDown == true) {
+                voteTypesToShow.removeAll { $0 == .voteDown }
+            }
+        }
+        
+        if let sharedConfig = SPConfigsDataSource.appConfig?.shared {
+            if [OWVotesType.heart, OWVotesType.recommend].contains( sharedConfig.votesType) {
+                voteTypesToShow.removeAll { $0 == .voteDown }
+            }
+            _votesType.onNext(sharedConfig.votesType)
+        } else {
+            _votesType.onNext(.like) // default
+        }
+        
+        _voteTypesToShow.onNext(voteTypesToShow)
+    }
+    
+    func setupObservers() {
         tapRankUp.withLatestFrom(_rankedByUser.unwrap())
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }

@@ -103,8 +103,10 @@ final class OWCommentVotingView: OWBaseView {
         rankDownLabel.backgroundColor = .clear
         rankDownLabel.textColor = .buttonTitle
     }
-    
-    private func setupUI() {
+}
+
+fileprivate extension OWCommentVotingView {
+    func setupUI() {
         self.addSubviews(stackView)
         
         // stackView
@@ -113,25 +115,23 @@ final class OWCommentVotingView: OWBaseView {
         }
     }
     
-    private func configureRankUpButton() {
+    func configureRankUpButton() {
         stackView.addArrangedSubview(rankUpButton)
         stackView.addArrangedSubview(rankUpLabel)
     }
     
-    private func configureSeperatorView() {
+    func configureSeperatorView() {
         stackView.addArrangedSubview(seperetorView)
         seperetorView.OWSnp.makeConstraints { make in
             make.width.equalTo(10)
         }
     }
 
-    private func configureRankDownButton() {
+    func configureRankDownButton() {
         stackView.addArrangedSubview(rankDownButton)
         stackView.addArrangedSubview(rankDownLabel)
     }
-}
-
-fileprivate extension OWCommentVotingView {
+    
     func setupObservers() {
         viewModel.outputs.rankUpText
             .bind(to: rankUpLabel.rx.text)
