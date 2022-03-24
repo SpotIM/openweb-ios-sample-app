@@ -103,7 +103,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         updateViewFromModel()
         
         if !isButtonOnlyModeEnabled {
-            self.updateWhatYouThinkView()
             self.updateTableViewData()
         }
         
@@ -366,7 +365,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.whatYouThinkView.setReadOnlyMode(isPreConversation: true)
                         self.updateFooterViewCustomUI(footerView: self.whatYouThinkView, isPreConversation: true)
                     }
-                    self.updateWhatYouThinkView()
                     self.updateTableViewData()
                 }
                 
@@ -421,10 +419,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func showErrorStateView() {
         super.showErrorStateView()
         footerView.hideShowMoreCommentsButton()
-    }
-
-    private func updateWhatYouThinkView() {
-//        whatYouThinkView.updateAvatar(model.dataSource.currentUserAvatarUrl)
     }
 
     override func isLastSection(with section: Int) -> Bool {

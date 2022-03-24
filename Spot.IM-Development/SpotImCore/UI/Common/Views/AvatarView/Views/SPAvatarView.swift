@@ -115,11 +115,6 @@ final class SPAvatarView: OWBaseView {
             }
         }
     }
-    
-//    /// Updates user's avatar, `nil` will set default placeholder
-//    private func updateAvatar(image: UIImage?) {
-//        setAvatarOrDefault(image: image)
-//    }
 
     /// Sets the image to the avatar image view, adds rasterization thereafter.
     /// If the image is nil, tries to set default image.

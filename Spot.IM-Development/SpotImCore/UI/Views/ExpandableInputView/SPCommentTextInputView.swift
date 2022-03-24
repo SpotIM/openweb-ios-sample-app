@@ -65,6 +65,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     }
     
     func updateAvatar(_ image: UIImage?) {
+        showingAvatar = image != nil
 //        avatarImageView.updateAvatar(image: image)
     }
     
