@@ -88,8 +88,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel) {
         self.model = model
-        let avatarModel = OWAvatarViewModel(user: model.dataModel.user, imageURLProvider: model.imageProvider)
-        textInputViewContainer.avatarImageView.configure(with: avatarModel)
+        textInputViewContainer.avatarImageView.configure(with: model.avatarViewVM)
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
     }
@@ -108,6 +107,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         if model.isCommentAReply() == false {
             topContainerView.bringSubviewToFront(closeButton)
         }
+        usernameView.avatarImageView.configure(with: model.avatarViewVM)
     }
     
     @objc override func overrideUserInterfaceStyleDidChange() {
@@ -524,11 +524,11 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     private func setAvatar(image: UIImage) {
         self.updateUserIcon(image: image)
-        if self.showsUserAvatarInTextInput {
-            self.textInputViewContainer.updateAvatar(image)
-        } else {
-            self.usernameView.updateAvatar(image)
-        }
+//        if self.showsUserAvatarInTextInput {
+//            self.textInputViewContainer.updateAvatar(image)
+//        } else {
+//            self.usernameView.updateAvatar(image)
+//        }
     }
 
     @objc
