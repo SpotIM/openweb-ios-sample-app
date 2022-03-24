@@ -35,7 +35,7 @@ class OWThemeStyleService: OWThemeStyleServicing {
     lazy var style: Observable<OWThemeStyle> = {
         return _style
             .asObservable()
-            .share()
+            .share(replay: 1)
     }()
 }
 

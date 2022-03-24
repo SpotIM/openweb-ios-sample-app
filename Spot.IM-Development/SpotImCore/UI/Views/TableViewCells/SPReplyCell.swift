@@ -18,7 +18,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private let avatarView: SPAvatarView = .init()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
-    private let replyActionsView: CommentActionsView = .init()
+    private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let commentMediaView: CommentMediaView = .init()
     
@@ -149,12 +149,10 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
+        replyActionsView.configure(with: dataModel.commentActionsVM, delegate: self)
+        dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
-        replyActionsView.setBrandColor(.brandColor)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
-        replyActionsView.setRankUp(dataModel.rankUp)
-        replyActionsView.setRankDown(dataModel.rankDown)
-        replyActionsView.setRanked(with: dataModel.rankedByUser)
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
@@ -243,7 +241,6 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func configureReplyActionsView() {
-        replyActionsView.delegate = self
         replyActionsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentMediaView.OWSnp.bottom)
             make.leading.equalTo(messageView)
@@ -303,12 +300,12 @@ extension SPReplyCell: CommentActionsDelegate {
         delegate?.replyTapped(for: commentId)
     }
     
-    func rankUp(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankUp(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
     
-    func rankDown(_ rankChange: SPRankChange, updateRankLocal: () -> Void) {
-        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId, updateRankLocal: updateRankLocal)
+    func rankDown(_ rankChange: SPRankChange) {
+        delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
 }
 
@@ -362,7 +359,7 @@ private enum Theme {
     static let leadingOffset: CGFloat = 42.0
     static let trailingOffset: CGFloat = 16.0
     static let messageContainerTopOffset: CGFloat = 5.0
-    static let replyActionsViewHeight: CGFloat = 49.0
+    static let replyActionsViewHeight: CGFloat = 32.0
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let userViewCollapsedHeight: CGFloat = 44.0
     static let userViewExpandedHeight: CGFloat = 69.0
