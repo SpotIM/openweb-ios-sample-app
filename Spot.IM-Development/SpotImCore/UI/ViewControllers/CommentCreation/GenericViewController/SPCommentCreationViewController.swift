@@ -86,7 +86,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel) {
         self.model = model
-        textInputViewContainer.avatarImageView.configure(with: model.avatarViewVM)
+        textInputViewContainer.configureAvatarViewModel(with: model.avatarViewVM)
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
     }
@@ -105,7 +105,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         if model.isCommentAReply() == false {
             topContainerView.bringSubviewToFront(closeButton)
         }
-        usernameView.avatarImageView.configure(with: model.avatarViewVM)
+        usernameView.configureAvatarViewModel(with: model.avatarViewVM)
     }
     
     @objc override func overrideUserInterfaceStyleDidChange() {

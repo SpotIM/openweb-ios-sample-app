@@ -56,9 +56,13 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     }
     
     var showOnlineIndicator: Observable<Bool> {
-        let disableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
+        let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
         return user
-            .map { ($0.online ?? false || $0.id == SPUserSessionHolder.session.user?.id) && !disableOnlineIndicator }
+            .map { user in
+                let isCurrentUser = user.id == SPUserSessionHolder.session.user?.id
+                let isUserOnline = (user.online ?? false) || isCurrentUser
+                return isUserOnline && !shouldDisableOnlineIndicator
+            }
     }
     
     func configureUser(user: SPUser) {
