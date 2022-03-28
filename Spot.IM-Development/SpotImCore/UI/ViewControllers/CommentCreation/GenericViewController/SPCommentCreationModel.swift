@@ -27,7 +27,7 @@ class SPCommentCreationModel {
     
     private var currentUploadingImageId: String?
     
-    let avatarViewVM: OWAvatarViewModel
+    let avatarViewVM: OWAvatarViewModeling
     
     init(commentCreationDTO: SPCommentCreationDTO,
          updater: SPCommentUpdater,
