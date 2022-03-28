@@ -117,6 +117,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
         OWLogger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
+        footer.userAvatarView.configure(with: model.avatarViewVM)
         summaryView.updateCommentsLabel(model.dataSource.messageCount)
         summaryView.configure(onlineViewingUsersVM: model.onlineViewingUsersConversationVM)
 
@@ -508,7 +509,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func setupFooterView() {
         view.bringSubviewToFront(footer)
-        footer.updateOnlineStatus(.online)
         footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         let bottomPadding: CGFloat
@@ -530,8 +530,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
+        if let user = SPUserSessionHolder.session.user {
+            model.avatarViewVM.inputs.configureUser(user: user)
+        }
         updateFooterViewCustomUI(footerView: footer)
-        footer.updateAvatar(model.dataSource.currentUserAvatarUrl)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard
                 let self = self,

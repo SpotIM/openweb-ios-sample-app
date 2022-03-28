@@ -18,6 +18,7 @@ struct SPConfigurationConversation: Decodable {
     let disableImageUploadButton: Bool?
     let translationTextOverrides: [String : [String : String]]? // [language: [key : text]]
     let subscriberBadgeConfig: OWSubscriberBadgeConfiguration?
+    let disableOnlineDotIndicator: Bool?
     let disableVoteDown: Bool?
     let disableVoteUp: Bool?
     
@@ -30,6 +31,7 @@ struct SPConfigurationConversation: Decodable {
              communityGuidelinesTitle,
              disableImageUploadButton,
              translationTextOverrides,
+             disableOnlineDotIndicator,
              disableVoteDown,
              disableVoteUp
     }

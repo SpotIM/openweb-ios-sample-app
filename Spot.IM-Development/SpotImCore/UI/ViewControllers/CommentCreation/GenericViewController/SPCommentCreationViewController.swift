@@ -30,9 +30,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     let topContainerView: OWBaseView = .init()
     let topContainerStack: OWBaseStackView = .init()
     let commentContentScrollView: OWBaseScrollView = .init()
-    var textInputViewContainer: SPCommentTextInputView = .init(
-        hasAvatar: SPUserSessionHolder.session.user?.registered ?? false
-    )
+    var textInputViewContainer: SPCommentTextInputView = .init()
     private let imagePreviewView: OWCommentImagePreview = .init()
     lazy var usernameView: SPNameInputView = SPNameInputView()
 
@@ -88,6 +86,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel) {
         self.model = model
+        textInputViewContainer.configureAvatarViewModel(with: model.avatarViewVM)
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
     }
@@ -106,6 +105,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         if model.isCommentAReply() == false {
             topContainerView.bringSubviewToFront(closeButton)
         }
+        usernameView.configureAvatarViewModel(with: model.avatarViewVM)
     }
     
     @objc override func overrideUserInterfaceStyleDidChange() {
@@ -495,7 +495,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
 
     func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
-        textInputViewContainer.configureCommentType(type)
+        textInputViewContainer.configureCommentType(type, showAvatar: SPUserSessionHolder.session.user?.registered ?? false)
         textInputViewContainer.updateText(model.commentText)
     }
     
@@ -518,15 +518,14 @@ class SPCommentCreationViewController: SPBaseViewController,
 
             self.setAvatar(image: image)
         }
+        if let user = SPUserSessionHolder.session.user {
+            model.avatarViewVM.inputs.configureUser(user: user)
+        }
+        textInputViewContainer.setShowAvatar(showAvatar: SPUserSessionHolder.session.user?.registered ?? false)
     }
 
     private func setAvatar(image: UIImage) {
         self.updateUserIcon(image: image)
-        if self.showsUserAvatarInTextInput {
-            self.textInputViewContainer.updateAvatar(image)
-        } else {
-            self.usernameView.updateAvatar(image)
-        }
     }
 
     @objc

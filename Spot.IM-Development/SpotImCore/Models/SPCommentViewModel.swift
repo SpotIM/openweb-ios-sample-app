@@ -33,7 +33,7 @@ internal struct CommentViewModel {
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
 
-    var showsOnline: Bool = false
+    private (set) var showsOnline: Bool = false
     var hasOffset: Bool = false
     var isDeleted: Bool = false
     var isReported: Bool = false
@@ -54,7 +54,7 @@ internal struct CommentViewModel {
     }
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
-    
+    let avatarViewVM: OWAvatarViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
 
     init(
@@ -63,9 +63,9 @@ internal struct CommentViewModel {
         replyingToDisplayName: String? = nil,
         color: UIColor? = nil,
         user: SPUser? = nil,
-        userImageURL: URL? = nil,
-        commentImageURL: URL? = nil) {
+        imageProvider: SPImageProvider? = nil) {
 
+        avatarViewVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         isDeleted = comment.deleted
         isEdited = comment.edited
         authorId = comment.userId
@@ -103,7 +103,8 @@ internal struct CommentViewModel {
             self.commentMediaOriginalWidth = gif.previewWidth
         }
         
-        if let image = comment.image, let commentImageURL = commentImageURL {
+        if let image = comment.image,
+            let commentImageURL = imageProvider?.imageURL(with: comment.image?.imageId, size: nil) {
             commentImage = CommentImage(id: image.imageId, height: image.originalHeight, width: image.originalWidth, imageUrl: commentImageURL)
             self.commentMediaOriginalHeight = image.originalHeight
             self.commentMediaOriginalWidth = image.originalWidth
@@ -146,7 +147,7 @@ internal struct CommentViewModel {
         if let user = user {
             showsOnline = user.online ?? false
             displayName = user.displayName
-            userAvatar = userImageURL
+            userAvatar = imageProvider?.imageURL(with: user.imageId, size: nil)
             badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
             subscriberBadgeVM.inputs.configureUser(user: user)
         }

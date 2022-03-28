@@ -7,18 +7,15 @@
 //
 
 import UIKit
+import RxSwift
 
 enum OWOnlineStatus {
-    
     case online
     case offline
-    
 }
 
-protocol OWAvatarViewDelegate: class {
-    
+protocol OWAvatarViewDelegate: AnyObject {
     func avatarDidTapped()
-    
 }
 
 final class SPAvatarView: OWBaseView {
@@ -30,12 +27,34 @@ final class SPAvatarView: OWBaseView {
     private let avatarButton: OWBaseButton = .init()
 
     private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", supportDarkMode: true) }
-
+    
+    fileprivate var viewModel: OWAvatarViewModeling!
+    fileprivate var disposeBag: DisposeBag!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setup()
         applyAccessibility()
+    }
+    
+    func configure(with viewModel: OWAvatarViewModeling) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        setupObservers()
+    }
+    
+    func setupObservers() {
+        viewModel.outputs.showOnlineIndicator
+            .map { !$0 } // Reverse
+            .bind(to: onlineIndicatorView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.imageType
+            .subscribe(onNext: { [weak self] avatarImageType in
+                self?.updateAvatar(avatarImageType: avatarImageType)
+            })
+            .disposed(by: disposeBag)
     }
     
     // Handle dark mode \ light mode change
@@ -78,6 +97,7 @@ final class SPAvatarView: OWBaseView {
         onlineIndicatorView.layer.borderWidth = 2.0
         onlineIndicatorView.layer.borderColor = UIColor.spBackground0.cgColor
         onlineIndicatorView.layer.shouldRasterize = true
+        onlineIndicatorView.isHidden = true
         onlineIndicatorView.layer.rasterizationScale = UIScreen.main.scale
         onlineIndicatorView.OWSnp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview()
@@ -86,30 +106,14 @@ final class SPAvatarView: OWBaseView {
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
-    func updateAvatar(avatarUrl: URL?) {
-        if avatarUrl == nil {
+    private func updateAvatar(avatarImageType: AvatarImageType) {
+        switch avatarImageType {
+        case .defaultAvatar:
             setAvatarOrDefault(image: nil)
-        } else {
-            avatarImageView.setImage(with: avatarUrl) { [weak self] (image, _) in
+        case .custom(let url):
+            avatarImageView.setImage(with: url) { [weak self] (image, _) in
                 self?.setAvatarOrDefault(image: image)
             }
-        }
-    }
-    
-    /// Updates user's avatar, `nil` will set default placeholder
-    func updateAvatar(image: UIImage?) {
-        setAvatarOrDefault(image: image)
-    }
-    
-    /// Updates user's online status, `nil` will hide status view
-    func updateOnlineStatus(_ status: OWOnlineStatus) {
-        onlineIndicatorView.backgroundColor = .mediumGreen
-        switch status {
-        case .online:
-            onlineIndicatorView.isHidden = false
-        
-        case .offline:
-            onlineIndicatorView.isHidden = true
         }
     }
 
