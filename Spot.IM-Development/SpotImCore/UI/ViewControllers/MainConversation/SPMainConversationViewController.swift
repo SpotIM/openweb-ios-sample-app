@@ -530,7 +530,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
-        model.avatarViewVM.inputs.configureUser(user: SPUserSessionHolder.session.user)
+        if let user = SPUserSessionHolder.session.user {
+            model.avatarViewVM.inputs.configureUser(user: user)
+        }
         updateFooterViewCustomUI(footerView: footer)
         model.fetchNavigationAvatar { [weak self] image, _ in
             guard
