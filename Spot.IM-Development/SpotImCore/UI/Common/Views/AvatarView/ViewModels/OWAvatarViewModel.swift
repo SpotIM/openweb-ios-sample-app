@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWAvatarViewModelingInputs {
-    func configureUser(user: SPUser?)
+    func configureUser(user: SPUser)
 }
 
 protocol OWAvatarViewModelingOutputs {
@@ -61,7 +61,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             .map { ($0.online ?? false || $0.id == SPUserSessionHolder.session.user?.id) && !disableOnlineIndicator }
     }
     
-    func configureUser(user: SPUser?) {
+    func configureUser(user: SPUser) {
         self._user.onNext(user)
     }
 }
