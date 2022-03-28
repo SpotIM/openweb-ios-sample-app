@@ -527,8 +527,7 @@ internal final class SPMainConversationDataSource {
             replyingToDisplayName: replyingToDisplayName,
             color: .brandColor,
             user: user,
-            userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil),
-            commentImageURL: dataProvider.imageURLProvider?.imageURL(with: comment.image?.imageId, size: nil)
+            imageProvider: dataProvider.imageURLProvider
         )
     }
 
@@ -796,8 +795,7 @@ extension SPMainConversationDataSource {
             replyingToDisplayName: displayName,
             color: .brandColor,
             user: user,
-            userImageURL: dataProvider.imageURLProvider?.imageURL(with: user?.imageId, size: nil),
-            commentImageURL: dataProvider.imageURLProvider?.imageURL(with: comment.image?.imageId, size: nil)
+            imageProvider: dataProvider.imageURLProvider
         )
         
         cachedCommentReply = viewModel

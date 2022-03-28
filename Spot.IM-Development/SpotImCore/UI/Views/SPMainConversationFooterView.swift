@@ -19,7 +19,7 @@ internal protocol SPMainConversationFooterViewDelegate: AnyObject {
 final class SPMainConversationFooterView: OWBaseView {
     private let cache = NSCache<NSString, UIImage>()
     private let callToActionLabel: OWBaseLabel = .init()
-    private let userAvatarView: SPAvatarView = .init()
+    let userAvatarView: SPAvatarView = .init()
     private let labelContainer: OWBaseView = .init()
     
     private lazy var separatorView: OWBaseView = .init()
@@ -73,16 +73,6 @@ final class SPMainConversationFooterView: OWBaseView {
         separatorView.backgroundColor = .spSeparator2
         dropsShadow = !SPUserInterfaceStyle.isDarkMode
         self.readOnlyLabel?.textColor = .spForeground3
-    }
-    
-    /// Updates user's avatar, `nil` will set default placeholder
-    func updateAvatar(_ avatarUrl: URL?) {
-        userAvatarView.updateAvatar(avatarUrl: avatarUrl)
-    }
-    
-    /// Updates user's online status, `nil` will hide status view
-    func updateOnlineStatus(_ status: OWOnlineStatus) {
-        userAvatarView.updateOnlineStatus(status)
     }
 
     func setCallToAction(text: String) {

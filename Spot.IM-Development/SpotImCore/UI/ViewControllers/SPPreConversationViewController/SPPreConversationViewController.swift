@@ -77,6 +77,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
         
+        whatYouThinkView.userAvatarView.configure(with: model.avatarViewVM)
     }
     
     override func viewDidLoad() {
@@ -102,7 +103,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         updateViewFromModel()
         
         if !isButtonOnlyModeEnabled {
-            self.updateWhatYouThinkView()
             self.updateTableViewData()
         }
         
@@ -118,6 +118,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             self.footerView.set(commentsCount: self.model.dataSource.messageCount.decimalFormatted)
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
+        }
+        if let user = SPUserSessionHolder.session.user {
+            model.avatarViewVM.inputs.configureUser(user: user)
         }
     }
     
@@ -296,7 +299,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     private func setupWhatYouThinkView() {
         view.bringSubviewToFront(whatYouThinkView)
-        whatYouThinkView.updateOnlineStatus(.online)
         whatYouThinkView.dropsShadow = false
         whatYouThinkView.showsSeparator = false
         whatYouThinkView.delegate = self
@@ -365,7 +367,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         self.whatYouThinkView.setReadOnlyMode(isPreConversation: true)
                         self.updateFooterViewCustomUI(footerView: self.whatYouThinkView, isPreConversation: true)
                     }
-                    self.updateWhatYouThinkView()
                     self.updateTableViewData()
                 }
                 
@@ -420,10 +421,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     override func showErrorStateView() {
         super.showErrorStateView()
         footerView.hideShowMoreCommentsButton()
-    }
-
-    private func updateWhatYouThinkView() {
-        whatYouThinkView.updateAvatar(model.dataSource.currentUserAvatarUrl)
     }
 
     override func isLastSection(with section: Int) -> Bool {

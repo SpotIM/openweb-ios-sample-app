@@ -9,7 +9,7 @@
 import UIKit
 
 internal final class SPNameInputView: OWBaseView, SPTextInputView {
-    private lazy var avatarImageView: SPAvatarView = .init()
+    private lazy var avatarUserView: SPAvatarView = .init()
     private lazy var usernameTextView: OWInputTextView = .init()
     private lazy var separatorView: UIView = .init()
 
@@ -37,14 +37,6 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         setup()
     }
 
-    func updateAvatar(_ image: UIImage?) {
-        avatarImageView.updateAvatar(image: image)
-    }
-
-    func updateAvatar(_ url: URL?) {
-        avatarImageView.updateAvatar(avatarUrl: url)
-    }
-
     func makeFirstResponder() {
         usernameTextView.becomeFirstResponder()
     }
@@ -56,7 +48,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         usernameTextView.backgroundColor = .spBackground0
         usernameTextView.autocorrectionType = !UIDevice.current.isPortrait() || UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
         separatorView.backgroundColor = .spSeparator2
-        avatarImageView.updateColorsAccordingToStyle()
+        avatarUserView.updateColorsAccordingToStyle()
     }
     
     func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
@@ -66,7 +58,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
     // MARK: - Internal methods
 
     private func setup() {
-        addSubviews(avatarImageView, usernameTextView, separatorView)
+        addSubviews(avatarUserView, usernameTextView, separatorView)
 
         setupAvatarImageView()
         setupUsernameTextField()
@@ -75,7 +67,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
     }
 
     private func setupAvatarImageView() {
-        avatarImageView.OWSnp.makeConstraints { make in
+        avatarUserView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Theme.xOffset)
             make.top.greaterThanOrEqualToSuperview()
             make.bottom.lessThanOrEqualToSuperview()
@@ -94,11 +86,15 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         
         usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your Username")
         usernameTextView.OWSnp.makeConstraints { make in
-            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(Theme.usernameLeading)
-            make.centerY.equalTo(avatarImageView).offset(usernameTextView.textContainer.lineFragmentPadding)
+            make.leading.equalTo(avatarUserView.OWSnp.trailing).offset(Theme.usernameLeading)
+            make.centerY.equalTo(avatarUserView).offset(usernameTextView.textContainer.lineFragmentPadding)
             make.trailing.equalToSuperview().offset(-Theme.xOffset)
-            make.height.equalTo(avatarImageView)
+            make.height.equalTo(avatarUserView)
         }
+    }
+    
+    func configureAvatarViewModel(with model: OWAvatarViewModeling) {
+        self.avatarUserView.configure(with: model)
     }
     
     func setTextAccess(isEditable: Bool) {

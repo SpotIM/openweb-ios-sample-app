@@ -156,17 +156,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
-        imageRequest?.cancel()
-        avatarView.updateAvatar(image: nil)
-        avatarView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
-        if !dataModel.isDeletedOrReported() {
-            imageRequest = UIImage.load(with: dataModel.userAvatar) { [weak self] image, _ in
-                self?.avatarView.updateAvatar(image: image)
-            }
-            avatarView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
-        } else {
-            avatarView.updateOnlineStatus(.offline)
-        }
+        avatarView.configure(with: dataModel.avatarViewVM)
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {

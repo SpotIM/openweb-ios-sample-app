@@ -271,17 +271,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateAvatarView(with dataModel: CommentViewModel) {
-        imageRequest?.cancel()
-        avatarImageView.updateAvatar(image: nil)
-        avatarImageView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
-        if !dataModel.isDeletedOrReported() {
-            imageRequest = UIImage.load(with: dataModel.userAvatar) { [weak self] image, _ in
-                self?.avatarImageView.updateAvatar(image: image)
-            }
-            avatarImageView.updateOnlineStatus(dataModel.showsOnline ? .online : .offline)
-        } else {
-            avatarImageView.updateOnlineStatus(.offline)
-        }
+        avatarImageView.configure(with: dataModel.avatarViewVM)
     }
     
     private func updateMoreRepliesView(with dataModel: CommentViewModel, minimumVisibleReplies: Int) {
