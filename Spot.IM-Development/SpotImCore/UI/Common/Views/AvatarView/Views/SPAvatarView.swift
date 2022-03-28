@@ -50,9 +50,9 @@ final class SPAvatarView: OWBaseView {
             .bind(to: onlineIndicatorView.rx.isHidden)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.imageUrl
-            .subscribe(onNext: { [weak self] url in
-                self?.updateAvatar(avatarUrl: url)
+        viewModel.outputs.imageType
+            .subscribe(onNext: { [weak self] avatarImageType in
+                self?.updateAvatar(avatarImageType: avatarImageType)
             })
             .disposed(by: disposeBag)
     }
@@ -106,11 +106,12 @@ final class SPAvatarView: OWBaseView {
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
-    private func updateAvatar(avatarUrl: URL?) {
-        if avatarUrl == nil {
+    private func updateAvatar(avatarImageType: AvatarImageType) {
+        switch avatarImageType {
+        case .defaultAvatar:
             setAvatarOrDefault(image: nil)
-        } else {
-            avatarImageView.setImage(with: avatarUrl) { [weak self] (image, _) in
+        case .custom(let url):
+            avatarImageView.setImage(with: url) { [weak self] (image, _) in
                 self?.setAvatarOrDefault(image: image)
             }
         }
