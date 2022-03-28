@@ -33,7 +33,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
                         set { textInputView.text = newValue } }
 
     private let textInputView: OWInputTextView = OWInputTextView()
-    private (set) lazy var avatarImageView: SPAvatarView = SPAvatarView()
+    private lazy var avatarUserView: SPAvatarView = SPAvatarView()
     
     private var textToAvatarConstraint: OWConstraint?
     private var textToLeadingConstraint: OWConstraint?
@@ -50,7 +50,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         textInputView.backgroundColor = .spBackground0
         textInputView.textColor = .spForeground1
         textInputView.autocorrectionType = !UIDevice.current.isPortrait() || UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
-        avatarImageView.updateColorsAccordingToStyle()
+        avatarUserView.updateColorsAccordingToStyle()
     }
     
     func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
@@ -78,28 +78,32 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         setShowAvatar(showAvatar: showAvatar)
     }
     
+    func configureAvatarViewModel(with model: OWAvatarViewModeling) {
+        self.avatarUserView.configure(with: model)
+    }
+    
     func setShowAvatar(showAvatar: Bool) {
         if showAvatar {
-            avatarImageView.isHidden = false
+            avatarUserView.isHidden = false
             textToLeadingConstraint?.deactivate()
             textToAvatarConstraint?.activate()
         } else {
-            avatarImageView.isHidden = true
+            avatarUserView.isHidden = true
             textToAvatarConstraint?.deactivate()
             textToLeadingConstraint?.activate()
         }
     }
     
     private func setupUI() {
-        addSubviews(textInputView, avatarImageView)
+        addSubviews(textInputView, avatarUserView)
         configureAvatarView()
         configureTextInputView()
         updateColorsAccordingToStyle()
     }
     
     private func configureAvatarView() {
-        avatarImageView.isHidden = true
-        avatarImageView.OWSnp.makeConstraints { make in
+        avatarUserView.isHidden = true
+        avatarUserView.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(Theme.avatarImageViewLeading)
             make.size.equalTo(Theme.avatarImageViewSize)
@@ -111,7 +115,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
             make.top.equalToSuperview().offset(Theme.textInputViewTopOffset)
             make.bottom.trailing.equalToSuperview()
             textToLeadingConstraint = make.leading.equalToSuperview().constraint
-            textToAvatarConstraint = make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(Theme.commentLeadingOffset).constraint
+            textToAvatarConstraint = make.leading.equalTo(avatarUserView.OWSnp.trailing).offset(Theme.commentLeadingOffset).constraint
         }
         textToLeadingConstraint?.deactivate()
         textToAvatarConstraint?.deactivate()

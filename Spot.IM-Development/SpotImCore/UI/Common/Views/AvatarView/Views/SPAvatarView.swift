@@ -41,10 +41,10 @@ final class SPAvatarView: OWBaseView {
     func configure(with viewModel: OWAvatarViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
-        configureViews()
+        setupObservers()
     }
     
-    func configureViews() {
+    func setupObservers() {
         viewModel.outputs.showOnlineIndicator
             .map { !$0 } // Reverse
             .bind(to: onlineIndicatorView.rx.isHidden)
