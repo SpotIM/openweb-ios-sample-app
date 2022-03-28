@@ -28,7 +28,7 @@ final class SPAvatarView: OWBaseView {
 
     private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", supportDarkMode: true) }
     
-    fileprivate var viewModel: OWAvatarViewModel!
+    fileprivate var viewModel: OWAvatarViewModeling!
     fileprivate var disposeBag: DisposeBag!
     
     override init(frame: CGRect) {
@@ -38,7 +38,7 @@ final class SPAvatarView: OWBaseView {
         applyAccessibility()
     }
     
-    func configure(with viewModel: OWAvatarViewModel) {
+    func configure(with viewModel: OWAvatarViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         configureViews()

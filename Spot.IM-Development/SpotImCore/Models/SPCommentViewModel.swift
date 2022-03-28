@@ -54,7 +54,7 @@ internal struct CommentViewModel {
     }
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
-    let avatarViewVM: OWAvatarViewModel
+    let avatarViewVM: OWAvatarViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
 
     init(
