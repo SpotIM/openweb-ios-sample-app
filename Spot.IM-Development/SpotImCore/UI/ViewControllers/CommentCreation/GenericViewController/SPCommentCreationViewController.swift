@@ -518,7 +518,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
             self.setAvatar(image: image)
         }
-        model.avatarViewVM.configureUser(user: SPUserSessionHolder.session.user)
+        model.avatarViewVM.inputs.configureUser(user: SPUserSessionHolder.session.user)
         textInputViewContainer.setShowAvatar(showAvatar: SPUserSessionHolder.session.user?.registered ?? false)
     }
 
