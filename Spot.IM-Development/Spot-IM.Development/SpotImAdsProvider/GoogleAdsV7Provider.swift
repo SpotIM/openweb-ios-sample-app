@@ -11,7 +11,7 @@ import GoogleMobileAds
 import SpotImCore
 
 final class GoogleAdsProvider: NSObject, AdsProvider {
-    let bannerView: BaseView = .init()
+    let bannerView: OWBaseView = .init()
     weak var bannerDelegate: AdsProviderBannerDelegate?
     weak var interstitialDelegate: AdsProviderInterstitialDelegate?
     
