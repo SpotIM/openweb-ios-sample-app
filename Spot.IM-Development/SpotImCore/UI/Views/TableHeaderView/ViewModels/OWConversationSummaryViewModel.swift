@@ -15,7 +15,7 @@ protocol OWConversationSummaryViewModelingInputs {
 
 protocol OWConversationSummaryViewModelingOutputs {
     var conversationCommentsCount: Observable<Int> { get }
-//    TODO: sort VM
+    // TODO: OWSortViewModel
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
 }
 
