@@ -118,6 +118,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         OWLogger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         footer.userAvatarView.configure(with: model.avatarViewVM)
+        tableHeader.configure(with: model.articleHeaderVM)
         summaryView.updateCommentsLabel(model.dataSource.messageCount)
         summaryView.configure(onlineViewingUsersVM: model.onlineViewingUsersConversationVM)
 
@@ -577,9 +578,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         tableHeader.OWSnp.updateConstraints { make in
             make.height.equalTo(articleHeaderMaxHeight)
         }
-        tableHeader.setAuthor(model.dataSource.articleMetadata.subtitle)
-        tableHeader.setImage(with: URL(string: model.dataSource.articleMetadata.thumbnailUrl))
-        tableHeader.setTitle(model.dataSource.articleMetadata.title)
     }
     
     private func removeBannerFromConversation() {

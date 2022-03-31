@@ -61,6 +61,7 @@ final class SPMainConversationModel {
     // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
     let onlineViewingUsersConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
     let avatarViewVM: OWAvatarViewModeling
+    let articleHeaderVM: OWArticleHeaderViewModeling
     
     private(set) var dataSource: SPMainConversationDataSource
     var sortOption: SPCommentSortMode = .best {
@@ -95,7 +96,8 @@ final class SPMainConversationModel {
         self.abTestsData = abTestData
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         dataSource = conversationDataSource
-        
+        articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
+
         dataSource.messageCounterUpdated = { [weak self] count in
             self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }
         }
