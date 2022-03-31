@@ -9,9 +9,7 @@
 import Foundation
 import RxSwift
 
-protocol OWArticleHeaderViewModelingInputs {
-    func configureArticle(articleMetadata: SpotImArticleMetadata)
-}
+protocol OWArticleHeaderViewModelingInputs { }
 
 protocol OWArticleHeaderViewModelingOutputs {
     var conversationImageType: Observable<ImageType> { get }
@@ -34,7 +32,7 @@ class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
         
     init (articleMetadata: SpotImArticleMetadata? = nil) {
         if let articleMetadata = articleMetadata {
-            configureArticle(articleMetadata: articleMetadata)
+            self._articleMetadata.onNext(articleMetadata)
         }
     }
     
@@ -59,10 +57,6 @@ class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
     var conversationAuthor: Observable<String> {
         self.articleMetadata
             .map { $0.subtitle}
-    }
-    
-    func configureArticle(articleMetadata: SpotImArticleMetadata) {
-        self._articleMetadata.onNext(articleMetadata)
     }
 }
 
