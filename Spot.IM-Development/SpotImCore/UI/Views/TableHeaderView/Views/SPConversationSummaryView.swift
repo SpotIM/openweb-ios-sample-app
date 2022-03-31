@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal protocol SPConversationSummaryViewDelegate: AnyObject {
 
@@ -72,6 +73,9 @@ final class SPConversationSummaryView: OWBaseView {
         }
     }
     
+    fileprivate var viewModel: OWConversationSummaryViewModeling!
+    fileprivate var disposeBag: DisposeBag!
+    
     // MARK: - Init
 
     override init(frame: CGRect) {
@@ -107,6 +111,17 @@ final class SPConversationSummaryView: OWBaseView {
     // I decided to wait with the refactoring and do so in a more specific task for it
     func configure(onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling) {
         onlineViewingUsersView.configure(with: onlineViewingUsersVM)
+    }
+    
+    func configure(viewModel: OWConversationSummaryViewModeling) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        setupObservers()
+    }
+    
+    private func setupObservers() {
+        onlineViewingUsersView.configure(with: viewModel.outputs.onlineViewingUsersVM)
+        
     }
     
     // MARK: - Actions
