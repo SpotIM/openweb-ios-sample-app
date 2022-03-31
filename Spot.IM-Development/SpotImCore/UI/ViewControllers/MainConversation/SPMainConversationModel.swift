@@ -100,6 +100,7 @@ final class SPMainConversationModel {
 
         dataSource.messageCounterUpdated = { [weak self] count in
             self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }
+            self?.conversationSummaryVM.inputs.configure(commentsCount: count)
         }
         
         dataSource.sortIsUpdated = { [weak self] in
@@ -393,6 +394,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
                 delegates.invoke { $0.totalTypingCountDidUpdate(count: totalTypingCount, newCommentsCount: realTimeNewMessagesCache.keys.count) }
                 if totalCommentsCount > 0 {
                     commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
+                    conversationSummaryVM.inputs.configure(commentsCount: totalCommentsCount)
                 }
                 
                 scheduleTypingCleaningTimer(
