@@ -120,7 +120,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         footer.userAvatarView.configure(with: model.avatarViewVM)
         tableHeader.configure(with: model.articleHeaderVM)
         summaryView.updateCommentsLabel(model.dataSource.messageCount)
-        summaryView.configure(onlineViewingUsersVM: model.onlineViewingUsersConversationVM)
+        summaryView.configure(viewModel: model.conversationSummaryVM)
 
         if model.areCommentsEmpty() {
             presentEmptyCommentsStateView()

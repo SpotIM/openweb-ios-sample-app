@@ -67,6 +67,7 @@
 		2459B87F263823A8006A0CF0 /* SPCommentCreationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2459B87E263823A8006A0CF0 /* SPCommentCreationModel.swift */; };
 		246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */; };
 		249BCDFA27F5962E00703CC9 /* OWArticleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */; };
+		249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */; };
 		24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88434261C922900EB7BCB /* CommentLabelView.swift */; };
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
@@ -690,6 +691,7 @@
 		2459B87E263823A8006A0CF0 /* SPCommentCreationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationModel.swift; sourceTree = "<group>"; };
 		246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsContainerView.swift; sourceTree = "<group>"; };
 		249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleHeaderViewModel.swift; sourceTree = "<group>"; };
+		249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryViewModel.swift; sourceTree = "<group>"; };
 		24B88434261C922900EB7BCB /* CommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLabelView.swift; sourceTree = "<group>"; };
 		24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationShared.swift; sourceTree = "<group>"; };
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
@@ -1231,6 +1233,22 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		249BCDFB27F5B58400703CC9 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		249BCDFC27F5B59000703CC9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				445417F223685144001D0ED0 /* SPConversationSummaryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		3D20A2D627A803F2003F8513 /* SdkAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -1612,7 +1630,8 @@
 		445417F123685144001D0ED0 /* TableHeaderView */ = {
 			isa = PBXGroup;
 			children = (
-				445417F223685144001D0ED0 /* SPConversationSummaryView.swift */,
+				249BCDFB27F5B58400703CC9 /* ViewModels */,
+				249BCDFC27F5B59000703CC9 /* Views */,
 			);
 			path = TableHeaderView;
 			sourceTree = "<group>";
@@ -2942,6 +2961,7 @@
 				44F2479F2379AD0100B36F12 /* OWBaseLabel.swift in Sources */,
 				4454180823685144001D0ED0 /* OWKeyboardHandable.swift in Sources */,
 				4454189B23685154001D0ED0 /* SPCommentRankUpdateRM.swift in Sources */,
+				249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */,
 				4416C65F237B15A800D3F7B9 /* SPRealtimeDataProvider.swift in Sources */,
 				3D20A36D27B0124F003F8513 /* OWConstraint.swift in Sources */,
 				44689B7423718CF90024EFC1 /* OWLogger.swift in Sources */,

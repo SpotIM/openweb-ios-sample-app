@@ -59,7 +59,7 @@ final class SPMainConversationModel {
     
     // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
     // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
-    let onlineViewingUsersConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
+    let conversationSummaryVM: OWConversationSummaryViewModeling = OWConversationSummaryViewModel()
     let avatarViewVM: OWAvatarViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
     
@@ -372,7 +372,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         do {
             let onlineViewingUsersModel = try data.onlineViewingUsersCount(fullConversationId)
             onlineViewingUsersPreConversationVM.inputs.configureModel(onlineViewingUsersModel)
-            onlineViewingUsersConversationVM.inputs.configureModel(onlineViewingUsersModel)
+            conversationSummaryVM.outputs.onlineViewingUsersVM.inputs.configureModel(onlineViewingUsersModel)
             
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
