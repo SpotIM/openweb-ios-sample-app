@@ -75,7 +75,7 @@ internal final class OWArticleHeader: OWBaseView {
             
             if error != nil {
                 self.conversationImageView.OWSnp.updateConstraints { make in
-                    make.size.equalTo(0)
+                    make.width.equalTo(0)
                 }
             }
             else if let image = image {
