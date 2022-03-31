@@ -170,7 +170,7 @@
 		4454181223685144001D0ED0 /* SPMainConversationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D723685144001D0ED0 /* SPMainConversationModel.swift */; };
 		4454181323685144001D0ED0 /* SPEmptyConversationActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417D923685144001D0ED0 /* SPEmptyConversationActionView.swift */; };
 		4454181423685144001D0ED0 /* SPMainConversationFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417DB23685144001D0ED0 /* SPMainConversationFooterView.swift */; };
-		4454181523685144001D0ED0 /* SPArticleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417DD23685144001D0ED0 /* SPArticleHeader.swift */; };
+		4454181523685144001D0ED0 /* OWArticleHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417DD23685144001D0ED0 /* OWArticleHeader.swift */; };
 		4454181623685144001D0ED0 /* SPCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417DF23685144001D0ED0 /* SPCommentCell.swift */; };
 		4454181723685144001D0ED0 /* SPLoaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417E023685144001D0ED0 /* SPLoaderCell.swift */; };
 		4454181823685144001D0ED0 /* SPBaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445417E123685144001D0ED0 /* SPBaseTableViewCell.swift */; };
@@ -796,7 +796,7 @@
 		445417D723685144001D0ED0 /* SPMainConversationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPMainConversationModel.swift; sourceTree = "<group>"; };
 		445417D923685144001D0ED0 /* SPEmptyConversationActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPEmptyConversationActionView.swift; sourceTree = "<group>"; };
 		445417DB23685144001D0ED0 /* SPMainConversationFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPMainConversationFooterView.swift; sourceTree = "<group>"; };
-		445417DD23685144001D0ED0 /* SPArticleHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPArticleHeader.swift; sourceTree = "<group>"; };
+		445417DD23685144001D0ED0 /* OWArticleHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWArticleHeader.swift; sourceTree = "<group>"; };
 		445417DF23685144001D0ED0 /* SPCommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentCell.swift; sourceTree = "<group>"; };
 		445417E023685144001D0ED0 /* SPLoaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPLoaderCell.swift; sourceTree = "<group>"; };
 		445417E123685144001D0ED0 /* SPBaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPBaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -1218,7 +1218,7 @@
 		249BCDF627F595D200703CC9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				445417DD23685144001D0ED0 /* SPArticleHeader.swift */,
+				445417DD23685144001D0ED0 /* OWArticleHeader.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2993,7 +2993,7 @@
 				4454189923685154001D0ED0 /* SPConfigurationSSO.swift in Sources */,
 				440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */,
 				4454181C23685144001D0ED0 /* MessageContainerView.swift in Sources */,
-				4454181523685144001D0ED0 /* SPArticleHeader.swift in Sources */,
+				4454181523685144001D0ED0 /* OWArticleHeader.swift in Sources */,
 				4454182123685144001D0ED0 /* SPCommentTextInputView.swift in Sources */,
 				440E0DB3237D7E3200757554 /* TotalTypingIndicationView.swift in Sources */,
 				3D20A39527B022B8003F8513 /* OWConstraintViewDSL.swift in Sources */,

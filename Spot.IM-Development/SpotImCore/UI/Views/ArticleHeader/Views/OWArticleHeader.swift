@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-internal final class SPArticleHeader: OWBaseView {
+internal final class OWArticleHeader: OWBaseView {
     
     private lazy var conversationImageView: OWBaseUIImageView = .init()
     private lazy var conversationTitleLabel: OWBaseLabel = .init()
@@ -69,7 +69,7 @@ internal final class SPArticleHeader: OWBaseView {
 
     // MARK: - Internal methods
 
-    internal func setImage(with url: URL?) {
+    private func setImage(with url: URL?) {
         conversationImageView.setImage(with: url) { [weak self] image, error in
             guard let self = self else { return }
             
@@ -82,14 +82,6 @@ internal final class SPArticleHeader: OWBaseView {
                 self.conversationImageView.image = image
             }
         }
-    }
-
-    internal func setTitle(_ title: String?) {
-        conversationTitleLabel.text = title
-    }
-
-    internal func setAuthor(_ author: String?) {
-        conversationAuthorLabel.text = author
     }
     
     // MARK: - Private Methods
