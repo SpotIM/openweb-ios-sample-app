@@ -14,7 +14,7 @@ protocol OWArticleHeaderViewModelingInputs {
 }
 
 protocol OWArticleHeaderViewModelingOutputs {
-    var conversationImageURL: Observable<URL?> { get }
+    var conversationImageType: Observable<ImageType> { get }
     var conversationTitle: Observable<String> { get }
     var conversationAuthor: Observable<String> { get }
 }
@@ -43,10 +43,13 @@ class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
             .unwrap()
     }()
     
-    var conversationImageURL: Observable<URL?> {
+    var conversationImageType: Observable<ImageType> {
         self.articleMetadata
             .map {
-                URL(string: $0.thumbnailUrl)
+                if let url = URL(string: $0.thumbnailUrl) {
+                    return .custom(url: url)
+                }
+                return .defaultImage
             }
     }
     var conversationTitle: Observable<String> {
