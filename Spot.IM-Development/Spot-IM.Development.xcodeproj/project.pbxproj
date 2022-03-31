@@ -66,6 +66,7 @@
 		2459B8772637FA3F006A0CF0 /* gifWebViewTemplate.html in Resources */ = {isa = PBXBuildFile; fileRef = 2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */; };
 		2459B87F263823A8006A0CF0 /* SPCommentCreationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2459B87E263823A8006A0CF0 /* SPCommentCreationModel.swift */; };
 		246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */; };
+		249BCDFA27F5962E00703CC9 /* OWArticleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */; };
 		24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88434261C922900EB7BCB /* CommentLabelView.swift */; };
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
@@ -688,6 +689,7 @@
 		2459B8762637FA3F006A0CF0 /* gifWebViewTemplate.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = gifWebViewTemplate.html; sourceTree = "<group>"; };
 		2459B87E263823A8006A0CF0 /* SPCommentCreationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationModel.swift; sourceTree = "<group>"; };
 		246AD83B263010C800D2DD1C /* SPCommentLabelsContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsContainerView.swift; sourceTree = "<group>"; };
+		249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleHeaderViewModel.swift; sourceTree = "<group>"; };
 		24B88434261C922900EB7BCB /* CommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLabelView.swift; sourceTree = "<group>"; };
 		24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationShared.swift; sourceTree = "<group>"; };
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
@@ -1213,6 +1215,22 @@
 			path = CommunityQuestionView;
 			sourceTree = "<group>";
 		};
+		249BCDF627F595D200703CC9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				445417DD23685144001D0ED0 /* SPArticleHeader.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		249BCDF827F5960800703CC9 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		3D20A2D627A803F2003F8513 /* SdkAPI */ = {
 			isa = PBXGroup;
 			children = (
@@ -1529,7 +1547,8 @@
 		445417DC23685144001D0ED0 /* ArticleHeader */ = {
 			isa = PBXGroup;
 			children = (
-				445417DD23685144001D0ED0 /* SPArticleHeader.swift */,
+				249BCDF827F5960800703CC9 /* ViewModel */,
+				249BCDF627F595D200703CC9 /* Views */,
 			);
 			path = ArticleHeader;
 			sourceTree = "<group>";
@@ -3022,6 +3041,7 @@
 				3D20A35C27A975DA003F8513 /* UIView+SemanticAttribute.swift in Sources */,
 				733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */,
 				4454188D23685154001D0ED0 /* FailureReportDataModels.swift in Sources */,
+				249BCDFA27F5962E00703CC9 /* OWArticleHeaderViewModel.swift in Sources */,
 				5DBD33E42397F98F003DE0BF /* OWBaseStackView.swift in Sources */,
 				445417FB23685144001D0ED0 /* UIColor+Hex.swift in Sources */,
 				4454189623685154001D0ED0 /* SPConfigurationSpotlight.swift in Sources */,
