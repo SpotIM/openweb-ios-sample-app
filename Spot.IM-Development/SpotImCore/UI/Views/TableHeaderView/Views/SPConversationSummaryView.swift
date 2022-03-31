@@ -96,7 +96,7 @@ final class SPConversationSummaryView: OWBaseView {
     }
     
     // MARK: - Internal methods    
-    func updateCommentsLabel(_ newCommentsCount: Int) {
+    private func updateCommentsLabel(_ newCommentsCount: Int) {
         let commentsText: String = newCommentsCount > 1 ?
             LocalizationManager.localizedString(key: "Comments") :
             LocalizationManager.localizedString(key: "Comment")
@@ -122,6 +122,11 @@ final class SPConversationSummaryView: OWBaseView {
     private func setupObservers() {
         onlineViewingUsersView.configure(with: viewModel.outputs.onlineViewingUsersVM)
         
+        viewModel.outputs.conversationCommentsCount
+            .subscribe(onNext: { [weak self] commentsCount in
+                self?.updateCommentsLabel(commentsCount)
+            })
+            .disposed(by: disposeBag)
     }
     
     // MARK: - Actions
