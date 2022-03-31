@@ -11,8 +11,8 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-enum AvatarImageType {
-    case defaultAvatar
+enum ImageType {
+    case defaultImage
     case custom(url: URL)
 }
 
@@ -21,7 +21,7 @@ protocol OWAvatarViewModelingInputs {
 }
 
 protocol OWAvatarViewModelingOutputs {
-    var imageType: Observable<AvatarImageType> { get }
+    var imageType: Observable<ImageType> { get }
     var showOnlineIndicator: Observable<Bool> { get }
 }
 
@@ -55,13 +55,13 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             .unwrap()
     }()
     
-    var imageType: Observable<AvatarImageType> {
+    var imageType: Observable<ImageType> {
         self.user
             .map {
                 if let url = self.imageURLProvider?.imageURL(with: $0.imageId, size: nil) {
                     return .custom(url: url)
                 }
-                return .defaultAvatar
+                return .defaultImage
             }
     }
     

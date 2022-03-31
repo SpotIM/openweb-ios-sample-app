@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal final class SPArticleHeader: OWBaseView {
     
@@ -16,12 +17,42 @@ internal final class SPArticleHeader: OWBaseView {
     private lazy var separatorView: OWBaseView = .init()
     private lazy var titlesContainer: OWBaseView = .init()
 
+    fileprivate var viewModel: OWArticleHeaderViewModeling!
+    fileprivate var disposeBag: DisposeBag!
+    
     // MARK: - Overrides
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setup()
+    }
+    
+    func configure(with viewModel: OWArticleHeaderViewModeling) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        setupObservers()
+    }
+
+    func setupObservers() {
+        viewModel.outputs.conversationImageType
+            .subscribe(onNext: { [weak self] imageType in
+                switch imageType {
+                case .custom(let url):
+                    self?.setImage(with: url)
+                case .defaultImage:
+                    self?.setImage(with: nil)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.conversationTitle
+            .bind(to: conversationTitleLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.conversationAuthor
+            .bind(to: conversationAuthorLabel.rx.text)
+            .disposed(by: disposeBag)
     }
     
     // Handle dark mode \ light mode change
