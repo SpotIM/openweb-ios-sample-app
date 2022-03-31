@@ -119,7 +119,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         updateFooterView()
         footer.userAvatarView.configure(with: model.avatarViewVM)
         tableHeader.configure(with: model.articleHeaderVM)
-        summaryView.updateCommentsLabel(model.dataSource.messageCount)
         summaryView.configure(viewModel: model.conversationSummaryVM)
 
         if model.areCommentsEmpty() {
@@ -233,7 +232,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         checkAdsAvailability()
 
         model.delegates.add(delegate: self)
-        model.commentsCounterDelegates.add(delegate: self)
 
         do {
             let typingCount = try model.typingCount()
@@ -247,7 +245,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
 
         if model.dataSource.messageCount > 0 {
-            summaryView.updateCommentsLabel(model.dataSource.messageCount)
+            model.conversationSummaryVM.inputs.configure(commentsCount: model.dataSource.messageCount)
         }
 
         // scroll to pre-selected comment (tapped on the Pre-Conversation)
@@ -281,7 +279,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             OWLogger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
-            self.summaryView.updateCommentsLabel(messageCount)
+            model.conversationSummaryVM.inputs.configure(commentsCount: messageCount)
 
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
@@ -363,7 +361,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 } else if success == false {
                     OWLogger.error("Load conversation next page request type is not `success`")
                 } else {
-                    self.summaryView.updateCommentsLabel(self.model.dataSource.messageCount)
+                    self.model.conversationSummaryVM.inputs.configure(commentsCount: self.model.dataSource.messageCount)
                 }
 
                 self.tableView.reloadData()
@@ -717,7 +715,7 @@ extension SPMainConversationViewController { // SPMainConversationDataSourceDele
         if shouldBeScrolledToTop {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
-        summaryView.updateCommentsLabel(model.dataSource.messageCount)
+        model.conversationSummaryVM.inputs.configure(commentsCount: model.dataSource.messageCount)
         tableView.reloadData()
     }
 
@@ -884,11 +882,5 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
         OWLogger.error("error bannerFailedToLoad - \(error)")
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .mainConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
-    }
-}
-
-extension SPMainConversationViewController: CommentsCounterDelegate {
-    func commentsCountDidUpdate(count: Int) {
-        self.summaryView.updateCommentsLabel(count)
     }
 }

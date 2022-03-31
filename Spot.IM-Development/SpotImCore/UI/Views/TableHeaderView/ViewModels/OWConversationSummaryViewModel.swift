@@ -9,10 +9,12 @@
 import Foundation
 import RxSwift
 
-protocol OWConversationSummaryViewModelingInputs { }
+protocol OWConversationSummaryViewModelingInputs {
+    func configure(commentsCount: Int)
+}
 
 protocol OWConversationSummaryViewModelingOutputs {
-//    var conversationCommentsCount: Observable<Int> { get }
+    var conversationCommentsCount: Observable<Int> { get }
 //    TODO: sort VM
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
 }
@@ -27,13 +29,23 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
                                       OWConversationSummaryViewModelingOutputs {
     var inputs: OWConversationSummaryViewModelingInputs { return self }
     var outputs: OWConversationSummaryViewModelingOutputs { return self }
+          
+    fileprivate let _commentsCount = BehaviorSubject<Int?>(value: nil)
     
-    fileprivate let _onlineViewingUsersVM = BehaviorSubject<OWOnlineViewingUsersCounterViewModeling?>(value: nil)
-        
     init (onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()) {
         self.onlineViewingUsersVM = onlineViewingUsersVM
     }
     
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling
+    
+    var conversationCommentsCount: Observable<Int> {
+        _commentsCount
+            .unwrap()
+            .map { $0 }
+    }
+    
+    func configure(commentsCount: Int) {
+        _commentsCount.onNext(commentsCount)
+    }
 }
 
