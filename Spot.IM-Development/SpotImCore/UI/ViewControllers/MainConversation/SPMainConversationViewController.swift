@@ -27,7 +27,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private let summaryView = SPConversationSummaryView()
 
     private lazy var refreshControl = UIRefreshControl()
-    private lazy var tableHeader = OWArticleHeader()
+    private lazy var articleHeader = OWArticleHeader()
     private lazy var loginPromptView = SPLoginPromptView()
     private lazy var collapsableContainer = OWBaseView()
     private lazy var communityQuestionView = SPCommunityQuestionView()
@@ -82,7 +82,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private var scrollingDirection: ScrollingDirection = .static {
         didSet {
             if oldValue != scrollingDirection {
-                currentHeightConstant = tableHeader.frame.height
+                currentHeightConstant = articleHeader.frame.height
                 initialOffsetY = lastOffsetY
             }
         }
@@ -118,7 +118,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         OWLogger.verbose("FirstComment: Have some comments in the data source")
         updateFooterView()
         footer.userAvatarView.configure(with: model.avatarViewVM)
-        tableHeader.configure(with: model.articleHeaderVM)
+        articleHeader.configure(with: model.articleHeaderVM)
         summaryView.configure(viewModel: model.conversationSummaryVM)
 
         if model.areCommentsEmpty() {
@@ -187,7 +187,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.tableView.backgroundColor = .spBackground0
         self.footer.updateColorsAccordingToStyle()
         self.updateFooterViewCustomUI(footerView: self.footer)
-        self.tableHeader.updateColorsAccordingToStyle()
+        self.articleHeader.updateColorsAccordingToStyle()
         self.summaryView.updateColorsAccordingToStyle()
         self.loginPromptView.updateColorsAccordingToStyle()
         self.communityQuestionView.updateColorsAccordingToStyle()
@@ -244,10 +244,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
 
-        if model.dataSource.messageCount > 0 {
-            model.conversationSummaryVM.inputs.configure(commentsCount: model.dataSource.messageCount)
-        }
-
         // scroll to pre-selected comment (tapped on the Pre-Conversation)
         if let indexPath = model.dataSource.indexPathOfComment(with: commentIdToShowOnOpen) {
             wasScrolled = true
@@ -279,7 +275,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             OWLogger.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
-            model.conversationSummaryVM.inputs.configure(commentsCount: messageCount)
 
             self.stateActionView?.removeFromSuperview()
             self.stateActionView = nil
@@ -357,8 +352,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                     )
                 } else if success == false {
                     OWLogger.error("Load conversation next page request type is not `success`")
-                } else {
-                    self.model.conversationSummaryVM.inputs.configure(commentsCount: self.model.dataSource.messageCount)
                 }
 
                 self.tableView.reloadData()
@@ -367,7 +360,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func setupUI() {
-        view.addSubviews(footer, summaryView, tableHeader, loginPromptView, collapsableContainer)
+        view.addSubviews(footer, summaryView, articleHeader, loginPromptView, collapsableContainer)
         super.setupUI()
 
         setupSummaryView()
@@ -459,12 +452,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func configureTableHeaderView() {
         if (self.displayArticleHeader == false) {
-            tableHeader.removeFromSuperview()
+            articleHeader.removeFromSuperview()
             return
         }
-        view.bringSubviewToFront(tableHeader)
-        tableHeader.clipsToBounds = true
-        tableHeader.OWSnp.makeConstraints { make in
+        view.bringSubviewToFront(articleHeader)
+        articleHeader.clipsToBounds = true
+        articleHeader.OWSnp.makeConstraints { make in
             make.top.equalTo(collapsableContainer.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(0.0)
@@ -473,7 +466,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     override func setupTableView() {
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(displayArticleHeader ? tableHeader.OWSnp.bottom : collapsableContainer.OWSnp.bottom)
+            make.top.equalTo(displayArticleHeader ? articleHeader.OWSnp.bottom : collapsableContainer.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(footer.OWSnp.top)
         }
@@ -569,7 +562,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             return
         }
         isHeaderVisible = true
-        tableHeader.OWSnp.updateConstraints { make in
+        articleHeader.OWSnp.updateConstraints { make in
             make.height.equalTo(articleHeaderMaxHeight)
         }
     }
@@ -598,7 +591,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         stateActionView?.OWSnp.makeConstraints({ make in
             make.bottom.equalTo(SpotIm.shouldConversationFooterStartFromBottomAnchor ? view : view.layoutMarginsGuide)
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(displayArticleHeader ? tableHeader.OWSnp.bottom : collapsableContainer.OWSnp.bottom)
+            make.top.equalTo(displayArticleHeader ? articleHeader.OWSnp.bottom : collapsableContainer.OWSnp.bottom)
         })
     }
 
@@ -711,7 +704,6 @@ extension SPMainConversationViewController { // SPMainConversationDataSourceDele
         if shouldBeScrolledToTop {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
-        model.conversationSummaryVM.inputs.configure(commentsCount: model.dataSource.messageCount)
         tableView.reloadData()
     }
 
@@ -809,7 +801,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
             height = articleHeaderMaxHeight
         }
         
-        tableHeader.OWSnp.updateConstraints { make in
+        articleHeader.OWSnp.updateConstraints { make in
             make.height.equalTo(height)
         }
     }
@@ -830,8 +822,8 @@ extension SPMainConversationViewController { // Article header scrolling logic
         }
 
         if (isHeaderVisible) {
-            let finaleHeight: CGFloat = tableHeader.frame.height < articleHeaderMaxHeight * 0.5 ? articleHeaderMinHeight: articleHeaderMaxHeight
-            tableHeader.OWSnp.updateConstraints { make in
+            let finaleHeight: CGFloat = articleHeader.frame.height < articleHeaderMaxHeight * 0.5 ? articleHeaderMinHeight: articleHeaderMaxHeight
+            articleHeader.OWSnp.updateConstraints { make in
                 make.height.equalTo(finaleHeight)
             }
         }
@@ -843,7 +835,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
     }
 
     private func canAnimateHeader(_ scrollView: UIScrollView) -> Bool {
-        let scrollViewMaxHeight = scrollView.frame.height + self.tableHeader.frame.height + articleHeaderMaxHeight
+        let scrollViewMaxHeight = scrollView.frame.height + self.articleHeader.frame.height + articleHeaderMaxHeight
         return scrollView.contentSize.height > scrollViewMaxHeight
     }
 
