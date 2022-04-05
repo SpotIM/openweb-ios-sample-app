@@ -41,7 +41,7 @@ internal final class OWArticleHeader: OWBaseView {
                 case .custom(let url):
                     self?.setImage(with: url)
                 case .defaultImage:
-                    self?.setImage(with: nil)
+                    self?.setNoImageConstraints()
                 }
             })
             .disposed(by: disposeBag)
@@ -69,18 +69,22 @@ internal final class OWArticleHeader: OWBaseView {
 
     // MARK: - Internal methods
 
-    private func setImage(with url: URL?) {
+    private func setImage(with url: URL) {
         conversationImageView.setImage(with: url) { [weak self] image, error in
             guard let self = self else { return }
             
             if error != nil {
-                self.conversationImageView.OWSnp.updateConstraints { make in
-                    make.width.equalTo(0)
-                }
+                self.setNoImageConstraints()
             }
             else if let image = image {
                 self.conversationImageView.image = image
             }
+        }
+    }
+    
+    private func setNoImageConstraints() {
+        self.conversationImageView.OWSnp.updateConstraints { make in
+            make.width.equalTo(0)
         }
     }
     
