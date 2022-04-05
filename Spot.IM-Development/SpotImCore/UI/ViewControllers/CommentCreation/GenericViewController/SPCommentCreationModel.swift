@@ -111,6 +111,9 @@ class SPCommentCreationModel {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         
         var metadata: [String: Any] = [SPRequestKeys.displayName: displayName]
+        if let bundleId = Bundle.main.bundleIdentifier {
+            metadata[SPRequestKeys.appBundleId] = bundleId
+        }
         
         var parameters: [String: Any] = [
             SPRequestKeys.content: self.getContentRequestParam()
@@ -327,6 +330,7 @@ extension SPCommentCreationModel {
         static let parentId = "parent_id"
         static let conversationId = "conversation_id"
         static let messageId = "message_id"
+        static let appBundleId = "appBundleId"
     }
     
     struct SelectedLabels {
