@@ -330,7 +330,7 @@ extension SPCommentCreationModel {
         static let parentId = "parent_id"
         static let conversationId = "conversation_id"
         static let messageId = "message_id"
-        static let appBundleId = "appBundleId"
+        static let appBundleId = "app_bundle_id"
     }
     
     struct SelectedLabels {
