@@ -15,7 +15,7 @@ protocol OWConversationSummaryViewModelingInputs {
 
 protocol OWConversationSummaryViewModelingOutputs {
     var conversationCommentsCount: Observable<Int> { get }
-    // TODO: OWSortViewModel
+    var conversationSortVM: OWConversationSortViewModeling { get }
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
 }
 
@@ -32,11 +32,14 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
           
     fileprivate let _commentsCount = BehaviorSubject<Int?>(value: nil)
     
-    init (onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()) {
+    init (onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel(),
+          conversationSortVM: OWConversationSortViewModeling = OWConversationSortViewModel()) {
         self.onlineViewingUsersVM = onlineViewingUsersVM
+        self.conversationSortVM = conversationSortVM
     }
     
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling
+    var conversationSortVM: OWConversationSortViewModeling
     
     var conversationCommentsCount: Observable<Int> {
         _commentsCount
