@@ -324,9 +324,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         model.sortingUpdateHandler = { [weak self] shoudBeUpdated in
             guard let self = self else { return }
 
-            let sortOption = self.model.sortOption
-
-            self.summaryView.updateSortOption(sortOption.title)
             if shoudBeUpdated {
                 self.reloadConversation()
             }
@@ -387,7 +384,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         view.bringSubviewToFront(summaryView)
         summaryView.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         summaryView.delegate = self
-        summaryView.updateSortOption(model.sortOption.title)
         summaryView.OWSnp.makeConstraints { make in
             make.top.equalTo(loginPromptView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()

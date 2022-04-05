@@ -103,14 +103,8 @@ final class SPConversationSummaryView: OWBaseView {
         commentsCountLabel.text = "\(newCommentsCount.formatedCount()) " + commentsText
     }
     
-    func updateSortOption(_ title: String) {
+    private func updateSortOption(_ title: String) {
         sortButton.setTitle(title, for: .normal)
-    }
-    
-    // Idealy this summary view will have a VM as well which will hold the online users VM
-    // I decided to wait with the refactoring and do so in a more specific task for it
-    func configure(onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling) {
-        onlineViewingUsersView.configure(with: onlineViewingUsersVM)
     }
     
     func configure(viewModel: OWConversationSummaryViewModeling) {
@@ -125,6 +119,12 @@ final class SPConversationSummaryView: OWBaseView {
         viewModel.outputs.conversationCommentsCount
             .subscribe(onNext: { [weak self] commentsCount in
                 self?.updateCommentsLabel(commentsCount)
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.conversationSortVM.outputs.selectedSortOption
+            .subscribe(onNext: { [weak self] sortOption in
+                self?.updateSortOption(sortOption.title)
             })
             .disposed(by: disposeBag)
     }

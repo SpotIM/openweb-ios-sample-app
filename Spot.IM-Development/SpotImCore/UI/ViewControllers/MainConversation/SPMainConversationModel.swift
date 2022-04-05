@@ -59,7 +59,7 @@ final class SPMainConversationModel {
     
     // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
     // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
-    let conversationSummaryVM: OWConversationSummaryViewModeling = OWConversationSummaryViewModel()
+    let conversationSummaryVM: OWConversationSummaryViewModeling
     let avatarViewVM: OWAvatarViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
     
@@ -67,7 +67,7 @@ final class SPMainConversationModel {
     var sortOption: SPCommentSortMode = .best {
         didSet {
             if oldValue != sortOption {
-                
+                self.conversationSummaryVM.outputs.conversationSortVM.inputs.configure(selectedSortOption: sortOption)
                 sortingUpdateHandler?(oldValue == dataSource.sortMode)
             }
         }
@@ -97,7 +97,7 @@ final class SPMainConversationModel {
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         dataSource = conversationDataSource
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
-
+        conversationSummaryVM = OWConversationSummaryViewModel(conversationSortVM: OWConversationSortViewModel(sortOption: self.sortOption))
         dataSource.messageCounterUpdated = { [weak self] count in
             self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }
             self?.conversationSummaryVM.inputs.configure(commentsCount: count)
