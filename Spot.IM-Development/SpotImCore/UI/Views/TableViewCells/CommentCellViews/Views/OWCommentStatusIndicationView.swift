@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class OWCommentStatusIndicationView: OWBaseView {
     private let iconImageView: OWBaseUIImageView = {
@@ -15,6 +16,7 @@ class OWCommentStatusIndicationView: OWBaseView {
         imageView.image = UIImage(spNamed: "pendingIcon")
         return imageView
     }()
+    
     private let statusTextLabel: OWBaseLabel = {
         let label = OWBaseLabel()
         label.textColor = .steelGrey
@@ -22,6 +24,7 @@ class OWCommentStatusIndicationView: OWBaseView {
         label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
         return label
     }()
+    
     private let statusExplanationButton: OWBaseButton = {
         let btn = OWBaseButton()
         btn.setTitle("Why?"/*LocalizationManager.localizedString(key: "Why?")*/, for: .normal)
@@ -31,10 +34,29 @@ class OWCommentStatusIndicationView: OWBaseView {
         return btn
     }()
     
+    fileprivate var viewModel: OWCommentStatusIndicationViewModeling!
+    fileprivate var disposeBag: DisposeBag!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setupUI()
+    }
+    
+    func configure(with viewModel: OWCommentStatusIndicationViewModeling) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        setupObservers()
+    }
+
+    func setupObservers() {
+        viewModel.outputs.indicationIcon
+            .bind(to: iconImageView.rx.image)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.indicationText
+            .bind(to: statusTextLabel.rx.text)
+            .disposed(by: disposeBag)
     }
     
     private func setupUI() {

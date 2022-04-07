@@ -56,6 +56,7 @@ internal struct CommentViewModel {
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     let avatarViewVM: OWAvatarViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
+    let statusIndicationVM: OWCommentStatusIndicationViewModeling = OWCommentStatusIndicationViewModel()
 
     init(
         with comment: SPComment,
@@ -156,6 +157,9 @@ internal struct CommentViewModel {
         self.replyingToDisplayName = replyingToDisplayName
             
         updateCommentActionsVM()
+        if let status = comment.status {
+            statusIndicationVM.inputs.configure(with: status)
+        }
     }
     
     func getCommentTextFromHtmlString(htmlString: String) -> String? {
@@ -250,6 +254,7 @@ internal struct CommentViewModel {
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + ((isDeletedOrReported() || commentLabels == nil) ? 0.0 : commentLabelHeight)
             + (isDeletedOrReported() ? 0.0 : mediaHeight)
+            + 68 // status indicator - TODO
 
         return height
     }
