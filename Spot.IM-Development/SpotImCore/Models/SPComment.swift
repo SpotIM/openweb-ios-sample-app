@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct SPComment: Decodable, Equatable {
+struct SPComment: Decodable, Equatable {
     
     enum CodingKeys: String, CodingKey {
         case id, parentId, rootComment, depth, userId, writtenAt, time, repliesCount, totalRepliesCount, offset,
@@ -47,9 +47,9 @@ internal struct SPComment: Decodable, Equatable {
         edited = editedStatus
     }
 
-    var status: Status? {
+    var status: CommentStatus? {
         guard let rawStatus = rawStatus else { return nil }
-        let status = Status(rawValue: rawStatus)
+        let status = CommentStatus(rawValue: rawStatus)
         return status == .unknown ? nil : status
     }
     
@@ -100,9 +100,10 @@ internal struct SPComment: Decodable, Equatable {
         additionalData = try? container.decode(AdditionalData.self, forKey: .additionalData)
     }
 
-    enum Status: String {
+    public enum CommentStatus: String {
         case unknown
         case block
+        case reject
         case publishAndModerate
         case requireApproval
 
@@ -116,6 +117,8 @@ internal struct SPComment: Decodable, Equatable {
                 self = .publishAndModerate
             case "require_approval":
                 self = .requireApproval
+            case "reject":
+                self = .reject
             default:
                 self = .unknown
             }
