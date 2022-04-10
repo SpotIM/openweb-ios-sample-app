@@ -235,7 +235,6 @@ extension SPMainConversationFooterView: OWAvatarViewDelegate {
 }
 
 // MARK: - Theme
-
 private enum Theme {
 
     static let separatorHeight: CGFloat = 1
