@@ -61,9 +61,9 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
             .map {
                 switch($0) {
                 case .reject:
-                    return "Your comment has been rejected"
+                    return LocalizationManager.localizedString(key: "Your comment has been rejected.")
                 case .requireApproval:
-                    return "Hold on, your comment is waiting for approval"
+                    return LocalizationManager.localizedString(key: "Hold on, your comment is waiting for approval.")
                 default:
                     return ""
                 }
