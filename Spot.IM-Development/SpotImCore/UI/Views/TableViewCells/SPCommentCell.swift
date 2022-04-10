@@ -26,6 +26,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     let messageView: MessageContainerView = .init()
 
+    private let statusIndicationView: OWCommentStatusIndicationView = .init()
     private let avatarImageView: SPAvatarView = SPAvatarView()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
@@ -87,12 +88,15 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit, windowWidth: windowWidth)
         updateCommentLabelView(with: data)
+        
+        statusIndicationView.configure(with: data.statusIndicationVM)
     }
 
     // MARK: - Private Methods - View setup
 
     private func setupUI() {
         contentView.addSubviews(headerView,
+                                statusIndicationView,
                                 avatarImageView,
                                 userNameView,
                                 commentLabelView,
@@ -101,6 +105,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
                                 replyActionsView,
                                 moreRepliesView)
         configureHeaderView()
+        configureStatusIndicationView()
         configureAvatarView()
         configureUserNameView()
         configureCommentLabelView()
@@ -108,6 +113,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         configureCommentMediaView()
         configureReplyActionsView()
         configureMoreRepliesView()
+    }
+    
+    private func configureStatusIndicationView() {
+        statusIndicationView.OWSnp.makeConstraints { make in
+            make.top.equalTo(headerView).offset(16)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+        }
     }
 
     private func configureHeaderView() {
@@ -140,7 +153,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func configureUserNameView() {
         userNameView.delegate = self
         userNameView.OWSnp.makeConstraints { make in
-            userNameViewTopConstraint = make.top.equalTo(headerView.OWSnp.bottom).offset(Theme.topOffset).constraint
+//            userNameViewTopConstraint = make.top.equalTo(headerView.OWSnp.bottom).offset(Theme.topOffset).constraint
+            userNameViewTopConstraint = make.top.equalTo(statusIndicationView.OWSnp.bottom).offset(Theme.topOffset).constraint
             make.trailing.equalToSuperview()
             make.height.equalTo(Theme.userViewCollapsedHeight)
         }
