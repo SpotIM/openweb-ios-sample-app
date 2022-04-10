@@ -22,19 +22,9 @@ class OWCommentStatusIndicationView: OWBaseView {
         label.numberOfLines = 0
         label.textColor = .steelGrey
         label.lineBreakMode = .byWordWrapping
-        label.text = "TODO!!!!"
         label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
         return label
     }()
-    
-//    private let statusExplanationButton: OWBaseButton = {
-//        let btn = OWBaseButton()
-//        btn.setTitle(LocalizationManager.localizedString(key: "Why?"), for: .normal)
-//        btn.setTitleColor(.brandColor, for: .normal)
-//        btn.titleLabel?.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
-////        btn.addTarget(self, action: #selector(presentAuth), for: .touchUpInside)
-//        return btn
-//    }()
     
     fileprivate var viewModel: OWCommentStatusIndicationViewModeling!
     fileprivate var disposeBag: DisposeBag!
@@ -43,7 +33,6 @@ class OWCommentStatusIndicationView: OWBaseView {
         super.init(frame: frame)
         
         setupUI()
-        setupGestureRecognizer()
     }
     
     func configure(with viewModel: OWCommentStatusIndicationViewModeling) {
@@ -58,9 +47,7 @@ class OWCommentStatusIndicationView: OWBaseView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.indicationText
-            .subscribe(onNext: { text in
-                self.setLabelText(with: text)
-            })
+            .bind(to: statusTextLabel.rx.text)
             .disposed(by: disposeBag)
     }
     
@@ -81,75 +68,6 @@ class OWCommentStatusIndicationView: OWBaseView {
             make.trailing.equalToSuperview().offset(-Metrics.statusTextLeadingOffset)
             make.centerY.equalToSuperview()
         }
-        
-//        statusExplanationButton.OWSnp.makeConstraints { make in
-//            make.leading.equalTo(statusTextLabel.OWSnp.trailing).offset(Metrics.explanationButtonLeadingOffset)
-//            make.centerY.equalToSuperview()
-//        }
-    }
-    
-    private func setLabelText(with text: String) {
-        let attributedMessage = NSMutableAttributedString(
-            string: text + " ",
-            attributes: [
-                .font: UIFont.preferred(style: .regular, of: Metrics.fontSize),
-                .foregroundColor: UIColor.steelGrey
-            ])
-        
-        attributedMessage.append(NSAttributedString(
-            string: LocalizationManager.localizedString(key: "Why?"),
-            attributes: [
-                .font: UIFont.preferred(style: .regular, of: Metrics.fontSize),
-                .foregroundColor: UIColor.brandColor,
-            ]))
-        attributedMessage.clippedToLine(index: 0, width: 0, clippedTextSettings: SPClippedTextSettings(collapsed: false, edited: false))
-        self.statusTextLabel.attributedText = attributedMessage
-    }
-    
-    private func setupGestureRecognizer() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        tap.delegate = self
-        statusTextLabel.addGestureRecognizer(tap)
-        statusTextLabel.isUserInteractionEnabled = true
-    }
-    
-    @objc
-    private func handleTap(gesture: UITapGestureRecognizer) {
-        let statusExplanationButtonText = LocalizationManager.localizedString(key: "Why?")
-        
-        if isTarget(substring: statusExplanationButtonText, destinationOf: gesture) {
-            // TODO
-        }
-    }
-    
-    private func didHitCustomTarget(with recognizer: UIGestureRecognizer) -> Bool {
-        let statusExplanationButtonText = LocalizationManager.localizedString(key: "Why?")
-
-        if isTarget(substring: statusExplanationButtonText, destinationOf: recognizer) {
-            return true
-        }
-        return false
-    }
-    
-    private func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
-        guard let string = statusTextLabel.attributedText?.string else { return false }
-        
-        guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
-        let tapLocation = gesture.location(in: statusTextLabel)
-        let index = statusTextLabel.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
-        
-        return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
-    }
-}
-
-extension OWCommentStatusIndicationView: UIGestureRecognizerDelegate {
-    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        let statusExplanationButtonText = LocalizationManager.localizedString(key: "Why?")
-
-        if isTarget(substring: statusExplanationButtonText, destinationOf: gestureRecognizer) {
-            return true
-        }
-        return false
     }
 }
 
