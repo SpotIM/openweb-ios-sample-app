@@ -14,7 +14,7 @@ protocol OWConversationSummaryViewModelingInputs {
 }
 
 protocol OWConversationSummaryViewModelingOutputs {
-    var conversationCommentsCount: Observable<Int> { get }
+    var conversationCommentsCountText: Observable<String> { get }
     var conversationSortVM: OWConversationSortViewModeling { get }
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
 }
@@ -41,14 +41,18 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling
     var conversationSortVM: OWConversationSortViewModeling
     
-    var conversationCommentsCount: Observable<Int> {
+    var conversationCommentsCountText: Observable<String> {
         _commentsCount
             .unwrap()
-            .map { $0 }
+            .map {
+                let commentsText: String = $0 > 1 ?
+                    LocalizationManager.localizedString(key: "Comments") :
+                    LocalizationManager.localizedString(key: "Comment")
+                return "\($0.formatedCount()) " + commentsText
+            }
     }
     
     func configure(commentsCount: Int) {
         _commentsCount.onNext(commentsCount)
     }
 }
-
