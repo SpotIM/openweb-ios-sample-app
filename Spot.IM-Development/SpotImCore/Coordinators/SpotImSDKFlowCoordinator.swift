@@ -369,8 +369,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     private func loadConversation(model:SPMainConversationModel, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !model.dataSource.isLoading else { return }
         
-        let sortModeRaw = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial.backEndTitle
-        let sortMode = SPCommentSortMode(rawValue: sortModeRaw) ?? .initial
+        let sortMode = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial
         self.isLoadingConversation = true
         model.dataSource.conversation(
             sortMode,
