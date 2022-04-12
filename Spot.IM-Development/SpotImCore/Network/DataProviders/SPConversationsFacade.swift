@@ -103,7 +103,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         // TODO: (Fedin) make sting constants for this
         let parameters: [String: Any] = [
             "conversation_id": "\(spotKey)_\(id)",
-            "sort_by": mode.kebabValue,
+            "sort_by": mode.rawValue,
             "offset": currentRequestOffset,
             "count": pageSize,
             "parent_id": parentId,
