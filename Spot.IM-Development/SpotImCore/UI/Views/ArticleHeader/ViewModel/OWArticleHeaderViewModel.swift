@@ -12,7 +12,7 @@ import RxSwift
 protocol OWArticleHeaderViewModelingInputs { }
 
 protocol OWArticleHeaderViewModelingOutputs {
-    var conversationImageType: Observable<ImageType> { get }
+    var conversationImageType: Observable<OWImageType> { get }
     var conversationTitle: Observable<String> { get }
     var conversationAuthor: Observable<String> { get }
 }
@@ -41,7 +41,7 @@ class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
             .unwrap()
     }()
     
-    var conversationImageType: Observable<ImageType> {
+    var conversationImageType: Observable<OWImageType> {
         self.articleMetadata
             .map {
                 if let url = URL(string: $0.thumbnailUrl) {
