@@ -42,7 +42,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private var userNameViewTopConstraint: OWConstraint?
     private var commentMediaViewTopConstraint: OWConstraint?
-
+    private var statusIndicatorViewHeighConstraint: OWConstraint?
+    private var statusIndicatorViewTopConstraint: OWConstraint?
+    
     private var imageRequest: DataRequest?
 
     // MARK: - Init
@@ -117,9 +119,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func configureStatusIndicationView() {
         statusIndicationView.OWSnp.makeConstraints { make in
-            make.top.equalTo(headerView).offset(16)
+            statusIndicatorViewTopConstraint = make.top.equalTo(headerView).offset(16).constraint
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
+            statusIndicatorViewHeighConstraint = make.height.equalTo(0).constraint
         }
     }
 
@@ -237,6 +240,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         userNameViewTopConstraint?.update(offset: dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
 
         userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
+        statusIndicationView.isHidden = !dataModel.showStatusIndicator
+        statusIndicatorViewHeighConstraint?.isActive = !dataModel.showStatusIndicator
+        statusIndicatorViewTopConstraint?.update(offset: dataModel.showStatusIndicator ? 16 :0)
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
