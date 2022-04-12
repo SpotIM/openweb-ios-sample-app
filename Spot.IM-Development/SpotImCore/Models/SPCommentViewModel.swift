@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal struct CommentViewModel {
 
@@ -161,11 +162,10 @@ internal struct CommentViewModel {
         updateCommentActionsVM()
         if let status = comment.status {
             showStatusIndicator = true
-            statusIndicationVM.inputs.configure(with: status)
-            // TODO - get the text from the VM (onnext) and set to local veriable, for height calulating
+            statusIndicationVM.inputs.configure(with: status, commentWidth: textWidth())
         } else {
             showStatusIndicator = true
-            statusIndicationVM.inputs.configure(with: .requireApproval)
+            statusIndicationVM.inputs.configure(with: .requireApproval, commentWidth: textWidth())
         }
     }
     
@@ -252,7 +252,7 @@ internal struct CommentViewModel {
         let deletedOffset = isDeletedOrReported() ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
         
-        let statusIndicationHeight: CGFloat = showStatusIndicator ? getStatusIndicatorHeight(lineLimit: lineLimit) : 0
+        let statusIndicationHeight: CGFloat = showStatusIndicator ? statusIndicationVM.outputs.indicationHeight : 0
         
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
@@ -263,7 +263,7 @@ internal struct CommentViewModel {
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + ((isDeletedOrReported() || commentLabels == nil) ? 0.0 : commentLabelHeight)
             + (isDeletedOrReported() ? 0.0 : mediaHeight)
-            + 68 // status indicator - TODO
+            + statusIndicationHeight // status indicator - TODO
 
         return height
     }
