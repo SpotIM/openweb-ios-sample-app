@@ -334,9 +334,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private func loadConversation() {
         guard !model.dataSource.isLoading else { return }
 
-        let sortMode = SPConfigsDataSource.appConfig?.initialization?.sortBy ?? SPCommentSortMode.initial
         model.dataSource.conversation(
-            sortMode,
+            model.getInitialSortMode(),
             page: .first,
             loadingStarted: {},
             completion: { (success, error) in
