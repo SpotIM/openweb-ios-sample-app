@@ -13,6 +13,17 @@ internal enum SPCommentSortMode: String, CaseIterable, Decodable {
     case best
     case newest
     case oldest
+    
+    init(from sortByOption: SpotImSortByOption) {
+        switch sortByOption {
+        case .best:
+            self = .best
+        case .newest:
+            self = .newest
+        case .oldest:
+            self = .oldest
+        }
+    }
 
     var title: String {
         if let customTitle = getCustomSortByModeTitleIfExists() {
