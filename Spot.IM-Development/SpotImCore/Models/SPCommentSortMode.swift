@@ -14,10 +14,6 @@ internal enum SPCommentSortMode: String, CaseIterable, Decodable {
     case newest
     case oldest
 
-    static var initial: SPCommentSortMode {
-        return .best
-    }
-
     var title: String {
         if let customTitle = getCustomSortByModeTitleIfExists() {
             return customTitle
@@ -42,17 +38,6 @@ internal enum SPCommentSortMode: String, CaseIterable, Decodable {
             return SpotIm.customSortByOptionText[.newest]
         case .oldest:
             return SpotIm.customSortByOptionText[.oldest]
-        }
-    }
-
-    var kebabValue: String {
-        switch self {
-        case .best:
-            return "best"
-        case .newest:
-            return "newest"
-        case .oldest:
-            return "oldest"
         }
     }
 }

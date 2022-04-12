@@ -112,7 +112,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             itemId = authorId
             targetType = newTargetType.kebabValue
         case .sortByClicked(let sortMode):
-            targetType = sortMode.kebabValue
+            targetType = sortMode.rawValue
         case .engineStatus(let statusType, let engineStatusTargetType):
             engineStatusType = statusType.kebabValue
             targetType = engineStatusTargetType.kebabValue
