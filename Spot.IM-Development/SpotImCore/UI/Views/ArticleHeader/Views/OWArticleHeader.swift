@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import RxSwift
 
-internal final class SPArticleHeader: OWBaseView {
+internal final class OWArticleHeader: OWBaseView {
     
     private lazy var conversationImageView: OWBaseUIImageView = .init()
     private lazy var conversationTitleLabel: OWBaseLabel = .init()
@@ -16,12 +17,42 @@ internal final class SPArticleHeader: OWBaseView {
     private lazy var separatorView: OWBaseView = .init()
     private lazy var titlesContainer: OWBaseView = .init()
 
+    fileprivate var viewModel: OWArticleHeaderViewModeling!
+    fileprivate var disposeBag: DisposeBag!
+    
     // MARK: - Overrides
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setup()
+    }
+    
+    func configure(with viewModel: OWArticleHeaderViewModeling) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        setupObservers()
+    }
+
+    func setupObservers() {
+        viewModel.outputs.conversationImageType
+            .subscribe(onNext: { [weak self] imageType in
+                switch imageType {
+                case .custom(let url):
+                    self?.setImage(with: url)
+                case .defaultImage:
+                    self?.setNoImageConstraints()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.conversationTitle
+            .bind(to: conversationTitleLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.conversationAuthor
+            .bind(to: conversationAuthorLabel.rx.text)
+            .disposed(by: disposeBag)
     }
     
     // Handle dark mode \ light mode change
@@ -38,27 +69,23 @@ internal final class SPArticleHeader: OWBaseView {
 
     // MARK: - Internal methods
 
-    internal func setImage(with url: URL?) {
+    private func setImage(with url: URL) {
         conversationImageView.setImage(with: url) { [weak self] image, error in
             guard let self = self else { return }
             
             if error != nil {
-                self.conversationImageView.OWSnp.updateConstraints { make in
-                    make.size.equalTo(0)
-                }
+                self.setNoImageConstraints()
             }
             else if let image = image {
                 self.conversationImageView.image = image
             }
         }
     }
-
-    internal func setTitle(_ title: String?) {
-        conversationTitleLabel.text = title
-    }
-
-    internal func setAuthor(_ author: String?) {
-        conversationAuthorLabel.text = author
+    
+    private func setNoImageConstraints() {
+        self.conversationImageView.OWSnp.updateConstraints { make in
+            make.width.equalTo(0)
+        }
     }
     
     // MARK: - Private Methods

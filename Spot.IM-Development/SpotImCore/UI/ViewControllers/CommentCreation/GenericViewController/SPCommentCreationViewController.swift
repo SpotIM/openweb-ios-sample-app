@@ -56,7 +56,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
     private let commentingContainer: UIView = .init()
     private let commentingOnLabel: OWBaseLabel = .init()
-    private lazy var articleView: SPArticleHeader = SPArticleHeader()
+    private lazy var articleView: OWArticleHeader = OWArticleHeader()
     
     private var imagePicker: OWImagePicker?
     
@@ -89,6 +89,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         textInputViewContainer.configureAvatarViewModel(with: model.avatarViewVM)
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
+        articleView.configure(with: model.articleHeaderVM)
     }
     
     override func viewDidLoad() {
@@ -378,9 +379,6 @@ class SPCommentCreationViewController: SPBaseViewController,
         setupHeaderComponentsIfNeeded()
         if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
             topContainerStack.insertArrangedSubview(articleView, at: 1)
-            articleView.setTitle(model.dataModel.articleMetadata.title)
-            articleView.setImage(with: URL(string: model.dataModel.articleMetadata.thumbnailUrl))
-            articleView.setAuthor(model.dataModel.articleMetadata.subtitle)
 
             articleView.OWSnp.makeConstraints { make in
                 make.height.equalTo(85.0)
