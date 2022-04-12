@@ -35,6 +35,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private let headerView: OWBaseView = .init()
     private let separatorView: OWBaseView = .init()
     private let commentMediaView: CommentMediaView = .init()
+    private let opacityView: OWBaseView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -105,8 +106,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
                                 messageView,
                                 commentMediaView,
                                 replyActionsView,
-                                moreRepliesView)
+                                moreRepliesView,
+                                opacityView)
         configureHeaderView()
+        configureOpacityView()
         configureStatusIndicationView()
         configureAvatarView()
         configureUserNameView()
@@ -124,6 +127,16 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             make.trailing.equalToSuperview().offset(-16)
             statusIndicatorViewHeighConstraint = make.height.equalTo(0).constraint
         }
+    }
+    
+    private func configureOpacityView() {
+        opacityView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(userNameView.OWSnp.top)
+        }
+        
+        opacityView.backgroundColor = .white
+        opacityView.layer.opacity = 0.4
     }
 
     private func configureHeaderView() {
@@ -243,6 +256,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         statusIndicationView.isHidden = !dataModel.showStatusIndicator
         statusIndicatorViewHeighConstraint?.isActive = !dataModel.showStatusIndicator
         statusIndicatorViewTopConstraint?.update(offset: dataModel.showStatusIndicator ? 16 :0)
+        opacityView.isHidden = !dataModel.showStatusIndicator
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
