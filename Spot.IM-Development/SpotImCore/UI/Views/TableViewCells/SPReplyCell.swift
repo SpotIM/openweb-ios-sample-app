@@ -22,6 +22,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let commentMediaView: CommentMediaView = .init()
+    private let opacityView: OWBaseView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -52,7 +53,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         statusIndicationView.isHidden = !data.showStatusIndicator
         statusIndicatorViewHeighConstraint?.isActive = !data.showStatusIndicator
         statusIndicatorViewTopConstraint?.update(offset: data.showStatusIndicator ? 16 :0)
-        
+        opacityView.isHidden = !data.showStatusIndicator
         textViewLeadingConstraint?.update(offset: data.depthOffset())
         let replyActionsViewHeight: CGFloat
         if data.isDeletedOrReported() {
@@ -193,7 +194,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, statusIndicationView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView)
+        contentView.addSubviews(avatarView, statusIndicationView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView, opacityView)
         configureAvatarView()
         configureStatusIndicationView()
         configureUserNameView()
@@ -202,6 +203,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         configureReplyActionsView()
         configureMoreRepliesView()
         configureCommentMediaView()
+        configureOpacityView()
     }
     
     private func configureAvatarView() {
@@ -212,6 +214,16 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.top.equalTo(userNameView)
             make.size.equalTo(Theme.avatarSideSize)
         }
+    }
+    
+    private func configureOpacityView() {
+        opacityView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(userNameView.OWSnp.top)
+        }
+        
+        opacityView.backgroundColor = .white
+        opacityView.layer.opacity = 0.4
     }
     
     private func configureStatusIndicationView() {
