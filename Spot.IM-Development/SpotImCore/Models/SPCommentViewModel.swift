@@ -46,7 +46,7 @@ internal struct CommentViewModel {
     var badgeTitle: String?
     var commentTextCollapsed: Bool = true
     
-    private var showStatusIndicator: Bool = false
+    var showStatusIndicator: Bool = false
 
     var brandColor: UIColor = .brandColor
 
@@ -164,7 +164,8 @@ internal struct CommentViewModel {
             showStatusIndicator = true
             statusIndicationVM.inputs.configure(with: status, commentWidth: textWidth())
         } else {
-            showStatusIndicator = true
+            let show = comment.userId == SPUserSessionHolder.session.user?.id
+            showStatusIndicator = show
             statusIndicationVM.inputs.configure(with: .requireApproval, commentWidth: textWidth())
         }
     }
