@@ -29,6 +29,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private var textViewLeadingConstraint: OWConstraint?
     private var commentMediaViewTopConstraint: OWConstraint?
+    private var statusIndicatorViewHeighConstraint: OWConstraint?
+    private var statusIndicatorViewTopConstraint: OWConstraint?
     
     private var imageRequest: DataRequest?
 
@@ -47,6 +49,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateAvatarView(with: data)
         updateCommentLabelView(with: data)
         messageView.delegate = self
+        statusIndicationView.isHidden = !data.showStatusIndicator
+        statusIndicatorViewHeighConstraint?.isActive = !data.showStatusIndicator
+        statusIndicatorViewTopConstraint?.update(offset: data.showStatusIndicator ? 16 :0)
         
         textViewLeadingConstraint?.update(offset: data.depthOffset())
         let replyActionsViewHeight: CGFloat
@@ -212,8 +217,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func configureStatusIndicationView() {
         statusIndicationView.OWSnp.makeConstraints { make in
             make.leading.equalTo(messageView)
-            make.top.equalToSuperview().offset(16)
+            statusIndicatorViewTopConstraint = make.top.equalToSuperview().offset(16).constraint
             make.trailing.equalToSuperview().offset(-16)
+            statusIndicatorViewHeighConstraint = make.height.equalTo(0).constraint
         }
     }
     
