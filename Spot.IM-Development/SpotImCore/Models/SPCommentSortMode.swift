@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal enum SPCommentSortMode: String, CaseIterable, SPKebabable {
+internal enum SPCommentSortMode: String, CaseIterable, Decodable {
     
     case best
     case newest
@@ -55,16 +55,4 @@ internal enum SPCommentSortMode: String, CaseIterable, SPKebabable {
             return "oldest"
         }
     }
-
-    var backEndTitle: String {
-        switch self {
-        case .best:
-            return "best"
-        case .newest:
-            return "newest"
-        case .oldest:
-            return "oldest"
-        }
-    }
-    
 }
