@@ -290,11 +290,7 @@ final class SPMainConversationModel {
         switch (configSortMode, SpotIm.getInitialSortOption()) {
         // client set a custom initial sort option (SpotImSortByOption)
         case (_ , .some(let sortByOption)):
-            switch sortByOption {
-            case .best: return .best
-            case .newest: return .newest
-            case .oldest: return .oldest
-            }
+            return SPCommentSortMode(from: sortByOption)
         // take sort option from config
         case (.some(let sortMode), _):
             return sortMode
