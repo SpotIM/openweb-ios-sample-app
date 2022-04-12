@@ -14,7 +14,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     weak var delegate: SPCommentCellDelegate?
     
     let messageView: MessageContainerView = .init()
-
+    
+    private let statusIndicationView: OWCommentStatusIndicationView = .init()
     private let avatarView: SPAvatarView = .init()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
@@ -80,6 +81,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateRepliesButtonTitle(with: data.repliesRawCount)
         moreRepliesView.updateView(with: data.repliesButtonState)
         updateCommentMediaView(with: data)
+        statusIndicationView.configure(with: data.statusIndicationVM)
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
@@ -186,8 +188,9 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView)
+        contentView.addSubviews(avatarView, statusIndicationView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView)
         configureAvatarView()
+        configureStatusIndicationView()
         configureUserNameView()
         configureCommentLabelView()
         configureMessageView()
@@ -206,6 +209,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
     
+    private func configureStatusIndicationView() {
+        statusIndicationView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(messageView)
+            make.top.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+        }
+    }
+    
     private func configureCommentMediaView() {
         commentMediaView.OWSnp.makeConstraints { make in
             commentMediaViewTopConstraint = make.top.equalTo(messageView.OWSnp.bottom).offset(SPCommonConstants.emptyCommentMediaTopPadding).constraint
@@ -218,7 +229,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func configureUserNameView() {
         userNameView.delegate = self
         userNameView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Theme.topOffset)
+            make.top.equalTo(statusIndicationView.OWSnp.bottom).offset(Theme.topOffset)
             make.trailing.equalToSuperview()
             make.height.equalTo(Theme.userViewCollapsedHeight)
         }
