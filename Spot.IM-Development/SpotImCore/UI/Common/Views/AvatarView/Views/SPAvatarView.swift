@@ -106,7 +106,7 @@ final class SPAvatarView: OWBaseView {
     }
     
     /// Updates user's avatar, `nil` will set default placeholder
-    private func updateAvatar(avatarImageType: ImageType) {
+    private func updateAvatar(avatarImageType: OWImageType) {
         switch avatarImageType {
         case .defaultImage:
             setAvatarOrDefault(image: nil)
