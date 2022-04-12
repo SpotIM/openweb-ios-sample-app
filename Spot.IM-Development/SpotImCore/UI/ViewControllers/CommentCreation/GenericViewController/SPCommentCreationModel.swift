@@ -28,6 +28,7 @@ class SPCommentCreationModel {
     private var currentUploadingImageId: String?
     
     let avatarViewVM: OWAvatarViewModeling
+    let articleHeaderVM: OWArticleHeaderViewModeling
     
     init(commentCreationDTO: SPCommentCreationDTO,
          updater: SPCommentUpdater,
@@ -39,6 +40,7 @@ class SPCommentCreationModel {
         commentService = updater
         self.articleMetadate = articleMetadate
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
+        articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: articleMetadate)
         setupCommentLabels()
         
         let commentIdentifier: String = getCommentIdentifierForCommentType()
