@@ -44,6 +44,8 @@ internal struct CommentViewModel {
     var isCollapsed: Bool = false
     var badgeTitle: String?
     var commentTextCollapsed: Bool = true
+    
+    private var showStatusIndicator: Bool = false
 
     var brandColor: UIColor = .brandColor
 
@@ -158,7 +160,12 @@ internal struct CommentViewModel {
             
         updateCommentActionsVM()
         if let status = comment.status {
+            showStatusIndicator = true
             statusIndicationVM.inputs.configure(with: status)
+            // TODO - get the text from the VM (onnext) and set to local veriable, for height calulating
+        } else {
+            showStatusIndicator = true
+            statusIndicationVM.inputs.configure(with: .requireApproval)
         }
     }
     
@@ -245,6 +252,8 @@ internal struct CommentViewModel {
         let deletedOffset = isDeletedOrReported() ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
         
+        let statusIndicationHeight: CGFloat = showStatusIndicator ? getStatusIndicatorHeight(lineLimit: lineLimit) : 0
+        
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
             + userViewHeight
@@ -256,6 +265,16 @@ internal struct CommentViewModel {
             + (isDeletedOrReported() ? 0.0 : mediaHeight)
             + 68 // status indicator - TODO
 
+        return height
+    }
+    
+    private func getStatusIndicatorHeight(lineLimit: Int) -> CGFloat {
+        let width = textWidth() - (12 * 2) - 14
+        let attributedMessage = NSAttributedString(
+            string: message(),
+            attributes: attributes(isDeleted: isDeletedOrReported()))
+        
+        let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)
         return height
     }
 
