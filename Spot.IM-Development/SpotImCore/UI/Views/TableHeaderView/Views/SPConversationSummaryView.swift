@@ -95,37 +95,24 @@ final class SPConversationSummaryView: OWBaseView {
         verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor = .spSeparator2
     }
     
-    // MARK: - Internal methods    
-    private func updateCommentsLabel(_ newCommentsCount: Int) {
-        let commentsText: String = newCommentsCount > 1 ?
-            LocalizationManager.localizedString(key: "Comments") :
-            LocalizationManager.localizedString(key: "Comment")
-        commentsCountLabel.text = "\(newCommentsCount.formatedCount()) " + commentsText
-    }
-    
-    private func updateSortOption(_ title: String) {
-        sortButton.setTitle(title, for: .normal)
-    }
-    
     func configure(with viewModel: OWConversationSummaryViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
     }
     
+    // MARK: - Internal methods
+    
     private func setupObservers() {
         onlineViewingUsersView.configure(with: viewModel.outputs.onlineViewingUsersVM)
         
-        viewModel.outputs.conversationCommentsCount
-            .subscribe(onNext: { [weak self] commentsCount in
-                self?.updateCommentsLabel(commentsCount)
-            })
+        viewModel.outputs.conversationCommentsCountText
+            .bind(to: commentsCountLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.outputs.conversationSortVM.outputs.selectedSortOption
-            .subscribe(onNext: { [weak self] sortOption in
-                self?.updateSortOption(sortOption.title)
-            })
+            .map{ $0.title }
+            .bind(to: sortButton.rx.title())
             .disposed(by: disposeBag)
     }
     
