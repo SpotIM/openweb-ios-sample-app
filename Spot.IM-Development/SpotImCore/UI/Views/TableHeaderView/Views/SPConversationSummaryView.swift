@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal protocol SPConversationSummaryViewDelegate: AnyObject {
 
@@ -72,6 +73,9 @@ final class SPConversationSummaryView: OWBaseView {
         }
     }
     
+    fileprivate var viewModel: OWConversationSummaryViewModeling!
+    fileprivate var disposeBag: DisposeBag!
+    
     // MARK: - Init
 
     override init(frame: CGRect) {
@@ -91,22 +95,25 @@ final class SPConversationSummaryView: OWBaseView {
         verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor = .spSeparator2
     }
     
-    // MARK: - Internal methods    
-    func updateCommentsLabel(_ newCommentsCount: Int) {
-        let commentsText: String = newCommentsCount > 1 ?
-            LocalizationManager.localizedString(key: "Comments") :
-            LocalizationManager.localizedString(key: "Comment")
-        commentsCountLabel.text = "\(newCommentsCount.formatedCount()) " + commentsText
+    func configure(with viewModel: OWConversationSummaryViewModeling) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        setupObservers()
     }
     
-    func updateSortOption(_ title: String) {
-        sortButton.setTitle(title, for: .normal)
-    }
+    // MARK: - Internal methods
     
-    // Idealy this summary view will have a VM as well which will hold the online users VM
-    // I decided to wait with the refactoring and do so in a more specific task for it
-    func configure(onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling) {
-        onlineViewingUsersView.configure(with: onlineViewingUsersVM)
+    private func setupObservers() {
+        onlineViewingUsersView.configure(with: viewModel.outputs.onlineViewingUsersVM)
+        
+        viewModel.outputs.conversationCommentsCountText
+            .bind(to: commentsCountLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.conversationSortVM.outputs.selectedSortOption
+            .map{ $0.title }
+            .bind(to: sortButton.rx.title())
+            .disposed(by: disposeBag)
     }
     
     // MARK: - Actions
