@@ -107,7 +107,7 @@ final class SPConversationSummaryView: OWBaseView {
         sortButton.setTitle(title, for: .normal)
     }
     
-    func configure(viewModel: OWConversationSummaryViewModeling) {
+    func configure(with viewModel: OWConversationSummaryViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
