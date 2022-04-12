@@ -12,13 +12,13 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentStatusIndicationViewModelingInputs {
-    func configure(with model: SPComment.CommentStatus)
+    func configure(with model: SPComment.CommentStatus, commentWidth: CGFloat)
 }
 
 protocol OWCommentStatusIndicationViewModelingOutputs {
     var indicationIcon: Observable<UIImage> { get }
     var indicationText: Observable<String> { get }
-    var explanationText: Observable<String> { get }
+    var indicationHeight: CGFloat { get }
 }
 
 protocol OWCommentStatusIndicationViewModeling {
@@ -34,9 +34,15 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     var outputs: OWCommentStatusIndicationViewModelingOutputs { return self }
         
     fileprivate let _status = BehaviorSubject<SPComment.CommentStatus?>(value: nil)
+    fileprivate let _commentWidth = BehaviorSubject<CGFloat?>(value: nil)
     
     fileprivate lazy var status: Observable<SPComment.CommentStatus> = {
         self._status
+            .unwrap()
+    }()
+    
+    fileprivate lazy var commentWidth: Observable<CGFloat> = {
+        self._commentWidth
             .unwrap()
     }()
     
@@ -59,32 +65,36 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     var indicationText: Observable<String> {
         self.status
             .map {
-                switch($0) {
-                case .reject:
-                    return LocalizationManager.localizedString(key: "Your comment has been rejected.")
-                case .requireApproval:
-                    return LocalizationManager.localizedString(key: "Hold on, your comment is waiting for approval.")
-                default:
-                    return ""
-                }
+                self.getIndicationText(status: $0)
             }
     }
     
-    var explanationText: Observable<String> {
-        self.status
-            .map {
-                switch($0) {
-                case .reject:
-                    return "Your comment has been rejected"
-                case .requireApproval:
-                    return "Hold on, your comment is waiting for approval"
-                default:
-                    return ""
-                }
-            }
-    }
+    var indicationHeight: CGFloat = 0
     
-    func configure(with status: SPComment.CommentStatus) {
+    func configure(with status: SPComment.CommentStatus, commentWidth: CGFloat) {
         self._status.onNext(status)
+        self._commentWidth.onNext(commentWidth)
+        indicationHeight = {
+            let width = commentWidth - (12 * 2) - 14
+            let attributedMessage = NSAttributedString(
+                string: self.getIndicationText(status: status),
+                attributes: [
+                    NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: 15)
+                ])
+            
+            let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)
+            return height + (12 * 2)
+        }()
+    }
+    
+    fileprivate func getIndicationText(status: SPComment.CommentStatus) -> String {
+        switch(status) {
+        case .reject:
+            return LocalizationManager.localizedString(key: "Your comment has been rejected.")
+        case .requireApproval:
+            return LocalizationManager.localizedString(key: "Hold on, your comment is waiting for approval.")
+        default:
+            return ""
+        }
     }
 }
