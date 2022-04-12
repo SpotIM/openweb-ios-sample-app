@@ -67,7 +67,8 @@ final class SPMainConversationModel {
     var sortOption: SPCommentSortMode = .best {
         didSet {
             if oldValue != sortOption {
-                self.conversationSummaryVM.outputs.conversationSortVM.inputs.configure(selectedSortOption: sortOption)
+                let conversationSortVM = self.conversationSummaryVM.outputs.conversationSortVM
+                conversationSortVM.inputs.configure(selectedSortOption: sortOption)
                 sortingUpdateHandler?(oldValue == dataSource.sortMode)
             }
         }
@@ -97,7 +98,8 @@ final class SPMainConversationModel {
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         dataSource = conversationDataSource
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
-        conversationSummaryVM = OWConversationSummaryViewModel(conversationSortVM: OWConversationSortViewModel(sortOption: self.sortOption))
+        let conversationSortVM = OWConversationSortViewModel(sortOption: self.sortOption)
+        conversationSummaryVM = OWConversationSummaryViewModel(conversationSortVM: conversationSortVM)
         dataSource.messageCounterUpdated = { [weak self] count in
             self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }
             self?.conversationSummaryVM.inputs.configure(commentsCount: count)
@@ -373,7 +375,8 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
         do {
             let onlineViewingUsersModel = try data.onlineViewingUsersCount(fullConversationId)
             onlineViewingUsersPreConversationVM.inputs.configureModel(onlineViewingUsersModel)
-            conversationSummaryVM.outputs.onlineViewingUsersVM.inputs.configureModel(onlineViewingUsersModel)
+            let onlineViewingUsersVM = conversationSummaryVM.outputs.onlineViewingUsersVM
+            onlineViewingUsersVM.inputs.configureModel(onlineViewingUsersModel)
             
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)

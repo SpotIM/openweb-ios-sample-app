@@ -119,7 +119,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         updateFooterView()
         footer.userAvatarView.configure(with: model.avatarViewVM)
         articleHeader.configure(with: model.articleHeaderVM)
-        summaryView.configure(viewModel: model.conversationSummaryVM)
+        summaryView.configure(with: model.conversationSummaryVM)
 
         if model.areCommentsEmpty() {
             presentEmptyCommentsStateView()
