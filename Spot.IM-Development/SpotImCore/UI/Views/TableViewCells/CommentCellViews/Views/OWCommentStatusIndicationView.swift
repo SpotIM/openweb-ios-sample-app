@@ -21,7 +21,6 @@ class OWCommentStatusIndicationView: OWBaseView {
         let label = OWBaseLabel()
         label.numberOfLines = 0
         label.textColor = .steelGrey
-        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
         return label
     }()
@@ -58,15 +57,15 @@ class OWCommentStatusIndicationView: OWBaseView {
         
         iconImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.iconLeadingOffset)
-            make.top.equalToSuperview().offset(Metrics.iconVerticalPadding)
-            make.bottom.equalToSuperview().offset(-Metrics.iconVerticalPadding)
+            make.centerY.equalToSuperview()
             make.width.height.equalTo(Metrics.iconSize)
         }
         
         statusTextLabel.OWSnp.makeConstraints { make in
             make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.statusTextLeadingOffset)
             make.trailing.equalToSuperview().offset(-Metrics.statusTextLeadingOffset)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.textVerticalPadding)
+            make.bottom.equalToSuperview().offset(-Metrics.textVerticalPadding)
         }
     }
 }
@@ -74,8 +73,8 @@ class OWCommentStatusIndicationView: OWBaseView {
 fileprivate struct Metrics {
     static let iconSize: CGFloat = 14
 
-    static let iconLeadingOffset: CGFloat = 10
-    static let iconVerticalPadding: CGFloat = 12
+    static let iconLeadingOffset: CGFloat = 12
+    static let textVerticalPadding: CGFloat = 12
     static let statusTextLeadingOffset: CGFloat = 8
     static let explanationButtonLeadingOffset: CGFloat = 10
     
