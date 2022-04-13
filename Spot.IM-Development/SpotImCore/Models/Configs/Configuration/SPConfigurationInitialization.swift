@@ -76,7 +76,7 @@ struct SPConfigurationInitialization: Decodable {
     let platform: String?
     let recommendationEnabled: Bool?
     let richSayControlEnabled: Bool?
-    let sortBy: String?
+    let sortBy: SPCommentSortMode?
     let ssoEditableProfile: Bool?
     let ssoEnabled: Bool?
     let ssoStartedBySpotim: Bool?
