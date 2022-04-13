@@ -50,10 +50,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateAvatarView(with: data)
         updateCommentLabelView(with: data)
         messageView.delegate = self
-        statusIndicationView.isHidden = !data.showStatusIndicator
-        statusIndicatorViewHeighConstraint?.isActive = !data.showStatusIndicator
-        statusIndicatorViewTopConstraint?.update(offset: data.showStatusIndicator ? 16 :0)
-        opacityView.isHidden = !data.showStatusIndicator
+        setStatusIndicatorVisibillity(isVisible: data.showStatusIndicator)
+        
         textViewLeadingConstraint?.update(offset: data.depthOffset())
         let replyActionsViewHeight: CGFloat
         if data.isDeletedOrReported() {
@@ -88,6 +86,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         moreRepliesView.updateView(with: data.repliesButtonState)
         updateCommentMediaView(with: data)
         statusIndicationView.configure(with: data.statusIndicationVM)
+    }
+    
+    private func setStatusIndicatorVisibillity(isVisible: Bool) {
+        statusIndicationView.isHidden = !isVisible
+        statusIndicatorViewHeighConstraint?.isActive = !isVisible
+        statusIndicatorViewTopConstraint?.update(offset: isVisible ? Theme.statusIndicatorTopOffset :0)
+        opacityView.isHidden = !isVisible
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
@@ -229,8 +234,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func configureStatusIndicationView() {
         statusIndicationView.OWSnp.makeConstraints { make in
             make.leading.equalTo(messageView)
-            statusIndicatorViewTopConstraint = make.top.equalToSuperview().offset(16).constraint
-            make.trailing.equalToSuperview().offset(-16)
+            statusIndicatorViewTopConstraint = make.top.equalToSuperview().offset(Theme.statusIndicatorTopOffset).constraint
+            make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
             statusIndicatorViewHeighConstraint = make.height.equalTo(0).constraint
         }
     }
@@ -396,5 +401,5 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
-
+    static let statusIndicatorTopOffset: CGFloat = 16
 }
