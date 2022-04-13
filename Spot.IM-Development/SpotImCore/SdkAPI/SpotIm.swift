@@ -147,6 +147,8 @@ public class SpotIm {
     
     internal static var analyticsEventDelegate: SPAnalyticsEventDelegate?
     
+    internal static var customInitialSortByOption: SpotImSortByOption? = nil
+    
     /**
     Initialize the SDK
 
@@ -424,6 +426,15 @@ public class SpotIm {
     
     public static func getButtonOnlyMode() -> SpotImButtonOnlyMode {
         return self.buttonOnlyMode
+    }
+    
+    /**
+        Set initial conversation sort option
+
+     - Parameter option: SpotImSortByOption
+     */
+    public static func setInitialSort(option: SpotImSortByOption) {
+        self.customInitialSortByOption = option
     }
 
     // MARK: Private

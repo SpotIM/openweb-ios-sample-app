@@ -289,6 +289,21 @@ final class SPMainConversationModel {
         let readOnlyMode = dataSource.articleMetadata.readOnlyMode
         return (readOnlyMode == .default && dataSource.isReadOnly) || readOnlyMode == .enable
     }
+    
+    func getInitialSortMode() -> SPCommentSortMode {
+        let configSortMode = SPConfigsDataSource.appConfig?.initialization?.sortBy
+        switch (configSortMode, SpotIm.customInitialSortByOption) {
+        // client set a custom initial sort option (SpotImSortByOption)
+        case (_ , .some(let sortByOption)):
+            return SPCommentSortMode(from: sortByOption)
+        // take sort option from config
+        case (.some(let sortMode), _):
+            return sortMode
+        // default sort option is .best
+        default:
+            return .best
+        }
+    }
 }
 
 extension SPMainConversationModel {
