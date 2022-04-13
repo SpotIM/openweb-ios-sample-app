@@ -124,9 +124,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func configureStatusIndicationView() {
         statusIndicationView.OWSnp.makeConstraints { make in
-            statusIndicatorViewTopConstraint = make.top.equalTo(headerView).offset(16).constraint
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            statusIndicatorViewTopConstraint = make.top.equalTo(headerView).offset(Theme.statusIndicatorTopOffset).constraint
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
+            make.trailing.equalToSuperview().offset(-Theme.leadingOffset)
             statusIndicatorViewHeighConstraint = make.height.equalTo(0).constraint
         }
     }
@@ -169,7 +169,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func configureUserNameView() {
         userNameView.delegate = self
         userNameView.OWSnp.makeConstraints { make in
-//            userNameViewTopConstraint = make.top.equalTo(headerView.OWSnp.bottom).offset(Theme.topOffset).constraint
             userNameViewTopConstraint = make.top.equalTo(statusIndicationView.OWSnp.bottom).offset(Theme.topOffset).constraint
             make.trailing.equalToSuperview()
             make.height.equalTo(Theme.userViewCollapsedHeight)
@@ -253,10 +252,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         userNameViewTopConstraint?.update(offset: dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
 
         userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
-        statusIndicationView.isHidden = !dataModel.showStatusIndicator
-        statusIndicatorViewHeighConstraint?.isActive = !dataModel.showStatusIndicator
-        statusIndicatorViewTopConstraint?.update(offset: dataModel.showStatusIndicator ? 16 :0)
-        opacityView.isHidden = !dataModel.showStatusIndicator
+        setStatusIndicatorVisibillity(isVisible: dataModel.showStatusIndicator)
+    }
+    
+    private func setStatusIndicatorVisibillity(isVisible: Bool) {
+        statusIndicationView.isHidden = !isVisible
+        statusIndicatorViewHeighConstraint?.isActive = !isVisible
+        statusIndicatorViewTopConstraint?.update(offset: isVisible ? Theme.statusIndicatorTopOffset :0)
+        opacityView.isHidden = !isVisible
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
@@ -498,4 +501,5 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
+    static let statusIndicatorTopOffset: CGFloat = 16
 }

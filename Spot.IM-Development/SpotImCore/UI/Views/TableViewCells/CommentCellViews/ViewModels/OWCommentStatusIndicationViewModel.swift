@@ -75,15 +75,20 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
         self._status.onNext(status)
         self._commentWidth.onNext(commentWidth)
         indicationHeight = {
-            let width = commentWidth - (12 * 2) - 14
+            // calculate text width using the comment with reducing all padding & icon
+            let width = commentWidth
+                        - (OWCommentStatusIndicationView.Metrics.statusTextHorizontalOffset * 2)
+                        - OWCommentStatusIndicationView.Metrics.iconSize
+                        - OWCommentStatusIndicationView.Metrics.iconLeadingOffset
+            
             let attributedMessage = NSAttributedString(
                 string: self.getIndicationText(status: status),
                 attributes: [
-                    NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: 15)
+                    NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: OWCommentStatusIndicationView.Metrics.fontSize)
                 ])
-            
+            // get the text height and add padding
             let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)
-            return height + (12 * 2)
+            return height + (OWCommentStatusIndicationView.Metrics.textVerticalPadding * 2)
         }()
     }
     
