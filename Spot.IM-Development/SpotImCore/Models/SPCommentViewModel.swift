@@ -253,7 +253,7 @@ internal struct CommentViewModel {
         let deletedOffset = isDeletedOrReported() ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
         
-        let statusIndicationHeight: CGFloat = showStatusIndicator ? statusIndicationVM.outputs.indicationHeight : 0
+        let statusIndicationHeight: CGFloat = showStatusIndicator ? (statusIndicationVM.outputs.indicationHeight + 16) : 0
         
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
@@ -264,7 +264,7 @@ internal struct CommentViewModel {
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + ((isDeletedOrReported() || commentLabels == nil) ? 0.0 : commentLabelHeight)
             + (isDeletedOrReported() ? 0.0 : mediaHeight)
-            + statusIndicationHeight // status indicator - TODO
+            + statusIndicationHeight
 
         return height
     }
