@@ -287,7 +287,7 @@ final class SPMainConversationModel {
     
     func getInitialSortMode() -> SPCommentSortMode {
         let configSortMode = SPConfigsDataSource.appConfig?.initialization?.sortBy
-        switch (configSortMode, SpotIm.getInitialSortOption()) {
+        switch (configSortMode, SpotIm.customInitialSortByOption) {
         // client set a custom initial sort option (SpotImSortByOption)
         case (_ , .some(let sortByOption)):
             return SPCommentSortMode(from: sortByOption)
