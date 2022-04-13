@@ -60,6 +60,11 @@ final class OWCommentActionsView: OWBaseView {
         votingView.updateColorsAccordingToStyle()
     }
     
+    func setIsDisabled(isDisabled: Bool) {
+        replyButton.isEnabled = !isDisabled
+        votingView.isUserInteractionEnabled = !isDisabled
+    }
+    
     func setReplyButton(repliesCount: String?, shouldHideButton: Bool = false) {
         var replyButtonTitle: String?
         var isEnabled: Bool = true
