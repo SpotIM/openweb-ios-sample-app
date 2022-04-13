@@ -65,22 +65,21 @@ class OWCommentStatusIndicationView: OWBaseView {
         }
         
         statusTextLabel.OWSnp.makeConstraints { make in
-            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.statusTextLeadingOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.statusTextLeadingOffset)
+            make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.statusTextHorizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.statusTextHorizontalOffset)
             make.top.equalToSuperview().offset(Metrics.textVerticalPadding)
             make.bottom.equalToSuperview().offset(-Metrics.textVerticalPadding)
         }
     }
-}
-
-fileprivate struct Metrics {
-    static let iconSize: CGFloat = 14
-
-    static let iconLeadingOffset: CGFloat = 12
-    static let textVerticalPadding: CGFloat = 12
-    static let statusTextLeadingOffset: CGFloat = 8
-    static let explanationButtonLeadingOffset: CGFloat = 10
     
-    static let fontSize: CGFloat = 15
-    
+    struct Metrics {
+        static let iconSize: CGFloat = 14
+
+        static let iconLeadingOffset: CGFloat = 12
+        static let textVerticalPadding: CGFloat = 12
+        static let statusTextHorizontalOffset: CGFloat = 8
+        
+        static let fontSize: CGFloat = 15
+        
+    }
 }
