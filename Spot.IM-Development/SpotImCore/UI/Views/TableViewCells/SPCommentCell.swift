@@ -60,12 +60,14 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     func updateColorsAccordingToStyle() {
         headerView.backgroundColor = .spBackground0
         contentView.backgroundColor = .spBackground0
+        opacityView.backgroundColor = .spBackground0
         messageView.updateColorsAccordingToStyle()
         userNameView.updateColorsAccordingToStyle()
         replyActionsView.updateColorsAccordingToStyle()
         avatarImageView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
         commentLabelView.updateColorsAccordingToStyle()
+        statusIndicationView.updateColorsAccordingToStyle()
     }
     
     // MARK: - Internal methods
@@ -134,8 +136,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(userNameView.OWSnp.top)
         }
-        
-        opacityView.backgroundColor = .white
         opacityView.layer.opacity = 0.4
     }
 
