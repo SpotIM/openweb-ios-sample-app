@@ -112,12 +112,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         contentView.backgroundColor = .spBackground0
+        opacityView.backgroundColor = .spBackground0
         messageView.updateColorsAccordingToStyle()
         userNameView.updateColorsAccordingToStyle()
         replyActionsView.updateColorsAccordingToStyle()
         avatarView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
         commentLabelView.updateColorsAccordingToStyle()
+        statusIndicationView.updateColorsAccordingToStyle()
     }
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
@@ -221,8 +223,6 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(userNameView.OWSnp.top)
         }
-        
-        opacityView.backgroundColor = .white
         opacityView.layer.opacity = 0.4
     }
     

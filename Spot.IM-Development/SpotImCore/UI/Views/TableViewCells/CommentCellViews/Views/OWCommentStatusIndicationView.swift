@@ -20,7 +20,6 @@ class OWCommentStatusIndicationView: OWBaseView {
     private let statusTextLabel: OWBaseLabel = {
         let label = OWBaseLabel()
         label.numberOfLines = 0
-        label.textColor = .steelGrey
         label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
         return label
     }()
@@ -32,6 +31,11 @@ class OWCommentStatusIndicationView: OWBaseView {
         super.init(frame: frame)
         
         setupUI()
+    }
+    
+    func updateColorsAccordingToStyle() {
+        statusTextLabel.textColor = .commentStatusIndicatorText
+        self.backgroundColor = .commentStatusIndicatorBackground
     }
     
     func configure(with viewModel: OWCommentStatusIndicationViewModeling) {
@@ -51,7 +55,6 @@ class OWCommentStatusIndicationView: OWBaseView {
     }
     
     private func setupUI() {
-        self.backgroundColor = .iceBlue
         self.addCornerRadius(4)
         self.addSubviews(iconImageView, statusTextLabel)
         
