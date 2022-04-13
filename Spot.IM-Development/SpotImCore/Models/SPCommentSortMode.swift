@@ -8,14 +8,21 @@
 
 import Foundation
 
-internal enum SPCommentSortMode: String, CaseIterable, SPKebabable {
+internal enum SPCommentSortMode: String, CaseIterable, Decodable {
     
     case best
     case newest
     case oldest
-
-    static var initial: SPCommentSortMode {
-        return .best
+    
+    init(from sortByOption: SpotImSortByOption) {
+        switch sortByOption {
+        case .best:
+            self = .best
+        case .newest:
+            self = .newest
+        case .oldest:
+            self = .oldest
+        }
     }
 
     var title: String {
@@ -44,27 +51,4 @@ internal enum SPCommentSortMode: String, CaseIterable, SPKebabable {
             return SpotIm.customSortByOptionText[.oldest]
         }
     }
-
-    var kebabValue: String {
-        switch self {
-        case .best:
-            return "best"
-        case .newest:
-            return "newest"
-        case .oldest:
-            return "oldest"
-        }
-    }
-
-    var backEndTitle: String {
-        switch self {
-        case .best:
-            return "best"
-        case .newest:
-            return "newest"
-        case .oldest:
-            return "oldest"
-        }
-    }
-    
 }
