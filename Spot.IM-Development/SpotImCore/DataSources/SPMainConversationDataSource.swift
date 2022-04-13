@@ -22,7 +22,7 @@ internal protocol SPMainConversationDataSourceDelegate: NSObjectProtocol {
     
 }
 
-typealias CommentActionAvailability = (isDeletable: Bool, isEditable: Bool, isReportable: Bool)
+typealias CommentActionAvailability = (isDeletable: Bool, isEditable: Bool, isReportable: Bool, isSharable: Bool)
 typealias DeletedIndexPathsInfo = (indexPathes: [IndexPath], shouldRemoveSection: Bool)
 
 internal final class SPMainConversationDataSource {

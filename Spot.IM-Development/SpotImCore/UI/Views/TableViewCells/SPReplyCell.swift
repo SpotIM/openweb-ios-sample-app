@@ -93,6 +93,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         statusIndicatorViewHeighConstraint?.isActive = !isVisible
         statusIndicatorViewTopConstraint?.update(offset: isVisible ? Theme.statusIndicatorTopOffset :0)
         opacityView.isHidden = !isVisible
+        replyActionsView.setIsDisabled(isDisabled: isVisible)
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
@@ -229,6 +230,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.top.equalTo(userNameView.OWSnp.top)
         }
         opacityView.layer.opacity = 0.4
+        opacityView.isUserInteractionEnabled = false
     }
     
     private func configureStatusIndicationView() {

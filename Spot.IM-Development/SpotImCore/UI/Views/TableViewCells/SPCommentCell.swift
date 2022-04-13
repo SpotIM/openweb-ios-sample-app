@@ -93,6 +93,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit, windowWidth: windowWidth)
         updateCommentLabelView(with: data)
+        setStatusIndicatorVisibillity(isVisible: data.showStatusIndicator)
         
         statusIndicationView.configure(with: data.statusIndicationVM)
     }
@@ -137,6 +138,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             make.top.equalTo(userNameView.OWSnp.top)
         }
         opacityView.layer.opacity = 0.4
+        opacityView.isUserInteractionEnabled = false
     }
 
     private func configureHeaderView() {
@@ -252,7 +254,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         userNameViewTopConstraint?.update(offset: dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
 
         userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
-        setStatusIndicatorVisibillity(isVisible: dataModel.showStatusIndicator)
     }
     
     private func setStatusIndicatorVisibillity(isVisible: Bool) {
@@ -260,6 +261,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         statusIndicatorViewHeighConstraint?.isActive = !isVisible
         statusIndicatorViewTopConstraint?.update(offset: isVisible ? Theme.statusIndicatorTopOffset :0)
         opacityView.isHidden = !isVisible
+        
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
@@ -291,6 +293,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount)
+        replyActionsView.setIsDisabled(isDisabled: dataModel.showStatusIndicator)
         replyActionsView.OWSnp.updateConstraints { make in
             make.height.equalTo(dataModel.isDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
         }
