@@ -147,7 +147,7 @@ public class SpotIm {
     
     internal static var analyticsEventDelegate: SPAnalyticsEventDelegate?
     
-    private static var customInitialSortByOption: SpotImSortByOption? = nil
+    internal static var customInitialSortByOption: SpotImSortByOption? = nil
     
     /**
     Initialize the SDK
@@ -435,10 +435,6 @@ public class SpotIm {
      */
     public static func setInitialSort(option: SpotImSortByOption) {
         self.customInitialSortByOption = option
-    }
-    
-    public static func getInitialSortOption() -> SpotImSortByOption? {
-        return self.customInitialSortByOption
     }
 
     // MARK: Private
