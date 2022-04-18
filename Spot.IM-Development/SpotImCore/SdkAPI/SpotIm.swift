@@ -300,7 +300,7 @@ public class SpotIm {
             let encodedConversationIds = conversationIds.map { ($0 as OWPostId).encoded }
             conversationDataProvider.commnetsCounters(conversationIds: encodedConversationIds).done { countersData in
                 let counters = Dictionary<String, SpotImConversationCounters>(uniqueKeysWithValues: countersData.map { key, value in
-                    let decodedConversationId = (key as OWPostId).decode
+                    let decodedConversationId = (key as OWPostId).decoded
                     let conversationCounter = SpotImConversationCounters(comments: value.comments, replies: value.replies)
                     return (decodedConversationId, conversationCounter)
                 })
