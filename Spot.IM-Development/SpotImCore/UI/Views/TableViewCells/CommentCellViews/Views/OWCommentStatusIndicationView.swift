@@ -60,7 +60,7 @@ class OWCommentStatusIndicationView: OWBaseView {
         
         iconImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.iconLeadingOffset)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.iconTopPadding)
             make.width.height.equalTo(Metrics.iconSize)
         }
         
@@ -76,6 +76,7 @@ class OWCommentStatusIndicationView: OWBaseView {
         static let iconSize: CGFloat = 14
 
         static let iconLeadingOffset: CGFloat = 12
+        static let iconTopPadding: CGFloat = 14
         static let textVerticalPadding: CGFloat = 12
         static let statusTextHorizontalOffset: CGFloat = 8
         
