@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentStatusIndicationViewModelingInputs {
-    func configure(with model: SPComment.CommentStatus, commentWidth: CGFloat)
+    func configure(with model: SPComment.CommentStatus, containerWidth: CGFloat)
 }
 
 protocol OWCommentStatusIndicationViewModelingOutputs {
@@ -53,7 +53,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
                 switch($0) {
                 case .reject:
                     image = UIImage(spNamed: "rejectIcon")
-                case .requireApproval:
+                case .requireApproval, .pending:
                     image = UIImage(spNamed: "pendingIcon")
                 default:
                     image = nil
@@ -71,12 +71,12 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     
     var indicationHeight: CGFloat = 0
     
-    func configure(with status: SPComment.CommentStatus, commentWidth: CGFloat) {
+    func configure(with status: SPComment.CommentStatus, containerWidth: CGFloat) {
         self._status.onNext(status)
-        self._commentWidth.onNext(commentWidth)
+        self._commentWidth.onNext(containerWidth)
         indicationHeight = {
             // calculate text width using the comment with reducing all padding & icon
-            let width = commentWidth
+            let width = containerWidth
                         - (OWCommentStatusIndicationView.Metrics.statusTextHorizontalOffset * 2)
                         - OWCommentStatusIndicationView.Metrics.iconSize
                         - OWCommentStatusIndicationView.Metrics.iconLeadingOffset
@@ -93,11 +93,14 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     }
     
     fileprivate func getIndicationText(status: SPComment.CommentStatus) -> String {
+        let isStrictMode = false // TODO - should get it from 'moderation/comment/' call
         switch(status) {
         case .reject:
             return LocalizationManager.localizedString(key: "Your comment has been rejected.")
-        case .requireApproval:
-            return LocalizationManager.localizedString(key: "Hold on, your comment is waiting for approval.")
+        case .requireApproval, .pending:
+            return isStrictMode ?
+            LocalizationManager.localizedString(key: "Your comment is waiting for approval due to the site’s policy.") :
+            LocalizationManager.localizedString(key: "Hold on, your comment is waiting for approval.")
         default:
             return ""
         }

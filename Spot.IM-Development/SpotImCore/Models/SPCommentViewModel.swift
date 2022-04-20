@@ -160,13 +160,13 @@ internal struct CommentViewModel {
         self.replyingToDisplayName = replyingToDisplayName
             
         updateCommentActionsVM()
-        if let status = comment.status {
+        if let status = comment.status,
+           comment.userId == SPUserSessionHolder.session.user?.id,
+           !comment.published {
             showStatusIndicator = true
-            statusIndicationVM.inputs.configure(with: status, commentWidth: textWidth())
+            statusIndicationVM.inputs.configure(with: status, containerWidth: textWidth())
         } else {
-            let show = comment.userId == SPUserSessionHolder.session.user?.id
-            showStatusIndicator = show
-            statusIndicationVM.inputs.configure(with: .requireApproval, commentWidth: textWidth())
+            showStatusIndicator = false
         }
     }
     
