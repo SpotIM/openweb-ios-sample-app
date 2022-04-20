@@ -122,6 +122,7 @@ final class OWCommentActionsView: OWBaseView {
         stackView.axis = .horizontal
         stackView.spacing = Metrics.baseOffset
         stackView.alignment = .center
+        stackView.backgroundColor = .clear
         stackView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
