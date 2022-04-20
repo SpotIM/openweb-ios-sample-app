@@ -104,6 +104,7 @@ internal struct SPComment: Decodable, Equatable {
         case unknown
         case block
         case reject
+        case pending
         case publishAndModerate
         case requireApproval
 
@@ -119,6 +120,8 @@ internal struct SPComment: Decodable, Equatable {
                 self = .requireApproval
             case "reject":
                 self = .reject
+            case "pending":
+                self = .pending
             default:
                 self = .unknown
             }
