@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SPComment: Decodable, Equatable {
+internal struct SPComment: Decodable, Equatable {
     
     enum CodingKeys: String, CodingKey {
         case id, parentId, rootComment, depth, userId, writtenAt, time, repliesCount, totalRepliesCount, offset,
@@ -100,7 +100,7 @@ struct SPComment: Decodable, Equatable {
         additionalData = try? container.decode(AdditionalData.self, forKey: .additionalData)
     }
 
-    public enum CommentStatus: String {
+    internal enum CommentStatus: String {
         case unknown
         case block
         case reject
