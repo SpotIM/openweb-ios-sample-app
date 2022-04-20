@@ -25,6 +25,7 @@ final class OWCommentVotingView: OWBaseView {
         let stackView = OWBaseStackView()
         stackView.axis = .horizontal
         stackView.alignment = .center
+        stackView.backgroundColor = .clear
         return stackView
     }()
     
