@@ -122,6 +122,7 @@
 		3DD72C78280EF99300117946 /* OWResponseLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C77280EF99300117946 /* OWResponseLogger.swift */; };
 		3DD72C7A280EFA0200117946 /* OWNetworkAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C79280EFA0200117946 /* OWNetworkAPI.swift */; };
 		3DD72C7D280F053A00117946 /* OWSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C7C280F053A00117946 /* OWSession.swift */; };
+		3DD72C62280DC23600117946 /* OWPostId+EncodeDecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C61280DC23600117946 /* OWPostId+EncodeDecode.swift */; };
 		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
 		3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */; };
@@ -763,6 +764,7 @@
 		3DD72C77280EF99300117946 /* OWResponseLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWResponseLogger.swift; sourceTree = "<group>"; };
 		3DD72C79280EFA0200117946 /* OWNetworkAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkAPI.swift; sourceTree = "<group>"; };
 		3DD72C7C280F053A00117946 /* OWSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSession.swift; sourceTree = "<group>"; };
+		3DD72C61280DC23600117946 /* OWPostId+EncodeDecode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWPostId+EncodeDecode.swift"; sourceTree = "<group>"; };
 		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
 		3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSharedServicesProvider.swift; sourceTree = "<group>"; };
@@ -1924,6 +1926,7 @@
 				3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */,
 				3D20A35927A96915003F8513 /* TableView+Registration.swift */,
 				3D20A35B27A975DA003F8513 /* UIView+SemanticAttribute.swift */,
+				3DD72C61280DC23600117946 /* OWPostId+EncodeDecode.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -3225,6 +3228,7 @@
 				44F247A52379B23100B36F12 /* OWBaseScrollView.swift in Sources */,
 				3D20A39127B0219A003F8513 /* OWConstraintRelatableTarget.swift in Sources */,
 				4454188023685154001D0ED0 /* SPImagesFacade.swift in Sources */,
+				3DD72C62280DC23600117946 /* OWPostId+EncodeDecode.swift in Sources */,
 				16A62B6826662F6C00DFE9B7 /* OWCustomUIDelegate.swift in Sources */,
 				445418B223685154001D0ED0 /* UIImageView+SPExtensions.swift in Sources */,
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
