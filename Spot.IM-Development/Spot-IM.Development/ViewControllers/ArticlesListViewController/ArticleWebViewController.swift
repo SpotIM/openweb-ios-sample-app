@@ -39,7 +39,14 @@ internal final class ArticleWebViewController: UIViewController {
     let shouldShowOpenCommentButton:Bool
     let shouldPresentFullConInNewNavStack:Bool
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
-    var callbacks: SPViewActionsCallbacks
+    let callbacks: SPViewActionsCallbacks = { type, source, postId in
+        switch type {
+        case .articleHeaderPressed:
+            print("[" + source.description + "] header tapped for postId: " + postId)
+        default:
+            break
+        }
+    }
     
     init(spotId: String, postId: String, metadata: SpotImArticleMetadata , url: String, authenticationControllerId: String) {
         self.spotId = spotId
@@ -50,15 +57,6 @@ internal final class ArticleWebViewController: UIViewController {
         self.shouldShowOpenFullConversationButton = UserDefaults.standard.bool(forKey: "shouldShowOpenFullConversation")
         self.shouldShowOpenCommentButton = UserDefaults.standard.bool(forKey: "shouldOpenComment")
         self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
-        
-        callbacks = { type, source, postId in
-            switch type {
-            case .articleHeaderPressed:
-                print("[" + source.description + "] header tapped for postId: " + postId)
-            default:
-                break
-            }
-        }
         
         super.init(nibName: nil, bundle: nil)
     }

@@ -381,17 +381,18 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     }
     
     private func setupObservers(for model: SPMainConversationModel, source: SPViewSourceType) {
+        let currentDisposeBag = DisposeBag()
         if source == .preConversation {
-            preConvDisposeBag = DisposeBag()
+            preConvDisposeBag = currentDisposeBag
         } else {
-            convDisposeBag = DisposeBag()
+            convDisposeBag = currentDisposeBag
         }
         model.actionCallback
             .subscribe( onNext: { [weak self] type in
                 guard let self = self, let postId = self.postId else { return }
                 self.viewActionsCallback?(type, source, postId)
             })
-            .disposed(by: source == .preConversation ? preConvDisposeBag : convDisposeBag)
+            .disposed(by: currentDisposeBag)
     }
     
     private func setupObservers(for model: SPCommentCreationModel) {
