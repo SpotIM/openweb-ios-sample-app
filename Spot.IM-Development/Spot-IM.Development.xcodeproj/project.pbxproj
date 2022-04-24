@@ -36,6 +36,7 @@
 		16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */; };
 		16229EDD27EA22DA000AA832 /* OWCommentVotingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16229EDC27EA22DA000AA832 /* OWCommentVotingModel.swift */; };
 		16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16670C6F25E68EEE00822D2D /* SPSSOData.swift */; };
+		166F796D281012BE009F45CE /* SPViewActionsCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166F796C281012BE009F45CE /* SPViewActionsCallbacks.swift */; };
 		168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */; };
 		169D58E227D11925009936F3 /* OWVotesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169D58E127D11924009936F3 /* OWVotesType.swift */; };
 		169D58E727D4E4E9009936F3 /* OWCommentActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169D58E627D4E4E9009936F3 /* OWCommentActionsViewModel.swift */; };
@@ -662,6 +663,7 @@
 		16103F77267A081400114A3E /* SPCommentCreationNewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentCreationNewHeaderView.swift; sourceTree = "<group>"; };
 		16229EDC27EA22DA000AA832 /* OWCommentVotingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentVotingModel.swift; sourceTree = "<group>"; };
 		16670C6F25E68EEE00822D2D /* SPSSOData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPSSOData.swift; sourceTree = "<group>"; };
+		166F796C281012BE009F45CE /* SPViewActionsCallbacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPViewActionsCallbacks.swift; sourceTree = "<group>"; };
 		169D58E127D11924009936F3 /* OWVotesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWVotesType.swift; sourceTree = "<group>"; };
 		169D58E627D4E4E9009936F3 /* OWCommentActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentActionsViewModel.swift; sourceTree = "<group>"; };
 		169D58E827D4EEC0009936F3 /* OWCommentVotingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentVotingViewModel.swift; sourceTree = "<group>"; };
@@ -1259,6 +1261,7 @@
 			children = (
 				3DE0FE3A27D6481B0097B17B /* Infra - Currently not in used */,
 				6D22A40A23AF79D800DCE08A /* SpotIm.swift */,
+				166F796C281012BE009F45CE /* SPViewActionsCallbacks.swift */,
 			);
 			path = SdkAPI;
 			sourceTree = "<group>";
@@ -3143,6 +3146,7 @@
 				3D20A36927B01078003F8513 /* OWConstraintConfig.swift in Sources */,
 				3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
+				166F796D281012BE009F45CE /* SPViewActionsCallbacks.swift in Sources */,
 				441165A92379720500B781F3 /* SPCloudinaryRequests.swift in Sources */,
 				44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */,
 				6D4E56B123A178DF005B79B6 /* UIView+Animations.swift in Sources */,
