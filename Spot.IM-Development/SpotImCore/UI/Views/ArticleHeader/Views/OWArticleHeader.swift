@@ -57,9 +57,11 @@ internal final class OWArticleHeader: OWBaseView {
         let tapGesture = UITapGestureRecognizer()
         self.addGestureRecognizer(tapGesture)
         
-        tapGesture.rx.event.bind(onNext: { [weak self] recognizer in
-            self?.viewModel.inputs.tap.onNext()
-        }).disposed(by: disposeBag)
+        tapGesture.rx.event.map { _ in
+            return
+        }
+        .bind(to: viewModel.inputs.tap)
+        .disposed(by: disposeBag)
     }
     
     // Handle dark mode \ light mode change
