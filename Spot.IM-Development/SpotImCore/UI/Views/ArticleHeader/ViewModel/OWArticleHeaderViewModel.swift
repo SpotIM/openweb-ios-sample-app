@@ -48,7 +48,7 @@ class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
     var tap = PublishSubject<Void>()
     
     var headerTapped: Observable<Void> {
-        return tap.asObserver()
+        return tap.asObservable()
     }
     
     var conversationImageType: Observable<OWImageType> {
