@@ -9,6 +9,7 @@
 
 import UIKit
 import SafariServices
+import RxSwift
 
 public protocol SpotImSDKNavigationDelegate: AnyObject {
     func controllerForSSOFlow() -> UIViewController
@@ -114,6 +115,11 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
+    private var viewActionsCallback: SPViewActionsCallbacks?
+    private var preConvDisposeBag = DisposeBag()
+    private var convDisposeBag = DisposeBag()
+    private var createCommentDisposeBag = DisposeBag()
+    
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
         sdkNavigationDelegate = delegate
@@ -158,25 +164,30 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                                           articleMetadata: SpotImArticleMetadata,
                                           numberOfPreLoadedMessages: Int = 2,
                                           navigationController: UINavigationController,
+                                          callbacks: SPViewActionsCallbacks? = nil,
                                           completion: @escaping (UIViewController) -> Void)
     {
+        self.viewActionsCallback = callbacks
         let encodedPostId = encodePostId(postId: postId)
+        self.postId = encodedPostId
         containerViewController = navigationController
         let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.setupObservers(for: conversationModel, source: .preConversation)
         self.conversationModel = conversationModel
         buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
     }
     
-    public func openFullConversationViewController(postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
+    public func openFullConversationViewController(postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, callbacks: SPViewActionsCallbacks? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
         switch presentationalMode {
         case .present(let viewController):
-            presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
+            presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, callbacks: callbacks, completion: completion)
         case .push(let navigationController):
-            pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
+            pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, callbacks: callbacks, completion: completion)
         }
     }
     
-    public func openNewCommentViewController(postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode, completion: SPOpenNewCommentCompletionHandler? = nil) {
+    public func openNewCommentViewController(postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode, callbacks: SPViewActionsCallbacks? = nil, completion: SPOpenNewCommentCompletionHandler? = nil) {
+        self.viewActionsCallback = callbacks
         switch fullConversationPresentationalMode {
         case .present(let viewController):
             // create nav controller in code to be the container for conversationController
@@ -231,8 +242,9 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     }
     
     // DEPRECATED - please use `openFullConversationViewController` instead
-    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil)
+    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, callbacks: SPViewActionsCallbacks? = nil, completion: SPShowFullConversationCompletionHandler? = nil)
     {
+        self.viewActionsCallback = callbacks
         self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
             switch result {
             case .success( _):
@@ -250,8 +262,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     }
     
     // DEPRECATED - please use `openFullConversationViewController` instead
-    public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil) {
-        
+    public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, callbacks: SPViewActionsCallbacks? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
+        self.viewActionsCallback = callbacks
         // create nav controller in code to be the container for conversationController
         let navController = createNavController()
         self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
@@ -273,8 +285,10 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     private func prepareAndLoadConversation(containerViewController: UIViewController?, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !self.isLoadingConversation else { return }
         let encodedPostId = encodePostId(postId: postId)
+        self.postId = encodedPostId
         self.containerViewController = containerViewController
         let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
+        self.setupObservers(for: conversationModel, source: .conversation)
         self.conversationModel = conversationModel
         self.loadConversation(model: conversationModel, completion: completion)
     }
@@ -364,6 +378,30 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         realTimeService.delegate = conversationModel
         self.realTimeService = realTimeService
         return conversationModel
+    }
+    
+    private func setupObservers(for model: SPMainConversationModel, source: SPViewSourceType) {
+        if source == .preConversation {
+            preConvDisposeBag = DisposeBag()
+        } else {
+            convDisposeBag = DisposeBag()
+        }
+        model.actionCallback
+            .subscribe( onNext: { [weak self] type in
+                guard let self = self, let postId = self.postId else { return }
+                self.viewActionsCallback?(type, source, postId)
+            })
+            .disposed(by: source == .preConversation ? preConvDisposeBag : convDisposeBag)
+    }
+    
+    private func setupObservers(for model: SPCommentCreationModel) {
+        createCommentDisposeBag = DisposeBag()
+        model.actionCallback
+            .subscribe( onNext: { [weak self] type in
+                guard let self = self, let postId = self.postId else { return }
+                self.viewActionsCallback?(type, .createComment, postId)
+            })
+            .disposed(by: createCommentDisposeBag)
     }
     
     private func loadConversation(model:SPMainConversationModel, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
@@ -562,12 +600,14 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     }
     
     internal func getCommentCreationModel(with dto: SPCommentCreationDTO, articleMetadata : SpotImArticleMetadata) -> SPCommentCreationModel {
-        return SPCommentCreationModel(
+        let model = SPCommentCreationModel(
             commentCreationDTO: dto,
             updater: conversationUpdater,
             imageProvider: imageProvider,
             articleMetadate: articleMetadata
         )
+        self.setupObservers(for: model)
+        return model
     }
 }
 
