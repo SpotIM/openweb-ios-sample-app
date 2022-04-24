@@ -13,6 +13,7 @@ protocol OWSharedServicesProviding {
     func themeStyleService() -> OWThemeStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<String, String>
+    func netwokAPI() -> OWNetworkAPI
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -36,6 +37,15 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCacheService<String, String>()
     }()
     
+    fileprivate lazy var _networkAPI: OWNetworkAPI = {
+        /*
+         By default we create the network once.
+         If we will want to "reset" everything when a new spotIfy provided, we can re-create the network entirely.
+         Note that the environment is being set in the `OWEnvironment` class which we can set in an earlier step by some
+         environment variable / flag in Xcode scheme configuration.
+        */
+        return OWNetworkAPI(environment: OWEnvironment.currentEnvironment)
+    }()
     
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
@@ -47,5 +57,9 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func commentsInMemoryCacheService() -> OWCacheService<String, String> {
         return _commentsInMemoryCacheService
+    }
+    
+    func netwokAPI() -> OWNetworkAPI {
+        return _networkAPI
     }
 }
