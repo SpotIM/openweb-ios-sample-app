@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 struct RankActionDataModel {
     
@@ -52,6 +53,15 @@ final class SPMainConversationModel {
     private(set) var realtimeViewType: RealTimeViewType?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: OWAbTests
+    
+    var actionCallback: Observable<SPViewActionCallbackType> {
+        let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
+            .map { _ -> SPViewActionCallbackType in
+                return .articleHeaderPressed
+            }
+        
+        return Observable.merge([headerTappedObservable])
+    }
     
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
     // Will refactor once we will move to MVVM
