@@ -295,11 +295,14 @@ public class SpotIm {
      - Parameter conversationIds: The conversations to get counters for
      - Parameter completion: A completion handler to receive the  conversation counter
      */
-    public static func getConversationCounters(conversationIds: [String], completion: @escaping ((SpotImResult<[String:SpotImConversationCounters]>) -> Void)) {
+    public static func getConversationCounters(conversationIds: [String], completion: @escaping ((SpotImResult<[String: SpotImConversationCounters]>) -> Void)) {
         execute(call: { _ in
-            conversationDataProvider.commnetsCounters(conversationIds: conversationIds).done { countersData in
-                let counters = Dictionary(uniqueKeysWithValues: countersData.map { key, value in
-                    (key, SpotImConversationCounters(comments: value.comments, replies: value.replies))
+            let encodedConversationIds = conversationIds.map { ($0 as OWPostId).encoded }
+            conversationDataProvider.commnetsCounters(conversationIds: encodedConversationIds).done { countersData in
+                let counters = Dictionary<String, SpotImConversationCounters>(uniqueKeysWithValues: countersData.map { key, value in
+                    let decodedConversationId = (key as OWPostId).decoded
+                    let conversationCounter = SpotImConversationCounters(comments: value.comments, replies: value.replies)
+                    return (decodedConversationId, conversationCounter)
                 })
 
                 completion(SpotImResult.success(counters))
