@@ -14,7 +14,7 @@ protocol OWNetworkAPIProtocol {
     func request(for endpoint: OWEndpoint) -> OWURLRequestConfiguration
 }
 
-struct OWResponseType<T> {
+struct OWNetworkResponseType<T> {
     var progress: PublishSubject<Progress>
     var response: Observable<T>
 }
@@ -76,7 +76,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
     }
 
     @discardableResult
-    func performRequest<T: Decodable>(route: OWURLRequestConfiguration, decoder: JSONDecoder = JSONDecoder()) -> OWResponseType<T> {
+    func performRequest<T: Decodable>(route: OWURLRequestConfiguration, decoder: JSONDecoder = JSONDecoder()) -> OWNetworkResponseType<T> {
         let progress = PublishSubject<Progress>()
 
         let request = requestAfterPerformingMiddlewares(with: route.urlRequest!)
@@ -105,6 +105,6 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
             }
         }
 
-        return OWResponseType<T>(progress: progress, response: response)
+        return OWNetworkResponseType<T>(progress: progress, response: response)
     }
 }
