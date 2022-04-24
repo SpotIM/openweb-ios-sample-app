@@ -168,13 +168,13 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                                           completion: @escaping (UIViewController) -> Void)
     {
         self.viewActionsCallback = callbacks
-        let encodedPostId = encodePostId(postId: postId)
-        self.postId = encodedPostId
+        self.postId = (postId as OWPostId).encoded
         containerViewController = navigationController
-        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.setupObservers(for: conversationModel, source: .preConversation)
-        self.conversationModel = conversationModel
-        buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
+        if let conversationModel = self.setupConversationDataProviderAndServices( articleMetadata: articleMetadata) {
+            self.setupObservers(for: conversationModel, source: .preConversation)
+            self.conversationModel = conversationModel
+            buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
+        }
     }
     
     public func openFullConversationViewController(postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, callbacks: SPViewActionsCallbacks? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
@@ -284,13 +284,13 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     private func prepareAndLoadConversation(containerViewController: UIViewController?, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !self.isLoadingConversation else { return }
-        let encodedPostId = encodePostId(postId: postId)
-        self.postId = encodedPostId
+        self.postId = (postId as OWPostId).encoded
         self.containerViewController = containerViewController
-        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.setupObservers(for: conversationModel, source: .conversation)
-        self.conversationModel = conversationModel
-        self.loadConversation(model: conversationModel, completion: completion)
+        if let conversationModel = self.setupConversationDataProviderAndServices( articleMetadata: articleMetadata) {
+            self.setupObservers(for: conversationModel, source: .conversation)
+            self.conversationModel = conversationModel
+            self.loadConversation(model: conversationModel, completion: completion)
+        }
     }
     
     private func showConversationInternal(selectedCommentId: String?, animated: Bool) {
@@ -356,7 +356,9 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
+    private func setupConversationDataProviderAndServices(articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel? {
+        guard let postId = postId else { return nil }
+
         SPAnalyticsHolder.default.prepareForNewPage(customBIData: articleMetadata.customBIData)
         
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
@@ -429,16 +431,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 }
             }
         )
-    }
-    
-    private func encodePostId(postId: String) -> String {
-        let result = postId.replacingOccurrences(of: "urn:uri:base64:", with: "urn$3Auri$3Abase64$3A")
-            .replacingOccurrences(of: ",", with: ";")
-            .replacingOccurrences(of: "_", with: "$")
-            .replacingOccurrences(of: ":", with: "~")
-            .replacingOccurrences(of: " ", with: "")
-            .replacingOccurrences(of: "/", with: "$2F")
-        return result
     }
     
     private func startFlow(with controller: SPMainConversationViewController, animated: Bool = true) {
