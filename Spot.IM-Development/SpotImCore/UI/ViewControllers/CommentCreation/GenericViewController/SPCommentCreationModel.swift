@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 let commentCacheMinCount: Int = 10
 
@@ -29,6 +30,15 @@ class SPCommentCreationModel {
     
     let avatarViewVM: OWAvatarViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
+    
+    var actionCallback: Observable<SPViewActionCallbackType> {
+        let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
+            .map { _ -> SPViewActionCallbackType in
+                return .articleHeaderPressed
+            }
+        
+        return Observable.merge([headerTappedObservable])
+    }
     
     init(commentCreationDTO: SPCommentCreationDTO,
          updater: SPCommentUpdater,

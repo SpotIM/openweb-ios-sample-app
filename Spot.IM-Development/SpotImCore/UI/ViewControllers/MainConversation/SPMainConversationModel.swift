@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 struct RankActionDataModel {
     
@@ -52,6 +53,21 @@ final class SPMainConversationModel {
     private(set) var realtimeViewType: RealTimeViewType?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: OWAbTests
+    
+    // This is an ungly soultion until we will split this model to two proper VMs
+    // By defualt this model serves the preConversation.
+    // Each of the consuming VC will set this variable when presenting on screen
+    var currentBindedVC: SPViewSourceType = .preConversation
+    
+    var actionCallback: Observable<(SPViewActionCallbackType, SPViewSourceType)> {
+        let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
+            .map { _ -> SPViewActionCallbackType in
+                return .articleHeaderPressed
+            }
+        
+        return Observable.merge([headerTappedObservable])
+            .map { ($0, self.currentBindedVC) }
+    }
     
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
     // Will refactor once we will move to MVVM
