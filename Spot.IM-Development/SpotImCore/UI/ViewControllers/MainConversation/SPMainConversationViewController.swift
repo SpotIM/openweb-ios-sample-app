@@ -232,10 +232,11 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         checkAdsAvailability()
 
         model.delegates.add(delegate: self)
+        model.currentBindedVC = .conversation
 
         do {
             let typingCount = try model.typingCount()
-            let newCommentsCount = try model.newMessagesCount()
+            let newCommentsCount = model.newMessagesCount()
             totalTypingCountDidUpdate(count: typingCount, newCommentsCount: newCommentsCount)
         } catch {
             if let realtimeError = error as? RealTimeError {
