@@ -116,8 +116,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
     private var viewActionsCallback: SPViewActionsCallbacks?
-    private var preConvDisposeBag = DisposeBag()
-    private var convDisposeBag = DisposeBag()
+    private var mainConversationModelDisposeBag = DisposeBag()
     private var createCommentDisposeBag = DisposeBag()
     
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
@@ -171,7 +170,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         self.postId = (postId as OWPostId).encoded
         containerViewController = navigationController
         if let conversationModel = self.setupConversationDataProviderAndServices( articleMetadata: articleMetadata) {
-            self.setupObservers(for: conversationModel, source: .preConversation)
+            self.setupObservers(for: conversationModel)
             self.conversationModel = conversationModel
             buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
         }
@@ -287,7 +286,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         self.postId = (postId as OWPostId).encoded
         self.containerViewController = containerViewController
         if let conversationModel = self.setupConversationDataProviderAndServices( articleMetadata: articleMetadata) {
-            self.setupObservers(for: conversationModel, source: .conversation)
+            self.setupObservers(for: conversationModel)
             self.conversationModel = conversationModel
             self.loadConversation(model: conversationModel, completion: completion)
         }
@@ -382,19 +381,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         return conversationModel
     }
     
-    private func setupObservers(for model: SPMainConversationModel, source: SPViewSourceType) {
-        let currentDisposeBag = DisposeBag()
-        if source == .preConversation {
-            preConvDisposeBag = currentDisposeBag
-        } else {
-            convDisposeBag = currentDisposeBag
-        }
+    private func setupObservers(for model: SPMainConversationModel) {
+        mainConversationModelDisposeBag = DisposeBag()
         model.actionCallback
-            .subscribe( onNext: { [weak self] type in
+            .subscribe( onNext: { [weak self] (type, source) in
                 guard let self = self, let postId = self.postId else { return }
                 self.viewActionsCallback?(type, source, postId)
             })
-            .disposed(by: currentDisposeBag)
+            .disposed(by: mainConversationModelDisposeBag)
     }
     
     private func setupObservers(for model: SPCommentCreationModel) {
