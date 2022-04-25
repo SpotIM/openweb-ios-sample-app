@@ -138,6 +138,12 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        model.currentBindedVC = .preConversation
+    }
+    
     @objc
     public func reactNativeShowMoreComments() {
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
