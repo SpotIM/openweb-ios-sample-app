@@ -161,8 +161,8 @@ internal struct CommentViewModel {
             
         updateCommentActionsVM()
         if let status = comment.status,
-           comment.userId == SPUserSessionHolder.session.user?.id,
-           !comment.published {
+           comment.userId == SPUserSessionHolder.session.user?.id {
+//           !comment.published {
             showStatusIndicator = true
             statusIndicationVM.inputs.configure(with: status, containerWidth: textWidth())
         } else {
