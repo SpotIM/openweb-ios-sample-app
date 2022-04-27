@@ -106,13 +106,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal func reloadConversation() {
         guard !model.dataSource.isLoading else { return }
         let mode = model.sortOption
-        OWLogger.verbose("FirstComment: Calling conversation API")
+        OWLoggerOld.verbose("FirstComment: Calling conversation API")
         model.dataSource.conversation(
             mode,
             page: .first,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
-                OWLogger.verbose("FirstComment: API did finish with \(success)")
+                OWLoggerOld.verbose("FirstComment: API did finish with \(success)")
                 self.handleConversationReloaded(success: success, error: error)
             }
         )
@@ -193,7 +193,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
                 SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
             }
             .catch { error in
-                OWLogger.verbose("Failed to get single use token: \(error)")
+                OWLoggerOld.verbose("Failed to get single use token: \(error)")
             }
         } else {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
@@ -535,7 +535,7 @@ extension SPBaseConversationViewController: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        OWLogger.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
+        OWLoggerOld.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
         if shouldShowLoader(forRowAt: indexPath) {
             let loaderCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPLoaderCell.self, for: indexPath)
             loaderCell.startAnimating()
@@ -882,7 +882,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func localCommentWasCreated() {
-        OWLogger.verbose("FirstComment:")
+        OWLoggerOld.verbose("FirstComment:")
         model.handlePendingComment()
     }
 

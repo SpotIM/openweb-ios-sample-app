@@ -215,7 +215,7 @@ class SPCommentCreationModel {
             return false
         } else if !Bundle.main.hasCameraUsageDescription ||
                     !Bundle.main.hasPhotoLibraryUsageDescription {
-            OWLogger.warn("Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file")
+            OWLoggerOld.warn("Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file")
             return false
         } else {
             return true
