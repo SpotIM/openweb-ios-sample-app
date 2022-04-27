@@ -318,14 +318,14 @@ class SPCommentCreationViewController: SPBaseViewController,
             [weak self] responseData in
             guard let self = self else { return }
 
-            if responseData.status == .block || !responseData.published {
+            /*if responseData.status == .block || !responseData.published {
                 switch responseData.content?.first {
                 case .text(let text):
                     self.delegate?.commentReplyDidBlock(with: text.text)
                 default: break
                 }
                 
-            } else if responseData.edited {
+            } else*/ if responseData.edited {
                 self.delegate?.commentReplyDidEdit(with: responseData)
             } else {
                 self.delegate?.commentReplyDidCreate(responseData)
