@@ -46,7 +46,6 @@ internal protocol SPConversationsDataProvider {
                   completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void)
 
     func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]>
-    func commentStatus(conversationId: String, commentId: String) -> Promise<[String: String]>
     func conversationAsync(postId: String, articleUrl: String)
     func copy(modifyingOffset newOffset: Int?, hasNext: Bool?) -> SPConversationsDataProvider
 }
@@ -190,40 +189,6 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
                     seal.reject(error)
-                }
-            }
-        }
-    }
-    
-    internal func commentStatus(conversationId: String, commentId: String) -> Promise<[String: String]> {
-        return Promise { seal in
-            let spRequest = SPConversationRequest.commentStatus(commentId)
-            guard let spotKey = SPClientSettings.main.spotKey else {
-                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-                seal.reject(SPNetworkError.custom(message))
-                return
-            }
-            
-            let headers = HTTPHeaders.basic(with: spotKey, postId: conversationId)
-
-            manager.execute(
-                request: spRequest,
-                parser: OWDecodableParser<[String:String]>(),
-                headers: headers
-            ) { (result, response) in
-                switch result {
-                case .success(let counters):
-                    print(counters)
-                case .failure(let error):
-                    print(error)
-//                    let rawReport = RawReportModel(
-//                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-//                        parameters: parameters,
-//                        errorData: response.data,
-//                        errorMessage: error.localizedDescription
-//                    )
-//                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-//                    seal.reject(error)
                 }
             }
         }
