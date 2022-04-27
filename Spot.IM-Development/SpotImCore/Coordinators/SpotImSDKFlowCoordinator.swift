@@ -380,7 +380,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     completion(.failure(error))
                 } else if success == false {
                     completion(.failure(SPNetworkError.requestFailed))
-                    OWLogger.error("Load conversation request type is not `success`")
+                    OWLoggerOld.error("Load conversation request type is not `success`")
                 } else {
                     
                     let messageCount = model.dataSource.messageCount
@@ -435,10 +435,10 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             controller.title = navigationItemTitleText
         }
         
-        OWLogger.verbose("FirstComment: localCommentReplayDidCreate SET")
+        OWLoggerOld.verbose("FirstComment: localCommentReplayDidCreate SET")
         localCommentReplyDidCreate = { comment in
-            OWLogger.verbose("FirstComment: localCommentReplayDidCreate CALLED")
-            OWLogger.verbose("FirstComment: setting the pending comment to the model")
+            OWLoggerOld.verbose("FirstComment: localCommentReplayDidCreate CALLED")
+            OWLoggerOld.verbose("FirstComment: setting the pending comment to the model")
             model.pendingComment = comment
         }
         commentReplyCreationBlocked = { commentText in
@@ -624,9 +624,9 @@ extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     internal func commentReplyDidCreate(_ comment: SPComment) {
-        OWLogger.verbose("FirstComment: Did received comment in delegate")
+        OWLoggerOld.verbose("FirstComment: Did received comment in delegate")
         if let model = conversationModel, shouldAddMain {
-            OWLogger.verbose("FirstComment: Adding main conversation screen before we continue")
+            OWLoggerOld.verbose("FirstComment: Adding main conversation screen before we continue")
             insertMainConversationToNavigation(model)
         }
         localCommentReplyDidCreate?(comment)

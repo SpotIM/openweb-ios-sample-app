@@ -14,6 +14,7 @@ protocol OWSharedServicesProviding {
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<String, String>
     func netwokAPI() -> OWNetworkAPI
+    func logger() -> OWLogger
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -47,6 +48,12 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWNetworkAPI(environment: OWEnvironment.currentEnvironment)
     }()
     
+    fileprivate lazy var _logger: OWLogger = {
+        let logger = OWLogger(logLevel: .verbose, logMethod: .console)
+        logger.log(level: .verbose, "Logger initalized")
+        return logger
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -61,5 +68,9 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func netwokAPI() -> OWNetworkAPI {
         return _networkAPI
+    }
+    
+    func logger() -> OWLogger {
+        return _logger
     }
 }
