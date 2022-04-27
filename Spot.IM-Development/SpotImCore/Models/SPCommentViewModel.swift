@@ -36,7 +36,7 @@ internal struct CommentViewModel {
 
     private (set) var showsOnline: Bool = false
     var hasOffset: Bool = false
-    var isDeleted: Bool = false
+    private (set) var isDeleted: Bool = false
     var isReported: Bool = false
     var isEdited: Bool = false
     // helper property for array cleaning
@@ -161,7 +161,8 @@ internal struct CommentViewModel {
             
         updateCommentActionsVM()
         if let status = comment.status,
-           comment.userId == SPUserSessionHolder.session.user?.id {
+           comment.userId == SPUserSessionHolder.session.user?.id,
+           !comment.deleted {
 //           !comment.published {
             showStatusIndicator = true
             statusIndicationVM.inputs.configure(with: status, containerWidth: textWidth())
@@ -299,6 +300,14 @@ internal struct CommentViewModel {
     func updateCommentActionsVM() {
         let model = OWCommentVotingModel(rankUpCount: rankUp, rankDownCount: rankDown, rankedByUserValue: rankedByUser)
         self.commentActionsVM.inputs.configure(with: model)
+    }
+    
+    mutating func setIsDeleted(isDeleted: Bool) {
+        self.isDeleted = isDeleted
+        // hide status indicator after deleting a comment
+        if isDeleted {
+            self.showStatusIndicator = false
+        }
     }
 
     private enum Theme {
