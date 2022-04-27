@@ -51,7 +51,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
             .map {
                 var image: UIImage?
                 switch($0) {
-                case .reject:
+                case .reject, .block:
                     image = UIImage(spNamed: "rejectIcon")
                 case .requireApproval, .pending:
                     image = UIImage(spNamed: "pendingIcon")
@@ -95,7 +95,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     fileprivate func getIndicationText(status: SPComment.CommentStatus) -> String {
         let isStrictMode = false // TODO - should get it from 'moderation/comment/' call
         switch(status) {
-        case .reject:
+        case .reject, .block:
             return LocalizationManager.localizedString(key: "Your comment has been rejected.")
         case .requireApproval, .pending:
             return isStrictMode ?
