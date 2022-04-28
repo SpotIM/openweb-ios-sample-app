@@ -45,7 +45,7 @@ public enum CustomizableView {
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
-    func customizeView(view: CustomizableView, isDarkMode: Bool)
+    func customizeView(view: CustomizableView, isDarkMode: Bool, postId: String)
 }
 
 internal protocol SPSafariWebPageDelegate: AnyObject {
@@ -706,43 +706,49 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {
+    private func customizeView(_ view: CustomizableView) {
+        guard let postId = self.postId else { return }
+        customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode, postId: postId)
+    }
+    
     func customizeShowCommentsButton(button: SPShowCommentsButton) {
-        customUIDelegate?.customizeView(view: .showCommentsButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.showCommentsButton(button: button))
     }
     
     func customizeLoginPromptTextView(textView: UITextView) {
-        customUIDelegate?.customizeView(view: .loginPrompt(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.loginPrompt(textView: textView))
     }
     func customizeCommunityQuestionTextView(textView: UITextView) {
-        customUIDelegate?.customizeView(view: .communityQuestion(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.communityQuestion(textView: textView))
     }
     func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool) {
         let view: CustomizableView = isPreConversation ? .sayControlInPreConversation(labelContainer: labelContainer, label: label) : .sayControlInMainConversation(labelContainer: labelContainer, label: label)
-        customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        
+        self.customizeView(view)
     }
     func customizeConversationFooter(view: UIView) {
-        customUIDelegate?.customizeView(view: .conversationFooter(view: view), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.conversationFooter(view: view))
     }
     func customizeCommunityGuidelines(textView: UITextView) {
-        customUIDelegate?.customizeView(view: .communityGuidelines(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.communityGuidelines(textView: textView))
     }
     func customizeNavigationItemTitle(textView: UITextView) {
         guard SpotIm.enableCustomNavigationItemTitle else { return }
-        customUIDelegate?.customizeView(view: .navigationItemTitle(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.navigationItemTitle(textView: textView))
     }
     
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
-        customUIDelegate?.customizeView(view: .preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel), isDarkMode:  SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel))
     }
     func customizeCommentCreationActionButton(button: OWBaseButton) {
-        customUIDelegate?.customizeView(view: .commentCreationActionButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.commentCreationActionButton(button: button))
     }
     
     func customizeReadOnlyLabel(label: UILabel) {
-        customUIDelegate?.customizeView(view: .readOnlyLabel(label: label), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.readOnlyLabel(label: label))
     }
     func customizeEmptyStateReadOnlyLabel(label: UILabel) {
-        customUIDelegate?.customizeView(view: .emptyStateReadOnlyLabel(label: label), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.emptyStateReadOnlyLabel(label: label))
     }
 }
 
