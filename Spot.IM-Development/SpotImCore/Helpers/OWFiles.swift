@@ -31,6 +31,13 @@ class OWFiles {
     static func write(text: String, filename: String, folder: String?, subfolder: String?) -> Bool {
         // Path before the file
         guard let url = url(forFolder: folder, subfolder: subfolder) else { return false }
+        
+        //Create directory if needed
+        if let folder = folder, !FileManager.default.fileExists(atPath: url.path) {
+            let dirCreationResult = createFolder(folder, subfolder: subfolder)
+            if !dirCreationResult { return false }
+        }
+        
         // File url
         let fileUrl = url.appendingPathComponent(filename)
         do {
@@ -86,12 +93,24 @@ fileprivate extension OWFiles {
         guard var url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         // Adding folder and subfoler if exist
         if let folder = folder {
-            url = url.appendingPathComponent("/\(folder)")
+            url = url.appendingPathComponent("\(folder)/")
             // Adding subfolder only if folder exist
             if let subfolder = subfolder {
-                url = url.appendingPathComponent("/\(subfolder)")
+                url = url.appendingPathComponent("\(subfolder)/")
             }
         }
         return url
+    }
+    
+    static func createFolder(_ folder: String, subfolder: String?, withIntermediateDirectories: Bool = true) -> Bool {
+        guard let url = url(forFolder: folder, subfolder: subfolder) else { return false }
+        do {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: withIntermediateDirectories, attributes: nil)
+            return true
+        }
+        catch {
+            // Just return false
+            return false
+        }
     }
 }
