@@ -109,6 +109,7 @@
 		3D20A39727B022D7003F8513 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39627B022D7003F8513 /* UIView+Extensions.swift */; };
 		3D20A39927B0243D003F8513 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39827B0243D003F8513 /* Debugging.swift */; };
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
+		3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9C5825281AF64F002D0FCB /* OWFiles.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
 		3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */; };
@@ -753,6 +754,7 @@
 		3D20A39827B0243D003F8513 /* Debugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
 		3D20A39A27B0258D003F8513 /* Typealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
+		3D9C5825281AF64F002D0FCB /* OWFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFiles.swift; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
 		3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpotImReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
@@ -1895,6 +1897,7 @@
 				16BD5F7E2709F16000066505 /* SPUIWindow.swift */,
 				441165A22375C3E700B781F3 /* OWResult.swift */,
 				449F5F73237C5D7300F81EA3 /* OWMulticastDelegate.swift */,
+				3D9C5825281AF64F002D0FCB /* OWFiles.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -3120,6 +3123,7 @@
 				440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */,
 				4454181C23685144001D0ED0 /* MessageContainerView.swift in Sources */,
 				4454181523685144001D0ED0 /* OWArticleHeader.swift in Sources */,
+				3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */,
 				4454182123685144001D0ED0 /* SPCommentTextInputView.swift in Sources */,
 				440E0DB3237D7E3200757554 /* TotalTypingIndicationView.swift in Sources */,
 				3D20A39527B022B8003F8513 /* OWConstraintViewDSL.swift in Sources */,
