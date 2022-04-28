@@ -12,9 +12,11 @@ import Alamofire
 
 protocol OWNetworkAPIProtocol {
     func request(for endpoint: OWEndpoint) -> OWURLRequestConfiguration
+    
+    var analytics: OWAnalyticsAPI { get }
 }
 
-struct OWNetworkResponseType<T> {
+struct OWNetworkResponse<T> {
     var progress: PublishSubject<Progress>
     var response: Observable<T>
 }
@@ -37,7 +39,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
     
     init(environment: OWEnvironmentProtocol,
          middlewares: [OWMiddleware] = defaultMiddlewares,
-         queueName: String = "OpenWebNetworkQueue",
+         queueName: String = "OpenWebSDKNetworkQueue",
          queuePriority: DispatchQoS = .userInteractive,
          session: OWSession = OWSession.default) {
 
@@ -76,7 +78,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
     }
 
     @discardableResult
-    func performRequest<T: Decodable>(route: OWURLRequestConfiguration, decoder: JSONDecoder = JSONDecoder()) -> OWNetworkResponseType<T> {
+    func performRequest<T: Decodable>(route: OWURLRequestConfiguration, decoder: JSONDecoder = JSONDecoder()) -> OWNetworkResponse<T> {
         let progress = PublishSubject<Progress>()
 
         let request = requestAfterPerformingMiddlewares(with: route.urlRequest!)
@@ -105,6 +107,6 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
             }
         }
 
-        return OWNetworkResponseType<T>(progress: progress, response: response)
+        return OWNetworkResponse<T>(progress: progress, response: response)
     }
 }
