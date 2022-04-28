@@ -54,7 +54,20 @@ enum OWLogLevel {
 }
 
 enum OWLogMethod {
-    case nsLog, osLog, file
+    case nsLog, osLog, file(maxFilesNumber: Int)
+}
+
+extension OWLogMethod: Hashable {
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case .nsLog:
+            return hasher.combine(1)
+        case .osLog:
+            return hasher.combine(2)
+        case .file(_):
+            return hasher.combine(3)
+        }
+    }
 }
 
 class OWLogger {
@@ -63,6 +76,9 @@ class OWLogger {
         static let logFileName = "OpenWeb_SDK_log"
         static let failedToWriteLogFileDescription = "Failure when trying to write log file"
         static let failedToDeleteLogFileDescription = "Failure when trying to delete log file"
+        static let maxAllowedLogFilesNumber = 200
+        static let minAllowedLogFilesNumber = 1
+        static let defaultLogFilesNumber = 50
     }
     
     fileprivate let logLevel: OWLogLevel
@@ -73,7 +89,7 @@ class OWLogger {
     fileprivate let sdkVer: String
     fileprivate let hostBundleName: String
     fileprivate let maxItemsPerLogFile: Int
-    fileprivate let maxLogFilesNumber: Int
+    fileprivate var maxLogFilesNumber: Int
     fileprivate var logItems = [String]()
     // Non DI as those should be constant
     fileprivate let fileCreationQueue = DispatchQueue(label: "OpenWebSDKLoggerFileCreationQueue", qos: .background) // Serial queue
@@ -88,10 +104,10 @@ class OWLogger {
     }()
     
     init(logLevel: OWLogLevel, logMethods: [OWLogMethod],
-         queue: DispatchQueue = DispatchQueue(label: "OpenWebSDKLoggerQueue", qos: .utility, attributes: .concurrent),
+         queue: DispatchQueue = DispatchQueue(label: "OpenWebSDKLoggerQueue", qos: .utility),
          prefix: String = "OpenWebSDKLogger", sdkVer: String = (Bundle.spot.shortVersion ?? "na"),
          hostBundleName: String = Bundle.main.bundleName ?? "",
-         maxItemsPerLogFile: Int = 100, maxLogFilesNumber: Int = 50) {
+         maxItemsPerLogFile: Int = 100) {
         self.logLevel = logLevel
         self.logMethods = Array(Set(logMethods))
         self.queue = queue
@@ -99,10 +115,24 @@ class OWLogger {
         self.sdkVer = sdkVer
         self.hostBundleName = hostBundleName
         self.maxItemsPerLogFile = maxItemsPerLogFile
-        self.maxLogFilesNumber = maxLogFilesNumber
-
+        
         if self.logMethods.contains(.osLog) {
             osLoggers[prefix] = OSLog(subsystem: Metircs.osLoggersSubsystem, category: prefix)
+        }
+        
+        self.maxLogFilesNumber = Metircs.defaultLogFilesNumber
+        if self.logMethods.contains(where: { method in
+            if case .file(let maxFilesNum) = method {
+                self.maxLogFilesNumber = validateMaxNumberOfLogFiles(number: maxFilesNum)
+                return true
+            }
+            return false
+        }) {
+            // Make sure we don't have a greater log files which exist than the requested new max of log files
+            fileCreationQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.removeExceedingLogFilesIfNeeded()
+            }
         }
     }
     
@@ -141,7 +171,7 @@ fileprivate extension OWLogger {
                 let osLogger = osLoggers[prefix] ?? OSLog(subsystem: Metircs.osLoggersSubsystem, category: prefix)
                 let textToLog = format + text
                 os_log("%@", log: osLogger, type: level.osLevel, textToLog)
-            case .file:
+            case .file(_):
                 let textToLog = "\(time()) \(hostBundleName) \(prefix) \(format)\(text)"
                 // Write on the file creation serial queue
                 fileCreationQueue.async { [weak self] in
@@ -184,43 +214,79 @@ fileprivate extension OWLogger {
     }
     
     func removeOldestLogFileIfNeeded() {
-        let numberOfLogsWritten = OWFiles.numOfElements(folder: OWFiles.Metrics.OpenSDKWebFolder,
-                                                       subfolder: OWFiles.Metrics.LogsSubfolder)
+        let numberOfLogsWritten = retrieveNumberOfSavedLogs()
         if (numberOfLogsWritten >= maxLogFilesNumber) {
             //Remove oldest
-            let savedFilenames = OWFiles.elementsName(folder: OWFiles.Metrics.OpenSDKWebFolder,
-                                                   subfolder: OWFiles.Metrics.LogsSubfolder)
-            
-            // Creating mapper between the timestamp to the full name
-            var mapper = [Double: String]()
-            let characterSet = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: "."))
-            savedFilenames.forEach { filename in
-                // Removing file surfix first
-                var components = filename.components(separatedBy: ".")
-                guard components.count > 1 else { return }
-                components.removeLast()
-                let filenameWithoutSurfix = components.joined(separator: ".")
-                // Keeping only digits and decimal point
-                let timestampString = filenameWithoutSurfix.trimmingCharacters(in: characterSet.inverted)
-                guard let timestamp = Double(timestampString) else { return }
-                mapper[timestamp] = filename
-            }
-            
-            let timestamps = mapper.keys
-            
+            removeOldestLogFiles(numOfFilesToRemove: 1)
+        }
+    }
+    
+    func removeExceedingLogFilesIfNeeded() {
+        let numberOfLogsWritten = retrieveNumberOfSavedLogs()
+        if (numberOfLogsWritten > maxLogFilesNumber) {
+            //Remove exceeding
+            let numToRemove = numberOfLogsWritten - maxLogFilesNumber
+            removeOldestLogFiles(numOfFilesToRemove: numToRemove)
+        }
+    }
+    
+    func retrieveNumberOfSavedLogs() -> Int {
+        let numberOfElements = OWFiles.elementsName(folder: OWFiles.Metrics.OpenSDKWebFolder,
+                                                    subfolder: OWFiles.Metrics.LogsSubfolder)
+        
+        return numberOfElements
+            .filter { $0.contains(Metircs.logFileName) }
+            .count
+    }
+    
+    func removeOldestLogFiles(numOfFilesToRemove: Int) {
+        var savedFilenames = OWFiles.elementsName(folder: OWFiles.Metrics.OpenSDKWebFolder,
+                                                  subfolder: OWFiles.Metrics.LogsSubfolder)
+        
+        savedFilenames = savedFilenames
+            .filter { $0.contains(Metircs.logFileName) }
+        
+        // Creating mapper between the timestamp to the full name
+        var mapper = [Double: String]()
+        let characterSet = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: "."))
+        savedFilenames.forEach { filename in
+            // Removing file surfix first
+            var components = filename.components(separatedBy: ".")
+            guard components.count > 1 else { return }
+            components.removeLast()
+            let filenameWithoutSurfix = components.joined(separator: ".")
+            // Keeping only digits and decimal point
+            let timestampString = filenameWithoutSurfix.trimmingCharacters(in: characterSet.inverted)
+            guard let timestamp = Double(timestampString) else { return }
+            mapper[timestamp] = filename
+        }
+        
+        var timestamps = Array(mapper.keys)
+        timestamps.sort { $0 < $1 }
+        
+        // Taking the min number so we won't exceed boundary
+        let numberOfFilesToRemove = min(timestamps.count, numOfFilesToRemove)
+        for _ in 1...numberOfFilesToRemove {
             // Find filename of the oldest log
-            guard let oldestTimestamp = timestamps.min(),
-                    let filenameToRemove = mapper[oldestTimestamp] else { return }
+            guard let oldestTimestamp = timestamps.first,
+                  let filenameToRemove = mapper[oldestTimestamp] else { return }
             
             let result = OWFiles.remove(filename: filenameToRemove, folder: OWFiles.Metrics.OpenSDKWebFolder,
-                           subfolder: OWFiles.Metrics.LogsSubfolder)
+                                        subfolder: OWFiles.Metrics.LogsSubfolder)
             
             if !result {
                 // Failed to remove log file. NSlog for internal debugging
                 let info = "\(self.prefix) -\(OWLogLevel.error.description) ver \(sdkVer): "
                 NSLog(info + Metircs.failedToDeleteLogFileDescription)
             }
+            
+            timestamps.removeFirst()
         }
+    }
+    
+    func validateMaxNumberOfLogFiles(number: Int) -> Int {
+        guard number <= Metircs.maxAllowedLogFilesNumber && number >= Metircs.minAllowedLogFilesNumber else { return Metircs.defaultLogFilesNumber}
+        return number
     }
 }
 
@@ -228,9 +294,18 @@ fileprivate extension OWLogger {
 fileprivate extension OWLogger {
     func setupObservers() {
         // TODO: Bind to RX service of lifecycle events in the application
-        if logMethods.contains(.file) && !logItems.isEmpty {
+        if needsToWriteLogFile() {
             writeLogFile()
         }
+    }
+    
+    func needsToWriteLogFile() -> Bool {
+        return !logItems.isEmpty && self.logMethods.contains(where: { method in
+            if case .file = method {
+                return true
+            }
+            return false
+        })
     }
 }
 
