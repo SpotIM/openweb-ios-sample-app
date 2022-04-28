@@ -259,19 +259,10 @@ internal final class SPCommentFacade: SPCommentUpdater {
             headers: headers
         ) { (result, response) in
             switch result {
-            case .success(let counters):
-                print(counters)
-                success(counters)
+            case .success(let status):
+                success(status)
             case .failure(let error):
-                print(error)
-//                    let rawReport = RawReportModel(
-//                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-//                        parameters: parameters,
-//                        errorData: response.data,
-//                        errorMessage: error.localizedDescription
-//                    )
-//                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-//                    seal.reject(error)
+                failure(error)
             }
         }
     }
