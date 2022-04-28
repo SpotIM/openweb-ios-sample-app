@@ -142,12 +142,14 @@ fileprivate extension OWLogger {
                 let textToLog = format + text
                 os_log("%@", log: osLogger, type: level.osLevel, textToLog)
             case .file:
-                let textToLog = "\(time()) \(hostBundleName) \(prefix) \(format)"
+                let textToLog = "\(time()) \(hostBundleName) \(prefix) \(format)\(text)"
                 // Write on the file creation serial queue
                 fileCreationQueue.async { [weak self] in
                     guard let self = self else { return }
                     self.logItems.append(textToLog)
-                    self.writeLogFileIfNeeded()
+                    // Write lof file if needed
+                    guard self.logItems.count >= self.maxItemsPerLogFile else { return }
+                    self.writeLogFile()
                 }
             }
         }
@@ -158,11 +160,6 @@ fileprivate extension OWLogger {
         return dateFormatter.string(from: date)
     }
     
-    func writeLogFileIfNeeded() {
-        guard logItems.count >= maxItemsPerLogFile else { return }
-        writeLogFile()
-    }
-    
     func writeLogFile() {
         let filename = "\(Metircs.logFileName)_\(Date.timeIntervalSinceReferenceDate).txt"
         // Prepare entire log
@@ -170,20 +167,23 @@ fileprivate extension OWLogger {
             return "\(log)\(line)\n"
         }
         
-        // Delete most oldest log if we reach the max log numbers
-        removeOldestLogFile()
+        // Delete oldest log if we reach the max log numbers
+        removeOldestLogFileIfNeeded()
         
         // Save new file
         let result = OWFiles.write(text: logText, filename: filename, folder: OWFiles.Metrics.OpenSDKWebFolder,
                                    subfolder: OWFiles.Metrics.LogsSubfolder)
-        if !result {
+        if result {
+            // Clean log items in memory
+            logItems.removeAll()
+        } else {
             // Failed to write log into file. NSlog for internal debugging
             let info = "\(self.prefix) -\(OWLogLevel.error.description) ver \(sdkVer): "
             NSLog(info + Metircs.failedToWriteLogFileDescription)
         }
     }
     
-    func removeOldestLogFile() {
+    func removeOldestLogFileIfNeeded() {
         let numberOfLogsWritten = OWFiles.numOfElements(folder: OWFiles.Metrics.OpenSDKWebFolder,
                                                        subfolder: OWFiles.Metrics.LogsSubfolder)
         if (numberOfLogsWritten >= maxLogFilesNumber) {
@@ -192,9 +192,17 @@ fileprivate extension OWLogger {
                                                    subfolder: OWFiles.Metrics.LogsSubfolder)
             
             // Creating mapper between the timestamp to the full name
-            var mapper = [Int: String]()
+            var mapper = [Double: String]()
+            let characterSet = CharacterSet.decimalDigits.union(CharacterSet(charactersIn: "."))
             savedFilenames.forEach { filename in
-                guard let timestamp = Int(filename.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) else { return }
+                // Removing file surfix first
+                var components = filename.components(separatedBy: ".")
+                guard components.count > 1 else { return }
+                components.removeLast()
+                let filenameWithoutSurfix = components.joined(separator: ".")
+                // Keeping only digits and decimal point
+                let timestampString = filenameWithoutSurfix.trimmingCharacters(in: characterSet.inverted)
+                guard let timestamp = Double(timestampString) else { return }
                 mapper[timestamp] = filename
             }
             
@@ -212,6 +220,16 @@ fileprivate extension OWLogger {
                 let info = "\(self.prefix) -\(OWLogLevel.error.description) ver \(sdkVer): "
                 NSLog(info + Metircs.failedToDeleteLogFileDescription)
             }
+        }
+    }
+}
+
+// RX
+fileprivate extension OWLogger {
+    func setupObservers() {
+        // TODO: Bind to RX service of lifecycle events in the application
+        if logMethods.contains(.file) && !logItems.isEmpty {
+            writeLogFile()
         }
     }
 }
