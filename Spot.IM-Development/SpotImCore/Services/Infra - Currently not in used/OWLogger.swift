@@ -46,52 +46,68 @@ enum OWLogLevel {
         case .error:
             return .error
         case .medium:
-            return .debug
-        case .verbose:
             return .info
+        case .verbose:
+            return .debug
         }
     }
 }
 
 enum OWLogMethod {
-    case console, file
+    case nsLog, osLog, file
 }
 
 class OWLogger {
+    fileprivate struct Metircs {
+        static let osLoggersSubsystem = "com.OpenWeb.sdk"
+        static let logFileName = "OpenWeb_SDK_log"
+        static let failedToWriteLogFileDescription = "Failure when trying to write log file"
+        static let failedToDeleteLogFileDescription = "Failure when trying to delete log file"
+    }
+    
     fileprivate let logLevel: OWLogLevel
-    fileprivate let logMethod: OWLogMethod
+    fileprivate let logMethods: [OWLogMethod]
     fileprivate let queue: DispatchQueue
     fileprivate let prefix: String
     fileprivate var osLoggers = [String :OSLog]()
-    fileprivate let osLoggersSubsystem = "com.OpenWeb.sdk"
     fileprivate let sdkVer: String
+    fileprivate let hostBundleName: String
+    fileprivate let maxItemsPerLogFile: Int
+    fileprivate let maxLogFilesNumber: Int
+    fileprivate var logItems = [String]()
+    // Non DI as those should be constant
+    fileprivate let fileCreationQueue = DispatchQueue(label: "OpenWebSDKLoggerFileCreationQueue", qos: .background) // Serial queue
     
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        // Output example 26/4/22
-        formatter.dateStyle = .short
-        // Output example 1:26:32 PM
-        formatter.timeStyle = .medium
         // UTC time zone - intentionally force to UTC and not the user time zone
         formatter.timeZone = TimeZone(abbreviation: "UTC")
+        // Example 2022-04-27 18:03:56.204
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         return formatter
     }()
     
-    init(logLevel: OWLogLevel, logMethod: OWLogMethod,
-         queue: DispatchQueue = DispatchQueue(label: "OpenWebLoggerQueue", qos: .utility),
-         prefix: String = "OpenWebLogger", sdkVer: String = (Bundle.spot.shortVersion ?? "na")) {
+    init(logLevel: OWLogLevel, logMethods: [OWLogMethod],
+         queue: DispatchQueue = DispatchQueue(label: "OpenWebSDKLoggerQueue", qos: .utility, attributes: .concurrent),
+         prefix: String = "OpenWebSDKLogger", sdkVer: String = (Bundle.spot.shortVersion ?? "na"),
+         hostBundleName: String = Bundle.main.bundleName ?? "",
+         maxItemsPerLogFile: Int = 100, maxLogFilesNumber: Int = 50) {
         self.logLevel = logLevel
-        self.logMethod = logMethod
+        self.logMethods = Array(Set(logMethods))
         self.queue = queue
         self.prefix = prefix
         self.sdkVer = sdkVer
-        if logMethod == .file {
-            osLoggers[prefix] = OSLog(subsystem: osLoggersSubsystem, category: prefix)
+        self.hostBundleName = hostBundleName
+        self.maxItemsPerLogFile = maxItemsPerLogFile
+        self.maxLogFilesNumber = maxLogFilesNumber
+
+        if self.logMethods.contains(.osLog) {
+            osLoggers[prefix] = OSLog(subsystem: Metircs.osLoggersSubsystem, category: prefix)
         }
     }
     
-    func log(level: OWLogLevel, prefix: String? = nil, queue: DispatchQueue? = nil,
-             _ text: String , file: String = #file, line: Int = #line) {
+    func log(level: OWLogLevel, _ text: String, prefix: String? = nil, queue: DispatchQueue? = nil,
+             file: String = #file, line: Int = #line) {
         let runQueue = queue ?? self.queue
         
         runQueue.async { [weak self] in
@@ -100,18 +116,13 @@ class OWLogger {
             guard level.rank <= self.logLevel.rank else { return } // Continue only if the log level rank appropriate
             
             let loggerPrefix = prefix ?? self.prefix
-            self.log(level: level, prefix: loggerPrefix, text, file: file, line: line)
+            self.log(level: level, text, prefix: loggerPrefix, file: file, line: line)
         }
     }
 }
 
 fileprivate extension OWLogger {
-    func time() -> String {
-        let date = Date()
-        return dateFormatter.string(from: date)
-    }
-    
-    func log(level: OWLogLevel, prefix: String, _ text: String , file: String = #file, line: Int = #line) {
+    func log(level: OWLogLevel, _ text: String, prefix: String, file: String = #file, line: Int = #line) {
         let fileName: String
         if let startIndex = file.range(of: "/", options: .backwards)?.upperBound {
             fileName = String(file[startIndex...])
@@ -119,16 +130,88 @@ fileprivate extension OWLogger {
             fileName = file
         }
         
-        switch logMethod {
-        case .console:
-            let info = "\(prefix) -\(level)) ver \(sdkVer) \(fileName) line (\(line)): "
-            NSLog(info + text)
-        case .file:
-            // Time and other info taking care by os_log, we only add the sdk version
-            let osLogger = osLoggers[prefix] ?? OSLog(subsystem: osLoggersSubsystem, category: prefix)
-            let info = "Ver \(sdkVer) \(fileName) line (\(line)): "
-            let textToLog = info + text
-            os_log("%@", log: osLogger, type: level.osLevel, textToLog)
+        let format = "-\(level.description) ver \(sdkVer) \(fileName) line (\(line)): "
+        
+        logMethods.forEach { logMethod in
+            switch logMethod {
+            case .nsLog:
+                let info = "\(prefix) \(format)"
+                NSLog(info + text)
+            case .osLog:
+                let osLogger = osLoggers[prefix] ?? OSLog(subsystem: Metircs.osLoggersSubsystem, category: prefix)
+                let textToLog = format + text
+                os_log("%@", log: osLogger, type: level.osLevel, textToLog)
+            case .file:
+                let textToLog = "\(time()) \(hostBundleName) \(prefix) \(format)"
+                // Write on the file creation serial queue
+                fileCreationQueue.async { [weak self] in
+                    guard let self = self else { return }
+                    self.logItems.append(textToLog)
+                    self.writeLogFileIfNeeded()
+                }
+            }
+        }
+    }
+    
+    func time() -> String {
+        let date = Date()
+        return dateFormatter.string(from: date)
+    }
+    
+    func writeLogFileIfNeeded() {
+        guard logItems.count >= maxItemsPerLogFile else { return }
+        writeLogFile()
+    }
+    
+    func writeLogFile() {
+        let filename = "\(Metircs.logFileName)_\(Date.timeIntervalSinceReferenceDate).txt"
+        // Prepare entire log
+        let logText = logItems.reduce("") { log, line in
+            return "\(log)\(line)\n"
+        }
+        
+        // Delete most oldest log if we reach the max log numbers
+        removeOldestLogFile()
+        
+        // Save new file
+        let result = OWFiles.write(text: logText, filename: filename, folder: OWFiles.Metrics.OpenSDKWebFolder,
+                                   subfolder: OWFiles.Metrics.LogsSubfolder)
+        if !result {
+            // Failed to write log into file. NSlog for internal debugging
+            let info = "\(self.prefix) -\(OWLogLevel.error.description) ver \(sdkVer): "
+            NSLog(info + Metircs.failedToWriteLogFileDescription)
+        }
+    }
+    
+    func removeOldestLogFile() {
+        let numberOfLogsWritten = OWFiles.numOfElements(folder: OWFiles.Metrics.OpenSDKWebFolder,
+                                                       subfolder: OWFiles.Metrics.LogsSubfolder)
+        if (numberOfLogsWritten >= maxLogFilesNumber) {
+            //Remove oldest
+            let savedFilenames = OWFiles.elementsName(folder: OWFiles.Metrics.OpenSDKWebFolder,
+                                                   subfolder: OWFiles.Metrics.LogsSubfolder)
+            
+            // Creating mapper between the timestamp to the full name
+            var mapper = [Int: String]()
+            savedFilenames.forEach { filename in
+                guard let timestamp = Int(filename.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) else { return }
+                mapper[timestamp] = filename
+            }
+            
+            let timestamps = mapper.keys
+            
+            // Find filename of the oldest log
+            guard let oldestTimestamp = timestamps.min(),
+                    let filenameToRemove = mapper[oldestTimestamp] else { return }
+            
+            let result = OWFiles.remove(filename: filenameToRemove, folder: OWFiles.Metrics.OpenSDKWebFolder,
+                           subfolder: OWFiles.Metrics.LogsSubfolder)
+            
+            if !result {
+                // Failed to remove log file. NSlog for internal debugging
+                let info = "\(self.prefix) -\(OWLogLevel.error.description) ver \(sdkVer): "
+                NSLog(info + Metircs.failedToDeleteLogFileDescription)
+            }
         }
     }
 }
