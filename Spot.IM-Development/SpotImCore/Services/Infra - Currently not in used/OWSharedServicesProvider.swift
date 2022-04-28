@@ -48,7 +48,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     fileprivate lazy var _logger: OWLogger = {
         let logger = OWLogger(logLevel: .verbose, logMethods: [.nsLog, .file(maxFilesNumber: 20)])
-        logger.log(level: .verbose, "Logger initalized")
+        logger.log(level: .verbose, "Logger initialized")
         return logger
     }()
     
