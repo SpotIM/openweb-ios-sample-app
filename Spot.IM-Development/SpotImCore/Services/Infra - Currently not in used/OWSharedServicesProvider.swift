@@ -13,7 +13,7 @@ protocol OWSharedServicesProviding {
     func themeStyleService() -> OWThemeStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<String, String>
-    func netwokAPI() -> OWNetworkAPI
+    func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
 }
 
@@ -22,9 +22,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     // Singleton
     static let shared: OWSharedServicesProviding = OWSharedServicesProvider()
 
-    private init() {
-
-    }
+    private init() {}
 
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
@@ -38,7 +36,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCacheService<String, String>()
     }()
     
-    fileprivate lazy var _networkAPI: OWNetworkAPI = {
+    fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
         /*
          By default we create the network once.
          If we will want to "reset" everything when a new spotIfy provided, we can re-create the network entirely.
@@ -49,7 +47,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
     
     fileprivate lazy var _logger: OWLogger = {
-        let logger = OWLogger(logLevel: .verbose, logMethod: .console)
+        let logger = OWLogger(logLevel: .verbose, logMethods: [.nsLog, .file])
         logger.log(level: .verbose, "Logger initalized")
         return logger
     }()
@@ -66,7 +64,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return _commentsInMemoryCacheService
     }
     
-    func netwokAPI() -> OWNetworkAPI {
+    func netwokAPI() -> OWNetworkAPIProtocol {
         return _networkAPI
     }
     
