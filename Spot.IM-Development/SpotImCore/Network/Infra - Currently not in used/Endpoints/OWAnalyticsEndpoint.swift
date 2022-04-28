@@ -11,7 +11,7 @@ import Alamofire
 import RxSwift
 
 enum OWAnalyticsEndpoint: OWEndpoint {
-case sendEvent(info: SPEventInfo)
+    case sendEvent(info: SPEventInfo)
     
     // MARK: - HTTPMethod
     var method: HTTPMethod {
@@ -20,7 +20,7 @@ case sendEvent(info: SPEventInfo)
             return .post
         }
     }
-
+    
     // MARK: - Path
     var path: String {
         switch self {
@@ -28,7 +28,7 @@ case sendEvent(info: SPEventInfo)
             return "/event"
         }
     }
-
+    
     // MARK: - Parameters
     var parameters: Parameters? {
         switch self {
@@ -60,14 +60,14 @@ case sendEvent(info: SPEventInfo)
 }
 
 protocol OWAnalyticsAPI {
-    func sendEvent(info: SPEventInfo) -> OWNetworkResponseType<Bool>
+    func sendEvent(info: SPEventInfo) -> OWNetworkResponse<Bool>
 }
 
 extension OWNetworkAPI: OWAnalyticsAPI {
     // Access by .analytics for readability
     var analytics: OWAnalyticsAPI { return self }
     
-    func sendEvent(info: SPEventInfo) -> OWNetworkResponseType<Bool> {
+    func sendEvent(info: SPEventInfo) -> OWNetworkResponse<Bool> {
         let endpoint = OWAnalyticsEndpoint.sendEvent(info: info)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
