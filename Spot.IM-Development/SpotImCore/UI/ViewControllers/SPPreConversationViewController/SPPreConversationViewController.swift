@@ -22,6 +22,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
     
+    private let logger: OWLogger
+    
     private var checkTableViewHeight: CGFloat = 0
     private let maxSectionCount: Int
     private let readingTracker = SPReadingTracker()
@@ -64,7 +66,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?, logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
         
         self.adsProvider = adsProvider
         // when buttonOnlyMode is on, show no comments
@@ -72,6 +74,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                             (numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM)
         // button only when numberOfMessagesToShow is 0 OR publisher set mode in SpotIm
         self.isButtonOnlyModeEnabled = (numberOfMessagesToShow == 0 || SpotIm.buttonOnlyMode.isEnabled())
+        
+        self.logger = logger
         
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
@@ -503,7 +507,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         if  model.adsGroup().interstitialEnabled(),
             AdsManager.shouldShowInterstitial(for: model.dataSource.postId) {
             if adsProvider.showInterstitial(in: self) {
-                print("Did not showed interstitial")
+                logger.log(level: .medium, "Did not showed interstitial")
             }
         }
          preConversationDelegate?.showMoreComments(with: model, selectedCommentId: selectedCommentId)
