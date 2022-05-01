@@ -110,6 +110,7 @@
 		3D20A39927B0243D003F8513 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39827B0243D003F8513 /* Debugging.swift */; };
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
 		3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9C5825281AF64F002D0FCB /* OWFiles.swift */; };
+		3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
 		3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */; };
@@ -755,6 +756,7 @@
 		3D20A39A27B0258D003F8513 /* Typealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3D9C5825281AF64F002D0FCB /* OWFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFiles.swift; sourceTree = "<group>"; };
+		3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycle.swift; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
 		3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpotImReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
@@ -1420,6 +1422,7 @@
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
 				3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */,
 				3DD72C802818297500117946 /* OWLogger.swift */,
+				3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */,
 			);
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
@@ -3180,6 +3183,7 @@
 				445417FB23685144001D0ED0 /* UIColor+Hex.swift in Sources */,
 				4454189623685154001D0ED0 /* SPConfigurationSpotlight.swift in Sources */,
 				4454181D23685144001D0ED0 /* UserNameView.swift in Sources */,
+				3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */,
 				3D20A37D27B01BA1003F8513 /* OWConstraintMakerExtendable.swift in Sources */,
 				3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */,
 				4416C65D237B119200D3F7B9 /* SPRealTimeModel.swift in Sources */,
