@@ -15,6 +15,7 @@ protocol OWSharedServicesProviding {
     func commentsInMemoryCacheService() -> OWCacheService<String, String>
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
+    func appLifeCycle() -> OWRxAppLifeCycleProtocol
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -52,6 +53,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return logger
     }()
     
+    fileprivate lazy var _appLifeCycle: OWRxAppLifeCycleProtocol = {
+        return OWRxAppLifeCycle()
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -70,5 +75,9 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func logger() -> OWLogger {
         return _logger
+    }
+    
+    func appLifeCycle() -> OWRxAppLifeCycleProtocol {
+        return _appLifeCycle
     }
 }
