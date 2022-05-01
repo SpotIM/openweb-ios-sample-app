@@ -31,6 +31,8 @@ class SPCommentCreationModel {
     let avatarViewVM: OWAvatarViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
     
+    fileprivate let logger: OWLogger
+    
     var actionCallback: Observable<SPViewActionCallbackType> {
         let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
             .map { _ -> SPViewActionCallbackType in
@@ -43,12 +45,14 @@ class SPCommentCreationModel {
     init(commentCreationDTO: SPCommentCreationDTO,
          updater: SPCommentUpdater,
          imageProvider: SPImageProvider,
-         articleMetadate: SpotImArticleMetadata
+         articleMetadate: SpotImArticleMetadata,
+         logger: OWLogger = OWSharedServicesProvider.shared.logger()
     ) {
         self.dataModel = commentCreationDTO
         self.imageProvider = imageProvider
         commentService = updater
         self.articleMetadate = articleMetadate
+        self.logger = logger
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: articleMetadate)
         setupCommentLabels()
@@ -287,7 +291,7 @@ class SPCommentCreationModel {
                 self.currentUploadingImageId = nil
                 completion(imageContent != nil)
             } else if let error = err {
-                print("Failed to upload image: " + error.localizedDescription)
+                self.logger.log(level: .error, "Failed to upload image: " + error.localizedDescription)
                 self.currentUploadingImageId = nil
                 self.errorHandler?(error)
                 completion(false)

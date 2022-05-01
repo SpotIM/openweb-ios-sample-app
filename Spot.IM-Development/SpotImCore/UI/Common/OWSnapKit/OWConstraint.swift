@@ -10,6 +10,11 @@ import UIKit
 
 
 class OWConstraint {
+    struct Helpers {
+        static let logger = OWSharedServicesProvider.shared.logger()
+        static let loggerPrefix = "OpenWebSDKSnapKitLogger"
+    }
+    
     let sourceLocation: (String, UInt)
     
     private let label: String?
@@ -28,7 +33,7 @@ class OWConstraint {
         }
     }
     var layoutConstraints: [OWLayoutConstraint]
-    
+
     var isActive: Bool {
         set {
             if newValue {
@@ -229,7 +234,7 @@ class OWConstraint {
 
     func activateIfNeeded(updatingExisting: Bool = false) {
         guard let item = self.from.layoutConstraintItem else {
-            print("WARNING: OWSnapKit failed to get from item from constraint. Activate will be a no-op.")
+            Helpers.logger.log(level: .medium, "WARNING: OWSnapKit failed to get from item from constraint. Activate will be a no-op.", prefix: Helpers.loggerPrefix)
             return
         }
         let layoutConstraints = self.layoutConstraints
@@ -257,7 +262,7 @@ class OWConstraint {
 
     func deactivateIfNeeded() {
         guard let item = self.from.layoutConstraintItem else {
-            print("WARNING: OWSnapKit failed to get from item from constraint. Deactivate will be a no-op.")
+            Helpers.logger.log(level: .medium, "WARNING: OWSnapKit failed to get from item from constraint. Deactivate will be a no-op.", prefix: Helpers.loggerPrefix)
             return
         }
         let layoutConstraints = self.layoutConstraints
