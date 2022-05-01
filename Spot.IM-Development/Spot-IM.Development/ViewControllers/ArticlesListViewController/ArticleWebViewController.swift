@@ -277,6 +277,7 @@ extension ArticleWebViewController: SpotImLoginDelegate {
 
 extension ArticleWebViewController: SpotImCustomUIDelegate {    
     func customizeView(view: CustomizableView, isDarkMode: Bool, postId: String) {
+        print("SpotImCustomUIDelegate customizeView callback receive with postId: \(postId)")
         guard spotId == "sp_mobileGuest" else { return }
         switch view {
         case .loginPrompt(let textView):
@@ -305,7 +306,7 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
             button.setTitle("comments " + (button.getCommentsCount() ?? ""), for: .normal)
             break
         case .preConversationHeader(let titleLabel, let counterLabel):
-            titleLabel.text = postId == "sdk1" ? "Comments" : "Article Comments"
+            titleLabel.text = "Comments"
             counterLabel.isHidden = true
             break
         case .commentCreationActionButton(let button):
