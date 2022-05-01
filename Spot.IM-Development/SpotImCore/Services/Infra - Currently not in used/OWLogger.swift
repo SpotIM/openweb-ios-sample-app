@@ -8,6 +8,7 @@
 
 import Foundation
 import os.log
+import RxSwift
 
 enum OWLogLevel {
     case none, error, medium, verbose
@@ -71,19 +72,23 @@ extension OWLogMethod: Hashable {
 }
 
 class OWLogger {
-    fileprivate struct Metircs {
-        static let osLoggersSubsystem = "com.OpenWeb.sdk"
+    struct Metrics {
         static let logFileName = "OpenWeb_SDK_log"
+        static let defaultLogFilesNumber = 20
+    }
+    
+    fileprivate struct PrivateMetrics {
+        static let osLoggersSubsystem = "com.OpenWeb.sdk"
         static let failedToWriteLogFileDescription = "Failure when trying to write log file"
         static let failedToDeleteLogFileDescription = "Failure when trying to delete log file"
         static let maxAllowedLogFilesNumber = 200
         static let minAllowedLogFilesNumber = 1
-        static let defaultLogFilesNumber = 50
     }
     
     fileprivate let logLevel: OWLogLevel
     fileprivate let logMethods: [OWLogMethod]
     fileprivate let queue: DispatchQueue
+    fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
     fileprivate let prefix: String
     fileprivate var osLoggers = [String :OSLog]()
     fileprivate let sdkVer: String
@@ -93,6 +98,7 @@ class OWLogger {
     fileprivate var logItems = [String]()
     // Non DI as those should be constant
     fileprivate let fileCreationQueue = DispatchQueue(label: "OpenWebSDKLoggerFileCreationQueue", qos: .background) // Serial queue
+    fileprivate let disposeBag = DisposeBag()
     
     lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -105,6 +111,7 @@ class OWLogger {
     
     init(logLevel: OWLogLevel, logMethods: [OWLogMethod],
          queue: DispatchQueue = DispatchQueue(label: "OpenWebSDKLoggerQueue", qos: .utility),
+         appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle(),
          prefix: String = "OpenWebSDKLogger", sdkVer: String = (Bundle.spot.shortVersion ?? "na"),
          hostBundleName: String = Bundle.main.bundleName ?? "",
          maxItemsPerLogFile: Int = 100) {
@@ -115,12 +122,13 @@ class OWLogger {
         self.sdkVer = sdkVer
         self.hostBundleName = hostBundleName
         self.maxItemsPerLogFile = maxItemsPerLogFile
+        self.appLifeCycle = appLifeCycle
         
         if self.logMethods.contains(.osLog) {
-            osLoggers[prefix] = OSLog(subsystem: Metircs.osLoggersSubsystem, category: prefix)
+            osLoggers[prefix] = OSLog(subsystem: PrivateMetrics.osLoggersSubsystem, category: prefix)
         }
         
-        self.maxLogFilesNumber = Metircs.defaultLogFilesNumber
+        self.maxLogFilesNumber = Metrics.defaultLogFilesNumber
         if self.logMethods.contains(where: { method in
             if case .file(let maxFilesNum) = method {
                 self.maxLogFilesNumber = validateMaxNumberOfLogFiles(number: maxFilesNum)
@@ -134,6 +142,8 @@ class OWLogger {
                 self.removeExceedingLogFilesIfNeeded()
             }
         }
+        
+        setupObservers()
     }
     
     func log(level: OWLogLevel, _ text: String, prefix: String? = nil, queue: DispatchQueue? = nil,
@@ -168,7 +178,7 @@ fileprivate extension OWLogger {
                 let info = "\(prefix) \(format)"
                 NSLog(info + text)
             case .osLog:
-                let osLogger = osLoggers[prefix] ?? OSLog(subsystem: Metircs.osLoggersSubsystem, category: prefix)
+                let osLogger = osLoggers[prefix] ?? OSLog(subsystem: PrivateMetrics.osLoggersSubsystem, category: prefix)
                 let textToLog = format + text
                 os_log("%@", log: osLogger, type: level.osLevel, textToLog)
             case .file(_):
@@ -191,7 +201,7 @@ fileprivate extension OWLogger {
     }
     
     func writeLogFile() {
-        let filename = "\(Metircs.logFileName)_\(Date.timeIntervalSinceReferenceDate).txt"
+        let filename = "\(Metrics.logFileName)_\(Date.timeIntervalSinceReferenceDate).txt"
         // Prepare entire log
         let logText = logItems.reduce("") { log, line in
             return "\(log)\(line)\n"
@@ -209,7 +219,7 @@ fileprivate extension OWLogger {
         } else {
             // Failed to write log into file. NSlog for internal debugging
             let info = "\(self.prefix) -\(OWLogLevel.error.description) ver \(sdkVer): "
-            NSLog(info + Metircs.failedToWriteLogFileDescription)
+            NSLog(info + PrivateMetrics.failedToWriteLogFileDescription)
         }
     }
     
@@ -235,7 +245,7 @@ fileprivate extension OWLogger {
                                                     subfolder: OWFiles.Metrics.LogsSubfolder)
         
         return numberOfElements
-            .filter { $0.contains(Metircs.logFileName) }
+            .filter { $0.contains(Metrics.logFileName) }
             .count
     }
     
@@ -244,7 +254,7 @@ fileprivate extension OWLogger {
                                                   subfolder: OWFiles.Metrics.LogsSubfolder)
         
         savedFilenames = savedFilenames
-            .filter { $0.contains(Metircs.logFileName) }
+            .filter { $0.contains(Metrics.logFileName) }
         
         // Creating mapper between the timestamp to the full name
         var mapper = [Double: String]()
@@ -277,7 +287,7 @@ fileprivate extension OWLogger {
             if !result {
                 // Failed to remove log file. NSlog for internal debugging
                 let info = "\(self.prefix) -\(OWLogLevel.error.description) ver \(sdkVer): "
-                NSLog(info + Metircs.failedToDeleteLogFileDescription)
+                NSLog(info + PrivateMetrics.failedToDeleteLogFileDescription)
             }
             
             timestamps.removeFirst()
@@ -285,18 +295,23 @@ fileprivate extension OWLogger {
     }
     
     func validateMaxNumberOfLogFiles(number: Int) -> Int {
-        guard number <= Metircs.maxAllowedLogFilesNumber && number >= Metircs.minAllowedLogFilesNumber else { return Metircs.defaultLogFilesNumber}
+        guard number <= PrivateMetrics.maxAllowedLogFilesNumber && number >= PrivateMetrics.minAllowedLogFilesNumber else { return Metrics.defaultLogFilesNumber}
         return number
     }
 }
 
-// RX
+// Rx
 fileprivate extension OWLogger {
     func setupObservers() {
-        // TODO: Bind to RX service of lifecycle events in the application
-        if needsToWriteLogFile() {
-            writeLogFile()
-        }
+        appLifeCycle.didEnterBackground
+            .filter { self.needsToWriteLogFile() }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.fileCreationQueue.async {
+                    self.writeLogFile()
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     func needsToWriteLogFile() -> Bool {
