@@ -122,7 +122,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
     
     private func signToCloudinary(publicId: String, timestamp: String, completion: @escaping (String?, Error?) -> Void) {
         guard let spotKey = SPClientSettings.main.spotKey else {
-            OWLoggerOld.error("[ERROR]: No spot key for signing")
+            logger.log(level: .error, "No spot key for signing")
             return
         }
         let headers = HTTPHeaders.basic(with: spotKey)

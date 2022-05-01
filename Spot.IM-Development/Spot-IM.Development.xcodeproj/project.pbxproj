@@ -270,7 +270,6 @@
 		445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4454187823685154001D0ED0 /* SPReadingTracker.swift */; };
 		44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B6F237070F30024EFC1 /* InputConfiguration.swift */; };
 		44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B71237185090024EFC1 /* LocalizationManager.swift */; };
-		44689B7423718CF90024EFC1 /* OWLoggerOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7323718CF80024EFC1 /* OWLoggerOld.swift */; };
 		44689B7D237414850024EFC1 /* SPABData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44689B7C237414850024EFC1 /* SPABData.swift */; };
 		448E1116236C53BE0005C9F9 /* FeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */; };
 		449F5F72237C064F00F81EA3 /* RealTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449F5F71237C064F00F81EA3 /* RealTimeService.swift */; };
@@ -915,7 +914,6 @@
 		4454187823685154001D0ED0 /* SPReadingTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SPReadingTracker.swift; sourceTree = "<group>"; };
 		44689B6F237070F30024EFC1 /* InputConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputConfiguration.swift; sourceTree = "<group>"; };
 		44689B71237185090024EFC1 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
-		44689B7323718CF80024EFC1 /* OWLoggerOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWLoggerOld.swift; sourceTree = "<group>"; };
 		44689B7C237414850024EFC1 /* SPABData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPABData.swift; sourceTree = "<group>"; };
 		44689B87237473E60024EFC1 /* Arial Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Arial Bold.ttf"; sourceTree = "<group>"; };
 		44689B88237473E60024EFC1 /* Arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Arial.ttf; sourceTree = "<group>"; };
@@ -1895,7 +1893,6 @@
 		4454185D23685154001D0ED0 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				44689B7323718CF80024EFC1 /* OWLoggerOld.swift */,
 				4454186D23685154001D0ED0 /* SPConstants.swift */,
 				4454186E23685154001D0ED0 /* SPClientSettings.swift */,
 				4454186F23685154001D0ED0 /* OWAuthenticationHandler.swift */,
@@ -3077,7 +3074,6 @@
 				249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */,
 				4416C65F237B15A800D3F7B9 /* SPRealtimeDataProvider.swift in Sources */,
 				3D20A36D27B0124F003F8513 /* OWConstraint.swift in Sources */,
-				44689B7423718CF90024EFC1 /* OWLoggerOld.swift in Sources */,
 				4454180323685144001D0ED0 /* SPAnimatedButton.swift in Sources */,
 				3D20A38527B01ED2003F8513 /* OWConstraintMakerRelatable+Extensions.swift in Sources */,
 				3D20A36527B00CAC003F8513 /* OWConstraintDSL.swift in Sources */,
