@@ -57,8 +57,15 @@ public struct SpotImArticleMetadata {
     let section: String
     var customBIData: [String:String]?
     var readOnlyMode: SpotImReadOnlyMode
+    
+    fileprivate let logger: OWLogger
 
     public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil, readOnlyMode: SpotImReadOnlyMode = .default) {
+        self.init(url: url, title: title, subtitle: subtitle, thumbnailUrl: thumbnailUrl, section: section, customBIData: customBIData, readOnlyMode: readOnlyMode, logger: OWSharedServicesProvider.shared.logger())
+    }
+    
+    internal init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String, customBIData: [String:String]?, readOnlyMode: SpotImReadOnlyMode,
+                  logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
         self.url = url
         self.title = title
         self.subtitle = subtitle
@@ -66,6 +73,7 @@ public struct SpotImArticleMetadata {
         self.section = section
         self.customBIData = customBIData
         self.readOnlyMode = readOnlyMode
+        self.logger = logger
     }
     
     public mutating func setCustomBIData(_ data: [String:String]) {
@@ -149,6 +157,8 @@ public class SpotIm {
     
     internal static var customInitialSortByOption: SpotImSortByOption? = nil
     
+    fileprivate static let logger: OWLogger = OWSharedServicesProvider.shared.logger()
+    
     /**
     Initialize the SDK
 
@@ -175,7 +185,7 @@ public class SpotIm {
                 SPClientSettings.main.sendAppInitEvent()
                 completion?(true, nil)
             }.catch { error in
-                OWLoggerOld.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
+                logger.log(level: .error, "FAILED to initialize the SDK, will try to recover on next API call: \(error.localizedDescription)")
                 completion?(false, SpotImError.internalError(error.localizedDescription))
             }
         } else {
@@ -448,7 +458,7 @@ public class SpotIm {
                     getUserPromise().done { user in
                         call(config)
                     }.catch { error in
-                        OWLoggerOld.verbose("FAILED!!!!")
+                        logger.log(level: .error, "FAILED to load user: \(error.localizedDescription)")
                         if let spotError = error as? SpotImError {
                             failure(spotError)
                         } else {
@@ -456,11 +466,11 @@ public class SpotIm {
                         }
                     }
                 } else {
-                    OWLoggerOld.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
+                    logger.log(level: .error, "SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
                 }
             }.catch { error in
-                OWLoggerOld.verbose("FAILED!!!!")
+                logger.log(level: .error, "FAILED to load config: \(error.localizedDescription)")
                 if let spotError = error as? SpotImError {
                     failure(spotError)
                 } else {
@@ -468,7 +478,7 @@ public class SpotIm {
                 }
             }
         } else {
-            OWLoggerOld.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
+            logger.log(level: .error, "Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
             failure(SpotImError.notInitialized)
         }
     }

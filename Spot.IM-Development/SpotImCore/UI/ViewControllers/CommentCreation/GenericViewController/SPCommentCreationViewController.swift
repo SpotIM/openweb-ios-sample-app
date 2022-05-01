@@ -62,6 +62,8 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     private var shouldBeAutoPosted: Bool = true
     
+    fileprivate let logger: OWLogger
+    
     // user name input ("nickname") is visible only when commenting as a guest
     // (if user entered nickname in the past it will not be editable)
     var showsUsernameInput: Bool {
@@ -84,8 +86,10 @@ class SPCommentCreationViewController: SPBaseViewController,
         unregisterFromKeyboardNotifications()
     }
     
-    init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel) {
+    init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel,
+         logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
         self.model = model
+        self.logger = logger
         textInputViewContainer.configureAvatarViewModel(with: model.avatarViewVM)
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
@@ -263,7 +267,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     func dismissController() {
-        OWLoggerOld.verbose("FirstComment: Dismissing creation view controller")
+        logger.log(level: .verbose, "FirstComment: Dismissing creation view controller")
         let transition = CATransition()
         transition.duration = 0.5
         transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
@@ -533,7 +537,8 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     private func post() {
         view.endEditing(true)
-        OWLoggerOld.verbose("FirstComment: Post clicked")
+        logger.log(level: .verbose, "FirstComment: Post clicked")
+
         showLoader()
         if commentLabelsContainer.selectedLabelsIds.count > 0 {
             model.updateCommentLabels(labelsIds: commentLabelsContainer.selectedLabelsIds)
@@ -544,7 +549,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     private func presentAuth() {
         view.endEditing(true)
-        OWLoggerOld.verbose("FirstComment: Signup to post clicked")
+        logger.log(level: .verbose, "FirstComment: Signup to post clicked")
         shouldBeAutoPosted = false
         userAuthFlowDelegate?.presentAuth()
 
@@ -814,7 +819,8 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
             // landscape - keep content behind keyboard and scroll to selected textView
             mainContainerBottomConstraint?.update(offset: 0)
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: constant, right: 0)
-            OWLoggerOld.verbose("Updating \"mainContainerBottomConstraint\" constraints to \(0)")
+            logger.log(level: .verbose, "Updating \"mainContainerBottomConstraint\" constraints to \(0)")
+
             setScrollView(
                 toView: usernameView.isSelected ? usernameView : textInputViewContainer,
                 toTop: constant == 0)
@@ -822,7 +828,7 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
             // portrait - push content on top of keyboard
             mainContainerBottomConstraint?.update(offset: -constant)
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            OWLoggerOld.verbose("Updating \"mainContainerBottomConstraint\" constraints to \(-constant)")
+            logger.log(level: .verbose, "Updating \"mainContainerBottomConstraint\" constraints to \(-constant)")
             scrollToTop()
         }
 

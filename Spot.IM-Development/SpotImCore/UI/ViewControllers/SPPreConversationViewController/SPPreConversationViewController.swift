@@ -21,9 +21,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var header: SPPreConversationHeaderView = .init()
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
-    
-    private let logger: OWLogger
-    
+        
     private var checkTableViewHeight: CGFloat = 0
     private let maxSectionCount: Int
     private let readingTracker = SPReadingTracker()
@@ -66,7 +64,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
     
     // MARK: - Overrides
-    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?, logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
+    internal init(model: SPMainConversationModel, numberOfMessagesToShow: Int, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?) {
         
         self.adsProvider = adsProvider
         // when buttonOnlyMode is on, show no comments
@@ -74,8 +72,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                             (numberOfMessagesToShow < PRE_LOADED_MESSAGES_MAX_NUM ? numberOfMessagesToShow : PRE_LOADED_MESSAGES_MAX_NUM)
         // button only when numberOfMessagesToShow is 0 OR publisher set mode in SpotIm
         self.isButtonOnlyModeEnabled = (numberOfMessagesToShow == 0 || SpotIm.buttonOnlyMode.isEnabled())
-        
-        self.logger = logger
         
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
@@ -359,7 +355,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         )
                     }
                 } else if success == false {
-                    OWLoggerOld.error("Load conversation request type is not `success`")
+                    self.logger.log(level: .error, "Load conversation request type is not `success`")
                 } else {
                     self.checkAdsAvailability()
                     
@@ -616,7 +612,7 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     }
     
     func bannerFailedToLoad(error: Error) {
-        OWLoggerOld.error("error bannerFailedToLoad - \(error)")
+        logger.log(level: .error, "error bannerFailedToLoad - \(error.localizedDescription)")
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .preConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }

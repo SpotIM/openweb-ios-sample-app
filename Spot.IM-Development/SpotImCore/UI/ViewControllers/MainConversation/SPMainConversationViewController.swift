@@ -89,20 +89,21 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?, openedByPublisher: Bool = false) {
-        OWLoggerOld.verbose("FirstComment: Main view controller created")
         self.adsProvider = adsProvider
         self.displayArticleHeader = SpotIm.displayArticleHeader
         self.openedByPublisher = openedByPublisher
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
+        logger.log(level: .verbose, "FirstComment: Main view controller created")
     }
     // MARK: - Overrides
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        OWLoggerOld.verbose("FirstComment: Main view did load")
+        logger.log(level: .verbose, "FirstComment: Main view did load")
+
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
             SPAnalyticsHolder.default.log(event: openedByPublisher ? .viewed : .mainViewed, source: .conversation)
             SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId = SPAnalyticsHolder.default.pageViewId
@@ -115,7 +116,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             setupUserIconHandler()
         }
 
-        OWLoggerOld.verbose("FirstComment: Have some comments in the data source")
+        logger.log(level: .verbose, "FirstComment: Have some comments in the data source")
+
         updateFooterView()
         footer.userAvatarView.configure(with: model.avatarViewVM)
         articleHeader.configure(with: model.articleHeaderVM)
@@ -257,7 +259,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
-        OWLoggerOld.verbose("FirstComment: API did finish with \(success)")
+        logger.log(level: .verbose, "FirstComment: API did finish with \(success)")
+
         self.hideLoader()
         self.refreshControl.endRefreshing()
 
@@ -271,9 +274,9 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                 )
             }
         } else if success == false {
-            OWLoggerOld.error("Load conversation request type is not `success`")
+            logger.log(level: .error, "Load conversation request type is not `success`")
         } else {
-            OWLoggerOld.verbose("FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
+            logger.log(level: .verbose, "FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
 
@@ -281,7 +284,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             self.stateActionView = nil
             self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
         }
-        OWLoggerOld.verbose("FirstComment: Calling reload on table view")
+        logger.log(level: .verbose, "FirstComment: Calling reload on table view")
         self.tableView.reloadData()
         self.updateHeaderUI()
         self.updateFooterView()
@@ -329,7 +332,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private func loadCommentsNextPage() {
         guard !model.dataSource.isLoading else { return }
 
-        OWLoggerOld.warn("DEBUG: Loading next page")
+        logger.log(level: .verbose, "Loading comments next page")
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         let mode = model.sortOption
         model.dataSource.comments(
@@ -337,12 +340,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             page: .next,
             loadingStarted: {
                 // showing loader section
-                OWLoggerOld.warn("DEBUG: Loading started called")
+                self.logger.log(level: .verbose, "Comments - loading started called")
                 self.tableView.reloadData()
             },
             loadingFinished: {
                 // Removing loader section
-                OWLoggerOld.warn("DEBUG: Loading finished called")
+                self.logger.log(level: .verbose, "Comments - loading finished called")
                 self.tableView.reloadData()
             },
             completion: { (success, _, error) in
@@ -352,7 +355,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                         message: error.localizedDescription
                     )
                 } else if success == false {
-                    OWLoggerOld.error("Load conversation next page request type is not `success`")
+                    self.logger.log(level: .error, "Load conversation next page request type is not `success`")
                 }
 
                 self.tableView.reloadData()
@@ -868,7 +871,8 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     }
 
     func bannerFailedToLoad(error: Error) {
-        OWLoggerOld.error("error bannerFailedToLoad - \(error)")
+        logger.log(level: .error, "BannerFailedToLoad - \(error.localizedDescription)")
+
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .mainConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }

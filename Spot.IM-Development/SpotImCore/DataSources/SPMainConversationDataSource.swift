@@ -56,6 +56,8 @@ internal final class SPMainConversationDataSource {
     private var cachedCommentReply: CommentViewModel?
     private var selectedLabelIds: [String]?
     
+    fileprivate let logger: OWLogger
+    
     internal var showReplies: Bool = false {
         didSet {
             expandAllCommentsIfNeeded()
@@ -67,13 +69,15 @@ internal final class SPMainConversationDataSource {
         SPAnalyticsHolder.default.postId = nil
     }
 
-    init(with postId: String, articleMetadata: SpotImArticleMetadata, dataProvider: SPConversationsDataProvider) {
+    init(with postId: String, articleMetadata: SpotImArticleMetadata, dataProvider: SPConversationsDataProvider,
+         logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
         SPAnalyticsHolder.default.postId = postId
         
         self.postId = postId
         self.dataProvider = dataProvider
         self.articleMetadata = articleMetadata
-    
+        self.logger = logger
+        
         dataProvider.conversationAsync(postId: postId, articleUrl: articleMetadata.url)
         NotificationCenter.default.addObserver(
             self,
@@ -783,7 +787,7 @@ extension SPMainConversationDataSource {
     }
     
     func update(with comment: SPComment) {
-        OWLoggerOld.verbose("FirstComment: preparing comment view model")
+        logger.log(level: .verbose, "FirstComment: preparing comment view model")
         let parentComment = self.comment(with: comment.parentId)
 
         let displayName = parentComment?.displayName
@@ -824,34 +828,33 @@ extension SPMainConversationDataSource {
     }
     
     private func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
-        OWLoggerOld.verbose("FirstComment: push is called, sorting is \(String(describing: sortMode))")
+        logger.log(level: .verbose, "FirstComment: push is called, sorting is \(String(describing: sortMode))")
         let updatedMessageCount = messageCount + 1
         if sortMode == .newest {
-            OWLoggerOld.verbose("FirstComment: Message will be posted locally only")
-            OWLoggerOld.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
+            logger.log(level: .verbose, "FirstComment: Message will be posted locally only")
+            logger.log(level: .verbose, "FirstComment: Updated message count: \(updatedMessageCount)")
             self.messageCount = updatedMessageCount
             self.messageCounterUpdated?(updatedMessageCount)
             cellData.insert([viewModel], at: shouldShowBanner ? 1 : 0)
             cachedCommentReply = nil
             delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
         } else {
-            OWLoggerOld.verbose("FirstComment: Refreshing to .newset sorting")
+            logger.log(level: .verbose, "FirstComment: Refreshing to .newset sorting")
             conversation(.newest, page: .first) { [weak self] result, _ in
-                OWLoggerOld.verbose("FirstComment: Got result from API")
-                OWLoggerOld.verbose("FirstComment: \(result)")
+                guard let self = self else { return }
+                self.logger.log(level: .verbose, "FirstComment: Got result from API")
+                self.logger.log(level: .verbose, "FirstComment: \(result)")
                 if result {
-                    guard let self = self else { return }
-                    OWLoggerOld.verbose("FirstComment: Calling reload data with scroll to top")
+                    self.logger.log(level: .verbose, "FirstComment: Calling reload data with scroll to top")
                     self.delegate?.reload(shouldBeScrolledToTop: true)
-                    
-                    OWLoggerOld.verbose("FirstComment: Searching for the posted comment in the API response")
-                    OWLoggerOld.verbose("FirstComment: cell data: \(self.cellData)")
+                    self.logger.log(level: .verbose, "FirstComment: Searching for the posted comment in the API response")
+                    self.logger.log(level: .verbose, "FirstComment: cell data: \(self.cellData)")
                     let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
                     if dataModel == nil {
-                        OWLoggerOld.verbose("FirstComment: Data model not found, adding it manually")
+                        self.logger.log(level: .verbose, "FirstComment: Data model not found, adding it manually")
                         self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
                         self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
-                        OWLoggerOld.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
+                        self.logger.log(level: .verbose, "FirstComment: Updated message count: \(updatedMessageCount)")
                         self.messageCount = updatedMessageCount
                         self.messageCounterUpdated?(updatedMessageCount)
                     }
