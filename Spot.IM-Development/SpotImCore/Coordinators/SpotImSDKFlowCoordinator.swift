@@ -411,13 +411,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             model.getInitialSortMode(),
             page: .first,
             loadingStarted: {},
-            completion: { (success, error) in
+            completion: { [weak self] (success, error) in
+                guard let self = self else { return }
                 self.isLoadingConversation = false
                 if let error = error {
                     completion(.failure(error))
                 } else if success == false {
                     completion(.failure(SPNetworkError.requestFailed))
-                    OWLoggerOld.error("Load conversation request type is not `success`")
+                    self.logger.log(level: .error, "Load conversation request type is not `success`")
                 } else {
                     
                     let messageCount = model.dataSource.messageCount
@@ -472,10 +473,12 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             controller.title = navigationItemTitleText
         }
         
-        OWLoggerOld.verbose("FirstComment: localCommentReplayDidCreate SET")
-        localCommentReplyDidCreate = { comment in
-            OWLoggerOld.verbose("FirstComment: localCommentReplayDidCreate CALLED")
-            OWLoggerOld.verbose("FirstComment: setting the pending comment to the model")
+        logger.log(level: .verbose, "FirstComment: localCommentReplayDidCreate SET")
+
+        localCommentReplyDidCreate = { [weak self] comment in
+            guard let self = self else { return }
+            self.logger.log(level: .verbose, "FirstComment: localCommentReplayDidCreate CALLED")
+            self.logger.log(level: .verbose, "FirstComment: setting the pending comment to the model")
             model.pendingComment = comment
         }
         commentReplyCreationBlocked = { commentText in
@@ -663,9 +666,9 @@ extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     internal func commentReplyDidCreate(_ comment: SPComment) {
-        OWLoggerOld.verbose("FirstComment: Did received comment in delegate")
+        logger.log(level: .verbose, "FirstComment: Did received comment in delegate")
         if let model = conversationModel, shouldAddMain {
-            OWLoggerOld.verbose("FirstComment: Adding main conversation screen before we continue")
+            logger.log(level: .verbose, "FirstComment: Adding main conversation screen before we continue")
             insertMainConversationToNavigation(model)
         }
         localCommentReplyDidCreate?(comment)
