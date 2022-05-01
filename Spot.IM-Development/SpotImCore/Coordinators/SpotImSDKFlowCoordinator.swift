@@ -119,6 +119,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     private var mainConversationModelDisposeBag = DisposeBag()
     private var createCommentDisposeBag = DisposeBag()
     
+    fileprivate let logger = OWSharedServicesProvider.shared.logger()
+    
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
         sdkNavigationDelegate = delegate
@@ -202,7 +204,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
-                    print("spNetworkError: \(spNetworkError.localizedDescription)")
+                    self.logger.log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
                         self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
@@ -224,7 +226,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
-                    print("spNetworkError: \(spNetworkError.localizedDescription)")
+                    self.logger.log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
                         self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
@@ -250,7 +252,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 self.showConversationInternal(selectedCommentId: selectedCommentId, animated: true)
                 completion?(true, nil)
             case .failure(let spNetworkError):
-                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.logger.log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
                     self.pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
@@ -271,7 +273,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: selectedCommentId, animated: true)
                 completion?(true, nil)
             case .failure(let spNetworkError):
-                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.logger.log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
                     self.presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
