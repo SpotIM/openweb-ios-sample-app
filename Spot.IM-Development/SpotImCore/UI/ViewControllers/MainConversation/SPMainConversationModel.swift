@@ -437,7 +437,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             }
         } catch {
             if let realtimeError = error as? RealTimeError {
-                OWLogger.error("Failed to update real time data: \(realtimeError)")
+                OWLoggerOld.error("Failed to update real time data: \(realtimeError)")
                 stopRealTimeFetching()
                 SPDefaultFailureReporter.shared.report(error: .realTimeError(realtimeError))
             }

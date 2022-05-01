@@ -50,7 +50,7 @@ public struct OWJSONParser: OWResponseParser {
             let json = try JSONSerialization.jsonObject(with: data, options: [.mutableContainers])
             return parse(object: json)
         } catch let error {
-            OWLogger.error(error)
+            OWLoggerOld.error(error)
             return .failure(error)
         }
         

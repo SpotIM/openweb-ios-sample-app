@@ -113,7 +113,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         let headers = HTTPHeaders.basic(
             with: spotKey,
             postId: id)
-        OWLogger.warn("DEBUG: Is loading = true")
+        OWLoggerOld.warn("DEBUG: Is loading = true")
         isLoading = true
 
         loadingStarted?()
@@ -125,7 +125,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             headers: headers
         ) { (result, response) in
             DispatchQueue.main.async {
-                OWLogger.warn("DEBUG: Is loading = false")
+                OWLoggerOld.warn("DEBUG: Is loading = false")
                 self.isLoading = false
                 loadingFinished?()
 
@@ -214,7 +214,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         ) { (result, response) in
             switch result {
             case .success:
-                OWLogger.verbose("Succesfully sent conversation async")
+                OWLoggerOld.verbose("Succesfully sent conversation async")
             case .failure(let error):
                 let rawReport = RawReportModel(
                     url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,

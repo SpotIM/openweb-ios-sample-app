@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct OWLogger {
+struct OWLoggerOld {
     
     enum Level: String, CustomStringConvertible {
         
@@ -64,7 +64,7 @@ struct OWLogger {
     }
 }
 
-extension OWLogger {
+extension OWLoggerOld {
     
     static func error(_ error: Error, file: String = #file, line: Int = #line) {
         self.error("\(error)", file: file, line: line)

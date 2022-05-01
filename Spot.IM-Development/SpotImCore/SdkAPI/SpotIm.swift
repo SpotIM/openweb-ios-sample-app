@@ -175,7 +175,7 @@ public class SpotIm {
                 SPClientSettings.main.sendAppInitEvent()
                 completion?(true, nil)
             }.catch { error in
-                OWLogger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
+                OWLoggerOld.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
                 completion?(false, SpotImError.internalError(error.localizedDescription))
             }
         } else {
@@ -448,7 +448,7 @@ public class SpotIm {
                     getUserPromise().done { user in
                         call(config)
                     }.catch { error in
-                        OWLogger.verbose("FAILED!!!!")
+                        OWLoggerOld.verbose("FAILED!!!!")
                         if let spotError = error as? SpotImError {
                             failure(spotError)
                         } else {
@@ -456,11 +456,11 @@ public class SpotIm {
                         }
                     }
                 } else {
-                    OWLogger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
+                    OWLoggerOld.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
                 }
             }.catch { error in
-                OWLogger.verbose("FAILED!!!!")
+                OWLoggerOld.verbose("FAILED!!!!")
                 if let spotError = error as? SpotImError {
                     failure(spotError)
                 } else {
@@ -468,7 +468,7 @@ public class SpotIm {
                 }
             }
         } else {
-            OWLogger.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
+            OWLoggerOld.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
             failure(SpotImError.notInitialized)
         }
     }
