@@ -114,7 +114,7 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         ) { (result, response) in
             guard case let .failure(error) = result else { return }
             
-            OWLogger.error(error)
+            OWLoggerOld.error(error)
         }
     }
 }
