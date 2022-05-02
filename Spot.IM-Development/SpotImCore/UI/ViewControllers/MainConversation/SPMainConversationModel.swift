@@ -54,7 +54,7 @@ final class SPMainConversationModel {
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: OWAbTests
     
-    fileprivate let logger: OWLogger
+    fileprivate let servicesProvider: OWSharedServicesProviding
     
     // This is an ungly soultion until we will split this model to two proper VMs
     // By defualt this model serves the preConversation.
@@ -109,12 +109,12 @@ final class SPMainConversationModel {
          imageProvider: SPImageProvider,
          realTimeService: RealTimeService,
          abTestData: OWAbTests,
-         logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.realTimeService = realTimeService
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
         self.abTestsData = abTestData
-        self.logger = logger
+        self.servicesProvider = servicesProvider
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         dataSource = conversationDataSource
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
@@ -441,7 +441,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             }
         } catch {
             if let realtimeError = error as? RealTimeError {
-                logger.log(level: .error, "Failed to update real time data: \(realtimeError)")
+                servicesProvider.logger().log(level: .error, "Failed to update real time data: \(realtimeError)")
                 stopRealTimeFetching()
                 SPDefaultFailureReporter.shared.report(error: .realTimeError(realtimeError))
             }

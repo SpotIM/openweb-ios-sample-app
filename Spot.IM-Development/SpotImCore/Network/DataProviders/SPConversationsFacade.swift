@@ -13,10 +13,10 @@ import PromiseKit
 class NetworkDataProvider {
 
     let manager: OWApiManager
-    let logger: OWLogger
+    let servicesProvider: OWSharedServicesProviding
 
-    init(apiManager: OWApiManager, logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
-        self.logger = logger
+    init(apiManager: OWApiManager, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
         self.manager = apiManager
     }
 }
@@ -215,7 +215,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             guard let self = self else { return }
             switch result {
             case .success:
-                self.logger.log(level: .verbose, "Succesfully sent conversation async")
+                self.servicesProvider.logger().log(level: .verbose, "Succesfully sent conversation async")
             case .failure(let error):
                 let rawReport = RawReportModel(
                     url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,

@@ -37,10 +37,10 @@ public struct OWJSONParser: OWResponseParser {
     
     struct JSONParserError: Error {}
     
-    fileprivate let logger: OWLogger
+    fileprivate let servicesProvider: OWSharedServicesProviding
     
-    init(logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
-        self.logger = logger
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
     }
     
     func parse(object: Any) -> OWResult<[String: Any]> {
@@ -54,7 +54,7 @@ public struct OWJSONParser: OWResponseParser {
             let json = try JSONSerialization.jsonObject(with: data, options: [.mutableContainers])
             return parse(object: json)
         } catch let error {
-            logger.log(level: .error, error.localizedDescription)
+            servicesProvider.logger().log(level: .error, error.localizedDescription)
             return .failure(error)
         }
         
