@@ -56,7 +56,7 @@ internal final class SPMainConversationDataSource {
     private var cachedCommentReply: CommentViewModel?
     private var selectedLabelIds: [String]?
     
-    fileprivate let logger: OWLogger
+    fileprivate let servicesProvider: OWSharedServicesProviding
     
     internal var showReplies: Bool = false {
         didSet {
@@ -70,13 +70,13 @@ internal final class SPMainConversationDataSource {
     }
 
     init(with postId: String, articleMetadata: SpotImArticleMetadata, dataProvider: SPConversationsDataProvider,
-         logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         SPAnalyticsHolder.default.postId = postId
         
         self.postId = postId
         self.dataProvider = dataProvider
         self.articleMetadata = articleMetadata
-        self.logger = logger
+        self.servicesProvider = servicesProvider
         
         dataProvider.conversationAsync(postId: postId, articleUrl: articleMetadata.url)
         NotificationCenter.default.addObserver(
@@ -787,7 +787,7 @@ extension SPMainConversationDataSource {
     }
     
     func update(with comment: SPComment) {
-        logger.log(level: .verbose, "FirstComment: preparing comment view model")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: preparing comment view model")
         let parentComment = self.comment(with: comment.parentId)
 
         let displayName = parentComment?.displayName
@@ -828,6 +828,7 @@ extension SPMainConversationDataSource {
     }
     
     private func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
+        let logger = servicesProvider.logger()
         logger.log(level: .verbose, "FirstComment: push is called, sorting is \(String(describing: sortMode))")
         let updatedMessageCount = messageCount + 1
         if sortMode == .newest {
@@ -840,21 +841,21 @@ extension SPMainConversationDataSource {
             delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
         } else {
             logger.log(level: .verbose, "FirstComment: Refreshing to .newset sorting")
-            conversation(.newest, page: .first) { [weak self] result, _ in
+            conversation(.newest, page: .first) { [weak self, weak logger] result, _ in
                 guard let self = self else { return }
-                self.logger.log(level: .verbose, "FirstComment: Got result from API")
-                self.logger.log(level: .verbose, "FirstComment: \(result)")
+                logger?.log(level: .verbose, "FirstComment: Got result from API")
+                logger?.log(level: .verbose, "FirstComment: \(result)")
                 if result {
-                    self.logger.log(level: .verbose, "FirstComment: Calling reload data with scroll to top")
+                    logger?.log(level: .verbose, "FirstComment: Calling reload data with scroll to top")
                     self.delegate?.reload(shouldBeScrolledToTop: true)
-                    self.logger.log(level: .verbose, "FirstComment: Searching for the posted comment in the API response")
-                    self.logger.log(level: .verbose, "FirstComment: cell data: \(self.cellData)")
+                    logger?.log(level: .verbose, "FirstComment: Searching for the posted comment in the API response")
+                    logger?.log(level: .verbose, "FirstComment: cell data: \(self.cellData)")
                     let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
                     if dataModel == nil {
-                        self.logger.log(level: .verbose, "FirstComment: Data model not found, adding it manually")
+                        logger?.log(level: .verbose, "FirstComment: Data model not found, adding it manually")
                         self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
                         self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
-                        self.logger.log(level: .verbose, "FirstComment: Updated message count: \(updatedMessageCount)")
+                        logger?.log(level: .verbose, "FirstComment: Updated message count: \(updatedMessageCount)")
                         self.messageCount = updatedMessageCount
                         self.messageCounterUpdated?(updatedMessageCount)
                     }

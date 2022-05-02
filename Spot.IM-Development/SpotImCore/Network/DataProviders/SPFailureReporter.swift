@@ -114,7 +114,7 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
         ) { [weak self] (result, response) in
             guard case let .failure(error) = result else { return }
             
-            self?.logger.log(level: .error, "FailureReporter: \(error.localizedDescription)", prefix: "OpenWebSDKNetworkFailureReporterLogger")
+            self?.servicesProvider.logger().log(level: .error, "FailureReporter: \(error.localizedDescription)", prefix: "OpenWebSDKNetworkFailureReporterLogger")
         }
     }
 }

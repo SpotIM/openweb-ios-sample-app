@@ -14,7 +14,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     private var authHandler: OWAuthenticationHandler?
     
     // If we are using inheritance let's at least take advantage of it, that's why not private
-    let logger: OWLogger
+    let servicesProvider: OWSharedServicesProviding
     
     weak var webPageDelegate: SPSafariWebPageDelegate?
 
@@ -56,9 +56,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     // MARK: - Internal methods
 
     internal init(model: SPMainConversationModel, customUIDelegate: OWCustomUIDelegate? = nil,
-                  logger: OWLogger = OWSharedServicesProvider.shared.logger()) {
+                  servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.model = model
-        self.logger = logger
+        self.servicesProvider = servicesProvider
         
         super.init(customUIDelegate: customUIDelegate)
     }
@@ -111,13 +111,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal func reloadConversation() {
         guard !model.dataSource.isLoading else { return }
         let mode = model.sortOption
-        logger.log(level: .verbose, "FirstComment: Calling conversation API")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: Calling conversation API")
         model.dataSource.conversation(
             mode,
             page: .first,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
-                self.logger.log(level: .verbose, "FirstComment: API did finish with \(success)")
+                self.servicesProvider.logger().log(level: .verbose, "FirstComment: API did finish with \(success)")
                 self.handleConversationReloaded(success: success, error: error)
             }
         )
@@ -198,7 +198,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
                 SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
             }
             .catch { [weak self] error in
-                self?.logger.log(level: .verbose, "Failed to get single use token: \(error)")
+                self?.servicesProvider.logger().log(level: .verbose, "Failed to get single use token: \(error)")
             }
         } else {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
@@ -886,7 +886,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func localCommentWasCreated() {
-        logger.log(level: .verbose, "FirstComment:")
+        servicesProvider.logger().log(level: .verbose, "FirstComment:")
         model.handlePendingComment()
     }
 
