@@ -104,6 +104,11 @@ final class OWCommentVotingView: OWBaseView {
         rankDownLabel.backgroundColor = .clear
         rankDownLabel.textColor = .buttonTitle
     }
+    
+    func prepareForReuse() {
+        rankUpButton.deselect()
+        rankDownButton.deselect()
+    }
 }
 
 fileprivate extension OWCommentVotingView {

@@ -90,6 +90,10 @@ final class OWCommentActionsView: OWBaseView {
             setShowReplyButton(false)
         }
     }
+    
+    func prepareForReuse() {
+        votingView.prepareForReuse()
+    }
 
     // MARK: - Private
     
