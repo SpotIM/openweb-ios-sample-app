@@ -276,7 +276,8 @@ extension ArticleWebViewController: SpotImLoginDelegate {
 }
 
 extension ArticleWebViewController: SpotImCustomUIDelegate {    
-    func customizeView(view: CustomizableView, isDarkMode: Bool) {
+    func customizeView(view: CustomizableView, isDarkMode: Bool, postId: String) {
+        print("SpotImCustomUIDelegate customizeView callback receive with postId: \(postId)")
         guard spotId == "sp_mobileGuest" else { return }
         switch view {
         case .loginPrompt(let textView):
