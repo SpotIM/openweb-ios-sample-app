@@ -95,14 +95,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         super.init(model: model, customUIDelegate: customUIDelegate)
         adsProvider.bannerDelegate = self
         self.shouldDisplayLoginPrompt = self.userAuthFlowDelegate?.shouldDisplayLoginPromptForGuests() ?? false
-        logger.log(level: .verbose, "FirstComment: Main view controller created")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: Main view controller created")
     }
     // MARK: - Overrides
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        logger.log(level: .verbose, "FirstComment: Main view did load")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: Main view did load")
 
         if SPAnalyticsHolder.default.pageViewId != SPAnalyticsHolder.default.lastRecordedMainViewedPageViewId {
             SPAnalyticsHolder.default.log(event: openedByPublisher ? .viewed : .mainViewed, source: .conversation)
@@ -116,7 +116,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             setupUserIconHandler()
         }
 
-        logger.log(level: .verbose, "FirstComment: Have some comments in the data source")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: Have some comments in the data source")
 
         updateFooterView()
         footer.userAvatarView.configure(with: model.avatarViewVM)
@@ -259,6 +259,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
+        let logger = servicesProvider.logger()
         logger.log(level: .verbose, "FirstComment: API did finish with \(success)")
 
         self.hideLoader()
@@ -331,34 +332,35 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func loadCommentsNextPage() {
         guard !model.dataSource.isLoading else { return }
-
+        
+        let logger = servicesProvider.logger()
         logger.log(level: .verbose, "Loading comments next page")
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
         let mode = model.sortOption
         model.dataSource.comments(
             mode,
             page: .next,
-            loadingStarted: {
+            loadingStarted: { [weak logger, weak self] in
                 // showing loader section
-                self.logger.log(level: .verbose, "Comments - loading started called")
-                self.tableView.reloadData()
+                logger?.log(level: .verbose, "Comments - loading started called")
+                self?.tableView.reloadData()
             },
-            loadingFinished: {
+            loadingFinished: { [weak logger, weak self] in
                 // Removing loader section
-                self.logger.log(level: .verbose, "Comments - loading finished called")
-                self.tableView.reloadData()
+                logger?.log(level: .verbose, "Comments - loading finished called")
+                self?.tableView.reloadData()
             },
-            completion: { (success, _, error) in
+            completion: { [weak logger, weak self] (success, _, error) in
                 if let error = error {
-                    self.showAlert(
+                    self?.showAlert(
                         title: LocalizationManager.localizedString(key: "Oops..."),
                         message: error.localizedDescription
                     )
                 } else if success == false {
-                    self.logger.log(level: .error, "Load conversation next page request type is not `success`")
+                    logger?.log(level: .error, "Load conversation next page request type is not `success`")
                 }
 
-                self.tableView.reloadData()
+                self?.tableView.reloadData()
             }
         )
     }
@@ -871,7 +873,7 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
     }
 
     func bannerFailedToLoad(error: Error) {
-        logger.log(level: .error, "BannerFailedToLoad - \(error.localizedDescription)")
+        servicesProvider.logger().log(level: .error, "BannerFailedToLoad - \(error.localizedDescription)")
 
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .mainConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
