@@ -18,7 +18,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
     func sendEvent(with info: SPEventInfo, postId: String?) {
 
         guard let spotKey = SPClientSettings.main.spotKey else {
-            OWLoggerOld.error("[ERROR]: No spot key for analytics")
+            servicesProvider.logger().log(level: .error, "No spot key for analytics")
             return
         }
 
