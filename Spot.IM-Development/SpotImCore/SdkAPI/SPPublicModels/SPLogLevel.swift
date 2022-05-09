@@ -8,6 +8,8 @@
 
 import Foundation
 
+// This entire file can be removed after refactoring prefix to OW
+
 public enum SPLogLevel {
     case none, error, medium, verbose
 }
