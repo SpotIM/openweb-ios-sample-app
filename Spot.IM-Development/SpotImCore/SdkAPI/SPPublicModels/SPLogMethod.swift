@@ -8,6 +8,8 @@
 
 import Foundation
 
+// This entire file can be removed after refactoring prefix to OW
+
 public enum SPLogMethod {
     case nsLog, osLog, file(maxFilesNumber: Int)
 }
