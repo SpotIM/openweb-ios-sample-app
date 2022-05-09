@@ -44,6 +44,10 @@ class DemoArticlesList: UITableViewController {
         super.viewDidLoad()
 
         SpotIm.initialize(spotId: spotId)
+        
+        SpotIm.configureLogger(logLevel: .verbose, logMethods: [.nsLog,
+                                                                .file(maxFilesNumber: 50)])
+        
         SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { [weak self] result in
             guard let self = self else { return }
             

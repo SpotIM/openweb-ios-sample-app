@@ -31,6 +31,8 @@ class SPCommentCreationModel {
     let avatarViewVM: OWAvatarViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
     
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    
     var actionCallback: Observable<SPViewActionCallbackType> {
         let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
             .map { _ -> SPViewActionCallbackType in
@@ -43,12 +45,13 @@ class SPCommentCreationModel {
     init(commentCreationDTO: SPCommentCreationDTO,
          updater: SPCommentUpdater,
          imageProvider: SPImageProvider,
-         articleMetadate: SpotImArticleMetadata
-    ) {
+         articleMetadate: SpotImArticleMetadata,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.dataModel = commentCreationDTO
         self.imageProvider = imageProvider
         commentService = updater
         self.articleMetadate = articleMetadate
+        self.servicesProvider = servicesProvider
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: articleMetadate)
         setupCommentLabels()
@@ -225,7 +228,7 @@ class SPCommentCreationModel {
             return false
         } else if !Bundle.main.hasCameraUsageDescription ||
                     !Bundle.main.hasPhotoLibraryUsageDescription {
-            OWLoggerOld.warn("Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file")
+            servicesProvider.logger().log(level: .medium, "Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file")
             return false
         } else {
             return true
@@ -287,7 +290,7 @@ class SPCommentCreationModel {
                 self.currentUploadingImageId = nil
                 completion(imageContent != nil)
             } else if let error = err {
-                print("Failed to upload image: " + error.localizedDescription)
+                self.servicesProvider.logger().log(level: .error, "Failed to upload image: " + error.localizedDescription)
                 self.currentUploadingImageId = nil
                 self.errorHandler?(error)
                 completion(false)

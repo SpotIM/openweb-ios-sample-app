@@ -21,7 +21,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var header: SPPreConversationHeaderView = .init()
     private lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     private lazy var footerView: SPPreConversationFooter = .init()
-    
+        
     private var checkTableViewHeight: CGFloat = 0
     private let maxSectionCount: Int
     private let readingTracker = SPReadingTracker()
@@ -344,7 +344,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             model.getInitialSortMode(),
             page: .first,
             loadingStarted: {},
-            completion: { (success, error) in
+            completion: { [weak self] (success, error) in
+                guard let self = self else { return }
                 if let error = error {
                     if self.model.areCommentsEmpty() {
                         self.presentErrorView(error: error)
@@ -355,7 +356,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
                         )
                     }
                 } else if success == false {
-                    OWLoggerOld.error("Load conversation request type is not `success`")
+                    self.servicesProvider.logger().log(level: .error, "Load conversation request type is not `success`")
                 } else {
                     self.checkAdsAvailability()
                     
@@ -503,7 +504,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         if  model.adsGroup().interstitialEnabled(),
             AdsManager.shouldShowInterstitial(for: model.dataSource.postId) {
             if adsProvider.showInterstitial(in: self) {
-                print("Did not showed interstitial")
+                servicesProvider.logger().log(level: .medium, "Did not showed interstitial")
             }
         }
          preConversationDelegate?.showMoreComments(with: model, selectedCommentId: selectedCommentId)
@@ -612,7 +613,7 @@ extension SPPreConversationViewController: AdsProviderBannerDelegate {
     }
     
     func bannerFailedToLoad(error: Error) {
-        OWLoggerOld.error("error bannerFailedToLoad - \(error)")
+        servicesProvider.logger().log(level: .error, "error bannerFailedToLoad - \(error.localizedDescription)")
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .preConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
     }
