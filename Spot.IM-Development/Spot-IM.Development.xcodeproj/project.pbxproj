@@ -112,6 +112,12 @@
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
 		3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9C5825281AF64F002D0FCB /* OWFiles.swift */; };
 		3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */; };
+		3DB3D180282A4A70008654CF /* UserAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D17F282A4A70008654CF /* UserAuthentication.swift */; };
+		3DB3D182282A4B94008654CF /* GenericSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D181282A4B94008654CF /* GenericSSOAuthentication.swift */; };
+		3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D183282A4F85008654CF /* JWTSSOAuthentication.swift */; };
+		3DB3D186282A5029008654CF /* AuthenticationPlaygroundVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D185282A5029008654CF /* AuthenticationPlaygroundVC.swift */; };
+		3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D187282A5038008654CF /* AuthenticationPlaygroundViewModel.swift */; };
+		3DB3D18B282A5624008654CF /* DLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D18A282A5624008654CF /* DLog.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
 		3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */; };
@@ -759,6 +765,12 @@
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3D9C5825281AF64F002D0FCB /* OWFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFiles.swift; sourceTree = "<group>"; };
 		3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycle.swift; sourceTree = "<group>"; };
+		3DB3D17F282A4A70008654CF /* UserAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuthentication.swift; sourceTree = "<group>"; };
+		3DB3D181282A4B94008654CF /* GenericSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericSSOAuthentication.swift; sourceTree = "<group>"; };
+		3DB3D183282A4F85008654CF /* JWTSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWTSSOAuthentication.swift; sourceTree = "<group>"; };
+		3DB3D185282A5029008654CF /* AuthenticationPlaygroundVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundVC.swift; sourceTree = "<group>"; };
+		3DB3D187282A5038008654CF /* AuthenticationPlaygroundViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundViewModel.swift; sourceTree = "<group>"; };
+		3DB3D18A282A5624008654CF /* DLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DLog.swift; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
 		3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpotImReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
@@ -1342,6 +1354,51 @@
 				3D20A39A27B0258D003F8513 /* Typealiases.swift */,
 			);
 			path = OWSnapKit;
+			sourceTree = "<group>";
+		};
+		3DB3D17B282A495C008654CF /* AuthenticationPlayground */ = {
+			isa = PBXGroup;
+			children = (
+				3DB3D17E282A49A7008654CF /* Models */,
+				3DB3D17D282A4996008654CF /* ViewModels */,
+				3DB3D17C282A4990008654CF /* Views */,
+			);
+			path = AuthenticationPlayground;
+			sourceTree = "<group>";
+		};
+		3DB3D17C282A4990008654CF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3DB3D185282A5029008654CF /* AuthenticationPlaygroundVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3DB3D17D282A4996008654CF /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				3DB3D187282A5038008654CF /* AuthenticationPlaygroundViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		3DB3D17E282A49A7008654CF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DB3D17F282A4A70008654CF /* UserAuthentication.swift */,
+				3DB3D181282A4B94008654CF /* GenericSSOAuthentication.swift */,
+				3DB3D183282A4F85008654CF /* JWTSSOAuthentication.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		3DB3D189282A55DA008654CF /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E685AC2825C97DB5008FECDB /* SpotImAdsProvider */,
+				3DB3D18A282A5624008654CF /* DLog.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		3DD72C63280EF03E00117946 /* Infra - Currently not in used */ = {
@@ -2048,9 +2105,10 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		5D4943B72302CA8C00AA7541 /* ViewControllers */ = {
+		5D4943B72302CA8C00AA7541 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				3DB3D17B282A495C008654CF /* AuthenticationPlayground */,
 				6DF3A6F62386CCCE00419B30 /* TableViewFooterTesterViewController */,
 				0EEF283A22EE52A400667A86 /* AuthenticationViewController.swift */,
 				0E1125CE23049F7A006B1489 /* ArticlesListViewController */,
@@ -2059,8 +2117,9 @@
 				5DA9B7F52358C7E9006DF43D /* SettingsViewController.swift */,
 				6DA75C90238D5A6F00FBDF19 /* DemoViewController.swift */,
 				6DAFEEC7239D022400441E97 /* DemoConfiguration.swift */,
+				5D697A4022B65106001AD556 /* ViewController.swift */,
 			);
-			path = ViewControllers;
+			path = UI;
 			sourceTree = "<group>";
 		};
 		5D697A3222B65106001AD556 = {
@@ -2105,18 +2164,17 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
-				E685AC2825C97DB5008FECDB /* SpotImAdsProvider */,
-				0E1125DC2304BC48006B1489 /* Extension */,
-				5D4943B72302CA8C00AA7541 /* ViewControllers */,
-				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
 				5D00B73E22E9B78100EFC1B0 /* Core */,
+				5D4943B72302CA8C00AA7541 /* UI */,
+				0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */,
 				5D697A3E22B65106001AD556 /* AppDelegate.swift */,
-				5D697A4022B65106001AD556 /* ViewController.swift */,
 				5D697A4522B65108001AD556 /* Assets.xcassets */,
 				5D697A4A22B65108001AD556 /* Info.plist */,
 				4416C653237ABDE700D3F7B9 /* LaunchScreen.storyboard */,
 				4416C652237ABDE700D3F7B9 /* Main.storyboard */,
 				6DA75C92238D61D100FBDF19 /* Demo.storyboard */,
+				0E1125DC2304BC48006B1489 /* Extension */,
+				3DB3D189282A55DA008654CF /* Helpers */,
 				E666D01E25E39F0A009F04D4 /* Resources */,
 			);
 			path = "Spot-IM.Development";
@@ -3279,7 +3337,10 @@
 				443B328D236997F00000BB60 /* SettingsViewController.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
+				3DB3D182282A4B94008654CF /* GenericSSOAuthentication.swift in Sources */,
+				3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
+				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
 				5D697A3F22B65106001AD556 /* AppDelegate.swift in Sources */,
 				0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */,
@@ -3291,7 +3352,10 @@
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
 				0E1125E423054335006B1489 /* ArticleWebViewController.swift in Sources */,
+				3DB3D180282A4A70008654CF /* UserAuthentication.swift in Sources */,
+				3DB3D186282A5029008654CF /* AuthenticationPlaygroundVC.swift in Sources */,
 				5D00B74422E9B7A600EFC1B0 /* DemoAuthenticationProvider.swift in Sources */,
+				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
