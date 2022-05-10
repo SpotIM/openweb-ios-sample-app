@@ -22,6 +22,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var customSpotTextField: UITextField!
     @IBOutlet weak var optionsScrollView: UIScrollView!
+    @IBOutlet weak var autenticationPlaygroundBtn: UIButton!
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -266,6 +267,14 @@ fileprivate extension ViewController {
             .subscribe(onNext: { [weak self] height in
                 guard let self = self else { return }
                 self.optionsScrollView.contentOffset = CGPoint(x: 0, y: height/2)
+            })
+            .disposed(by: disposeBag)
+        
+        autenticationPlaygroundBtn.rx.tap
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self else { return }
+                let autenticationPlaygroundVC = AuthenticationPlaygroundVC()
+                self.navigationController?.pushViewController(autenticationPlaygroundVC, animated: true)
             })
             .disposed(by: disposeBag)
     }
