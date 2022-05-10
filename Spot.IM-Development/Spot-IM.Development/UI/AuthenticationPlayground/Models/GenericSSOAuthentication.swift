@@ -19,7 +19,14 @@ extension GenericSSOAuthentication {
     static let mockModels = [
         GenericSSOAuthentication(domainName: "Test-Mobile-SSO",
                                  spotId: "sp_eCIlROSD",
-                                 ssoToken: "", userAuthentication: UserAuthentication(username: "test",
+                                 ssoToken: "",
+                                 userAuthentication: UserAuthentication(username: "test",
+                                                                                      password: "1234",
+                                                                                      userToken: "03190715DchJcY")),
+        GenericSSOAuthentication(domainName: "Yahoo",
+                                 spotId: "sp_Rba9aFpG",
+                                 ssoToken: "03200929UI9yij.458e37600305d9b8e34a9776baf4e9cddbc3fc2355c9da1ef5cc359309d89403",
+                                 userAuthentication: UserAuthentication(username: "test",
                                                                                       password: "1234",
                                                                                       userToken: "03190715DchJcY"))
     ]
