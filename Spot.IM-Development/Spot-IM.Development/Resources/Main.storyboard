@@ -168,7 +168,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1485" y="362"/>
+            <point key="canvasLocation" x="1606" y="363"/>
         </scene>
         <!--Article View Controller-->
         <scene sceneID="gZq-Jd-NbV">
@@ -348,9 +348,6 @@
                                         <state key="normal" title="Authentication Playground">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
-                                        <connections>
-                                            <segue destination="BYZ-38-t0r" kind="show" id="K30-vi-Uta"/>
-                                        </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="dNW-kA-umB">
                                         <rect key="frame" x="90" y="304" width="195" height="34"/>
@@ -442,6 +439,7 @@ Build: [unknown]</string>
                     <navigationItem key="navigationItem" id="JkC-5p-26C"/>
                     <connections>
                         <outlet property="appInfoLabel" destination="TMI-UE-CFh" id="nzs-aY-YgY"/>
+                        <outlet property="autenticationPlaygroundBtn" destination="htH-kI-1Pw" id="04w-3f-3CM"/>
                         <outlet property="customSpotTextField" destination="rRC-QZ-NmV" id="zoq-1e-bJ9"/>
                         <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
                         <outlet property="optionsScrollView" destination="pQi-6l-4ah" id="d78-Is-hkY"/>
