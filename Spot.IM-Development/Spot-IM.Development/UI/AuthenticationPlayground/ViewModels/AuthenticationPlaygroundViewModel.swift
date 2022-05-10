@@ -15,11 +15,15 @@ protocol AuthenticationPlaygroundViewModelingInputs {
     var selectedGenericSSOOptionIndex: PublishSubject<Int> { get }
     var selectedJWTSSOOptionIndex: PublishSubject<Int> { get }
     var logoutPressed: PublishSubject<Void> { get }
+    var genericSSOAuthenticatePressed: PublishSubject<Void> { get }
+    var JWTSSOAuthenticatePressed: PublishSubject<Void> { get }
 }
 
 protocol AuthenticationPlaygroundViewModelingOutputs {
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> { get }
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> { get }
+    var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
+    var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
 }
 
 protocol AuthenticationPlaygroundViewModeling {
@@ -38,6 +42,8 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     var selectedJWTSSOOptionIndex = PublishSubject<Int>()
     
     var logoutPressed = PublishSubject<Void>()
+    var genericSSOAuthenticatePressed = PublishSubject<Void>()
+    var JWTSSOAuthenticatePressed = PublishSubject<Void>()
     
     fileprivate let _genericSSOOptions = BehaviorSubject(value: GenericSSOAuthentication.mockModels)
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> {
@@ -49,6 +55,14 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> {
         return _JWTSSOOptions
             .asObservable()
+    }
+    
+    var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> {
+        return Observable.empty()
+    }
+    
+    var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> {
+        return Observable.empty()
     }
     
     fileprivate let disposeBag = DisposeBag()
