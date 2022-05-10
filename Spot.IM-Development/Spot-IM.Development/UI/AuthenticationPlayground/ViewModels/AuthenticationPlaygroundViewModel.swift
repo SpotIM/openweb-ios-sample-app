@@ -20,6 +20,7 @@ protocol AuthenticationPlaygroundViewModelingInputs {
 }
 
 protocol AuthenticationPlaygroundViewModelingOutputs {
+    var title: String { get }
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> { get }
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> { get }
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
@@ -45,6 +46,10 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
     var JWTSSOAuthenticatePressed = PublishSubject<Void>()
     
+    lazy var title: String = {
+       return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
+    }()
+    
     fileprivate let _genericSSOOptions = BehaviorSubject(value: GenericSSOAuthentication.mockModels)
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> {
         return _genericSSOOptions
@@ -58,11 +63,11 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     }
     
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> {
-        return Observable.empty()
+        return Observable.just(.initial)
     }
     
     var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> {
-        return Observable.empty()
+        return Observable.just(.initial)
     }
     
     fileprivate let disposeBag = DisposeBag()
