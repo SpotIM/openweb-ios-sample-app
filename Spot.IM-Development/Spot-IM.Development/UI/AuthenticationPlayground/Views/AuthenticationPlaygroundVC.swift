@@ -12,8 +12,8 @@ import SnapKit
 
 class AuthenticationPlaygroundVC: UIViewController {
     fileprivate struct Metrics {
-        static let verticalMargin: CGFloat = 40
-        static let verticalBigMargin: CGFloat = 80
+        static let verticalMargin: CGFloat = 20
+        static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 20
         static let horizontalSmallMargin: CGFloat = 6
         static let roundCornerRadius: CGFloat = 10
@@ -32,7 +32,30 @@ class AuthenticationPlaygroundVC: UIViewController {
     }()
     
     fileprivate lazy var switchInitializeSDK: UISwitch = {
-        return UISwitch()
+        let aSwitch = UISwitch()
+        aSwitch.setOn(true, animated: false)
+        return aSwitch
+    }()
+    
+    fileprivate lazy var lblAutomaticallyDismiss: UILabel = {
+        let txt = NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":"
+        return txt
+            .label
+            .font(FontBook.secondaryHeadingBold)
+            .textColor(ColorPalette.blackish)
+    }()
+    
+    fileprivate lazy var lblAutomaticallyDismissDescription: UILabel = {
+        return NSLocalizedString("AutomaticallyDismissAfterLoginDescription", comment: "")
+            .label
+            .font(FontBook.helperLight)
+            .textColor(ColorPalette.darkGrey)
+    }()
+    
+    fileprivate lazy var switchAutomaticallyDismiss: UISwitch = {
+        let aSwitch = UISwitch()
+        aSwitch.setOn(true, animated: false)
+        return aSwitch
     }()
     
     fileprivate lazy var lblGenericSSO: UILabel = {
@@ -155,7 +178,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         // Initialize SDK section
         view.addSubview(lblInitializeSDK)
         lblInitializeSDK.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(2*Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
@@ -164,11 +187,31 @@ fileprivate extension AuthenticationPlaygroundVC {
             make.centerY.equalTo(lblInitializeSDK)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
         }
+        
+        // Automatically dismiss after login section
+        view.addSubview(lblAutomaticallyDismiss)
+        lblAutomaticallyDismiss.snp.makeConstraints { make in
+            make.top.equalTo(lblInitializeSDK.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+        }
+        
+        view.addSubview(lblAutomaticallyDismissDescription)
+        lblAutomaticallyDismissDescription.snp.makeConstraints { make in
+            make.top.equalTo(lblAutomaticallyDismiss.snp.bottom).offset(0.5 * Metrics.verticalMargin)
+            make.leading.equalTo(lblAutomaticallyDismiss)
+            make.trailing.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
+        
+        view.addSubview(switchAutomaticallyDismiss)
+        switchAutomaticallyDismiss.snp.makeConstraints { make in
+            make.centerY.equalTo(lblAutomaticallyDismiss)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
 
         // Generic SSO section
         view.addSubview(lblGenericSSO)
         lblGenericSSO.snp.makeConstraints { make in
-            make.top.equalTo(lblInitializeSDK.snp.bottom).offset(1.5*Metrics.verticalBigMargin)
+            make.top.equalTo(lblAutomaticallyDismissDescription.snp.bottom).offset(1.5*Metrics.verticalBigMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
@@ -234,9 +277,8 @@ fileprivate extension AuthenticationPlaygroundVC {
         btnLogout.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.greaterThanOrEqualTo(btnJWTSSOAuthenticate.snp.bottom).offset(Metrics.verticalMargin)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-0.5*Metrics.verticalMargin)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-Metrics.verticalMargin)
         }
-    
     }
 
     func setupObservers() {
@@ -300,6 +342,16 @@ fileprivate extension AuthenticationPlaygroundVC {
         
         switchInitializeSDK.rx.isOn
             .bind(to: viewModel.inputs.initializeSDKToggled)
+            .disposed(by: disposeBag)
+        
+        switchAutomaticallyDismiss.rx.isOn
+            .bind(to: viewModel.inputs.automaticallyDismissToggled)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.dismissVC
+            .subscribe(onNext: { [weak self] in
+                self?.navigationController?.popViewController(animated: true)
+            })
             .disposed(by: disposeBag)
     }
 }
