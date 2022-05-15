@@ -276,7 +276,7 @@ struct Response: Decodable {
 
 extension ArticlesListViewController: SpotImSDKNavigationDelegate {
     func controllerForSSOFlow() -> UIViewController {
-        if (authenticationControllerId == String.defaultAuthenticationPlayground) {
+        if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
             let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
             return authenticationPlaygroundVC
         } else {

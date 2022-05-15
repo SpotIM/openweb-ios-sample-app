@@ -255,7 +255,7 @@ extension ArticleWebViewController: WKNavigationDelegate {
 extension ArticleWebViewController: SpotImLoginDelegate {
     func startLoginFlow() {
         if (self.shouldPresentFullConInNewNavStack == false) {
-            if (authenticationControllerId == String.defaultAuthenticationPlayground) {
+            if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
                 let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
                 navigationController?.pushViewController(authenticationPlaygroundVC, animated: true)
             } else {
@@ -271,7 +271,7 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     
     
     func presentControllerForSSOFlow(with spotNavController: UIViewController) {
-        if (authenticationControllerId == String.defaultAuthenticationPlayground) {
+        if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
             let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
             spotNavController.present(authenticationPlaygroundVC, animated: true, completion: nil)
         } else {
