@@ -23,6 +23,18 @@ class AuthenticationPlaygroundVC: UIViewController {
     fileprivate let viewModel: AuthenticationPlaygroundViewModeling
     fileprivate let disposeBag = DisposeBag()
     
+    fileprivate lazy var lblInitializeSDK: UILabel = {
+        let txt = NSLocalizedString("InitializeSDKFirst", comment: "") + ":"
+        return txt
+            .label
+            .font(FontBook.secondaryHeadingBold)
+            .textColor(ColorPalette.blackish)
+    }()
+    
+    fileprivate lazy var switchInitializeSDK: UISwitch = {
+        return UISwitch()
+    }()
+    
     fileprivate lazy var lblGenericSSO: UILabel = {
         let txt = NSLocalizedString("GenericSSO", comment: "") + ":"
         return txt
@@ -139,11 +151,24 @@ class AuthenticationPlaygroundVC: UIViewController {
 fileprivate extension AuthenticationPlaygroundVC {
     func setupViews() {
         view.backgroundColor = .white
+        
+        // Initialize SDK section
+        view.addSubview(lblInitializeSDK)
+        lblInitializeSDK.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+        }
+        
+        view.addSubview(switchInitializeSDK)
+        switchInitializeSDK.snp.makeConstraints { make in
+            make.centerY.equalTo(lblInitializeSDK)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+        }
 
         // Generic SSO section
         view.addSubview(lblGenericSSO)
         lblGenericSSO.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
+            make.top.equalTo(lblInitializeSDK.snp.bottom).offset(1.5*Metrics.verticalBigMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
@@ -208,7 +233,8 @@ fileprivate extension AuthenticationPlaygroundVC {
         view.addSubview(btnLogout)
         btnLogout.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-Metrics.verticalMargin)
+            make.top.greaterThanOrEqualTo(btnJWTSSOAuthenticate.snp.bottom).offset(Metrics.verticalMargin)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-0.5*Metrics.verticalMargin)
         }
     
     }
@@ -270,6 +296,10 @@ fileprivate extension AuthenticationPlaygroundVC {
         
         btnLogout.rx.tap
             .bind(to: viewModel.inputs.logoutPressed)
+            .disposed(by: disposeBag)
+        
+        switchInitializeSDK.rx.isOn
+            .bind(to: viewModel.inputs.initializeSDKToggled)
             .disposed(by: disposeBag)
     }
 }
