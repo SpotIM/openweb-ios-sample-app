@@ -33,7 +33,6 @@ class AuthenticationPlaygroundVC: UIViewController {
     
     fileprivate lazy var switchInitializeSDK: UISwitch = {
         let aSwitch = UISwitch()
-        aSwitch.setOn(true, animated: false)
         return aSwitch
     }()
     
