@@ -18,6 +18,7 @@ protocol AuthenticationPlaygroundViewModelingInputs {
     var genericSSOAuthenticatePressed: PublishSubject<Void> { get }
     var JWTSSOAuthenticatePressed: PublishSubject<Void> { get }
     var initializeSDKToggled: PublishSubject<Bool> { get }
+    var automaticallyDismissToggled: PublishSubject<Bool> { get }
 }
 
 protocol AuthenticationPlaygroundViewModelingOutputs {
@@ -26,6 +27,7 @@ protocol AuthenticationPlaygroundViewModelingOutputs {
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> { get }
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
+    var dismissVC: PublishSubject<Void> { get }
 }
 
 protocol AuthenticationPlaygroundViewModeling {
@@ -37,16 +39,26 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     var inputs: AuthenticationPlaygroundViewModelingInputs { return self }
     var outputs: AuthenticationPlaygroundViewModelingOutputs { return self }
     
+    fileprivate struct Metrics {
+        static let delayUntilDismissVC = 500 // milliseconds
+    }
+    
     fileprivate let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedGenericSSOOptionIndex = PublishSubject<Int>()
     
     fileprivate let _selectedJWTSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedJWTSSOOptionIndex = PublishSubject<Int>()
     
-    fileprivate let _initializeSDKToggled = BehaviorSubject(value: false)
+    fileprivate let shouldInitializeSDK = BehaviorSubject(value: true)
     var initializeSDKToggled = PublishSubject<Bool>()
     
+    fileprivate let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
+    var automaticallyDismissToggled = PublishSubject<Bool>()
+    
     var logoutPressed = PublishSubject<Void>()
+    
+    var dismissVC = PublishSubject<Void>()
+    
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
     var JWTSSOAuthenticatePressed = PublishSubject<Void>()
     
@@ -110,7 +122,16 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
             })
-            .bind(to: _initializeSDKToggled)
+            .bind(to: shouldInitializeSDK)
+            .disposed(by: disposeBag)
+                
+        // Bind automatically dismiss toggle (after successful login)
+        automaticallyDismissToggled
+            .do(onNext: { [weak self] _ in
+                self?._genericSSOAuthenticationStatus.onNext(.initial)
+                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+            })
+            .bind(to: shouldAutomaticallyDismiss)
             .disposed(by: disposeBag)
            
         // Logout
@@ -153,7 +174,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
             })
-            .withLatestFrom(_initializeSDKToggled) { genricSSO, shouldInitializeSDK -> GenericSSOAuthentication in
+            .withLatestFrom(shouldInitializeSDK) { genricSSO, shouldInitializeSDK -> GenericSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if (shouldInitializeSDK) {
                     SpotIm.reinit = true
@@ -216,9 +237,17 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     })
                     .unwrap()
             }
-            .subscribe(onNext: { [weak self] _ in
+            .do(onNext: { [weak self] _ in
                 self?._genericSSOAuthenticationStatus.onNext(.successful)
             })
+            .withLatestFrom(shouldAutomaticallyDismiss)
+            .filter { $0 == true }
+            .delay(.milliseconds(Metrics.delayUntilDismissVC), scheduler: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                // 7. Rx back to the view layer to dismiss itself
+                self?.outputs.dismissVC.onNext()
+            })
+            .subscribe()
             .disposed(by: disposeBag)
         
         // JWT SSO authentication started
@@ -236,7 +265,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 self?._JWTSSOAuthenticationStatus.onNext(.inProgress)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
-            .withLatestFrom(_initializeSDKToggled) { JWTSSO, shouldInitializeSDK -> JWTSSOAuthentication in
+            .withLatestFrom(shouldInitializeSDK) { JWTSSO, shouldInitializeSDK -> JWTSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if (shouldInitializeSDK) {
                     SpotIm.reinit = true
@@ -256,9 +285,17 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     })
                     .unwrap()
             }
-            .subscribe(onNext: { [weak self] _ in
+            .do(onNext: { [weak self] _ in
                 self?._JWTSSOAuthenticationStatus.onNext(.successful)
             })
+            .withLatestFrom(shouldAutomaticallyDismiss)
+            .filter { $0 == true }
+            .delay(.milliseconds(Metrics.delayUntilDismissVC), scheduler: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                // 5. Rx back to the view layer to dismiss itself
+                self?.outputs.dismissVC.onNext()
+            })
+            .subscribe()
             .disposed(by: disposeBag)
     }
     

@@ -15,3 +15,5 @@
 "Authenticate" = "Authenticate";
 "Status" = "Status";
 "InitializeSDKFirst" = "Initialize SDK first";
+"AutomaticallyDismissAfterLogin" = "Dismiss after login";
+"AutomaticallyDismissAfterLoginDescription" = "Will dismiss after half a second for visibility";
