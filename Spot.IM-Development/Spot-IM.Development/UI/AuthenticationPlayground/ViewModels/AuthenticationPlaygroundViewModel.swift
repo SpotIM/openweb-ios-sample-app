@@ -102,6 +102,10 @@ fileprivate extension AuthenticationPlaygroundViewModel {
            
         // Logout
         logoutPressed
+            .do(onNext: { [weak self] JWTSSO in
+                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                self?._genericSSOAuthenticationStatus.onNext(.initial)
+            })
             .subscribe(onNext: {
                 SpotIm.getUserLoginStatus { loginStatus in
                     DLog("Before logout \(loginStatus))")
@@ -135,10 +139,26 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             .do(onNext: { [weak self] genricSSO in
                 // 2. Initialize SDK with appropriate spotId
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
+                self?._JWTSSOAuthenticationStatus.onNext(.initial)
+                SpotIm.reinit = true
                 SpotIm.initialize(spotId: genricSSO.spotId)
             })
-            .flatMapLatest { [weak self] _ -> Observable<String> in
-                // 3. Start SSO
+            .flatMapLatest { [weak self] genricSSO -> Observable<(String, GenericSSOAuthentication)> in
+                // 3. Login user if needed
+                guard let self = self, genricSSO.requiredUserLogin else { return.just(("", genricSSO)) }
+                return self.login(user: genricSSO.user)
+                    .catchAndReturn(nil) // Keep the main subscription in case of an error
+                    .do(onNext: { [weak self] value in
+                        if value == nil {
+                            self?._genericSSOAuthenticationStatus.onNext(.failed)
+                        }
+                    })
+                    .unwrap()
+                    .map { ($0, genricSSO) }
+                    
+            }
+            .flatMapLatest { [weak self] token, genricSSO -> Observable<(String, String, GenericSSOAuthentication)> in
+                // 4. Start SSO
                 guard let self = self else { return Observable.empty() }
                 return self.startSSO()
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
@@ -148,13 +168,26 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                         }
                     })
                     .unwrap()
+                    .map { ($0, token, genricSSO) }
             }
-            .flatMapLatest { [weak self] codeA -> Observable<String> in
+            .flatMapLatest { [weak self] codeA, token, genricSSO -> Observable<String> in
+                // 5. Retrieving Code B
                 guard let self = self else { return Observable.empty() }
-                return .just("codeB")
+                if genricSSO.requiredUserLogin {
+                    return self.codeB(codeA: codeA, token: token, user: genricSSO.user)
+                        .catchAndReturn(nil) // Keep the main subscription in case of an error
+                        .do(onNext: { [weak self] value in
+                            if value == nil {
+                                self?._genericSSOAuthenticationStatus.onNext(.failed)
+                            }
+                        })
+                        .unwrap()
+                } else {
+                    return .just("FindAWayToMockPublishersCodeB")
+                }
             }
             .flatMapLatest { [weak self] codeB -> Observable<Void> in
-                // 4. Complete SSO
+                // 6. Complete SSO
                 guard let self = self else { return Observable.empty() }
                 return self.completeSSO(codeB: codeB)
                     .catchAndReturn(nil)
@@ -184,6 +217,8 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             .do(onNext: { [weak self] JWTSSO in
                 // 2. Initialize SDK with appropriate spotId
                 self?._JWTSSOAuthenticationStatus.onNext(.inProgress)
+                self?._genericSSOAuthenticationStatus.onNext(.initial)
+                SpotIm.reinit = true
                 SpotIm.initialize(spotId: JWTSSO.spotId)
             })
             .flatMapLatest { [weak self] JWTSSO -> Observable<Void> in
@@ -208,13 +243,13 @@ fileprivate extension AuthenticationPlaygroundViewModel {
         return Observable.create { observer in
             SpotIm.startSSO { response, error in
                 if let error = error {
-                    DLog("Failed in 'SpotIm.startSSO' with error: \(error.localizedDescription)")
+                    DLog("Failed in 'startSSO' with error: \(error.localizedDescription)")
                     observer.onError(error)
                 } else if let response = response, let codeA = response.codeA {
                     observer.onNext(codeA)
                     observer.onCompleted()
                 } else {
-                    DLog("Failed in 'SpotIm.startSSO' without an error")
+                    DLog("Failed in 'startSSO' without an error")
                     observer.onError(AuthenticationError.startSSOCodeAMissing)
                 }
             }
@@ -227,13 +262,13 @@ fileprivate extension AuthenticationPlaygroundViewModel {
         return Observable.create { observer in
             SpotIm.completeSSO(with: codeB) { success, error in
                 if let error = error {
-                    DLog("Failed in 'SpotIm.completeSSO' with error: \(error.localizedDescription)")
+                    DLog("Failed in 'completeSSO(codeB:)' with error: \(error.localizedDescription)")
                     observer.onError(error)
                 } else if success == true {
                     observer.onNext(())
                     observer.onCompleted()
                 } else {
-                    DLog("Failed in 'SpotIm.completeSSO' without an error")
+                    DLog("Failed in 'completeSSO(codeB:)' without an error")
                     observer.onError(AuthenticationError.completeSSOFailed)
                 }
             }
@@ -246,17 +281,54 @@ fileprivate extension AuthenticationPlaygroundViewModel {
         return Observable.create { observer in
             SpotIm.sso(withJwtSecret: jwtSecret) { response, error in
                 if let error = error {
-                    DLog("Failed in 'SpotIm.sso(jwtSecret:)' with error: \(error.localizedDescription)")
+                    DLog("Failed in 'sso(jwtSecret:)' with error: \(error.localizedDescription)")
                     observer.onError(error)
                 } else if let success = response?.success, success {
                     observer.onNext(())
                     observer.onCompleted()
                 } else {
-                    DLog("Failed in 'SpotIm.sso(jwtSecret:)' without an error")
+                    DLog("Failed in 'sso(jwtSecret:)' without an error")
                     observer.onError(AuthenticationError.JWTSSOFailed)
                 }
             }
             
+            return Disposables.create()
+        }
+    }
+    
+    func login(user: UserAuthentication) -> Observable<String?> {
+        return Observable.create { observer in
+            DemoAuthenticationProvider.logIn(with: user.username, password: user.password) { token, error in
+                guard let token = token else {
+                    let loginError = error != nil ? error! : AuthenticationError.userLoginFailed
+                    DLog("Failed in 'login(user:)' with error: \(loginError.localizedDescription)")
+                    observer.onError(loginError)
+                    return
+                }
+                observer.onNext(token)
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func codeB(codeA: String, token: String, user: UserAuthentication) -> Observable<String?> {
+        return Observable.create { observer in
+            DemoAuthenticationProvider.getCodeB(with: codeA,
+                                                accessToken: token,
+                                                username: user.username,
+                                                accessTokenNetwork: user.userToken) { codeB, error in
+                guard let codeB = codeB else {
+                    let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
+                    DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError.localizedDescription)")
+                    observer.onError(codeBError)
+                    return
+                }
+                observer.onNext(codeB)
+                observer.onCompleted()
+                
+                
+            }
             return Disposables.create()
         }
     }
