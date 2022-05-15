@@ -12,4 +12,6 @@ enum AuthenticationError: Error {
     case startSSOCodeAMissing
     case completeSSOFailed
     case JWTSSOFailed
+    case userLoginFailed
+    case codeBFailed
 }
