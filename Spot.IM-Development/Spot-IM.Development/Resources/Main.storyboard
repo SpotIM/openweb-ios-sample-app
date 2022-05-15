@@ -453,7 +453,7 @@ Build: [unknown]</string>
         <!--Fox Authentication View Controller-->
         <scene sceneID="MDj-ZJ-CSk">
             <objects>
-                <viewController storyboardIdentifier="FoxAuthenticationViewController" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FoxAuthenticationVC" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hKb-AP-Smg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
