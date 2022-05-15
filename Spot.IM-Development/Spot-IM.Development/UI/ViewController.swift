@@ -102,27 +102,27 @@ class ViewController: UIViewController {
     
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
         setup(with: .demoGenericSpotKeyForSSO, from: sender)
-        showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationPlayground)
     }
 
     @IBAction func showsp_mobileSSO(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSSO, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSSO, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: .demoSpotKeyForMobileSSO, authenticationControllerId: .defaultAuthenticationPlayground)
     }
     
     @IBAction func showsp_mobileGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileGuest, from: sender)
-        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationPlayground)
     }
     
     @IBAction func showsp_mobileSocial(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSocial, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSocial, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: .demoSpotKeyForMobileSocial, authenticationControllerId: .defaultAuthenticationPlayground)
     }
     
     @IBAction func show_spmobileSocialGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSocialGuest, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSocialGuest, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: .demoSpotKeyForMobileSocialGuest, authenticationControllerId: .defaultAuthenticationPlayground)
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
@@ -133,7 +133,7 @@ class ViewController: UIViewController {
     @IBAction func showCustomSpotConversation(_ sender: UIButton) {
         let spotId = customSpotTextField.text ?? ""
         setup(with: spotId, from: sender)
-        showArticles(with: spotId, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: spotId, authenticationControllerId: .defaultAuthenticationPlayground)
     }
     
     private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
@@ -195,9 +195,9 @@ class ViewController: UIViewController {
 }
 
 /// demo constants
-private extension String {
-    static var defaultAuthenticationControllerId:   String { return "AuthenticstionViewController" }
-    static var foxAuthenticationControllerId:       String { return "FoxAuthenticationViewController" }
+extension String {
+    static var defaultAuthenticationPlayground:   String { return "AuthenticationPlaygroundVC" }
+    static var foxAuthenticationControllerId:       String { return "FoxAuthenticationVC" }
     static var demoGenericSpotKeyForSSO:            String { return "sp_eCIlROSD" }
     static var demoFoxSpotKeyForSSO:                String { return "sp_ANQXRpqH" }
     static var demoSpotKeyForMobileSSO:             String { return "sp_mobileSSO" }
