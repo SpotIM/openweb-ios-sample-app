@@ -49,7 +49,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     fileprivate let _selectedJWTSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedJWTSSOOptionIndex = PublishSubject<Int>()
     
-    fileprivate let shouldInitializeSDK = BehaviorSubject(value: true)
+    fileprivate let shouldInitializeSDK = BehaviorSubject(value: false)
     var initializeSDKToggled = PublishSubject<Bool>()
     
     fileprivate let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
