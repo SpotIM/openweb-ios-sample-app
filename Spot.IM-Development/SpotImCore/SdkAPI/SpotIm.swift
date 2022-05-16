@@ -149,6 +149,8 @@ public class SpotIm {
     
     internal static var customInitialSortByOption: SpotImSortByOption? = nil
     
+    fileprivate static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
+    
     /**
     Initialize the SDK
 
@@ -175,7 +177,7 @@ public class SpotIm {
                 SPClientSettings.main.sendAppInitEvent()
                 completion?(true, nil)
             }.catch { error in
-                OWLoggerOld.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
+                servicesProvider.logger().log(level: .error, "FAILED to initialize the SDK, will try to recover on next API call: \(error.localizedDescription)")
                 completion?(false, SpotImError.internalError(error.localizedDescription))
             }
         } else {
@@ -439,6 +441,17 @@ public class SpotIm {
     public static func setInitialSort(option: SpotImSortByOption) {
         self.customInitialSortByOption = option
     }
+    
+    /**
+        Configure OpenWeb SDK logger
+
+     - Parameter logLevel: SPLogLevel - the level which will be logged out
+     - Parameter logMethods: [SPLogMethod] - the methods in which we will log
+     */
+    public static func configureLogger(logLevel: SPLogLevel, logMethods: [SPLogMethod]) {
+        self.servicesProvider.configure.configureLogger(logLevel: logLevel.toOWPrefix,
+                                                        logMethods: logMethods.map {$0.toOWPrefix })
+    }
 
     // MARK: Private
     private static func execute(call: @escaping (SpotConfig) -> Void, failure: @escaping ((SpotImError) -> Void)) {
@@ -448,7 +461,7 @@ public class SpotIm {
                     getUserPromise().done { user in
                         call(config)
                     }.catch { error in
-                        OWLoggerOld.verbose("FAILED!!!!")
+                        servicesProvider.logger().log(level: .error, "FAILED to load user: \(error.localizedDescription)")
                         if let spotError = error as? SpotImError {
                             failure(spotError)
                         } else {
@@ -456,11 +469,11 @@ public class SpotIm {
                         }
                     }
                 } else {
-                    OWLoggerOld.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
+                    servicesProvider.logger().log(level: .error, "SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
                     failure(SpotImError.configurationSdkDisabled)
                 }
             }.catch { error in
-                OWLoggerOld.verbose("FAILED!!!!")
+                servicesProvider.logger().log(level: .error, "FAILED to load config: \(error.localizedDescription)")
                 if let spotError = error as? SpotImError {
                     failure(spotError)
                 } else {
@@ -468,7 +481,7 @@ public class SpotIm {
                 }
             }
         } else {
-            OWLoggerOld.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
+            servicesProvider.logger().log(level: .error, "Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
             failure(SpotImError.notInitialized)
         }
     }
