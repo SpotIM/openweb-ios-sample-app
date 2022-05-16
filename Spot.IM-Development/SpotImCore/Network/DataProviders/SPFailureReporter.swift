@@ -111,10 +111,10 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
             parameters: error.parameters(),
             parser: OWEmptyParser(),
             headers: headers
-        ) { (result, response) in
+        ) { [weak self] (result, response) in
             guard case let .failure(error) = result else { return }
             
-            OWLoggerOld.error(error)
+            self?.servicesProvider.logger().log(level: .error, "FailureReporter: \(error.localizedDescription)", prefix: "OpenWebSDKNetworkFailureReporterLogger")
         }
     }
 }

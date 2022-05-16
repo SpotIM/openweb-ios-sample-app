@@ -119,6 +119,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     private var mainConversationModelDisposeBag = DisposeBag()
     private var createCommentDisposeBag = DisposeBag()
     
+    fileprivate let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
+    
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
         sdkNavigationDelegate = delegate
@@ -191,7 +193,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         case .present(let viewController):
             // create nav controller in code to be the container for conversationController
             let navController = createNavController()
-            self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
+            self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success( _):
                     self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: nil, animated: true)
@@ -202,7 +205,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
-                    print("spNetworkError: \(spNetworkError.localizedDescription)")
+                    self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
                         self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
@@ -212,7 +215,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             }
             break
         case .push(let navigationController):
-            prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
+            prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success( _):
                     let model = self.conversationModel!
@@ -224,7 +228,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
-                    print("spNetworkError: \(spNetworkError.localizedDescription)")
+                    self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
                         self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
@@ -244,13 +248,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, callbacks: SPViewActionsCallbacks? = nil, completion: SPShowFullConversationCompletionHandler? = nil)
     {
         self.viewActionsCallback = callbacks
-        self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
+        self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success( _):
                 self.showConversationInternal(selectedCommentId: selectedCommentId, animated: true)
                 completion?(true, nil)
             case .failure(let spNetworkError):
-                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
                     self.pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
@@ -265,13 +270,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         self.viewActionsCallback = callbacks
         // create nav controller in code to be the container for conversationController
         let navController = createNavController()
-        self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
+        self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success( _):
                 self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: selectedCommentId, animated: true)
                 completion?(true, nil)
             case .failure(let spNetworkError):
-                print("spNetworkError: \(spNetworkError.localizedDescription)")
+                self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
                     self.presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
                 }
@@ -409,13 +415,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             model.getInitialSortMode(),
             page: .first,
             loadingStarted: {},
-            completion: { (success, error) in
+            completion: { [weak self] (success, error) in
+                guard let self = self else { return }
                 self.isLoadingConversation = false
                 if let error = error {
                     completion(.failure(error))
                 } else if success == false {
                     completion(.failure(SPNetworkError.requestFailed))
-                    OWLoggerOld.error("Load conversation request type is not `success`")
+                    self.servicesProvider.logger().log(level: .error, "Load conversation request type is not `success`")
                 } else {
                     
                     let messageCount = model.dataSource.messageCount
@@ -470,10 +477,12 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             controller.title = navigationItemTitleText
         }
         
-        OWLoggerOld.verbose("FirstComment: localCommentReplayDidCreate SET")
-        localCommentReplyDidCreate = { comment in
-            OWLoggerOld.verbose("FirstComment: localCommentReplayDidCreate CALLED")
-            OWLoggerOld.verbose("FirstComment: setting the pending comment to the model")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: localCommentReplayDidCreate SET")
+
+        localCommentReplyDidCreate = { [weak self] comment in
+            guard let self = self else { return }
+            self.servicesProvider.logger().log(level: .verbose, "FirstComment: localCommentReplayDidCreate CALLED")
+            self.servicesProvider.logger().log(level: .verbose, "FirstComment: setting the pending comment to the model")
             model.pendingComment = comment
         }
         commentReplyCreationBlocked = { commentText in
@@ -661,9 +670,9 @@ extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     internal func commentReplyDidCreate(_ comment: SPComment) {
-        OWLoggerOld.verbose("FirstComment: Did received comment in delegate")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: Did received comment in delegate")
         if let model = conversationModel, shouldAddMain {
-            OWLoggerOld.verbose("FirstComment: Adding main conversation screen before we continue")
+            servicesProvider.logger().log(level: .verbose, "FirstComment: Adding main conversation screen before we continue")
             insertMainConversationToNavigation(model)
         }
         localCommentReplyDidCreate?(comment)

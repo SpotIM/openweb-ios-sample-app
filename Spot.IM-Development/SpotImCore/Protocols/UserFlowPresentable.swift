@@ -72,11 +72,12 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
             title: LocalizationManager.localizedString(key: "Log Out"),
             style: .destructive) { _ in
                 SpotIm.logout { result in
+                    let logger = OWSharedServicesProvider.shared.logger()
                     switch result {
                     case .success:
-                        print("Logout succeeded")
+                        logger.log(level: .medium, "Logout succeeded")
                     case .failure(let error):
-                        print("Logout error: \(error)")
+                        logger.log(level: .error, "Logout error: \(error)")
                     }
                 }
         }
