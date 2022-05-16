@@ -62,6 +62,9 @@ class ArticlesListViewController: UITableViewController {
             print("SpotIm.initialize - isInitialized: \(isInitialized)")
         }
         
+        SpotIm.configureLogger(logLevel: .verbose, logMethods: [.nsLog,
+                                                                .file(maxFilesNumber: 50)])
+        
         // This is the new implementation for publishers with monetization. The app developer should provide the AdsProvider implementation instance
         // to utilize the ad-network dependecies from the app target instead of the SDK.
         SpotIm.setGoogleAdsProvider(googleAdsProvider: GoogleAdsProvider())

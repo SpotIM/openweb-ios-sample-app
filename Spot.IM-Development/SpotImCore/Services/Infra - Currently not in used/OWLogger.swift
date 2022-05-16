@@ -159,6 +159,10 @@ class OWLogger {
             self.log(level: level, text, prefix: loggerPrefix, file: file, line: line)
         }
     }
+    
+    // Deinit
+    // Will be called if the logger configuration was changed because we creating a new logger in such case
+    // I intentionally decided to do nothing in such case, i.e NOT saving the log in case the publisher decided to change configuration
 }
 
 fileprivate extension OWLogger {
@@ -304,10 +308,14 @@ fileprivate extension OWLogger {
 fileprivate extension OWLogger {
     func setupObservers() {
         appLifeCycle.didEnterBackground
-            .filter { self.needsToWriteLogFile() }
+            .filter { [weak self] in
+                guard let self = self else { return false }
+                return self.needsToWriteLogFile()
+            }
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.fileCreationQueue.async {
+                self.fileCreationQueue.async { [weak self] in
+                    guard let self = self else { return }
                     self.writeLogFile()
                 }
             })
