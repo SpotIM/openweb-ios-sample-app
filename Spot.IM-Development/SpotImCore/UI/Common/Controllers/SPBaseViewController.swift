@@ -62,6 +62,7 @@ internal class SPBaseViewController: UIViewController {
             
             // title view
             navigationItemTitleView?.textColor = UIColor.spForeground0
+            navigationItemTitleView?.isScrollEnabled = false
         
             // nav bar
             let navBarAppearance = UINavigationBarAppearance()
