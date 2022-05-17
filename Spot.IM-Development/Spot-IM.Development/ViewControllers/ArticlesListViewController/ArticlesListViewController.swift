@@ -54,6 +54,7 @@ class ArticlesListViewController: UITableViewController {
         super.viewDidLoad()
         
         SpotIm.reinit = shouldReinit
+        SpotIm.enableCustomNavigationItemTitle = true
         
         SpotIm.initialize(spotId: spotId) { (isInitialized, error) in
             if let error = error {
