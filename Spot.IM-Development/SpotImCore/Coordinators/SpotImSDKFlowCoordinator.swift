@@ -501,6 +501,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         navigationItemTextView.attributedText = attributedTitleText
         navigationItemTextView.isEditable = false
         navigationItemTextView.isSelectable = false
+        navigationItemTextView.isScrollEnabled = false
         customizeNavigationItemTitle(textView: navigationItemTextView)
         return navigationItemTextView
     }
