@@ -184,7 +184,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             }
             .flatMapLatest { [weak self] genricSSO -> Observable<(String, GenericSSOAuthentication)> in
                 // 3. Login user if needed
-                guard let self = self, genricSSO.requiredUserLogin else { return.just(("", genricSSO)) }
+                guard let self = self else { return.just(("", genricSSO)) }
                 return self.login(user: genricSSO.user)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
@@ -210,20 +210,16 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     .map { ($0, token, genricSSO) }
             }
             .flatMapLatest { [weak self] codeA, token, genricSSO -> Observable<String> in
-                // 5. Retrieving Code B
-                guard let self = self else { return Observable.empty() }
-                if genricSSO.requiredUserLogin {
-                    return self.codeB(codeA: codeA, token: token, user: genricSSO.user)
-                        .catchAndReturn(nil) // Keep the main subscription in case of an error
-                        .do(onNext: { [weak self] value in
-                            if value == nil {
-                                self?._genericSSOAuthenticationStatus.onNext(.failed)
-                            }
-                        })
-                        .unwrap()
-                } else {
-                    return .just("FindAWayToMockPublishersCodeB")
-                }
+            // 5. Retrieving Code B
+            guard let self = self else { return Observable.empty() }
+                return self.codeB(codeA: codeA, token: token, user: genricSSO.user)
+                    .catchAndReturn(nil) // Keep the main subscription in case of an error
+                    .do(onNext: { [weak self] value in
+                        if value == nil {
+                            self?._genericSSOAuthenticationStatus.onNext(.failed)
+                        }
+                    })
+                    .unwrap()
             }
             .flatMapLatest { [weak self] codeB -> Observable<Void> in
                 // 6. Complete SSO
