@@ -65,7 +65,7 @@ internal extension Dictionary where Key == AnyHashable, Value == Any {
         return self[APIHeadersConstants.openwebTokenHeader] as? String
     }
 
-    var userIdHeader: String? {
+    var guidHeader: String? {
         return self[APIHeadersConstants.guid] as? String
     }
 }
