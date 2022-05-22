@@ -382,9 +382,8 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 }
                 observer.onNext(codeB)
                 observer.onCompleted()
-                
-                
             }
+            
             return Disposables.create()
         }
     }

@@ -8,6 +8,7 @@
 
 import Foundation
 import PromiseKit
+import RxSwift
 
 public enum SpotImError: Error {
     /// SDK was not initilized, please call SpotIm.initialize(spotId: String) with your spotId before calling any other SDK APIs
@@ -171,13 +172,16 @@ public class SpotIm {
         if SpotIm.spotId == nil {
             SpotIm.reinit = false
             SpotIm.spotId = spotId
-            getConfigPromise(spotId: spotId).ensure {
-                SPClientSettings.main.sendAppInitEvent()
-                completion?(true, nil)
-            }.catch { error in
-                servicesProvider.logger().log(level: .error, "FAILED to initialize the SDK, will try to recover on next API call: \(error.localizedDescription)")
-                completion?(false, SpotImError.internalError(error.localizedDescription))
-            }
+            
+            _ = getConfig(spotId: spotId)
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { _ in
+                    SPClientSettings.main.sendAppInitEvent()
+                    completion?(true, nil)
+                }, onError: { error in
+                    servicesProvider.logger().log(level: .error, "FAILED to initialize the SDK, will try to recover on next API call: \(error.localizedDescription)")
+                    completion?(false, SpotImError.internalError(error.localizedDescription))
+                })
         } else {
             completion?(false, SpotImError.alreadyInitialized)
         }
@@ -365,13 +369,13 @@ public class SpotIm {
     
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
         execute(call: { _ in
-            firstly {
-                authProvider.logout()
-            }.done {
-                completion(.success)
-            }.catch { (error) in
-                completion(.failure(SpotImError.internalError(error.localizedDescription)))
-            }
+            _ = authProvider.logout()
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { _ in
+                    completion(.success)
+                }, onError: { error in
+                    completion(.failure(SpotImError.internalError(error.localizedDescription)))
+                })
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
@@ -426,47 +430,65 @@ public class SpotIm {
     // MARK: Private
     private static func execute(call: @escaping (SpotConfig) -> Void, failure: @escaping ((SpotImError) -> Void)) {
         if let spotId = SpotIm.spotId {
-            getConfigPromise(spotId: spotId).done { config in
-                if let enabled = config.appConfig.mobileSdk.enabled, enabled {
-                    getUserPromise().done { user in
-                        call(config)
-                    }.catch { error in
-                        servicesProvider.logger().log(level: .error, "FAILED to load user: \(error.localizedDescription)")
-                        if let spotError = error as? SpotImError {
-                            failure(spotError)
-                        } else {
-                            failure(SpotImError.internalError(error.localizedDescription))
-                        }
+            _ = getConfig(spotId: spotId) // Load config
+                .catch { error in
+                    servicesProvider.logger().log(level: .error, "FAILED to load config: \(error.localizedDescription)")
+                    if let spotError = error as? SpotImError {
+                        failure(spotError)
+                    } else {
+                        failure(SpotImError.internalError(error.localizedDescription))
                     }
-                } else {
-                    servicesProvider.logger().log(level: .error, "SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
-                    failure(SpotImError.configurationSdkDisabled)
+                    return .empty() // Actually stop here
                 }
-            }.catch { error in
-                servicesProvider.logger().log(level: .error, "FAILED to load config: \(error.localizedDescription)")
-                if let spotError = error as? SpotImError {
-                    failure(spotError)
-                } else {
-                    failure(SpotImError.internalError(error.localizedDescription))
+                .take(1) // No need to disposed since we take 1
+                .flatMapLatest { config in
+                    return getUser() // Load user
+                        .catch { error in
+                            servicesProvider.logger().log(level: .error, "FAILED to load user: \(error.localizedDescription)")
+                            if let spotError = error as? SpotImError {
+                                failure(spotError)
+                            } else {
+                                failure(SpotImError.internalError(error.localizedDescription))
+                            }
+                            return .empty() // Actually stop here
+                        }
+                        .map { _ in
+                            return config
+                        }
                 }
-            }
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { config in
+                    call(config)
+                })
         } else {
             servicesProvider.logger().log(level: .error, "Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
             failure(SpotImError.notInitialized)
         }
     }
 
-    private static func getConfigPromise(spotId: String) -> Promise<SpotConfig> {
-        if let configurationPromise = configurationPromise, !configurationPromise.isRejected {
-            return configurationPromise
-        }
+    private static func getConfig(spotId: String) -> Observable<SpotConfig> {
+        return Observable.create { observer in
+            let configuration: Promise<SpotConfig>
+            if let configurationPromise = self.configurationPromise, !configurationPromise.isRejected {
+                configuration = configurationPromise
+            } else {
+                let result = SPClientSettings.main.setup(spotId: spotId)
+                self.configurationPromise = result
+                configuration = self.configurationPromise!
+            }
 
-        let result = SPClientSettings.main.setup(spotId: spotId)
-        configurationPromise = result
-        return result
+            configuration.done { config in
+                observer.onNext(config)
+                observer.onCompleted()
+            }.catch { error in
+                return observer.onError(error)
+            }
+            
+            return Disposables.create()
+        }
     }
 
-    private static func getUserPromise() -> Promise<SPUser> {
+    private static func getUser() -> Observable<SPUser> {
         // Since the way to know the user expired is by code 403 for that request, we should never cache the user.
         // We will able to do so only after some expiration field will be added
         return authProvider.getUser()
