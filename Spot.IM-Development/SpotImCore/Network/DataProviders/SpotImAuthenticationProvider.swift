@@ -13,13 +13,6 @@ import PromiseKit
 public typealias AuthCompletionHandler = (_ success: Bool, _ error: Error?) -> Void
 public typealias AuthStratCompleteionHandler = (_ response: SSOStartResponse?, _ error: Error?) -> Void
 
-public protocol SSOAthenticationDelegate: AnyObject {
-    func ssoFlowStarted()
-    func ssoFlowDidSucceed()
-    func ssoFlowDidFail(with error: Error?)
-    func userLogout()
-}
-
 public struct SSOStartResponse: Codable {
     public var codeA: String?
     public var jwtToken: String?
@@ -27,31 +20,38 @@ public struct SSOStartResponse: Codable {
     public var success: Bool = false
 }
 
-internal struct SSOStartResponseInternal: Codable {
-    public var codeA: String?
-    public var autoComplete: Bool = false
-    public var success: Bool = false
-    public var user: SPUser?
+protocol SSOAthenticationDelegate: AnyObject {
+    func ssoFlowStarted()
+    func ssoFlowDidSucceed()
+    func ssoFlowDidFail(with error: Error?)
+    func userLogout()
 }
 
-internal struct SSOCompleteResponseInternal: Codable {
-    public var success: Bool = false
-    public var user: SPUser?
+struct SSOStartResponseInternal: Codable {
+    var codeA: String?
+    var autoComplete: Bool = false
+    var success: Bool = false
+    var user: SPUser?
+}
+
+struct SSOCompleteResponseInternal: Codable {
+    var success: Bool = false
+    var user: SPUser?
 }
 
 
-internal class SpotImAuthenticationProvider {
-        public weak var ssoAuthDelegate: SSOAthenticationDelegate?
+class SpotImAuthenticationProvider {
+        weak var ssoAuthDelegate: SSOAthenticationDelegate?
 
         private let internalAuthProvider: SPInternalAuthProvider
         private let manager: OWApiManager
 
-        public init(manager: OWApiManager, internalProvider: SPInternalAuthProvider) {
+        init(manager: OWApiManager, internalProvider: SPInternalAuthProvider) {
             self.manager = manager
             self.internalAuthProvider = internalProvider
         }
 
-        public func startSSO(completion: @escaping AuthStratCompleteionHandler) {
+        func startSSO(completion: @escaping AuthStratCompleteionHandler) {
             guard SPUserSessionHolder.isRegister() == false else {
                 let message = LocalizationManager.localizedString(key: "User is already logged in.")
                 completion(nil, SpotImError.internalError(message))
@@ -70,7 +70,7 @@ internal class SpotImAuthenticationProvider {
             }
         }
 
-        public func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
+        func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
             ssoAuthDelegate?.ssoFlowStarted()
             SPUserSessionHolder.resetUserSession()
             internalAuthProvider.login { (token, error) in
@@ -99,7 +99,7 @@ internal class SpotImAuthenticationProvider {
             }
 
             var headers = HTTPHeaders.basic(with: spotKey)
-            headers[APIHeadersConstants.AUTHORIZATION] = ssoParams?.token ?? SPUserSessionHolder.session.token
+            headers[APIHeadersConstants.authorization] = ssoParams?.token ?? SPUserSessionHolder.session.token
             manager.execute(
                 request: spRequest,
                 parameters: requestParams,
@@ -136,7 +136,7 @@ internal class SpotImAuthenticationProvider {
             }
     }
 
-    public func completeSSO(with codeB: String?,
+    func completeSSO(with codeB: String?,
                             completion: @escaping AuthCompletionHandler) {
         guard SPUserSessionHolder.isRegister() == false else {
             let message = LocalizationManager.localizedString(key: "User is already logged in.")
@@ -157,7 +157,7 @@ internal class SpotImAuthenticationProvider {
         let params = [APIParamKeysContants.CODE_B: codeB]
         var headers = HTTPHeaders.basic(with: spotKey)
         if let token = SPUserSessionHolder.session.token {
-            headers[APIHeadersConstants.AUTHORIZATION] = token
+            headers[APIHeadersConstants.authorization] = token
         }
 
         self.manager.execute(
@@ -207,11 +207,11 @@ internal class SpotImAuthenticationProvider {
     
     }
 
-    public func getUser() -> Promise<SPUser> {
+    func getUser() -> Promise<SPUser> {
         return internalAuthProvider.user()
     }
     
-    public func logout() -> Promise<Void> {
+    func logout() -> Promise<Void> {
         return firstly {
             internalAuthProvider.logout()
         }.then {
@@ -223,7 +223,7 @@ internal class SpotImAuthenticationProvider {
 }
 
 private struct SPCodeAParameters {
-    public init(token: String? = nil, secret: String? = nil) {
+    init(token: String? = nil, secret: String? = nil) {
         self.token = token
         self.secret = secret
     }
