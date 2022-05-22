@@ -41,7 +41,7 @@ public enum SpotImResult<T> {
 
 public enum SpotImLoginStatus {
     case guest
-    case loggedIn
+    case ssoLoggedIn(userId: String)
 }
 
 public struct SpotImConversationCounters: Codable {
@@ -121,7 +121,6 @@ public typealias InitizlizeCompletionHandler = (_ success: Bool, _ error: SpotIm
 
 public class SpotIm {
     private static var configurationPromise: Promise<SpotConfig>?
-    private static var userPromise: Promise<SPUser>?
     private static let apiManager: OWApiManager = OWApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     internal static let profileProvider: SPProfileProvider = SPProfileProvider(apiManager: SpotIm.apiManager)
@@ -166,7 +165,6 @@ public class SpotIm {
             SpotIm.spotId = nil
             SPUserSessionHolder.resetUserSession()
             configurationPromise = nil
-            userPromise = nil
             LocalizationManager.reset()
         }
 
@@ -342,57 +340,29 @@ public class SpotIm {
      Get the current user login status
 
      The login status may be one of 2 options:
-     1. Guest - an unauthenticated session
-     2. LoggedIn - an authenticated session
+     1. guest - an unauthenticated session
+     2. ssoLoggedIn - an authenticated session
      - Parameter completion: A completion handler to receive the current login status of the user
      */
     public static func getUserLoginStatus(completion: @escaping ((SpotImResult<SpotImLoginStatus>) -> Void)) {
         execute(call: { _ in
-            if let user = SPUserSessionHolder.session.user {
-                completion(.success(user.registered ? .loggedIn : .guest))
-            } else {
+            guard let user = SPUserSessionHolder.session.user else {
                 completion(.failure(SpotImError.notInitialized))
+                return
             }
+            let loginStatus: SpotImLoginStatus
+            if user.registered, let userId = user.id {
+                loginStatus = .ssoLoggedIn(userId: userId)
+            } else {
+                loginStatus = .guest
+            }
+            completion(.success(loginStatus))
+
         }) { (error) in
             completion(.failure(SpotImError.internalError(error.localizedDescription)))
         }
     }
 
-    /**
-     Get the current user login status with the user ID (if registered)
-
-     The login status may be one of 2 options:
-     1. Guest - an unauthenticated session
-     2. LoggedIn - an authenticated session
-     - Parameter completion: A completion handler to receive the current login status of the user
-     - SpotImResult returns the "user id" for a logged-in user
-     */
-    public static func getUserLoginStatusWithId(completion: @escaping ((SpotImResult<(SpotImLoginStatus, String?)>) -> Void)) {
-        execute(call: { _ in
-            if let user = SPUserSessionHolder.session.user {
-                let loginStatus:SpotImLoginStatus = user.registered ? .loggedIn : .guest
-                let userId = user.registered ? user.id : nil
-                completion(.success((loginStatus, userId)))
-            } else {
-                completion(.failure(SpotImError.notInitialized))
-            }
-        }) { (error) in
-            completion(.failure(SpotImError.internalError(error.localizedDescription)))
-        }
-    }
-    
-    /**
-     Get the current user ID (if registered)
-     */
-    public static func getRegisteredUserId() -> String? {
-        if let user = SPUserSessionHolder.session.user {
-            let userId = user.registered ? user.id : nil
-            return userId
-        } else {
-            return nil
-        }
-    }
-    
     public static func setCustomSortByOptionText(option: SpotImSortByOption, text: String) {
         customSortByOptionText[option] = text
     }
@@ -497,13 +467,8 @@ public class SpotIm {
     }
 
     private static func getUserPromise() -> Promise<SPUser> {
-        if let userPromise = userPromise, !userPromise.isRejected {
-            return userPromise
-        }
-
-        
-        let result = authProvider.getUser()
-        userPromise = result
-        return result
+        // Since the way to know the user expired is by code 403 for that request, we should never cache the user.
+        // We will able to do so only after some expiration field will be added
+        return authProvider.getUser()
     }
 }
