@@ -29,7 +29,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
 
         var headers = HTTPHeaders.basic(with: spotKey)
         if let token = SPUserSessionHolder.session.token {
-            headers["Authorization"] = token
+            headers[APIHeadersConstants.authorization] = token
         }
 
         manager.execute(
@@ -81,7 +81,7 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
 
             var headers = HTTPHeaders.basic(with: spotKey)
             if let token = SPUserSessionHolder.session.token {
-                headers["Authorization"] = token
+                headers[APIHeadersConstants.authorization] = token
             }
 
             manager.execute(
@@ -114,25 +114,11 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                 seal.reject(SPNetworkError.custom(message))
                 return
             }
-            
-            var shouldRemoveAuthorizationHeader = false
-            if let user = SPUserSessionHolder.session.user {
-                if !user.expired { // valid user - no need to fetch user/data
-                    seal.fulfill(user)
-                    return
-                } else { // user token is expired
-                    shouldRemoveAuthorizationHeader = true
-                }
-            }
-            
+
             let spRequest = SPInternalAuthRequests.user
-            
             var headers = HTTPHeaders.basic(with: spotKey)
-            // remove expired auth header to avoid 403 status
-            if shouldRemoveAuthorizationHeader {
-                headers.remove(name: "Authorization")
-            }
-            
+            headers[APIHeadersConstants.authorization] = "dfsdszdsafdsada"
+
             manager.execute(
                 request: spRequest,
                 parser: OWDecodableParser<SPUser>(),
