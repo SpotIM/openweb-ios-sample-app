@@ -52,14 +52,25 @@ class SpotImAuthenticationProvider {
         }
 
         func startSSO(completion: @escaping AuthStratCompleteionHandler) {
-            guard SPUserSessionHolder.isRegister() == false else {
-                let message = LocalizationManager.localizedString(key: "User is already logged in.")
-                completion(nil, SpotImError.internalError(message))
-                return
-            }
-            self.ssoAuthDelegate?.ssoFlowStarted()
-            SPUserSessionHolder.resetUserSession()
-            _ = internalAuthProvider.login()
+            _ = Observable.just(()) // Begin RX flow
+                .flatMapLatest { [weak self] _ -> Observable<Void> in
+                    guard let self = self else { return .empty() }
+                    if SPUserSessionHolder.isRegister() { // In such case logout first
+                        return self.logout()
+                            .catchAndReturn(()) // Just continue in case of an error
+                    } else {
+                        return .just(())
+                    }
+                }
+                .take(1) // No need to disposed since we take 1
+                .do(onNext: { [weak self] _ in
+                    self?.ssoAuthDelegate?.ssoFlowStarted()
+                    SPUserSessionHolder.resetUserSession()
+                })
+                .flatMapLatest { [weak self] _ -> Observable<String> in
+                    guard let self = self else { return .empty() }
+                    return self.internalAuthProvider.login()
+                }
                 .take(1) // No need to disposed since we take 1
                 .subscribe(onNext: { [weak self] token in
                     let newParams = SPCodeAParameters(token: token, secret: nil)
