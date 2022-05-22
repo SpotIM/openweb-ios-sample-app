@@ -22,6 +22,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var customSpotTextField: UITextField!
     @IBOutlet weak var optionsScrollView: UIScrollView!
+    @IBOutlet weak var autenticationPlaygroundBtn: UIButton!
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -101,38 +102,38 @@ class ViewController: UIViewController {
     
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
         setup(with: .demoGenericSpotKeyForSSO, from: sender)
-        showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
 
     @IBAction func showsp_mobileSSO(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSSO, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSSO, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: .demoSpotKeyForMobileSSO, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
     
     @IBAction func showsp_mobileGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileGuest, from: sender)
-        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
     
     @IBAction func showsp_mobileSocial(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSocial, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSocial, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: .demoSpotKeyForMobileSocial, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
     
     @IBAction func show_spmobileSocialGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSocialGuest, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSocialGuest, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: .demoSpotKeyForMobileSocialGuest, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
-        showArticlesWithSettingsAlert(with: .demoFoxSpotKeyForSSO, authenticationControllerId: .foxAuthenticationControllerId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+        showArticlesWithSettingsAlert(with: .demoFoxSpotKeyForSSO, authenticationControllerId: AuthenticationMetrics.foxAuthenticationId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
     }
     
     @IBAction func showCustomSpotConversation(_ sender: UIButton) {
         let spotId = customSpotTextField.text ?? ""
         setup(with: spotId, from: sender)
-        showArticles(with: spotId, authenticationControllerId: .defaultAuthenticationControllerId)
+        showArticles(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
     
     private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
@@ -195,8 +196,6 @@ class ViewController: UIViewController {
 
 /// demo constants
 private extension String {
-    static var defaultAuthenticationControllerId:   String { return "AuthenticstionViewController" }
-    static var foxAuthenticationControllerId:       String { return "FoxAuthenticationViewController" }
     static var demoGenericSpotKeyForSSO:            String { return "sp_eCIlROSD" }
     static var demoFoxSpotKeyForSSO:                String { return "sp_ANQXRpqH" }
     static var demoSpotKeyForMobileSSO:             String { return "sp_mobileSSO" }
@@ -266,6 +265,14 @@ fileprivate extension ViewController {
             .subscribe(onNext: { [weak self] height in
                 guard let self = self else { return }
                 self.optionsScrollView.contentOffset = CGPoint(x: 0, y: height/2)
+            })
+            .disposed(by: disposeBag)
+        
+        autenticationPlaygroundBtn.rx.tap
+            .subscribe(onNext: { [weak self] height in
+                guard let self = self else { return }
+                let autenticationPlaygroundVC = AuthenticationPlaygroundVC()
+                self.navigationController?.pushViewController(autenticationPlaygroundVC, animated: true)
             })
             .disposed(by: disposeBag)
     }

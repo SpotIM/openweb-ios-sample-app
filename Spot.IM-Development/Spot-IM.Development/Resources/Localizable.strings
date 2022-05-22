@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  Spot-IM.Development
+
+  Created by Alon Haiut on 10/05/2022.
+  Copyright © 2022 Spot.IM. All rights reserved.
+*/
+
+
+"AuthenticationPlaygroundTitle" = "Authentication Playground";
+"GenericSSO" = "Generic SSO";
+"JWTSSO" = "JWT SSO";
+"Login" = "Login";
+"Logout" = "Logout";
+"Authenticate" = "Authenticate";
+"Status" = "Status";
+"InitializeSDKFirst" = "Initialize SDK first";
+"AutomaticallyDismissAfterLogin" = "Dismiss after successful login";
+"AutomaticallyDismissAfterLoginDescription" = "Will dismiss after half a second for visibility";

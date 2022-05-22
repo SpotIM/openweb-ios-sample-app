@@ -68,14 +68,8 @@ internal final class ArticleViewController: UIViewController {
 
 extension ArticleViewController: SpotImLoginDelegate {
     func startLoginFlow() {
-        let controller: AuthenticstionViewController = UIStoryboard(
-            name: "Main",
-            bundle: nil
-        ).instantiateViewController(withIdentifier: "AuthenticstionViewController")
-            as! AuthenticstionViewController
-
-        controller.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(controller, animated: true)
+        let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
+        navigationController?.pushViewController(authenticationPlaygroundVC, animated: true)
     }
 }
 
