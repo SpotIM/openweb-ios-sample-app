@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2022-05-18
+### Added
+- Completely new logger system to assist in debug issues. We are really excited about that and recommend to read the document to understand the posabilities.
+- Add PostId to SpotImCustomUIDelegate callback
+
+### Fixed
+- Disable the scrolling of the title inside the navigation bar
+- Fixed a flickering in the UI of likes inside comments when the user refresh the screen
+
+### Internal
+- New infra for the network
+
 ## [1.12.0] - 2022-04-25
 ### Added
 - API to set the initial sorting option when a conversation open up

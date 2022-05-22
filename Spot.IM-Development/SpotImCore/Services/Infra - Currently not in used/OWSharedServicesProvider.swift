@@ -55,11 +55,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
     
     fileprivate lazy var _logger: OWLogger = {
-        var methods: [OWLogMethod] = [.file(maxFilesNumber: OWLogger.Metrics.defaultLogFilesNumber)]
-        // By default log to Xcode and device console only in debug mode
-#if DEBUG
-        methods.insert(.nsLog, at: 0)
-#endif
+        var methods: [OWLogMethod] = [.nsLog, .file(maxFilesNumber: OWLogger.Metrics.defaultLogFilesNumber)]
         let logger = OWLogger(logLevel: .verbose, logMethods: methods)
         logger.log(level: .verbose, "Logger initialized")
         return logger
