@@ -8,7 +8,7 @@
 
 import Foundation
 import Alamofire
-import PromiseKit
+import RxSwift
 
 public typealias AuthCompletionHandler = (_ success: Bool, _ error: Error?) -> Void
 public typealias AuthStratCompleteionHandler = (_ response: SSOStartResponse?, _ error: Error?) -> Void
@@ -59,29 +59,29 @@ class SpotImAuthenticationProvider {
             }
             self.ssoAuthDelegate?.ssoFlowStarted()
             SPUserSessionHolder.resetUserSession()
-            self.internalAuthProvider.login { (token, error) in
-                if let error = error {
-                    self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                    completion(nil, error)
-                } else {
+            _ = internalAuthProvider.login()
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { [weak self] token in
                     let newParams = SPCodeAParameters(token: token, secret: nil)
-                    self.getCodeA(withGuest: newParams, completion: completion)
-                }
-            }
+                    self?.getCodeA(withGuest: newParams, completion: completion)
+                }, onError: { [weak self] error in
+                    self?.ssoAuthDelegate?.ssoFlowDidFail(with: error)
+                    completion(nil, error)
+                })
         }
 
         func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
             ssoAuthDelegate?.ssoFlowStarted()
             SPUserSessionHolder.resetUserSession()
-            internalAuthProvider.login { (token, error) in
-                if let error = error {
-                    self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
-                    completion(nil, error)
-                } else {
+            _ = internalAuthProvider.login()
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { [weak self] token in
                     let newParams = SPCodeAParameters(token: token, secret: secret)
-                    self.getCodeA(withGuest: newParams, completion: completion)
-                }
-            }
+                    self?.getCodeA(withGuest: newParams, completion: completion)
+                }, onError: { [weak self] error in
+                    self?.ssoAuthDelegate?.ssoFlowDidFail(with: error)
+                    completion(nil, error)
+                })
         }
 
         private func getCodeA(withGuest ssoParams: SPCodeAParameters?,
@@ -207,18 +207,20 @@ class SpotImAuthenticationProvider {
     
     }
 
-    func getUser() -> Promise<SPUser> {
+    func getUser() -> Observable<SPUser> {
         return internalAuthProvider.user()
     }
     
-    func logout() -> Promise<Void> {
-        return firstly {
-            internalAuthProvider.logout()
-        }.then {
-            self.internalAuthProvider.user()
-        }.map { _ in
-            self.ssoAuthDelegate?.userLogout()
-        }
+    func logout() -> Observable<Void> {
+        return internalAuthProvider.logout()
+            .flatMapLatest { [weak self] _ -> Observable<SPUser> in
+                guard let self = self else { return .empty() }
+                return self.internalAuthProvider.user()
+            }
+            .voidify()
+            .do(onNext: { [weak self] _ in
+                self?.ssoAuthDelegate?.userLogout()
+            })
     }
 }
 
