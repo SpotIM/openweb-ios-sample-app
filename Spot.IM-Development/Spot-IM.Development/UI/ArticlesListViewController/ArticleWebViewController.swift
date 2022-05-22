@@ -253,30 +253,22 @@ extension ArticleWebViewController: WKNavigationDelegate {
 
 
 extension ArticleWebViewController: SpotImLoginDelegate {
-    func startLoginFlow() {
-        if (self.shouldPresentFullConInNewNavStack == false) {
-            if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
-                let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
-                navigationController?.pushViewController(authenticationPlaygroundVC, animated: true)
-            } else {
-                let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-                authViewController.modalPresentationStyle = .fullScreen
-                navigationController?.pushViewController(authViewController, animated: true)
-            }
-        }
-        else {
-            print("SDK notify that we started the Login flow - navigation is handled by the SDK")
-        }
-    }
-    
-    
-    func presentControllerForSSOFlow(with spotNavController: UIViewController) {
+    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode) {
+        let authVC: UIViewController
         if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
-            let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
-            spotNavController.present(authenticationPlaygroundVC, animated: true, completion: nil)
+            authVC = AuthenticationPlaygroundVC()
         } else {
-            let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-            spotNavController.present(authViewController, animated: true, completion: nil)
+            authVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+        }
+        
+        switch presentationalMode {
+        case .push(let navController):
+            authVC.modalPresentationStyle = .fullScreen
+            navController.pushViewController(authVC, animated: true)
+        case .present(let viewController):
+            viewController.present(authVC, animated: true, completion: nil)
+        @unknown default:
+            DLog("startLoginUIFlow received with unknown case")
         }
     }
     

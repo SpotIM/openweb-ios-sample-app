@@ -139,9 +139,17 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
 }
 
 extension TableViewFooterTesterViewController: SpotImLoginDelegate {
-    func startLoginFlow() {
+    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode) {
         let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
-        navigationController?.pushViewController(authenticationPlaygroundVC, animated: true)
+        
+        switch presentationalMode {
+        case .push(let navController):
+            navController.pushViewController(authenticationPlaygroundVC, animated: true)
+        case .present(let viewController):
+            viewController.present(authenticationPlaygroundVC, animated: true, completion: nil)
+        @unknown default:
+            DLog("startLoginUIFlow received with unknown case")
+        }
     }
 }
 
