@@ -362,10 +362,6 @@ public class SpotIm {
             completion(.failure(SpotImError.internalError(error.localizedDescription)))
         }
     }
-
-    public static func setCustomSortByOptionText(option: SpotImSortByOption, text: String) {
-        customSortByOptionText[option] = text
-    }
     
     public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
         execute(call: { _ in
@@ -379,6 +375,10 @@ public class SpotIm {
         }) { (error) in
             completion(SpotImResult.failure(error))
         }
+    }
+    
+    public static func setCustomSortByOptionText(option: SpotImSortByOption, text: String) {
+        customSortByOptionText[option] = text
     }
     
     /**
