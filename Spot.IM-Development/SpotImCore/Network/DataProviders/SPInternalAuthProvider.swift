@@ -175,6 +175,9 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                 return .just(user)
             case .retry:
                 return self.user(enableRetry: false) // Trying only one more time in case we failed auth
+                    .do { _ in
+                        // We received a new guest user, however we should signal publishers to renew SSO authentication
+                    }
             }
         }
     }
