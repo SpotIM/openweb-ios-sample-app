@@ -28,3 +28,7 @@ struct APIHeadersConstants {
     static let openwebTokenHeader = "x-openweb-token"
     static let guid = "x-guid"
 }
+
+struct APIErrorCodes {
+    static let authorizationErrorCode = 403
+}

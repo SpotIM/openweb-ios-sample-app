@@ -219,14 +219,14 @@ class SpotImAuthenticationProvider {
     }
 
     func getUser() -> Observable<SPUser> {
-        return internalAuthProvider.user()
+        return internalAuthProvider.user(enableRetry: true)
     }
     
     func logout() -> Observable<Void> {
         return internalAuthProvider.logout()
             .flatMapLatest { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                return self.internalAuthProvider.user()
+                return self.internalAuthProvider.user(enableRetry: true)
             }
             .voidify()
             .do(onNext: { [weak self] _ in
