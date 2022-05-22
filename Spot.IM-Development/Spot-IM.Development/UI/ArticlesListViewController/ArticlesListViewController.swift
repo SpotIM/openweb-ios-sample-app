@@ -280,9 +280,13 @@ struct Response: Decodable {
 
 extension ArticlesListViewController: SpotImSDKNavigationDelegate {
     func controllerForSSOFlow() -> UIViewController {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-        
-        return controller
+        if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
+            let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
+            return authenticationPlaygroundVC
+        } else {
+            let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+            return controller
+        }
     }
 }
 

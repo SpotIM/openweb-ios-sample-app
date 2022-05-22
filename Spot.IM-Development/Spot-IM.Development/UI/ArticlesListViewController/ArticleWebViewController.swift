@@ -255,9 +255,14 @@ extension ArticleWebViewController: WKNavigationDelegate {
 extension ArticleWebViewController: SpotImLoginDelegate {
     func startLoginFlow() {
         if (self.shouldPresentFullConInNewNavStack == false) {
-            let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-            authViewController.modalPresentationStyle = .fullScreen
-            navigationController?.pushViewController(authViewController, animated: true)
+            if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
+                let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
+                navigationController?.pushViewController(authenticationPlaygroundVC, animated: true)
+            } else {
+                let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+                authViewController.modalPresentationStyle = .fullScreen
+                navigationController?.pushViewController(authViewController, animated: true)
+            }
         }
         else {
             print("SDK notify that we started the Login flow - navigation is handled by the SDK")
@@ -266,8 +271,13 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     
     
     func presentControllerForSSOFlow(with spotNavController: UIViewController) {
-        let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-        spotNavController.present(authViewController, animated: true, completion: nil)
+        if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
+            let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
+            spotNavController.present(authenticationPlaygroundVC, animated: true, completion: nil)
+        } else {
+            let authViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+            spotNavController.present(authViewController, animated: true, completion: nil)
+        }
     }
     
     func shouldDisplayLoginPromptForGuests() -> Bool {
