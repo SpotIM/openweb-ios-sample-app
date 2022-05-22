@@ -24,8 +24,8 @@ public protocol AuthenticationViewDelegate: AnyObject {
 }
 
 public protocol SpotImLoginDelegate: AnyObject {
-    func startLoginFlow()
-    func presentControllerForSSOFlow(with spotNavController: UIViewController)
+    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode)
+    func renewSSOAuthentication()
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
 
@@ -62,12 +62,11 @@ public enum SPViewControllerPresentationalMode {
 
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
-    func presentControllerForSSOFlow(with spotNavController: UIViewController) {
-        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for presentControllerForSSOFlow()")
+    func startLoginUIFlow() {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginUIFlow()")
     }
-    
-    func startLoginFlow() {
-        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginFlow()")
+    func renewSSOAuthentication() {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for renewSSOAuthentication()")
     }
     func shouldDisplayLoginPromptForGuests() -> Bool {
         return false //default
@@ -638,14 +637,19 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
-    internal func presentAuth() {
+    func presentAuth() {
         SpotIm.authProvider.ssoAuthDelegate = self
         if let loginDelegate = self.loginDelegate {
-            if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
-                loginDelegate.presentControllerForSSOFlow(with: self.navigationController!)
-            }
-            else {
-                loginDelegate.startLoginFlow()
+            if let tag = self.navigationController?.view.tag, tag == SPOTIM_NAV_CONTROL_TAG,
+               let viewController = self.navigationController {
+                loginDelegate.startLoginUIFlow(presentationalMode: .present(viewController: viewController as UIViewController))
+                                               
+            } else {
+                guard let navController = containerViewController as? UINavigationController else {
+                    servicesProvider.logger().log(level: .error, "Supposed to call startLoginUIFlow in 'push' mode but UINavigationController is missing")
+                    return
+                }
+                loginDelegate.startLoginUIFlow(presentationalMode: .push(navigationController: navController))
             }
         } else if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
             // Deprecated - this code should be removed once the deprecated sdkNavigationDelegate is deleted from the SDK
