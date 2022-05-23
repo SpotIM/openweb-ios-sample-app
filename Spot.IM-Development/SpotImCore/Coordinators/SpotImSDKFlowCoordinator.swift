@@ -648,21 +648,25 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
-    public func ssoFlowStarted() {
+    func ssoFlowStarted() {
         authenticationViewDelegate?.authenticationStarted()
     }
     
-    public func ssoFlowDidSucceed() {
+    func ssoFlowDidSucceed() {
         authHandlers.forEach { $0.value?.authHandler?(true) }
         NotificationCenter.default.post(name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION), object: nil)
     }
     
-    public func ssoFlowDidFail(with error: Error?) {
+    func ssoFlowDidFail(with error: Error?) {
         
     }
     
-    public func userLogout() {
+    func userLogout() {
         authHandlers.forEach { $0.value?.authHandler?(false) }
+    }
+    
+    func renewSSO(userId: String) {
+        loginDelegate?.renewSSOAuthentication(userId: userId)
     }
 }
 
