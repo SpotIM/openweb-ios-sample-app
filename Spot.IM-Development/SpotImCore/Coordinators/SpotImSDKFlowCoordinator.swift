@@ -115,6 +115,11 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     fileprivate let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
     
+    // The creation of this service alone is enough to begin the renew process in case the "Authorization" header token expired
+    // Everything happen in the init, so it's ok this variable is not being used.
+    // Solving auth expiration after application was in background for some days (or the lifespan of the token)
+    fileprivate let authenticationRenewerService: OWAuthenticationRenewerServicing = OWAuthenticationRenewerService()
+    
     ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, loginDelegate: SpotImLoginDelegate, spotId: String, localeId: String?) {
         self.loginDelegate = loginDelegate
@@ -129,6 +134,9 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         if let localeId = localeId {
             LocalizationManager.setLocale(localeId)
         }
+        
+        // Set self to be the delegate for all auth provider functions
+        SpotIm.authProvider.ssoAuthDelegate = self
     }
     
     public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
@@ -603,7 +611,6 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 
 extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
     func presentAuth() {
-        SpotIm.authProvider.ssoAuthDelegate = self
         if let loginDelegate = self.loginDelegate {
             if let tag = self.navigationController?.view.tag,
                tag == SPOTIM_NAV_CONTROL_TAG,
