@@ -93,7 +93,7 @@ private struct InitResult {
     let user: SPUser
 }
 
-public typealias InitizlizeCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
+public typealias InitizlizeCompletionHandler = (Swift.Result<Void, SpotImError>) -> Void
 
 public class SpotIm {
     private static var configurationPromise: Promise<SpotConfig>?
@@ -152,13 +152,13 @@ public class SpotIm {
                 .take(1) // No need to disposed since we take 1
                 .subscribe(onNext: { _ in
                     SPClientSettings.main.sendAppInitEvent()
-                    completion?(true, nil)
+                    completion?(.success(()))
                 }, onError: { error in
                     servicesProvider.logger().log(level: .error, "FAILED to initialize the SDK, will try to recover on next API call: \(error.localizedDescription)")
-                    completion?(false, SpotImError.internalError(error.localizedDescription))
+                    completion?(.failure(SpotImError.internalError(error.localizedDescription)))
                 })
         } else {
-            completion?(false, SpotImError.alreadyInitialized)
+            completion?(.failure(SpotImError.alreadyInitialized))
         }
     }
     
@@ -179,7 +179,7 @@ public class SpotIm {
         execute(call: { _ in
             authProvider.sso(withJwtSecret: secret, completion: completion)
         }) { (error) in
-            completion(nil, error)
+            completion(.failure(error))
         }
     }
 
@@ -195,7 +195,7 @@ public class SpotIm {
         execute(call: { _ in
             authProvider.startSSO(completion: completion)
         }) { (error) in
-            completion(nil, error)
+            completion(.failure(error))
         }
     }
 
@@ -211,7 +211,7 @@ public class SpotIm {
         execute(call: { _ in
             authProvider.completeSSO(with: codeB, completion: completion)
         }) { (error) in
-            completion(false, error)
+            completion(.failure(error))
         }
     }
 
