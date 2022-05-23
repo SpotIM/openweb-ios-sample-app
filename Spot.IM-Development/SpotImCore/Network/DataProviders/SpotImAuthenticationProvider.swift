@@ -42,10 +42,27 @@ struct SSOCompleteResponseInternal: Codable {
 
 
 class SpotImAuthenticationProvider {
-    weak var ssoAuthDelegate: SSOAthenticationDelegate?
+    weak var ssoAuthDelegate: SSOAthenticationDelegate? {
+        didSet {
+            // An ugly solution for a bad architecture scenario..
+            // Since the coordinator might create only after `renewSSOPublish` emit an event,
+            // We need to check if there was a renew event once the coordinator set itself as the delegate to this `SpotIm AuthenticationProvider` class.
+            if let delegate = ssoAuthDelegate {
+                _ = renewSSOBehavior
+                    .take(1) // No need to dispose since we take only the first one
+                    .unwrap()
+                    .subscribe(onNext: { [weak delegate] userId in
+                        delegate?.renewSSO(userId: userId)
+                    })
+                // Prepare of a new coordinator creates (cannot happen in the current architecture but still).
+                renewSSOBehavior.onNext(nil)
+            }
+        }
+    }
     
     // Should be in a protocol like with MVVM, but I will leave it for a bigger refactor
-    fileprivate let renewSSOSubject = PublishSubject<String>()
+    fileprivate let renewSSOPublish = PublishSubject<String>()
+    fileprivate let renewSSOBehavior = BehaviorSubject<String?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
     
     private let internalAuthProvider: SPInternalAuthProvider
@@ -231,7 +248,7 @@ class SpotImAuthenticationProvider {
     }
     
     func getUser() -> Observable<SPUser> {
-        return internalAuthProvider.user(enableRetry: true, renewSSOSubject: renewSSOSubject)
+        return internalAuthProvider.user(enableRetry: true, renewSSOSubject: renewSSOPublish)
     }
     
     func logout() -> Observable<Void> {
@@ -249,11 +266,15 @@ class SpotImAuthenticationProvider {
 
 extension SpotImAuthenticationProvider {
     func setupObservers() {
-        renewSSOSubject
+        renewSSOPublish
             .subscribe(onNext: { [weak self] userId in
                 guard let self = self else { return }
                 self.ssoAuthDelegate?.renewSSO(userId: userId)
             })
+            .disposed(by: disposeBag)
+        
+        renewSSOPublish
+            .bind(to: renewSSOBehavior)
             .disposed(by: disposeBag)
     }
 }
