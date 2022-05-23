@@ -56,11 +56,13 @@ class ArticlesListViewController: UITableViewController {
         SpotIm.reinit = shouldReinit
         SpotIm.enableCustomNavigationItemTitle = true
         
-        SpotIm.initialize(spotId: spotId) { (isInitialized, error) in
-            if let error = error {
-                print("SpotIm.initialize - error: \(error)")
+        SpotIm.initialize(spotId: spotId) { result in
+            switch result {
+            case .failure(let error):
+                DLog("SpotIm.initialize - error: \(error)")
+            case .success(_):
+                print("SpotIm.initialize successfully")
             }
-            print("SpotIm.initialize - isInitialized: \(isInitialized)")
         }
         
         SpotIm.configureLogger(logLevel: .verbose, logMethods: [.nsLog,
