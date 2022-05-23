@@ -21,7 +21,7 @@ public protocol AuthenticationViewDelegate: AnyObject {
 
 public protocol SpotImLoginDelegate: AnyObject {
     func startLoginUIFlow(navigationController: UINavigationController)
-    func renewSSOAuthentication()
+    func renewSSOAuthentication(userId: String)
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
 
@@ -59,10 +59,10 @@ public enum SPViewControllerPresentationalMode {
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
     func startLoginUIFlow(navigationController: UINavigationController) {
-        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginUIFlow()")
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginUIFlow(navigationController:)")
     }
-    func renewSSOAuthentication() {
-        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for renewSSOAuthentication()")
+    func renewSSOAuthentication(userId: String) {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for renewSSOAuthentication(userId:)")
     }
     func shouldDisplayLoginPromptForGuests() -> Bool {
         return false //default
