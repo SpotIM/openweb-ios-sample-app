@@ -278,14 +278,23 @@ struct Response: Decodable {
     let posts: [Post]?
 }
 
-extension ArticlesListViewController: SpotImSDKNavigationDelegate {
-    func controllerForSSOFlow() -> UIViewController {
+extension ArticlesListViewController: SpotImLoginDelegate {
+    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode) {
+        
+        let authVC: UIViewController
         if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
-            let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
-            return authenticationPlaygroundVC
+            authVC = AuthenticationPlaygroundVC()
         } else {
-            let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-            return controller
+            authVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+        }
+        
+        switch presentationalMode {
+        case .push(let navController):
+            navController.pushViewController(authVC, animated: true)
+        case .present(let viewController):
+            viewController.present(authVC, animated: true)
+        @unknown default:
+            DLog("startLoginUIFlow received with unknown case")
         }
     }
 }
