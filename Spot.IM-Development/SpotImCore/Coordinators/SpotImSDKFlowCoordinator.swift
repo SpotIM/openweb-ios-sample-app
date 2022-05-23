@@ -20,7 +20,7 @@ public protocol AuthenticationViewDelegate: AnyObject {
 }
 
 public protocol SpotImLoginDelegate: AnyObject {
-    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode)
+    func startLoginUIFlow(navigationController: UINavigationController)
     func renewSSOAuthentication()
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
@@ -58,7 +58,7 @@ public enum SPViewControllerPresentationalMode {
 
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
-    func startLoginUIFlow() {
+    func startLoginUIFlow(navigationController: UINavigationController) {
         assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginUIFlow()")
     }
     func renewSSOAuthentication() {
@@ -605,16 +605,16 @@ extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
     func presentAuth() {
         SpotIm.authProvider.ssoAuthDelegate = self
         if let loginDelegate = self.loginDelegate {
-            if let tag = self.navigationController?.view.tag, tag == SPOTIM_NAV_CONTROL_TAG,
-               let viewController = self.navigationController {
-                loginDelegate.startLoginUIFlow(presentationalMode: .present(viewController: viewController as UIViewController))
-                                               
+            if let tag = self.navigationController?.view.tag,
+               tag == SPOTIM_NAV_CONTROL_TAG,
+               let navController = self.navigationController{
+                loginDelegate.startLoginUIFlow(navigationController: navController)
             } else {
                 guard let navController = containerViewController as? UINavigationController else {
-                    servicesProvider.logger().log(level: .error, "Supposed to call startLoginUIFlow in 'push' mode but UINavigationController is missing")
+                    servicesProvider.logger().log(level: .error, "Supposed to call startLoginUIFlow but UINavigationController is missing")
                     return
                 }
-                loginDelegate.startLoginUIFlow(presentationalMode: .push(navigationController: navController))
+                loginDelegate.startLoginUIFlow(navigationController: navController)
             }
         }
     }
