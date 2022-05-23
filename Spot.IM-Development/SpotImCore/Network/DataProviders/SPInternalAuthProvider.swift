@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import PromiseKit
 import RxSwift
 
 protocol SPInternalAuthProvider {
@@ -148,7 +147,6 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                         let code = afError.responseCode,
                         code == APIErrorCodes.authorizationErrorCode {
                         self.servicesProvider.logger().log(level: .error, "Network request to '/user/data' got error code: \(code), might be an expired token. Trying to recover with a new request")
-                        SPUserSessionHolder.resetUserSession()
                         observer.onNext(Retry<SPUser>.retry)
                         observer.onCompleted()
                     } else {
@@ -174,9 +172,22 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
             case .value(let user):
                 return .just(user)
             case .retry:
-                return self.user(enableRetry: false) // Trying only one more time in case we failed auth
-                    .do { _ in
-                        // We received a new guest user, however we should signal publishers to renew SSO authentication
+                // We arrived here because auth 403 error
+                // We will signal the publishers to renew SSO authentication in the end if we had a registered user
+                // However before that we will clear the user session to receive a guest session
+                // So we will have guest session regardless of the possible renew SSO
+                let shouldRenewSSO = SPUserSessionHolder.isRegister()
+                SPUserSessionHolder.resetUserSession()
+                
+                return Observable<Bool>.just(shouldRenewSSO)  // Begin RX chain
+                    .flatMapLatest { [weak self] shouldRenewSSO -> Observable<SPUser> in
+                        guard let self = self else { return .empty() }
+                        return self.user(enableRetry: false)
+                            .do(onNext: { _ in
+                                if shouldRenewSSO {
+                                    // Add callback to renew
+                                }
+                            })
                     }
             }
         }
