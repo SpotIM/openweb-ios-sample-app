@@ -130,16 +130,9 @@ extension DemoArticlesList {
 }
 
 extension DemoArticlesList: SpotImLoginDelegate {
-    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode) {
+    func startLoginUIFlow(navigationController: UINavigationController) {
         let storyboard = UIStoryboard(name: "Demo", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "DemoAuthVC")
-        switch presentationalMode {
-        case .push(let navController):
-            navController.pushViewController(controller, animated: true)
-        case .present(let viewController):
-            viewController.present(controller, animated: true)
-        @unknown default:
-            DLog("startLoginUIFlow received with unknown case")
-        }
+        let authVC = storyboard.instantiateViewController(withIdentifier: "DemoAuthVC")
+        navigationController.pushViewController(authVC, animated: true)
     }
 }

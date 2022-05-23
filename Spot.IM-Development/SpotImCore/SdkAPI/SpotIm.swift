@@ -21,25 +21,6 @@ public enum SpotImError: Error {
     case internalError(String)
 }
 
-public enum SpotImResult<T> {
-    case success(T)
-    case failure(SpotImError)
-
-    public var value: T? {
-        switch self {
-        case .success(let result): return result
-        case .failure: return nil
-        }
-    }
-
-    public var error: SpotImError? {
-        switch self {
-        case .success: return nil
-        case .failure(let error): return error
-        }
-    }
-}
-
 public enum SpotImLoginStatus {
     case guest
     case ssoLoggedIn(userId: String)
@@ -103,12 +84,6 @@ public enum SpotImReadOnlyMode {
 
 public protocol SPAnalyticsEventDelegate {
     func trackEvent(type: SPEventType, event: SPEventInfo)
-}
-
-extension SpotImResult where T == Void {
-    static var success: SpotImResult {
-        return .success(())
-    }
 }
 
 internal let NUM_OF_RETRIES: UInt = 3
@@ -248,10 +223,10 @@ public class SpotIm {
      - Parameter loginDelegate: A delegate to notify the parent app that a login flow was requested by the user
      - Parameter completion: A completion handler to receive the response/error of the completeSSO process
      */
-    public static func createSpotImFlowCoordinator(loginDelegate: SpotImLoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
+    public static func createSpotImFlowCoordinator(loginDelegate: SpotImLoginDelegate, completion: @escaping ((Swift.Result<SpotImSDKFlowCoordinator, SpotImError>) -> Void)) {
         execute(call: { config in
             guard let spotId = spotId else {
-                completion(SpotImResult.failure(.internalError("Please call init SDK")))
+                completion(.failure(.internalError("Please call init SDK")))
                 return
             }
             
@@ -259,14 +234,14 @@ public class SpotIm {
             // if googleAdsProviderRequired exists AND "true" AND publisher didn't provide an adsProvider we will fail
             if let googleAdsProviderRequired = config.appConfig.mobileSdk.googleAdsProviderRequired,
                googleAdsProviderRequired && SpotIm.googleAdsProvider == nil {
-                completion(SpotImResult.failure(.internalError("Make sure to call setAdsProvider() with an AdsProvider")))
+                completion(.failure(.internalError("Make sure to call setAdsProvider() with an AdsProvider")))
                 return
             }
 
             let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, loginDelegate: loginDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk.locale)
-            completion(SpotImResult.success(coordinator))
+            completion(.success(coordinator))
         }) { (error) in
-            completion(SpotImResult.failure(error))
+            completion(.failure(error))
         }
     }
 
@@ -276,7 +251,7 @@ public class SpotIm {
      - Parameter conversationIds: The conversations to get counters for
      - Parameter completion: A completion handler to receive the  conversation counter
      */
-    public static func getConversationCounters(conversationIds: [String], completion: @escaping ((SpotImResult<[String: SpotImConversationCounters]>) -> Void)) {
+    public static func getConversationCounters(conversationIds: [String], completion: @escaping ((Swift.Result<[String: SpotImConversationCounters], SpotImError>) -> Void)) {
         execute(call: { _ in
             let encodedConversationIds = conversationIds.map { ($0 as OWPostId).encoded }
             conversationDataProvider.commnetsCounters(conversationIds: encodedConversationIds).done { countersData in
@@ -286,12 +261,12 @@ public class SpotIm {
                     return (decodedConversationId, conversationCounter)
                 })
 
-                completion(SpotImResult.success(counters))
+                completion(.success(counters))
             }.catch { error in
-                completion(SpotImResult.failure(.internalError(error.localizedDescription)))
+                completion(.failure(.internalError(error.localizedDescription)))
             }
         }) { error in
-            completion(SpotImResult.failure(error))
+            completion(.failure(error))
         }
     }
 
@@ -325,7 +300,7 @@ public class SpotIm {
      2. ssoLoggedIn - an authenticated session
      - Parameter completion: A completion handler to receive the current login status of the user
      */
-    public static func getUserLoginStatus(completion: @escaping ((SpotImResult<SpotImLoginStatus>) -> Void)) {
+    public static func getUserLoginStatus(completion: @escaping ((Swift.Result<SpotImLoginStatus, SpotImError>) -> Void)) {
         execute(call: { _ in
             guard let user = SPUserSessionHolder.session.user else {
                 completion(.failure(SpotImError.notInitialized))
@@ -344,17 +319,17 @@ public class SpotIm {
         }
     }
     
-    public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
+    public static func logout(completion: @escaping ((Swift.Result<Void, SpotImError>) -> Void)) {
         execute(call: { _ in
             _ = authProvider.logout()
                 .take(1) // No need to disposed since we take 1
                 .subscribe(onNext: { _ in
-                    completion(.success)
+                    completion(.success(()))
                 }, onError: { error in
                     completion(.failure(SpotImError.internalError(error.localizedDescription)))
                 })
         }) { (error) in
-            completion(SpotImResult.failure(error))
+            completion(.failure(error))
         }
     }
     

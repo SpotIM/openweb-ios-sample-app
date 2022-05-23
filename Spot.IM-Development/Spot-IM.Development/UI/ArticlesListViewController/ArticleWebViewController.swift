@@ -253,23 +253,14 @@ extension ArticleWebViewController: WKNavigationDelegate {
 
 
 extension ArticleWebViewController: SpotImLoginDelegate {
-    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode) {
+    func startLoginUIFlow(navigationController: UINavigationController) {
         let authVC: UIViewController
         if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
             authVC = AuthenticationPlaygroundVC()
         } else {
             authVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
         }
-        
-        switch presentationalMode {
-        case .push(let navController):
-            authVC.modalPresentationStyle = .fullScreen
-            navController.pushViewController(authVC, animated: true)
-        case .present(let viewController):
-            viewController.present(authVC, animated: true, completion: nil)
-        @unknown default:
-            DLog("startLoginUIFlow received with unknown case")
-        }
+        navigationController.pushViewController(authVC, animated: true)
     }
     
     func shouldDisplayLoginPromptForGuests() -> Bool {

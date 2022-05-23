@@ -67,16 +67,9 @@ internal final class ArticleViewController: UIViewController {
 }
 
 extension ArticleViewController: SpotImLoginDelegate {
-    func startLoginUIFlow(presentationalMode: SPViewControllerPresentationalMode) {
-        let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
-        switch presentationalMode {
-        case .push(let navController):
-            navController.pushViewController(authenticationPlaygroundVC, animated: true)
-        case .present(let viewController):
-            viewController.present(authenticationPlaygroundVC, animated: true)
-        @unknown default:
-            DLog("startLoginUIFlow received with unknown case")
-        }
+    func startLoginUIFlow(navigationController: UINavigationController) {
+        let authVC = AuthenticationPlaygroundVC()
+        navigationController.pushViewController(authVC, animated: true)
     }
 }
 
