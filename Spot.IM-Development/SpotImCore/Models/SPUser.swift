@@ -20,7 +20,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     }
     
     // all users
-    private var userId: String?
+    var userId: String?
     var id: String?
     var displayName: String?
     var userName: String?
