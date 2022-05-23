@@ -25,6 +25,7 @@ protocol SSOAthenticationDelegate: AnyObject {
     func ssoFlowDidSucceed()
     func ssoFlowDidFail(with error: Error?)
     func userLogout()
+    func renewSSO(userId: String)
 }
 
 struct SSOStartResponseInternal: Codable {
@@ -43,12 +44,18 @@ struct SSOCompleteResponseInternal: Codable {
 class SpotImAuthenticationProvider {
     weak var ssoAuthDelegate: SSOAthenticationDelegate?
     
+    // Should be in a protocol like with MVVM, but I will leave it for a bigger refactor
+    fileprivate let renewSSOSubject = PublishSubject<String>()
+    fileprivate let disposeBag = DisposeBag()
+    
     private let internalAuthProvider: SPInternalAuthProvider
     private let manager: OWApiManager
     
     init(manager: OWApiManager, internalProvider: SPInternalAuthProvider) {
         self.manager = manager
         self.internalAuthProvider = internalProvider
+        
+        setupObservers()
     }
     
     func startSSO(completion: @escaping AuthStratCompleteionHandler) {
@@ -224,20 +231,31 @@ class SpotImAuthenticationProvider {
     }
     
     func getUser() -> Observable<SPUser> {
-        return internalAuthProvider.user(enableRetry: true)
+        return internalAuthProvider.user(enableRetry: true, renewSSOSubject: renewSSOSubject)
     }
     
     func logout() -> Observable<Void> {
         return internalAuthProvider.logout()
             .flatMapLatest { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                return self.internalAuthProvider.user(enableRetry: true)
+                return self.internalAuthProvider.user(enableRetry: true, renewSSOSubject: nil)
             }
             .voidify()
             .do(onNext: { [weak self] _ in
                 self?.ssoAuthDelegate?.userLogout()
             })
-                }
+    }
+}
+
+extension SpotImAuthenticationProvider {
+    func setupObservers() {
+        renewSSOSubject
+            .subscribe(onNext: { [weak self] userId in
+                guard let self = self else { return }
+                self.ssoAuthDelegate?.renewSSO(userId: userId)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 private struct SPCodeAParameters {

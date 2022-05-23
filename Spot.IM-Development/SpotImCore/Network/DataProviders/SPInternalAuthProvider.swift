@@ -13,11 +13,11 @@ import RxSwift
 protocol SPInternalAuthProvider {
     func login() -> Observable<String>
     func logout() -> Observable<Void>
-    func user(enableRetry: Bool) -> Observable<SPUser>
+    func user(enableRetry: Bool, renewSSOSubject: PublishSubject<String>?) -> Observable<SPUser>
 }
 
 final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthProvider {
-    
+        
     func login() -> Observable<String> {
         return Observable<String>.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
@@ -118,7 +118,7 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
     }
     
     // `enableRetry` used to recover from expired token / unauthorized user to enable the publishers (SDK users) to re-login / SSO after we fallback to some defualt guest user
-    func user(enableRetry: Bool = true) -> Observable<SPUser> {
+    func user(enableRetry: Bool = true, renewSSOSubject: PublishSubject<String>?) -> Observable<SPUser> {
         return Observable<(Retry<SPUser>)>.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
@@ -177,15 +177,17 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                 // However before that we will clear the user session to receive a guest session
                 // So we will have guest session regardless of the possible renew SSO
                 let shouldRenewSSO = SPUserSessionHolder.isRegister()
+                let userId = SPUserSessionHolder.session.user?.userId ?? ""
                 SPUserSessionHolder.resetUserSession()
                 
-                return Observable<Bool>.just(shouldRenewSSO)  // Begin RX chain
-                    .flatMapLatest { [weak self] shouldRenewSSO -> Observable<SPUser> in
+                return Observable<(Bool, String)>.just((shouldRenewSSO, userId))  // Begin RX chain
+                    .flatMapLatest { [weak self] shouldRenewSSO, userId -> Observable<SPUser> in
                         guard let self = self else { return .empty() }
-                        return self.user(enableRetry: false)
+                        return self.user(enableRetry: false, renewSSOSubject: renewSSOSubject)
                             .do(onNext: { _ in
                                 if shouldRenewSSO {
                                     // Add callback to renew
+                                    renewSSOSubject?.onNext(userId)
                                 }
                             })
                     }

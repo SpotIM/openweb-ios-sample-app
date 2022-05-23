@@ -30,6 +30,8 @@ internal final class ArticleWebViewController: UIViewController {
 
     private lazy var loadingIndicator = UIActivityIndicatorView(style: .gray)
     
+    fileprivate let silentSSOAuthentication: SilentSSOAuthenticationProtocol = SilentSSOAuthentication()
+    
     let spotId: String
     let postId: String
     let url: String
@@ -261,6 +263,20 @@ extension ArticleWebViewController: SpotImLoginDelegate {
             authVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
         }
         navigationController.pushViewController(authVC, animated: true)
+    }
+    
+    func renewSSOAuthentication(userId: String) {
+        let spotIdWithTestLoginUser = "sp_eCIlROSD"
+        if self.spotId == spotIdWithTestLoginUser,
+           let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.spotId == spotIdWithTestLoginUser }) {
+            _ = silentSSOAuthentication.silentGenericSSO(for: genericSSO, ignoreLoginStatus: true)
+                .take(1) // No need to disposed since we only take 1
+                .subscribe(onNext: { userId in
+                    DLog("Silent generic SSO completed successfully with userId: \(userId)")
+                }, onError: { error in
+                    DLog("Silent generic SSO failed with error: \(error)")
+                })
+        }
     }
     
     func shouldDisplayLoginPromptForGuests() -> Bool {
