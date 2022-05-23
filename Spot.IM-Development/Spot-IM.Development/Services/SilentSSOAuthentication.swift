@@ -17,7 +17,46 @@ protocol SilentSSOAuthenticationProtocol {
 class SilentSSOAuthentication: SilentSSOAuthenticationProtocol {
     
     func silentGenericSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> Observable<String> {
-        return Observable.empty()
+        return Observable.just(()) // Begin RX
+            .flatMapLatest { [weak self] _ -> Observable<Void> in
+                // Check user login status if needed
+                guard let self = self else { return .empty() }
+                if ignoreLoginStatus {
+                    return .just(())
+                } else {
+                    return self.userLoginStatus()
+                        .map { loginStatus in
+                            if case .ssoLoggedIn(_) = loginStatus {
+                                return false
+                            } else {
+                                return true
+                            }
+                        }
+                        .filter { $0 } // continue only if user not logged in
+                        .voidify()
+                }
+            }
+            .flatMapLatest { [weak self] _ -> Observable<String> in
+                // Login
+                guard let self = self else { return .empty() }
+                return self.login(user: genericSSO.user)
+            }
+            .flatMapLatest { [weak self] token -> Observable<(String, String)> in
+                // Start SSO
+                guard let self = self else { return .empty() }
+                return self.startSSO()
+                    .map { ($0, token) }
+            }
+            .flatMapLatest { [weak self] codeA, token -> Observable<String> in
+                // Get codeB
+                guard let self = self else { return .empty() }
+                return self.codeB(codeA: codeA, token: token, user: genericSSO.user)
+            }
+            .flatMapLatest { [weak self] codeB -> Observable<String> in
+                // Complete SSO
+                guard let self = self else { return .empty() }
+                return self.completeSSO(codeB: codeB)
+            }
     }
 }
 
