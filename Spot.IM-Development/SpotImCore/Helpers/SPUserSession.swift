@@ -45,13 +45,13 @@ internal class SPUserSessionHolder {
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(user) {
             let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: .userSessionKey)
+            defaults.set(encoded, forKey: .userSession)
         }
     }
 
     static func updateSession(with response: HTTPURLResponse?, forced: Bool = false) {
         let headers = response?.allHeaderFields
-        if let serverGuid = headers?.userIdHeader, serverGuid != session.guid, let url = response?.url {
+        if let serverGuid = headers?.guidHeader, serverGuid != session.guid, let url = response?.url {
             let rawReport = RawReportModel(
                 url: url.absoluteString,
                 parameters: nil,
@@ -68,7 +68,7 @@ internal class SPUserSessionHolder {
             session.token = headers?.authorizationHeader ?? session.token
             session.openwebToken = headers?.openwebTokenHeader ?? session.openwebToken
         }
-        UserDefaults.standard.setValue(session.token, forKey: .guestSessionTokenKey)
+        UserDefaults.standard.setValue(session.token, forKey: .authorizatioSessionToken)
         UserDefaults.standard.setValue(session.openwebToken, forKey: .openwebSessionToken)
     }
 
@@ -87,28 +87,28 @@ internal class SPUserSessionHolder {
     static var displayNameFrozen: Bool { session.displayNameFrozen }
 
     static func resetUserSession() {
-        UserDefaults.standard.removeObject(forKey: .guestSessionTokenKey)
-        UserDefaults.standard.removeObject(forKey: .userSessionKey)
-        UserDefaults.standard.removeObject(forKey: .reportedCommentsKey)
+        UserDefaults.standard.removeObject(forKey: .authorizatioSessionToken)
+        UserDefaults.standard.removeObject(forKey: .userSession)
+        UserDefaults.standard.removeObject(forKey: .reportedCommentsSession)
         session = loadOrCreateGuestUserSession()
     }
 
     private static func loadOrCreateGuestUserSession() -> SPUserSessionType {
         let session = SPUserSession()
-        if UserDefaults.standard.string(forKey: .guestSessionUserIdKey) == nil {
+        if UserDefaults.standard.string(forKey: .guestSessionUserId) == nil {
             let newUuid = UUID().uuidString
-            UserDefaults.standard.set(newUuid, forKey: .guestSessionUserIdKey)
+            UserDefaults.standard.set(newUuid, forKey: .guestSessionUserId)
         }
         
-        session.guid = UserDefaults.standard.string(forKey: .guestSessionUserIdKey)
-        session.token = UserDefaults.standard.string(forKey: .guestSessionTokenKey)
+        session.guid = UserDefaults.standard.string(forKey: .guestSessionUserId)
+        session.token = UserDefaults.standard.string(forKey: .authorizatioSessionToken)
         session.openwebToken = UserDefaults.standard.string(forKey: .openwebSessionToken)
         
-        if let reportedComments = UserDefaults.standard.dictionary(forKey: .reportedCommentsKey) as? [String:Bool] {
+        if let reportedComments = UserDefaults.standard.dictionary(forKey: .reportedCommentsSession) as? [String:Bool] {
             session.reportedComments = reportedComments
         }
         
-        if let savedUser = UserDefaults.standard.object(forKey: .userSessionKey) as? Data {
+        if let savedUser = UserDefaults.standard.object(forKey: .userSession) as? Data {
             let decoder = JSONDecoder()
             if let user = try? decoder.decode(SPUser.self, from: savedUser) {
                 session.user = user
@@ -120,7 +120,7 @@ internal class SPUserSessionHolder {
     
     static func reportComment(commentId: String) {
         session.reportedComments[commentId] = true
-        UserDefaults.standard.set(session.reportedComments, forKey: .reportedCommentsKey)
+        UserDefaults.standard.set(session.reportedComments, forKey: .reportedCommentsSession)
     }
     
     static func isRegister() -> Bool {
@@ -132,11 +132,11 @@ internal class SPUserSessionHolder {
 }
 
 private extension String {
-    static let guestSessionUserIdKey = "session.guest.userId"
-    static let guestSessionTokenKey = "session.guest.token"
-    static let openwebSessionToken = "openweb.session.toekn"
-    static let userSessionKey = "session.user"
-    static let reportedCommentsKey = "session.reportedComments"
+    static let guestSessionUserId = "session.guest.userId"
+    static let authorizatioSessionToken = "session.authorization.token"
+    static let openwebSessionToken = "session.openweb.toekn"
+    static let userSession = "session.user"
+    static let reportedCommentsSession = "session.reportedComments"
 }
 
 public final class SPPublicSessionInterface {

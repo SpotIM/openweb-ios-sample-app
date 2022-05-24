@@ -165,7 +165,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     func updateLoginPromptVisibily() {
-        if self.shouldDisplayLoginPrompt && SpotIm.getRegisteredUserId() == nil {
+        if self.shouldDisplayLoginPrompt && SPUserSessionHolder.session.user?.id == nil {
             // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
             self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
         }
