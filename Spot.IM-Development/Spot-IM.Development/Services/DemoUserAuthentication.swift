@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-internal class DemoAuthenticationProvider {
+internal class DemoUserAuthentication {
 
     private static let loginURLString = "https://ow-sso-server.now.sh/api/login"
     private static let codeBURLString = "https://ow-sso-server.now.sh/api/spotim-sso"
