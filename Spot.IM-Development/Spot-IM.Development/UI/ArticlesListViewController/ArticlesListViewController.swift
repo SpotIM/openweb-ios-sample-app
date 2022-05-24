@@ -56,11 +56,13 @@ class ArticlesListViewController: UITableViewController {
         SpotIm.reinit = shouldReinit
         SpotIm.enableCustomNavigationItemTitle = true
         
-        SpotIm.initialize(spotId: spotId) { (isInitialized, error) in
-            if let error = error {
-                print("SpotIm.initialize - error: \(error)")
+        SpotIm.initialize(spotId: spotId) { result in
+            switch result {
+            case .failure(let error):
+                DLog("SpotIm.initialize - error: \(error)")
+            case .success(_):
+                print("SpotIm.initialize successfully")
             }
-            print("SpotIm.initialize - isInitialized: \(isInitialized)")
         }
         
         SpotIm.configureLogger(logLevel: .verbose, logMethods: [.nsLog,
@@ -278,15 +280,15 @@ struct Response: Decodable {
     let posts: [Post]?
 }
 
-extension ArticlesListViewController: SpotImSDKNavigationDelegate {
-    func controllerForSSOFlow() -> UIViewController {
+extension ArticlesListViewController: SpotImLoginDelegate {
+    func startLoginUIFlow(navigationController: UINavigationController) {
+        let authVC: UIViewController
         if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
-            let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
-            return authenticationPlaygroundVC
+            authVC = AuthenticationPlaygroundVC()
         } else {
-            let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
-            return controller
+            authVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
         }
+        navigationController.pushViewController(authVC, animated: true)
     }
 }
 

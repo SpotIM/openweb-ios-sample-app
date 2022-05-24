@@ -48,7 +48,7 @@ class DemoArticlesList: UITableViewController {
         SpotIm.configureLogger(logLevel: .verbose, logMethods: [.nsLog,
                                                                 .file(maxFilesNumber: 50)])
         
-        SpotIm.createSpotImFlowCoordinator(navigationDelegate: self) { [weak self] result in
+        SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -56,8 +56,6 @@ class DemoArticlesList: UITableViewController {
                 self.spotIMCoordinator = coordinator
             case .failure(let error):
                 print(error)
-            @unknown default:
-                fatalError()
             }
         }
 
@@ -97,7 +95,7 @@ extension DemoArticlesList : ArticleTableViewCellDelegate {
         guard let post = post, let postId = postId(post: post) else { return }
         
         let metadata = SpotImArticleMetadata(url: post.extractData.url, title: post.extractData.title, subtitle: post.extractData.description, thumbnailUrl: post.extractData.description)
-        let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: "", useLoginDelegate: false)
+        let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: "")
         articleViewController.spotIMCoordinator = self.spotIMCoordinator
         self.spotIMCoordinator?.setLayoutDelegate(delegate: articleViewController)
         self.navigationController?.pushViewController(articleViewController, animated: true)
@@ -129,12 +127,10 @@ extension DemoArticlesList {
     }
 }
 
-extension DemoArticlesList: SpotImSDKNavigationDelegate {
-
-    func controllerForSSOFlow() -> UIViewController {
+extension DemoArticlesList: SpotImLoginDelegate {
+    func startLoginUIFlow(navigationController: UINavigationController) {
         let storyboard = UIStoryboard(name: "Demo", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "DemoAuthVC")
-        return controller
+        let authVC = storyboard.instantiateViewController(withIdentifier: "DemoAuthVC")
+        navigationController.pushViewController(authVC, animated: true)
     }
-
 }
