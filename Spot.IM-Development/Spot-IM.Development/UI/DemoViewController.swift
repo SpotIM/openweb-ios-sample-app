@@ -56,8 +56,6 @@ class DemoArticlesList: UITableViewController {
                 self.spotIMCoordinator = coordinator
             case .failure(let error):
                 print(error)
-            @unknown default:
-                fatalError()
             }
         }
 
