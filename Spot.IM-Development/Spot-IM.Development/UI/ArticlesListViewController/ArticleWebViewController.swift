@@ -92,8 +92,6 @@ internal final class ArticleWebViewController: UIViewController {
                 }
             case .failure(let error):
                 print("Failed to get flow coordinator: \(error)")
-            default:
-                break
             }
         }
     }
