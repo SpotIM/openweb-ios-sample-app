@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2022-05-24
+### Added
+- Added French support
+### Fixed
+- Fixed SSO authentication flow
+- Renew SSO when returning to foreground if needed - token can potentially expire when the application is in background for some days - this fixed that
+### Changes
+- Few changes in SSO related methods API, read our documentation for the full details
+- Added renewSSOAuthentication function inside SpotImLoginDelegate
+- Function Renaming inside SpotImLoginDelegate to startLoginUIFlow
+- Returning the userId in completeSSO function inside SpotImLoginDelegate
+
 ## [1.13.0] - 2022-05-18
 ### Added
 - Completely new logger system to assist in debug issues. We are really excited about that and recommend to read the document to understand the posabilities.
