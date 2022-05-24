@@ -777,14 +777,14 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     func replyTapped(for commentId: String?) {
         guard let id = commentId, let delegate = delegate else { return }
         
-        if SpotIm.reactNativeShowLoginScreenOnRootVC &&
-            SpotIm.getRegisteredUserId() == nil {
-            self.startLoginFlow()
+        guard SpotIm.reactNativeShowLoginScreenOnRootVC,
+              SPUserSessionHolder.session.user?.id == nil else {
+            logCreationOpen(with: .reply, parentId: commentId)
+            delegate.createReply(with: model, to: id)
             return
         }
         
-        logCreationOpen(with: .reply, parentId: commentId)
-        delegate.createReply(with: model, to: id)
+        self.startLoginFlow()
     }
 
     func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton) {
@@ -858,7 +858,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
         guard let delegate = delegate else { return }
         
         if SpotIm.reactNativeShowLoginScreenOnRootVC &&
-            SpotIm.getRegisteredUserId() == nil {
+            SPUserSessionHolder.session.user?.id == nil {
             self.startLoginFlow()
             return
         }
