@@ -8,53 +8,54 @@
 
 import Foundation
 import Alamofire
-import PromiseKit
+import RxSwift
 
-internal protocol SPInternalAuthProvider {
-    func login(completion: @escaping (String?, Error?) -> Void)
-    func logout() -> Promise<Void>
-    func user() -> Promise<SPUser>
+protocol SPInternalAuthProvider {
+    func login() -> Observable<String>
+    func logout() -> Observable<Void>
+    func user(enableRetry: Bool, renewSSOSubject: PublishSubject<String>?) -> Observable<SPUser>
 }
 
-internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthProvider {
-    
-    internal func login(completion: @escaping (String?, Error?) -> Void) {
-        guard let spotKey = SPClientSettings.main.spotKey else {
-            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-            completion(nil, SPNetworkError.custom(message))
-            return
-        }
+final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthProvider {
         
-        let spRequest = SPInternalAuthRequests.guest
-
-        var headers = HTTPHeaders.basic(with: spotKey)
-        if let token = SPUserSessionHolder.session.token {
-            headers["Authorization"] = token
-        }
-
-        manager.execute(
-            request: spRequest,
-            parser: OWDecodableParser<SPUser>(),
-            headers: headers
-        ) { result, response in
-            let token = response.response?.allHeaderFields.authorizationHeader ?? SPUserSessionHolder.session.token
-            if token == nil {
-                let rawReport = RawReportModel(
-                    url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                    parameters: nil,
-                    errorData: response.data,
-                    errorMessage: "Authorization header empty"
-                )
-                SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                completion(nil, SPNetworkError.default)
+    func login() -> Observable<String> {
+        return Observable<String>.create { [weak self] observer in
+            guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
+                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+                observer.onError(SPNetworkError.custom(message))
+                return Disposables.create()
             }
             
-            switch result {
+            let spRequest = SPInternalAuthRequests.guest
+            
+            var headers = HTTPHeaders.basic(with: spotKey)
+            if let token = SPUserSessionHolder.session.token {
+                headers[APIHeadersConstants.authorization] = token
+            }
+            
+            let task = self.manager.execute(
+                request: spRequest,
+                parser: OWDecodableParser<SPUser>(),
+                headers: headers
+            ) { result, response in
+                guard let token = response.response?.allHeaderFields.authorizationHeader ?? SPUserSessionHolder.session.token else {
+                    let rawReport = RawReportModel(
+                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                        parameters: nil,
+                        errorData: response.data,
+                        errorMessage: "Authorization header empty"
+                    )
+                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
+                    observer.onError(SPNetworkError.default)
+                    return
+                }
+                
+                switch result {
                 case .success(let user):
                     SPUserSessionHolder.updateSession(with: response.response)
                     SPUserSessionHolder.updateSessionUser(user: user)
-                    completion(token, nil)
-                    
+                    observer.onNext(token)
+                    observer.onCompleted()
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -63,28 +64,32 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    completion(token, error)
+                    observer.onError(error)
                 }
+            }
             
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
     
-    internal func logout() -> Promise<Void> {
-        return Promise<Void> { seal in
-            guard let spotKey = SPClientSettings.main.spotKey else {
+    func logout() -> Observable<Void> {
+        return Observable.create { [weak self] observer in
+            guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-                seal.reject(SPNetworkError.custom(message))
-                return
+                observer.onError(SPNetworkError.custom(message))
+                return Disposables.create()
             }
             
             let spRequest = SPInternalAuthRequests.logout
-
+            
             var headers = HTTPHeaders.basic(with: spotKey)
             if let token = SPUserSessionHolder.session.token {
-                headers["Authorization"] = token
+                headers[APIHeadersConstants.authorization] = token
             }
-
-            manager.execute(
+            
+            let task = self.manager.execute(
                 request: spRequest,
                 parser: OWEmptyParser(),
                 headers: headers
@@ -92,7 +97,8 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                 switch result {
                 case .success:
                     SPUserSessionHolder.resetUserSession()
-                    seal.fulfill_()
+                    observer.onNext(())
+                    observer.onCompleted()
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -101,58 +107,90 @@ internal final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInter
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    seal.reject(error)
+                    observer.onError(error)
                 }
+            }
+            
+            return Disposables.create {
+                task.cancel()
             }
         }
     }
     
-    internal func user() -> Promise<SPUser> {
-        return Promise<SPUser> { seal in
-            guard let spotKey = SPClientSettings.main.spotKey else {
+    // `enableRetry` used to recover from expired token / unauthorized user to enable the publishers (SDK users) to re-login / SSO after we fallback to some defualt guest user
+    func user(enableRetry: Bool = true, renewSSOSubject: PublishSubject<String>?) -> Observable<SPUser> {
+        return Observable<(Retry<SPUser>)>.create { [weak self] observer in
+            guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-                seal.reject(SPNetworkError.custom(message))
-                return
-            }
-            
-            var shouldRemoveAuthorizationHeader = false
-            if let user = SPUserSessionHolder.session.user {
-                if !user.expired { // valid user - no need to fetch user/data
-                    seal.fulfill(user)
-                    return
-                } else { // user token is expired
-                    shouldRemoveAuthorizationHeader = true
-                }
+                observer.onError(SPNetworkError.custom(message))
+                return Disposables.create()
             }
             
             let spRequest = SPInternalAuthRequests.user
+            let headers = HTTPHeaders.basic(with: spotKey)
             
-            var headers = HTTPHeaders.basic(with: spotKey)
-            // remove expired auth header to avoid 403 status
-            if shouldRemoveAuthorizationHeader {
-                headers.remove(name: "Authorization")
-            }
-            
-            manager.execute(
+            let task = self.manager.execute(
                 request: spRequest,
                 parser: OWDecodableParser<SPUser>(),
                 headers: headers
-            ) { result, response in
+            ) { [weak self] result, response in
                 switch result {
                 case .success(let user):
                     SPUserSessionHolder.updateSession(with: response.response)
                     SPUserSessionHolder.updateSessionUser(user: user)
-                    seal.fulfill(user)
+                    observer.onNext(Retry<SPUser>.value(user))
+                    observer.onCompleted()
                 case .failure(let error):
-                    let rawReport = RawReportModel(
-                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                        parameters: nil,
-                        errorData: response.data,
-                        errorMessage: error.localizedDescription
-                    )
-                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    seal.reject(error)
+                    if let self = self,
+                        enableRetry,
+                        let afError = error .asAFError,
+                        let code = afError.responseCode,
+                        code == APIErrorCodes.authorizationErrorCode {
+                        self.servicesProvider.logger().log(level: .error, "Network request to '/user/data' got error code: \(code), might be an expired token. Trying to recover with a new request")
+                        observer.onNext(Retry<SPUser>.retry)
+                        observer.onCompleted()
+                    } else {
+                        let rawReport = RawReportModel(
+                            url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                            parameters: nil,
+                            errorData: response.data,
+                            errorMessage: error.localizedDescription
+                        )
+                        SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
+                        observer.onError(error)
+                    }
                 }
+            }
+            
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+        .flatMapLatest { [weak self] retryValue -> Observable<SPUser> in
+            guard let self = self else { return .empty() }
+            switch retryValue {
+            case .value(let user):
+                return .just(user)
+            case .retry:
+                // We arrived here because auth 403 error
+                // We will signal the publishers to renew SSO authentication in the end if we had a registered user
+                // However before that we will clear the user session to receive a guest session
+                // So we will have guest session regardless of the possible renew SSO
+                let shouldRenewSSO = SPUserSessionHolder.isRegister()
+                let userId = SPUserSessionHolder.session.user?.userId ?? ""
+                SPUserSessionHolder.resetUserSession()
+                
+                return Observable<(Bool, String)>.just((shouldRenewSSO, userId))  // Begin RX chain
+                    .flatMapLatest { [weak self] shouldRenewSSO, userId -> Observable<SPUser> in
+                        guard let self = self else { return .empty() }
+                        return self.user(enableRetry: false, renewSSOSubject: renewSSOSubject)
+                            .do(onNext: { _ in
+                                if shouldRenewSSO {
+                                    // Add callback to renew
+                                    renewSSOSubject?.onNext(userId)
+                                }
+                            })
+                    }
             }
         }
     }

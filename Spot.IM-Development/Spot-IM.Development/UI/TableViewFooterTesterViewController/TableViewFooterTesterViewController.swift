@@ -139,9 +139,9 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
 }
 
 extension TableViewFooterTesterViewController: SpotImLoginDelegate {
-    func startLoginFlow() {
+    func startLoginUIFlow(navigationController: UINavigationController) {
         let authenticationPlaygroundVC = AuthenticationPlaygroundVC()
-        navigationController?.pushViewController(authenticationPlaygroundVC, animated: true)
+        navigationController.pushViewController(authenticationPlaygroundVC, animated: true)
     }
 }
 

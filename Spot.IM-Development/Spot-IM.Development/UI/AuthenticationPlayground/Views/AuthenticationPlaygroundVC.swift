@@ -349,7 +349,12 @@ fileprivate extension AuthenticationPlaygroundVC {
         
         viewModel.outputs.dismissVC
             .subscribe(onNext: { [weak self] in
-                self?.navigationController?.popViewController(animated: true)
+                guard let self = self else { return }
+                if let navController = self.navigationController {
+                    navController.popViewController(animated: true)
+                } else {
+                    self.dismiss(animated: true, completion: nil)
+                }
             })
             .disposed(by: disposeBag)
     }

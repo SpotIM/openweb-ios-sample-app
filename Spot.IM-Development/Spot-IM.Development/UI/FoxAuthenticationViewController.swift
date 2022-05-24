@@ -49,9 +49,16 @@ class FoxAuthenticationViewController: UIViewController {
     }
     
     private func authenticateWithSpotIm(token:String) {
-        SpotIm.sso(withJwtSecret: token) { response, error in
-            if let success = response?.success, success {
-                print("Authentication successful!")
+        SpotIm.sso(withJwtSecret: token) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let ssoResponse):
+                guard ssoResponse.success else {
+                    self.handleErrorFromJWTSSO(error: AuthenticationError.JWTSSOFailed)
+                    return
+                }
+                
+                DLog("Authentication successful!")
                 if (!self.shouldPresentFullConInNewNavStack) {
                     // If the SDK uses the same navigation stack as the app - we should pop the Auth VC here
                     self.navigationController?.popViewController(animated: true)
@@ -59,14 +66,18 @@ class FoxAuthenticationViewController: UIViewController {
                 else {
                     self.dismiss(animated: true, completion: nil)
                 }
-            } else {
-                print("Authentication error:\n\(String(describing: error))")
-                let alert = UIAlertController(title: "Failed authenticating with SpotIm", message: error?.localizedDescription, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-                   }))
-                self.present(alert, animated: true, completion: nil)
+            case .failure(let error):
+                self.handleErrorFromJWTSSO(error: error)
             }
         }
+    }
+    
+    fileprivate func handleErrorFromJWTSSO(error: Error) {
+        DLog("Authentication error:\n\(String(describing: error))")
+        let alert = UIAlertController(title: "Failed authenticating with SpotIm", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+           }))
+        self.present(alert, animated: true, completion: nil)
     }
     
     @IBAction func createAccountTapped(_ sender: Any) {
