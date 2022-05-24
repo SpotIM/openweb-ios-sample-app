@@ -22,6 +22,7 @@ class SPCommentCreationViewController: SPBaseViewController,
                                        OWUserAuthFlowDelegateContainable,
                                        OWUserPresentable {
     
+    weak var parentVC: UIViewController?
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: OWAuthenticationHandler?
@@ -274,7 +275,11 @@ class SPCommentCreationViewController: SPBaseViewController,
         transition.type = .reveal
         transition.subtype = .fromBottom
         navigationController?.view.layer.add(transition, forKey: nil)
-        navigationController?.popViewController(animated: false)
+        if let parentVC = parentVC { // Popping staright to the parentVC if exist
+            navigationController?.popToViewController(parentVC, animated: false)
+        } else {
+            navigationController?.popViewController(animated: false) // Should pop this view
+        }
     }
     
     func userDidSignInHandler() -> OWAuthenticationHandler? {
@@ -334,6 +339,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             } else {
                 self.delegate?.commentReplyDidCreate(responseData)
             }
+            self.hideLoader()
             self.dismissController()
         }
         
