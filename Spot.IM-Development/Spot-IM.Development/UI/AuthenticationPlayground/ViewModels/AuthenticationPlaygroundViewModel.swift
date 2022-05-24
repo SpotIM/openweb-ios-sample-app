@@ -151,8 +151,6 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                             }
                         case .failure(let error):
                             DLog("Logout error: \(error)")
-                        @unknown default:
-                            DLog("SDK logout function returned unknown result")
                         }
                     }
                 }
