@@ -14,6 +14,7 @@ enum SupportedLanguage: String {
     case arabic = "ar"
     case spanish = "es"
     case portoguese = "pt"
+    case french = "fr"
     
     var langStringsPath: String {
         switch self {
@@ -27,6 +28,8 @@ enum SupportedLanguage: String {
             return "es"
         case .portoguese:
             return "pt-PT"
+        case .french:
+            return "fr"
         }
     }
     
