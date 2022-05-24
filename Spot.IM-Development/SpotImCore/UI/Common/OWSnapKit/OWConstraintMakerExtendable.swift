@@ -60,12 +60,6 @@ class OWConstraintMakerExtendable: OWConstraintMakerRelatable {
         return self
     }
     
-    @available(*, deprecated, renamed:"lastBaseline")
-    var baseline: OWConstraintMakerExtendable {
-        self.description.attributes += .lastBaseline
-        return self
-    }
-    
     var lastBaseline: OWConstraintMakerExtendable {
         self.description.attributes += .lastBaseline
         return self
