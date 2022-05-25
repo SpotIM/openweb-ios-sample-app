@@ -18,7 +18,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
     func sendEvent(with info: SPEventInfo, postId: String?) {
 
         guard let spotKey = SPClientSettings.main.spotKey else {
-            OWLogger.error("[ERROR]: No spot key for analytics")
+            servicesProvider.logger().log(level: .error, "No spot key for analytics")
             return
         }
 
@@ -55,8 +55,8 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
             parameters: parameters,
             parser: OWEmptyParser(),
             headers: headers
-        ) { _, response in
-            SPUserSessionHolder.updateSession(with: response.response)
+        ) { _, _ in
+            // Doing nothing here. Basically we should not update user session or anything here that might mess with the authentication
         }
     }
 

@@ -45,8 +45,8 @@ internal struct CommentViewModel {
     var isCollapsed: Bool = false
     var badgeTitle: String?
     var commentTextCollapsed: Bool = true
-    
     var showStatusIndicator: Bool = false
+    var anyHiddenReply: Bool = false
 
     var brandColor: UIColor = .brandColor
 
@@ -114,8 +114,9 @@ internal struct CommentViewModel {
             self.commentMediaOriginalWidth = image.originalWidth
         }
         
-        
-        if comment.hasNext {
+        anyHiddenReply = 1 <= depth && (comment.replies?.count ?? 0 > 0)
+
+        if comment.hasNext || anyHiddenReply {
             repliesButtonState = .collapsed
         } else {
             repliesButtonState = .hidden

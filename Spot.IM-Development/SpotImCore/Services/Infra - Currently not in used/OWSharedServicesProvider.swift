@@ -9,21 +9,29 @@
 import Foundation
 import UIKit
 
+protocol OWSharedServicesProviderConfigure {
+    func configureLogger(logLevel: OWLogLevel, logMethods: [OWLogMethod])
+}
+
 protocol OWSharedServicesProviding {
+    var configure: OWSharedServicesProviderConfigure { get }
     func themeStyleService() -> OWThemeStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
     func commentsInMemoryCacheService() -> OWCacheService<String, String>
+    func netwokAPI() -> OWNetworkAPIProtocol
+    func logger() -> OWLogger
+    func appLifeCycle() -> OWRxAppLifeCycleProtocol
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
     
     // Singleton
     static let shared: OWSharedServicesProviding = OWSharedServicesProvider()
-
-    private init() {
-
-    }
-
+    
+    private init() {}
+    
+    var configure: OWSharedServicesProviderConfigure { return self }
+    
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
     }()
@@ -36,6 +44,26 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWCacheService<String, String>()
     }()
     
+    fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
+        /*
+         By default we create the network once.
+         If we will want to "reset" everything when a new spotIfy provided, we can re-create the network entirely.
+         Note that the environment is being set in the `OWEnvironment` class which we can set in an earlier step by some
+         environment variable / flag in Xcode scheme configuration.
+         */
+        return OWNetworkAPI(environment: OWEnvironment.currentEnvironment)
+    }()
+    
+    fileprivate lazy var _logger: OWLogger = {
+        var methods: [OWLogMethod] = [.nsLog, .file(maxFilesNumber: OWLogger.Metrics.defaultLogFilesNumber)]
+        let logger = OWLogger(logLevel: .verbose, logMethods: methods)
+        logger.log(level: .verbose, "Logger initialized")
+        return logger
+    }()
+    
+    fileprivate lazy var _appLifeCycle: OWRxAppLifeCycleProtocol = {
+        return OWRxAppLifeCycle()
+    }()
     
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
@@ -47,5 +75,25 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func commentsInMemoryCacheService() -> OWCacheService<String, String> {
         return _commentsInMemoryCacheService
+    }
+    
+    func netwokAPI() -> OWNetworkAPIProtocol {
+        return _networkAPI
+    }
+    
+    func logger() -> OWLogger {
+        return _logger
+    }
+    
+    func appLifeCycle() -> OWRxAppLifeCycleProtocol {
+        return _appLifeCycle
+    }
+}
+
+// Configure
+extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
+    func configureLogger(logLevel level: OWLogLevel, logMethods methods: [OWLogMethod]) {
+        _logger = OWLogger(logLevel: level, logMethods: methods)
+        _logger.log(level: .verbose, "Logger re-initialized with new configuration")
     }
 }

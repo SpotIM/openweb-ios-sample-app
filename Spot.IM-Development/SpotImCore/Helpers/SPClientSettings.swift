@@ -21,30 +21,6 @@ public class SPClientSettings {
     
     private(set) var spotKey: String?
     private var configProvider: SPDefaultConfigProvider!
-    
-    @available(*, deprecated, message: "Use SpotIm.initialize(spotId: String) instead")
-    public func setup(spotKey: String?) {
-        if self.spotKey != spotKey {
-            self.spotKey = spotKey
-            UIFont.loadAllFonts
-            
-            sendAppInitEvent()
-
-            NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(appMovedToForeground),
-                    name: UIApplication.willEnterForegroundNotification,
-                    object: nil)
-            
-            firstly {
-                configProvider.fetchConfigs()
-            }.done { _ in
-                
-            }.catch { error in
-                
-            }
-        }
-    }
 
     internal func  setup(spotId: String) -> Promise<SpotConfig> {
         self.spotKey = spotId
@@ -67,14 +43,6 @@ public class SPClientSettings {
     public func appMovedToForeground(notification: Notification) {
         SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
     }
-    
-    @available(*, deprecated, message: "Use SpotIm.overrideUserInterfaceStyle instead")
-    public static var overrideUserInterfaceStyle: SPUserInterfaceStyle? = {
-        if UserDefaults.standard.bool(forKey: "demo.isCustomDarkModeEnabled") {
-            return SPUserInterfaceStyle(rawValue: UserDefaults.standard.integer(forKey: "demo.interfaceStyle"))
-        }
-        return nil
-    }()
     
     internal static var darkModeBackgroundColor: UIColor = .mineShaft
     

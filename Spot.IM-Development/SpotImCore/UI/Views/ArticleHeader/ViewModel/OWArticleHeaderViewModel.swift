@@ -9,12 +9,15 @@
 import Foundation
 import RxSwift
 
-protocol OWArticleHeaderViewModelingInputs { }
+protocol OWArticleHeaderViewModelingInputs {
+    var tap: PublishSubject<Void> { get }
+}
 
 protocol OWArticleHeaderViewModelingOutputs {
     var conversationImageType: Observable<OWImageType> { get }
     var conversationTitle: Observable<String> { get }
     var conversationAuthor: Observable<String> { get }
+    var headerTapped: Observable<Void> { get }
 }
 
 protocol OWArticleHeaderViewModeling {
@@ -25,6 +28,7 @@ protocol OWArticleHeaderViewModeling {
 class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
                                 OWArticleHeaderViewModelingInputs,
                                 OWArticleHeaderViewModelingOutputs {
+    
     var inputs: OWArticleHeaderViewModelingInputs { return self }
     var outputs: OWArticleHeaderViewModelingOutputs { return self }
     
@@ -40,6 +44,12 @@ class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
         self._articleMetadata
             .unwrap()
     }()
+    
+    var tap = PublishSubject<Void>()
+    
+    var headerTapped: Observable<Void> {
+        return tap.asObservable()
+    }
     
     var conversationImageType: Observable<OWImageType> {
         self.articleMetadata

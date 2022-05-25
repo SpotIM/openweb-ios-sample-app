@@ -9,8 +9,6 @@
 import Foundation
 import Alamofire
 
-fileprivate let OPENWEB_TOKEN_HEADER = "x-openweb-token"
-
 internal extension HTTPHeaders {
     
     
@@ -36,15 +34,15 @@ internal extension HTTPHeaders {
                                     "x-spotim-page-view-id": pageViewId]
         
         if let userId = SPUserSessionHolder.session.guid, !userId.isEmpty {
-            headers["x-guid"] = userId
+            headers[APIHeadersConstants.guid] = userId
         }
 
         if let token = SPUserSessionHolder.session.token, !token.isEmpty {
-            headers["Authorization"] = token
+            headers[APIHeadersConstants.authorization] = token
         }
         
         if let openwebToken = SPUserSessionHolder.session.openwebToken, !openwebToken.isEmpty {
-            headers[OPENWEB_TOKEN_HEADER] = openwebToken
+            headers[APIHeadersConstants.openwebTokenHeader] = openwebToken
         }
         
         return headers
@@ -60,14 +58,14 @@ internal extension HTTPHeaders {
 
 internal extension Dictionary where Key == AnyHashable, Value == Any {
     var authorizationHeader: String? {
-        return self["Authorization"] as? String
+        return self[APIHeadersConstants.authorization] as? String
     }
     
     var openwebTokenHeader: String? {
-        return self[OPENWEB_TOKEN_HEADER] as? String
+        return self[APIHeadersConstants.openwebTokenHeader] as? String
     }
 
-    var userIdHeader: String? {
-        return self["x-guid"] as? String
+    var guidHeader: String? {
+        return self[APIHeadersConstants.guid] as? String
     }
 }

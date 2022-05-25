@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 struct RankActionDataModel {
     
@@ -53,6 +54,23 @@ final class SPMainConversationModel {
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: OWAbTests
     
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    
+    // This is an ungly soultion until we will split this model to two proper VMs
+    // By defualt this model serves the preConversation.
+    // Each of the consuming VC will set this variable when presenting on screen
+    var currentBindedVC: SPViewSourceType = .preConversation
+    
+    var actionCallback: Observable<(SPViewActionCallbackType, SPViewSourceType)> {
+        let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
+            .map { _ -> SPViewActionCallbackType in
+                return .articleHeaderPressed
+            }
+        
+        return Observable.merge([headerTappedObservable])
+            .map { ($0, self.currentBindedVC) }
+    }
+    
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
     // Will refactor once we will move to MVVM
     let onlineViewingUsersPreConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
@@ -90,11 +108,13 @@ final class SPMainConversationModel {
          conversationDataSource: SPMainConversationDataSource,
          imageProvider: SPImageProvider,
          realTimeService: RealTimeService,
-         abTestData: OWAbTests) {
+         abTestData: OWAbTests,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.realTimeService = realTimeService
         self.commentUpdater = commentUpdater
         self.imageProvider = imageProvider
         self.abTestsData = abTestData
+        self.servicesProvider = servicesProvider
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         dataSource = conversationDataSource
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: dataSource.articleMetadata)
@@ -425,7 +445,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             }
         } catch {
             if let realtimeError = error as? RealTimeError {
-                OWLogger.error("Failed to update real time data: \(realtimeError)")
+                servicesProvider.logger().log(level: .error, "Failed to update real time data: \(realtimeError)")
                 stopRealTimeFetching()
                 SPDefaultFailureReporter.shared.report(error: .realTimeError(realtimeError))
             }

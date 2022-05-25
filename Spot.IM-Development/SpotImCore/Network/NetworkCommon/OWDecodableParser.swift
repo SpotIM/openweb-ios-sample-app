@@ -13,10 +13,12 @@ final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
     typealias Representation = T
     
     let decoder: JSONDecoder
+    fileprivate let servicesProvider: OWSharedServicesProviding
     
-    init(keyPath: String? = nil, decoder: JSONDecoder = defaultDecoder) {
+    init(keyPath: String? = nil, decoder: JSONDecoder = defaultDecoder,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.decoder = decoder
-
+        self.servicesProvider = servicesProvider
         super.init(keyPath: keyPath)
     }
     
@@ -25,8 +27,7 @@ final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
             let item = try decoder.decode(Representation.self, from: data)
             return .success(item)
         } catch let error {
-            OWLogger.error(error)
-            
+            servicesProvider.logger().log(level: .error, error.localizedDescription)
             return .failure(error)
         }
     }
@@ -38,7 +39,7 @@ final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
             let decoded = try decoder.decode(Representation.self, from: data)
             return .success(decoded)
         } catch let error {
-            OWLogger.error(error)
+            servicesProvider.logger().log(level: .error, error.localizedDescription)
             return .failure(error)
         }
     }

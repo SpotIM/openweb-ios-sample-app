@@ -56,6 +56,8 @@ internal final class SPMainConversationDataSource {
     private var cachedCommentReply: CommentViewModel?
     private var selectedLabelIds: [String]?
     
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    
     internal var showReplies: Bool = false {
         didSet {
             expandAllCommentsIfNeeded()
@@ -67,13 +69,15 @@ internal final class SPMainConversationDataSource {
         SPAnalyticsHolder.default.postId = nil
     }
 
-    init(with postId: String, articleMetadata: SpotImArticleMetadata, dataProvider: SPConversationsDataProvider) {
+    init(with postId: String, articleMetadata: SpotImArticleMetadata, dataProvider: SPConversationsDataProvider,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         SPAnalyticsHolder.default.postId = postId
         
         self.postId = postId
         self.dataProvider = dataProvider
         self.articleMetadata = articleMetadata
-    
+        self.servicesProvider = servicesProvider
+        
         dataProvider.conversationAsync(postId: postId, articleUrl: articleMetadata.url)
         NotificationCenter.default.addObserver(
             self,
@@ -541,13 +545,13 @@ internal final class SPMainConversationDataSource {
         let viewModel = commentViewModel(with: reply,
                                          replyingToCommentId: reply.parentId,
                                          replyingToDisplayName: parent.deleted ? nil :  displayName)
-        makeRepliesProviderIfNeeded(for: reply)
+        makeRepliesProviderIfNeeded(for: reply, viewModel: viewModel)
         
         return viewModel
     }
 
-    private func makeRepliesProviderIfNeeded(for comment: SPComment) {
-        if comment.hasNext, let replyId = comment.id, repliesProviders[replyId] == nil {
+    private func makeRepliesProviderIfNeeded(for comment: SPComment, viewModel: CommentViewModel) {
+        if comment.hasNext || viewModel.anyHiddenReply, let replyId = comment.id, repliesProviders[replyId] == nil {
             let newProvider = dataProvider.copy(modifyingOffset: comment.offset, hasNext: comment.hasNext)
             repliesProviders[replyId] = newProvider
         }
@@ -563,7 +567,7 @@ internal final class SPMainConversationDataSource {
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
 
-            makeRepliesProviderIfNeeded(for: comment)
+            makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
             
             guard let id = comment.id, let replies = comment.replies, !replies.isEmpty else {
                 visibleComments.append(viewModel)
@@ -598,6 +602,7 @@ internal final class SPMainConversationDataSource {
             let viewModel = commentViewModel(with: comment,
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
+
             section.append(viewModel)
 
             guard let replies = comment.replies, !replies.isEmpty else {
@@ -629,7 +634,7 @@ internal final class SPMainConversationDataSource {
             }
             visibleComments.append(section)
 
-            makeRepliesProviderIfNeeded(for: comment)
+            makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
         }
         
         return visibleComments
@@ -784,7 +789,7 @@ extension SPMainConversationDataSource {
     }
     
     func update(with comment: SPComment) {
-        OWLogger.verbose("FirstComment: preparing comment view model")
+        servicesProvider.logger().log(level: .verbose, "update: preparing comment view model")
         let parentComment = self.comment(with: comment.parentId)
 
         let displayName = parentComment?.displayName
@@ -825,39 +830,29 @@ extension SPMainConversationDataSource {
     }
     
     private func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
-        OWLogger.verbose("FirstComment: push is called, sorting is \(String(describing: sortMode))")
+        let logger = servicesProvider.logger()
+        logger.log(level: .verbose, "pushLocalComment called, sorting is \(String(describing: sortMode))")
         let updatedMessageCount = messageCount + 1
-        if sortMode == .newest {
-            OWLogger.verbose("FirstComment: Message will be posted locally only")
-            OWLogger.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
-            self.messageCount = updatedMessageCount
-            self.messageCounterUpdated?(updatedMessageCount)
-            cellData.insert([viewModel], at: shouldShowBanner ? 1 : 0)
-            cachedCommentReply = nil
-            delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
-        } else {
-            OWLogger.verbose("FirstComment: Refreshing to .newset sorting")
-            conversation(.newest, page: .first) { [weak self] result, _ in
-                OWLogger.verbose("FirstComment: Got result from API")
-                OWLogger.verbose("FirstComment: \(result)")
-                if result {
-                    guard let self = self else { return }
-                    OWLogger.verbose("FirstComment: Calling reload data with scroll to top")
-                    self.delegate?.reload(shouldBeScrolledToTop: true)
-                    
-                    OWLogger.verbose("FirstComment: Searching for the posted comment in the API response")
-                    OWLogger.verbose("FirstComment: cell data: \(self.cellData)")
-                    let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
-                    if dataModel == nil {
-                        OWLogger.verbose("FirstComment: Data model not found, adding it manually")
-                        self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
-                        self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
-                        OWLogger.verbose("FirstComment: Updated message count: \(updatedMessageCount)")
-                        self.messageCount = updatedMessageCount
-                        self.messageCounterUpdated?(updatedMessageCount)
-                    }
-                    self.cachedCommentReply = nil
+        logger.log(level: .verbose, "pushLocalComment: Refreshing to .newset sorting")
+        conversation(.newest, page: .first) { [weak self, weak logger] result, _ in
+            guard let self = self else { return }
+            logger?.log(level: .verbose, "pushLocalComment: Got result from API")
+            logger?.log(level: .verbose, "pushLocalComment: \(result)")
+            if result {
+                logger?.log(level: .verbose, "pushLocalComment: Calling reload data with scroll to top")
+                self.delegate?.reload(shouldBeScrolledToTop: true)
+                logger?.log(level: .verbose, "pushLocalComment: Searching for the posted comment in the API response")
+                logger?.log(level: .verbose, "pushLocalComment: cell data: \(self.cellData)")
+                let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
+                if dataModel == nil {
+                    logger?.log(level: .verbose, "pushLocalComment: Data model not found, adding it manually")
+                    self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
+                    self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
+                    logger?.log(level: .verbose, "pushLocalComment: Updated message count: \(updatedMessageCount)")
+                    self.messageCount = updatedMessageCount
+                    self.messageCounterUpdated?(updatedMessageCount)
                 }
+                self.cachedCommentReply = nil
             }
         }
     }
