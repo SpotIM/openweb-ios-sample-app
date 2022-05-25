@@ -8,6 +8,7 @@
 
 import Foundation
 import PromiseKit
+import RxSwift
 
 public enum SpotImError: Error {
     /// SDK was not initilized, please call SpotIm.initialize(spotId: String) with your spotId before calling any other SDK APIs
@@ -20,28 +21,9 @@ public enum SpotImError: Error {
     case internalError(String)
 }
 
-public enum SpotImResult<T> {
-    case success(T)
-    case failure(SpotImError)
-
-    public var value: T? {
-        switch self {
-        case .success(let result): return result
-        case .failure: return nil
-        }
-    }
-
-    public var error: SpotImError? {
-        switch self {
-        case .success: return nil
-        case .failure(let error): return error
-        }
-    }
-}
-
 public enum SpotImLoginStatus {
     case guest
-    case loggedIn
+    case ssoLoggedIn(userId: String)
 }
 
 public struct SpotImConversationCounters: Codable {
@@ -104,12 +86,6 @@ public protocol SPAnalyticsEventDelegate {
     func trackEvent(type: SPEventType, event: SPEventInfo)
 }
 
-extension SpotImResult where T == Void {
-    static var success: SpotImResult {
-        return .success(())
-    }
-}
-
 internal let NUM_OF_RETRIES: UInt = 3
 
 private struct InitResult {
@@ -117,11 +93,10 @@ private struct InitResult {
     let user: SPUser
 }
 
-public typealias InitizlizeCompletionHandler = (_ success: Bool, _ error: SpotImError?) -> Void
+public typealias InitizlizeCompletionHandler = (Swift.Result<Void, SpotImError>) -> Void
 
 public class SpotIm {
     private static var configurationPromise: Promise<SpotConfig>?
-    private static var userPromise: Promise<SPUser>?
     private static let apiManager: OWApiManager = OWApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     internal static let profileProvider: SPProfileProvider = SPProfileProvider(apiManager: SpotIm.apiManager)
@@ -149,6 +124,8 @@ public class SpotIm {
     
     internal static var customInitialSortByOption: SpotImSortByOption? = nil
     
+    fileprivate static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
+    
     /**
     Initialize the SDK
 
@@ -164,22 +141,24 @@ public class SpotIm {
             SpotIm.spotId = nil
             SPUserSessionHolder.resetUserSession()
             configurationPromise = nil
-            userPromise = nil
             LocalizationManager.reset()
         }
 
         if SpotIm.spotId == nil {
             SpotIm.reinit = false
             SpotIm.spotId = spotId
-            getConfigPromise(spotId: spotId).ensure {
-                SPClientSettings.main.sendAppInitEvent()
-                completion?(true, nil)
-            }.catch { error in
-                OWLogger.verbose("FAILED to initialize the SDK, will try to recover on next API call: \(error)")
-                completion?(false, SpotImError.internalError(error.localizedDescription))
-            }
+            
+            _ = getConfig(spotId: spotId)
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { _ in
+                    SPClientSettings.main.sendAppInitEvent()
+                    completion?(.success(()))
+                }, onError: { error in
+                    servicesProvider.logger().log(level: .error, "FAILED to initialize the SDK, will try to recover on next API call: \(error.localizedDescription)")
+                    completion?(.failure(SpotImError.internalError(error.localizedDescription)))
+                })
         } else {
-            completion?(false, SpotImError.alreadyInitialized)
+            completion?(.failure(SpotImError.alreadyInitialized))
         }
     }
     
@@ -200,7 +179,7 @@ public class SpotIm {
         execute(call: { _ in
             authProvider.sso(withJwtSecret: secret, completion: completion)
         }) { (error) in
-            completion(nil, error)
+            completion(.failure(error))
         }
     }
 
@@ -216,7 +195,7 @@ public class SpotIm {
         execute(call: { _ in
             authProvider.startSSO(completion: completion)
         }) { (error) in
-            completion(nil, error)
+            completion(.failure(error))
         }
     }
 
@@ -232,30 +211,7 @@ public class SpotIm {
         execute(call: { _ in
             authProvider.completeSSO(with: codeB, completion: completion)
         }) { (error) in
-            completion(false, error)
-        }
-    }
-
-    /**
-    Factory method to create a SpotImSDKFlowCoordinator objcet
-
-     The SpotImSDKFlowCoordinator is the start point to interact with SpotIm commenting system UI
-
-     - Parameter navigationDelegate: DEPRECATED - please use LoginDelegate instead
-     - Parameter completion: A completion handler to receive the response/error of the completeSSO process
-     */
-    @available(*, deprecated, message: "Use SpotIm.createSpotImFlowCoordinator(loginDelegate: LoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) instead")
-    public static func createSpotImFlowCoordinator(navigationDelegate: SpotImSDKNavigationDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
-        execute(call: { config in
-            guard let spotId = spotId else {
-                completion(SpotImResult.failure(.internalError("Please call init SDK")))
-                return
-            }
-
-            let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, delegate: navigationDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk.locale)
-            completion(SpotImResult.success(coordinator))
-        }) { (error) in
-            completion(SpotImResult.failure(error))
+            completion(.failure(error))
         }
     }
 
@@ -267,10 +223,10 @@ public class SpotIm {
      - Parameter loginDelegate: A delegate to notify the parent app that a login flow was requested by the user
      - Parameter completion: A completion handler to receive the response/error of the completeSSO process
      */
-    public static func createSpotImFlowCoordinator(loginDelegate: SpotImLoginDelegate, completion: @escaping ((SpotImResult<SpotImSDKFlowCoordinator>) -> Void)) {
+    public static func createSpotImFlowCoordinator(loginDelegate: SpotImLoginDelegate, completion: @escaping ((Swift.Result<SpotImSDKFlowCoordinator, SpotImError>) -> Void)) {
         execute(call: { config in
             guard let spotId = spotId else {
-                completion(SpotImResult.failure(.internalError("Please call init SDK")))
+                completion(.failure(.internalError("Please call init SDK")))
                 return
             }
             
@@ -278,14 +234,14 @@ public class SpotIm {
             // if googleAdsProviderRequired exists AND "true" AND publisher didn't provide an adsProvider we will fail
             if let googleAdsProviderRequired = config.appConfig.mobileSdk.googleAdsProviderRequired,
                googleAdsProviderRequired && SpotIm.googleAdsProvider == nil {
-                completion(SpotImResult.failure(.internalError("Make sure to call setAdsProvider() with an AdsProvider")))
+                completion(.failure(.internalError("Make sure to call setAdsProvider() with an AdsProvider")))
                 return
             }
 
             let coordinator = SpotImSDKFlowCoordinator(spotConfig: config, loginDelegate: loginDelegate, spotId: spotId, localeId: config.appConfig.mobileSdk.locale)
-            completion(SpotImResult.success(coordinator))
+            completion(.success(coordinator))
         }) { (error) in
-            completion(SpotImResult.failure(error))
+            completion(.failure(error))
         }
     }
 
@@ -295,19 +251,22 @@ public class SpotIm {
      - Parameter conversationIds: The conversations to get counters for
      - Parameter completion: A completion handler to receive the  conversation counter
      */
-    public static func getConversationCounters(conversationIds: [String], completion: @escaping ((SpotImResult<[String:SpotImConversationCounters]>) -> Void)) {
+    public static func getConversationCounters(conversationIds: [String], completion: @escaping ((Swift.Result<[String: SpotImConversationCounters], SpotImError>) -> Void)) {
         execute(call: { _ in
-            conversationDataProvider.commnetsCounters(conversationIds: conversationIds).done { countersData in
-                let counters = Dictionary(uniqueKeysWithValues: countersData.map { key, value in
-                    (key, SpotImConversationCounters(comments: value.comments, replies: value.replies))
+            let encodedConversationIds = conversationIds.map { ($0 as OWPostId).encoded }
+            conversationDataProvider.commnetsCounters(conversationIds: encodedConversationIds).done { countersData in
+                let counters = Dictionary<String, SpotImConversationCounters>(uniqueKeysWithValues: countersData.map { key, value in
+                    let decodedConversationId = (key as OWPostId).decoded
+                    let conversationCounter = SpotImConversationCounters(comments: value.comments, replies: value.replies)
+                    return (decodedConversationId, conversationCounter)
                 })
 
-                completion(SpotImResult.success(counters))
+                completion(.success(counters))
             }.catch { error in
-                completion(SpotImResult.failure(.internalError(error.localizedDescription)))
+                completion(.failure(.internalError(error.localizedDescription)))
             }
         }) { error in
-            completion(SpotImResult.failure(error))
+            completion(.failure(error))
         }
     }
 
@@ -337,73 +296,45 @@ public class SpotIm {
      Get the current user login status
 
      The login status may be one of 2 options:
-     1. Guest - an unauthenticated session
-     2. LoggedIn - an authenticated session
+     1. guest - an unauthenticated session
+     2. ssoLoggedIn - an authenticated session
      - Parameter completion: A completion handler to receive the current login status of the user
      */
-    public static func getUserLoginStatus(completion: @escaping ((SpotImResult<SpotImLoginStatus>) -> Void)) {
+    public static func getUserLoginStatus(completion: @escaping ((Swift.Result<SpotImLoginStatus, SpotImError>) -> Void)) {
         execute(call: { _ in
-            if let user = SPUserSessionHolder.session.user {
-                completion(.success(user.registered ? .loggedIn : .guest))
-            } else {
+            guard let user = SPUserSessionHolder.session.user else {
                 completion(.failure(SpotImError.notInitialized))
+                return
             }
-        }) { (error) in
-            completion(.failure(SpotImError.internalError(error.localizedDescription)))
-        }
-    }
-
-    /**
-     Get the current user login status with the user ID (if registered)
-
-     The login status may be one of 2 options:
-     1. Guest - an unauthenticated session
-     2. LoggedIn - an authenticated session
-     - Parameter completion: A completion handler to receive the current login status of the user
-     - SpotImResult returns the "user id" for a logged-in user
-     */
-    public static func getUserLoginStatusWithId(completion: @escaping ((SpotImResult<(SpotImLoginStatus, String?)>) -> Void)) {
-        execute(call: { _ in
-            if let user = SPUserSessionHolder.session.user {
-                let loginStatus:SpotImLoginStatus = user.registered ? .loggedIn : .guest
-                let userId = user.registered ? user.id : nil
-                completion(.success((loginStatus, userId)))
+            let loginStatus: SpotImLoginStatus
+            if user.registered, let userId = user.id {
+                loginStatus = .ssoLoggedIn(userId: userId)
             } else {
-                completion(.failure(SpotImError.notInitialized))
+                loginStatus = .guest
             }
+            completion(.success(loginStatus))
+
         }) { (error) in
             completion(.failure(SpotImError.internalError(error.localizedDescription)))
         }
     }
     
-    /**
-     Get the current user ID (if registered)
-     */
-    public static func getRegisteredUserId() -> String? {
-        if let user = SPUserSessionHolder.session.user {
-            let userId = user.registered ? user.id : nil
-            return userId
-        } else {
-            return nil
+    public static func logout(completion: @escaping ((Swift.Result<Void, SpotImError>) -> Void)) {
+        execute(call: { _ in
+            _ = authProvider.logout()
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { _ in
+                    completion(.success(()))
+                }, onError: { error in
+                    completion(.failure(SpotImError.internalError(error.localizedDescription)))
+                })
+        }) { (error) in
+            completion(.failure(error))
         }
     }
     
     public static func setCustomSortByOptionText(option: SpotImSortByOption, text: String) {
         customSortByOptionText[option] = text
-    }
-    
-    public static func logout(completion: @escaping ((SpotImResult<Void>) -> Void)) {
-        execute(call: { _ in
-            firstly {
-                authProvider.logout()
-            }.done {
-                completion(.success)
-            }.catch { (error) in
-                completion(.failure(SpotImError.internalError(error.localizedDescription)))
-            }
-        }) { (error) in
-            completion(SpotImResult.failure(error))
-        }
     }
     
     /**
@@ -436,58 +367,82 @@ public class SpotIm {
     public static func setInitialSort(option: SpotImSortByOption) {
         self.customInitialSortByOption = option
     }
+    
+    /**
+        Configure OpenWeb SDK logger
+
+     - Parameter logLevel: SPLogLevel - the level which will be logged out
+     - Parameter logMethods: [SPLogMethod] - the methods in which we will log
+     */
+    public static func configureLogger(logLevel: SPLogLevel, logMethods: [SPLogMethod]) {
+        self.servicesProvider.configure.configureLogger(logLevel: logLevel.toOWPrefix,
+                                                        logMethods: logMethods.map {$0.toOWPrefix })
+    }
 
     // MARK: Private
     private static func execute(call: @escaping (SpotConfig) -> Void, failure: @escaping ((SpotImError) -> Void)) {
         if let spotId = SpotIm.spotId {
-            getConfigPromise(spotId: spotId).done { config in
-                if let enabled = config.appConfig.mobileSdk.enabled, enabled {
-                    getUserPromise().done { user in
-                        call(config)
-                    }.catch { error in
-                        OWLogger.verbose("FAILED!!!!")
-                        if let spotError = error as? SpotImError {
-                            failure(spotError)
-                        } else {
-                            failure(SpotImError.internalError(error.localizedDescription))
-                        }
+            _ = getConfig(spotId: spotId) // Load config
+                .catch { error in
+                    servicesProvider.logger().log(level: .error, "FAILED to load config: \(error.localizedDescription)")
+                    if let spotError = error as? SpotImError {
+                        failure(spotError)
+                    } else {
+                        failure(SpotImError.internalError(error.localizedDescription))
                     }
-                } else {
-                    OWLogger.error("SpotIM SDK is disabled for spot id: \(SPClientSettings.main.spotKey ?? "NONE").\nPlease contact SpotIM for more information")
-                    failure(SpotImError.configurationSdkDisabled)
+                    return .empty() // Actually stop here
                 }
-            }.catch { error in
-                OWLogger.verbose("FAILED!!!!")
-                if let spotError = error as? SpotImError {
-                    failure(spotError)
-                } else {
-                    failure(SpotImError.internalError(error.localizedDescription))
+                .take(1) // No need to disposed since we take 1
+                .flatMapLatest { config in
+                    return getUser() // Load user
+                        .catch { error in
+                            servicesProvider.logger().log(level: .error, "FAILED to load user: \(error.localizedDescription)")
+                            if let spotError = error as? SpotImError {
+                                failure(spotError)
+                            } else {
+                                failure(SpotImError.internalError(error.localizedDescription))
+                            }
+                            return .empty() // Actually stop here
+                        }
+                        .map { _ in
+                            return config
+                        }
                 }
-            }
+                .take(1) // No need to disposed since we take 1
+                .subscribe(onNext: { config in
+                    call(config)
+                })
         } else {
-            OWLogger.error("Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
+            servicesProvider.logger().log(level: .error, "Please call SpotIm.initialize(spotId: String) before calling any SpotIm SDK method")
             failure(SpotImError.notInitialized)
         }
     }
 
-    private static func getConfigPromise(spotId: String) -> Promise<SpotConfig> {
-        if let configurationPromise = configurationPromise, !configurationPromise.isRejected {
-            return configurationPromise
-        }
+    private static func getConfig(spotId: String) -> Observable<SpotConfig> {
+        return Observable.create { observer in
+            let configuration: Promise<SpotConfig>
+            if let configurationPromise = self.configurationPromise, !configurationPromise.isRejected {
+                configuration = configurationPromise
+            } else {
+                let result = SPClientSettings.main.setup(spotId: spotId)
+                self.configurationPromise = result
+                configuration = self.configurationPromise!
+            }
 
-        let result = SPClientSettings.main.setup(spotId: spotId)
-        configurationPromise = result
-        return result
+            configuration.done { config in
+                observer.onNext(config)
+                observer.onCompleted()
+            }.catch { error in
+                return observer.onError(error)
+            }
+            
+            return Disposables.create()
+        }
     }
 
-    private static func getUserPromise() -> Promise<SPUser> {
-        if let userPromise = userPromise, !userPromise.isRejected {
-            return userPromise
-        }
-
-        
-        let result = authProvider.getUser()
-        userPromise = result
-        return result
+    private static func getUser() -> Observable<SPUser> {
+        // Since the way to know the user expired is by code 403 for that request, we should never cache the user.
+        // We will able to do so only after some expiration field will be added
+        return authProvider.getUser()
     }
 }

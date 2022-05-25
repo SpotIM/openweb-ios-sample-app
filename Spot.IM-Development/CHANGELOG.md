@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2022-05-24
+### Added
+- Added French support
+### Fixed
+- Fixed SSO authentication flow
+- Renew SSO when returning to foreground if needed - token can potentially expire when the application is in background for some days - this fixed that
+### Changes
+- Few changes in SSO related methods API, read our documentation for the full details
+- Added renewSSOAuthentication function inside SpotImLoginDelegate
+- Function Renaming inside SpotImLoginDelegate to startLoginUIFlow
+- Returning the userId in completeSSO function inside SpotImLoginDelegate
+
+## [1.13.0] - 2022-05-18
+### Added
+- Completely new logger system to assist in debug issues. We are really excited about that and recommend to read the document to understand the posabilities.
+- Add PostId to SpotImCustomUIDelegate callback
+
+### Fixed
+- Disable the scrolling of the title inside the navigation bar
+- Fixed a flickering in the UI of likes inside comments when the user refresh the screen
+
+### Internal
+- New infra for the network
+
+## [1.12.0] - 2022-04-25
+### Added
+- API to set the initial sorting option when a conversation open up
+- API to set a callback when the end user is pressing on the conversation header
+- Added application bundle id to webhook callback
+
+### Fixed
+- Decoding special characters back in comment counters API
+- Colors of comment actions (up vote and etc.) when switching between light mode to dark mode and vice versa
+
+### Internal
+- Refactor conversation header to proper MVVM with Rx
+
 ## [1.11.0] - 2022-03-31
 ### Added
 - Like & Dislike customization

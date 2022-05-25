@@ -13,8 +13,10 @@ import PromiseKit
 class NetworkDataProvider {
 
     let manager: OWApiManager
+    let servicesProvider: OWSharedServicesProviding
 
-    init(apiManager: OWApiManager) {
+    init(apiManager: OWApiManager, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
         self.manager = apiManager
     }
 }
@@ -62,7 +64,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
 
     internal var isLoading = false
     internal var hasNext = defaultHasNext
-
+    
     internal var canLoadNextPage: Bool {
         return !isLoading && hasNext
     }
@@ -113,7 +115,6 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         let headers = HTTPHeaders.basic(
             with: spotKey,
             postId: id)
-        OWLogger.warn("DEBUG: Is loading = true")
         isLoading = true
 
         loadingStarted?()
@@ -125,7 +126,6 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             headers: headers
         ) { (result, response) in
             DispatchQueue.main.async {
-                OWLogger.warn("DEBUG: Is loading = false")
                 self.isLoading = false
                 loadingFinished?()
 
@@ -211,10 +211,11 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             encoding: OWJsonWithoutEscapingSlashesEncoding(),
             parser: OWEmptyParser(),
             headers: headers
-        ) { (result, response) in
+        ) { [weak self] (result, response) in
+            guard let self = self else { return }
             switch result {
             case .success:
-                OWLogger.verbose("Succesfully sent conversation async")
+                self.servicesProvider.logger().log(level: .verbose, "Succesfully sent conversation async")
             case .failure(let error):
                 let rawReport = RawReportModel(
                     url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,

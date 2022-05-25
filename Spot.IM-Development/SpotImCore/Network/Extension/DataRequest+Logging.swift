@@ -12,7 +12,7 @@ import Alamofire
 internal extension DataRequest {
 
     @discardableResult
-    func log(level: SpotImRequestLogLevel = .simple) -> Self {
+    func log(level: OWLogLevel = .medium) -> Self {
         #if DEBUG
         self.logRequest(level: level)
         return self.logResponse(level: level)
@@ -22,7 +22,7 @@ internal extension DataRequest {
     }
 
     @discardableResult
-    private func logRequest(level: SpotImRequestLogLevel = .simple) -> Self {
+    private func logRequest(level: OWLogLevel = .medium) -> Self {
         guard level != .none else {
             return self
         }
@@ -66,12 +66,12 @@ internal extension DataRequest {
                 }
             }
             
-            print(message)
+            OWSharedServicesProvider.shared.logger().log(level: level, message)
         }
     }
 
     @discardableResult
-    private func logResponse(level: SpotImRequestLogLevel = .simple) -> Self {
+    private func logResponse(level: OWLogLevel = .medium) -> Self {
         guard level != .none else {
             return self
         }
@@ -118,7 +118,7 @@ internal extension DataRequest {
                 }
             }
 
-            print(message)
+            OWSharedServicesProvider.shared.logger().log(level: level, message)
         })
     }
 }

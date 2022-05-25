@@ -9,6 +9,7 @@
 "Please provide Spot Key" = "Please provide Spot Key";
 "Please provide Code B" = "Please provide Code B";
 "Authentication error" = "Authentication error";
+"Failed to get user in SSO complete" = "Failed to get user in SSO complete";
 "It seems we are experiencing technical issues. Please try again" = "It seems we are experiencing technical issues. Please try again";
 "Empty response" = "Empty response";
 "The Internet connection appears to be offline." = "Looks like we’re experiencing some connectivity issues.";
