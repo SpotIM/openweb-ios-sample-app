@@ -550,7 +550,7 @@ internal final class SPMainConversationDataSource {
     }
 
     private func makeRepliesProviderIfNeeded(for comment: SPComment, viewModel: CommentViewModel) {
-        if comment.hasNext || viewModel.wasSomeRepliesHidden, let replyId = comment.id, repliesProviders[replyId] == nil {
+        if comment.hasNext || viewModel.anyHiddenReply, let replyId = comment.id, repliesProviders[replyId] == nil {
             let newProvider = dataProvider.copy(modifyingOffset: comment.offset, hasNext: comment.hasNext)
             repliesProviders[replyId] = newProvider
         }
