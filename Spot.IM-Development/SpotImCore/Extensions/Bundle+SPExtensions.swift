@@ -34,6 +34,14 @@ extension Bundle {
     var hasPhotoLibraryUsageDescription: Bool {
         return self.photoLibraryUsageDescription != nil
     }
+    
+    var displayName: String? {
+        return self.infoDictionary?["CFBundleDisplayName"] as? String
+    }
+    
+    var bundleName: String? {
+        return self.infoDictionary?[kCFBundleNameKey as String] as? String
+    }
 }
 
 

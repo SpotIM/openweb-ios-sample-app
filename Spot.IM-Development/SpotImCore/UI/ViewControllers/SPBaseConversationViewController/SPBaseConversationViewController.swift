@@ -13,6 +13,9 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     private var authHandler: OWAuthenticationHandler?
     
+    // If we are using inheritance let's at least take advantage of it, that's why not private
+    let servicesProvider: OWSharedServicesProviding
+    
     weak var webPageDelegate: SPSafariWebPageDelegate?
 
     internal lazy var tableView: UITableView = {
@@ -52,8 +55,10 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     
     // MARK: - Internal methods
 
-    internal init(model: SPMainConversationModel, customUIDelegate: OWCustomUIDelegate? = nil) {
+    internal init(model: SPMainConversationModel, customUIDelegate: OWCustomUIDelegate? = nil,
+                  servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.model = model
+        self.servicesProvider = servicesProvider
         
         super.init(customUIDelegate: customUIDelegate)
     }
@@ -106,13 +111,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal func reloadConversation() {
         guard !model.dataSource.isLoading else { return }
         let mode = model.sortOption
-        OWLogger.verbose("FirstComment: Calling conversation API")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: Calling conversation API")
         model.dataSource.conversation(
             mode,
             page: .first,
             completion: { [weak self] (success, error) in
                 guard let self = self else { return }
-                OWLogger.verbose("FirstComment: API did finish with \(success)")
+                self.servicesProvider.logger().log(level: .verbose, "FirstComment: API did finish with \(success)")
                 self.handleConversationReloaded(success: success, error: error)
             }
         )
@@ -192,8 +197,8 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
             .ensure {
                 SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
             }
-            .catch { error in
-                OWLogger.verbose("Failed to get single use token: \(error)")
+            .catch { [weak self] error in
+                self?.servicesProvider.logger().log(level: .verbose, "Failed to get single use token: \(error)")
             }
         } else {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
@@ -535,7 +540,6 @@ extension SPBaseConversationViewController: UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        OWLogger.warn("DEBUG: cell for row called for indexPath: \(indexPath)")
         if shouldShowLoader(forRowAt: indexPath) {
             let loaderCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPLoaderCell.self, for: indexPath)
             loaderCell.startAnimating()
@@ -773,14 +777,14 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
     func replyTapped(for commentId: String?) {
         guard let id = commentId, let delegate = delegate else { return }
         
-        if SpotIm.reactNativeShowLoginScreenOnRootVC &&
-            SpotIm.getRegisteredUserId() == nil {
-            self.startLoginFlow()
+        guard SpotIm.reactNativeShowLoginScreenOnRootVC,
+              SPUserSessionHolder.session.user?.id == nil else {
+            logCreationOpen(with: .reply, parentId: commentId)
+            delegate.createReply(with: model, to: id)
             return
         }
         
-        logCreationOpen(with: .reply, parentId: commentId)
-        delegate.createReply(with: model, to: id)
+        self.startLoginFlow()
     }
 
     func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton) {
@@ -854,7 +858,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
         guard let delegate = delegate else { return }
         
         if SpotIm.reactNativeShowLoginScreenOnRootVC &&
-            SpotIm.getRegisteredUserId() == nil {
+            SPUserSessionHolder.session.user?.id == nil {
             self.startLoginFlow()
             return
         }
@@ -882,7 +886,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
     }
     
     func localCommentWasCreated() {
-        OWLogger.verbose("FirstComment:")
+        servicesProvider.logger().log(level: .verbose, "FirstComment:")
         model.handlePendingComment()
     }
 

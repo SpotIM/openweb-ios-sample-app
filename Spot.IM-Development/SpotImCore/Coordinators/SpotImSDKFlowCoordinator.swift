@@ -9,10 +9,7 @@
 
 import UIKit
 import SafariServices
-
-public protocol SpotImSDKNavigationDelegate: AnyObject {
-    func controllerForSSOFlow() -> UIViewController
-}
+import RxSwift
 
 public protocol SpotImLayoutDelegate: AnyObject {
     func viewHeightDidChange(to newValue: CGFloat)
@@ -23,8 +20,8 @@ public protocol AuthenticationViewDelegate: AnyObject {
 }
 
 public protocol SpotImLoginDelegate: AnyObject {
-    func startLoginFlow()
-    func presentControllerForSSOFlow(with spotNavController: UIViewController)
+    func startLoginUIFlow(navigationController: UINavigationController)
+    func renewSSOAuthentication(userId: String)
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
 
@@ -44,7 +41,7 @@ public enum CustomizableView {
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
-    func customizeView(view: CustomizableView, isDarkMode: Bool)
+    func customizeView(view: CustomizableView, isDarkMode: Bool, postId: String)
 }
 
 internal protocol SPSafariWebPageDelegate: AnyObject {
@@ -61,12 +58,11 @@ public enum SPViewControllerPresentationalMode {
 
 // Default implementation - https://stackoverflow.com/questions/24032754/how-to-define-optional-methods-in-swift-protocol
 public extension SpotImLoginDelegate {
-    func presentControllerForSSOFlow(with spotNavController: UIViewController) {
-        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for presentControllerForSSOFlow()")
+    func startLoginUIFlow(navigationController: UINavigationController) {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginUIFlow(navigationController:)")
     }
-    
-    func startLoginFlow() {
-        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for startLoginFlow()")
+    func renewSSOAuthentication(userId: String) {
+        assertionFailure("If this method gets called it means you (the publisher) must override the default implementation for renewSSOAuthentication(userId:)")
     }
     func shouldDisplayLoginPromptForGuests() -> Bool {
         return false //default
@@ -93,7 +89,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     // MARK: - Services    
     private let conversationUpdater: SPCommentUpdater
     
-    private weak var sdkNavigationDelegate: SpotImSDKNavigationDelegate?
     private weak var spotLayoutDelegate: SpotImLayoutDelegate?
     private weak var loginDelegate: SpotImLoginDelegate?
     private weak var customUIDelegate: SpotImCustomUIDelegate?
@@ -114,22 +109,18 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     private var preConversationViewController: UIViewController?
     private weak var authenticationViewDelegate: AuthenticationViewDelegate?
     
-    ///If inputConfiguration parameter is nil Localization settings will be taken from server config
-    internal init(spotConfig: SpotConfig, delegate: SpotImSDKNavigationDelegate, spotId: String, localeId: String?) {
-        sdkNavigationDelegate = delegate
-        adsManager = AdsManager(spotId: spotId)
-        apiManager = OWApiManager()
-        conversationUpdater = SPCommentFacade(apiManager: apiManager)
-        self.spotConfig = spotConfig
-        imageProvider = SPCloudinaryImageProvider(apiManager: apiManager)
-        SPPermissionsProvider.delegate = self
-        configureAPIAndRealTimeHandlers()
-        
-        if let localeId = localeId {
-            LocalizationManager.setLocale(localeId)
-        }
-    }
+    private var viewActionsCallback: SPViewActionsCallbacks?
+    private var mainConversationModelDisposeBag = DisposeBag()
+    private var createCommentDisposeBag = DisposeBag()
     
+    fileprivate let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
+    
+    // The creation of this service alone is enough to begin the renew process in case the "Authorization" header token expired
+    // Everything happen in the init, so it's ok this variable is not being used.
+    // Solving auth expiration after application was in background for some days (or the lifespan of the token)
+    fileprivate let authenticationRenewerService: OWAuthenticationRenewerServicing = OWAuthenticationRenewerService()
+    
+    ///If inputConfiguration parameter is nil Localization settings will be taken from server config
     internal init(spotConfig: SpotConfig, loginDelegate: SpotImLoginDelegate, spotId: String, localeId: String?) {
         self.loginDelegate = loginDelegate
         adsManager = AdsManager(spotId: spotId)
@@ -143,6 +134,9 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         if let localeId = localeId {
             LocalizationManager.setLocale(localeId)
         }
+        
+        // Set self to be the delegate for all auth provider functions
+        SpotIm.authProvider.ssoAuthDelegate = self
     }
     
     public func setLayoutDelegate(delegate: SpotImLayoutDelegate) {
@@ -158,30 +152,69 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                                           articleMetadata: SpotImArticleMetadata,
                                           numberOfPreLoadedMessages: Int = 2,
                                           navigationController: UINavigationController,
+                                          callbacks: SPViewActionsCallbacks? = nil,
                                           completion: @escaping (UIViewController) -> Void)
     {
-        let encodedPostId = encodePostId(postId: postId)
+        self.viewActionsCallback = callbacks
+        self.postId = (postId as OWPostId).encoded
         containerViewController = navigationController
-        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.conversationModel = conversationModel
-        buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
-    }
-    
-    public func openFullConversationViewController(postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
-        switch presentationalMode {
-        case .present(let viewController):
-            presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
-        case .push(let navigationController):
-            pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId, completion: completion)
+        if let conversationModel = self.setupConversationDataProviderAndServices( articleMetadata: articleMetadata) {
+            self.setupObservers(for: conversationModel)
+            self.conversationModel = conversationModel
+            buildPreConversationController(with: conversationModel, numberOfPreLoadedMessages: numberOfPreLoadedMessages, completion: completion)
         }
     }
     
-    public func openNewCommentViewController(postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode, completion: SPOpenNewCommentCompletionHandler? = nil) {
+    public func openFullConversationViewController(postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, callbacks: SPViewActionsCallbacks? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
+        
+        let navController: UINavigationController
+        switch presentationalMode {
+        case .present(_):
+            // Create nav controller in code to be the container for conversationController
+            navController = createNavController()
+        case .push(let navigationController):
+            navController = navigationController
+        }
+        
+        self.viewActionsCallback = callbacks
+        self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success( _):
+                switch presentationalMode {
+                case .present(let viewController):
+                    self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: selectedCommentId, animated: true)
+                case .push(_):
+                    self.showConversationInternal(selectedCommentId: selectedCommentId, animated: true)
+                }
+                completion?(true, nil)
+            case .failure(let spNetworkError):
+                let vcToPresentError: UIViewController
+                switch presentationalMode {
+                case .present(let viewController):
+                    vcToPresentError = viewController
+                case .push(let navigationController):
+                    vcToPresentError = navigationController
+                }
+                self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
+                self.presentFailureAlert(viewController: vcToPresentError, spNetworkError: spNetworkError) { _ in
+                    // Retry
+                    self.openFullConversationViewController(postId: postId, articleMetadata: articleMetadata, presentationalMode: presentationalMode, selectedCommentId: selectedCommentId, callbacks: callbacks, completion: completion)
+                }
+                completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
+                break
+            }
+        }
+    }
+    
+    public func openNewCommentViewController(postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode, callbacks: SPViewActionsCallbacks? = nil, completion: SPOpenNewCommentCompletionHandler? = nil) {
+        self.viewActionsCallback = callbacks
         switch fullConversationPresentationalMode {
         case .present(let viewController):
             // create nav controller in code to be the container for conversationController
             let navController = createNavController()
-            self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
+            self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success( _):
                     self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: nil, animated: true)
@@ -192,7 +225,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
-                    print("spNetworkError: \(spNetworkError.localizedDescription)")
+                    self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
                         self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
@@ -202,7 +235,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             }
             break
         case .push(let navigationController):
-            prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
+            prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success( _):
                     let model = self.conversationModel!
@@ -214,7 +248,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     }
                     completion?(true, nil)
                 case .failure(let spNetworkError):
-                    print("spNetworkError: \(spNetworkError.localizedDescription)")
+                    self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
                         self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
@@ -225,58 +259,15 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         }
     }
     
-    // DEPRECATED - please use `openFullConversationViewController` instead
-    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: SPShowFullConversationCompletionHandler? = nil) {
-        pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: nil, completion: completion)
-    }
-    
-    // DEPRECATED - please use `openFullConversationViewController` instead
-    public func pushFullConversationViewController(navigationController: UINavigationController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil)
-    {
-        self.prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { result in
-            switch result {
-            case .success( _):
-                self.showConversationInternal(selectedCommentId: selectedCommentId, animated: true)
-                completion?(true, nil)
-            case .failure(let spNetworkError):
-                print("spNetworkError: \(spNetworkError.localizedDescription)")
-                self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
-                    self.pushFullConversationViewController(navigationController: navigationController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
-                }
-                completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
-                break
-            }
-        }
-    }
-    
-    // DEPRECATED - please use `openFullConversationViewController` instead
-    public func presentFullConversationViewController(inViewController viewController: UIViewController, withPostId postId: String, articleMetadata: SpotImArticleMetadata, selectedCommentId: String?, completion: SPShowFullConversationCompletionHandler? = nil) {
-        
-        // create nav controller in code to be the container for conversationController
-        let navController = createNavController()
-        self.prepareAndLoadConversation(containerViewController: navController, withPostId: postId, articleMetadata: articleMetadata) { result in
-            switch result {
-            case .success( _):
-                self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: selectedCommentId, animated: true)
-                completion?(true, nil)
-            case .failure(let spNetworkError):
-                print("spNetworkError: \(spNetworkError.localizedDescription)")
-                self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
-                    self.presentFullConversationViewController(inViewController: viewController, withPostId: postId, articleMetadata: articleMetadata, selectedCommentId: selectedCommentId)
-                }
-                completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
-                break
-            }
-        }
-    }
-    
     private func prepareAndLoadConversation(containerViewController: UIViewController?, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !self.isLoadingConversation else { return }
-        let encodedPostId = encodePostId(postId: postId)
+        self.postId = (postId as OWPostId).encoded
         self.containerViewController = containerViewController
-        let conversationModel = self.setupConversationDataProviderAndServices(postId: encodedPostId, articleMetadata: articleMetadata)
-        self.conversationModel = conversationModel
-        self.loadConversation(model: conversationModel, completion: completion)
+        if let conversationModel = self.setupConversationDataProviderAndServices( articleMetadata: articleMetadata) {
+            self.setupObservers(for: conversationModel)
+            self.conversationModel = conversationModel
+            self.loadConversation(model: conversationModel, completion: completion)
+        }
     }
     
     private func showConversationInternal(selectedCommentId: String?, animated: Bool) {
@@ -342,7 +333,9 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    private func setupConversationDataProviderAndServices(postId: String, articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel {
+    private func setupConversationDataProviderAndServices(articleMetadata: SpotImArticleMetadata) -> SPMainConversationModel? {
+        guard let postId = postId else { return nil }
+
         SPAnalyticsHolder.default.prepareForNewPage(customBIData: articleMetadata.customBIData)
         
         let conversationDataProvider = SPConversationsFacade(apiManager: apiManager)
@@ -366,6 +359,26 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         return conversationModel
     }
     
+    private func setupObservers(for model: SPMainConversationModel) {
+        mainConversationModelDisposeBag = DisposeBag()
+        model.actionCallback
+            .subscribe( onNext: { [weak self] (type, source) in
+                guard let self = self, let postId = self.postId else { return }
+                self.viewActionsCallback?(type, source, postId)
+            })
+            .disposed(by: mainConversationModelDisposeBag)
+    }
+    
+    private func setupObservers(for model: SPCommentCreationModel) {
+        createCommentDisposeBag = DisposeBag()
+        model.actionCallback
+            .subscribe( onNext: { [weak self] type in
+                guard let self = self, let postId = self.postId else { return }
+                self.viewActionsCallback?(type, .createComment, postId)
+            })
+            .disposed(by: createCommentDisposeBag)
+    }
+    
     private func loadConversation(model:SPMainConversationModel, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !model.dataSource.isLoading else { return }
         
@@ -374,13 +387,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             model.getInitialSortMode(),
             page: .first,
             loadingStarted: {},
-            completion: { (success, error) in
+            completion: { [weak self] (success, error) in
+                guard let self = self else { return }
                 self.isLoadingConversation = false
                 if let error = error {
                     completion(.failure(error))
                 } else if success == false {
                     completion(.failure(SPNetworkError.requestFailed))
-                    OWLogger.error("Load conversation request type is not `success`")
+                    self.servicesProvider.logger().log(level: .error, "Load conversation request type is not `success`")
                 } else {
                     
                     let messageCount = model.dataSource.messageCount
@@ -390,16 +404,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 }
             }
         )
-    }
-    
-    private func encodePostId(postId: String) -> String {
-        let result = postId.replacingOccurrences(of: "urn:uri:base64:", with: "urn$3Auri$3Abase64$3A")
-            .replacingOccurrences(of: ",", with: ";")
-            .replacingOccurrences(of: "_", with: "$")
-            .replacingOccurrences(of: ":", with: "~")
-            .replacingOccurrences(of: " ", with: "")
-            .replacingOccurrences(of: "/", with: "$2F")
-        return result
     }
     
     private func startFlow(with controller: SPMainConversationViewController, animated: Bool = true) {
@@ -445,10 +449,12 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             controller.title = navigationItemTitleText
         }
         
-        OWLogger.verbose("FirstComment: localCommentReplayDidCreate SET")
-        localCommentReplyDidCreate = { comment in
-            OWLogger.verbose("FirstComment: localCommentReplayDidCreate CALLED")
-            OWLogger.verbose("FirstComment: setting the pending comment to the model")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: localCommentReplayDidCreate SET")
+
+        localCommentReplyDidCreate = { [weak self] comment in
+            guard let self = self else { return }
+            self.servicesProvider.logger().log(level: .verbose, "FirstComment: localCommentReplayDidCreate CALLED")
+            self.servicesProvider.logger().log(level: .verbose, "FirstComment: setting the pending comment to the model")
             model.pendingComment = comment
         }
         commentReplyCreationBlocked = { commentText in
@@ -467,12 +473,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         navigationItemTextView.attributedText = attributedTitleText
         navigationItemTextView.isEditable = false
         navigationItemTextView.isSelectable = false
+        navigationItemTextView.isScrollEnabled = false
         customizeNavigationItemTitle(textView: navigationItemTextView)
         return navigationItemTextView
     }
     
     private func presentContentCreationViewController(controller: SPCommentCreationViewController, _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
+        controller.parentVC = lastViewController
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
         
         let transition = CATransition()
@@ -562,12 +570,14 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     }
     
     internal func getCommentCreationModel(with dto: SPCommentCreationDTO, articleMetadata : SpotImArticleMetadata) -> SPCommentCreationModel {
-        return SPCommentCreationModel(
+        let model = SPCommentCreationModel(
             commentCreationDTO: dto,
             updater: conversationUpdater,
             imageProvider: imageProvider,
             articleMetadate: articleMetadata
         )
+        self.setupObservers(for: model)
+        return model
     }
 }
 
@@ -601,25 +611,19 @@ extension SpotImSDKFlowCoordinator: SPPreConversationViewControllerDelegate {
 }
 
 extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
-    internal func presentAuth() {
-        SpotIm.authProvider.ssoAuthDelegate = self
+    func presentAuth() {
         if let loginDelegate = self.loginDelegate {
-            if self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
-                loginDelegate.presentControllerForSSOFlow(with: self.navigationController!)
+            if let tag = self.navigationController?.view.tag,
+               tag == SPOTIM_NAV_CONTROL_TAG,
+               let navController = self.navigationController{
+                loginDelegate.startLoginUIFlow(navigationController: navController)
+            } else {
+                guard let navController = containerViewController as? UINavigationController else {
+                    servicesProvider.logger().log(level: .error, "Supposed to call startLoginUIFlow but UINavigationController is missing")
+                    return
+                }
+                loginDelegate.startLoginUIFlow(navigationController: navController)
             }
-            else {
-                loginDelegate.startLoginFlow()
-            }
-        } else if let controller = sdkNavigationDelegate?.controllerForSSOFlow() {
-            // Deprecated - this code should be removed once the deprecated sdkNavigationDelegate is deleted from the SDK
-            let container = UINavigationController(rootViewController: controller)
-            let barItem = UIBarButtonItem(title: "Back",
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(hidePresentedViewController))
-            controller.navigationItem.setLeftBarButton(barItem, animated: false)
-            controller.modalPresentationStyle = .fullScreen
-            navigationController?.present(container, animated: true, completion: nil)
         }
     }
     
@@ -634,9 +638,9 @@ extension SpotImSDKFlowCoordinator: OWUserAuthFlowDelegate {
 extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     
     internal func commentReplyDidCreate(_ comment: SPComment) {
-        OWLogger.verbose("FirstComment: Did received comment in delegate")
+        servicesProvider.logger().log(level: .verbose, "FirstComment: Did received comment in delegate")
         if let model = conversationModel, shouldAddMain {
-            OWLogger.verbose("FirstComment: Adding main conversation screen before we continue")
+            servicesProvider.logger().log(level: .verbose, "FirstComment: Adding main conversation screen before we continue")
             insertMainConversationToNavigation(model)
         }
         localCommentReplyDidCreate?(comment)
@@ -649,73 +653,75 @@ extension SpotImSDKFlowCoordinator: CommentReplyViewControllerDelegate {
     internal func commentReplyDidEdit(with comment: SPComment) {
         conversationModel?.handleEditedComment(comment: comment)
     }
-    
-    @objc
-    private func hidePresentedViewController() {
-        if self.sdkNavigationDelegate != nil {
-            self.navigationController?.dismiss(animated: true, completion: nil)
-        }
-    }
 }
 
 extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
-    public func ssoFlowStarted() {
+    func ssoFlowStarted() {
         authenticationViewDelegate?.authenticationStarted()
     }
     
-    public func ssoFlowDidSucceed() {
-        hidePresentedViewController()
+    func ssoFlowDidSucceed() {
         authHandlers.forEach { $0.value?.authHandler?(true) }
         NotificationCenter.default.post(name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION), object: nil)
     }
     
-    public func ssoFlowDidFail(with error: Error?) {
-        hidePresentedViewController()
+    func ssoFlowDidFail(with error: Error?) {
+        
     }
     
-    public func userLogout() {
+    func userLogout() {
         authHandlers.forEach { $0.value?.authHandler?(false) }
+    }
+    
+    func renewSSO(userId: String) {
+        loginDelegate?.renewSSOAuthentication(userId: userId)
     }
 }
 
 extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {
+    private func customizeView(_ view: CustomizableView) {
+        guard let postId = self.postId else { return }
+        customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode, postId: postId)
+    }
+    
     func customizeShowCommentsButton(button: SPShowCommentsButton) {
-        customUIDelegate?.customizeView(view: .showCommentsButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.showCommentsButton(button: button))
     }
     
     func customizeLoginPromptTextView(textView: UITextView) {
-        customUIDelegate?.customizeView(view: .loginPrompt(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.loginPrompt(textView: textView))
     }
     func customizeCommunityQuestionTextView(textView: UITextView) {
-        customUIDelegate?.customizeView(view: .communityQuestion(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.communityQuestion(textView: textView))
     }
     func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool) {
         let view: CustomizableView = isPreConversation ? .sayControlInPreConversation(labelContainer: labelContainer, label: label) : .sayControlInMainConversation(labelContainer: labelContainer, label: label)
-        customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        
+        self.customizeView(view)
     }
     func customizeConversationFooter(view: UIView) {
-        customUIDelegate?.customizeView(view: .conversationFooter(view: view), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.conversationFooter(view: view))
     }
     func customizeCommunityGuidelines(textView: UITextView) {
-        customUIDelegate?.customizeView(view: .communityGuidelines(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.communityGuidelines(textView: textView))
     }
     func customizeNavigationItemTitle(textView: UITextView) {
         guard SpotIm.enableCustomNavigationItemTitle else { return }
-        customUIDelegate?.customizeView(view: .navigationItemTitle(textView: textView), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.navigationItemTitle(textView: textView))
     }
     
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
-        customUIDelegate?.customizeView(view: .preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel), isDarkMode:  SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel))
     }
     func customizeCommentCreationActionButton(button: OWBaseButton) {
-        customUIDelegate?.customizeView(view: .commentCreationActionButton(button: button), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.commentCreationActionButton(button: button))
     }
     
     func customizeReadOnlyLabel(label: UILabel) {
-        customUIDelegate?.customizeView(view: .readOnlyLabel(label: label), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.readOnlyLabel(label: label))
     }
     func customizeEmptyStateReadOnlyLabel(label: UILabel) {
-        customUIDelegate?.customizeView(view: .emptyStateReadOnlyLabel(label: label), isDarkMode: SPUserInterfaceStyle.isDarkMode)
+        self.customizeView(.emptyStateReadOnlyLabel(label: label))
     }
 }
 

@@ -21,8 +21,8 @@ git status
 git add .
 git status
 git config credential.helper 'cache --timeout=120'
-git config --global user.email "odedre@gmail.com"
-git config --global user.name "Oded Regev via CircleCI"
+git config --global user.email "ios-dev@openweb.com"
+git config --global user.name "OpenWeb Mobile bot via CircleCI"
 git commit -m "CircleCI update SpotIMCore.xcframework to tag $TAG"
 
 git tag $TAG
