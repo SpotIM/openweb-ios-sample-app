@@ -544,13 +544,13 @@ internal final class SPMainConversationDataSource {
         let viewModel = commentViewModel(with: reply,
                                          replyingToCommentId: reply.parentId,
                                          replyingToDisplayName: parent.deleted ? nil :  displayName)
-        makeRepliesProviderIfNeeded(for: reply)
+        makeRepliesProviderIfNeeded(for: reply, viewModel: viewModel)
         
         return viewModel
     }
 
-    private func makeRepliesProviderIfNeeded(for comment: SPComment) {
-        if comment.hasNext, let replyId = comment.id, repliesProviders[replyId] == nil {
+    private func makeRepliesProviderIfNeeded(for comment: SPComment, viewModel: CommentViewModel) {
+        if comment.hasNext || viewModel.anyHiddenReply, let replyId = comment.id, repliesProviders[replyId] == nil {
             let newProvider = dataProvider.copy(modifyingOffset: comment.offset, hasNext: comment.hasNext)
             repliesProviders[replyId] = newProvider
         }
@@ -566,7 +566,7 @@ internal final class SPMainConversationDataSource {
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
 
-            makeRepliesProviderIfNeeded(for: comment)
+            makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
             
             guard let id = comment.id, let replies = comment.replies, !replies.isEmpty else {
                 visibleComments.append(viewModel)
@@ -601,6 +601,7 @@ internal final class SPMainConversationDataSource {
             let viewModel = commentViewModel(with: comment,
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
+
             section.append(viewModel)
 
             guard let replies = comment.replies, !replies.isEmpty else {
@@ -632,7 +633,7 @@ internal final class SPMainConversationDataSource {
             }
             visibleComments.append(section)
 
-            makeRepliesProviderIfNeeded(for: comment)
+            makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
         }
         
         return visibleComments
