@@ -22,7 +22,6 @@ class SPCommentCreationViewController: SPBaseViewController,
                                        OWUserAuthFlowDelegateContainable,
                                        OWUserPresentable {
     
-    weak var parentVC: UIViewController?
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: OWAuthenticationHandler?
@@ -275,11 +274,27 @@ class SPCommentCreationViewController: SPBaseViewController,
         transition.type = .reveal
         transition.subtype = .fromBottom
         navigationController?.view.layer.add(transition, forKey: nil)
-        if let parentVC = parentVC { // Popping staright to the parentVC if exist
-            navigationController?.popToViewController(parentVC, animated: false)
-        } else {
-            navigationController?.popViewController(animated: false) // Should pop this view
+        
+        
+        guard let navController = navigationController,
+              let currentVCIndex = navController.viewControllers.firstIndex(where: { $0 == self }) else {
+                  servicesProvider.logger().log(level: .medium, "Couldn't find the VC before the comment creation VC, recovering by popping the last VC in the navigation controller")
+                  navigationController?.popViewController(animated: false) // Just pop the last VC
+                  return
+              }
+        
+        let indexOfPreviuosVS = currentVCIndex - 1
+        let navigationVCs = navController.viewControllers
+        
+        guard indexOfPreviuosVS >= 0, indexOfPreviuosVS < navigationVCs.count else {
+            servicesProvider.logger().log(level: .medium, "Couldn't find the VC before the comment creation VC, recovering by popping the last VC in the navigation controller")
+            navigationController?.popViewController(animated: false) // Just pop the last VC
+            return
         }
+        
+        let previousVC = navigationVCs[indexOfPreviuosVS]
+        servicesProvider.logger().log(level: .verbose, "Popping to the VC before comment creation VC")
+        navigationController?.popToViewController(previousVC, animated: false)
     }
     
     func userDidSignInHandler() -> OWAuthenticationHandler? {
