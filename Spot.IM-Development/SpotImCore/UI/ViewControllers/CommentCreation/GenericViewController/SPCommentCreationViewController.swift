@@ -288,13 +288,13 @@ class SPCommentCreationViewController: SPBaseViewController,
         
         guard indexOfPreviuosVS >= 0, indexOfPreviuosVS < navigationVCs.count else {
             servicesProvider.logger().log(level: .medium, "Couldn't find the VC before the comment creation VC, recovering by popping the last VC in the navigation controller")
-            navigationController?.popViewController(animated: false) // Just pop the last VC
+            navController.popViewController(animated: false) // Just pop the last VC
             return
         }
         
         let previousVC = navigationVCs[indexOfPreviuosVS]
         servicesProvider.logger().log(level: .verbose, "Popping to the VC before comment creation VC")
-        navigationController?.popToViewController(previousVC, animated: false)
+        navController.popToViewController(previousVC, animated: false)
     }
     
     func userDidSignInHandler() -> OWAuthenticationHandler? {
