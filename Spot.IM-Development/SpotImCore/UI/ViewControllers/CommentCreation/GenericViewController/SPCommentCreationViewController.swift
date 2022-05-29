@@ -286,7 +286,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         let indexOfPreviuosVS = currentVCIndex - 1
         let navigationVCs = navController.viewControllers
         
-        guard indexOfPreviuosVS >= 0, indexOfPreviuosVS < navigationVCs.count else {
+        guard indexOfPreviuosVS >= 0 else {
             servicesProvider.logger().log(level: .medium, "Couldn't find the VC before the comment creation VC, recovering by popping the last VC in the navigation controller")
             navController.popViewController(animated: false) // Just pop the last VC
             return
