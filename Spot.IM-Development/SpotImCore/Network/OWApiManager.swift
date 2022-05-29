@@ -98,13 +98,13 @@ final class OWApiManager {
     var requestDidSucceed: ((SPRequest) -> Void)?
     
     let session: Alamofire.Session
+    fileprivate let networkInterceptor: OWNetworkInterceptor
     
-    init() {
+    init(networkInterceptor: OWNetworkInterceptor = OWNetworkInterceptor()) {
+        self.networkInterceptor = networkInterceptor
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        let retryableHttpMethods: Set<HTTPMethod> = [.delete, .get, .head, .options, .put, .trace, .post] // Added POST to the default set as most of our requests are POST
-        let retryPolicy = RetryPolicy(retryLimit: 3, retryableHTTPMethods: retryableHttpMethods)
-        session = Session(configuration: configuration, interceptor: retryPolicy)
+        session = Session(configuration: configuration)
     }
     
     @discardableResult
@@ -113,13 +113,15 @@ final class OWApiManager {
                     encoding: ParameterEncoding = JSONEncoding.default,
                     parser: T,
                     headers: HTTPHeaders? = nil,
+                    useInterceptor: Bool = true,
                     completion: @escaping (_ result: OWResult<T.Representation>, _ response: APIResponse) -> Void) -> DataRequest where T: OWResponseParser {
         
         return session.request(request.url,
                                  method: request.method,
                                  parameters: parameters,
                                  encoding: encoding,
-                                 headers: headers)
+                                 headers: headers,
+                                 interceptor: useInterceptor ? networkInterceptor : nil)
             .log(level: .medium)
             .validate()
             .responseData { [weak self] response in

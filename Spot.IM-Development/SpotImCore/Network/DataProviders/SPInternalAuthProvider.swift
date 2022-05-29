@@ -132,7 +132,8 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
             let task = self.manager.execute(
                 request: spRequest,
                 parser: OWDecodableParser<SPUser>(),
-                headers: headers
+                headers: headers,
+                useInterceptor: false // Avoid interceptor to recover
             ) { [weak self] result, response in
                 switch result {
                 case .success(let user):
