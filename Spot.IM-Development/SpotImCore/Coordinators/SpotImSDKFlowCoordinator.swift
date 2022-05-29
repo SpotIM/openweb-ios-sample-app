@@ -480,7 +480,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     private func presentContentCreationViewController(controller: SPCommentCreationViewController, _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
-        controller.parentVC = lastViewController
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
         
         let transition = CATransition()
@@ -497,10 +496,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     private func insertMainConversationToNavigation(_ dataModel: SPMainConversationModel) {
         let controller = conversationController(with: dataModel)
-        // if comment creation is visible, we need to update the parentVC so it will pop to the right vc
-        if let vc = authenticationViewDelegate as? SPCommentCreationViewController {
-            vc.parentVC = controller
-        }
         let index = (navigationController?.viewControllers.count ?? 1) - 1
         navigationController?.viewControllers.insert(controller, at: index)
     }
