@@ -104,7 +104,7 @@ final class OWApiManager {
         self.networkInterceptor = networkInterceptor
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        session = Session(configuration: configuration)
+        session = Session(configuration: configuration, interceptor: networkInterceptor)
     }
     
     @discardableResult
@@ -113,15 +113,13 @@ final class OWApiManager {
                     encoding: ParameterEncoding = JSONEncoding.default,
                     parser: T,
                     headers: HTTPHeaders? = nil,
-                    useInterceptor: Bool = true,
                     completion: @escaping (_ result: OWResult<T.Representation>, _ response: APIResponse) -> Void) -> DataRequest where T: OWResponseParser {
         
         return session.request(request.url,
                                  method: request.method,
                                  parameters: parameters,
                                  encoding: encoding,
-                                 headers: headers,
-                                 interceptor: useInterceptor ? networkInterceptor : nil)
+                                 headers: headers)
             .log(level: .medium)
             .validate()
             .responseData { [weak self] response in

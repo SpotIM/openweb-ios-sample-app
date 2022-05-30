@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import RxSwift
 
 class OWNetworkInterceptor: RequestInterceptor {
     fileprivate let retryLimit: Int
@@ -18,7 +19,16 @@ class OWNetworkInterceptor: RequestInterceptor {
         self.servicesProvider = servicesProvider
     }
     
-    // Adapt should not change as we inject headers in a different place
+    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+        var request = urlRequest
+        
+        // Update token - required because retry requests with old token will need to be updated with new token when called for a retry
+        if let token = SPUserSessionHolder.session.token, !token.isEmpty {
+            request.setValue(token, forHTTPHeaderField: APIHeadersConstants.authorization)
+        }
+        
+        completion(.success(request))
+    }
     
     func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
         let requestURL = request.request?.url?.description ?? ""
@@ -30,24 +40,40 @@ class OWNetworkInterceptor: RequestInterceptor {
             return
         }
         
-        guard let errorCode = error.asAFError?.responseCode,
-              errorCode == APIErrorCodes.authorizationErrorCode else {
-                  let log = "Reuest: \(requestURL) going to retry"
-                  servicesProvider.logger().log(level: .verbose, log)
-                  completion(.retry)
-                  return
-              }
-        
-        // Get new user session and authorization token
-        // Will renew SSO with publishers API if a user was logged in before
-        // Due to bad architecture it is not possible to dependency injection the authProvider in the class initializer
-        _ = SpotIm.authProvider
-            .getUser()
-            .take(1) // No need to dispose
-            .subscribe(onNext: { [weak self] _ in
-                let log = "Reuest: \(requestURL) going to retry after generating a new authorization token"
-                self?.servicesProvider.logger().log(level: .verbose, log)
-                completion(.retry)
-            })
+        if let errorCode = error.asAFError?.responseCode,
+            errorCode == APIErrorCodes.authorizationErrorCode  {
+            // Authorization error (i.e code 403)
+              
+            // Get new user session and reset the old one
+            // Also check if we should renew SSO after the process
+            let shouldRenewSSO = SPUserSessionHolder.isRegister()
+            let userId = SPUserSessionHolder.session.user?.userId ?? ""
+            SPUserSessionHolder.resetUserSession()
+            
+            // Due to bad architecture it is not possible to dependency injection the authProvider in the class initializer
+            _ = SpotIm.authProvider
+                .getUser()
+                .take(1) // No need to dispose
+                .subscribe(onNext: { [weak self] _ in
+                    let log = "Reuest: \(requestURL) going to retry after generating a new authorization token"
+                    self?.servicesProvider.logger().log(level: .verbose, log)
+                    
+                    if shouldRenewSSO {
+                        // Will renew SSO with publishers API if a user was logged in before
+                        SpotIm.authProvider.renewSSOPublish.onNext(userId)
+                    }
+                    
+                    // Will succeed because we re-generate a new guest user session regardless of the silent SSO
+                    // 'adapt' function will inject the new auth token
+                    completion(.retry)
+                }, onError: { _ in
+                    completion(.doNotRetry)
+                })
+        } else {
+            // General error, just retry
+            let log = "Reuest: \(requestURL) going to retry"
+            servicesProvider.logger().log(level: .verbose, log)
+            completion(.retry)
+        }
     }
 }
