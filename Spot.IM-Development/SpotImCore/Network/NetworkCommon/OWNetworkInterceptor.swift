@@ -34,7 +34,7 @@ class OWNetworkInterceptor: RequestInterceptor {
         let requestURL = request.request?.url?.description ?? ""
         
         guard request.retryCount < retryLimit else {
-            let log = "Reuest: \(requestURL) exceed max retry limit \(retryLimit)"
+            let log = "Request: \(requestURL) exceed max retry limit \(retryLimit)"
             servicesProvider.logger().log(level: .medium, log)
             completion(.doNotRetry)
             return
@@ -55,7 +55,7 @@ class OWNetworkInterceptor: RequestInterceptor {
                 .getUser()
                 .take(1) // No need to dispose
                 .subscribe(onNext: { [weak self] _ in
-                    let log = "Reuest: \(requestURL) going to retry after generating a new authorization token"
+                    let log = "Request: \(requestURL) going to retry after generating a new authorization token"
                     self?.servicesProvider.logger().log(level: .verbose, log)
                     
                     if shouldRenewSSO {
@@ -66,7 +66,9 @@ class OWNetworkInterceptor: RequestInterceptor {
                     // Will succeed because we re-generate a new guest user session regardless of the silent SSO
                     // 'adapt' function will inject the new auth token
                     completion(.retry)
-                }, onError: { _ in
+                }, onError: { [weak self] _ in
+                    let log = "Failed to get `user/data` after clearing authorization header for recovering from 403 error code.\nRequest: \(requestURL) failed because of that"
+                    self?.servicesProvider.logger().log(level: .error, log)
                     completion(.doNotRetry)
                 })
         } else {
