@@ -46,7 +46,9 @@ class OWNetworkInterceptor: RequestInterceptor {
               
             // Get new user session and reset the old one
             // Also check if we should renew SSO after the process
-            let shouldRenewSSO = SPUserSessionHolder.isRegister()
+            let isUserRegistered = SPUserSessionHolder.isRegister()
+            let isSSO = SPConfigsDataSource.appConfig?.initialization?.ssoEnabled ?? false
+            let shouldRenewSSO = isUserRegistered && isSSO
             let userId = SPUserSessionHolder.session.user?.userId ?? ""
             SPUserSessionHolder.resetUserSession()
             
