@@ -61,7 +61,7 @@ class SpotImAuthenticationProvider {
     }
     
     // Should be in a protocol like with MVVM, but I will leave it for a bigger refactor
-    fileprivate let renewSSOPublish = PublishSubject<String>()
+    let renewSSOPublish = PublishSubject<String>()
     fileprivate let renewSSOBehavior = BehaviorSubject<String?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
     
@@ -248,14 +248,14 @@ class SpotImAuthenticationProvider {
     }
     
     func getUser() -> Observable<SPUser> {
-        return internalAuthProvider.user(enableRetry: true, renewSSOSubject: renewSSOPublish)
+        return internalAuthProvider.user()
     }
     
     func logout() -> Observable<Void> {
         return internalAuthProvider.logout()
             .flatMapLatest { [weak self] _ -> Observable<SPUser> in
                 guard let self = self else { return .empty() }
-                return self.internalAuthProvider.user(enableRetry: true, renewSSOSubject: nil)
+                return self.internalAuthProvider.user()
             }
             .voidify()
             .do(onNext: { [weak self] _ in
