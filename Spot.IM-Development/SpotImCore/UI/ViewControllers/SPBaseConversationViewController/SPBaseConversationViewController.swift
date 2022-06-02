@@ -657,6 +657,12 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
         tableView.insertSections(IndexSet(indexes), with: .top)
         tableView.endUpdates()
         CATransaction.commit()
+        // if needed, hide emptyview
+        if !self.model.areCommentsEmpty() {
+            self.stateActionView?.removeFromSuperview()
+            self.stateActionView = nil
+            self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
+        }
     }
     
     @objc
@@ -926,6 +932,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                             title: LocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )
+                    }
+                    // after delete comment, show emptystate if needed
+                    if let isEmpty = self?.model.areCommentsEmpty(), isEmpty {
+                        self?.presentEmptyCommentsStateView()
                     }
                 }
         }
