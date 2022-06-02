@@ -280,9 +280,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             logger.log(level: .verbose, "FirstComment: Did get result, saving data from backend \(self.model.dataSource.messageCount)")
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
-
-            self.stateActionView?.removeFromSuperview()
-            self.stateActionView = nil
+            // show/hide empty view if needed
+            if self.model.areCommentsEmpty(){
+                presentEmptyCommentsStateView()
+            } else {
+                hideEmptyStateView()
+            }
             self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
         }
         logger.log(level: .verbose, "FirstComment: Calling reload on table view")
@@ -704,8 +707,11 @@ extension SPMainConversationViewController: SPAdBannerCellDelegate {
 extension SPMainConversationViewController { // SPMainConversationDataSourceDelegate
 
     override func reload(shouldBeScrolledToTop: Bool) {
-        stateActionView?.removeFromSuperview()
-        stateActionView = nil
+        if self.model.areCommentsEmpty(){
+            presentEmptyCommentsStateView()
+        } else {
+            hideEmptyStateView()
+        }
 
         if shouldBeScrolledToTop {
             tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)

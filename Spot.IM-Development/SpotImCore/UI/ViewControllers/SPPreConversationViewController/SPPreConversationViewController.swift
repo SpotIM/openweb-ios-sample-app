@@ -111,7 +111,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     private func updateViewFromModel() {
         if self.model.areCommentsEmpty() && !self.isButtonOnlyModeEnabled {
-            self.showEmptyStateView()
+            self.presentEmptyCommentsStateView()
         } else {
             self.hideEmptyStateView()
             self.header.set(commentCount: self.model.dataSource.messageCount.decimalFormatted)
@@ -407,7 +407,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
 
-    func showEmptyStateView() {
+    override func presentEmptyCommentsStateView() {
+        super.presentEmptyCommentsStateView()
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
         let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")
@@ -415,7 +416,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         whatYouThinkView.setCallToAction(text: callToAction)
     }
     
-    func hideEmptyStateView() {
+    override func hideEmptyStateView() {
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
         
