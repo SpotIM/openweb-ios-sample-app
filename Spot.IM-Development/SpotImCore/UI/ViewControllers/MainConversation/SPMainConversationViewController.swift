@@ -124,7 +124,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         summaryView.configure(with: model.conversationSummaryVM)
 
         if model.areCommentsEmpty() {
-            presentEmptyCommentsStateView()
+            showEmptyStateView()
         }
 
         NotificationCenter.default.addObserver(
@@ -282,7 +282,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             SPAnalyticsHolder.default.totalComments = messageCount
             // show/hide empty view if needed
             if self.model.areCommentsEmpty(){
-                presentEmptyCommentsStateView()
+                showEmptyStateView()
             } else {
                 hideEmptyStateView()
             }
@@ -708,7 +708,7 @@ extension SPMainConversationViewController { // SPMainConversationDataSourceDele
 
     override func reload(shouldBeScrolledToTop: Bool) {
         if self.model.areCommentsEmpty(){
-            presentEmptyCommentsStateView()
+            showEmptyStateView()
         } else {
             hideEmptyStateView()
         }

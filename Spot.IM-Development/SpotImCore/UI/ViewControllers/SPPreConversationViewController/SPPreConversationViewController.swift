@@ -111,7 +111,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     
     private func updateViewFromModel() {
         if self.model.areCommentsEmpty() && !self.isButtonOnlyModeEnabled {
-            self.presentEmptyCommentsStateView()
+            self.showEmptyStateView()
         } else {
             self.hideEmptyStateView()
             self.header.set(commentCount: self.model.dataSource.messageCount.decimalFormatted)
@@ -407,8 +407,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
 
-    override func presentEmptyCommentsStateView() {
-        super.presentEmptyCommentsStateView()
+    override func showEmptyStateView() {
+        // Here we specifically showing call to action text instead of the default empty state
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
         let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")

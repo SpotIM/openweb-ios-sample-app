@@ -250,7 +250,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         self.stateActionView = nil
     }
     
-    internal func presentEmptyCommentsStateView() {
+    internal func showEmptyStateView() {
         configureEmptyStateView()
         let actionMessage: String
         let actionIcon: UIImage
@@ -938,7 +938,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                     }
                     // after delete comment, show emptystate if needed
                     if let isEmpty = self?.model.areCommentsEmpty(), isEmpty {
-                        self?.presentEmptyCommentsStateView()
+                        self?.showEmptyStateView()
                     }
                 }
         }
