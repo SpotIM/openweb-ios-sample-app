@@ -245,6 +245,11 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         )
     }
     
+    func hideEmptyStateView() {
+        self.stateActionView?.removeFromSuperview()
+        self.stateActionView = nil
+    }
+    
     internal func presentEmptyCommentsStateView() {
         configureEmptyStateView()
         let actionMessage: String
@@ -659,9 +664,7 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
         CATransaction.commit()
         // if needed, hide emptyview
         if !self.model.areCommentsEmpty() {
-            self.stateActionView?.removeFromSuperview()
-            self.stateActionView = nil
-            self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
+            hideEmptyStateView()
         }
     }
     
