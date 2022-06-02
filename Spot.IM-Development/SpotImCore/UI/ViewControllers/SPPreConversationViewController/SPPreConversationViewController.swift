@@ -407,7 +407,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         }
     }
 
-    func showEmptyStateView() {
+    override func showEmptyStateView() {
+        // Here we specifically showing call to action text instead of the default empty state
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
         let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")
@@ -415,7 +416,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         whatYouThinkView.setCallToAction(text: callToAction)
     }
     
-    func hideEmptyStateView() {
+    override func hideEmptyStateView() {
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
         
