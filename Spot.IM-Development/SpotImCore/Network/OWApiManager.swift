@@ -98,13 +98,13 @@ final class OWApiManager {
     var requestDidSucceed: ((SPRequest) -> Void)?
     
     let session: Alamofire.Session
+    fileprivate let networkInterceptor: OWNetworkInterceptor
     
-    init() {
+    init(networkInterceptor: OWNetworkInterceptor = OWNetworkInterceptor()) {
+        self.networkInterceptor = networkInterceptor
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        let retryableHttpMethods: Set<HTTPMethod> = [.delete, .get, .head, .options, .put, .trace, .post] // Added POST to the default set as most of our requests are POST
-        let retryPolicy = RetryPolicy(retryLimit: 3, retryableHTTPMethods: retryableHttpMethods)
-        session = Session(configuration: configuration, interceptor: retryPolicy)
+        session = Session(configuration: configuration, interceptor: networkInterceptor)
     }
     
     @discardableResult
