@@ -74,6 +74,7 @@
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
 		24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */; };
+		3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EA8284E475500FF8360 /* OWKeychain.swift */; };
 		3D20A2D827A805BE003F8513 /* EasyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A2D727A805BE003F8513 /* EasyViews.swift */; };
 		3D20A35827A968F8003F8513 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */; };
 		3D20A35A27A96915003F8513 /* TableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35927A96915003F8513 /* TableView+Registration.swift */; };
@@ -732,6 +733,7 @@
 		377DD973617E9820A88EE7A0 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		395BD17827841FD0BC6FFD64 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		3BA412CB4B682D95D3929020 /* Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3D199EA8284E475500FF8360 /* OWKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychain.swift; sourceTree = "<group>"; };
 		3D20A2D727A805BE003F8513 /* EasyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyViews.swift; sourceTree = "<group>"; };
 		3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
 		3D20A35927A96915003F8513 /* TableView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Registration.swift"; sourceTree = "<group>"; };
@@ -2063,6 +2065,7 @@
 				3DD72C802818297500117946 /* OWLogger.swift */,
 				3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */,
 				3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */,
+				3D199EA8284E475500FF8360 /* OWKeychain.swift */,
 				4454187323685154001D0ED0 /* Ads */,
 				4454187723685154001D0ED0 /* SPAnalyticsService.swift */,
 				4454187823685154001D0ED0 /* SPReadingTracker.swift */,
@@ -3188,6 +3191,7 @@
 				4454188B23685154001D0ED0 /* SPInternalAuthenticationRequests.swift in Sources */,
 				3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */,
 				445418B523685154001D0ED0 /* SPConstants.swift in Sources */,
+				3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */,
 				16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */,
 				4454181123685144001D0ED0 /* SPMainConversationViewController.swift in Sources */,
 				4454180D23685144001D0ED0 /* SPCommentCreationViewController.swift in Sources */,
