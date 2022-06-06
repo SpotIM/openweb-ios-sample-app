@@ -1537,19 +1537,6 @@
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
 		};
-		3DE0FE3D27D649720097B17B /* Infra - Currently not in used */ = {
-			isa = PBXGroup;
-			children = (
-				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
-				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
-				3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */,
-				3DD72C802818297500117946 /* OWLogger.swift */,
-				3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */,
-				3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */,
-			);
-			path = "Infra - Currently not in used";
-			sourceTree = "<group>";
-		};
 		3DF95BD127CE53E50008A380 /* Infra - Currently not in used */ = {
 			isa = PBXGroup;
 			children = (
@@ -2070,7 +2057,12 @@
 		4454187123685154001D0ED0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				3DE0FE3D27D649720097B17B /* Infra - Currently not in used */,
+				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
+				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
+				3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */,
+				3DD72C802818297500117946 /* OWLogger.swift */,
+				3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */,
+				3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */,
 				4454187323685154001D0ED0 /* Ads */,
 				4454187723685154001D0ED0 /* SPAnalyticsService.swift */,
 				4454187823685154001D0ED0 /* SPReadingTracker.swift */,
