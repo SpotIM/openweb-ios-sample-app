@@ -22,6 +22,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
+    func keychainMigrationService() -> OWKeychainMigrationServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -70,6 +71,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWKeychain(servicesProvider: self)
     }()
     
+    fileprivate lazy var _keychainMigration: OWKeychainMigrationServicing = {
+        return OWKeychainMigrationService(servicesProvider: self)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -96,6 +101,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func keychain() -> OWKeychainProtocol {
         return _keychain
+    }
+    
+    func keychainMigrationService() -> OWKeychainMigrationServicing {
+        return _keychainMigration
     }
 }
 
