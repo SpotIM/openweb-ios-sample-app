@@ -37,6 +37,7 @@ class OWKeychain : OWKeychainProtocol {
         case authorizationSessionToken = "session.authorization.token"
         case openwebSessionToken = "session.openweb.toekn"
         case reportedCommentsSession = "session.reported.comments"
+        case isMigratedToKeychain = "keychain.data.migration"
     }
     
     func save<T>(value: T, forKey key: OWKeychainKey<T>) {
@@ -79,6 +80,8 @@ fileprivate extension OWKeychain.OWKeychainKey {
             return "The token which arrived in x-openweb-token"
         case .reportedCommentsSession:
             return "Reported comments"
+        case .isMigratedToKeychain:
+            return "Is a migration from user defaults to keychain was done"
         }
     }
 }
