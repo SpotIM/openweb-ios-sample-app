@@ -8,10 +8,11 @@
 
 import Foundation
 
+// Remove this migration service file within half a year from now
+
 protocol OWKeychainMigrationServicing {
     func migrateToKeychainIfNeeded()
 }
-
 
 class OWKeychainMigrationService: OWKeychainMigrationServicing {
     fileprivate let deletionQueue: DispatchQueue

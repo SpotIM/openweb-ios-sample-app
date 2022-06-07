@@ -22,6 +22,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
+    // Remove this migration service within half a year from now
     func keychainMigrationService() -> OWKeychainMigrationServicing
 }
 
