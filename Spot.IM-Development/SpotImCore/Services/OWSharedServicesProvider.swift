@@ -13,7 +13,7 @@ protocol OWSharedServicesProviderConfigure {
     func configureLogger(logLevel: OWLogLevel, logMethods: [OWLogMethod])
 }
 
-protocol OWSharedServicesProviding {
+protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func themeStyleService() -> OWThemeStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
@@ -21,6 +21,7 @@ protocol OWSharedServicesProviding {
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
+    func keychain() -> OWKeychainProtocol
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -65,6 +66,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWRxAppLifeCycle()
     }()
     
+    fileprivate lazy var _keychain: OWKeychainProtocol = {
+        return OWKeychain(servicesProvider: self)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -87,6 +92,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func appLifeCycle() -> OWRxAppLifeCycleProtocol {
         return _appLifeCycle
+    }
+    
+    func keychain() -> OWKeychainProtocol {
+        return _keychain
     }
 }
 
