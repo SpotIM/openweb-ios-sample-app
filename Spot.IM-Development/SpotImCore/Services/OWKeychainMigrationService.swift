@@ -18,6 +18,7 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
     fileprivate let deletionQueue: DispatchQueue
     fileprivate let deletionUserDefaults: UserDefaults
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    fileprivate let decoder: JSONDecoder
     
     fileprivate enum OldDataKeys: String, CaseIterable {
         case guestSessionUserId = "session.guest.userId"
@@ -25,14 +26,19 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
         case openwebSessionToken = "session.openweb.toekn"
         case userSession = "session.user"
         case reportedCommentsSession = "session.reportedComments"
+        // Those we should just remove (keys were recently changed)
+        case oldGuestSessionToken = "session.guest.token"
+        case oldOpenwebSessionToken = "openweb.session.toekn"
     }
     
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          deletionQueue: DispatchQueue = DispatchQueue(label: "OpenWebSDKRemoveOldDataQueue", qos: .background),
-         deletionUserDefaults: UserDefaults = UserDefaults.standard) {
+         deletionUserDefaults: UserDefaults = UserDefaults.standard,
+         decoder: JSONDecoder = JSONDecoder()) {
         self.servicesProvider = servicesProvider
         self.deletionQueue = deletionQueue
         self.deletionUserDefaults = deletionUserDefaults
+        self.decoder = decoder
     }
     
     func migrateToKeychainIfNeeded() {
@@ -52,8 +58,26 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
 
 fileprivate extension OWKeychainMigrationService {
     func migratePersistentDataToKeychain() {
-        // One by one as the keys are not the same and also some of the old keys are here just for deletion
-        // TODO: Complete
+        let keychain = servicesProvider.keychain()
+        
+        // One by one as there is no way to know the value type from the old keys
+
+        if let authToken = deletionUserDefaults.string(forKey: OldDataKeys.authorizatioSessionToken.rawValue) {
+            keychain.save(value: authToken, forKey: OWKeychain.OWKeychainKey<String>.authorizationSessionToken)
+        }
+        if let openwebToken = deletionUserDefaults.string(forKey: OldDataKeys.openwebSessionToken.rawValue) {
+            keychain.save(value: openwebToken, forKey: OWKeychain.OWKeychainKey<String>.openwebSessionToken)
+        }
+        if let userId = deletionUserDefaults.string(forKey: OldDataKeys.guestSessionUserId.rawValue) {
+            keychain.save(value: userId, forKey: OWKeychain.OWKeychainKey<String>.guestSessionUserId)
+        }
+        if let userData = deletionUserDefaults.object(forKey: OldDataKeys.userSession.rawValue) as? Data,
+           let user = try? decoder.decode(SPUser.self, from: userData) {
+            keychain.save(value: user, forKey: OWKeychain.OWKeychainKey<SPUser>.loggedInUserSession)
+        }
+        if let reportedComments = deletionUserDefaults.dictionary(forKey: OldDataKeys.reportedCommentsSession.rawValue) as? [String: Bool] {
+            keychain.save(value: reportedComments, forKey: OWKeychain.OWKeychainKey<[String: Bool]>.reportedCommentsSession)
+        }
     }
     
     func removeOldData() {
