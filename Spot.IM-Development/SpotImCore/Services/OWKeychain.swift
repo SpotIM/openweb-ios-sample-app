@@ -9,9 +9,9 @@
 import Foundation
 
 protocol OWKeychainProtocol {
-    func save<T>(value: T, forKey key: OWKeychain.OWKeychainKey<T>)
-    func get<T>(key: OWKeychain.OWKeychainKey<T>) -> T?
-    func remove<T>(key: OWKeychain.OWKeychainKey<T>)
+    func save<T>(value: T, forKey key: OWKeychain.OWKey<T>)
+    func get<T>(key: OWKeychain.OWKey<T>) -> T?
+    func remove<T>(key: OWKeychain.OWKey<T>)
 }
 
 class OWKeychain : OWKeychainProtocol {
@@ -31,7 +31,7 @@ class OWKeychain : OWKeychainProtocol {
         self.decoder = decoder
     }
     
-    enum OWKeychainKey<T: Codable>: String {
+    enum OWKey<T: Codable>: String {
         case guestSessionUserId = "session.guest.userId"
         case loggedInUserSession = "session.user"
         case authorizationSessionToken = "session.authorization.token"
@@ -40,7 +40,7 @@ class OWKeychain : OWKeychainProtocol {
         case isMigratedToKeychain = "keychain.data.migration"
     }
     
-    func save<T>(value: T, forKey key: OWKeychainKey<T>) {
+    func save<T>(value: T, forKey key: OWKey<T>) {
         guard let encodedData = try? encoder.encode(value) else {
             servicesProvider.logger().log(level: .error, "Failed to encode data for key: \(key.rawValue) before writing to Keychain")
             return
@@ -48,7 +48,7 @@ class OWKeychain : OWKeychainProtocol {
         _save(data: encodedData, forKey: key)
     }
     
-    func get<T>(key: OWKeychainKey<T>) -> T? {
+    func get<T>(key: OWKey<T>) -> T? {
         guard let data = _get(key: key) else {
             return nil
         }
@@ -61,12 +61,12 @@ class OWKeychain : OWKeychainProtocol {
         return valueToReturn
     }
     
-    func remove<T>(key: OWKeychainKey<T>) {
+    func remove<T>(key: OWKey<T>) {
         _remove(key: key)
     }
 }
 
-fileprivate extension OWKeychain.OWKeychainKey {
+fileprivate extension OWKeychain.OWKey {
     // Add description for better understanding of future cases (keys)
     var description: String? {
         switch self {
@@ -87,7 +87,7 @@ fileprivate extension OWKeychain.OWKeychainKey {
 }
 
 fileprivate extension OWKeychain {
-    func query<T>(forKey key: OWKeychainKey<T>) -> [String: Any] {
+    func query<T>(forKey key: OWKey<T>) -> [String: Any] {
         var query: [String: Any] = [
             String(kSecClass): kSecClassGenericPassword,
             String(kSecAttrService): Metrics.kSecAttrService,
@@ -100,7 +100,7 @@ fileprivate extension OWKeychain {
         return query
     }
     
-    func _save<T>(data: Data, forKey key: OWKeychainKey<T>) {
+    func _save<T>(data: Data, forKey key: OWKey<T>) {
         var query = query(forKey: key)
         
         let searchStatus = SecItemCopyMatching(query as CFDictionary, nil)
@@ -124,7 +124,7 @@ fileprivate extension OWKeychain {
         }
     }
     
-    func _get<T>(key: OWKeychainKey<T>) -> Data? {
+    func _get<T>(key: OWKey<T>) -> Data? {
         var query = query(forKey: key)
         query[String(kSecReturnAttributes)] = kCFBooleanTrue
         query[String(kSecReturnData)] = kCFBooleanTrue
@@ -147,7 +147,7 @@ fileprivate extension OWKeychain {
         }
     }
     
-    func _remove<T>(key: OWKeychainKey<T>) {
+    func _remove<T>(key: OWKey<T>) {
         let query = query(forKey: key)
         
         let removeStatus = SecItemDelete(query as CFDictionary)
