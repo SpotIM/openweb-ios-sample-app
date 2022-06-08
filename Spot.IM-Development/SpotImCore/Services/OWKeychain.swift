@@ -91,8 +91,7 @@ fileprivate extension OWKeychain {
         var query: [String: Any] = [
             String(kSecClass): kSecClassGenericPassword,
             String(kSecAttrService): Metrics.kSecAttrService,
-            String(kSecAttrAccount): key.rawValue,
-            String(kSecMatchLimit): kSecMatchLimitOne
+            String(kSecAttrAccount): key.rawValue
         ]
         if let des = key.description, !des.isEmpty {
             query[String(kSecAttrDescription)] = des
@@ -102,8 +101,11 @@ fileprivate extension OWKeychain {
     
     func _save<T>(data: Data, forKey key: OWKey<T>) {
         var query = query(forKey: key)
+        query[String(kSecMatchLimit)] = kSecMatchLimitOne
         
         let searchStatus = SecItemCopyMatching(query as CFDictionary, nil)
+        // Remove the match limit as we are using the same query for writing
+        query.removeValue(forKey: String(kSecMatchLimit))
         switch searchStatus {
         case errSecSuccess:
             let attributes: [String: Any] = [
@@ -126,6 +128,7 @@ fileprivate extension OWKeychain {
     
     func _get<T>(key: OWKey<T>) -> Data? {
         var query = query(forKey: key)
+        query[String(kSecMatchLimit)] = kSecMatchLimitOne
         query[String(kSecReturnAttributes)] = kCFBooleanTrue
         query[String(kSecReturnData)] = kCFBooleanTrue
         
