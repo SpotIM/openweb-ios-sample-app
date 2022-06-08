@@ -44,12 +44,12 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
     func migrateToKeychainIfNeeded() {
         let keychain = servicesProvider.keychain()
         let logger = servicesProvider.logger()
-        let isDataMigrated = keychain.get(key: OWKeychain.OWKeychainKey<Bool>.isMigratedToKeychain) ?? false
+        let isDataMigrated = keychain.get(key: OWKeychain.OWKey<Bool>.isMigratedToKeychain) ?? false
         
         if (!isDataMigrated) {
             logger.log(level: .verbose, "Performing sensitive data migration from User Defaults to Keychain")
             migratePersistentDataToKeychain()
-            keychain.save(value: true, forKey: OWKeychain.OWKeychainKey<Bool>.isMigratedToKeychain)
+            keychain.save(value: true, forKey: OWKeychain.OWKey<Bool>.isMigratedToKeychain)
             logger.log(level: .verbose, "Finished migration from User Defaults to Keychain")
             removeOldData()
         }
@@ -62,21 +62,38 @@ fileprivate extension OWKeychainMigrationService {
         
         // One by one as there is no way to know the value type from the old keys
 
-        if let authToken = deletionUserDefaults.string(forKey: OldDataKeys.authorizatioSessionToken.rawValue) {
-            keychain.save(value: authToken, forKey: OWKeychain.OWKeychainKey<String>.authorizationSessionToken)
+        // We recently changed the key for the auth token, so trying to get it from the newer key and if there is no value there, from the old key
+        var authToken = deletionUserDefaults.string(forKey: OldDataKeys.authorizatioSessionToken.rawValue)
+        if authToken == nil {
+            authToken = deletionUserDefaults.string(forKey: OldDataKeys.oldGuestSessionToken.rawValue)
         }
-        if let openwebToken = deletionUserDefaults.string(forKey: OldDataKeys.openwebSessionToken.rawValue) {
-            keychain.save(value: openwebToken, forKey: OWKeychain.OWKeychainKey<String>.openwebSessionToken)
+        if let token = authToken {
+            keychain.save(value: token, forKey: OWKeychain.OWKey<String>.authorizationSessionToken)
         }
+        
+        // We recently changed the key for the open web token, so trying to get it from the newer key and if there is no value there, from the old key
+        var openwebToken = deletionUserDefaults.string(forKey: OldDataKeys.openwebSessionToken.rawValue)
+        if openwebToken == nil {
+            openwebToken = deletionUserDefaults.string(forKey: OldDataKeys.oldOpenwebSessionToken.rawValue)
+        }
+        if let token = openwebToken {
+            keychain.save(value: token, forKey: OWKeychain.OWKey<String>.openwebSessionToken)
+        }
+        
+        // User Id
         if let userId = deletionUserDefaults.string(forKey: OldDataKeys.guestSessionUserId.rawValue) {
-            keychain.save(value: userId, forKey: OWKeychain.OWKeychainKey<String>.guestSessionUserId)
+            keychain.save(value: userId, forKey: OWKeychain.OWKey<String>.guestSessionUserId)
         }
+        
+        // User
         if let userData = deletionUserDefaults.object(forKey: OldDataKeys.userSession.rawValue) as? Data,
            let user = try? decoder.decode(SPUser.self, from: userData) {
-            keychain.save(value: user, forKey: OWKeychain.OWKeychainKey<SPUser>.loggedInUserSession)
+            keychain.save(value: user, forKey: OWKeychain.OWKey<SPUser>.loggedInUserSession)
         }
+        
+        // Reported comments
         if let reportedComments = deletionUserDefaults.dictionary(forKey: OldDataKeys.reportedCommentsSession.rawValue) as? [String: Bool] {
-            keychain.save(value: reportedComments, forKey: OWKeychain.OWKeychainKey<[String: Bool]>.reportedCommentsSession)
+            keychain.save(value: reportedComments, forKey: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession)
         }
     }
     
