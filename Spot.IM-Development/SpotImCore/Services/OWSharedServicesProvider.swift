@@ -24,6 +24,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func keychain() -> OWKeychainProtocol
     // Remove this migration service within half a year from now
     func keychainMigrationService() -> OWKeychainMigrationServicing
+    func userDefaults() -> OWUserDefaultsProtocol
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -76,6 +77,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWKeychainMigrationService(servicesProvider: self)
     }()
     
+    fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
+        return OWUserDefaults(servicesProvider: self)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -106,6 +111,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func keychainMigrationService() -> OWKeychainMigrationServicing {
         return _keychainMigration
+    }
+    
+    func userDefaults() -> OWUserDefaultsProtocol {
+        return _userDefaults
     }
 }
 
