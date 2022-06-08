@@ -68,7 +68,7 @@ class OWKeychain : OWKeychainProtocol {
 
 fileprivate extension OWKeychain.OWKey {
     // Add description for better understanding of future cases (keys)
-    var description: String? {
+    var description: String {
         switch self {
         case .guestSessionUserId:
             return "The user Id of a guest user"
@@ -88,14 +88,13 @@ fileprivate extension OWKeychain.OWKey {
 
 fileprivate extension OWKeychain {
     func query<T>(forKey key: OWKey<T>) -> [String: Any] {
-        var query: [String: Any] = [
+        let query: [String: Any] = [
             String(kSecClass): kSecClassGenericPassword,
             String(kSecAttrService): Metrics.kSecAttrService,
-            String(kSecAttrAccount): key.rawValue
+            String(kSecAttrAccount): key.rawValue,
+            String(kSecAttrDescription): key.description
         ]
-        if let des = key.description, !des.isEmpty {
-            query[String(kSecAttrDescription)] = des
-        }
+
         return query
     }
     
