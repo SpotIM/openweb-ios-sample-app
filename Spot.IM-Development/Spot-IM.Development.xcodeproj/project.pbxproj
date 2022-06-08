@@ -76,6 +76,7 @@
 		24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */; };
 		3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EA8284E475500FF8360 /* OWKeychain.swift */; };
 		3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */; };
+		3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */; };
 		3D20A2D827A805BE003F8513 /* EasyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A2D727A805BE003F8513 /* EasyViews.swift */; };
 		3D20A35827A968F8003F8513 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */; };
 		3D20A35A27A96915003F8513 /* TableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35927A96915003F8513 /* TableView+Registration.swift */; };
@@ -736,6 +737,7 @@
 		3BA412CB4B682D95D3929020 /* Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3D199EA8284E475500FF8360 /* OWKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychain.swift; sourceTree = "<group>"; };
 		3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychainMigrationService.swift; sourceTree = "<group>"; };
+		3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaults.swift; sourceTree = "<group>"; };
 		3D20A2D727A805BE003F8513 /* EasyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyViews.swift; sourceTree = "<group>"; };
 		3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
 		3D20A35927A96915003F8513 /* TableView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Registration.swift"; sourceTree = "<group>"; };
@@ -2068,6 +2070,7 @@
 				3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */,
 				3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */,
 				3D199EA8284E475500FF8360 /* OWKeychain.swift */,
+				3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */,
 				3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */,
 				4454187323685154001D0ED0 /* Ads */,
 				4454187723685154001D0ED0 /* SPAnalyticsService.swift */,
@@ -3283,6 +3286,7 @@
 				169D58E227D11925009936F3 /* OWVotesType.swift in Sources */,
 				4454187B23685154001D0ED0 /* SPMainConversationDataSource.swift in Sources */,
 				44F0FD262369EEBC003525E0 /* SPAdsConfiguration.swift in Sources */,
+				3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */,
 				4454181E23685144001D0ED0 /* ShowMoreRepliesView.swift in Sources */,
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
