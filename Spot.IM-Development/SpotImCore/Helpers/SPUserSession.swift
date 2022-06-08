@@ -30,23 +30,20 @@ final internal class SPUserSession: SPUserSessionType {
 }
 
 internal class SPUserSessionHolder {
+    fileprivate static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
 
     static var session: SPUserSessionType = {
         let session = loadOrCreateGuestUserSession()
         return session
     }()
 
-    static func updateSessionUser(user: SPUser?) {
+    static func updateSessionUser(user: SPUser) {
         // preserving entered username for unregistered user
         session.user = user
-        SPAnalyticsHolder.default.userId = user?.id
-        SPAnalyticsHolder.default.isUserRegistered = user?.registered ?? false
+        SPAnalyticsHolder.default.userId = user.id
+        SPAnalyticsHolder.default.isUserRegistered = user.registered
         
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(user) {
-            let defaults = UserDefaults.standard
-            defaults.set(encoded, forKey: .userSession)
-        }
+        servicesProvider.keychain().save(value: user, forKey: OWKeychain.OWKey<SPUser>.loggedInUserSession)
     }
 
     static func updateSession(with response: HTTPURLResponse?, forced: Bool = false) {
@@ -68,8 +65,14 @@ internal class SPUserSessionHolder {
             session.token = headers?.authorizationHeader ?? session.token
             session.openwebToken = headers?.openwebTokenHeader ?? session.openwebToken
         }
-        UserDefaults.standard.setValue(session.token, forKey: .authorizatioSessionToken)
-        UserDefaults.standard.setValue(session.openwebToken, forKey: .openwebSessionToken)
+        
+        let keychain = servicesProvider.keychain()
+        if let authToken = session.token {
+            keychain.save(value: authToken, forKey: OWKeychain.OWKey<String>.authorizationSessionToken)
+        }
+        if let openwebToken = session.openwebToken {
+            keychain.save(value: openwebToken, forKey: OWKeychain.OWKey<String>.openwebSessionToken)
+        }
     }
 
     static func update(displayName: String?) {
@@ -87,40 +90,39 @@ internal class SPUserSessionHolder {
     static var displayNameFrozen: Bool { session.displayNameFrozen }
 
     static func resetUserSession() {
-        UserDefaults.standard.removeObject(forKey: .authorizatioSessionToken)
-        UserDefaults.standard.removeObject(forKey: .userSession)
-        UserDefaults.standard.removeObject(forKey: .reportedCommentsSession)
+        let keychain = servicesProvider.keychain()
+        keychain.remove(key: OWKeychain.OWKey<String>.authorizationSessionToken)
+        keychain.remove(key: OWKeychain.OWKey<SPUser>.loggedInUserSession)
+        keychain.remove(key: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession)
+
         session = loadOrCreateGuestUserSession()
     }
 
     private static func loadOrCreateGuestUserSession() -> SPUserSessionType {
         let session = SPUserSession()
-        if UserDefaults.standard.string(forKey: .guestSessionUserId) == nil {
+        let keychain = servicesProvider.keychain()
+        
+        if keychain.get(key: OWKeychain.OWKey<String>.guestSessionUserId) == nil {
             let newUuid = UUID().uuidString
-            UserDefaults.standard.set(newUuid, forKey: .guestSessionUserId)
+            keychain.save(value: newUuid, forKey: OWKeychain.OWKey<String>.guestSessionUserId)
         }
         
-        session.guid = UserDefaults.standard.string(forKey: .guestSessionUserId)
-        session.token = UserDefaults.standard.string(forKey: .authorizatioSessionToken)
-        session.openwebToken = UserDefaults.standard.string(forKey: .openwebSessionToken)
+        session.guid = keychain.get(key: OWKeychain.OWKey<String>.guestSessionUserId)
+        session.token = keychain.get(key: OWKeychain.OWKey<String>.authorizationSessionToken)
+        session.openwebToken = keychain.get(key: OWKeychain.OWKey<String>.openwebSessionToken)
         
-        if let reportedComments = UserDefaults.standard.dictionary(forKey: .reportedCommentsSession) as? [String:Bool] {
+        if let reportedComments = keychain.get(key: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession) {
             session.reportedComments = reportedComments
         }
         
-        if let savedUser = UserDefaults.standard.object(forKey: .userSession) as? Data {
-            let decoder = JSONDecoder()
-            if let user = try? decoder.decode(SPUser.self, from: savedUser) {
-                session.user = user
-            }
-        }
+        session.user = keychain.get(key: OWKeychain.OWKey<SPUser>.loggedInUserSession)
 
         return session
     }
     
     static func reportComment(commentId: String) {
         session.reportedComments[commentId] = true
-        UserDefaults.standard.set(session.reportedComments, forKey: .reportedCommentsSession)
+        servicesProvider.keychain().save(value: session.reportedComments, forKey: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession)
     }
     
     static func isRegister() -> Bool {
@@ -129,14 +131,6 @@ internal class SPUserSessionHolder {
         }
         return false
     }
-}
-
-private extension String {
-    static let guestSessionUserId = "session.guest.userId"
-    static let authorizatioSessionToken = "session.authorization.token"
-    static let openwebSessionToken = "session.openweb.toekn"
-    static let userSession = "session.user"
-    static let reportedCommentsSession = "session.reportedComments"
 }
 
 public final class SPPublicSessionInterface {
