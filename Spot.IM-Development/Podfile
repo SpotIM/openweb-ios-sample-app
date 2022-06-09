@@ -15,8 +15,8 @@ abstract_target 'Shared' do
   target 'Spot-IM.DevelopmentTests'
   
   abstract_target 'DemoApps' do
-    pod 'SnapKit'
-    pod 'Cards'
+    pod 'SnapKit', '~> 5.6.0'
+    pod 'Cards', '~> 1.4.0'
     pod 'Kingfisher'
     pod 'Google-Mobile-Ads-SDK', '= 8.0'
 
