@@ -57,11 +57,12 @@ class OWNetworkInterceptor: RequestInterceptor {
                 .getUser()
                 .take(1) // No need to dispose
                 .subscribe(onNext: { [weak self] _ in
-                    let log = "Request: \(requestURL) going to retry after generating a new authorization token"
+                    let log = "Request: \(requestURL) going to retry after generating a new authorization token after network 403 error code"
                     self?.servicesProvider.logger().log(level: .verbose, log)
                     
                     if shouldRenewSSO {
                         // Will renew SSO with publishers API if a user was logged in before
+                        self?.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
                         SpotIm.authProvider.renewSSOPublish.onNext(userId)
                     }
                     
