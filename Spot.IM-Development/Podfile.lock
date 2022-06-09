@@ -36,7 +36,6 @@ PODS:
   - "GoogleUtilities/NSData+zlib (7.5.2)"
   - GoogleUtilities/Reachability (7.5.2):
     - GoogleUtilities/Logger
-  - Kingfisher (6.1.0)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -65,7 +64,6 @@ DEPENDENCIES:
   - Alamofire (~> 5.6.1)
   - Cards (~> 1.4.0)
   - Google-Mobile-Ads-SDK (= 8.0)
-  - Kingfisher
   - PromiseKit (~> 6.17.1)
   - RxCocoa (~> 6.5)
   - RxSwift (~> 6.5)
@@ -79,7 +77,6 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleUserMessagingPlatform
     - GoogleUtilities
-    - Kingfisher
     - nanopb
     - Player
     - PromiseKit
@@ -96,7 +93,6 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: fd19169c3034975cb934e865e5667bfdce59df7f
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
-  Kingfisher: f5d8d60a0ef3edd642fd781bae60918599901aff
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   Player: 968d8d07d923bcdd6f7e4091c9e306eb44a5f7a4
   PromiseKit: ee485df3d4dc570594d7e7aecae6352697dc6a4c
@@ -106,6 +102,6 @@ SPEC CHECKSUMS:
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: c792c8d2491d01731dbaa63e3973c4766d2b8c4c
+PODFILE CHECKSUM: 9249e134ae4ac7c81cb5ba62ffff33107c9230ad
 
 COCOAPODS: 1.11.2
