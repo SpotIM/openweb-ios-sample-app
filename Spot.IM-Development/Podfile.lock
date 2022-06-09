@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.4.1)
+  - Alamofire (5.6.1)
   - Cards (1.4.0):
     - Player (= 0.13.0)
   - Google-Mobile-Ads-SDK (8.0.0):
@@ -43,32 +43,32 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - Player (0.13.0)
-  - PromiseKit (6.13.1):
-    - PromiseKit/CorePromise (= 6.13.1)
-    - PromiseKit/Foundation (= 6.13.1)
-    - PromiseKit/UIKit (= 6.13.1)
-  - PromiseKit/CorePromise (6.13.1)
-  - PromiseKit/Foundation (6.13.1):
+  - PromiseKit (6.17.1):
+    - PromiseKit/CorePromise (= 6.17.1)
+    - PromiseKit/Foundation (= 6.17.1)
+    - PromiseKit/UIKit (= 6.17.1)
+  - PromiseKit/CorePromise (6.17.1)
+  - PromiseKit/Foundation (6.17.1):
     - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.13.1):
+  - PromiseKit/UIKit (6.17.1):
     - PromiseKit/CorePromise
   - PromisesObjC (2.0.0)
-  - RxCocoa (6.2.0):
-    - RxRelay (= 6.2.0)
-    - RxSwift (= 6.2.0)
-  - RxRelay (6.2.0):
-    - RxSwift (= 6.2.0)
-  - RxSwift (6.2.0)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
+  - RxSwift (6.5.0)
   - SnapKit (4.2.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 5.4)
+  - Alamofire (~> 5.6.1)
   - Cards
   - Google-Mobile-Ads-SDK (= 8.0)
   - Kingfisher
-  - PromiseKit (~> 6.8)
-  - RxCocoa
-  - RxSwift
+  - PromiseKit (~> 6.17.1)
+  - RxCocoa (~> 6.5)
+  - RxSwift (~> 6.5)
   - SnapKit
 
 SPEC REPOS:
@@ -90,7 +90,7 @@ SPEC REPOS:
     - SnapKit
 
 SPEC CHECKSUMS:
-  Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
   Cards: 45ae6bd0eca7b5e8016d3b6cb30b60b04753f68f
   Google-Mobile-Ads-SDK: 9509c62617e8d77e2524833eed0b73dd028f0bc6
   GoogleAppMeasurement: fd19169c3034975cb934e865e5667bfdce59df7f
@@ -99,13 +99,13 @@ SPEC CHECKSUMS:
   Kingfisher: f5d8d60a0ef3edd642fd781bae60918599901aff
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   Player: 968d8d07d923bcdd6f7e4091c9e306eb44a5f7a4
-  PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
+  PromiseKit: ee485df3d4dc570594d7e7aecae6352697dc6a4c
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
-  RxCocoa: 4baf94bb35f2c0ab31bc0cb9f1900155f646ba42
-  RxRelay: e72dbfd157807478401ef1982e1c61c945c94b2f
-  RxSwift: d356ab7bee873611322f134c5f9ef379fa183d8f
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: 54365921845a86f9437627c86c7fd8b3efec1339
+PODFILE CHECKSUM: fc0d553dd73bac7c251f15c4862901dda7fdecf2
 
 COCOAPODS: 1.11.2
