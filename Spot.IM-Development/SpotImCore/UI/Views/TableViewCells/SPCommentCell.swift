@@ -228,9 +228,9 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         let labelHeight: CGFloat
         if let commentLabels = dataModel.commentLabels,
-           dataModel.isDeletedOrReported() == false
-        {
-            let selectedCommentLabel =  commentLabels[0]
+           dataModel.isDeletedOrReported() == false,
+           commentLabels.count > 0 {
+            let selectedCommentLabel = commentLabels[0]
             commentLabelView.setLabel(
                 commentLabelIconUrl: selectedCommentLabel.iconUrl,
                 labelColor: selectedCommentLabel.color,
