@@ -13,7 +13,7 @@ import RxSwift
 protocol SPInternalAuthProvider {
     func login() -> Observable<String>
     func logout() -> Observable<Void>
-    func user(enableRetry: Bool, renewSSOSubject: PublishSubject<String>?) -> Observable<SPUser>
+    func user() -> Observable<SPUser>
 }
 
 final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthProvider {
@@ -118,8 +118,8 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
     }
     
     // `enableRetry` used to recover from expired token / unauthorized user to enable the publishers (SDK users) to re-login / SSO after we fallback to some defualt guest user
-    func user(enableRetry: Bool = true, renewSSOSubject: PublishSubject<String>?) -> Observable<SPUser> {
-        return Observable<(Retry<SPUser>)>.create { [weak self] observer in
+    func user() -> Observable<SPUser> {
+        return Observable<SPUser>.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
                 observer.onError(SPNetworkError.custom(message))
@@ -133,64 +133,27 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                 request: spRequest,
                 parser: OWDecodableParser<SPUser>(),
                 headers: headers
-            ) { [weak self] result, response in
+            ) { result, response in
                 switch result {
                 case .success(let user):
                     SPUserSessionHolder.updateSession(with: response.response)
                     SPUserSessionHolder.updateSessionUser(user: user)
-                    observer.onNext(Retry<SPUser>.value(user))
+                    observer.onNext(user)
                     observer.onCompleted()
                 case .failure(let error):
-                    if let self = self,
-                        enableRetry,
-                        let afError = error .asAFError,
-                        let code = afError.responseCode,
-                        code == APIErrorCodes.authorizationErrorCode {
-                        self.servicesProvider.logger().log(level: .error, "Network request to '/user/data' got error code: \(code), might be an expired token. Trying to recover with a new request")
-                        observer.onNext(Retry<SPUser>.retry)
-                        observer.onCompleted()
-                    } else {
-                        let rawReport = RawReportModel(
-                            url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
-                            parameters: nil,
-                            errorData: response.data,
-                            errorMessage: error.localizedDescription
-                        )
-                        SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                        observer.onError(error)
-                    }
+                    let rawReport = RawReportModel(
+                        url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
+                        parameters: nil,
+                        errorData: response.data,
+                        errorMessage: error.localizedDescription
+                    )
+                    SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
+                    observer.onError(error)
                 }
             }
             
             return Disposables.create {
                 task.cancel()
-            }
-        }
-        .flatMapLatest { [weak self] retryValue -> Observable<SPUser> in
-            guard let self = self else { return .empty() }
-            switch retryValue {
-            case .value(let user):
-                return .just(user)
-            case .retry:
-                // We arrived here because auth 403 error
-                // We will signal the publishers to renew SSO authentication in the end if we had a registered user
-                // However before that we will clear the user session to receive a guest session
-                // So we will have guest session regardless of the possible renew SSO
-                let shouldRenewSSO = SPUserSessionHolder.isRegister()
-                let userId = SPUserSessionHolder.session.user?.userId ?? ""
-                SPUserSessionHolder.resetUserSession()
-                
-                return Observable<(Bool, String)>.just((shouldRenewSSO, userId))  // Begin RX chain
-                    .flatMapLatest { [weak self] shouldRenewSSO, userId -> Observable<SPUser> in
-                        guard let self = self else { return .empty() }
-                        return self.user(enableRetry: false, renewSSOSubject: renewSSOSubject)
-                            .do(onNext: { _ in
-                                if shouldRenewSSO {
-                                    // Add callback to renew
-                                    renewSSOSubject?.onNext(userId)
-                                }
-                            })
-                    }
             }
         }
     }

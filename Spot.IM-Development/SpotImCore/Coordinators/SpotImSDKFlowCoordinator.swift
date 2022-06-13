@@ -480,7 +480,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     private func presentContentCreationViewController(controller: SPCommentCreationViewController, _ dataModel: SPMainConversationModel) {
         let lastViewController = navigationController?.viewControllers.last
-        controller.parentVC = lastViewController
         shouldAddMain = !(lastViewController?.isKind(of: SPMainConversationViewController.self) ?? true)
         
         let transition = CATransition()
