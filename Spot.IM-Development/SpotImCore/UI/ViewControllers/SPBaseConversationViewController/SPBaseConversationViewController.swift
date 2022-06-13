@@ -245,7 +245,12 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         )
     }
     
-    internal func presentEmptyCommentsStateView() {
+    func hideEmptyStateView() {
+        self.stateActionView?.removeFromSuperview()
+        self.stateActionView = nil
+    }
+    
+    internal func showEmptyStateView() {
         configureEmptyStateView()
         let actionMessage: String
         let actionIcon: UIImage
@@ -657,6 +662,10 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
         tableView.insertSections(IndexSet(indexes), with: .top)
         tableView.endUpdates()
         CATransaction.commit()
+        // if needed, hide emptyview
+        if !self.model.areCommentsEmpty() {
+            hideEmptyStateView()
+        }
     }
     
     @objc
@@ -926,6 +935,10 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                             title: LocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )
+                    }
+                    // after delete comment, show emptystate if needed
+                    if let isEmpty = self?.model.areCommentsEmpty(), isEmpty {
+                        self?.showEmptyStateView()
                     }
                 }
         }

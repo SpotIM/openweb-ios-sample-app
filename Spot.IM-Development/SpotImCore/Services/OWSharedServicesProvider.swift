@@ -13,7 +13,7 @@ protocol OWSharedServicesProviderConfigure {
     func configureLogger(logLevel: OWLogLevel, logMethods: [OWLogMethod])
 }
 
-protocol OWSharedServicesProviding {
+protocol OWSharedServicesProviding: AnyObject {
     var configure: OWSharedServicesProviderConfigure { get }
     func themeStyleService() -> OWThemeStyleServicing
     func imageCacheService() -> OWCacheService<String, UIImage>
@@ -21,6 +21,10 @@ protocol OWSharedServicesProviding {
     func netwokAPI() -> OWNetworkAPIProtocol
     func logger() -> OWLogger
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
+    func keychain() -> OWKeychainProtocol
+    // Remove this migration service within half a year from now
+    func keychainMigrationService() -> OWKeychainMigrationServicing
+    func userDefaults() -> OWUserDefaultsProtocol
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -65,6 +69,18 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWRxAppLifeCycle()
     }()
     
+    fileprivate lazy var _keychain: OWKeychainProtocol = {
+        return OWKeychain(servicesProvider: self)
+    }()
+    
+    fileprivate lazy var _keychainMigration: OWKeychainMigrationServicing = {
+        return OWKeychainMigrationService(servicesProvider: self)
+    }()
+    
+    fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
+        return OWUserDefaults(servicesProvider: self)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -87,6 +103,18 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func appLifeCycle() -> OWRxAppLifeCycleProtocol {
         return _appLifeCycle
+    }
+    
+    func keychain() -> OWKeychainProtocol {
+        return _keychain
+    }
+    
+    func keychainMigrationService() -> OWKeychainMigrationServicing {
+        return _keychainMigration
+    }
+    
+    func userDefaults() -> OWUserDefaultsProtocol {
+        return _userDefaults
     }
 }
 

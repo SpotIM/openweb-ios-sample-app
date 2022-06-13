@@ -833,28 +833,16 @@ extension SPMainConversationDataSource {
         let logger = servicesProvider.logger()
         logger.log(level: .verbose, "pushLocalComment called, sorting is \(String(describing: sortMode))")
         let updatedMessageCount = messageCount + 1
-        logger.log(level: .verbose, "pushLocalComment: Refreshing to .newset sorting")
-        conversation(.newest, page: .first) { [weak self, weak logger] result, _ in
-            guard let self = self else { return }
-            logger?.log(level: .verbose, "pushLocalComment: Got result from API")
-            logger?.log(level: .verbose, "pushLocalComment: \(result)")
-            if result {
-                logger?.log(level: .verbose, "pushLocalComment: Calling reload data with scroll to top")
-                self.delegate?.reload(shouldBeScrolledToTop: true)
-                logger?.log(level: .verbose, "pushLocalComment: Searching for the posted comment in the API response")
-                logger?.log(level: .verbose, "pushLocalComment: cell data: \(self.cellData)")
-                let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
-                if dataModel == nil {
-                    logger?.log(level: .verbose, "pushLocalComment: Data model not found, adding it manually")
-                    self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
-                    self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
-                    logger?.log(level: .verbose, "pushLocalComment: Updated message count: \(updatedMessageCount)")
-                    self.messageCount = updatedMessageCount
-                    self.messageCounterUpdated?(updatedMessageCount)
-                }
-                self.cachedCommentReply = nil
-            }
+        let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
+        if dataModel == nil {
+            logger.log(level: .verbose, "pushLocalComment: Data model not found, adding comment manually")
+            self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
+            self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
+            logger.log(level: .verbose, "pushLocalComment: Updated message count: \(updatedMessageCount)")
+            self.messageCount = updatedMessageCount
+            self.messageCounterUpdated?(updatedMessageCount)
         }
+        self.cachedCommentReply = nil
     }
     
     private func pushLocalReply(reply: SPComment, viewModel: CommentViewModel) {
