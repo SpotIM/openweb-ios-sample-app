@@ -8,7 +8,6 @@
 
 import UIKit
 import Cards
-import Kingfisher
 import SnapKit
 
 protocol ArticleTableViewCellDelegate: AnyObject {
@@ -24,23 +23,19 @@ class ArticleTableViewCell : UITableViewCell {
             guard let extract = post?.extractData, let publishedAt = post?.publishedAt, let id = post?.conversationId else {
                 return
             }
-     
+            
             card.category = self.formattedDate(publishedAt: publishedAt)
             card.title = extract.title.truncated(limit: 60)
             card.subtitle = extract.description.truncated(limit: 100)
             
             if let url = URL(string: extract.thumbnailUrl) {
-                KingfisherManager.shared.retrieveImage(with: url, options: [.processor(OverlayImageProcessor(overlay: .black))]) { [weak self] result in
-                    switch result {
-                    case .failure(let error):
-                        print("Error loading image: \(error)")
-                    case .success(let imageResult):
-                        guard id == self?.post?.conversationId else { return }
-                        self?.card.backgroundImage = imageResult.image
+                UIImage.from(url: url) { [weak self] result in
+                    if case .success(let image) = result,
+                       id == self?.post?.conversationId {
+                        self?.card.backgroundImage = image
                     }
                 }
             }
-           
             card.delegate = self
         }
     }

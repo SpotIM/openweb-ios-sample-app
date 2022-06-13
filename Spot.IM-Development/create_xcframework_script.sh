@@ -35,8 +35,8 @@ mkdir "${SRCROOT}/Release"
 
 # Build the framework for device and for simulator (using
 # all needed architectures).
-xcodebuild archive -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -destination="iOS" -sdk iphonesimulator SKIP_INSTALL=NO BUILD_LIBRARIES_FOR_DISTRIBUTION=YES -archivePath "${BUILD_DIR}/Release-iphonesimulator"
-xcodebuild archive -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -destination="iOS" -sdk iphoneos        SKIP_INSTALL=NO BUILD_LIBRARIES_FOR_DISTRIBUTION=YES -archivePath "${BUILD_DIR}/Release-iphoneos"
+xcodebuild archive -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -destination="iOS" -sdk iphonesimulator SKIP_INSTALL=NO BUILD_LIBRARY_FOR_DISTRIBUTION=YES -archivePath "${BUILD_DIR}/Release-iphonesimulator"
+xcodebuild archive -workspace "${WORKSPACE}" -scheme "${TARGET_NAME}" -destination="iOS" -sdk iphoneos        SKIP_INSTALL=NO BUILD_LIBRARY_FOR_DISTRIBUTION=YES -archivePath "${BUILD_DIR}/Release-iphoneos"
 
 
 

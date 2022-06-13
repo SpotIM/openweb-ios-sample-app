@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.3] - 2022-06-09
+### Fixed
+- Fixed a crash which happened in rare cases for comments label
+### Changes
+- Using Keychain to securely save tokens and general sensitive data
+### Internal
+- Update dependencies versions (RxSwift, RxCocoa, Alamofire, PromiseKit)
+
+## [1.14.2] - 2022-06-06
+### Fixed
+- Recovering from 403 auth error and renewing SOO if needed
+- Keep the conversation screen with the same sort option after posting a new comment
+### Changes
+- Improving the way we dismiss the comment creation screen
+
+## [1.14.1] - 2022-05-26
+### Fixed
+- Fixed number of comments after deleting reply
+- Fixed crash when posting a comment from pre-conversation
+
 ## [1.14.0] - 2022-05-24
 ### Added
 - Added French support
