@@ -807,6 +807,8 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         let actions = model.commentAvailableActions(commentId, sender: sender)
         if !actions.isEmpty {
             showActionSheet(actions: actions, sender: sender)
+        } else {
+            // TODO: Show some message to the user (waiting for product decision)
         }
     }
 
