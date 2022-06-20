@@ -807,6 +807,24 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         let actions = model.commentAvailableActions(commentId, sender: sender)
         if !actions.isEmpty {
             showActionSheet(actions: actions, sender: sender)
+        } else {
+            servicesProvider.logger().log(level: .verbose, "Showing the user a message because there are no available options to interact with a comment after pressing the 3 dots")
+            let actions = [UIRxAlertAction(title: LocalizationManager.localizedString(key: "OK"), style: .default)]
+            _ = UIAlertController.rx.show(onViewController: self, title: "",
+                                      message: LocalizationManager.localizedString(key: "No available options"),
+                                      actions: actions)
+                .take(2) // Taking 2 cause the first one is the completion. No need to dispose cause the whole subscription will finish when the user select an option
+                .subscribe(onNext: { [weak self] result in
+                    switch result {
+                    case .completion:
+                        // Do nothing
+                        break
+                    case .selected(let action):
+                        if action == actions.first {
+                            self?.servicesProvider.logger().log(level: .verbose, "User pressed OK option")
+                        }
+                    }
+                })
         }
     }
 

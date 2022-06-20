@@ -237,12 +237,15 @@ final class SPMainConversationModel {
         let replyingToID = viewModel?.rootCommentId
         var actions: [UIAlertAction] = []
         
+        if availability.isShareable {
         let shareAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Share"),
             style: .default) { [weak self] _ in
                 self?.commentsActionDelegate?.prepareFlowForAction(.share(commentId: commentId, replyingToID: replyingToID), sender: sender)
             }
-        actions.append(shareAction)
+            actions.append(shareAction)
+        }
+
         if availability.isReportable {
             let reportAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Report"),
@@ -278,6 +281,7 @@ final class SPMainConversationModel {
         ) { action in
             SPAnalyticsHolder.default.log(event: .messageContextMenuClosed(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
+        
         if !actions.isEmpty {
             actions.append(cancelAction)
         }
@@ -286,13 +290,17 @@ final class SPMainConversationModel {
     }
     
     func commentActionsAvailability(viewModel: CommentViewModel?) -> CommentActionAvailability {
-        guard let viewModel = viewModel else { return (false, false, false) }
+        let shouldDisableShareComment = SPConfigsDataSource.appConfig?.conversation?.disableShareComment ?? false
+        let isShareable = !shouldDisableShareComment
+        
+        guard let viewModel = viewModel else { return (false, false, false, isShareable) }
         
         let isDeletable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isEditable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isReportable = !viewModel.isDeleted && !(viewModel.authorId == SPUserSessionHolder.session.user?.id)
         
-        return (isDeletable, isEditable, isReportable)
+        
+        return (isDeletable, isEditable, isReportable, isShareable)
     }
     
     func adsGroup() -> AdsABGroup {
