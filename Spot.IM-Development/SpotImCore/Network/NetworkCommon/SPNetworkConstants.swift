@@ -11,6 +11,7 @@ import Alamofire
 
 struct APIConstants {
     static let baseURLString: String = "https://mobile-gw.spot.im"
+//    static let baseURLString: String = "http://localhost:8044"
     static let uploadImageBaseURL: String = SPConfigsDataSource.appConfig?.mobileSdk.imageUploadBaseUrl ?? "https://api.cloudinary.com/v1_1/com-3pix/image/upload/"
     static let fetchImageBaseURL: String = SPConfigsDataSource.appConfig?.mobileSdk.fetchImageBaseUrl ?? "https://images.spot.im/image/upload/"
     static let cdnBaseURL: String = "https://static-cdn.spot.im/production/"

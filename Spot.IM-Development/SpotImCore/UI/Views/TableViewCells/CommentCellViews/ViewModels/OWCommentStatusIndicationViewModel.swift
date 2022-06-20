@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentStatusIndicationViewModelingInputs {
-    func configure(with model: SPComment.CommentStatus, containerWidth: CGFloat)
+    func configure(with model: SPComment.CommentStatus, isStrictMode: Bool, containerWidth: CGFloat)
 }
 
 protocol OWCommentStatusIndicationViewModelingOutputs {
@@ -34,10 +34,16 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     var outputs: OWCommentStatusIndicationViewModelingOutputs { return self }
         
     fileprivate let _status = BehaviorSubject<SPComment.CommentStatus?>(value: nil)
+    fileprivate let _strictMode = BehaviorSubject<Bool?>(value: nil)
     fileprivate let _commentWidth = BehaviorSubject<CGFloat?>(value: nil)
     
     fileprivate lazy var status: Observable<SPComment.CommentStatus> = {
         self._status
+            .unwrap()
+    }()
+    
+    fileprivate lazy var strictMode: Observable<Bool> = {
+        self._strictMode
             .unwrap()
     }()
     
@@ -64,15 +70,16 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     
     var indicationText: Observable<String> {
         self.status
-            .map {
-                self.getIndicationText(status: $0)
+            .withLatestFrom(strictMode) { status, isStrictMode in
+                return self.getIndicationText(status: status, isStrictMode: isStrictMode)
             }
     }
-    
+
     var indicationHeight: CGFloat = 0
     
-    func configure(with status: SPComment.CommentStatus, containerWidth: CGFloat) {
+    func configure(with status: SPComment.CommentStatus, isStrictMode: Bool, containerWidth: CGFloat) {
         self._status.onNext(status)
+        self._strictMode.onNext(isStrictMode)
         self._commentWidth.onNext(containerWidth)
         indicationHeight = {
             // calculate text width using the comment with reducing all padding & icon
@@ -82,7 +89,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
                         - OWCommentStatusIndicationView.Metrics.iconLeadingOffset
             
             let attributedMessage = NSAttributedString(
-                string: self.getIndicationText(status: status),
+                string: self.getIndicationText(status: status, isStrictMode: isStrictMode),
                 attributes: [
                     NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: OWCommentStatusIndicationView.Metrics.fontSize)
                 ])
@@ -92,8 +99,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
         }()
     }
     
-    fileprivate func getIndicationText(status: SPComment.CommentStatus) -> String {
-        let isStrictMode = false // TODO - should get it from 'moderation/comment/' call
+    fileprivate func getIndicationText(status: SPComment.CommentStatus, isStrictMode: Bool) -> String {
         switch(status) {
         case .reject, .block:
             return LocalizationManager.localizedString(key: "Your comment has been rejected.")
