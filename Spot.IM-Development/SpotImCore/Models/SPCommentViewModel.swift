@@ -163,10 +163,10 @@ internal struct CommentViewModel {
         updateCommentActionsVM()
         if let status = comment.status,
            comment.userId == SPUserSessionHolder.session.user?.id,
-           !comment.deleted {
+           !comment.deleted, !comment.published {
 //           !comment.published {
             showStatusIndicator = true
-            statusIndicationVM.inputs.configure(with: status, containerWidth: textWidth())
+            statusIndicationVM.inputs.configure(with: status, isStrictMode: comment.conversation?.strictMode ?? false, containerWidth: textWidth())
         } else {
             showStatusIndicator = false
         }
