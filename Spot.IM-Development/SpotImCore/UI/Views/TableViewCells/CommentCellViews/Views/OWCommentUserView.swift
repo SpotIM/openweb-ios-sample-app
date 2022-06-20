@@ -49,7 +49,7 @@ final class OWCommentUserView: OWBaseView {
     private func configureAvatarView() {
         avatarImageView.delegate = self
         avatarImageView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Metrics.leadingOffset)
+            make.leading.equalToSuperview()
             make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Metrics.avatarImageViewTrailingOffset)
             make.top.equalTo(userNameView)
             make.size.equalTo(Metrics.avatarSideSize)
@@ -76,8 +76,13 @@ final class OWCommentUserView: OWBaseView {
         userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
         userNameView.setSubtitle(
             dataModel.replyingToDisplayName?.isEmpty ?? true
+                ? ""
+                : LocalizationManager.localizedString(key: "To") + " \(dataModel.replyingToDisplayName!)"
+        )
+        userNameView.setDate(
+            dataModel.replyingToDisplayName?.isEmpty ?? true
                 ? dataModel.timestamp
-                : "\(dataModel.replyingToDisplayName!) · ".appending(dataModel.timestamp ?? "")
+                : " · ".appending(dataModel.timestamp ?? "")
         )
         let userViewHeight = dataModel.usernameViewHeight()
         userNameView.OWSnp.updateConstraints { make in

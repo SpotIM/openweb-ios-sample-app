@@ -128,7 +128,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func configureUserView() {
         userView.OWSnp.makeConstraints { make in
             userViewTopConstraint = make.top.equalTo(headerView.OWSnp.bottom).offset(Theme.topOffset).constraint
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(Theme.leadingOffset)
+            make.trailing.equalToSuperview()
             make.height.equalTo(Theme.userViewCollapsedHeight)
         }
     }
@@ -408,9 +409,6 @@ private enum Theme {
     static let replyActionsViewHeight: CGFloat = 32
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let userViewCollapsedHeight: CGFloat = 44.0
-    static let userViewExpandedHeight: CGFloat = 69.0
-    static let avatarSideSize: CGFloat = 39.0
-    static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
 }
