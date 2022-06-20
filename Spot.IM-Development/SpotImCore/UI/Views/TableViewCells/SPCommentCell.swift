@@ -26,8 +26,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     let messageView: MessageContainerView = .init()
 
-    private let avatarImageView: SPAvatarView = SPAvatarView()
-    private let userNameView: UserNameView = .init()
+    private let userView: OWCommentUserView = .init()
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
@@ -39,7 +38,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private var replyingToId: String?
     private var repliesButtonState: RepliesButtonState = .collapsed
     
-    private var userNameViewTopConstraint: OWConstraint?
+    private var userViewTopConstraint: OWConstraint?
     private var commentMediaViewTopConstraint: OWConstraint?
 
     private var imageRequest: DataRequest?
@@ -57,11 +56,10 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         headerView.backgroundColor = .spBackground0
         contentView.backgroundColor = .spBackground0
         messageView.updateColorsAccordingToStyle()
-        userNameView.updateColorsAccordingToStyle()
         replyActionsView.updateColorsAccordingToStyle()
-        avatarImageView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
         commentLabelView.updateColorsAccordingToStyle()
+        userView.updateColorsAccordingToStyle()
     }
     
     // MARK: - Internal methods
@@ -79,30 +77,30 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         repliesButtonState = data.repliesButtonState
         messageView.delegate = self
         
-        updateUserView(with: data)
+        userView.updateUserView(with: data)
         updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
-        updateAvatarView(with: data)
+        userView.updateAvatarView(with: data)
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
         updateCommentMediaView(with: data)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
         updateMessageView(with: data, clipToLine: lineLimit, windowWidth: windowWidth)
         updateCommentLabelView(with: data)
+        
+        userViewTopConstraint?.update(offset: data.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
     }
 
     // MARK: - Private Methods - View setup
 
     private func setupUI() {
         contentView.addSubviews(headerView,
-                                avatarImageView,
-                                userNameView,
+                                userView,
                                 commentLabelView,
                                 messageView,
                                 commentMediaView,
                                 replyActionsView,
                                 moreRepliesView)
         configureHeaderView()
-        configureAvatarView()
-        configureUserNameView()
+        configureUserView()
         configureCommentLabelView()
         configureMessageView()
         configureCommentMediaView()
@@ -127,28 +125,17 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func configureAvatarView() {
-        avatarImageView.delegate = self
-        avatarImageView.OWSnp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Theme.leadingOffset)
-            make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Theme.avatarImageViewTrailingOffset)
-            make.top.equalTo(userNameView)
-            make.size.equalTo(Theme.avatarSideSize)
-        }
-    }
-    
-    private func configureUserNameView() {
-        userNameView.delegate = self
-        userNameView.OWSnp.makeConstraints { make in
-            userNameViewTopConstraint = make.top.equalTo(headerView.OWSnp.bottom).offset(Theme.topOffset).constraint
-            make.trailing.equalToSuperview()
+    private func configureUserView() {
+        userView.OWSnp.makeConstraints { make in
+            userViewTopConstraint = make.top.equalTo(headerView.OWSnp.bottom).offset(Theme.topOffset).constraint
+            make.leading.trailing.equalToSuperview()
             make.height.equalTo(Theme.userViewCollapsedHeight)
         }
     }
     
     private func configureCommentLabelView() {
         commentLabelView.OWSnp.makeConstraints { make in
-            make.top.equalTo(userNameView.OWSnp.bottom).offset(10)
+            make.top.equalTo(userView.OWSnp.bottom).offset(10)
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
             make.height.equalTo(Theme.commentLabelHeight)
         }
@@ -201,30 +188,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func updateUserView(with dataModel: CommentViewModel) {
-        userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
-        
-        userNameView.setUserName(
-            dataModel.displayName,
-            badgeTitle: dataModel.badgeTitle,
-            contentType: .reply,
-            isDeleted: dataModel.isDeletedOrReported(),
-            isOneLine: dataModel.isUsernameOneRow())
-        userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
-        userNameView.setSubtitle(
-            dataModel.replyingToDisplayName?.isEmpty ?? true
-                ? dataModel.timestamp
-                : "\(dataModel.replyingToDisplayName!) · ".appending(dataModel.timestamp ?? "")
-        )
-        let userViewHeight = dataModel.usernameViewHeight()
-        userNameView.OWSnp.updateConstraints { make in
-            make.height.equalTo(userViewHeight)
-        }
-        userNameViewTopConstraint?.update(offset: dataModel.isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
-
-        userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
-    }
-    
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         let labelHeight: CGFloat
         if let commentLabels = dataModel.commentLabels,
@@ -268,10 +231,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
 
         separatorView.backgroundColor = .spSeparator2
-    }
-    
-    private func updateAvatarView(with dataModel: CommentViewModel) {
-        avatarImageView.configure(with: dataModel.avatarViewVM)
     }
     
     private func updateMoreRepliesView(with dataModel: CommentViewModel, minimumVisibleReplies: Int) {
@@ -373,24 +332,6 @@ extension SPCommentCell: CommentActionsDelegate {
         delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
     
-}
-
-extension SPCommentCell: UserNameViewDelegate {
-    
-    func moreButtonDidTapped(sender: UIButton) {
-        delegate?.moreTapped(for: commentId, replyingToID: replyingToId, sender: sender)
-    }
-    
-    func userNameDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: false)
-    }
-}
-
-extension SPCommentCell: OWAvatarViewDelegate {
-    
-    func avatarDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
-    }
 }
 
 extension SPCommentCell: ShowMoreRepliesViewDelegate {
