@@ -21,9 +21,11 @@ struct SPConfigurationConversation: Decodable {
     let disableOnlineDotIndicator: Bool?
     let disableVoteDown: Bool?
     let disableVoteUp: Bool?
+    let disableShareComment: Bool?
     
     enum CodingKeys: String, CodingKey {
         case subscriberBadgeConfig = "subscriberBadge"
+        case disableShareComment = "disableShare"
         case readBatchSize,
              socialEnable,
              typingAggregationTimeSeconds,
