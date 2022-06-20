@@ -95,6 +95,7 @@ class SPCommentCreationModel {
                 var responseData = self.populateResponseFields(response)
                 let commentIdentifier: String = self.getCommentIdentifierForCommentType()
                 
+                // set new comment status after "/status" call
                 self.commentService.commentStatus(conversationId: self.dataModel.postId, commentId: responseData.id ?? "", success: { status in
                     responseData.rawStatus = status["status"]
                     OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)

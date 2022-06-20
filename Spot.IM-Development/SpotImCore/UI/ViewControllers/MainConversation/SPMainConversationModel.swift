@@ -291,14 +291,14 @@ final class SPMainConversationModel {
     
     func commentActionsAvailability(viewModel: CommentViewModel?) -> CommentActionAvailability {
         let shouldDisableShareComment = SPConfigsDataSource.appConfig?.conversation?.disableShareComment ?? false
-        let isShareable = !shouldDisableShareComment
+        var isShareable = !shouldDisableShareComment
         
         guard let viewModel = viewModel else { return (false, false, false, isShareable) }
         
         let isDeletable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isEditable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isReportable = !viewModel.isDeleted && !(viewModel.authorId == SPUserSessionHolder.session.user?.id)
-        let isSharable = !viewModel.showStatusIndicator
+        isShareable = isShareable && !viewModel.showStatusIndicator
         
         return (isDeletable, isEditable, isReportable, isShareable)
     }

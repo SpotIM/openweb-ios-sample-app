@@ -269,16 +269,6 @@ internal struct CommentViewModel {
 
         return height
     }
-    
-    private func getStatusIndicatorHeight(lineLimit: Int) -> CGFloat {
-        let width = textWidth() - (12 * 2) - 14
-        let attributedMessage = NSAttributedString(
-            string: message(),
-            attributes: attributes(isDeleted: isDeletedOrReported()))
-        
-        let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)
-        return height
-    }
 
     func depthOffset() -> CGFloat {
         switch depth {
