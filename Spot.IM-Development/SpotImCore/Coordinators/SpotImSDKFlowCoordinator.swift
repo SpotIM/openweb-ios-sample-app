@@ -499,7 +499,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         
         let logger =  servicesProvider.logger()
         
-        // We should insert below the comment creation screen
+        // We should insert the main conversation below the comment creation screen
         guard let navController = navigationController,
               let commentVCIndex = navController.viewControllers.firstIndex(where: { $0 is SPCommentCreationViewController }) else {
                   logger.log(level: .medium, "Couldn't find comment creation VC index, recovering by inserting main conversation VC to the previous position before the last one in the navigation stack VCs")
