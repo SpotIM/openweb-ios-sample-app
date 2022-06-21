@@ -659,7 +659,19 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
         CATransaction.setCompletionBlock {
             self.tableView.reloadData()
         }
-        tableView.insertSections(IndexSet(indexes), with: .top)
+        
+        // Part of the reason why inheritance is crap.. We won't have such things once we will refactor the UI layer
+        if let preConversation = self as? SPPreConversationViewController {
+            // In the pre conversation we can add section only if we didn't exceed the max number of sections (which return in the table view number of sections delegate)
+            let currentSections = dataSource.numberOfSections()
+            if currentSections <= preConversation.maxSectionCount {
+                tableView.insertSections(IndexSet(indexes), with: .top)
+            }
+        } else {
+            // Full conversation
+            tableView.insertSections(IndexSet(indexes), with: .top)
+        }
+
         tableView.endUpdates()
         CATransaction.commit()
         // if needed, hide emptyview
