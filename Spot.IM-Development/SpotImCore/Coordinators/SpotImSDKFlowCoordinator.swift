@@ -496,8 +496,20 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     
     private func insertMainConversationToNavigation(_ dataModel: SPMainConversationModel) {
         let controller = conversationController(with: dataModel)
-        let index = (navigationController?.viewControllers.count ?? 1) - 1
-        navigationController?.viewControllers.insert(controller, at: index)
+        
+        let logger =  servicesProvider.logger()
+        
+        // We should insert the main conversation below the comment creation screen
+        guard let navController = navigationController,
+              let commentVCIndex = navController.viewControllers.firstIndex(where: { $0 is SPCommentCreationViewController }) else {
+                  logger.log(level: .medium, "Couldn't find comment creation VC index, recovering by inserting main conversation VC to the previous position before the last one in the navigation stack VCs")
+                  let index = (navigationController?.viewControllers.count ?? 1) - 1
+                  navigationController?.viewControllers.insert(controller, at: index)
+                  return
+              }
+        
+        logger.log(level: .verbose, "Inserting main conversation VC before the comment creation VC")
+        navigationController?.viewControllers.insert(controller, at: commentVCIndex)
     }
     
     @objc
