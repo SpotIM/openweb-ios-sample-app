@@ -23,7 +23,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     private lazy var footerView: SPPreConversationFooter = .init()
         
     private var checkTableViewHeight: CGFloat = 0
-    private let maxSectionCount: Int
+    let maxSectionCount: Int
     private let readingTracker = SPReadingTracker()
     private let visibilityTracker = ViewVisibilityTracker()
     private let bannerVisisilityTracker = ViewVisibilityTracker()
@@ -675,6 +675,7 @@ extension SPPreConversationViewController: ViewVisibilityDelegate {
         }
     }
 }
+
 private extension SPPreConversationViewController {
 
     private enum Theme {
