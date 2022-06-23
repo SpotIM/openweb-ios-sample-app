@@ -77,9 +77,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         repliesButtonState = data.repliesButtonState
         messageView.delegate = self
         
-        userView.updateUserView(with: data)
         updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
-        userView.updateAvatarView(with: data)
+        userView.configure(with: data)
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
         updateCommentMediaView(with: data)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
