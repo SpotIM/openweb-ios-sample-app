@@ -54,8 +54,7 @@ internal struct CommentViewModel {
         return id == rootCommentId
     }
     
-    let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
-    let avatarViewVM: OWAvatarViewModeling
+    let commentUserVM: OWCommentUserViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
 
     init(
@@ -65,8 +64,8 @@ internal struct CommentViewModel {
         color: UIColor? = nil,
         user: SPUser? = nil,
         imageProvider: SPImageProvider? = nil) {
-
-        avatarViewVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
+        
+        commentUserVM = OWCommentUserViewModel(user: user, imageProvider: imageProvider)
         isDeleted = comment.deleted
         isEdited = comment.edited
         authorId = comment.userId
@@ -151,12 +150,12 @@ internal struct CommentViewModel {
             displayName = user.displayName
             userAvatar = imageProvider?.imageURL(with: user.imageId, size: nil)
             badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
-            subscriberBadgeVM.inputs.configureUser(user: user)
         }
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
             
+        updateCommentUserVM()
         updateCommentActionsVM()
     }
     
@@ -271,6 +270,10 @@ internal struct CommentViewModel {
     
     func isAReply() -> Bool {
         return replyingToCommentId != nil
+    }
+    
+    func updateCommentUserVM() {
+        self.commentUserVM.inputs.configure(with: self)
     }
     
     func updateCommentActionsVM() {
