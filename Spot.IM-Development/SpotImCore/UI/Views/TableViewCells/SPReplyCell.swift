@@ -40,9 +40,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
         repliesButtonState = data.repliesButtonState
-        userView.updateUserView(with: data)
+        userView.configure(with: data)
         updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
-        userView.updateAvatarView(with: data)
         updateCommentLabelView(with: data)
         messageView.delegate = self
         

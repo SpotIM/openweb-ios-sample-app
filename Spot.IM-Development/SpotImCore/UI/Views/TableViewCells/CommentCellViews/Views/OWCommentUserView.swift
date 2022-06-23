@@ -34,6 +34,17 @@ final class OWCommentUserView: OWBaseView {
         setupUI()
     }
     
+    func configure(with model: CommentViewModel) {
+        self.viewModel = model.commentUserVM
+        disposeBag = DisposeBag()
+        
+        userNameView.configureSubscriberBadgeVM(viewModel: viewModel.outputs.subscriberBadgeVM)
+        avatarImageView.configure(with: viewModel.outputs.avatarVM)
+        
+        updateUserView(with: model)
+        updateAvatarView(with: model)
+    }
+    
     private func setupUI() {
         addSubviews(avatarImageView, userNameView)
         configureAvatarView()
@@ -88,12 +99,10 @@ final class OWCommentUserView: OWBaseView {
         userNameView.OWSnp.updateConstraints { make in
             make.height.equalTo(userViewHeight)
         }
-
-        userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
     }
     
     func updateAvatarView(with dataModel: CommentViewModel) {
-        avatarImageView.configure(with: dataModel.avatarViewVM)
+        avatarImageView.configure(with: dataModel.commentUserVM.outputs.avatarVM)
     }
 }
 
