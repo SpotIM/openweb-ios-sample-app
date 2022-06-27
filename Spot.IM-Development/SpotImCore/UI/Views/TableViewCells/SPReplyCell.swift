@@ -178,8 +178,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         let height: CGFloat
         if let commentLabels = dataModel.commentLabels,
-           dataModel.isDeletedOrReported() == false
-        {
+           dataModel.isDeletedOrReported() == false,
+           commentLabels.count > 0 {
             let selectedCommentLabel =  commentLabels[0]
             commentLabelView.setLabel(
                 commentLabelIconUrl: selectedCommentLabel.iconUrl,
