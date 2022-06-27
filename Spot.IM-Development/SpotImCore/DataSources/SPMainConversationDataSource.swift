@@ -836,8 +836,9 @@ extension SPMainConversationDataSource {
         let dataModel = self.cellData.flatMap { $0 }.first { $0.commentId == viewModel.commentId }
         if dataModel == nil {
             logger.log(level: .verbose, "pushLocalComment: Data model not found, adding comment manually")
-            self.cellData.insert([viewModel], at: self.shouldShowBanner ? 1 : 0)
-            self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [0])
+            let section = self.shouldShowBanner ? 1 : 0
+            self.cellData.insert([viewModel], at: section)
+            self.delegate?.dataSource(dataSource: self, didInsertSectionsAt: [section])
             logger.log(level: .verbose, "pushLocalComment: Updated message count: \(updatedMessageCount)")
             self.messageCount = updatedMessageCount
             self.messageCounterUpdated?(updatedMessageCount)
