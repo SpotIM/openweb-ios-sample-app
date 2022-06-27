@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.4] - 2022-06-22
+### Added
+- Support hiding the share button according to remote configuration
+- Support line break in comment text
+### Fixed
+- Fixed a crash which happened in rare cases in replies UI
+### Internal
+- Removed old schemes from the project
+
 ## [1.14.3] - 2022-06-09
 ### Fixed
 - Fixed a crash which happened in rare cases for comments label
