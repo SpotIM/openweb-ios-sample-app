@@ -11,6 +11,7 @@ import UIKit
 
 protocol OWSharedServicesProviderConfigure {
     func configureLogger(logLevel: OWLogLevel, logMethods: [OWLogMethod])
+    func change(spotId : String)
 }
 
 protocol OWSharedServicesProviding: AnyObject {
@@ -25,6 +26,7 @@ protocol OWSharedServicesProviding: AnyObject {
     // Remove this migration service within half a year from now
     func keychainMigrationService() -> OWKeychainMigrationServicing
     func userDefaults() -> OWUserDefaultsProtocol
+    func realtimeService() -> OWRealtimeServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -81,6 +83,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWUserDefaults(servicesProvider: self)
     }()
     
+    fileprivate lazy var _realtimeService: OWRealtimeServicing = {
+        return OWRealtimeService(servicesProvider: self)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -116,6 +122,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func userDefaults() -> OWUserDefaultsProtocol {
         return _userDefaults
     }
+    
+    func realtimeService() -> OWRealtimeServicing {
+        return _realtimeService
+    }
 }
 
 // Configure
@@ -123,5 +133,10 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     func configureLogger(logLevel level: OWLogLevel, logMethods methods: [OWLogMethod]) {
         _logger = OWLogger(logLevel: level, logMethods: methods)
         _logger.log(level: .verbose, "Logger re-initialized with new configuration")
+    }
+    
+    func change(spotId : String) {
+        // Stop / re-create services which depend on spot id
+        _realtimeService.stopFetchingData()
     }
 }
