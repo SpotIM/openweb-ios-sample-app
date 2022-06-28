@@ -116,6 +116,7 @@
 		3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */; };
 		3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C052852482D007420AD /* UIImageView+URL.swift */; };
 		3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C0728524A40007420AD /* UIImage+URL.swift */; };
+		3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A6E286B081D001A939C /* OWRealtimeService.swift */; };
 		3D9C5826281AF64F002D0FCB /* OWFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9C5825281AF64F002D0FCB /* OWFiles.swift */; };
 		3DA9A42A284398150033BB8C /* OWNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */; };
 		3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */; };
@@ -485,6 +486,7 @@
 		3D6A4C052852482D007420AD /* UIImageView+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URL.swift"; sourceTree = "<group>"; };
 		3D6A4C0728524A40007420AD /* UIImage+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+URL.swift"; sourceTree = "<group>"; };
 		3D76FAE2283CD1B700DB18F6 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3D894A6E286B081D001A939C /* OWRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeService.swift; sourceTree = "<group>"; };
 		3D9C5825281AF64F002D0FCB /* OWFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFiles.swift; sourceTree = "<group>"; };
 		3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkInterceptor.swift; sourceTree = "<group>"; };
 		3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycle.swift; sourceTree = "<group>"; };
@@ -1707,6 +1709,7 @@
 				3D199EA8284E475500FF8360 /* OWKeychain.swift */,
 				3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */,
 				3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */,
+				3D894A6E286B081D001A939C /* OWRealtimeService.swift */,
 				4454187323685154001D0ED0 /* Ads */,
 				4454187723685154001D0ED0 /* SPAnalyticsService.swift */,
 				4454187823685154001D0ED0 /* SPReadingTracker.swift */,
@@ -2540,6 +2543,7 @@
 				6D4E56B123A178DF005B79B6 /* UIView+Animations.swift in Sources */,
 				441165A32375C3E700B781F3 /* OWResult.swift in Sources */,
 				241B075C2643D99200253944 /* GifWebView.swift in Sources */,
+				3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */,
 				445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */,
 				3D29A2D9283AD339002BE318 /* Retry.swift in Sources */,
 				3DD72C78280EF99300117946 /* OWResponseLogger.swift in Sources */,
