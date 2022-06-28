@@ -20,7 +20,7 @@ class OWRealtimeService: OWRealtimeServicing {
     fileprivate let currentPostId = BehaviorSubject<String?>(value: nil)
     fileprivate let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
     
-    init (manager: OWManagerInternalProtocol = OWManager.shared,
+    init (manager: OWManagerInternalProtocol = OWManager.manager,
           servicesProvider: OWSharedServicesProviding) {
         self.manager = manager
         self.servicesProvider = servicesProvider
