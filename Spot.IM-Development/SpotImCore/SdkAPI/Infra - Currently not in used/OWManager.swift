@@ -19,11 +19,11 @@ protocol OWManagerInternalProtocol: AnyObject  {
     var spotConfig: Observable<SPSpotConfiguration> { get }
 }
 
-class OWManager: OWManagerInternalProtocol {
+class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     
     // Singleton, will be public access once a new API will be ready.
     // Publishers and SDK consumers will basically interact with the manager / public encapsulation of it.
-    static let shared = OWManager()
+    static let manager = OWManager()
     
     // Memebers variables
     fileprivate let servicesProvider: OWSharedServicesProviding
