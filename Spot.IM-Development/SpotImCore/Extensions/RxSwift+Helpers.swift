@@ -27,3 +27,34 @@ extension ObserverType where Element == Void {
         self.onNext(())
     }
 }
+
+extension ObservableType {
+    // Simple retry
+    func retry(maxAttempts: Int, millisecondsDelay: Int, scheduler: SchedulerType = MainScheduler.instance) -> Observable<Self.Element> {
+        return self.retry { errors in
+            return errors.enumerated().flatMap { (index, error) -> Observable<Int64> in
+                if index < maxAttempts {
+                    return Observable<Int64>.timer(RxTimeInterval.milliseconds(millisecondsDelay), scheduler: scheduler)
+                } else {
+                    return Observable.error(error)
+                }
+            }
+        }
+    }
+    
+    // Exponential retry (simple algorithm)
+    func exponentialRetry(maxAttempts: Int, millisecondsDelay: Int, scheduler: SchedulerType = MainScheduler.instance) -> Observable<Self.Element> {
+        return self.retry { errors in
+            return errors.enumerated().flatMap { (index, error) -> Observable<Int64> in
+                if index < maxAttempts {
+                    let factor = index + 1
+                    let exponential = factor * factor
+                    let exponentialDelay =  RxTimeInterval.milliseconds(exponential * millisecondsDelay)
+                    return Observable<Int64>.timer(exponentialDelay, scheduler: scheduler)
+                } else {
+                    return Observable.error(error)
+                }
+            }
+        }
+    }
+}
