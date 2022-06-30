@@ -15,6 +15,7 @@ protocol OWNetworkAPIProtocol {
     
     var analytics: OWAnalyticsAPI { get }  
     var realtime: OWRealtimeAPI { get }
+    var configuration: OWConfigurationAPI { get }
 }
 
 struct OWNetworkResponse<T> {

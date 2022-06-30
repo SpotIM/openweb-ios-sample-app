@@ -29,6 +29,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func keychainMigrationService() -> OWKeychainMigrationServicing
     func userDefaults() -> OWUserDefaultsProtocol
     func realtimeService() -> OWRealtimeServicing
+    func spotConfigurationService() -> OWSpotConfigurationServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -89,6 +90,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWRealtimeService(servicesProvider: self)
     }()
     
+    fileprivate lazy var _spotConfigurationService: OWSpotConfigurationServicing = {
+        return OWSpotConfigurationService(servicesProvider: self)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -127,6 +132,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func realtimeService() -> OWRealtimeServicing {
         return _realtimeService
+    }
+    
+    func spotConfigurationService() -> OWSpotConfigurationServicing {
+        return _spotConfigurationService
     }
 }
 

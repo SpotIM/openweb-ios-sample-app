@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWRealtimeServicing {
-    func startFetchingData(postId: String)
+    func startFetchingData(postId: PostId)
     func stopFetchingData()
     var realtimeData: Observable<RealTimeModel> { get }
 }
@@ -19,7 +19,7 @@ class OWRealtimeService: OWRealtimeServicing {
     fileprivate unowned let manager: OWManagerInternalProtocol
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let scheduler: SchedulerType
-    fileprivate let currentPostId = BehaviorSubject<String?>(value: nil)
+    fileprivate let currentPostId = BehaviorSubject<PostId?>(value: nil)
     fileprivate let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
     fileprivate var disposeBag: DisposeBag?
     
@@ -40,10 +40,14 @@ class OWRealtimeService: OWRealtimeServicing {
             .share(replay: 1) // Send the last component to new subscribers immediately
     }
     
-    func startFetchingData(postId: String) {
-        _ = manager.spotConfig
+    func startFetchingData(postId: PostId) {
+        _ = manager.currentSpotId
             .take(1)
             .observe(on: self.scheduler) // Do the rest of the Rx chain on this class scheduler
+            .flatMap { [weak self] spotId -> Observable<SPSpotConfiguration> in
+                guard let self = self else { return .empty()}
+                return self.servicesProvider.spotConfigurationService().config(spotId: spotId)
+            }
             .flatMap { [weak self] config -> Observable<String?> in
                 // Continue only if real time service is enabled according to the config
                 guard let self = self,
