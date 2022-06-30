@@ -73,6 +73,7 @@
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
 		24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */; };
+		3D100D95286DD17100AA4F85 /* OWTypealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D94286DD17100AA4F85 /* OWTypealiases.swift */; };
 		3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EA8284E475500FF8360 /* OWKeychain.swift */; };
 		3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */; };
 		3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */; };
@@ -443,6 +444,7 @@
 		377DD973617E9820A88EE7A0 /* Pods-Shared-SpotImCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debug.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debug.xcconfig"; sourceTree = "<group>"; };
 		395BD17827841FD0BC6FFD64 /* Pods-Shared-SpotImCore.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		3BA412CB4B682D95D3929020 /* Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3D100D94286DD17100AA4F85 /* OWTypealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTypealiases.swift; sourceTree = "<group>"; };
 		3D199EA8284E475500FF8360 /* OWKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychain.swift; sourceTree = "<group>"; };
 		3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychainMigrationService.swift; sourceTree = "<group>"; };
 		3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaults.swift; sourceTree = "<group>"; };
@@ -1181,6 +1183,7 @@
 			children = (
 				3D894A70286B18E7001A939C /* OpenWeb.swift */,
 				3DE0FE3B27D648330097B17B /* OWManager.swift */,
+				3D100D94286DD17100AA4F85 /* OWTypealiases.swift */,
 			);
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
@@ -2363,6 +2366,7 @@
 				4454188B23685154001D0ED0 /* SPInternalAuthenticationRequests.swift in Sources */,
 				3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */,
 				445418B523685154001D0ED0 /* SPConstants.swift in Sources */,
+				3D100D95286DD17100AA4F85 /* OWTypealiases.swift in Sources */,
 				3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */,
 				16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */,
 				4454181123685144001D0ED0 /* SPMainConversationViewController.swift in Sources */,
