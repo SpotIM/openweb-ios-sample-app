@@ -82,7 +82,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         messageView.delegate = self
         
         updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
-        userView.configure(with: data)
+        updateUserView(with: data)
         updateHeaderView(with: data, shouldShowHeader: shouldShowHeader)
         updateCommentMediaView(with: data)
         updateMoreRepliesView(with: data, minimumVisibleReplies: minimumVisibleReplies)
@@ -224,6 +224,11 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         replyActionsView.OWSnp.updateConstraints { make in
             make.height.equalTo(dataModel.isDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
         }
+    }
+    
+    private func updateUserView(with dataModel: CommentViewModel) {
+        dataModel.updateCommentUserVM()
+        userView.configure(with: dataModel)
     }
     
     private func updateHeaderView(with dataModel: CommentViewModel, shouldShowHeader: Bool) {

@@ -59,6 +59,8 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     func configure(with model: CommentViewModel) {
         commentId = model.commentId
         replyToCommentId = model.replyingToCommentId
+        
+        userNameVM.inputs.configure(with: model)
     }
     
     func setDelegate(_ delegate: SPCommentCellDelegate) {

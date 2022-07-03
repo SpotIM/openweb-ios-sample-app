@@ -11,12 +11,25 @@ import RxCocoa
 import UIKit
 
 protocol OWUserNameViewModelingInputs {
+    func configure(with model: CommentViewModel)
+    
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<UIButton> { get }
 }
 
 protocol OWUserNameViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
+    
+    var showMoreButton: Observable<Bool> { get }
+    var showSubscriberBadge: Observable<Bool> { get }
+    var nameText: Observable<String?> { get }
+    var nameTextStyle: Observable<SPFontStyle> { get }
+    var subtitleText: Observable<String?> { get }
+    var dateText: Observable<String?> { get }
+    var badgeTitle: Observable<String?> { get }
+    var isUsernameOneRow: Observable<Bool> { get }
+    var deletedOrReportedText: Observable<String?> { get }
+    
 }
 
 protocol OWUserNameViewModeling {
@@ -33,11 +46,12 @@ class OWUserNameViewModel: OWUserNameViewModeling,
     
     fileprivate let disposeBag = DisposeBag()
     
+    fileprivate let _model = BehaviorSubject<CommentViewModel?>(value: nil)
+
     init(user: SPUser?) {
         if let user = user {
             subscriberBadgeVM.inputs.configureUser(user: user)
         }
-        self.setupObservers()
     }
     
     var tapUserName = PublishSubject<Void>()
@@ -45,6 +59,83 @@ class OWUserNameViewModel: OWUserNameViewModeling,
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     
-    func setupObservers() {
+    var showMoreButton: Observable<Bool> {
+        _model
+            .unwrap()
+            .map { !$0.isDeletedOrReported() }
+    }
+    
+    var showSubscriberBadge: Observable<Bool> {
+        _model
+            .unwrap()
+            .map { !$0.isDeletedOrReported() }
+    }
+    
+    var subtitleText: Observable<String?> {
+        _model
+            .unwrap()
+            .map({ model -> String? in
+                if (model.isDeletedOrReported()) { return nil }
+                return model.replyingToDisplayName
+            })
+            .unwrap()
+            .map({ $0.isEmpty ? ""
+                : LocalizationManager.localizedString(key: "To") + " \($0)"
+            })
+    }
+    
+    var dateText: Observable<String?> {
+        _model
+            .unwrap()
+            .map({ model in
+                if (model.isDeletedOrReported()) { return nil }
+                return (model.replyingToDisplayName?.isEmpty ?? true)
+                    ? model.timestamp
+                    : " · ".appending(model.timestamp ?? "")
+            })
+    }
+    
+    var badgeTitle: Observable<String?> {
+        _model
+            .unwrap()
+            .map({ model -> String? in
+                if (model.isDeletedOrReported()) { return nil }
+                return model.badgeTitle
+            })
+    }
+    
+    var nameText: Observable<String?> {
+        _model
+            .unwrap()
+            .map({ model -> String? in
+                if (model.isDeletedOrReported()) { return nil }
+                return model.displayName
+            })
+    }
+    
+    var nameTextStyle: Observable<SPFontStyle> {
+        _model
+            .unwrap()
+            .map { $0.replyingToCommentId == nil ? .bold : .medium }
+    }
+    
+    var isUsernameOneRow: Observable<Bool> {
+        _model
+            .unwrap()
+            .map { $0.isUsernameOneRow() }
+    }
+    
+    var deletedOrReportedText: Observable<String?> {
+        _model
+            .unwrap()
+            .map { model in
+                if (!model.isDeletedOrReported()) { return nil }
+                let isReported = model.isReported
+                return LocalizationManager.localizedString(key: isReported ? "This message was reported." : "This message was deleted.")
+            }
+    }
+    
+    func configure(with model: CommentViewModel) {
+        _model.onNext(model)
     }
 }
