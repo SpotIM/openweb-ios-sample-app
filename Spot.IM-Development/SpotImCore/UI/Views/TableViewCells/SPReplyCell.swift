@@ -11,7 +11,11 @@ import Alamofire
 
 final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
-    weak var delegate: SPCommentCellDelegate?
+    weak var delegate: SPCommentCellDelegate?{
+        didSet {
+            userView.setDelegate(delegate)
+        }
+    }
     
     let messageView: MessageContainerView = .init()
 

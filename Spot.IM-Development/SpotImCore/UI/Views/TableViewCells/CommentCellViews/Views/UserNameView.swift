@@ -7,14 +7,17 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
 
 internal final class UserNameView: OWBaseView {
 
     enum ContentType {
         case comment, reply
     }
-
-    weak var delegate: UserNameViewDelegate?
+    
+    fileprivate var viewModel: OWUserNameViewModeling!
+    fileprivate var disposeBag: DisposeBag!
 
     private let userNameLabel: OWBaseLabel = .init()
     private let badgeTagLabel: OWBaseLabel = .init()
@@ -100,9 +103,14 @@ internal final class UserNameView: OWBaseView {
     func setMoreButton(hidden: Bool) {
         moreButton.isHidden = hidden
     }
-
-    func configureSubscriberBadgeVM(viewModel: OWUserSubscriberBadgeViewModeling) {
-        subscriberBadgeView.configure(with: viewModel)
+    
+    func configure(with viewModel: OWUserNameViewModeling) {
+        self.viewModel = viewModel
+        disposeBag = DisposeBag()
+        
+        subscriberBadgeView.configure(with: viewModel.outputs.subscriberBadgeVM)
+        
+        setupObservers()
     }
     
     // MARK: - Private
@@ -115,7 +123,7 @@ internal final class UserNameView: OWBaseView {
                     subtitleLabel,
                     dateLabel)
         configureNameAndBadgeStackView()
-        setupMoreButton()
+        configureMoreButton()
         configureSubtitleAndDateLabels()
         configureSubscriberBadgeView()
         updateColorsAccordingToStyle()
@@ -168,8 +176,6 @@ internal final class UserNameView: OWBaseView {
         }
 
         userNameLabel.isUserInteractionEnabled = true
-        let labelTap = UITapGestureRecognizer(target: self, action: #selector(userNameTapped))
-        userNameLabel.addGestureRecognizer(labelTap)
     }
     
     private func configureSubscriberBadgeView() {
@@ -180,7 +186,7 @@ internal final class UserNameView: OWBaseView {
         }
     }
 
-    private func setupMoreButton() {
+    private func configureMoreButton() {
         let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
         moreButton.setImage(image, for: .normal)
         moreButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
@@ -189,7 +195,6 @@ internal final class UserNameView: OWBaseView {
             make.centerY.equalTo(userNameLabel)
             make.trailing.equalToSuperview()
         }
-        moreButton.addTarget(self, action: #selector(moreTapped), for: .touchUpInside)
     }
 
     private func configureSubtitleAndDateLabels() {
@@ -211,19 +216,23 @@ internal final class UserNameView: OWBaseView {
             make.trailing.lessThanOrEqualTo(moreButton.OWSnp.leading)
         }
     }
-
-    // MARK: - Actions
-
-    @objc
-    private func moreTapped() {
-        delegate?.moreButtonDidTapped(sender: moreButton)
+    
+    func setupObservers() {
+        
+        let tapGesture = UITapGestureRecognizer()
+        userNameLabel.addGestureRecognizer(tapGesture)
+        
+        tapGesture.rx.event.map { _ in
+            return
+        }
+        .bind(to: viewModel.inputs.tapUserName)
+        .disposed(by: disposeBag)
+        
+        moreButton.rx.tap.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.inputs.tapMore.onNext(self.moreButton)
+        }).disposed(by: disposeBag)
     }
-
-    @objc
-    private func userNameTapped() {
-        delegate?.userNameDidTapped()
-    }
-
 }
 
 // MARK: Accessibility
@@ -233,13 +242,6 @@ extension UserNameView {
     moreButton.accessibilityTraits = .button
     moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
   }
-}
-
-// MARK: - Delegate
-
-protocol UserNameViewDelegate: class {
-    func moreButtonDidTapped(sender: UIButton)
-    func userNameDidTapped()
 }
 
 // MARK: - Theme
