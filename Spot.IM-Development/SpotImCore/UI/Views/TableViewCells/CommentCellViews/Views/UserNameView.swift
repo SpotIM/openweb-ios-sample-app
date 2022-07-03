@@ -62,57 +62,6 @@ internal final class UserNameView: OWBaseView {
         dateLabel.backgroundColor = .spBackground0
         deletedMessageLabel.backgroundColor = .spBackground0
     }
-
-
-    func setDeletedOrReported(isDeleted: Bool, isReported: Bool) {
-        let showDeletedLabel = isDeleted || isReported
-        deletedMessageLabel.isHidden = !showDeletedLabel
-        userNameLabel.isHidden = showDeletedLabel
-        dateLabel.isHidden = showDeletedLabel
-        subtitleLabel.isHidden = showDeletedLabel
-        moreButton.isHidden = showDeletedLabel
-        badgeTagLabel.isHidden = showDeletedLabel
-        subscriberBadgeView.isHidden = showDeletedLabel
-        configureDeletedLabel(isReported: isReported)
-    }
-
-    func setUserName(
-        _ name: String?,
-        badgeTitle: String?,
-        contentType: ContentType,
-        isDeleted: Bool,
-        isOneLine: Bool = true) {
-
-        switch contentType {
-        case .comment:
-            userNameLabel.font = .preferred(style: .bold, of: Metrics.fontSize)
-
-        case .reply:
-            userNameLabel.font = .preferred(style: .medium, of: Metrics.fontSize)
-        }
-
-        userNameLabel.text = name
-        badgeTagLabel.text = badgeTitle
-        
-        subtitleToNameConstraint?.isActive = badgeTitle == nil ? true : false
-        nameAndBadgeStackview.axis = isOneLine ? .horizontal : .vertical
-        badgeTagLabel.isHidden = badgeTitle == nil
-        badgeTagLabel.textColor = .brandColor
-        badgeTagLabel.layer.borderColor = UIColor.brandColor.cgColor
-    }
-
-    /// Subtitle should contains `replying to` and `timestamp` information
-    func setSubtitle(_ subtitle: String?) {
-        subtitleLabel.text = subtitle
-    }
-
-    func setDate(_ date: String?) {
-        dateLabel.text = date
-    }
-
-    func setMoreButton(hidden: Bool) {
-        moreButton.isHidden = hidden
-    }
     
     func configure(with viewModel: OWUserNameViewModeling) {
         self.viewModel = viewModel
@@ -136,16 +85,17 @@ internal final class UserNameView: OWBaseView {
         configureMoreButton()
         configureSubtitleAndDateLabels()
         configureSubscriberBadgeView()
+        configureDeletedLabel()
         updateColorsAccordingToStyle()
     }
 
-    private func configureDeletedLabel(isReported: Bool = false) {
-        deletedMessageLabel.backgroundColor = .spBackground0
-
+    private func configureDeletedLabel() {
         deletedMessageLabel.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-
+    }
+    
+    private func getDeletedOrReportedAttributedString(with message: String) -> NSAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
@@ -158,8 +108,8 @@ internal final class UserNameView: OWBaseView {
             .paragraphStyle: paragraphStyle
         ]
 
-        deletedMessageLabel.attributedText = NSAttributedString(
-            string: LocalizationManager.localizedString(key: isReported ? "This message was reported." : "This message was deleted."),
+        return NSAttributedString(
+            string: message,
             attributes: attributes
         )
     }
@@ -177,6 +127,9 @@ internal final class UserNameView: OWBaseView {
         badgeTagLabel.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
         badgeTagLabel.layer.masksToBounds = true
         badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        badgeTagLabel.textColor = .brandColor
+        badgeTagLabel.layer.borderColor = UIColor.brandColor.cgColor
+        
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         self.addSubviews(nameAndBadgeStackview)
@@ -242,6 +195,72 @@ internal final class UserNameView: OWBaseView {
             guard let self = self else { return }
             self.viewModel.inputs.tapMore.onNext(self.moreButton)
         }).disposed(by: disposeBag)
+        
+        viewModel.outputs.showMoreButton
+            .map { !$0 } // Reverse
+            .bind(to: moreButton.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.showSubscriberBadge
+            .map { !$0 } // Reverse
+            .bind(to: subscriberBadgeView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.subtitleText
+            .bind(to: subtitleLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.subtitleText
+            .map { $0 == nil }
+            .bind(to: subtitleLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.dateText
+            .bind(to: dateLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.dateText
+            .map { $0 == nil }
+            .bind(to: dateLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.badgeTitle
+            .subscribe(onNext: { [weak self] title in
+                guard let self = self else { return }
+                self.badgeTagLabel.text = title
+                self.badgeTagLabel.isHidden = title == nil
+                self.badgeTagLabel.layer.isHidden = title == nil
+                self.subtitleToNameConstraint?.isActive = title == nil
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.nameText
+            .bind(to: userNameLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.nameTextStyle
+            .subscribe(onNext: { [weak self] style in
+                guard let self = self else { return }
+                self.userNameLabel.font(
+                    .preferred(style: style, of: Metrics.fontSize)
+                )
+            }).disposed(by: disposeBag)
+        
+        viewModel.outputs.isUsernameOneRow
+            .subscribe(onNext: { [weak self] isOneRow in
+                guard let self = self else { return }
+                self.nameAndBadgeStackview.axis = isOneRow ? .horizontal : .vertical
+            }).disposed(by: disposeBag)
+        
+        viewModel.outputs.deletedOrReportedText
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+                if let text = text {
+                    self.deletedMessageLabel.attributedText =
+                    self.getDeletedOrReportedAttributedString(with: text)
+                }
+                self.deletedMessageLabel.isHidden = text == nil
+            }).disposed(by: disposeBag)
     }
 }
 

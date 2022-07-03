@@ -39,10 +39,12 @@ final class OWCommentUserView: OWBaseView {
         disposeBag = DisposeBag()
         
         avatarImageView.configure(with: viewModel.outputs.avatarVM)
-        
         userNameView.configure(with: viewModel.outputs.userNameVM)
         
-        updateUserView(with: model)
+        let userViewHeight = model.usernameViewHeight()
+        userNameView.OWSnp.updateConstraints { make in
+            make.height.equalTo(userViewHeight)
+        }
     }
     
     func setDelegate(_ delegate: SPCommentCellDelegate?) {
@@ -75,32 +77,6 @@ final class OWCommentUserView: OWBaseView {
         userNameView.OWSnp.makeConstraints { make in
             make.trailing.top.equalToSuperview()
             make.height.equalTo(Metrics.userViewCollapsedHeight)
-        }
-    }
-    
-    private func updateUserView(with dataModel: CommentViewModel) {
-        userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
-        
-        userNameView.setUserName(
-            dataModel.displayName,
-            badgeTitle: dataModel.badgeTitle,
-            contentType: dataModel.replyingToCommentId == nil ? .comment : .reply,
-            isDeleted: dataModel.isDeletedOrReported(),
-            isOneLine: dataModel.isUsernameOneRow())
-        userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
-        userNameView.setSubtitle(
-            dataModel.replyingToDisplayName?.isEmpty ?? true
-                ? ""
-                : LocalizationManager.localizedString(key: "To") + " \(dataModel.replyingToDisplayName!)"
-        )
-        userNameView.setDate(
-            dataModel.replyingToDisplayName?.isEmpty ?? true
-                ? dataModel.timestamp
-                : " · ".appending(dataModel.timestamp ?? "")
-        )
-        let userViewHeight = dataModel.usernameViewHeight()
-        userNameView.OWSnp.updateConstraints { make in
-            make.height.equalTo(userViewHeight)
         }
     }
 }
