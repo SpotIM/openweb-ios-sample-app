@@ -16,6 +16,16 @@ internal final class UserNameView: OWBaseView {
         case comment, reply
     }
     
+    fileprivate struct Metrics {
+        static let fontSize: CGFloat = 16.0
+        static let labelFontSize: CGFloat = 12.0
+        static let usernameTrailingPadding: CGFloat = 25.0
+        static let badgeLeadingPadding: CGFloat = 4
+        static let badgeHorizontalInset: CGFloat = 4
+        static let badgeVerticalInset: CGFloat = 2
+        static let subtitleTopPadding: CGFloat = 6
+    }
+    
     fileprivate var viewModel: OWUserNameViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
@@ -75,10 +85,10 @@ internal final class UserNameView: OWBaseView {
 
         switch contentType {
         case .comment:
-            userNameLabel.font = .preferred(style: .bold, of: Theme.fontSize)
+            userNameLabel.font = .preferred(style: .bold, of: Metrics.fontSize)
 
         case .reply:
-            userNameLabel.font = .preferred(style: .medium, of: Theme.fontSize)
+            userNameLabel.font = .preferred(style: .medium, of: Metrics.fontSize)
         }
 
         userNameLabel.text = name
@@ -159,12 +169,12 @@ internal final class UserNameView: OWBaseView {
         nameAndBadgeStackview.addArrangedSubview(badgeTagLabel)
         nameAndBadgeStackview.axis = .horizontal
         nameAndBadgeStackview.alignment = .leading
-        nameAndBadgeStackview.spacing = Theme.badgeLeadingPadding
+        nameAndBadgeStackview.spacing = Metrics.badgeLeadingPadding
         
-        badgeTagLabel.font = .preferred(style: .medium, of: Theme.labelFontSize)
+        badgeTagLabel.font = .preferred(style: .medium, of: Metrics.labelFontSize)
         badgeTagLabel.layer.borderWidth = 1
         badgeTagLabel.layer.cornerRadius = 3
-        badgeTagLabel.insets = UIEdgeInsets(top: Theme.badgeVerticalInset, left: Theme.badgeHorizontalInset, bottom: Theme.badgeVerticalInset, right: Theme.badgeHorizontalInset)
+        badgeTagLabel.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
         badgeTagLabel.layer.masksToBounds = true
         badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -172,7 +182,7 @@ internal final class UserNameView: OWBaseView {
         self.addSubviews(nameAndBadgeStackview)
         nameAndBadgeStackview.OWSnp.makeConstraints { make in
             make.top.leading.equalToSuperview()
-            make.trailing.lessThanOrEqualToSuperview().offset(-Theme.usernameTrailingPadding)
+            make.trailing.lessThanOrEqualToSuperview().offset(-Metrics.usernameTrailingPadding)
         }
 
         userNameLabel.isUserInteractionEnabled = true
@@ -198,17 +208,17 @@ internal final class UserNameView: OWBaseView {
     }
 
     private func configureSubtitleAndDateLabels() {
-        subtitleLabel.font = .preferred(style: .regular, of: Theme.fontSize)
+        subtitleLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.isUserInteractionEnabled = false
         subtitleLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(nameAndBadgeStackview.OWSnp.bottom).offset(Theme.subtitleTopPadding)
+            make.top.equalTo(nameAndBadgeStackview.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
             make.leading.equalTo(userNameLabel)
             make.trailing.equalTo(dateLabel.OWSnp.leading)
         }
 
-        dateLabel.font = .preferred(style: .regular, of: Theme.fontSize)
+        dateLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
         dateLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         dateLabel.isUserInteractionEnabled = false
         dateLabel.OWSnp.makeConstraints { make in
@@ -242,17 +252,4 @@ extension UserNameView {
     moreButton.accessibilityTraits = .button
     moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
   }
-}
-
-// MARK: - Theme
-
-private enum Theme {
-    static let fontSize: CGFloat = 16.0
-    static let labelFontSize: CGFloat = 12.0
-    
-    static let usernameTrailingPadding: CGFloat = 25.0
-    static let badgeLeadingPadding: CGFloat = 4
-    static let badgeHorizontalInset: CGFloat = 4
-    static let badgeVerticalInset: CGFloat = 2
-    static let subtitleTopPadding: CGFloat = 6
 }
