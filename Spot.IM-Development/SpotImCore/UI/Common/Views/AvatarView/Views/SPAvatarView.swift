@@ -55,6 +55,9 @@ final class SPAvatarView: OWBaseView {
                 self?.updateAvatar(avatarImageType: avatarImageType)
             })
             .disposed(by: disposeBag)
+        
+        avatarButton.rx.tap.bind(to: viewModel.inputs.tapAvatar)
+            .disposed(by: disposeBag)
     }
     
     // Handle dark mode \ light mode change

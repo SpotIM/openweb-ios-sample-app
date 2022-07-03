@@ -38,11 +38,16 @@ final class OWCommentUserView: OWBaseView {
         self.viewModel = model.commentUserVM
         disposeBag = DisposeBag()
         
-        userNameView.configureSubscriberBadgeVM(viewModel: viewModel.outputs.subscriberBadgeVM)
         avatarImageView.configure(with: viewModel.outputs.avatarVM)
         
+        userNameView.configure(with: viewModel.outputs.userNameVM)
+        
         updateUserView(with: model)
-        updateAvatarView(with: model)
+    }
+    
+    func setDelegate(_ delegate: SPCommentCellDelegate?) {
+        guard let delegate = delegate else { return }
+        self.viewModel.inputs.setDelegate(delegate)
     }
     
     private func setupUI() {
@@ -58,7 +63,6 @@ final class OWCommentUserView: OWBaseView {
     }
     
     private func configureAvatarView() {
-        avatarImageView.delegate = self
         avatarImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Metrics.avatarImageViewTrailingOffset)
@@ -68,20 +72,19 @@ final class OWCommentUserView: OWBaseView {
     }
     
     private func configureUserNameView() {
-        userNameView.delegate = self
         userNameView.OWSnp.makeConstraints { make in
             make.trailing.top.equalToSuperview()
             make.height.equalTo(Metrics.userViewCollapsedHeight)
         }
     }
     
-    func updateUserView(with dataModel: CommentViewModel) {
+    private func updateUserView(with dataModel: CommentViewModel) {
         userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
         
         userNameView.setUserName(
             dataModel.displayName,
             badgeTitle: dataModel.badgeTitle,
-            contentType: .reply,
+            contentType: dataModel.replyingToCommentId == nil ? .comment : .reply,
             isDeleted: dataModel.isDeletedOrReported(),
             isOneLine: dataModel.isUsernameOneRow())
         userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
@@ -99,27 +102,5 @@ final class OWCommentUserView: OWBaseView {
         userNameView.OWSnp.updateConstraints { make in
             make.height.equalTo(userViewHeight)
         }
-    }
-    
-    func updateAvatarView(with dataModel: CommentViewModel) {
-        avatarImageView.configure(with: dataModel.commentUserVM.outputs.avatarVM)
-    }
-}
-
-extension OWCommentUserView: UserNameViewDelegate {
-    
-    func moreButtonDidTapped(sender: UIButton) {
-//        delegate?.moreTapped(for: commentId, replyingToID: replyingToId, sender: sender)
-    }
-    
-    func userNameDidTapped() {
-//        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: false)
-    }
-}
-
-extension OWCommentUserView: OWAvatarViewDelegate {
-    
-    func avatarDidTapped() {
-//        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
     }
 }

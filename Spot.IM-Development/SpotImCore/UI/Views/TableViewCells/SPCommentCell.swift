@@ -22,7 +22,11 @@ extension MessageItemContainable {
 
 internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable {
     
-    weak var delegate: SPCommentCellDelegate?
+    weak var delegate: SPCommentCellDelegate? {
+        didSet {
+            userView.setDelegate(delegate)
+        }
+    }
 
     let messageView: MessageContainerView = .init()
 

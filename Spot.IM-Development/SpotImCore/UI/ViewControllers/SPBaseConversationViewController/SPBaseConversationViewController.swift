@@ -553,20 +553,26 @@ extension SPBaseConversationViewController: UITableViewDataSource {
         } else if indexPath.row == 0 {
             let commentCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPCommentCell.self, for: indexPath)
             if let data = cellData(for: indexPath) {
-                commentCell.setup(with: data,
-                                  shouldShowHeader: indexPath.section != 0,
-                                  minimumVisibleReplies: model.dataSource.minVisibleReplies,
-                                  lineLimit: messageLineLimit,
-                                  isReadOnlyMode: isReadOnlyModeEnabled(),
-                                  windowWidth: self.view.window?.frame.width)
+                commentCell.setup(
+                    with: data,
+                    shouldShowHeader: indexPath.section != 0,
+                    minimumVisibleReplies: model.dataSource.minVisibleReplies,
+                    lineLimit: messageLineLimit,
+                    isReadOnlyMode: isReadOnlyModeEnabled(),
+                    windowWidth: self.view.window?.frame.width
+                )
             }
             commentCell.delegate = self
 
             return commentCell
         } else {
             let replyCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPReplyCell.self, for: indexPath)
-            replyCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
-                                  windowWidth: self.view.window?.frame.width)
+            replyCell.configure(
+                with: model.dataSource.cellData(for: indexPath),
+                lineLimit: messageLineLimit,
+                isReadOnlyMode: isReadOnlyModeEnabled(),
+                windowWidth: self.view.window?.frame.width
+            )
             replyCell.delegate = self
             
             return replyCell

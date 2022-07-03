@@ -13,6 +13,8 @@ import UIKit
 
 protocol OWAvatarViewModelingInputs {
     func configureUser(user: SPUser)
+    
+    var tapAvatar: PublishSubject<Void> { get }
 }
 
 protocol OWAvatarViewModelingOutputs {
@@ -35,6 +37,8 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     
     fileprivate let imageURLProvider: SPImageProvider?
+    
+    var tapAvatar = PublishSubject<Void>()
     
     init (user: SPUser? = nil,
           imageURLProvider: SPImageProvider?) {
