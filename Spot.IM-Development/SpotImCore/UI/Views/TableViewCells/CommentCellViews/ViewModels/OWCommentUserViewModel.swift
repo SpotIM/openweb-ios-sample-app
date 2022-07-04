@@ -13,8 +13,6 @@ import UIKit
 protocol OWCommentUserViewModelingInputs {
     func configure(with model: CommentViewModel)
     func setDelegate(_ delegate: SPCommentCellDelegate)
-    
-    var tapAuthor: PublishSubject<Bool> { get }
 }
 
 protocol OWCommentUserViewModelingOutputs {
@@ -54,8 +52,6 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     
-    var tapAuthor = PublishSubject<Bool>()
-    
     func configure(with model: CommentViewModel) {
         commentId = model.commentId
         replyToCommentId = model.replyingToCommentId
@@ -66,15 +62,13 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     func setDelegate(_ delegate: SPCommentCellDelegate) {
         self.delegate = delegate
     }
-    
+}
+
+fileprivate extension OWCommentUserViewModel {
     func setupObservers() {
         userNameVM.inputs.tapUserName.subscribe(onNext: { [weak self] _ in
-            self?.tapAuthor.onNext(false)
-        }).disposed(by: disposeBag)
-        
-        tapAuthor.subscribe(onNext: {  [weak self] isAvatarClicked in
             guard let self = self else { return }
-            self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: isAvatarClicked)
+            self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: false)
         }).disposed(by: disposeBag)
         
         userNameVM.inputs.tapMore.subscribe(onNext: { [weak self] sender in
