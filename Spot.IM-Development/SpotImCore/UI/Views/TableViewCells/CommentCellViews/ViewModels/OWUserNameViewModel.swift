@@ -20,16 +20,14 @@ protocol OWUserNameViewModelingInputs {
 protocol OWUserNameViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
     
-    var showMoreButton: Observable<Bool> { get }
-    var showSubscriberBadge: Observable<Bool> { get }
-    var nameText: Observable<String?> { get }
+    var showDeletedOrReportedMessage: Observable<Bool> { get }
+    var nameText: Observable<String> { get }
     var nameTextStyle: Observable<SPFontStyle> { get }
-    var subtitleText: Observable<String?> { get }
-    var dateText: Observable<String?> { get }
-    var badgeTitle: Observable<String?> { get }
+    var subtitleText: Observable<String> { get }
+    var dateText: Observable<String> { get }
+    var badgeTitle: Observable<String> { get }
     var isUsernameOneRow: Observable<Bool> { get }
-    var deletedOrReportedText: Observable<String?> { get }
-    
+    var deletedOrReportedText: Observable<String> { get }
 }
 
 protocol OWUserNameViewModeling {
@@ -59,23 +57,10 @@ class OWUserNameViewModel: OWUserNameViewModeling,
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     
-    var showMoreButton: Observable<Bool> {
-        _model
-            .unwrap()
-            .map { !$0.isDeletedOrReported() }
-    }
-    
-    var showSubscriberBadge: Observable<Bool> {
-        _model
-            .unwrap()
-            .map { !$0.isDeletedOrReported() }
-    }
-    
-    var subtitleText: Observable<String?> {
+    var subtitleText: Observable<String> {
         _model
             .unwrap()
             .map({ model -> String? in
-                if (model.isDeletedOrReported()) { return nil }
                 return model.replyingToDisplayName
             })
             .unwrap()
@@ -84,32 +69,29 @@ class OWUserNameViewModel: OWUserNameViewModeling,
             })
     }
     
-    var dateText: Observable<String?> {
+    var dateText: Observable<String> {
         _model
             .unwrap()
             .map({ model in
-                if (model.isDeletedOrReported()) { return nil }
+                let timestamp = model.timestamp ?? ""
                 return (model.replyingToDisplayName?.isEmpty ?? true)
-                    ? model.timestamp
-                    : " · ".appending(model.timestamp ?? "")
+                    ? timestamp : " · ".appending(timestamp)
             })
     }
     
-    var badgeTitle: Observable<String?> {
+    var badgeTitle: Observable<String> {
         _model
             .unwrap()
-            .map({ model -> String? in
-                if (model.isDeletedOrReported()) { return nil }
-                return model.badgeTitle
+            .map({ model -> String in
+                return (model.badgeTitle ?? "")
             })
     }
     
-    var nameText: Observable<String?> {
+    var nameText: Observable<String> {
         _model
             .unwrap()
-            .map({ model -> String? in
-                if (model.isDeletedOrReported()) { return nil }
-                return model.displayName
+            .map({ model -> String in
+                return (model.displayName ?? "")
             })
     }
     
@@ -125,14 +107,20 @@ class OWUserNameViewModel: OWUserNameViewModeling,
             .map { $0.isUsernameOneRow() }
     }
     
-    var deletedOrReportedText: Observable<String?> {
+    var deletedOrReportedText: Observable<String> {
         _model
             .unwrap()
             .map { model in
-                if (!model.isDeletedOrReported()) { return nil }
+                guard model.isDeletedOrReported() else { return "" }
                 let isReported = model.isReported
                 return LocalizationManager.localizedString(key: isReported ? "This message was reported." : "This message was deleted.")
             }
+    }
+    
+    var showDeletedOrReportedMessage: Observable<Bool> {
+        _model
+            .unwrap()
+            .map { $0.isDeletedOrReported() }
     }
     
     func configure(with model: CommentViewModel) {

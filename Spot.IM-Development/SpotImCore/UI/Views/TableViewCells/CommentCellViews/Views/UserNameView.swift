@@ -196,43 +196,35 @@ fileprivate extension UserNameView {
             self.viewModel.inputs.tapMore.onNext(self.moreButton)
         }).disposed(by: disposeBag)
         
-        viewModel.outputs.showMoreButton
-            .map { !$0 } // Reverse
-            .bind(to: moreButton.rx.isHidden)
-            .disposed(by: disposeBag)
-        
-        viewModel.outputs.showSubscriberBadge
-            .map { !$0 } // Reverse
-            .bind(to: subscriberBadgeView.rx.isHidden)
-            .disposed(by: disposeBag)
-        
         viewModel.outputs.subtitleText
             .bind(to: subtitleLabel.rx.text)
-            .disposed(by: disposeBag)
-        
-        viewModel.outputs.subtitleText
-            .map { $0 == nil }
-            .bind(to: subtitleLabel.rx.isHidden)
             .disposed(by: disposeBag)
         
         viewModel.outputs.dateText
             .bind(to: dateLabel.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.dateText
-            .map { $0 == nil }
-            .bind(to: dateLabel.rx.isHidden)
-            .disposed(by: disposeBag)
-        
         viewModel.outputs.badgeTitle
             .subscribe(onNext: { [weak self] title in
                 guard let self = self else { return }
                 self.badgeTagLabel.text = title
-                self.badgeTagLabel.isHidden = title == nil
-                self.badgeTagLabel.layer.isHidden = title == nil
-                self.subtitleToNameConstraint?.isActive = title == nil
+                self.badgeTagLabel.isHidden = title.isEmpty
+                self.badgeTagLabel.layer.isHidden = title.isEmpty
+                self.subtitleToNameConstraint?.isActive = !title.isEmpty
             })
             .disposed(by: disposeBag)
+        
+        viewModel.outputs.showDeletedOrReportedMessage
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self = self else { return }
+                self.userNameLabel.isHidden = shouldShow
+                self.dateLabel.isHidden = shouldShow
+                self.moreButton.isHidden = shouldShow
+                self.subscriberBadgeView.isHidden = shouldShow
+                
+                self.deletedMessageLabel.isHidden = !shouldShow
+                
+            }).disposed(by: disposeBag)
         
         viewModel.outputs.nameText
             .bind(to: userNameLabel.rx.text)
@@ -255,11 +247,8 @@ fileprivate extension UserNameView {
         viewModel.outputs.deletedOrReportedText
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
-                if let text = text {
-                    self.deletedMessageLabel.attributedText =
-                    self.getDeletedOrReportedAttributedString(with: text)
-                }
-                self.deletedMessageLabel.isHidden = text == nil
+                self.deletedMessageLabel.attributedText =
+                self.getDeletedOrReportedAttributedString(with: text)
             }).disposed(by: disposeBag)
     }
 }
