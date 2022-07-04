@@ -396,7 +396,7 @@ protocol SPCommentCellDelegate: AnyObject {
     func hideReplies(for commentId: String?)
     func changeRank(with change: SPRankChange, for commentId: String?, with replyingToID: String?)
     func replyTapped(for commentId: String?)
-    func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton)
+    func moreTapped(for commentId: String?, replyingToID: String?, sender: OWUISource)
     func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool)
     func showMoreText(for commentId: String?)
     func showLessText(for commentId: String?)

@@ -45,7 +45,7 @@ internal final class UserNameView: OWBaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        setupUI()
+        setupViews()
         applyAccessibility()
     }
     
@@ -71,50 +71,27 @@ internal final class UserNameView: OWBaseView {
         
         setupObservers()
     }
-    
-    // MARK: - Private
+}
 
-    private func setupUI() {
+fileprivate extension UserNameView {
+    func setupViews() {
         addSubviews(deletedMessageLabel,
                     userNameLabel,
                     badgeTagLabel,
                     moreButton,
                     subtitleLabel,
-                    dateLabel)
-        configureNameAndBadgeStackView()
-        configureMoreButton()
-        configureSubtitleAndDateLabels()
-        configureSubscriberBadgeView()
-        configureDeletedLabel()
-        updateColorsAccordingToStyle()
-    }
-
-    private func configureDeletedLabel() {
+                    dateLabel,
+                    nameAndBadgeStackview,
+                    subscriberBadgeView)
+        
+        // Setup deleted label
+        
         deletedMessageLabel.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-    }
-    
-    private func getDeletedOrReportedAttributedString(with message: String) -> NSAttributedString {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = 0
-        paragraphStyle.lineSpacing = 3.5
-        paragraphStyle.updateAlignment()
         
-        var attributes: [NSAttributedString.Key: Any]
-        attributes = [
-            .foregroundColor: UIColor.spForeground3,
-            .font: UIFont.preferred(style: .regularItalic, of: 17.0),
-            .paragraphStyle: paragraphStyle
-        ]
-
-        return NSAttributedString(
-            string: message,
-            attributes: attributes
-        )
-    }
-
-    private func configureNameAndBadgeStackView() {
+        // Setup name and badge stack view
+        
         nameAndBadgeStackview.addArrangedSubview(userNameLabel)
         nameAndBadgeStackview.addArrangedSubview(badgeTagLabel)
         nameAndBadgeStackview.axis = .horizontal
@@ -132,24 +109,22 @@ internal final class UserNameView: OWBaseView {
         
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
-        self.addSubviews(nameAndBadgeStackview)
         nameAndBadgeStackview.OWSnp.makeConstraints { make in
             make.top.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview().offset(-Metrics.usernameTrailingPadding)
         }
-
         userNameLabel.isUserInteractionEnabled = true
-    }
-    
-    private func configureSubscriberBadgeView() {
+        
+        // Setup subscriber badge
+        
         self.addSubviews(subscriberBadgeView)
         subscriberBadgeView.OWSnp.makeConstraints { make in
             make.top.equalTo(nameAndBadgeStackview)
             make.leading.equalTo(nameAndBadgeStackview.OWSnp.trailing).offset(5.0)
         }
-    }
-
-    private func configureMoreButton() {
+        
+        // Setup more button
+        
         let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
         moreButton.setImage(image, for: .normal)
         moreButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
@@ -158,9 +133,9 @@ internal final class UserNameView: OWBaseView {
             make.centerY.equalTo(userNameLabel)
             make.trailing.equalToSuperview()
         }
-    }
-
-    private func configureSubtitleAndDateLabels() {
+        
+        // Setup subtitle label
+        
         subtitleLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -171,6 +146,7 @@ internal final class UserNameView: OWBaseView {
             make.trailing.equalTo(dateLabel.OWSnp.leading)
         }
 
+        // Setup date label
         dateLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
         dateLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         dateLabel.isUserInteractionEnabled = false
@@ -178,10 +154,34 @@ internal final class UserNameView: OWBaseView {
             make.top.equalTo(subtitleLabel)
             make.trailing.lessThanOrEqualTo(moreButton.OWSnp.leading)
         }
+        
+        
+        // Update colors
+        
+        self.updateColorsAccordingToStyle()
+    }
+
+    
+    func getDeletedOrReportedAttributedString(with message: String) -> NSAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.firstLineHeadIndent = 0
+        paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.updateAlignment()
+        
+        var attributes: [NSAttributedString.Key: Any]
+        attributes = [
+            .foregroundColor: UIColor.spForeground3,
+            .font: UIFont.preferred(style: .regularItalic, of: 17.0),
+            .paragraphStyle: paragraphStyle
+        ]
+
+        return NSAttributedString(
+            string: message,
+            attributes: attributes
+        )
     }
     
     func setupObservers() {
-        
         let tapGesture = UITapGestureRecognizer()
         userNameLabel.addGestureRecognizer(tapGesture)
         
