@@ -31,7 +31,7 @@ final class OWCommentUserView: OWBaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setupUI()
+        setupViews()
     }
     
     func configure(with model: CommentViewModel) {
@@ -52,28 +52,28 @@ final class OWCommentUserView: OWBaseView {
         self.viewModel.inputs.setDelegate(delegate)
     }
     
-    private func setupUI() {
-        addSubviews(avatarImageView, userNameView)
-        configureAvatarView()
-        configureUserNameView()
-    }
-    
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         userNameView.updateColorsAccordingToStyle()
         avatarImageView.updateColorsAccordingToStyle()
     }
-    
-    private func configureAvatarView() {
+}
+
+fileprivate extension OWCommentUserView {
+    func setupViews() {
+        addSubviews(avatarImageView, userNameView)
+        
+        // Setup avatar
+        
         avatarImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Metrics.avatarImageViewTrailingOffset)
             make.top.equalTo(userNameView)
             make.size.equalTo(Metrics.avatarSideSize)
         }
-    }
-    
-    private func configureUserNameView() {
+        
+        // Setup user name view
+        
         userNameView.OWSnp.makeConstraints { make in
             make.trailing.top.equalToSuperview()
             make.height.equalTo(Metrics.userViewCollapsedHeight)

@@ -14,7 +14,7 @@ protocol OWUserNameViewModelingInputs {
     func configure(with model: CommentViewModel)
     
     var tapUserName: PublishSubject<Void> { get }
-    var tapMore: PublishSubject<UIButton> { get }
+    var tapMore: PublishSubject<OWUISource> { get }
 }
 
 protocol OWUserNameViewModelingOutputs {
@@ -55,7 +55,7 @@ class OWUserNameViewModel: OWUserNameViewModeling,
     }
     
     var tapUserName = PublishSubject<Void>()
-    var tapMore = PublishSubject<UIButton>()
+    var tapMore = PublishSubject<OWUISource>()
     
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     
