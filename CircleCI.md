@@ -4,7 +4,15 @@
 
 We integrate our code with CircleCI so that every `git push` will trigger a build.
 
-We currently support 5 types of "jobs":
+
+We currently support 2 types of "workflows":
+
+1. independent_job_workflow - a workflow to trigget each job independently 
+
+2. release_multi_workflow - build the SDK XCFramework on multiple Xcode versions. Basically trigger `release_sdk_job` and multiple `release_tag_job` for different Xcode versions. Triggered by any branch that matches `/^release/multi/.*/` for example `release/multi/4.2.8`
+
+
+We currently support 4 types of "jobs":
 
 1. default_job - build the app scheme and run unit-tests on the SDK. Triggered by any branch that DOES NOT match `/^release/.*/`
 
@@ -14,7 +22,6 @@ We currently support 5 types of "jobs":
 
 4. release_app_job - build the Sample App and release a new version to Test-Flight. Triggered by any branch that matches `/^release/app/.*/` for example `release/app/4.2.8`
 
-5. release_multi_job - build the SDK XCFramework on multiple Xcode versions. Basically trigger `release_sdk_job` and multiple `release_tag_job` for a preset of Xcode versions. Triggered by any branch that matches `/^release/multi/.*/` for example `release/multi/4.2.8`
 
 ## default_job
 
@@ -54,7 +61,7 @@ build the app scheme and run unit-tests on the SDK. If one of those fail the job
 3. Release the sample app - upload to Test Flight and automatically notify internal testers.
 
 
-## release_multi_job
+## release_multi_workflow
 
 1. grep the version from the branch name.
 
