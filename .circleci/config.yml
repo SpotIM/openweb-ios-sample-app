@@ -20,7 +20,7 @@ references:
       xcode: "13.3.0"
     working_directory: ~/project/Spot.IM-Development
     
-      ios_config_xcode_13_4: &ios_config_xcode_13_4
+  ios_config_xcode_13_4: &ios_config_xcode_13_4
     macos:
       xcode: "13.4.0"
     working_directory: ~/project/Spot.IM-Development
