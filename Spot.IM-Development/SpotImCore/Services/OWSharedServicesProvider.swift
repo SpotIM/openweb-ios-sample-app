@@ -11,6 +11,9 @@ import UIKit
 
 protocol OWSharedServicesProviderConfigure {
     func configureLogger(logLevel: OWLogLevel, logMethods: [OWLogMethod])
+    func set(spotId: SpotId)
+    // If spotId re-set, this function should be called to re-prepare all the services which require a spotId
+    func change(spotId: SpotId)
 }
 
 protocol OWSharedServicesProviding: AnyObject {
@@ -25,6 +28,8 @@ protocol OWSharedServicesProviding: AnyObject {
     // Remove this migration service within half a year from now
     func keychainMigrationService() -> OWKeychainMigrationServicing
     func userDefaults() -> OWUserDefaultsProtocol
+    func realtimeService() -> OWRealtimeServicing
+    func spotConfigurationService() -> OWSpotConfigurationServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -81,6 +86,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWUserDefaults(servicesProvider: self)
     }()
     
+    fileprivate lazy var _realtimeService: OWRealtimeServicing = {
+        return OWRealtimeService(servicesProvider: self)
+    }()
+    
+    fileprivate lazy var _spotConfigurationService: OWSpotConfigurationServicing = {
+        return OWSpotConfigurationService(servicesProvider: self)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -116,6 +129,14 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func userDefaults() -> OWUserDefaultsProtocol {
         return _userDefaults
     }
+    
+    func realtimeService() -> OWRealtimeServicing {
+        return _realtimeService
+    }
+    
+    func spotConfigurationService() -> OWSpotConfigurationServicing {
+        return _spotConfigurationService
+    }
 }
 
 // Configure
@@ -123,5 +144,14 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     func configureLogger(logLevel level: OWLogLevel, logMethods methods: [OWLogMethod]) {
         _logger = OWLogger(logLevel: level, logMethods: methods)
         _logger.log(level: .verbose, "Logger re-initialized with new configuration")
+    }
+    
+    func set(spotId: SpotId) {
+        
+    }
+    
+    func change(spotId : SpotId) {
+        // Stop / re-create services which depend on spot id
+        _realtimeService.stopFetchingData()
     }
 }
