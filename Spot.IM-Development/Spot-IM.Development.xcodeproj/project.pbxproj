@@ -114,7 +114,6 @@
 		3D20A39727B022D7003F8513 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39627B022D7003F8513 /* UIView+Extensions.swift */; };
 		3D20A39927B0243D003F8513 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39827B0243D003F8513 /* Debugging.swift */; };
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
-		3D29A2D9283AD339002BE318 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D29A2D8283AD339002BE318 /* Retry.swift */; };
 		3D29A2DC283BA544002BE318 /* SilentSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */; };
 		3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */; };
 		3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C052852482D007420AD /* UIImageView+URL.swift */; };
@@ -487,7 +486,6 @@
 		3D20A39627B022D7003F8513 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		3D20A39827B0243D003F8513 /* Debugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
 		3D20A39A27B0258D003F8513 /* Typealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
-		3D29A2D8283AD339002BE318 /* Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Retry.swift; sourceTree = "<group>"; };
 		3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentSSOAuthentication.swift; sourceTree = "<group>"; };
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRenewerService.swift; sourceTree = "<group>"; };
@@ -1667,7 +1665,6 @@
 				441165A22375C3E700B781F3 /* OWResult.swift */,
 				449F5F73237C5D7300F81EA3 /* OWMulticastDelegate.swift */,
 				3D9C5825281AF64F002D0FCB /* OWFiles.swift */,
-				3D29A2D8283AD339002BE318 /* Retry.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2565,7 +2562,6 @@
 				241B075C2643D99200253944 /* GifWebView.swift in Sources */,
 				3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */,
 				445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */,
-				3D29A2D9283AD339002BE318 /* Retry.swift in Sources */,
 				3DD72C78280EF99300117946 /* OWResponseLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
