@@ -16,8 +16,9 @@ enum OWConversationCoordinatorResult {
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
     
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
-        let conversationVM: OWConversationViewModeling = OWConversationViewModel()
-        let conversationVC = OWConversationVC(viewModel: conversationVM)
+        // TODO: complete the flow
+//        let conversationVM: OWConversationViewModeling = OWConversationViewModel()
+//        let conversationVC = OWConversationVC(viewModel: conversationVM)
         return .empty()
     }
     

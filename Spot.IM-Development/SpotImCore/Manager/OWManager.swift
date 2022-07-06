@@ -9,11 +9,6 @@
 import Foundation
 import RxSwift
 
-// Will be a public protocol which expose the different layers of the manager
-protocol OWManagerProtocol {
-    var spotId: SpotId { get set }
-}
-
 // Internal protocol
 protocol OWManagerInternalProtocol: AnyObject  {
     var currentSpotId: Observable<SpotId> { get }
@@ -26,13 +21,19 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     static let manager = OWManager()
     
     // Memebers variables
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
+    let analyticsLayer: OWAnalytics
+    let uiLayer: OWUILayer
     fileprivate let _currentSpotId = BehaviorSubject<SpotId?>(value: nil)
     fileprivate var _currentNonRxSpotId: SpotId? = nil
-    fileprivate let disposeBag = DisposeBag()
     
-    private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+                 analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
+                 uiLayer: OWUILayer = OWUILayer()) {
         self.servicesProvider = servicesProvider
+        self.analyticsLayer = analyticsLayer
+        self.uiLayer = uiLayer
         setupObservers()
     }
 }
