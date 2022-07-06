@@ -10,14 +10,14 @@ import Foundation
 import RxSwift
 
 protocol OWSpotConfigurationServicing {
-    func config(spotId: SpotId) -> Observable<SPSpotConfiguration>
-    func spotChanged(spotId: SpotId)
+    func config(spotId: OWSpotId) -> Observable<SPSpotConfiguration>
+    func spotChanged(spotId: OWSpotId)
 }
 
 class OWSpotConfigurationService: OWSpotConfigurationServicing {
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     // Cache config for half an hour
-    fileprivate let cacheConfigService = OWCacheService<SpotId, SPSpotConfiguration>(expirationStrategy: .time(lifetime: 30 * 60))
+    fileprivate let cacheConfigService = OWCacheService<OWSpotId, SPSpotConfiguration>(expirationStrategy: .time(lifetime: 30 * 60))
     fileprivate var disposeBag: DisposeBag? = DisposeBag()
     fileprivate let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
     fileprivate let _configWhichJustFetched = BehaviorSubject<SPSpotConfiguration?>(value: nil)
@@ -31,7 +31,7 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
         self.servicesProvider = servicesProvider
     }
     
-    func config(spotId: SpotId) -> Observable<SPSpotConfiguration> {
+    func config(spotId: OWSpotId) -> Observable<SPSpotConfiguration> {
         if let cacheConfig = cacheConfigService[spotId] {
             // Return cache configuration
             return .just(cacheConfig)
@@ -50,7 +50,7 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
         }
     }
     
-    func spotChanged(spotId: SpotId) {
+    func spotChanged(spotId: OWSpotId) {
         // Dispose any current network requests if exist
         disposeBag = nil
         isCurrentlyFetching.onNext(false)
@@ -60,7 +60,7 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
 }
 
 fileprivate extension OWSpotConfigurationService {
-    func fetchConfig(spotId: SpotId) {
+    func fetchConfig(spotId: OWSpotId) {
         // Fetch from API
         let api: OWConfigurationAPI = self.servicesProvider.netwokAPI().configuration
         

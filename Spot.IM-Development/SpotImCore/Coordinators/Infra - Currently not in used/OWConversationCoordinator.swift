@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 enum OWConversationCoordinatorResult {
-    case openCommentCreation(postId: PostId)
+    case openCommentCreation(postId: OWPostId)
 }
 
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
