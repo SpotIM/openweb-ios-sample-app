@@ -13,7 +13,7 @@ import RxSwift
 // TODO: Complete OWConfigurationEndpoint
 
 enum OWConfigurationEndpoint: OWEndpoint {
-    case fetchConfig(spotId: SpotId)
+    case fetchConfig(spotId: OWSpotId)
     
     // MARK: - HTTPMethod
     var method: HTTPMethod {
@@ -41,14 +41,14 @@ enum OWConfigurationEndpoint: OWEndpoint {
 }
 
 protocol OWConfigurationAPI {
-    func fetchConfig(spotId: SpotId) -> OWNetworkResponse<SPSpotConfiguration>
+    func fetchConfig(spotId: OWSpotId) -> OWNetworkResponse<SPSpotConfiguration>
 }
 
 extension OWNetworkAPI: OWConfigurationAPI {
     // Access by .realtime for readability
     var configuration: OWConfigurationAPI { return self }
     
-    func fetchConfig(spotId: SpotId) -> OWNetworkResponse<SPSpotConfiguration> {
+    func fetchConfig(spotId: OWSpotId) -> OWNetworkResponse<SPSpotConfiguration> {
         let endpoint = OWConfigurationEndpoint.fetchConfig(spotId: spotId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
