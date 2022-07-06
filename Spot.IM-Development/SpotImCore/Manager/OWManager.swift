@@ -11,7 +11,7 @@ import RxSwift
 
 // Internal protocol
 protocol OWManagerInternalProtocol: AnyObject  {
-    var currentSpotId: Observable<SpotId> { get }
+    var currentSpotId: Observable<OWSpotId> { get }
 }
 
 class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
@@ -25,8 +25,8 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     fileprivate let servicesProvider: OWSharedServicesProviding
     let analyticsLayer: OWAnalytics
     let uiLayer: OWUILayer
-    fileprivate let _currentSpotId = BehaviorSubject<SpotId?>(value: nil)
-    fileprivate var _currentNonRxSpotId: SpotId? = nil
+    fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
+    fileprivate var _currentNonRxSpotId: OWSpotId? = nil
     
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
@@ -40,7 +40,7 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
 
 // Will be public extension
 extension OWManager {
-    var spotId: SpotId {
+    var spotId: OWSpotId {
         get {
            return _currentNonRxSpotId ?? ""
         }
@@ -53,7 +53,7 @@ extension OWManager {
     
 // Internal extension
 extension OWManager {
-    var currentSpotId: Observable<SpotId> {
+    var currentSpotId: Observable<OWSpotId> {
         return _currentSpotId
             .unwrap()
             .asObservable()
