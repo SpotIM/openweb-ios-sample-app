@@ -115,6 +115,7 @@
 		3D08E0B4287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B3287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift */; };
 		3D08E0B6287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B5287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift */; };
 		3D08E0B8287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B7287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift */; };
+		3D08E0BA287AF3BC00E6F1AC /* OWObservableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B9287AF3BC00E6F1AC /* OWObservableArray.swift */; };
 		3D100D95286DD17100AA4F85 /* OWTypealiasesFundamentals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D94286DD17100AA4F85 /* OWTypealiasesFundamentals.swift */; };
 		3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */; };
 		3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoint.swift */; };
@@ -529,6 +530,7 @@
 		3D08E0B3287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxCollectionViewSectionedReloadDataSource.swift; sourceTree = "<group>"; };
 		3D08E0B5287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCollectionViewSectionedDataSource.swift; sourceTree = "<group>"; };
 		3D08E0B7287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxCollectionViewSectionedAnimatedDataSource.swift; sourceTree = "<group>"; };
+		3D08E0B9287AF3BC00E6F1AC /* OWObservableArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWObservableArray.swift; sourceTree = "<group>"; };
 		3D100D94286DD17100AA4F85 /* OWTypealiasesFundamentals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTypealiasesFundamentals.swift; sourceTree = "<group>"; };
 		3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpotConfigurationService.swift; sourceTree = "<group>"; };
 		3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConfigurationEndpoint.swift; sourceTree = "<group>"; };
@@ -1894,6 +1896,7 @@
 				441165A22375C3E700B781F3 /* OWResult.swift */,
 				449F5F73237C5D7300F81EA3 /* OWMulticastDelegate.swift */,
 				3D9C5825281AF64F002D0FCB /* OWFiles.swift */,
+				3D08E0B9287AF3BC00E6F1AC /* OWObservableArray.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2803,6 +2806,7 @@
 				3D20A36327B00B8A003F8513 /* OWLayoutConstraintItem.swift in Sources */,
 				3D20A38927B01FAF003F8513 /* OWConstraintOffsetTarget.swift in Sources */,
 				3DD72C7A280EFA0200117946 /* OWNetworkAPI.swift in Sources */,
+				3D08E0BA287AF3BC00E6F1AC /* OWObservableArray.swift in Sources */,
 				445418B423685154001D0ED0 /* IndexPath+SPExtensions.swift in Sources */,
 				44F247A52379B23100B36F12 /* OWBaseScrollView.swift in Sources */,
 				3D20A39127B0219A003F8513 /* OWConstraintRelatableTarget.swift in Sources */,
