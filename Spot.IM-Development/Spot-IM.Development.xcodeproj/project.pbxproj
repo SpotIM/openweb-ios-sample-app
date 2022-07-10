@@ -112,6 +112,9 @@
 		3D08E0AD2877216B00E6F1AC /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0AC2877216B00E6F1AC /* Optional+Extensions.swift */; };
 		3D08E0AF287721A400E6F1AC /* OWDifferentiatorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0AE287721A400E6F1AC /* OWDifferentiatorError.swift */; };
 		3D08E0B1287722F700E6F1AC /* UI+OWSectionedViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B0287722F700E6F1AC /* UI+OWSectionedViewType.swift */; };
+		3D08E0B4287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B3287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift */; };
+		3D08E0B6287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B5287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift */; };
+		3D08E0B8287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0B7287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift */; };
 		3D100D95286DD17100AA4F85 /* OWTypealiasesFundamentals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D94286DD17100AA4F85 /* OWTypealiasesFundamentals.swift */; };
 		3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */; };
 		3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoint.swift */; };
@@ -523,6 +526,9 @@
 		3D08E0AC2877216B00E6F1AC /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		3D08E0AE287721A400E6F1AC /* OWDifferentiatorError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWDifferentiatorError.swift; sourceTree = "<group>"; };
 		3D08E0B0287722F700E6F1AC /* UI+OWSectionedViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UI+OWSectionedViewType.swift"; sourceTree = "<group>"; };
+		3D08E0B3287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxCollectionViewSectionedReloadDataSource.swift; sourceTree = "<group>"; };
+		3D08E0B5287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCollectionViewSectionedDataSource.swift; sourceTree = "<group>"; };
+		3D08E0B7287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxCollectionViewSectionedAnimatedDataSource.swift; sourceTree = "<group>"; };
 		3D100D94286DD17100AA4F85 /* OWTypealiasesFundamentals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTypealiasesFundamentals.swift; sourceTree = "<group>"; };
 		3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpotConfigurationService.swift; sourceTree = "<group>"; };
 		3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConfigurationEndpoint.swift; sourceTree = "<group>"; };
@@ -1186,6 +1192,9 @@
 				3D08E0A428771B0900E6F1AC /* OWRxTableViewSectionedAnimatedDataSource.swift */,
 				3D08E0A22877164C00E6F1AC /* OWRxTableViewSectionedReloadDataSource.swift */,
 				3D08E09C28770FFD00E6F1AC /* OWTableViewSectionedDataSource.swift */,
+				3D08E0B7287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift */,
+				3D08E0B3287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift */,
+				3D08E0B5287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift */,
 				3D08E0B0287722F700E6F1AC /* UI+OWSectionedViewType.swift */,
 				3D08E0A628771B9D00E6F1AC /* OWViewTransition.swift */,
 				3D08E09E287712A100E6F1AC /* OWRxDataSourceError.swift */,
@@ -2625,11 +2634,13 @@
 				4454181B23685144001D0ED0 /* OWCommentActionsView.swift in Sources */,
 				445417FE23685144001D0ED0 /* NSAttributedString+Extensions.swift in Sources */,
 				3DD72C7D280F053A00117946 /* OWSession.swift in Sources */,
+				3D08E0B8287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift in Sources */,
 				169D58E727D4E4E9009936F3 /* OWCommentActionsViewModel.swift in Sources */,
 				2440DD0826A98DED00001462 /* SPShowCommentsButton.swift in Sources */,
 				16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */,
 				3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */,
 				3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */,
+				3D08E0B6287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift in Sources */,
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
 				4454187A23685154001D0ED0 /* SPConfigsDataSource.swift in Sources */,
 				449F5F74237C5D7300F81EA3 /* OWMulticastDelegate.swift in Sources */,
@@ -2763,6 +2774,7 @@
 				4454188F23685154001D0ED0 /* SPNetworkExtensions.swift in Sources */,
 				4454189123685154001D0ED0 /* SPPaginationPage.swift in Sources */,
 				4454189723685154001D0ED0 /* SPConfigurationRealtime.swift in Sources */,
+				3D08E0B4287AF0FF00E6F1AC /* OWRxCollectionViewSectionedReloadDataSource.swift in Sources */,
 				445417F723685144001D0ED0 /* UIButton+Extensions.swift in Sources */,
 				4454188723685154001D0ED0 /* SPFailureReportRequest.swift in Sources */,
 				4454188923685154001D0ED0 /* SPRequest.swift in Sources */,
