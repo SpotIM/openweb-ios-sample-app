@@ -151,7 +151,6 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             switch result {
                             case .success(let comment):
                                 SPUserSessionHolder.freezeDisplayNameIfNeeded()
-                                // TODO - shold get from server!!!
                                 success(comment)
                             case .failure(let error):
                                 let rawReport = RawReportModel(

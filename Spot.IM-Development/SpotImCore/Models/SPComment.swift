@@ -12,7 +12,7 @@ internal struct SPComment: Decodable, Equatable {
     
     enum CodingKeys: String, CodingKey {
         case id, parentId, rootComment, depth, userId, writtenAt, time, repliesCount, totalRepliesCount, offset,
-        status, hasNext, edited, deleted, published, rank, content, users, replies, isReply, additionalData, conversation
+        status, hasNext, edited, deleted, published, rank, content, users, replies, isReply, additionalData, strictMode
     }
     
     var id: String?
