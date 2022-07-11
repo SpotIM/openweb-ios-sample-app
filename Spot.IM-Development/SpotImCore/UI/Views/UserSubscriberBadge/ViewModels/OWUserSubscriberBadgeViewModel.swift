@@ -34,11 +34,11 @@ class OWUserSubscriberBadgeViewModel: OWUserSubscriberBadgeViewModeling,
     
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     fileprivate var subscriberBadgeConfig: OWSubscriberBadgeConfiguration?
-    fileprivate var subscriberBadgeService: SubscriberBadgeServicing!
+    fileprivate var subscriberBadgeService: OWSubscriberBadgeServicing!
     
     init (user: SPUser? = nil,
           subscriberBadgeConfig: OWSubscriberBadgeConfiguration? = SPConfigsDataSource.appConfig?.conversation?.subscriberBadgeConfig,
-          subscriberBadgeService: SubscriberBadgeServicing = SubscriberBadgeService()) {
+          subscriberBadgeService: OWSubscriberBadgeServicing = OWSubscriberBadgeService()) {
         self.subscriberBadgeService = subscriberBadgeService
         self.subscriberBadgeConfig = subscriberBadgeConfig
         

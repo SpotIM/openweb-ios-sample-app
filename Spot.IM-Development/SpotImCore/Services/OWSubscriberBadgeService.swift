@@ -1,5 +1,5 @@
 //
-//  SubscriberBadgeService.swift
+//  OWSubscriberBadgeService.swift
 //  SpotImCore
 //
 //  Created by Tomer Ben Rachel on 01/02/2022.
@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 
-protocol SubscriberBadgeServicing {
+protocol OWSubscriberBadgeServicing {
     func badgeImage(config: OWSubscriberBadgeConfiguration) -> Observable<UIImage>
 }
 
-class SubscriberBadgeService: SubscriberBadgeServicing {
+class OWSubscriberBadgeService: OWSubscriberBadgeServicing {
     
     fileprivate struct URLS {
         static let subscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL)\(SPImageRequestConstants.iconsPathComponent)"
@@ -22,7 +22,7 @@ class SubscriberBadgeService: SubscriberBadgeServicing {
     }
 
     
-    fileprivate enum SubscriberBadgeIconType: String {
+    fileprivate enum OWSubscriberBadgeIconType: String {
         case regular = "fa-regular"
         case solid = "fa-solid"
         case brands = "fa-brands"
@@ -47,7 +47,7 @@ class SubscriberBadgeService: SubscriberBadgeServicing {
     
     func badgeImage(config: OWSubscriberBadgeConfiguration) -> Observable<UIImage> {
         
-        let iconType = SubscriberBadgeIconType(rawValue: config.type) ?? SubscriberBadgeIconType.custom
+        let iconType = OWSubscriberBadgeIconType(rawValue: config.type) ?? OWSubscriberBadgeIconType.custom
         let iconUrl = iconType.buildUrl(config: config)
         
         return UIImage.load(with: iconUrl)
