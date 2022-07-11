@@ -180,14 +180,14 @@ fileprivate extension UserNameView {
             attributes: attributes
         )
     }
-    
+}
+
+fileprivate extension UserNameView {
     func setupObservers() {
         let tapGesture = UITapGestureRecognizer()
         userNameLabel.addGestureRecognizer(tapGesture)
         
-        tapGesture.rx.event.map { _ in
-            return
-        }
+        tapGesture.rx.event.voidify()
         .bind(to: viewModel.inputs.tapUserName)
         .disposed(by: disposeBag)
         
@@ -205,16 +205,22 @@ fileprivate extension UserNameView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.badgeTitle
+            .bind(to: badgeTagLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.badgeTitle
+            .map { $0.isEmpty }
+            .bind(to: badgeTagLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.badgeTitle
             .subscribe(onNext: { [weak self] title in
                 guard let self = self else { return }
-                self.badgeTagLabel.text = title
-                self.badgeTagLabel.isHidden = title.isEmpty
-                self.badgeTagLabel.layer.isHidden = title.isEmpty
                 self.subtitleToNameConstraint?.isActive = !title.isEmpty
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.showDeletedOrReportedMessage
+        viewModel.outputs.shouldShowDeletedOrReportedMessage
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
                 self.userNameLabel.isHidden = shouldShow

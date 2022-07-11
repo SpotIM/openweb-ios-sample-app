@@ -20,6 +20,8 @@ protocol OWAvatarViewModelingInputs {
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var showOnlineIndicator: Observable<Bool> { get }
+    
+    var avatarTapped: Observable<Void> { get }
 }
 
 protocol OWAvatarViewModeling {
@@ -72,6 +74,11 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                 let isUserOnline = (user.online ?? false) || isCurrentUser
                 return isUserOnline && !shouldDisableOnlineIndicator
             }
+    }
+    
+    var avatarTapped: Observable<Void> {
+        tapAvatar
+            .asObserver()
     }
     
     func configureUser(user: SPUser) {

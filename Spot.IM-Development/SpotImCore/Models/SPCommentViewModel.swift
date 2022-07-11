@@ -155,7 +155,7 @@ internal struct CommentViewModel {
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
             
-        updateCommentUserVM()
+        self.commentUserVM.inputs.configure(with: self)
         updateCommentActionsVM()
     }
     
@@ -270,10 +270,6 @@ internal struct CommentViewModel {
     
     func isAReply() -> Bool {
         return replyingToCommentId != nil
-    }
-    
-    func updateCommentUserVM() {
-        self.commentUserVM.inputs.configure(with: self)
     }
     
     func updateCommentActionsVM() {

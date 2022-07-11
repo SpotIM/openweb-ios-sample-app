@@ -20,7 +20,7 @@ protocol OWUserNameViewModelingInputs {
 protocol OWUserNameViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
     
-    var showDeletedOrReportedMessage: Observable<Bool> { get }
+    var shouldShowDeletedOrReportedMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
     var nameTextStyle: Observable<SPFontStyle> { get }
     var subtitleText: Observable<String> { get }
@@ -28,6 +28,9 @@ protocol OWUserNameViewModelingOutputs {
     var badgeTitle: Observable<String> { get }
     var isUsernameOneRow: Observable<Bool> { get }
     var deletedOrReportedText: Observable<String> { get }
+    
+    var userNameTapped: Observable<Void> { get }
+    var moreTapped: Observable<OWUISource> { get }
 }
 
 protocol OWUserNameViewModeling {
@@ -117,10 +120,20 @@ class OWUserNameViewModel: OWUserNameViewModeling,
             }
     }
     
-    var showDeletedOrReportedMessage: Observable<Bool> {
+    var shouldShowDeletedOrReportedMessage: Observable<Bool> {
         _model
             .unwrap()
             .map { $0.isDeletedOrReported() }
+    }
+    
+    var userNameTapped: Observable<Void> {
+        tapUserName
+            .asObserver()
+    }
+    
+    var moreTapped: Observable<OWUISource> {
+        tapMore
+            .asObserver()
     }
     
     func configure(with model: CommentViewModel) {
