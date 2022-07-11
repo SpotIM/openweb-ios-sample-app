@@ -13,7 +13,9 @@ import Alamofire
 protocol OWNetworkAPIProtocol {
     func request(for endpoint: OWEndpoint) -> OWURLRequestConfiguration
     
-    var analytics: OWAnalyticsAPI { get }
+    var analytics: OWAnalyticsAPI { get }  
+    var realtime: OWRealtimeAPI { get }
+    var configuration: OWConfigurationAPI { get }
 }
 
 struct OWNetworkResponse<T> {
