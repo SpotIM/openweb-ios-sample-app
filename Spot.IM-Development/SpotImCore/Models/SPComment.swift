@@ -99,6 +99,7 @@ internal struct SPComment: Decodable, Equatable {
         users = try? container.decode([String: SPUser].self, forKey: .users)
         replies = try? container.decode([SPComment].self, forKey: .replies)
         additionalData = try? container.decode(AdditionalData.self, forKey: .additionalData)
+        strictMode = try? container.decode(Bool.self, forKey: .strictMode)
     }
 
     internal enum CommentStatus: String {
