@@ -64,7 +64,6 @@ fileprivate extension OWCommentUserView {
         addSubviews(avatarImageView, userNameView)
         
         // Setup avatar
-        
         avatarImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Metrics.avatarImageViewTrailingOffset)
@@ -73,7 +72,6 @@ fileprivate extension OWCommentUserView {
         }
         
         // Setup user name view
-        
         userNameView.OWSnp.makeConstraints { make in
             make.trailing.top.equalToSuperview()
             make.height.equalTo(Metrics.userViewCollapsedHeight)
