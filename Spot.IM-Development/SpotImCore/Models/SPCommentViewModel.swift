@@ -165,7 +165,7 @@ internal struct CommentViewModel {
            comment.userId == SPUserSessionHolder.session.user?.id,
            !comment.deleted, (comment.status == .reject || comment.status == .block || comment.status == .requireApproval || comment.status == .pending) {
             showStatusIndicator = true
-            statusIndicationVM.inputs.configure(with: status, isStrictMode: comment.conversation?.strictMode ?? false, containerWidth: textWidth())
+            statusIndicationVM.inputs.configure(with: status, isStrictMode: comment.strictMode ?? false, containerWidth: textWidth())
         } else {
             showStatusIndicator = false
         }

@@ -35,7 +35,7 @@ internal struct SPComment: Decodable, Equatable {
     var users: [String: SPUser]?
     var replies: [SPComment]?
     var additionalData: AdditionalData?
-    var conversation: CommentConversationData?
+    var strictMode: Bool?
 
     var isReply: Bool {
         guard let id = id, let rootComment = rootComment else {
@@ -206,10 +206,6 @@ extension SPComment {
     struct CommentLabel: Decodable, Equatable {
         var section: String?
         var ids: [String]?
-    }
-    
-    struct CommentConversationData: Decodable, Equatable {
-        var strictMode: Bool
     }
     
 }
