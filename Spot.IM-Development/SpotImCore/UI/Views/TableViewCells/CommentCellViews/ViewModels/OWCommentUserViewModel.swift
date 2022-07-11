@@ -66,17 +66,17 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
 
 fileprivate extension OWCommentUserViewModel {
     func setupObservers() {
-        userNameVM.inputs.tapUserName.subscribe(onNext: { [weak self] _ in
+        userNameVM.outputs.userNameTapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: false)
         }).disposed(by: disposeBag)
         
-        userNameVM.inputs.tapMore.subscribe(onNext: { [weak self] sender in
+        userNameVM.outputs.moreTapped.subscribe(onNext: { [weak self] sender in
             guard let self = self else { return }
             self.delegate?.moreTapped(for: self.commentId, replyingToID: self.replyToCommentId, sender: sender)
         }).disposed(by: disposeBag)
         
-        avatarVM.inputs.tapAvatar.subscribe(onNext: { [weak self] _ in
+        avatarVM.outputs.avatarTapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: true)
         }).disposed(by: disposeBag)
