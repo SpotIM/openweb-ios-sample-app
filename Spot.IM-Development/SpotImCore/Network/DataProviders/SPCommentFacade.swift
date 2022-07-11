@@ -152,9 +152,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             case .success(let comment):
                                 SPUserSessionHolder.freezeDisplayNameIfNeeded()
                                 // TODO - shold get from server!!!
-                                var newComment = comment
-                                newComment.conversation = SPComment.CommentConversationData(strictMode: true)
-                                success(newComment)
+                                success(comment)
                             case .failure(let error):
                                 let rawReport = RawReportModel(
                                     url: request.method.rawValue + " " + request.url.absoluteString,
