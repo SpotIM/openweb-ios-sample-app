@@ -24,13 +24,13 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     let analyticsLayer: OWAnalytics
-    let uiLayer: OWUILayer
+    let uiLayer: OWUI
     fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
     fileprivate var _currentNonRxSpotId: OWSpotId? = nil
     
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
-                 uiLayer: OWUILayer = OWUILayer()) {
+                 uiLayer: OWUI = OWUILayer()) {
         self.servicesProvider = servicesProvider
         self.analyticsLayer = analyticsLayer
         self.uiLayer = uiLayer

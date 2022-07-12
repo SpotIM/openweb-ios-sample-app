@@ -10,6 +10,6 @@ import Foundation
 
 extension OWManager: OWUI {
     var ui: OWUI { return uiLayer }
-    var flows: OWUIFlows { return uiLayer }
-    var views: OWUIViews { return uiLayer }
+    var flows: OWUIFlows { return uiLayer as! OWUILayer }
+    var views: OWUIViews { return uiLayer as! OWUILayer }
 }
