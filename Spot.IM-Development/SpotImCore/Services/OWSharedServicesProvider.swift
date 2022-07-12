@@ -11,9 +11,9 @@ import UIKit
 
 protocol OWSharedServicesProviderConfigure {
     func configureLogger(logLevel: OWLogLevel, logMethods: [OWLogMethod])
-    func set(spotId: SpotId)
+    func set(spotId: OWSpotId)
     // If spotId re-set, this function should be called to re-prepare all the services which require a spotId
-    func change(spotId: SpotId)
+    func change(spotId: OWSpotId)
 }
 
 protocol OWSharedServicesProviding: AnyObject {
@@ -146,11 +146,11 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _logger.log(level: .verbose, "Logger re-initialized with new configuration")
     }
     
-    func set(spotId: SpotId) {
+    func set(spotId: OWSpotId) {
         
     }
     
-    func change(spotId : SpotId) {
+    func change(spotId : OWSpotId) {
         // Stop / re-create services which depend on spot id
         _realtimeService.stopFetchingData()
     }
