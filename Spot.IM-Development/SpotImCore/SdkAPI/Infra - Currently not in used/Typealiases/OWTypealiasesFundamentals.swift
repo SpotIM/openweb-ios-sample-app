@@ -9,5 +9,5 @@
 import Foundation
 
 // Fundamentals
-typealias SpotId = String
-typealias PostId = String
+typealias OWSpotId = String
+typealias OWPostId = String
