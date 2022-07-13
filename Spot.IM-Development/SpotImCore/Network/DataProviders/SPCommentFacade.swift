@@ -244,7 +244,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
     }
     
     internal func commentStatus(conversationId: String, commentId: String, success: @escaping ([String:String]) -> Void, failure: @escaping ErrorHandler) {
-        let spRequest = SPConversationRequest.commentStatus(commentId)
+        let spRequest = SPConversationRequest.commentStatus(commentId: commentId)
         guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))

@@ -102,7 +102,7 @@ internal struct SPComment: Decodable, Equatable {
         strictMode = try? container.decode(Bool.self, forKey: .strictMode)
     }
 
-    internal enum CommentStatus: String {
+    enum CommentStatus: String {
         case unknown
         case block
         case reject
