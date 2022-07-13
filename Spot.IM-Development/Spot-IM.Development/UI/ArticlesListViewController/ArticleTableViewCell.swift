@@ -7,96 +7,198 @@
 //
 
 import UIKit
-import Cards
 import SnapKit
+import RxSwift
 
 protocol ArticleTableViewCellDelegate: AnyObject {
     func articleCellTapped(withPost: Post?)
 }
 
-class ArticleTableViewCell : UITableViewCell {
+class ArticleTableViewCell: UITableViewCell {
     
+    fileprivate struct Metrics {
+        static let corenerRadius: CGFloat = 15
+        static let verticalOffset: CGFloat = 20
+        static let horizontalOffset: CGFloat = 20
+        static let aspectRatio: CGFloat = 1.2
+        static let outlineColor: UIColor = .black
+        static let imageOpacity: Float = 0.2
+        static let outlineWidth: Float = 4.0
+        static let placeholder: UIImage = UIImage(named: "general_placeholder")!
+    }
+    
+    fileprivate var disposeBag: DisposeBag!
+    
+    fileprivate lazy var mainView: UIView = {
+        let view = UIView()
+            .corner(radius: Metrics.corenerRadius)
+                
+        view.addGestureRecognizer(tapGesture)
+        
+        view.addSubview(backgroundImageView)
+        backgroundImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        view.addSubview(dateLabel)
+        dateLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.lessThanOrEqualToSuperview()
+            make.top.equalToSuperview().offset(Metrics.verticalOffset)
+        }
+        
+        view.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(dateLabel.snp.bottom).offset(Metrics.verticalOffset/4)
+        }
+        
+        view.addSubview(descriptionLabel)
+        descriptionLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+        }
+        
+        return view
+    }()
+    
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        tap.numberOfTapsRequired = 1
+        return tap
+    }()
+    
+    fileprivate lazy var backgroundImageView: UIImageView = {
+        let img = UIImageView()
+            .contentMode(.scaleAspectFill)
+        img.image = Metrics.placeholder
+        
+        let opacityView = UIView()
+        opacityView.layer.opacity = Metrics.imageOpacity
+        opacityView.layer.backgroundColor = UIColor.black.cgColor
+        
+        img.addSubview(opacityView)
+        opacityView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        return img
+    }()
+    
+    fileprivate lazy var dateLabel: UILabel = {
+        let lbl = UILabel()
+            .font(FontBook.primaryHeadingMedium)
+            .textColor(ColorPalette.basicGrey)
+        return lbl
+    }()
+    
+    fileprivate lazy var titleLabel: UILabel = {
+        let lbl = UILabel()
+            .font(FontBook.secondaryHeadingBold)
+            .textColor(.white)
+            .numberOfLines(2)
+        return lbl
+    }()
+    
+    fileprivate lazy var descriptionLabel: UILabel = {
+        let lbl = UILabel()
+            .font(FontBook.paragraphBold)
+            .textColor(.white)
+            .numberOfLines(3)
+        return lbl
+    }()
+        
     weak var delegate: ArticleTableViewCellDelegate?
     
     var post : Post? {
         didSet {
-            guard let extract = post?.extractData, let publishedAt = post?.publishedAt, let id = post?.conversationId else {
+            guard let extract = post?.extractData, let publishedAt = post?.publishedAt else {
                 return
             }
             
-            card.category = self.formattedDate(publishedAt: publishedAt)
-            card.title = extract.title.truncated(limit: 60)
-            card.subtitle = extract.description.truncated(limit: 100)
+            let dateText = self.formattedDate(publishedAt: publishedAt)
+            let title = extract.title.truncated(limit: 60)
+            let description = extract.description.truncated(limit: 100)
             
+            dateLabel.attributedText = attributedOutlineText(dateText, color: dateLabel.textColor,
+                                                             outlineColor: Metrics.outlineColor, font: dateLabel.font)
+            
+            titleLabel.attributedText = attributedOutlineText(title, color: titleLabel.textColor,
+                                                             outlineColor: Metrics.outlineColor, font: titleLabel.font)
+            
+            descriptionLabel.attributedText = attributedOutlineText(description, color: descriptionLabel.textColor,
+                                                             outlineColor: Metrics.outlineColor, font: descriptionLabel.font)
+
             if let url = URL(string: extract.thumbnailUrl) {
-                UIImage.from(url: url) { [weak self] result in
-                    if case .success(let image) = result,
-                       id == self?.post?.conversationId {
-                        self?.card.backgroundImage = image
-                    }
-                }
+                backgroundImageView.image(from: url)
             }
-            card.delegate = self
         }
     }
     
-    public func shouldPresent( _ contentViewController: UIViewController?, from superVC: UIViewController?, fullscreen: Bool = false) {
-        self.card.shouldPresent(contentViewController, from: superVC, fullscreen: fullscreen)
-    }
-    
     override func prepareForReuse() {
-        card.title = ""
-        card.backgroundImage = nil
+        backgroundImageView.image = Metrics.placeholder
+        disposeBag = nil
     }
-    
-    
-    private let card : CardArticle = {
-        let card = CardArticle(frame: CGRect(x: 10, y: 0, width: 200 , height: 240))
-        
-        card.backgroundColor = UIColor(red: 0, green: 94/255, blue: 112/255, alpha: 1)
-        card.textColor = UIColor.white
-        card.hasParallax = true
-        
-        return card
-    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.setup()
+        self.setupUI()
+        self.setupObservers()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+fileprivate extension ArticleTableViewCell {
     
-    private func formattedDate(publishedAt: String) -> String {
-        guard publishedAt != "" else { return "" }
+    func attributedOutlineText(_ text: String,
+                               color: UIColor,
+                               outlineColor: UIColor,
+                               font: UIFont) -> NSAttributedString {
+        let attributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.strokeColor: outlineColor,
+            NSAttributedString.Key.foregroundColor: color,
+            NSAttributedString.Key.strokeWidth: -Metrics.outlineWidth,
+            NSAttributedString.Key.font: font
+        ]
+        
+        return NSMutableAttributedString(string: text, attributes: attributes)
+    }
+    
+    func formattedDate(publishedAt: String) -> String {
+        guard !publishedAt.isEmpty else { return "" }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         let date = dateFormatter.date(from:publishedAt)!
         return date.timeAgo()
     }
     
-    private func setup() {
-        self.setupCard()
-    }
-    
-    private func setupCard() {
-        addSubview(card)
-        card.snp.makeConstraints {
-            $0.centerX.equalTo(self)
-            $0.top.equalTo(self).offset(20)
-            $0.bottom.equalTo(self).offset(-20)
-            $0.height.equalTo(card.snp.width).multipliedBy(1.2)
-            $0.width.equalTo(self).multipliedBy(0.8)
+    func setupUI() {
+        self.selectionStyle = .none
+        
+        addSubview(mainView)
+        mainView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.verticalOffset)
+            make.bottom.equalToSuperview().offset(-Metrics.verticalOffset)
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.height.equalTo(mainView.snp.width).multipliedBy(Metrics.aspectRatio)
         }
-        card.delegate = self
     }
     
-}
-
-extension ArticleTableViewCell : CardDelegate {
-    func cardDidTapInside(card: Card) {
-        self.delegate?.articleCellTapped(withPost: self.post)
+    func setupObservers() {
+        disposeBag = DisposeBag()
+        
+        tapGesture.rx.event
+            .voidify()
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.delegate?.articleCellTapped(withPost: self.post)
+            })
+            .disposed(by: disposeBag)
     }
 }
