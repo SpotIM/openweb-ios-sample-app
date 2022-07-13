@@ -8,8 +8,6 @@
 
 import Foundation
 
-typealias OWPostId = String
-
 extension OWPostId {
     // Encoded
     var encoded: String {
