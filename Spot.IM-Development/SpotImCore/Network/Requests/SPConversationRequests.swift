@@ -20,7 +20,7 @@ internal enum SPConversationRequest: SPRequest {
     case commentDelete
     case commentRankChange
     case commentsCounters
-    case commentStatus(String)
+    case commentStatus(commentId: String)
 
     internal var method: HTTPMethod {
         switch self {

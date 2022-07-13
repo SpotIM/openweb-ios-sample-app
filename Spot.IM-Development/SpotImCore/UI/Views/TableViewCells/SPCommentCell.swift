@@ -26,7 +26,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     let messageView: MessageContainerView = .init()
 
-    private let statusIndicationView: OWCommentStatusIndicationView = .init()
+    private let statusIndicationView = OWCommentStatusIndicationView()
     private let avatarImageView: SPAvatarView = SPAvatarView()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()

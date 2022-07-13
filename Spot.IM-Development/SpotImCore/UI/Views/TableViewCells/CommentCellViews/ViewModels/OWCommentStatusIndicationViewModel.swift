@@ -37,20 +37,17 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     fileprivate let _strictMode = BehaviorSubject<Bool?>(value: nil)
     fileprivate let _commentWidth = BehaviorSubject<CGFloat?>(value: nil)
     
-    fileprivate lazy var status: Observable<SPComment.CommentStatus> = {
-        self._status
-            .unwrap()
-    }()
+    fileprivate var status: Observable<SPComment.CommentStatus> {
+        return self._status.unwrap().asObservable()
+    }
     
-    fileprivate lazy var strictMode: Observable<Bool> = {
-        self._strictMode
-            .unwrap()
-    }()
+    fileprivate var strictMode: Observable<Bool> {
+        return self._strictMode.unwrap().asObservable()
+    }
     
-    fileprivate lazy var commentWidth: Observable<CGFloat> = {
-        self._commentWidth
-            .unwrap()
-    }()
+    fileprivate var commentWidth: Observable<CGFloat> {
+        return self._commentWidth.unwrap().asObservable()
+    }
     
     var indicationIcon: Observable<UIImage> {
         self.status
@@ -70,8 +67,9 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     
     var indicationText: Observable<String> {
         self.status
-            .withLatestFrom(strictMode) { status, isStrictMode in
-                return self.getIndicationText(status: status, isStrictMode: isStrictMode)
+            .withLatestFrom(strictMode) { [weak self] status, isStrictMode in
+                guard let self = self else { return "" }
+                return self.indicationText(status: status, isStrictMode: isStrictMode)
             }
     }
 
@@ -89,7 +87,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
                         - OWCommentStatusIndicationView.Metrics.iconLeadingOffset
             
             let attributedMessage = NSAttributedString(
-                string: self.getIndicationText(status: status, isStrictMode: isStrictMode),
+                string: self.indicationText(status: status, isStrictMode: isStrictMode),
                 attributes: [
                     NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: OWCommentStatusIndicationView.Metrics.fontSize)
                 ])
@@ -98,8 +96,10 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
             return height + (OWCommentStatusIndicationView.Metrics.textVerticalPadding * 2)
         }()
     }
-    
-    fileprivate func getIndicationText(status: SPComment.CommentStatus, isStrictMode: Bool) -> String {
+}
+
+fileprivate extension OWCommentStatusIndicationViewModel {
+    func indicationText(status: SPComment.CommentStatus, isStrictMode: Bool) -> String {
         switch(status) {
         case .reject, .block:
             return LocalizationManager.localizedString(key: "Your comment has been rejected.")

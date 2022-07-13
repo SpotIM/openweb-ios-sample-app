@@ -43,7 +43,21 @@ class OWCommentStatusIndicationView: OWBaseView {
         disposeBag = DisposeBag()
         setupObservers()
     }
+    
+    struct Metrics {
+        static let iconSize: CGFloat = 14
 
+        static let iconLeadingOffset: CGFloat = 12
+        static let iconTopPadding: CGFloat = 14
+        static let textVerticalPadding: CGFloat = 12
+        static let statusTextHorizontalOffset: CGFloat = 8
+        
+        static let fontSize: CGFloat = 15
+        
+    }
+}
+
+fileprivate extension OWCommentStatusIndicationView {
     func setupObservers() {
         viewModel.outputs.indicationIcon
             .bind(to: iconImageView.rx.image)
@@ -54,7 +68,7 @@ class OWCommentStatusIndicationView: OWBaseView {
             .disposed(by: disposeBag)
     }
     
-    private func setupUI() {
+    func setupUI() {
         self.addCornerRadius(4)
         self.addSubviews(iconImageView, statusTextLabel)
         
@@ -70,17 +84,5 @@ class OWCommentStatusIndicationView: OWBaseView {
             make.top.equalToSuperview().offset(Metrics.textVerticalPadding)
             make.bottom.equalToSuperview().offset(-Metrics.textVerticalPadding)
         }
-    }
-    
-    struct Metrics {
-        static let iconSize: CGFloat = 14
-
-        static let iconLeadingOffset: CGFloat = 12
-        static let iconTopPadding: CGFloat = 14
-        static let textVerticalPadding: CGFloat = 12
-        static let statusTextHorizontalOffset: CGFloat = 8
-        
-        static let fontSize: CGFloat = 15
-        
     }
 }
