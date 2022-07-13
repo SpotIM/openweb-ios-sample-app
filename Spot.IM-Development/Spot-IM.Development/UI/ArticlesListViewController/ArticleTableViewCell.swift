@@ -112,6 +112,7 @@ class ArticleTableViewCell: UITableViewCell {
         
     weak var delegate: ArticleTableViewCellDelegate?
     
+    // This variable can be seen like a "configure" function in general
     var post : Post? {
         didSet {
             guard let extract = post?.extractData, let publishedAt = post?.publishedAt else {
@@ -134,6 +135,8 @@ class ArticleTableViewCell: UITableViewCell {
             if let url = URL(string: extract.thumbnailUrl) {
                 backgroundImageView.image(from: url)
             }
+            
+            self.setupObservers()
         }
     }
     
@@ -145,7 +148,6 @@ class ArticleTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupUI()
-        self.setupObservers()
     }
     
     required init?(coder aDecoder: NSCoder) {
