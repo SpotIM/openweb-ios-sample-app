@@ -231,7 +231,7 @@ final class SPMainConversationModel {
         return actions
     }
     
-    func commentAvailableActions(_ commentId: String, sender: UIButton) -> [UIAlertAction] {
+    func commentAvailableActions(_ commentId: String, sender: OWUISource) -> [UIAlertAction] {
         let viewModel = dataSource.commentViewModel(commentId)
         let availability = commentActionsAvailability(viewModel: viewModel)
         let replyingToID = viewModel?.rootCommentId
@@ -494,7 +494,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
 
 protocol CommentsActionDelegate: AnyObject {
     
-    func prepareFlowForAction(_ type: ActionType, sender: UIButton)
+    func prepareFlowForAction(_ type: ActionType, sender: OWUISource)
     func localCommentWasCreated()
     func localCommentWillBeCreated()
     func messageCreationBlocked(with messageText: String?)
