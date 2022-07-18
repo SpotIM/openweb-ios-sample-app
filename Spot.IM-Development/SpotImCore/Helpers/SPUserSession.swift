@@ -45,6 +45,10 @@ internal class SPUserSessionHolder {
         
         servicesProvider.keychain().save(value: user, forKey: OWKeychain.OWKey<SPUser>.loggedInUserSession)
     }
+    
+    static func updateSessionUserSsoPublisherId(_ ssoPublisherId: String) {
+        session.user?.ssoPublisherId = ssoPublisherId
+    }
 
     static func updateSession(with response: HTTPURLResponse?, forced: Bool = false) {
         let headers = response?.allHeaderFields

@@ -155,6 +155,11 @@ internal final class SPMainConversationDataSource {
             if let error = error {
                 completion(false, error)
             } else {
+                // Update user ssoPublisherId
+                if let userSsoPublisherId = response?.user?.ssoPublisherId {
+                    SPUserSessionHolder.updateSessionUserSsoPublisherId(userSsoPublisherId)
+                }
+                
                 if let newUsers = response?.conversation?.users {
                     let mergedUsers = self.users.merging(newUsers) { $1 }
                     self.users = mergedUsers
