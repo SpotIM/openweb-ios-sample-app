@@ -92,10 +92,19 @@ class SPCommentCreationModel {
                 [weak self] response in
                 guard let self = self else { return }
                 
-                let responseData = self.populateResponseFields(response)
+                var responseData = self.populateResponseFields(response)
                 let commentIdentifier: String = self.getCommentIdentifierForCommentType()
-                OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
-                self.postCompletionHandler?(responseData)
+                
+                // set new comment status after "/status" call
+                self.commentService.commentStatus(conversationId: self.dataModel.postId, commentId: responseData.id ?? "", success: { status in
+                    responseData.rawStatus = status["status"]
+                    OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
+                    self.postCompletionHandler?(responseData)
+                }, failure: {_ in
+                    OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
+                    self.postCompletionHandler?(responseData)
+                })
+                
             },
             failure: {
                 [weak self] error in
