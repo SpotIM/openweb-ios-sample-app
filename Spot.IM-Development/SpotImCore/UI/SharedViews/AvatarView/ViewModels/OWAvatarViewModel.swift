@@ -78,7 +78,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     
     var avatarTapped: Observable<Void> {
         tapAvatar
-            .asObserver()
+            .asObservable()
     }
     
     func configureUser(user: SPUser) {

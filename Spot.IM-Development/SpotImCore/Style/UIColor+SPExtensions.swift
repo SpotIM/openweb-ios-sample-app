@@ -91,6 +91,14 @@ internal extension UIColor {
         SPUserInterfaceStyle.isDarkMode ? mineShaft2 : white.withAlphaComponent(0.1)
     }
     
+    static var commentStatusIndicatorText: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? .coolGrey : .steelGrey
+    }
+    
+    static var commentStatusIndicatorBackground: UIColor {
+        SPUserInterfaceStyle.isDarkMode ? white.withAlphaComponent(0.15) : .iceBlue
+    }
+    
     static var commentLabelBackgroundOpacity: CGFloat {
         SPUserInterfaceStyle.isDarkMode ? 0.2 : 0.1
     }
