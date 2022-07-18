@@ -11,7 +11,7 @@ import Alamofire
 import RxSwift
 
 enum OWRealtimeEndpoint: OWEndpoint {
-    case fetchData(postId: PostId)
+    case fetchData(postId: OWPostId)
     
     // MARK: - HTTPMethod
     var method: HTTPMethod {
@@ -40,14 +40,14 @@ enum OWRealtimeEndpoint: OWEndpoint {
 }
 
 protocol OWRealtimeAPI {
-    func fetchData(postId: PostId) -> OWNetworkResponse<RealTimeModel>
+    func fetchData(postId: OWPostId) -> OWNetworkResponse<RealTimeModel>
 }
 
 extension OWNetworkAPI: OWRealtimeAPI {
     // Access by .realtime for readability
     var realtime: OWRealtimeAPI { return self }
     
-    func fetchData(postId: PostId) -> OWNetworkResponse<RealTimeModel> {
+    func fetchData(postId: OWPostId) -> OWNetworkResponse<RealTimeModel> {
         let endpoint = OWRealtimeEndpoint.fetchData(postId: postId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
