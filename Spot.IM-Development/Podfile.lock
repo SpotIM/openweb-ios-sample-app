@@ -1,7 +1,5 @@
 PODS:
   - Alamofire (5.6.1)
-  - Cards (1.4.0):
-    - Player (= 0.13.0)
   - Google-Mobile-Ads-SDK (8.0.0):
     - GoogleAppMeasurement (~> 7.0)
     - GoogleUserMessagingPlatform (~> 1.1)
@@ -41,7 +39,6 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
-  - Player (0.13.0)
   - PromiseKit (6.17.1):
     - PromiseKit/CorePromise (= 6.17.1)
     - PromiseKit/Foundation (= 6.17.1)
@@ -62,7 +59,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 5.6.1)
-  - Cards (~> 1.4.0)
   - Google-Mobile-Ads-SDK (= 8.0)
   - PromiseKit (~> 6.17.1)
   - RxCocoa (~> 6.5)
@@ -72,13 +68,11 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
-    - Cards
     - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
     - GoogleUserMessagingPlatform
     - GoogleUtilities
     - nanopb
-    - Player
     - PromiseKit
     - PromisesObjC
     - RxCocoa
@@ -88,13 +82,11 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
-  Cards: 45ae6bd0eca7b5e8016d3b6cb30b60b04753f68f
   Google-Mobile-Ads-SDK: 9509c62617e8d77e2524833eed0b73dd028f0bc6
   GoogleAppMeasurement: fd19169c3034975cb934e865e5667bfdce59df7f
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  Player: 968d8d07d923bcdd6f7e4091c9e306eb44a5f7a4
   PromiseKit: ee485df3d4dc570594d7e7aecae6352697dc6a4c
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
@@ -102,6 +94,6 @@ SPEC CHECKSUMS:
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: e3743d0df2d289891d5e6cf86bbe03674e56e889
+PODFILE CHECKSUM: 818a75f66cfeadd1e708d64d7f4d68b7c0814edb
 
 COCOAPODS: 1.11.2

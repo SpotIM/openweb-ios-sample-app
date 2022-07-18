@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal struct CommentViewModel {
 
@@ -35,7 +36,7 @@ internal struct CommentViewModel {
 
     private (set) var showsOnline: Bool = false
     var hasOffset: Bool = false
-    var isDeleted: Bool = false
+    private (set) var isDeleted: Bool = false
     var isReported: Bool = false
     var isEdited: Bool = false
     // helper property for array cleaning
@@ -44,6 +45,7 @@ internal struct CommentViewModel {
     var isCollapsed: Bool = false
     var badgeTitle: String?
     var commentTextCollapsed: Bool = true
+    var showStatusIndicator: Bool = false
     var anyHiddenReply: Bool = false
 
     var brandColor: UIColor = .brandColor
@@ -56,6 +58,7 @@ internal struct CommentViewModel {
     
     let commentUserVM: OWCommentUserViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
+    let statusIndicationVM: OWCommentStatusIndicationViewModeling = OWCommentStatusIndicationViewModel()
 
     init(
         with comment: SPComment,
@@ -157,6 +160,14 @@ internal struct CommentViewModel {
             
         self.commentUserVM.inputs.configure(with: self)
         updateCommentActionsVM()
+        if let status = comment.status,
+           comment.userId == SPUserSessionHolder.session.user?.id,
+           !comment.deleted, (comment.status == .reject || comment.status == .block || comment.status == .requireApproval || comment.status == .pending) {
+            showStatusIndicator = true
+            statusIndicationVM.inputs.configure(with: status, isStrictMode: comment.strictMode ?? false, containerWidth: textWidth())
+        } else {
+            showStatusIndicator = false
+        }
     }
     
     func getCommentTextFromHtmlString(htmlString: String) -> String? {
@@ -242,6 +253,8 @@ internal struct CommentViewModel {
         let deletedOffset = isDeletedOrReported() ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
         
+        let statusIndicationHeight: CGFloat = showStatusIndicator ? (statusIndicationVM.outputs.indicationHeight + 16) : 0
+        
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
             + userViewHeight
@@ -251,6 +264,7 @@ internal struct CommentViewModel {
             + (isCollapsed ? 0.0 : moreRepliesHeight)
             + ((isDeletedOrReported() || commentLabels == nil) ? 0.0 : commentLabelHeight)
             + (isDeletedOrReported() ? 0.0 : mediaHeight)
+            + statusIndicationHeight
 
         return height
     }
@@ -275,6 +289,14 @@ internal struct CommentViewModel {
     func updateCommentActionsVM() {
         let model = OWCommentVotingModel(rankUpCount: rankUp, rankDownCount: rankDown, rankedByUserValue: rankedByUser)
         self.commentActionsVM.inputs.configure(with: model)
+    }
+    
+    mutating func setIsDeleted(isDeleted: Bool) {
+        self.isDeleted = isDeleted
+        // hide status indicator after deleting a comment
+        if isDeleted {
+            self.showStatusIndicator = false
+        }
     }
 
     private enum Theme {

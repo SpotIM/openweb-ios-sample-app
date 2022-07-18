@@ -99,3 +99,6 @@
 "Edit a Comment" = "ערוך תגובה";
 "Edit a comment" = "ערוך תגובה";
 "Recommend" = "המלץ/י";
+"Your comment has been rejected." = "תגובתך נדחתה.";
+"Hold on, your comment is waiting for approval." = "המתן בסבלנות, תגובתך ממתינה לאישור.";
+"Your comment is waiting for approval due to the site’s policy." = "התגובה שלך ממתינה לאישור, בכפוף למדיניות האתר.";
