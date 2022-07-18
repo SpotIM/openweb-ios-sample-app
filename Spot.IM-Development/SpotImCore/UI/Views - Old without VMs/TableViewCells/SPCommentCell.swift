@@ -137,7 +137,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             make.top.equalTo(userView.OWSnp.top)
         }
         opacityView.layer.opacity = 0.4
-        opacityView.isUserInteractionEnabled = false
     }
 
     private func configureHeaderView() {
