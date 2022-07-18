@@ -98,3 +98,6 @@
 "Edit a Comment" = "تحرير تعليق";
 "Edit a comment" = "تحرير تعليق";
 "Recommend" = "يوصي";
+"Your comment has been rejected." = "تم رفض تعليقك.";
+"Hold on, your comment is waiting for approval." = "انتظر، لا يزال تعليقك بانتظار الموافقة.";
+"Your comment is waiting for approval due to the site’s policy." = "تعليقك بانتظار الموافقة بموجب سياسة الموقع.";
