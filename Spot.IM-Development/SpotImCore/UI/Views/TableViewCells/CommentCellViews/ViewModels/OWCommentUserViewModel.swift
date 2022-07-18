@@ -43,6 +43,8 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     let avatarVM: OWAvatarViewModeling
     let userNameVM: OWUserNameViewModeling
     
+    fileprivate let _conversationModel = BehaviorSubject<SPMainConversationModel?>(value: nil)
+    
     init(user: SPUser?, imageProvider: SPImageProvider? = nil) {
         avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         userNameVM = OWUserNameViewModel(user: user)
@@ -53,6 +55,7 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     
     func configure(with model: CommentViewModel) {
+        _conversationModel.onNext(model.conversationModel)
         commentId = model.commentId
         replyToCommentId = model.replyingToCommentId
         
@@ -66,19 +69,28 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
 
 fileprivate extension OWCommentUserViewModel {
     func setupObservers() {
-        userNameVM.outputs.userNameTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: false)
-        }).disposed(by: disposeBag)
-        
         userNameVM.outputs.moreTapped.subscribe(onNext: { [weak self] sender in
             guard let self = self else { return }
             self.delegate?.moreTapped(for: self.commentId, replyingToID: self.replyToCommentId, sender: sender)
         }).disposed(by: disposeBag)
         
-        avatarVM.outputs.avatarTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: true)
-        }).disposed(by: disposeBag)
+        userNameVM.outputs.userNameTapped.withLatestFrom(_conversationModel.unwrap())
+            .subscribe(onNext: { [weak self] conversationModel in
+                guard let self = self, let commentId = self.commentId else { return }
+                conversationModel.authorTapped.onNext((
+                    userId: commentId,
+                    isTappedOnAvatar: false
+                ))
+            }).disposed(by: disposeBag)
+        
+        avatarVM.outputs.avatarTapped
+            .withLatestFrom(_conversationModel.unwrap())
+            .subscribe(onNext: { [weak self] conversationModel in
+                guard let self = self, let commentId = self.commentId else { return }
+                conversationModel.authorTapped.onNext((
+                    userId: commentId,
+                    isTappedOnAvatar: true
+                ))
+            }).disposed(by: disposeBag)
     }
 }
