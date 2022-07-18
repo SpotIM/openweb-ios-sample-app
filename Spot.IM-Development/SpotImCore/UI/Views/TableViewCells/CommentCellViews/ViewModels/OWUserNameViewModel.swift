@@ -128,12 +128,12 @@ class OWUserNameViewModel: OWUserNameViewModeling,
     
     var userNameTapped: Observable<Void> {
         tapUserName
-            .asObserver()
+            .asObservable()
     }
     
     var moreTapped: Observable<OWUISource> {
         tapMore
-            .asObserver()
+            .asObservable()
     }
     
     func configure(with model: CommentViewModel) {
