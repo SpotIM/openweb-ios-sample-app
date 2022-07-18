@@ -159,7 +159,8 @@ final class SPMainConversationModel {
             let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
             
             if let ssoPublisherId = user.ssoPublisherId,
-               !ssoPublisherId.isEmpty {
+               !ssoPublisherId.isEmpty,
+               SPConfigsDataSource.appConfig?.shared?.usePublisherUserProfile == true {
                 self.openPublisherUser.onNext(user.ssoPublisherId)
             } else {
                 self.openUserProfileDelegate?.openProfileWebScreen(userId: userId)
