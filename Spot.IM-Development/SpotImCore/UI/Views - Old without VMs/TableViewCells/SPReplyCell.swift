@@ -11,13 +11,15 @@ import Alamofire
 
 final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
-    weak var delegate: SPCommentCellDelegate?
+    weak var delegate: SPCommentCellDelegate?{
+        didSet {
+            userView.setDelegate(delegate)
+        }
+    }
     
     let messageView: MessageContainerView = .init()
-    
+    private let userView: OWCommentUserView = .init()
     private let statusIndicationView: OWCommentStatusIndicationView = .init()
-    private let avatarView: SPAvatarView = .init()
-    private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
@@ -45,9 +47,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
         repliesButtonState = data.repliesButtonState
-        updateUserView(with: data)
+        userView.configure(with: data)
         updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
-        updateAvatarView(with: data)
         updateCommentLabelView(with: data)
         messageView.delegate = self
         setStatusIndicatorVisibillity(isVisible: data.showStatusIndicator)
@@ -120,9 +121,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         contentView.backgroundColor = .spBackground0
         opacityView.backgroundColor = .spBackground0
         messageView.updateColorsAccordingToStyle()
-        userNameView.updateColorsAccordingToStyle()
+        userView.updateColorsAccordingToStyle()
         replyActionsView.updateColorsAccordingToStyle()
-        avatarView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
         commentLabelView.updateColorsAccordingToStyle()
         statusIndicationView.updateColorsAccordingToStyle()
@@ -138,41 +138,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
     
-    private func updateUserView(with dataModel: CommentViewModel) {
-        userNameView.setDeletedOrReported(isDeleted: dataModel.isDeleted, isReported: dataModel.isReported)
-        userNameView.setUserName(dataModel.displayName,
-                                 badgeTitle: dataModel.badgeTitle,
-                                 contentType: .reply,
-                                 isDeleted: dataModel.isDeletedOrReported(),
-                                 isOneLine: dataModel.isUsernameOneRow())
-        userNameView.setMoreButton(hidden: dataModel.isDeletedOrReported())
-        userNameView.setSubtitle(
-            dataModel.replyingToDisplayName?.isEmpty ?? true
-                ? ""
-                : LocalizationManager.localizedString(key: "To") + " \(dataModel.replyingToDisplayName!)"
-        )
-        userNameView.setDate(
-            dataModel.replyingToDisplayName?.isEmpty ?? true
-                ? dataModel.timestamp
-                : " · ".appending(dataModel.timestamp ?? "")
-        )
-        let userViewHeight = dataModel.usernameViewHeight()
-        userNameView.OWSnp.updateConstraints { make in
-            make.height.equalTo(userViewHeight)
-        }
-
-        userNameView.configureSubscriberBadgeVM(viewModel: dataModel.subscriberBadgeVM)
-    }
-    
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
         replyActionsView.configure(with: dataModel.commentActionsVM, delegate: self)
         dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
-    }
-    
-    private func updateAvatarView(with dataModel: CommentViewModel) {
-        avatarView.configure(with: dataModel.avatarViewVM)
     }
     
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
@@ -202,35 +172,23 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, statusIndicationView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView, opacityView)
-        configureAvatarView()
-        configureStatusIndicationView()
-        configureUserNameView()
+        contentView.addSubviews(userView, statusIndicationView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView, opacityView)
+        configureUserView()
         configureCommentLabelView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
         configureCommentMediaView()
+        configureStatusIndicationView()
         configureOpacityView()
-    }
-    
-    private func configureAvatarView() {
-        avatarView.delegate = self
-        avatarView.OWSnp.makeConstraints { make in
-            make.leading.equalTo(messageView)
-            make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Theme.avatarImageViewTrailingOffset)
-            make.top.equalTo(userNameView)
-            make.size.equalTo(Theme.avatarSideSize)
-        }
     }
     
     private func configureOpacityView() {
         opacityView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(userNameView.OWSnp.top)
+            make.top.equalTo(userView.OWSnp.top)
         }
         opacityView.layer.opacity = 0.4
-        opacityView.isUserInteractionEnabled = false
     }
     
     private func configureStatusIndicationView() {
@@ -251,10 +209,10 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         }
     }
     
-    private func configureUserNameView() {
-        userNameView.delegate = self
-        userNameView.OWSnp.makeConstraints { make in
+    private func configureUserView() {
+        userView.OWSnp.makeConstraints { make in
             make.top.equalTo(statusIndicationView.OWSnp.bottom).offset(Theme.topOffset)
+            make.leading.equalTo(messageView)
             make.trailing.equalToSuperview()
             make.height.equalTo(Theme.userViewCollapsedHeight)
         }
@@ -262,7 +220,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func configureCommentLabelView() {
         commentLabelView.OWSnp.makeConstraints { make in
-            make.top.equalTo(userNameView.OWSnp.bottom).offset(10)
+            make.top.equalTo(userView.OWSnp.bottom).offset(10)
             make.leading.equalTo(messageView)
             make.height.equalTo(Theme.commentLabelHeight)
         }
@@ -323,13 +281,6 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
 // MARK: - Extensions
 
-extension SPReplyCell: OWAvatarViewDelegate {
-    
-    func avatarDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: true)
-    }
-}
-
 extension SPReplyCell: CommentActionsDelegate {
     
     func reply() {
@@ -342,17 +293,6 @@ extension SPReplyCell: CommentActionsDelegate {
     
     func rankDown(_ rankChange: SPRankChange) {
         delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
-    }
-}
-
-extension SPReplyCell: UserNameViewDelegate {
-    
-    func moreButtonDidTapped(sender: UIButton) {
-        delegate?.moreTapped(for: commentId, replyingToID: replyingToId, sender: sender)
-    }
-    
-    func userNameDidTapped() {
-        delegate?.respondToAuthorTap(for: commentId, isAvatarClicked: false)
     }
 }
 
@@ -398,9 +338,6 @@ private enum Theme {
     static let replyActionsViewHeight: CGFloat = 32.0
     static let moreRepliesViewHeight: CGFloat = 31.0
     static let userViewCollapsedHeight: CGFloat = 44.0
-    static let userViewExpandedHeight: CGFloat = 69.0
-    static let avatarSideSize: CGFloat = 39.0
-    static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
     static let statusIndicatorTopOffset: CGFloat = 16

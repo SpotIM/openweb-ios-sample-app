@@ -13,11 +13,15 @@ import UIKit
 
 protocol OWAvatarViewModelingInputs {
     func configureUser(user: SPUser)
+    
+    var tapAvatar: PublishSubject<Void> { get }
 }
 
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var showOnlineIndicator: Observable<Bool> { get }
+    
+    var avatarTapped: Observable<Void> { get }
 }
 
 protocol OWAvatarViewModeling {
@@ -35,6 +39,8 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     
     fileprivate let imageURLProvider: SPImageProvider?
+    
+    var tapAvatar = PublishSubject<Void>()
     
     init (user: SPUser? = nil,
           imageURLProvider: SPImageProvider?) {
@@ -68,6 +74,11 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                 let isUserOnline = (user.online ?? false) || isCurrentUser
                 return isUserOnline && !shouldDisableOnlineIndicator
             }
+    }
+    
+    var avatarTapped: Observable<Void> {
+        tapAvatar
+            .asObservable()
     }
     
     func configureUser(user: SPUser) {

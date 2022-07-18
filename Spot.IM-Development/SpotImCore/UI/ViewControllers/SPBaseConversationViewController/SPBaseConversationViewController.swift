@@ -553,20 +553,26 @@ extension SPBaseConversationViewController: UITableViewDataSource {
         } else if indexPath.row == 0 {
             let commentCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPCommentCell.self, for: indexPath)
             if let data = cellData(for: indexPath) {
-                commentCell.setup(with: data,
-                                  shouldShowHeader: indexPath.section != 0,
-                                  minimumVisibleReplies: model.dataSource.minVisibleReplies,
-                                  lineLimit: messageLineLimit,
-                                  isReadOnlyMode: isReadOnlyModeEnabled(),
-                                  windowWidth: self.view.window?.frame.width)
+                commentCell.setup(
+                    with: data,
+                    shouldShowHeader: indexPath.section != 0,
+                    minimumVisibleReplies: model.dataSource.minVisibleReplies,
+                    lineLimit: messageLineLimit,
+                    isReadOnlyMode: isReadOnlyModeEnabled(),
+                    windowWidth: self.view.window?.frame.width
+                )
             }
             commentCell.delegate = self
 
             return commentCell
         } else {
             let replyCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPReplyCell.self, for: indexPath)
-            replyCell.configure(with: model.dataSource.cellData(for: indexPath), lineLimit: messageLineLimit, isReadOnlyMode: isReadOnlyModeEnabled(),
-                                  windowWidth: self.view.window?.frame.width)
+            replyCell.configure(
+                with: model.dataSource.cellData(for: indexPath),
+                lineLimit: messageLineLimit,
+                isReadOnlyMode: isReadOnlyModeEnabled(),
+                windowWidth: self.view.window?.frame.width
+            )
             replyCell.delegate = self
             
             return replyCell
@@ -808,7 +814,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         self.startLoginFlow()
     }
 
-    func moreTapped(for commentId: String?, replyingToID: String?, sender: UIButton) {
+    func moreTapped(for commentId: String?, replyingToID: String?, sender: OWUISource) {
         guard let commentId = commentId else { return }
 
         SPAnalyticsHolder.default.log(
@@ -935,7 +941,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         }
     }
     
-    func prepareFlowForAction(_ type: ActionType, sender: UIButton) {
+    func prepareFlowForAction(_ type: ActionType, sender: OWUISource) {
         switch type {
         case .delete(let commentId, let replyingToID):
             showCommentDeletionFlow(commentId, replyingToID: replyingToID)
@@ -1011,7 +1017,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
-    private func showCommentShareFlow(_ commentId: String, sender: UIButton, replyingToID: String?) {
+    private func showCommentShareFlow(_ commentId: String, sender: OWUISource, replyingToID: String?) {
         showLoader()
         model.shareComment(with: commentId) { [weak self] url, error in
             guard let self = self else { return }
