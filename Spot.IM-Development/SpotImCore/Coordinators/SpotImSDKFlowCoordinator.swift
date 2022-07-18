@@ -354,6 +354,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             abTestData: spotConfig.abConfig
         )
         
+        conversationDataSource.conversationModel = conversationModel
+        
         realTimeService.delegate = conversationModel
         self.realTimeService = realTimeService
         return conversationModel

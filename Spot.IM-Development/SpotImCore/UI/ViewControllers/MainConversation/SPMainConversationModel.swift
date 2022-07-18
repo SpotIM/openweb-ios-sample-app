@@ -29,6 +29,10 @@ protocol MainConversationModelDelegate: AnyObject {
     func realtimeViewTypeDidUpdate()
 }
 
+protocol OpenUserProfileDelegate: AnyObject {
+    func openProfileWebScreen(userId: String)
+}
+
 protocol CommentsCounterDelegate: AnyObject {
     func commentsCountDidUpdate(count: Int)
 }
@@ -39,6 +43,7 @@ final class SPMainConversationModel {
     /// Beware of `SPMainConversationDataSource` data changings in this way
     var delegates: OWMulticastDelegate<MainConversationModelDelegate> = .init()
     var commentsCounterDelegates: OWMulticastDelegate<CommentsCounterDelegate> = .init()
+    weak var openUserProfileDelegate: OpenUserProfileDelegate?
     
     private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"
     private let typingVisibilityAdditionalTimeInterval: Double = 5.0
@@ -56,6 +61,10 @@ final class SPMainConversationModel {
     
     fileprivate let servicesProvider: OWSharedServicesProviding
     
+    fileprivate let disposeBag = DisposeBag()
+    let authorTapped = BehaviorSubject<(userId: String, isTappedOnAvatar: Bool)?>(value: nil)
+    fileprivate let openPublisherUser = BehaviorSubject<String?>(value: nil)
+    
     // This is an ungly soultion until we will split this model to two proper VMs
     // By defualt this model serves the preConversation.
     // Each of the consuming VC will set this variable when presenting on screen
@@ -67,8 +76,17 @@ final class SPMainConversationModel {
                 return .articleHeaderPressed
             }
         
-        return Observable.merge([headerTappedObservable])
-            .map { ($0, self.currentBindedVC) }
+        let openPublisherUserProfileObservable: Observable<SPViewActionCallbackType> =
+        openPublisherUser
+            .unwrap()
+            .map { userId -> SPViewActionCallbackType in
+                return .openUserProfile(userId: userId)
+            }
+        
+        return Observable.merge([
+            headerTappedObservable,
+            openPublisherUserProfileObservable
+        ]).map { ($0, self.currentBindedVC) }
     }
     
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
@@ -129,6 +147,39 @@ final class SPMainConversationModel {
             if let self = self {
                 self.sortOption = self.dataSource.sortMode ?? .newest
             }
+        }
+        
+        authorTapped.unwrap().subscribe(onNext: { [weak self] userId, isAvatarClicked in
+            guard let self = self else { return }
+            
+            let authorId: String
+            if let comment = self.dataSource.commentViewModel(userId),
+               let commentAuthorId = comment.authorId {
+                authorId = commentAuthorId
+            } else {
+                authorId = userId
+            }
+            
+            let isMyProfile = SPPublicSessionInterface.isMe(userId: authorId)
+            let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
+            self.trackProfileClicked(commentId: userId, authorId: authorId, isMyProfile: isMyProfile, targetType: targetType)
+            
+            // TODO - check if we should handle open user profile or the publisher will handle it
+            // TODO -  pass the publisher user Id
+            self.openPublisherUser.onNext(authorId)
+            
+            self.openUserProfileDelegate?.openProfileWebScreen(userId: authorId)
+        }).disposed(by: disposeBag)
+    }
+    
+    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
+        if isMyProfile {
+            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId, targetType: targetType), source: .conversation)
+        } else {
+            SPAnalyticsHolder.default.log(
+                event: .userProfileClicked(messageId: commentId, userId: authorId, targetType: targetType),
+                source: .conversation
+            )
         }
     }
     
