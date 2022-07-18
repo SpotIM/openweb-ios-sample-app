@@ -38,6 +38,7 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     fileprivate var delegate: SPCommentCellDelegate?
     
     fileprivate var commentId: String?
+    fileprivate var user: SPUser?
     fileprivate var replyToCommentId: String?
     
     let avatarVM: OWAvatarViewModeling
@@ -48,6 +49,7 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     init(user: SPUser?, imageProvider: SPImageProvider? = nil) {
         avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         userNameVM = OWUserNameViewModel(user: user)
+        self.user = user
         
         self.setupObservers()
     }
@@ -76,9 +78,14 @@ fileprivate extension OWCommentUserViewModel {
         
         userNameVM.outputs.userNameTapped.withLatestFrom(_conversationModel.unwrap())
             .subscribe(onNext: { [weak self] conversationModel in
-                guard let self = self, let commentId = self.commentId else { return }
+                guard
+                    let self = self,
+                    let commentId = self.commentId,
+                    let user = self.user
+                else { return }
                 conversationModel.authorTapped.onNext((
-                    userId: commentId,
+                    user: user,
+                    commentId: commentId,
                     isTappedOnAvatar: false
                 ))
             }).disposed(by: disposeBag)
@@ -86,9 +93,14 @@ fileprivate extension OWCommentUserViewModel {
         avatarVM.outputs.avatarTapped
             .withLatestFrom(_conversationModel.unwrap())
             .subscribe(onNext: { [weak self] conversationModel in
-                guard let self = self, let commentId = self.commentId else { return }
+                guard
+                    let self = self,
+                    let commentId = self.commentId,
+                    let user = self.user
+                else { return }
                 conversationModel.authorTapped.onNext((
-                    userId: commentId,
+                    user: user,
+                    commentId: commentId,
                     isTappedOnAvatar: true
                 ))
             }).disposed(by: disposeBag)

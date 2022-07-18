@@ -62,7 +62,7 @@ final class SPMainConversationModel {
     fileprivate let servicesProvider: OWSharedServicesProviding
     
     fileprivate let disposeBag = DisposeBag()
-    let authorTapped = BehaviorSubject<(userId: String, isTappedOnAvatar: Bool)?>(value: nil)
+    let authorTapped = BehaviorSubject<(user: SPUser, commentId: String?, isTappedOnAvatar: Bool)?>(value: nil)
     fileprivate let openPublisherUser = BehaviorSubject<String?>(value: nil)
     
     // This is an ungly soultion until we will split this model to two proper VMs
@@ -149,33 +149,31 @@ final class SPMainConversationModel {
             }
         }
         
-        authorTapped.unwrap().subscribe(onNext: { [weak self] userId, isAvatarClicked in
-            guard let self = self else { return }
+        authorTapped.unwrap().subscribe(onNext: { [weak self] user, commentId, isAvatarClicked in
+            guard let self = self,
+                  let userId = user.id
+            else { return }
             
-            let authorId: String
-            if let comment = self.dataSource.commentViewModel(userId),
-               let commentAuthorId = comment.authorId {
-                authorId = commentAuthorId
+            let isMyProfile = SPPublicSessionInterface.isMe(userId: userId)
+            
+            let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
+            
+            if let ssoPublisherId = user.ssoPublisherId,
+               !ssoPublisherId.isEmpty {
+                self.openPublisherUser.onNext(user.ssoPublisherId)
             } else {
-                authorId = userId
+                self.openUserProfileDelegate?.openProfileWebScreen(userId: userId)
             }
             
-            let isMyProfile = SPPublicSessionInterface.isMe(userId: authorId)
-            let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
-            self.trackProfileClicked(commentId: userId, authorId: authorId, isMyProfile: isMyProfile, targetType: targetType)
+            self.trackProfileClicked(commentId: commentId, authorId: userId, isMyProfile: isMyProfile, targetType: targetType)
             
-            // TODO - check if we should handle open user profile or the publisher will handle it
-            // TODO -  pass the publisher user Id
-            self.openPublisherUser.onNext(authorId)
-            
-            self.openUserProfileDelegate?.openProfileWebScreen(userId: authorId)
         }).disposed(by: disposeBag)
     }
     
-    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
+    private func trackProfileClicked(commentId: String?, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
         if isMyProfile {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId, targetType: targetType), source: .conversation)
-        } else {
+        } else if let commentId = commentId {
             SPAnalyticsHolder.default.log(
                 event: .userProfileClicked(messageId: commentId, userId: authorId, targetType: targetType),
                 source: .conversation
