@@ -62,7 +62,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
                     image = nil
                 }
                 return image ?? UIImage()
-            }
+            }.asObservable()
     }
     
     var indicationText: Observable<String> {
@@ -70,7 +70,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
             .withLatestFrom(strictMode) { [weak self] status, isStrictMode in
                 guard let self = self else { return "" }
                 return self.indicationText(status: status, isStrictMode: isStrictMode)
-            }
+            }.asObservable()
     }
 
     var indicationHeight: CGFloat = 0
@@ -79,22 +79,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
         self._status.onNext(status)
         self._strictMode.onNext(isStrictMode)
         self._commentWidth.onNext(containerWidth)
-        indicationHeight = {
-            // calculate text width using the comment with reducing all padding & icon
-            let width = containerWidth
-                        - (OWCommentStatusIndicationView.Metrics.statusTextHorizontalOffset * 2)
-                        - OWCommentStatusIndicationView.Metrics.iconSize
-                        - OWCommentStatusIndicationView.Metrics.iconLeadingOffset
-            
-            let attributedMessage = NSAttributedString(
-                string: self.indicationText(status: status, isStrictMode: isStrictMode),
-                attributes: [
-                    NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: OWCommentStatusIndicationView.Metrics.fontSize)
-                ])
-            // get the text height and add padding
-            let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)
-            return height + (OWCommentStatusIndicationView.Metrics.textVerticalPadding * 2)
-        }()
+        calculateHeight(containerWidth: containerWidth, text: self.indicationText(status: status, isStrictMode: isStrictMode))
     }
 }
 
@@ -110,5 +95,22 @@ fileprivate extension OWCommentStatusIndicationViewModel {
         default:
             return ""
         }
+    }
+    
+    func calculateHeight(containerWidth: CGFloat, text: String) {
+        // calculate text width using the comment with reducing all padding & icon
+        let width = containerWidth
+                    - (OWCommentStatusIndicationView.Metrics.statusTextHorizontalOffset * 2)
+                    - OWCommentStatusIndicationView.Metrics.iconSize
+                    - OWCommentStatusIndicationView.Metrics.iconLeadingOffset
+        
+        let attributedMessage = NSAttributedString(
+            string: text,
+            attributes: [
+                NSAttributedString.Key.font: UIFont.preferred(style: .regular, of: OWCommentStatusIndicationView.Metrics.fontSize)
+            ])
+        // get the text height and add padding
+        let height: CGFloat = attributedMessage.height(withConstrainedWidth: width)
+        indicationHeight = height + (OWCommentStatusIndicationView.Metrics.textVerticalPadding * 2)
     }
 }

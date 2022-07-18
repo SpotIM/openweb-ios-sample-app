@@ -11,6 +11,18 @@ import UIKit
 import RxSwift
 
 class OWCommentStatusIndicationView: OWBaseView {
+    struct Metrics {
+        static let iconSize: CGFloat = 14
+
+        static let iconLeadingOffset: CGFloat = 12
+        static let iconTopPadding: CGFloat = 14
+        static let textVerticalPadding: CGFloat = 12
+        static let statusTextHorizontalOffset: CGFloat = 8
+        
+        static let fontSize: CGFloat = 15
+        
+    }
+    
     private let iconImageView: OWBaseUIImageView = {
         let imageView = OWBaseUIImageView()
         imageView.image = UIImage(spNamed: "pendingIcon")
@@ -42,18 +54,6 @@ class OWCommentStatusIndicationView: OWBaseView {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
-    }
-    
-    struct Metrics {
-        static let iconSize: CGFloat = 14
-
-        static let iconLeadingOffset: CGFloat = 12
-        static let iconTopPadding: CGFloat = 14
-        static let textVerticalPadding: CGFloat = 12
-        static let statusTextHorizontalOffset: CGFloat = 8
-        
-        static let fontSize: CGFloat = 15
-        
     }
 }
 
