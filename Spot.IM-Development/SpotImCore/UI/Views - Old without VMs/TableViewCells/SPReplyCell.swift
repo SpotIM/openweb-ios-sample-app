@@ -14,13 +14,15 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     weak var delegate: SPCommentCellDelegate?
     
     let messageView: MessageContainerView = .init()
-
+    
+    private let statusIndicationView: OWCommentStatusIndicationView = .init()
     private let avatarView: SPAvatarView = .init()
     private let userNameView: UserNameView = .init()
     private let commentLabelView: CommentLabelView = .init()
     private let replyActionsView: OWCommentActionsView = .init()
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let commentMediaView: CommentMediaView = .init()
+    private let opacityView: OWBaseView = .init()
     
     private var commentId: String?
     private var replyingToId: String?
@@ -28,6 +30,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private var textViewLeadingConstraint: OWConstraint?
     private var commentMediaViewTopConstraint: OWConstraint?
+    private var statusIndicatorViewHeighConstraint: OWConstraint?
+    private var statusIndicatorViewTopConstraint: OWConstraint?
     
     private var imageRequest: DataRequest?
 
@@ -46,6 +50,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateAvatarView(with: data)
         updateCommentLabelView(with: data)
         messageView.delegate = self
+        setStatusIndicatorVisibillity(isVisible: data.showStatusIndicator)
         
         textViewLeadingConstraint?.update(offset: data.depthOffset())
         let replyActionsViewHeight: CGFloat
@@ -80,6 +85,15 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateRepliesButtonTitle(with: data.repliesRawCount)
         moreRepliesView.updateView(with: data.repliesButtonState)
         updateCommentMediaView(with: data)
+        statusIndicationView.configure(with: data.statusIndicationVM)
+    }
+    
+    private func setStatusIndicatorVisibillity(isVisible: Bool) {
+        statusIndicationView.isHidden = !isVisible
+        statusIndicatorViewHeighConstraint?.isActive = !isVisible
+        statusIndicatorViewTopConstraint?.update(offset: isVisible ? Theme.statusIndicatorTopOffset :0)
+        opacityView.isHidden = !isVisible
+        replyActionsView.setIsDisabled(isDisabled: isVisible)
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
@@ -104,12 +118,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         contentView.backgroundColor = .spBackground0
+        opacityView.backgroundColor = .spBackground0
         messageView.updateColorsAccordingToStyle()
         userNameView.updateColorsAccordingToStyle()
         replyActionsView.updateColorsAccordingToStyle()
         avatarView.updateColorsAccordingToStyle()
         moreRepliesView.updateColorsAccordingToStyle()
         commentLabelView.updateColorsAccordingToStyle()
+        statusIndicationView.updateColorsAccordingToStyle()
     }
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
@@ -186,14 +202,16 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     // MARK: - Private UISetup
     
     private func setupUI() {
-        contentView.addSubviews(avatarView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView)
+        contentView.addSubviews(avatarView, statusIndicationView, userNameView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView, opacityView)
         configureAvatarView()
+        configureStatusIndicationView()
         configureUserNameView()
         configureCommentLabelView()
         configureMessageView()
         configureReplyActionsView()
         configureMoreRepliesView()
         configureCommentMediaView()
+        configureOpacityView()
     }
     
     private func configureAvatarView() {
@@ -203,6 +221,24 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.trailing.equalTo(userNameView.OWSnp.leading).offset(-Theme.avatarImageViewTrailingOffset)
             make.top.equalTo(userNameView)
             make.size.equalTo(Theme.avatarSideSize)
+        }
+    }
+    
+    private func configureOpacityView() {
+        opacityView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(userNameView.OWSnp.top)
+        }
+        opacityView.layer.opacity = 0.4
+        opacityView.isUserInteractionEnabled = false
+    }
+    
+    private func configureStatusIndicationView() {
+        statusIndicationView.OWSnp.makeConstraints { make in
+            make.leading.equalTo(messageView)
+            statusIndicatorViewTopConstraint = make.top.equalToSuperview().offset(Theme.statusIndicatorTopOffset).constraint
+            make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
+            statusIndicatorViewHeighConstraint = make.height.equalTo(0).constraint
         }
     }
     
@@ -218,7 +254,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func configureUserNameView() {
         userNameView.delegate = self
         userNameView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Theme.topOffset)
+            make.top.equalTo(statusIndicationView.OWSnp.bottom).offset(Theme.topOffset)
             make.trailing.equalToSuperview()
             make.height.equalTo(Theme.userViewCollapsedHeight)
         }
@@ -367,5 +403,5 @@ private enum Theme {
     static let avatarImageViewTrailingOffset: CGFloat = 11.0
     static let moreRepliesTopOffset: CGFloat = 12.0
     static let commentLabelHeight: CGFloat = 28.0
-
+    static let statusIndicatorTopOffset: CGFloat = 16
 }
