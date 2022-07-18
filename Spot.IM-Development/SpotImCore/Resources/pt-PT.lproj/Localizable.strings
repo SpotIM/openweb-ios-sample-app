@@ -98,3 +98,6 @@
 "Edit a Comment" = "Editar um comentário";
 "Edit a Comment" = "Editar um comentário";
 "Recommend" = "Recomendar";
+"Your comment has been rejected." = "O seu comentário foi rejeitado.";
+"Hold on, your comment is waiting for approval." = "Aguarde, o seu comentário está à espera de aprovação.";
+"Your comment is waiting for approval due to the site’s policy." = "O seu comentário aguarda aprovação devido à política do Website.";

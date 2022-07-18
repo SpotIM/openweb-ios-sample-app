@@ -85,6 +85,7 @@ internal final class SPMainConversationDataSource {
             name: .userDisplayNameFrozen,
             object: nil
         )
+        
     }
     
     // MARK: - Internal methods and computed properties
@@ -722,7 +723,7 @@ extension SPMainConversationDataSource {
         
         handleDeletedCommentReplies(commentId: id, sectionIndexPath: indexPath)
         if isSoft {
-            (cellData[indexPath.section])[indexPath.row].isDeleted = true
+            (cellData[indexPath.section])[indexPath.row].setIsDeleted(isDeleted: true)
             delegate?.reload(shouldBeScrolledToTop: false)
         } else {
             let removeSection = (indexPath.row == 0 && isCascade) || cellData[indexPath.section].count == 1

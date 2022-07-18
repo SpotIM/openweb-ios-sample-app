@@ -34,6 +34,9 @@ internal protocol SPCommentUpdater {
     
     func shareComment(parameters: [String: Any], postId: String,
                       success: @escaping ShareCommentHandler, failure: @escaping ErrorHandler)
+    
+    func commentStatus(conversationId: String, commentId: String,
+                       success: @escaping ([String:String]) -> Void, failure: @escaping ErrorHandler)
 }
 
 internal final class SPCommentFacade: SPCommentUpdater {
@@ -237,6 +240,30 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             case .failure(_):
                                 failure(SPNetworkError.default)
                             }
+        }
+    }
+    
+    internal func commentStatus(conversationId: String, commentId: String, success: @escaping ([String:String]) -> Void, failure: @escaping ErrorHandler) {
+        let spRequest = SPConversationRequest.commentStatus(commentId: commentId)
+        guard let spotKey = SPClientSettings.main.spotKey
+            else {
+                failure(SPNetworkError.custom("Please provide Spot Key"))
+                return
+        }
+            
+        let headers = HTTPHeaders.basic(with: spotKey, postId: conversationId)
+
+        apiManager.execute(
+            request: spRequest,
+            parser: OWDecodableParser<[String:String]>(),
+            headers: headers
+        ) { (result, response) in
+            switch result {
+            case .success(let status):
+                success(status)
+            case .failure(let error):
+                failure(error)
+            }
         }
     }
     
