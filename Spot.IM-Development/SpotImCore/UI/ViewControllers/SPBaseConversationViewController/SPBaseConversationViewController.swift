@@ -168,13 +168,13 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     
     private func myUserAvatarDidTap() {
         guard let user = SPUserSessionHolder.session.user,
-              let userId = user.id,
               let policyForceRegister = SPConfigsDataSource.appConfig?.initialization?.policyForceRegister else {
             return
         }
         if (user.registered || !policyForceRegister) {
             model.authorTapped.onNext((
-                userId: userId,
+                user: user,
+                commentId: nil,
                 isTappedOnAvatar: true
             ))
         } else {
