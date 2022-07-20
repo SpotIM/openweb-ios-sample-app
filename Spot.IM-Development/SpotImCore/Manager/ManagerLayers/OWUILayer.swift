@@ -11,11 +11,15 @@ import Foundation
 class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
+    var helpers: OWHelpers { return self._helpers }
     
     fileprivate let sdkCoordinator: OWSDKCoordinator
+    fileprivate let _helpers: OWHelpers
     
-    init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator()) {
+    init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator(),
+        helpers: OWHelpers = OWHelpersInternal()) {
         self.sdkCoordinator = sdkCoordinator
+        self._helpers = helpers
     }
     
     /*
