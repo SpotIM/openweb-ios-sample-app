@@ -32,9 +32,8 @@ enum OWRealtimeEndpoint: OWEndpoint {
     // MARK: - Parameters
     var parameters: Parameters? {
         switch self {
-        // TODO: Complete parameters for the fetch data
-        case .fetchData:
-            return nil
+        case .fetchData(let postId):
+            return fetchDataParameters(postId: postId)
         }
     }
 }
@@ -51,5 +50,42 @@ extension OWNetworkAPI: OWRealtimeAPI {
         let endpoint = OWRealtimeEndpoint.fetchData(postId: postId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
+    }
+}
+
+fileprivate extension OWRealtimeEndpoint {
+    func fetchDataParameters(postId: OWPostId) -> [String: Any] {
+        let timestamp: Int = Int((Date()).timeIntervalSince1970)
+        let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: postId]
+        let withMessageIds = conversationId.merging([RealtimeAPIKeys.messageIds: []]) { first, _ in first }
+        
+        return [
+            RealtimeAPIKeys.timestamp: timestamp,
+            RealtimeAPIKeys.data: [
+                RealtimeAPIKeys.conversationNewMessages: [conversationId],
+                RealtimeAPIKeys.conversationCountMessages: [conversationId],
+                RealtimeAPIKeys.onlineUsers: [conversationId],
+                RealtimeAPIKeys.onlineViewingUsersCount: [withMessageIds],
+                RealtimeAPIKeys.conversationUpdatedMessages: [conversationId],
+                RealtimeAPIKeys.conversationDeletedMessages: [withMessageIds],
+                RealtimeAPIKeys.conversationTypingV2Users: [withMessageIds],
+                RealtimeAPIKeys.conversationTypingV2Count: [withMessageIds]
+            ]
+        ]
+    }
+    
+    enum RealtimeAPIKeys {
+        static let timestamp = "timestamp"
+        static let data = "data"
+        static let conversationId = "conversation_id"
+        static let conversationNewMessages = "conversation/new-messages"
+        static let conversationCountMessages = "conversation/count-messages"
+        static let onlineUsers = "online/users"
+        static let onlineViewingUsersCount = "online/users-count"
+        static let conversationUpdatedMessages = "conversation/updated-messages"
+        static let conversationDeletedMessages = "conversation/deleted-messages"
+        static let messageIds = "message_ids"
+        static let conversationTypingV2Users = "conversation/typing-v2-users"
+        static let conversationTypingV2Count = "conversation/typing-v2-count"
     }
 }
