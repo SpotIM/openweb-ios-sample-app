@@ -346,6 +346,7 @@ class SPCommentCreationViewController: SPBaseViewController,
                 self.delegate?.commentReplyDidEdit(with: responseData)
             } else {
                 self.delegate?.commentReplyDidCreate(responseData)
+                SPAnalyticsHolder.default.log(event: .createMessageSuccessfully, source: .conversation)
             }
             self.hideLoader()
             self.dismissController()
