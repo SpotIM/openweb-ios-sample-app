@@ -10,8 +10,6 @@ import Foundation
 import Alamofire
 import RxSwift
 
-// TODO: Complete OWConfigurationEndpoint
-
 enum OWConfigurationEndpoint: OWEndpoint {
     case fetchConfig(spotId: OWSpotId)
     case fetchAdsConfig
