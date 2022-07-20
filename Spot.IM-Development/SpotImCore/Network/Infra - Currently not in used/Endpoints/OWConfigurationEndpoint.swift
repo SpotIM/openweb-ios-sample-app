@@ -14,11 +14,17 @@ import RxSwift
 
 enum OWConfigurationEndpoint: OWEndpoint {
     case fetchConfig(spotId: OWSpotId)
+    case fetchAdsConfig
+    case fetchAbTestData
     
     // MARK: - HTTPMethod
     var method: HTTPMethod {
         switch self {
         case .fetchConfig:
+            return .get
+        case .fetchAdsConfig:
+            return .post
+        case .fetchAbTestData:
             return .get
         }
     }
@@ -26,8 +32,12 @@ enum OWConfigurationEndpoint: OWEndpoint {
     // MARK: - Path
     var path: String {
         switch self {
-        case .fetchConfig:
-            return ""
+        case .fetchConfig(let spotId):
+            return "/config/get/\(spotId)/default"
+        case .fetchAdsConfig:
+            return "/ads_config"
+        case .fetchAbTestData:
+            return "/config/ab_test"
         }
     }
     
@@ -35,6 +45,13 @@ enum OWConfigurationEndpoint: OWEndpoint {
     var parameters: Parameters? {
         switch self {
         case .fetchConfig:
+            return nil
+        case .fetchAdsConfig:
+            let date = Date()
+            let dayName = Date.dayNameFormatter.string(from: date).lowercased()
+            let hour = Int(Date.hourFormatter.string(from: date))!
+            return ["day": dayName, "hour": hour]
+        case .fetchAbTestData:
             return nil
         }
     }
