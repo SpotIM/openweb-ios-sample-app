@@ -46,7 +46,7 @@ internal class SPUserSessionHolder {
         servicesProvider.keychain().save(value: user, forKey: OWKeychain.OWKey<SPUser>.loggedInUserSession)
     }
     
-    static func updateSessionUserSsoPublisherId(_ ssoPublisherId: String) {
+    static func updateSessionUserSSOPublisherId(_ ssoPublisherId: String) {
         session.user?.ssoPublisherId = ssoPublisherId
     }
 
