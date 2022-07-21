@@ -45,6 +45,8 @@ internal final class ArticleWebViewController: UIViewController {
         switch type {
         case .articleHeaderPressed:
             print("[" + source.description + "] header tapped for postId: " + postId)
+        case .openUserProfile(let userId):
+            print("[" + source.description + "]) user profile tapped for userId: " + userId)
         default:
             break
         }
