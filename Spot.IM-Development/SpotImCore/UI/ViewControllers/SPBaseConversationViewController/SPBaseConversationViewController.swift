@@ -58,9 +58,11 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal init(model: SPMainConversationModel, customUIDelegate: OWCustomUIDelegate? = nil,
                   servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.model = model
+        
         self.servicesProvider = servicesProvider
         
         super.init(customUIDelegate: customUIDelegate)
+        self.model.openUserProfileDelegate = self
     }
 
     override func viewDidLoad() {
@@ -164,44 +166,19 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         return htmlString
     }
     
-    private func openMyProfileWebScreen() {
+    private func myUserAvatarDidTap() {
         guard let user = SPUserSessionHolder.session.user,
-              let userId = user.id,
               let policyForceRegister = SPConfigsDataSource.appConfig?.initialization?.policyForceRegister else {
             return
         }
         if (user.registered || !policyForceRegister) {
-            openProfileWebScreen(userId: userId, isMyProfile: true)
-            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: nil, userId: userId, targetType: .avatar), source: .conversation)
+            model.authorTapped.onNext((
+                user: user,
+                commentId: nil,
+                isTappedOnAvatar: true
+            ))
         } else {
             self.startLoginFlow()
-        }
-    }
-    
-    private func openProfileWebScreen(userId: String, isMyProfile: Bool) {
-        guard let mobileSdkConfig = SPConfigsDataSource.appConfig?.mobileSdk,
-              mobileSdkConfig.profileEnabled == true,
-              let spotId = SPClientSettings.main.spotKey else { return }
-        let params = SPWebSDKProvider.Params(
-            module: .profile,
-            spotId: spotId,
-            postId: model.dataSource.postId,
-            userId: userId
-        )
-        
-        if isMyProfile {
-            // add singleUseTicket to params when navigating to profile screen
-            SpotIm.profileProvider.getSingleUseToken().done { singleUseToken in
-                params.singleUseTicket = singleUseToken
-            }
-            .ensure {
-                SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
-            }
-            .catch { [weak self] error in
-                self?.servicesProvider.logger().log(level: .verbose, "Failed to get single use token: \(error)")
-            }
-        } else {
-            SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
     }
 
@@ -710,29 +687,6 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
 }
 
 extension SPBaseConversationViewController: SPCommentCellDelegate {
-    func respondToAuthorTap(for commentId: String?, isAvatarClicked: Bool) {
-        guard let commentId = commentId,
-              let comment = model.dataSource.commentViewModel(commentId),
-              let authorId = comment.authorId else { return }
-        
-        let isMyProfile = SPPublicSessionInterface.isMe(userId: authorId)
-        let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
-        trackProfileClicked(commentId: commentId, authorId: authorId, isMyProfile: isMyProfile, targetType: targetType)
-        
-        openProfileWebScreen(userId: authorId, isMyProfile: isMyProfile)
-    }
-    
-    private func trackProfileClicked(commentId: String, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
-        if isMyProfile {
-            SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId, targetType: targetType), source: .conversation)
-        } else {
-            SPAnalyticsHolder.default.log(
-                event: .userProfileClicked(messageId: commentId, userId: authorId, targetType: targetType),
-                source: .conversation
-            )
-        }
-    }
-
     @objc
     func showMoreReplies(for commentId: String?) {
         fatalError("Implement in subclass")
@@ -912,7 +866,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
     }
     
     func userAvatarDidTap(_ foorterView: SPMainConversationFooterView) {
-        openMyProfileWebScreen()
+        myUserAvatarDidTap()
     }
     
     private func isInFullConversationVC() -> Bool {
@@ -1070,6 +1024,37 @@ extension SPBaseConversationViewController: SPLoginPromptViewDelegate {
     func userTapOnLoginPrompt() {
         if let userAuthFlowDelegate = self.userAuthFlowDelegate {
             userAuthFlowDelegate.presentAuth()
+        }
+    }
+}
+
+extension SPBaseConversationViewController: OpenUserProfileDelegate {
+    func openProfileWebScreen(userId: String) {
+        guard let mobileSdkConfig = SPConfigsDataSource.appConfig?.mobileSdk,
+              mobileSdkConfig.profileEnabled == true,
+              let spotId = SPClientSettings.main.spotKey else { return }
+        let params = SPWebSDKProvider.Params(
+            module: .profile,
+            spotId: spotId,
+            postId: model.dataSource.postId,
+            userId: userId
+        )
+        
+        let isMyProfile = SPPublicSessionInterface.isMe(userId: userId)
+        
+        if isMyProfile {
+            // add singleUseTicket to params when navigating to profile screen
+            SpotIm.profileProvider.getSingleUseToken().done { singleUseToken in
+                params.singleUseTicket = singleUseToken
+            }
+            .ensure {
+                SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
+            }
+            .catch { [weak self] error in
+                self?.servicesProvider.logger().log(level: .verbose, "Failed to get single use token: \(error)")
+            }
+        } else {
+            SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
     }
 }

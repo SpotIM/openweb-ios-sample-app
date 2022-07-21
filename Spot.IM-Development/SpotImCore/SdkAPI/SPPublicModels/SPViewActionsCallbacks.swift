@@ -32,4 +32,5 @@ public enum SPViewSourceType {
 
 public enum SPViewActionCallbackType {
     case articleHeaderPressed
+    case openUserProfile(userId: String)
 }
