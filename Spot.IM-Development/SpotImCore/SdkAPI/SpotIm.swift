@@ -124,6 +124,7 @@ public class SpotIm {
     
     internal static var customInitialSortByOption: SpotImSortByOption? = nil
     
+    fileprivate static let openWebManager: OWManagerProtocol = OpenWeb.manager
     fileprivate static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
     
     /**
@@ -380,6 +381,17 @@ public class SpotIm {
     public static func configureLogger(logLevel: SPLogLevel, logMethods: [SPLogMethod]) {
         self.servicesProvider.configure.configureLogger(logLevel: logLevel.toOWPrefix,
                                                         logMethods: logMethods.map {$0.toOWPrefix })
+    }
+    
+    /**
+        Set additional configurations
+
+     - Parameter configurations - array of `SPAdditionalConfiguration` enum
+     */
+    public static func setAdditionalConfigurations(configurations: [SPAdditionalConfiguration]) {
+        let additionalConfigurations: [OWAdditionalConfiguration] = configurations.map { $0.toOWPrefix }
+        var helpers = openWebManager.ui.helpers
+        helpers.additionalConfigurations = additionalConfigurations
     }
 
     // MARK: Private
