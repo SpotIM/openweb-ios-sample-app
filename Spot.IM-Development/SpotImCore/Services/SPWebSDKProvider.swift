@@ -10,6 +10,11 @@ import Foundation
 
 internal final class SPWebSDKProvider {
     
+    fileprivate struct Settings {
+        static let helpers: OWHelpersInternal = OpenWeb.manager.ui.helpers as! OWHelpersInternal
+        static let tenantConfigCommentsFilter: String = "tenant_config.user-profile.keys_to_filter_comments"
+    }
+    
     enum WebModule: String {
         case profile = "user-profile"
     }
@@ -32,6 +37,13 @@ internal final class SPWebSDKProvider {
         }
 
         url = urlWithDarkModeParam(url: url)
+        
+        if Settings.helpers.shouldSuppressFinmbFilter {
+            // Current way for Yahoo internal testing for suppress finmb
+            // We will remove this noize from the code soon
+            url.appendQueryParam(name: Settings.tenantConfigCommentsFilter, value: "")
+        }
+        
         return url.absoluteString
     }
     
