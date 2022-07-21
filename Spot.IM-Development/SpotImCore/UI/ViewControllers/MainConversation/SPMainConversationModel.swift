@@ -62,8 +62,8 @@ final class SPMainConversationModel {
     fileprivate let servicesProvider: OWSharedServicesProviding
     
     fileprivate let disposeBag = DisposeBag()
-    let authorTapped = PublishSubject<(user: SPUser, commentId: String?, isTappedOnAvatar: Bool)?>()
-    fileprivate let openPublisherUser = PublishSubject<String?>()
+    let authorTapped = PublishSubject<(user: SPUser, commentId: String?, isTappedOnAvatar: Bool)>()
+    fileprivate let openPublisherUser = PublishSubject<String>()
     
     // This is an ungly soultion until we will split this model to two proper VMs
     // By defualt this model serves the preConversation.
@@ -78,7 +78,6 @@ final class SPMainConversationModel {
         
         let openPublisherUserProfileObservable: Observable<SPViewActionCallbackType> =
         openPublisherUser
-            .unwrap()
             .map { userId -> SPViewActionCallbackType in
                 return .openUserProfile(userId: userId)
             }
@@ -150,7 +149,6 @@ final class SPMainConversationModel {
         }
         
         authorTapped
-            .unwrap()
             .subscribe(onNext: { [weak self] user, commentId, isAvatarClicked in
                 guard let self = self,
                       let userId = user.id
@@ -158,12 +156,18 @@ final class SPMainConversationModel {
                 
                 let isMyProfile = SPPublicSessionInterface.isMe(userId: userId)
                 
+                var ssoPublisherId = user.ssoPublisherId
+                if isMyProfile, let currentUser = SPUserSessionHolder.session.user {
+                    // take the most updated user.ssoPublisherId
+                    ssoPublisherId = currentUser.ssoPublisherId
+                }
+                
                 let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
                 
-                if let ssoPublisherId = user.ssoPublisherId,
-                   !ssoPublisherId.isEmpty,
-                   SPConfigsDataSource.appConfig?.shared?.usePublisherUserProfile == true {
-                    self.openPublisherUser.onNext(user.ssoPublisherId)
+                if SPConfigsDataSource.appConfig?.shared?.usePublisherUserProfile == true,
+                   let ssoPublisherId = ssoPublisherId,
+                   !ssoPublisherId.isEmpty {
+                    self.openPublisherUser.onNext(ssoPublisherId)
                 } else {
                     self.openUserProfileDelegate?.openProfileWebScreen(userId: userId)
                 }
