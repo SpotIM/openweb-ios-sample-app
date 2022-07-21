@@ -10,6 +10,8 @@ import UIKit
 import RxSwift
 
 internal struct CommentViewModel {
+    
+    unowned var conversationModel: SPMainConversationModel?
 
     var authorId: String?
     var commentId: String?

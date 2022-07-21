@@ -28,6 +28,7 @@ typealias DeletedIndexPathsInfo = (indexPathes: [IndexPath], shouldRemoveSection
 internal final class SPMainConversationDataSource {
     
     weak var delegate: SPMainConversationDataSourceDelegate?
+    unowned var conversationModel: SPMainConversationModel?
 
     let articleMetadata: SpotImArticleMetadata
     var sortIsUpdated: (() -> Void)?
@@ -155,6 +156,11 @@ internal final class SPMainConversationDataSource {
             if let error = error {
                 completion(false, error)
             } else {
+                // Update user ssoPublisherId
+                if let userSsoPublisherId = response?.user?.ssoPublisherId {
+                    SPUserSessionHolder.updateSessionUserSSOPublisherId(userSsoPublisherId)
+                }
+                
                 if let newUsers = response?.conversation?.users {
                     let mergedUsers = self.users.merging(newUsers) { $1 }
                     self.users = mergedUsers
@@ -516,7 +522,7 @@ internal final class SPMainConversationDataSource {
 
     // MARK: - Private methods
 
-    private func commentViewModel(with comment: SPComment,
+    private func getCommentViewModel(with comment: SPComment,
                                   replyingToCommentId: String? = nil,
                                   replyingToDisplayName: String? = nil) -> CommentViewModel {
         var user: SPUser?
@@ -526,7 +532,7 @@ internal final class SPMainConversationDataSource {
                 user = commentUsers[userId]
             }
         }
-        return CommentViewModel(
+        var commentViewModel = CommentViewModel(
             with: comment,
             replyingToCommentId: replyingToCommentId,
             replyingToDisplayName: replyingToDisplayName,
@@ -534,6 +540,10 @@ internal final class SPMainConversationDataSource {
             user: user,
             imageProvider: dataProvider.imageURLProvider
         )
+        
+        commentViewModel.conversationModel = conversationModel
+        
+        return commentViewModel
     }
 
     private func replyViewModel(from reply: SPComment, with parent: SPComment) -> CommentViewModel {
@@ -542,7 +552,7 @@ internal final class SPMainConversationDataSource {
             displayName = user.displayName
         }
 
-        let viewModel = commentViewModel(with: reply,
+        let viewModel = getCommentViewModel(with: reply,
                                          replyingToCommentId: reply.parentId,
                                          replyingToDisplayName: parent.deleted ? nil :  displayName)
         makeRepliesProviderIfNeeded(for: reply, viewModel: viewModel)
@@ -563,7 +573,7 @@ internal final class SPMainConversationDataSource {
         var visibleComments = [CommentViewModel]()
 
         comments?.forEach { comment in
-            var viewModel = commentViewModel(with: comment,
+            var viewModel = getCommentViewModel(with: comment,
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
 
@@ -599,7 +609,7 @@ internal final class SPMainConversationDataSource {
 
         comments?.forEach { comment in
             var section = [CommentViewModel]()
-            let viewModel = commentViewModel(with: comment,
+            let viewModel = getCommentViewModel(with: comment,
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
 
