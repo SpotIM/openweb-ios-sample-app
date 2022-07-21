@@ -158,7 +158,7 @@ internal final class SPMainConversationDataSource {
             } else {
                 // Update user ssoPublisherId
                 if let userSsoPublisherId = response?.user?.ssoPublisherId {
-                    SPUserSessionHolder.updateSessionUserSsoPublisherId(userSsoPublisherId)
+                    SPUserSessionHolder.updateSessionUserSSOPublisherId(userSsoPublisherId)
                 }
                 
                 if let newUsers = response?.conversation?.users {

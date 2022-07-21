@@ -62,8 +62,8 @@ final class SPMainConversationModel {
     fileprivate let servicesProvider: OWSharedServicesProviding
     
     fileprivate let disposeBag = DisposeBag()
-    let authorTapped = BehaviorSubject<(user: SPUser, commentId: String?, isTappedOnAvatar: Bool)?>(value: nil)
-    fileprivate let openPublisherUser = BehaviorSubject<String?>(value: nil)
+    let authorTapped = PublishSubject<(user: SPUser, commentId: String?, isTappedOnAvatar: Bool)?>()
+    fileprivate let openPublisherUser = PublishSubject<String?>()
     
     // This is an ungly soultion until we will split this model to two proper VMs
     // By defualt this model serves the preConversation.
