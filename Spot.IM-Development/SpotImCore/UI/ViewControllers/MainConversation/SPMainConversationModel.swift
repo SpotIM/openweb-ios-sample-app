@@ -149,26 +149,27 @@ final class SPMainConversationModel {
             }
         }
         
-        authorTapped.unwrap().subscribe(onNext: { [weak self] user, commentId, isAvatarClicked in
-            guard let self = self,
-                  let userId = user.id
-            else { return }
-            
-            let isMyProfile = SPPublicSessionInterface.isMe(userId: userId)
-            
-            let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
-            
-            if let ssoPublisherId = user.ssoPublisherId,
-               !ssoPublisherId.isEmpty,
-               SPConfigsDataSource.appConfig?.shared?.usePublisherUserProfile == true {
-                self.openPublisherUser.onNext(user.ssoPublisherId)
-            } else {
-                self.openUserProfileDelegate?.openProfileWebScreen(userId: userId)
-            }
-            
-            self.trackProfileClicked(commentId: commentId, authorId: userId, isMyProfile: isMyProfile, targetType: targetType)
-            
-        }).disposed(by: disposeBag)
+        authorTapped
+            .unwrap()
+            .subscribe(onNext: { [weak self] user, commentId, isAvatarClicked in
+                guard let self = self,
+                      let userId = user.id
+                else { return }
+                
+                let isMyProfile = SPPublicSessionInterface.isMe(userId: userId)
+                
+                let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
+                
+                if let ssoPublisherId = user.ssoPublisherId,
+                   !ssoPublisherId.isEmpty,
+                   SPConfigsDataSource.appConfig?.shared?.usePublisherUserProfile == true {
+                    self.openPublisherUser.onNext(user.ssoPublisherId)
+                } else {
+                    self.openUserProfileDelegate?.openProfileWebScreen(userId: userId)
+                }
+                
+                self.trackProfileClicked(commentId: commentId, authorId: userId, isMyProfile: isMyProfile, targetType: targetType)
+            }).disposed(by: disposeBag)
     }
     
     private func trackProfileClicked(commentId: String?, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
