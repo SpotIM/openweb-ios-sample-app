@@ -12,4 +12,5 @@ import Foundation
 protocol OWUI {
     var flows: OWUIFlows { get }
     var views: OWUIViews { get }
+    var helpers: OWHelpers { get }
 }
