@@ -47,7 +47,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
         repliesButtonState = data.repliesButtonState
-        userView.configure(with: data)
+        updateUserView(with: data)
         updateActionView(with: data, isReadOnlyMode: isReadOnlyMode)
         updateCommentLabelView(with: data)
         messageView.delegate = self
@@ -126,6 +126,11 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         moreRepliesView.updateColorsAccordingToStyle()
         commentLabelView.updateColorsAccordingToStyle()
         statusIndicationView.updateColorsAccordingToStyle()
+    }
+    
+    private func updateUserView(with dataModel: CommentViewModel) {
+        dataModel.commentUserVM.inputs.configure(with: dataModel)
+        userView.configure(with: dataModel)
     }
 
     private func updateRepliesButtonTitle(with repliesCount: Int?) {
