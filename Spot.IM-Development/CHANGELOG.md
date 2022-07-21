@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2022-07-21
+### Added
+- UI to see pending messages which require approval (visible only to the user who wrote those)
+- Analytic event after a new comment created successfully (createMessageSuccessfully)
+- Infrastructure for various additional configurations
+### Internal
+- Infrastructure for UI cells animation using RX
+
 ## [1.14.4] - 2022-06-22
 ### Added
 - Support hiding the share button according to remote configuration
