@@ -10,6 +10,8 @@ import RxSwift
 import RxCocoa
 import UIKit
 
+typealias ConversationModelIsAvatarSource = (SPMainConversationModel, Bool)
+
 protocol OWCommentUserViewModelingInputs {
     func configure(with model: CommentViewModel)
     func setDelegate(_ delegate: SPCommentCellDelegate)
@@ -76,32 +78,35 @@ fileprivate extension OWCommentUserViewModel {
             self.delegate?.moreTapped(for: self.commentId, replyingToID: self.replyToCommentId, sender: sender)
         }).disposed(by: disposeBag)
         
-        userNameVM.outputs.userNameTapped.withLatestFrom(_conversationModel.unwrap())
-            .subscribe(onNext: { [weak self] conversationModel in
-                guard
-                    let self = self,
-                    let commentId = self.commentId,
-                    let user = self.user
-                else { return }
-                conversationModel.authorTapped.onNext((
-                    user: user,
-                    commentId: commentId,
-                    isTappedOnAvatar: false
-                ))
-            }).disposed(by: disposeBag)
+        let avatarTapped = avatarVM.outputs.avatarTapped
+            .flatMap { [weak self] _ -> Observable<ConversationModelIsAvatarSource> in
+                guard let self = self else { return .empty() }
+                return self._conversationModel
+                    .unwrap()
+                    .take(1)
+                    .map {($0, true)}
+            }
         
-        avatarVM.outputs.avatarTapped
-            .withLatestFrom(_conversationModel.unwrap())
-            .subscribe(onNext: { [weak self] conversationModel in
+        let userNameTapped = userNameVM.outputs.userNameTapped
+            .flatMap { [weak self] _ -> Observable<ConversationModelIsAvatarSource> in
+                guard let self = self else { return .empty() }
+                return self._conversationModel
+                    .unwrap()
+                    .take(1)
+                    .map {($0, false)}
+            }
+        
+        Observable.merge([avatarTapped, userNameTapped])
+            .subscribe(onNext: { [weak self] result in
                 guard
                     let self = self,
                     let commentId = self.commentId,
                     let user = self.user
                 else { return }
-                conversationModel.authorTapped.onNext((
+                result.0.authorTapped.onNext((
                     user: user,
                     commentId: commentId,
-                    isTappedOnAvatar: true
+                    isTappedOnAvatar: result.1
                 ))
             }).disposed(by: disposeBag)
     }
