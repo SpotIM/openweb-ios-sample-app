@@ -1913,9 +1913,9 @@
 				441165A22375C3E700B781F3 /* OWResult.swift */,
 				449F5F73237C5D7300F81EA3 /* OWMulticastDelegate.swift */,
 				3D9C5825281AF64F002D0FCB /* OWFiles.swift */,
+				3D08E0B9287AF3BC00E6F1AC /* OWObservableArray.swift */,
 				3D29A2D8283AD339002BE318 /* Retry.swift */,
 				168DC7D22873243E009A88B6 /* OWTypealiasesInternal.swift */,
-				3D08E0B9287AF3BC00E6F1AC /* OWObservableArray.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";

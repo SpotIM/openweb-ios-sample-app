@@ -10,6 +10,8 @@ import RxSwift
 import RxCocoa
 import UIKit
 
+typealias ConversationModelIsAvatarSource = (SPMainConversationModel, Bool)
+
 protocol OWCommentUserViewModelingInputs {
     func configure(with model: CommentViewModel)
     func setDelegate(_ delegate: SPCommentCellDelegate)
@@ -38,14 +40,18 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     fileprivate var delegate: SPCommentCellDelegate?
     
     fileprivate var commentId: String?
+    fileprivate var user: SPUser?
     fileprivate var replyToCommentId: String?
     
     let avatarVM: OWAvatarViewModeling
     let userNameVM: OWUserNameViewModeling
     
+    fileprivate let _conversationModel = BehaviorSubject<SPMainConversationModel?>(value: nil)
+    
     init(user: SPUser?, imageProvider: SPImageProvider? = nil) {
         avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         userNameVM = OWUserNameViewModel(user: user)
+        self.user = user
         
         self.setupObservers()
     }
@@ -53,6 +59,7 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     
     func configure(with model: CommentViewModel) {
+        _conversationModel.onNext(model.conversationModel)
         commentId = model.commentId
         replyToCommentId = model.replyingToCommentId
         
@@ -66,19 +73,41 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
 
 fileprivate extension OWCommentUserViewModel {
     func setupObservers() {
-        userNameVM.outputs.userNameTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: false)
-        }).disposed(by: disposeBag)
-        
         userNameVM.outputs.moreTapped.subscribe(onNext: { [weak self] sender in
             guard let self = self else { return }
             self.delegate?.moreTapped(for: self.commentId, replyingToID: self.replyToCommentId, sender: sender)
         }).disposed(by: disposeBag)
         
-        avatarVM.outputs.avatarTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.respondToAuthorTap(for: self.commentId, isAvatarClicked: true)
-        }).disposed(by: disposeBag)
+        let avatarTapped = avatarVM.outputs.avatarTapped
+            .flatMap { [weak self] _ -> Observable<ConversationModelIsAvatarSource> in
+                guard let self = self else { return .empty() }
+                return self._conversationModel
+                    .unwrap()
+                    .take(1)
+                    .map {($0, true)}
+            }
+        
+        let userNameTapped = userNameVM.outputs.userNameTapped
+            .flatMap { [weak self] _ -> Observable<ConversationModelIsAvatarSource> in
+                guard let self = self else { return .empty() }
+                return self._conversationModel
+                    .unwrap()
+                    .take(1)
+                    .map {($0, false)}
+            }
+        
+        Observable.merge([avatarTapped, userNameTapped])
+            .subscribe(onNext: { [weak self] result in
+                guard
+                    let self = self,
+                    let commentId = self.commentId,
+                    let user = self.user
+                else { return }
+                result.0.authorTapped.onNext((
+                    user: user,
+                    commentId: commentId,
+                    isTappedOnAvatar: result.1
+                ))
+            }).disposed(by: disposeBag)
     }
 }
