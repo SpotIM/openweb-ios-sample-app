@@ -99,7 +99,17 @@ internal class SPUserSessionHolder {
         keychain.remove(key: OWKeychain.OWKey<SPUser>.loggedInUserSession)
         keychain.remove(key: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession)
 
-        session = loadOrCreateGuestUserSession()
+        let newSession = loadOrCreateGuestUserSession()
+        replace(withSession: newSession)
+    }
+    
+    private static func replace(withSession session: SPUserSessionType) {
+        self.session.user = session.user
+        self.session.guid = session.guid
+        self.session.token = session.token
+        self.session.openwebToken = session.openwebToken
+        self.session.displayNameFrozen = session.displayNameFrozen
+        self.session.reportedComments = session.reportedComments
     }
 
     private static func loadOrCreateGuestUserSession() -> SPUserSessionType {
