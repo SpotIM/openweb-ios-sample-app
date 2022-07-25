@@ -46,7 +46,7 @@ protocol OWProfileAPI {
 }
 
 extension OWNetworkAPI: OWProfileAPI {
-    // Access by .realtime for readability
+    // Access by .profile for readability
     var profile: OWProfileAPI { return self }
     
     func createSingleUseToken() -> OWNetworkResponse<[String: String]> {

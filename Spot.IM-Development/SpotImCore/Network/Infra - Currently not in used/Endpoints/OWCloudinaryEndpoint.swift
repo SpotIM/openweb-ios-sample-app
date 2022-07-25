@@ -12,7 +12,7 @@ import Alamofire
 enum OWCloudinaryEndpoint: OWEndpoint {
     case fetchImage(url: URL)
     case login(publicId: String, timestamp: String)
-case upload(signature: String, publicId: String, timestamp: String, imageData: String)
+    case upload(signature: String, publicId: String, timestamp: String, imageData: String)
 
     // MARK: - HTTPMethod
     var method: HTTPMethod {
@@ -59,6 +59,29 @@ case upload(signature: String, publicId: String, timestamp: String, imageData: S
 
 protocol OWCloudinaryAPI {
     func fetchImage(url: URL) -> OWNetworkResponse<Data>
-    func login() -> OWNetworkResponse<SPSignResponse>
-//    func upload() -> ??
+    func login(publicId: String, timestamp: String) -> OWNetworkResponse<SPSignResponse>
+    func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image?>
+}
+
+extension OWNetworkAPI: OWCloudinaryAPI {
+    // Access by .cloudinary for readability
+    var cloudinary: OWCloudinaryAPI { return self }
+    
+    func fetchImage(url: URL) -> OWNetworkResponse<Data> {
+        let endpoint = OWCloudinaryEndpoint.fetchImage(url: url)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
+    
+    func login(publicId: String, timestamp: String) -> OWNetworkResponse<SPSignResponse> {
+        let endpoint = OWCloudinaryEndpoint.login(publicId: publicId, timestamp: timestamp)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
+    
+    func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image?> {
+        let endpoint = OWCloudinaryEndpoint.upload(signature: signature, publicId: publicId, timestamp: timestamp, imageData: imageData)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
 }
