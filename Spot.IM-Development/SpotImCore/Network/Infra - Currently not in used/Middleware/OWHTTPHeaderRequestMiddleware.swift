@@ -32,9 +32,36 @@ struct OWHTTPHeaderContent {
 
 class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
     func process(request: URLRequest) -> URLRequest {
+        guard let spotKey = SPClientSettings.main.spotKey else {
+            OWSharedServicesProvider.shared.logger().log(level: .error, "Please provide Spot Key")
+            return request
+        }
         
-        // TODO: Complete the headers
-        let headers: HTTPHeaders = [OWHTTPHeaderName.contentType: OWHTTPHeaderContent.json]
+        var headers: HTTPHeaders = [
+            OWHTTPHeaderName.contentType: OWHTTPHeaderContent.json,
+            OWHTTPHeaderName.spotId: spotKey,
+            OWHTTPHeaderName.postId: spotKey, // TODO - should we get it as a param ?
+            OWHTTPHeaderName.platform: UIDevice.current.deviceTypeXPlatformHeader(),
+            OWHTTPHeaderName.moblieGWVersion: "v1.0.0",
+            OWHTTPHeaderName.platformVersion: UIDevice.current.systemVersion,
+            OWHTTPHeaderName.sdkVersion: Bundle.spot.shortVersion ?? "na",
+            OWHTTPHeaderName.appVersion: Bundle.main.shortVersion ?? "na",
+            OWHTTPHeaderName.appScheme: Bundle.main.bundleIdentifier ?? "na",
+            OWHTTPHeaderName.userAgent: extendedAgent(),
+            OWHTTPHeaderName.pageViewId: SPAnalyticsHolder.default.pageViewId
+        ]
+        
+        if let userId = SPUserSessionHolder.session.guid, !userId.isEmpty {
+            headers[OWHTTPHeaderName.guid] = userId
+        }
+
+        if let token = SPUserSessionHolder.session.token, !token.isEmpty {
+            headers[OWHTTPHeaderName.authorization] = token
+        }
+        
+        if let openwebToken = SPUserSessionHolder.session.openwebToken, !openwebToken.isEmpty {
+            headers[OWHTTPHeaderName.openWebToken] = openwebToken
+        }
         
         var newRequest = request
         
@@ -43,5 +70,14 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
         }
         
         return newRequest
+    }
+}
+
+fileprivate extension OWHTTPHeaderRequestMiddleware {
+    func extendedAgent() -> String {
+        var agent = HTTPHeaders.default.dictionary["User-Agent"] ?? "na"
+        let device = UIDevice.modelIdentifier()
+        agent.insert(contentsOf: device.appending(" "), at: agent.startIndex)
+        return agent
     }
 }
