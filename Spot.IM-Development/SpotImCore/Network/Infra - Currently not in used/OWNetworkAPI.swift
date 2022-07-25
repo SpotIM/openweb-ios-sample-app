@@ -60,9 +60,12 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
             .unwrap()
     }
 
-    private func requestAfterPerformingMiddlewares(with request: URLRequest) -> URLRequest {
+    private func requestAfterPerformingMiddlewares(with request: URLRequest, additionalMiddlewares: [OWRequestMiddleware]) -> URLRequest {
         var newRequest = request
         for middleware in requestMiddlewares {
+            newRequest = middleware.process(request: newRequest)
+        }
+        for middleware in additionalMiddlewares {
             newRequest = middleware.process(request: newRequest)
         }
         return newRequest
@@ -85,8 +88,8 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
     func performRequest<T: Decodable>(route: OWURLRequestConfiguration, decoder: JSONDecoder = JSONDecoder()) -> OWNetworkResponse<T> {
         let progress = PublishSubject<Progress>()
 
-        let request = requestAfterPerformingMiddlewares(with: route.urlRequest!)
-
+        let request = requestAfterPerformingMiddlewares(with: route.urlRequest!, additionalMiddlewares: route.endpoint.additionalMiddlewares ?? [])
+        
         let response = Observable<T>.create { observer in
             let task = self.session.afSession.request(request)
                 .downloadProgress(closure: { prog in
