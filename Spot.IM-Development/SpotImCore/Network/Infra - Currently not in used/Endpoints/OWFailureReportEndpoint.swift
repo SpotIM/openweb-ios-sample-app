@@ -1,0 +1,53 @@
+//
+//  OWFailureReportEndpoint.swift
+//  SpotImCore
+//
+//  Created by  Nogah Melamed on 25/07/2022.
+//  Copyright © 2022 Spot.IM. All rights reserved.
+//
+
+import Foundation
+import Alamofire
+
+enum OWFailureReportEndpoint: OWEndpoint {
+    case error(error: SPError)
+    
+    // MARK: - HTTPMethod
+    var method: HTTPMethod {
+        switch self {
+        case .error:
+            return .post
+        }
+    }
+    
+    // MARK: - Path
+    var path: String {
+        switch self {
+        case .error:
+            return "/error"
+        }
+    }
+    
+    // MARK: - Parameters
+    var parameters: Parameters? {
+        switch self {
+        case .error(let error):
+            return error.parameters()
+        }
+    }
+}
+
+protocol OWFailureReportAPI {
+//    func reportError(error: SPError) -> OWNetworkResponse<String> - TODO - Empty response
+}
+
+extension OWNetworkAPI: OWFailureReportAPI {
+    // Access by .error for readability
+    var error: OWFailureReportAPI { return self }
+    
+//    func reportError(error: SPError) -> OWNetworkResponse<String> {
+//        let endpoint = OWFailureReportEndpoint.error(error: error)
+//        let requestConfigure = request(for: endpoint)
+//        return performRequest(route: requestConfigure)
+//    }
+}
