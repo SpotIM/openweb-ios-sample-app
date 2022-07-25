@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
-enum OWConfigurationEndpoint: OWEndpoint {
+enum OWConfigurationEndpoints: OWEndpoints {
     case fetchConfig(spotId: OWSpotId)
     case fetchAdsConfig
     case fetchAbTestData
@@ -66,19 +66,19 @@ extension OWNetworkAPI: OWConfigurationAPI {
     var configuration: OWConfigurationAPI { return self }
     
     func fetchConfig(spotId: OWSpotId) -> OWNetworkResponse<SPSpotConfiguration> {
-        let endpoint = OWConfigurationEndpoint.fetchConfig(spotId: spotId)
+        let endpoint = OWConfigurationEndpoints.fetchConfig(spotId: spotId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func fetchAdsConfig() -> OWNetworkResponse<SPAdsConfiguration> {
-        let endpoint = OWConfigurationEndpoint.fetchAdsConfig
+        let endpoint = OWConfigurationEndpoints.fetchAdsConfig
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func fetchAbTestData() -> OWNetworkResponse<OWAbTests> {
-        let endpoint = OWConfigurationEndpoint.fetchAbTestData
+        let endpoint = OWConfigurationEndpoints.fetchAbTestData
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }

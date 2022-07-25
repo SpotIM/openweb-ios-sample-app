@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-enum OWInternalAuthenticationEndpoint: OWEndpoint {
+enum OWInternalAuthenticationEndpoints: OWEndpoints {
     case guest
     case ssoStart(secret: String?)
     case ssoComplete(codeB: String)
@@ -70,31 +70,31 @@ extension OWNetworkAPI: OWInternalAuthenticationAPI {
     var internalAuthentication: OWInternalAuthenticationAPI { return self }
     
     func loginGuest() -> OWNetworkResponse<SPUser> {
-        let endpoint = OWInternalAuthenticationEndpoint.guest
+        let endpoint = OWInternalAuthenticationEndpoints.guest
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func ssoStart(secret: String?) -> OWNetworkResponse<SSOStartResponseInternal> {
-        let endpoint = OWInternalAuthenticationEndpoint.ssoStart(secret: secret)
+        let endpoint = OWInternalAuthenticationEndpoints.ssoStart(secret: secret)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func ssoComplete(codeB: String) -> OWNetworkResponse<SSOCompleteResponseInternal> {
-        let endpoint = OWInternalAuthenticationEndpoint.ssoComplete(codeB: codeB)
+        let endpoint = OWInternalAuthenticationEndpoints.ssoComplete(codeB: codeB)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func logout() -> OWNetworkResponse<EmptyDecodable> {
-        let endpoint = OWInternalAuthenticationEndpoint.logout
+        let endpoint = OWInternalAuthenticationEndpoints.logout
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func user() -> OWNetworkResponse<SPUser> {
-        let endpoint = OWInternalAuthenticationEndpoint.user
+        let endpoint = OWInternalAuthenticationEndpoints.user
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
