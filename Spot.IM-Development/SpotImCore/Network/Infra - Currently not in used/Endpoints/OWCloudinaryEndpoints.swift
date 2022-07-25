@@ -29,7 +29,6 @@ enum OWCloudinaryEndpoints: OWEndpoints {
     // MARK: - Path
     var path: String {
         switch self {
-        // MARK: TODO - these EP are not to our mobileGW, we should find a way to map it properly
         // MARK: TODO - check why there is no use in url given to fetchImage and how is it working today !?
         case .fetchImage, .upload: return ""
         case .login: return "/conversation/sign-upload"
