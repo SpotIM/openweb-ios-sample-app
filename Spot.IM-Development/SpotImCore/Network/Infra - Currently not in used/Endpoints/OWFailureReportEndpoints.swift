@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-enum OWFailureReportEndpoint: OWEndpoint {
+enum OWFailureReportEndpoints: OWEndpoints {
     case error(error: SPError)
     
     // MARK: - HTTPMethod
@@ -46,7 +46,7 @@ extension OWNetworkAPI: OWFailureReportAPI {
     var error: OWFailureReportAPI { return self }
     
     func reportError(error: SPError) -> OWNetworkResponse<EmptyDecodable> {
-        let endpoint = OWFailureReportEndpoint.error(error: error)
+        let endpoint = OWFailureReportEndpoints.error(error: error)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }

@@ -11,7 +11,7 @@ import RxSwift
 import Alamofire
 
 protocol OWNetworkAPIProtocol {
-    func request(for endpoint: OWEndpoint) -> OWURLRequestConfiguration
+    func request(for endpoint: OWEndpoints) -> OWURLRequestConfiguration
     
     var analytics: OWAnalyticsAPI { get }  
     var realtime: OWRealtimeAPI { get }
@@ -76,7 +76,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
         return newResponse
     }
 
-    func request(for endpoint: OWEndpoint) -> OWURLRequestConfiguration {
+    func request(for endpoint: OWEndpoints) -> OWURLRequestConfiguration {
         return OWURLRequestConfigure(environment: environment,
                                    endpoint: endpoint)
     }

@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
-enum OWRealtimeEndpoint: OWEndpoint {
+enum OWRealtimeEndpoints: OWEndpoints {
     case fetchData(postId: OWPostId)
     
     // MARK: - HTTPMethod
@@ -47,13 +47,13 @@ extension OWNetworkAPI: OWRealtimeAPI {
     var realtime: OWRealtimeAPI { return self }
     
     func fetchData(postId: OWPostId) -> OWNetworkResponse<RealTimeModel> {
-        let endpoint = OWRealtimeEndpoint.fetchData(postId: postId)
+        let endpoint = OWRealtimeEndpoints.fetchData(postId: postId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
 }
 
-fileprivate extension OWRealtimeEndpoint {
+fileprivate extension OWRealtimeEndpoints {
     func fetchDataParameters(postId: OWPostId) -> [String: Any] {
         let timestamp: Int = Int((Date()).timeIntervalSince1970)
         let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: postId]
