@@ -23,6 +23,8 @@ struct OWNetworkResponse<T> {
     var response: Observable<T>
 }
 
+struct EmptyDecodable: Decodable {}
+
 private let defaultMiddlewares: [OWMiddleware] = [OWRequestLogger(),
                                                   OWResponseLogger(),
                                                   OWHTTPHeaderRequestMiddleware()]

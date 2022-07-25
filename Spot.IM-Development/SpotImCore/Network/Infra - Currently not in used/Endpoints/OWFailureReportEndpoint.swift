@@ -38,16 +38,16 @@ enum OWFailureReportEndpoint: OWEndpoint {
 }
 
 protocol OWFailureReportAPI {
-//    func reportError(error: SPError) -> OWNetworkResponse<String> - TODO - Empty response
+    func reportError(error: SPError) -> OWNetworkResponse<EmptyDecodable>
 }
 
 extension OWNetworkAPI: OWFailureReportAPI {
     // Access by .error for readability
     var error: OWFailureReportAPI { return self }
     
-//    func reportError(error: SPError) -> OWNetworkResponse<String> {
-//        let endpoint = OWFailureReportEndpoint.error(error: error)
-//        let requestConfigure = request(for: endpoint)
-//        return performRequest(route: requestConfigure)
-//    }
+    func reportError(error: SPError) -> OWNetworkResponse<EmptyDecodable> {
+        let endpoint = OWFailureReportEndpoint.error(error: error)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
 }
