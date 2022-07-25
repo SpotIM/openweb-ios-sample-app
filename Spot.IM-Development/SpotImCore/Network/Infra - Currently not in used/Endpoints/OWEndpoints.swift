@@ -18,10 +18,15 @@ protocol OWEndpoints {
     var path: String { get }
     var parameters: Parameters? { get }
     var overrideBaseURL: URL? { get }
+    var additionalMiddlewares: [OWRequestMiddleware]? { get }
 }
 
 extension OWEndpoints {
     var overrideBaseURL: URL? {
+        return nil
+    }
+    
+    var additionalMiddlewares: [OWRequestMiddleware]? {
         return nil
     }
 }
