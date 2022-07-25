@@ -57,14 +57,28 @@ enum OWConfigurationEndpoint: OWEndpoint {
 
 protocol OWConfigurationAPI {
     func fetchConfig(spotId: OWSpotId) -> OWNetworkResponse<SPSpotConfiguration>
+    func fetchAdsConfig() -> OWNetworkResponse<SPAdsConfiguration>
+    func fetchAbTestData() -> OWNetworkResponse<OWAbTests>
 }
 
 extension OWNetworkAPI: OWConfigurationAPI {
-    // Access by .realtime for readability
+    // Access by .configuration for readability
     var configuration: OWConfigurationAPI { return self }
     
     func fetchConfig(spotId: OWSpotId) -> OWNetworkResponse<SPSpotConfiguration> {
         let endpoint = OWConfigurationEndpoint.fetchConfig(spotId: spotId)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
+    
+    func fetchAdsConfig() -> OWNetworkResponse<SPAdsConfiguration> {
+        let endpoint = OWConfigurationEndpoint.fetchAdsConfig
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
+    
+    func fetchAbTestData() -> OWNetworkResponse<OWAbTests> {
+        let endpoint = OWConfigurationEndpoint.fetchAbTestData
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
