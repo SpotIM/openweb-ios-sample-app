@@ -108,14 +108,16 @@ extension OWNetworkAPI: OWInternalAuthenticationAPI {
     }
 }
 
-class OWHTTPAuthHeaderRequestMiddleware: OWRequestMiddleware {
-    private var token = SPUserSessionHolder.session.token
-    init(token: String?) {
-        self.token = token ?? SPUserSessionHolder.session.token
-    }
-    func process(request: URLRequest) -> URLRequest {
-        var newRequest = request
-        newRequest.setValue(self.token, forHTTPHeaderField: OWHTTPHeaderName.authorization)
-        return newRequest
+extension OWInternalAuthenticationEndpoints {
+    class OWHTTPAuthHeaderRequestMiddleware: OWRequestMiddleware {
+        private var token = SPUserSessionHolder.session.token
+        init(token: String?) {
+            self.token = token ?? SPUserSessionHolder.session.token
+        }
+        func process(request: URLRequest) -> URLRequest {
+            var newRequest = request
+            newRequest.setValue(self.token, forHTTPHeaderField: OWHTTPHeaderName.authorization)
+            return newRequest
+        }
     }
 }
