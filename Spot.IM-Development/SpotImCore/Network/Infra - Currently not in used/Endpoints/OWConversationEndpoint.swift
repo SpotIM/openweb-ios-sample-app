@@ -110,9 +110,9 @@ fileprivate struct OWConversationEndpointConst {
 }
 
 protocol OWConversationAPI {
-//    func fetchConversation(articleUrl: String) -> Void // TODO - check if should be void
+    func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
     func conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String) -> OWNetworkResponse<SPConversationReadRM>
-//    func commentReport(id: String, parentId: String?) -> Void // TODO - check if should be void
+    func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
     func commentPost(parameters: Parameters) -> OWNetworkResponse<SPComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
     func commentUpdate(parameters: Parameters) -> OWNetworkResponse<SPComment>
@@ -126,11 +126,11 @@ extension OWNetworkAPI: OWConversationAPI {
     // Access by .conversation for readability
     var conversation: OWConversationAPI { return self }
     
-//    func fetchConversation(articleUrl: String) {
-//        let endpoint = OWConversationEndpoint.conversationAsync(articleUrl: articleUrl)
-//        let requestConfigure = request(for: endpoint)
-//        return performRequest(route: requestConfigure)
-//    }
+    func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable> {
+        let endpoint = OWConversationEndpoint.conversationAsync(articleUrl: articleUrl)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
     
     func conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String) -> OWNetworkResponse<SPConversationReadRM> {
         let endpoint = OWConversationEndpoint.conversationRead(id: id, mode: mode, page: page, parentId: parentId)
@@ -138,11 +138,11 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
     
-//    func commentReport(id: String, parentId: String?) {
-//        let endpoint = OWConversationEndpoint.commentReport(id: id, parentId: parentId)
-//        let requestConfigure = request(for: endpoint)
-//        return performRequest(route: requestConfigure)
-//    }
+    func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable> {
+        let endpoint = OWConversationEndpoint.commentReport(id: id, parentId: parentId)
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
     
     func commentPost(parameters: Parameters) -> OWNetworkResponse<SPComment> {
         let endpoint = OWConversationEndpoint.commentPost(parameters: parameters)

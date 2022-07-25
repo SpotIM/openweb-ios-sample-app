@@ -61,7 +61,7 @@ protocol OWInternalAuthenticationAPI {
     func loginGuest() -> OWNetworkResponse<SPUser>
     func ssoStart(secret: String?) -> OWNetworkResponse<SSOStartResponseInternal>
     func ssoComplete(codeB: String) -> OWNetworkResponse<SSOCompleteResponseInternal>
-//    func logout() -> OWNetworkResponse<?> TODO!!
+    func logout() -> OWNetworkResponse<EmptyDecodable>
     func user() -> OWNetworkResponse<SPUser>
 }
 
@@ -87,11 +87,11 @@ extension OWNetworkAPI: OWInternalAuthenticationAPI {
         return performRequest(route: requestConfigure)
     }
     
-//    func logout() -> OWNetworkResponse<?> {
-//        let endpoint = OWInternalAuthenticationEndpoint.logout
-//        let requestConfigure = request(for: endpoint)
-//        return performRequest(route: requestConfigure)
-//    }
+    func logout() -> OWNetworkResponse<EmptyDecodable> {
+        let endpoint = OWInternalAuthenticationEndpoint.logout
+        let requestConfigure = request(for: endpoint)
+        return performRequest(route: requestConfigure)
+    }
     
     func user() -> OWNetworkResponse<SPUser> {
         let endpoint = OWInternalAuthenticationEndpoint.user
