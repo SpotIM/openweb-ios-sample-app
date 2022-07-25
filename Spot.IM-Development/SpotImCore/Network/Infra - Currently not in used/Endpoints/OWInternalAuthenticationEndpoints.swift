@@ -11,7 +11,7 @@ import Alamofire
 
 enum OWInternalAuthenticationEndpoints: OWEndpoints {
     case guest
-    case ssoStart(secret: String?)
+    case ssoStart(secret: String?, token: String?)
     case ssoComplete(codeB: String)
     case logout
     case user
@@ -40,7 +40,7 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
         switch self {
         case .guest:
             return nil
-        case .ssoStart(let secret):
+        case .ssoStart(let secret, let token):
             let spotKey = SPClientSettings.main.spotKey
             var requestParams: [String: Any] = ["spot_id": spotKey]
             if let secret = secret {
@@ -55,11 +55,19 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
             return nil
         }
     }
+    
+    var additionalMiddlewares: [OWRequestMiddleware]? {
+        switch self {
+        case .ssoStart(let secret, let token):
+            return [OWHTTPAuthHeaderRequestMiddleware(token: token)]
+        default: return nil
+        }
+    }
 }
 
 protocol OWInternalAuthenticationAPI {
     func loginGuest() -> OWNetworkResponse<SPUser>
-    func ssoStart(secret: String?) -> OWNetworkResponse<SSOStartResponseInternal>
+    func ssoStart(secret: String?, token: String?) -> OWNetworkResponse<SSOStartResponseInternal>
     func ssoComplete(codeB: String) -> OWNetworkResponse<SSOCompleteResponseInternal>
     func logout() -> OWNetworkResponse<EmptyDecodable>
     func user() -> OWNetworkResponse<SPUser>
@@ -75,8 +83,8 @@ extension OWNetworkAPI: OWInternalAuthenticationAPI {
         return performRequest(route: requestConfigure)
     }
     
-    func ssoStart(secret: String?) -> OWNetworkResponse<SSOStartResponseInternal> {
-        let endpoint = OWInternalAuthenticationEndpoints.ssoStart(secret: secret)
+    func ssoStart(secret: String?, token: String?) -> OWNetworkResponse<SSOStartResponseInternal> {
+        let endpoint = OWInternalAuthenticationEndpoints.ssoStart(secret: secret, token: token)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
@@ -97,5 +105,17 @@ extension OWNetworkAPI: OWInternalAuthenticationAPI {
         let endpoint = OWInternalAuthenticationEndpoints.user
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
+    }
+}
+
+class OWHTTPAuthHeaderRequestMiddleware: OWRequestMiddleware {
+    private var token = SPUserSessionHolder.session.token
+    init(token: String?) {
+        self.token = token ?? SPUserSessionHolder.session.token
+    }
+    func process(request: URLRequest) -> URLRequest {
+        var newRequest = request
+        newRequest.setValue(self.token, forHTTPHeaderField: OWHTTPHeaderName.authorization)
+        return newRequest
     }
 }
