@@ -45,8 +45,12 @@ internal final class ArticleWebViewController: UIViewController {
         switch type {
         case .articleHeaderPressed:
             print("[" + source.description + "] header tapped for postId: " + postId)
-        case .openUserProfile(let userId):
+        case .openUserProfile(let userId, let navController):
             print("[" + source.description + "]) user profile tapped for userId: " + userId)
+            // here the publisher will navigate to the internal user profile
+//            let vc = UIViewController()
+//            vc.view.backgroundColor = .green
+//            navController.pushViewController(vc, animated: true)
         default:
             break
         }
