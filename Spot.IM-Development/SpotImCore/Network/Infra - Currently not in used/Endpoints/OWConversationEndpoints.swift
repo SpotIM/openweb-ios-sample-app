@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-enum OWConversationEndpoint: OWEndpoint {
+enum OWConversationEndpoints: OWEndpoints {
     case conversationAsync(articleUrl: String)
     case conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String)
     case commentReport(id: String, parentId: String?)
@@ -127,61 +127,61 @@ extension OWNetworkAPI: OWConversationAPI {
     var conversation: OWConversationAPI { return self }
     
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable> {
-        let endpoint = OWConversationEndpoint.conversationAsync(articleUrl: articleUrl)
+        let endpoint = OWConversationEndpoints.conversationAsync(articleUrl: articleUrl)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String) -> OWNetworkResponse<SPConversationReadRM> {
-        let endpoint = OWConversationEndpoint.conversationRead(id: id, mode: mode, page: page, parentId: parentId)
+        let endpoint = OWConversationEndpoints.conversationRead(id: id, mode: mode, page: page, parentId: parentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable> {
-        let endpoint = OWConversationEndpoint.commentReport(id: id, parentId: parentId)
+        let endpoint = OWConversationEndpoints.commentReport(id: id, parentId: parentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentPost(parameters: Parameters) -> OWNetworkResponse<SPComment> {
-        let endpoint = OWConversationEndpoint.commentPost(parameters: parameters)
+        let endpoint = OWConversationEndpoints.commentPost(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink> {
-        let endpoint = OWConversationEndpoint.commentShare(id: id, parentId: parentId)
+        let endpoint = OWConversationEndpoints.commentShare(id: id, parentId: parentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentUpdate(parameters: Parameters) -> OWNetworkResponse<SPComment> {
-        let endpoint = OWConversationEndpoint.commentUpdate(parameters: parameters)
+        let endpoint = OWConversationEndpoints.commentUpdate(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete> {
-        let endpoint = OWConversationEndpoint.commentDelete(id: id, parentId: parentId)
+        let endpoint = OWConversationEndpoints.commentDelete(id: id, parentId: parentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<Bool> {
-        let endpoint = OWConversationEndpoint.commentRankChange(conversationId: conversationId, operation: operation, commentId: commentId)
+        let endpoint = OWConversationEndpoints.commentRankChange(conversationId: conversationId, operation: operation, commentId: commentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<[String : [String : SPConversationCounters]]> {
-        let endpoint = OWConversationEndpoint.commentsCounters(conversationIds: conversationIds)
+        let endpoint = OWConversationEndpoints.commentsCounters(conversationIds: conversationIds)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func commentStatus(commentId: String) -> OWNetworkResponse<[String : String]> {
-        let endpoint = OWConversationEndpoint.commentStatus(commentId: commentId)
+        let endpoint = OWConversationEndpoints.commentStatus(commentId: commentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }

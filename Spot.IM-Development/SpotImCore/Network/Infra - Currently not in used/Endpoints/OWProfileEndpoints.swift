@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-enum OWProfileEndpoint: OWEndpoint {
+enum OWProfileEndpoints: OWEndpoints {
     case createSingleUseToken
     
     // MARK: - HTTPMethod
@@ -50,7 +50,7 @@ extension OWNetworkAPI: OWProfileAPI {
     var profile: OWProfileAPI { return self }
     
     func createSingleUseToken() -> OWNetworkResponse<[String: String]> {
-        let endpoint = OWProfileEndpoint.createSingleUseToken
+        let endpoint = OWProfileEndpoints.createSingleUseToken
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
