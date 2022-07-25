@@ -55,6 +55,15 @@ enum OWCloudinaryEndpoints: OWEndpoints {
             ]
         }
     }
+    
+    // MARK: - Base URL
+    var overrideBaseURL: URL? {
+        switch self {
+        case .fetchImage: return URL(string: APIConstants.fetchImageBaseURL)
+        case .login: return URL(string: APIConstants.baseURLString)
+        case .upload: return URL(string: APIConstants.uploadImageBaseURL)
+        }
+    }
 }
 
 protocol OWCloudinaryAPI {
