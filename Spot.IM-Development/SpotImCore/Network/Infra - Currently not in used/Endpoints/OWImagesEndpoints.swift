@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-enum OWCloudinaryEndpoints: OWEndpoints {
+enum OWImagesEndpoints: OWEndpoints {
     case fetchImage(url: URL)
     case login(publicId: String, timestamp: String)
     case upload(signature: String, publicId: String, timestamp: String, imageData: String)
@@ -65,30 +65,30 @@ enum OWCloudinaryEndpoints: OWEndpoints {
     }
 }
 
-protocol OWCloudinaryAPI {
+protocol OWImagesAPI {
     func fetchImage(url: URL) -> OWNetworkResponse<Data>
     func login(publicId: String, timestamp: String) -> OWNetworkResponse<SPSignResponse>
     func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image>
 }
 
-extension OWNetworkAPI: OWCloudinaryAPI {
-    // Access by .cloudinary for readability
-    var cloudinary: OWCloudinaryAPI { return self }
+extension OWNetworkAPI: OWImagesAPI {
+    // Access by .images for readability
+    var images: OWImagesAPI { return self }
     
     func fetchImage(url: URL) -> OWNetworkResponse<Data> {
-        let endpoint = OWCloudinaryEndpoints.fetchImage(url: url)
+        let endpoint = OWImagesEndpoints.fetchImage(url: url)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func login(publicId: String, timestamp: String) -> OWNetworkResponse<SPSignResponse> {
-        let endpoint = OWCloudinaryEndpoints.login(publicId: publicId, timestamp: timestamp)
+        let endpoint = OWImagesEndpoints.login(publicId: publicId, timestamp: timestamp)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
     func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image> {
-        let endpoint = OWCloudinaryEndpoints.upload(signature: signature, publicId: publicId, timestamp: timestamp, imageData: imageData)
+        let endpoint = OWImagesEndpoints.upload(signature: signature, publicId: publicId, timestamp: timestamp, imageData: imageData)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
