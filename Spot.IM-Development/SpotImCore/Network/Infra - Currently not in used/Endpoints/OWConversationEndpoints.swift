@@ -11,7 +11,7 @@ import Alamofire
 
 enum OWConversationEndpoints: OWEndpoints {
     case conversationAsync(articleUrl: String)
-    case conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String)
+    case conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String, offset: Int)
     case commentReport(id: String, parentId: String?)
     case commentPost(parameters: Parameters)
     case commentShare(id: String, parentId: String?)
@@ -56,13 +56,12 @@ enum OWConversationEndpoints: OWEndpoints {
         switch self {
         case .conversationAsync(let articleUrl):
             return ["host_url": articleUrl]
-        case .conversationRead(let id, let mode, let page, let parentId):
+        case .conversationRead(let id, let mode, let page, let parentId, let offset):
             let spotKey = SPClientSettings.main.spotKey
-            let currentRequestOffset = page == .first ? 0 : 0 /* self.offset */ // TODO - offset logic ?
             return [
                 "conversation_id": "\(spotKey)_\(id)",
                 "sort_by": mode.rawValue,
-                "offset": currentRequestOffset,
+                "offset": offset,
                 "count": PAGE_SIZE,
                 "parent_id": parentId,
                 "extract_data": page == .first,
