@@ -29,8 +29,8 @@ enum OWCloudinaryEndpoints: OWEndpoints {
     // MARK: - Path
     var path: String {
         switch self {
-        // MARK: TODO - check why there is no use in url given to fetchImage and how is it working today !?
-        case .fetchImage, .upload: return ""
+        case .fetchImage(let url): return url
+        case .upload: return ""
         case .login: return "/conversation/sign-upload"
         }
     }
