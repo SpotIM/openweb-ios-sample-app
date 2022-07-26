@@ -110,7 +110,7 @@ fileprivate struct OWConversationEndpointConst {
 
 protocol OWConversationAPI {
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
-    func conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String) -> OWNetworkResponse<SPConversationReadRM>
+    func conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM>
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
     func commentPost(parameters: Parameters) -> OWNetworkResponse<SPComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
@@ -131,8 +131,8 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
     
-    func conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String) -> OWNetworkResponse<SPConversationReadRM> {
-        let endpoint = OWConversationEndpoints.conversationRead(id: id, mode: mode, page: page, parentId: parentId)
+    func conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM> {
+        let endpoint = OWConversationEndpoints.conversationRead(id: id, mode: mode, page: page, parentId: parentId, offset: offset)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
