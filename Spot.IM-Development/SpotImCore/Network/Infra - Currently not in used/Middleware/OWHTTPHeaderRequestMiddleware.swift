@@ -32,15 +32,11 @@ struct OWHTTPHeaderContent {
 
 class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
     func process(request: URLRequest) -> URLRequest {
-        guard let spotKey = SPClientSettings.main.spotKey else {
-            OWSharedServicesProvider.shared.logger().log(level: .error, "Please provide Spot Key")
-            return request
-        }
         
         var headers: HTTPHeaders = [
             OWHTTPHeaderName.contentType: OWHTTPHeaderContent.json,
-            OWHTTPHeaderName.spotId: spotKey,
-            OWHTTPHeaderName.postId: spotKey, // TODO - should we get it as a param ?
+            OWHTTPHeaderName.spotId: OWManager.manager.spotId,
+            OWHTTPHeaderName.postId: OWManager.manager.postId ?? "default",
             OWHTTPHeaderName.platform: UIDevice.current.deviceTypeXPlatformHeader(),
             OWHTTPHeaderName.moblieGWVersion: "v1.0.0",
             OWHTTPHeaderName.platformVersion: UIDevice.current.systemVersion,
