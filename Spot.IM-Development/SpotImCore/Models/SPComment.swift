@@ -6,6 +6,7 @@
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
 
+
 import Foundation
 
 internal struct SPComment: Decodable, Equatable {
