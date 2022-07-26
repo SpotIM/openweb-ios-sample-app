@@ -68,7 +68,7 @@ enum OWCloudinaryEndpoints: OWEndpoints {
 protocol OWCloudinaryAPI {
     func fetchImage(url: URL) -> OWNetworkResponse<Data>
     func login(publicId: String, timestamp: String) -> OWNetworkResponse<SPSignResponse>
-    func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image?>
+    func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image>
 }
 
 extension OWNetworkAPI: OWCloudinaryAPI {
@@ -87,7 +87,7 @@ extension OWNetworkAPI: OWCloudinaryAPI {
         return performRequest(route: requestConfigure)
     }
     
-    func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image?> {
+    func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image> {
         let endpoint = OWCloudinaryEndpoints.upload(signature: signature, publicId: publicId, timestamp: timestamp, imageData: imageData)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)

@@ -42,8 +42,8 @@ protocol OWFailureReportAPI {
 }
 
 extension OWNetworkAPI: OWFailureReportAPI {
-    // Access by .error for readability
-    var error: OWFailureReportAPI { return self }
+    // Access by .failureReporter for readability
+    var failureReporter: OWFailureReportAPI { return self }
     
     func reportError(error: SPError) -> OWNetworkResponse<EmptyDecodable> {
         let endpoint = OWFailureReportEndpoints.error(error: error)

@@ -117,8 +117,8 @@ protocol OWConversationAPI {
     func commentUpdate(parameters: Parameters) -> OWNetworkResponse<SPComment>
     func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete>
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<Bool>
-    func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<[String:[String: SPConversationCounters]]>
-    func commentStatus(commentId: String) -> OWNetworkResponse<[String:String]>
+    func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<OWConversationCountersResponse>
+    func commentStatus(commentId: String) -> OWNetworkResponse<OWCommentStatusResponse>
 }
 
 extension OWNetworkAPI: OWConversationAPI {
@@ -173,13 +173,13 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
     
-    func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<[String : [String : SPConversationCounters]]> {
+    func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<OWConversationCountersResponse> {
         let endpoint = OWConversationEndpoints.commentsCounters(conversationIds: conversationIds)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
     
-    func commentStatus(commentId: String) -> OWNetworkResponse<[String : String]> {
+    func commentStatus(commentId: String) -> OWNetworkResponse<OWCommentStatusResponse> {
         let endpoint = OWConversationEndpoints.commentStatus(commentId: commentId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)

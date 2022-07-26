@@ -42,14 +42,14 @@ enum OWProfileEndpoints: OWEndpoints {
 }
 
 protocol OWProfileAPI {
-    func createSingleUseToken() -> OWNetworkResponse<[String: String]>
+    func createSingleUseToken() -> OWNetworkResponse<OWSingleUseTokenResponse>
 }
 
 extension OWNetworkAPI: OWProfileAPI {
     // Access by .profile for readability
     var profile: OWProfileAPI { return self }
     
-    func createSingleUseToken() -> OWNetworkResponse<[String: String]> {
+    func createSingleUseToken() -> OWNetworkResponse<OWSingleUseTokenResponse> {
         let endpoint = OWProfileEndpoints.createSingleUseToken
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
