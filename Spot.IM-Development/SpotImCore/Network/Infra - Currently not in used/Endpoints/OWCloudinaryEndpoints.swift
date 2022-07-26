@@ -29,7 +29,7 @@ enum OWCloudinaryEndpoints: OWEndpoints {
     // MARK: - Path
     var path: String {
         switch self {
-        case .fetchImage(let url): return url
+        case .fetchImage(let url): return url.absoluteString
         case .upload: return ""
         case .login: return "/conversation/sign-upload"
         }
