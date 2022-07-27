@@ -133,8 +133,14 @@ class SPCommentCreationModel {
     
     func gatherParametersForCreateCommentRequest() -> [String: Any] {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
+        let isRegistered = SPUserSessionHolder.session.user?.registered ?? false
         
-        var metadata: [String: Any] = [SPRequestKeys.displayName: displayName]
+        var metadata: [String: Any] = [:]
+        
+        if (!isRegistered) {
+            metadata[SPRequestKeys.displayName] = displayName
+        }
+        
         if let bundleId = Bundle.main.bundleIdentifier {
             metadata[SPRequestKeys.appBundleId] = bundleId
         }
