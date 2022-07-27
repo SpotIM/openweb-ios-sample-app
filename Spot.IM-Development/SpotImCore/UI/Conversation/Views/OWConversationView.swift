@@ -15,6 +15,20 @@ class OWConversationView: UIView {
         
     }
     
+    fileprivate lazy var tableView: UITableView = {
+        let tableView = UITableView()
+            .enforceSemanticAttribute()
+            .backgroundColor(.spBackground0)
+            .separatorStyle(.none)
+        
+        // Register cells
+        for option in OWConversationCellOption.allCases {
+            tableView.register(cellClass: option.cellClass)
+        }
+            
+        return tableView
+    }()
+    
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
     
@@ -26,11 +40,20 @@ class OWConversationView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
+        setupObservers()
     }
 }
 
 fileprivate extension OWConversationView {
     func setupViews() {
-        
+        // After building the other views, position the table view in the appropriate place
+        self.addSubview(tableView)
+        tableView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    
+    func setupObservers() {
+        viewModel.outputs.cellsViewModels
     }
 }
