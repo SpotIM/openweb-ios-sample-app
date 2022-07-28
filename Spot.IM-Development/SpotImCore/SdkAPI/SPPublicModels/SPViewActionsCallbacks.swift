@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public typealias SPViewActionsCallbacks = (SPViewActionCallbackType, SPViewSourceType, String) -> Void
 
@@ -32,5 +33,5 @@ public enum SPViewSourceType {
 
 public enum SPViewActionCallbackType {
     case articleHeaderPressed
-    case openUserProfile(userId: String)
+    case openUserProfile(userId: String, navigationController: UINavigationController)
 }
