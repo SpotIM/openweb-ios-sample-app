@@ -31,10 +31,6 @@ internal class SPBaseViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .spBackground0
-
-        let backItem = UIBarButtonItem()
-        backItem.title = ""
-        navigationItem.backBarButtonItem = backItem
         
         NotificationCenter.default.addObserver(
                    self,

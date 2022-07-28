@@ -291,8 +291,10 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     }
     
     private func createBackBarButtonItem() -> UIBarButtonItem {
-        let backButton = UIButton(type: .custom)
-        backButton.frame.size = CGSize(width: 44,height: 44) // set button size to enlarge hit area
+        let backButton = UIButton(frame: CGRect(x: 0, y: 0, width: 70.0, height: 70.0))
+        backButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -6, bottom: 0, right: 0)
+        backButton.titleEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 0.0)
+
         backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
         backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal) // Image can be downloaded from here below link
         backButton.contentHorizontalAlignment = .left
@@ -304,13 +306,35 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         let navController = PresentedContainerNavigationController()
         navController.view.tag = SPOTIM_NAV_CONTROL_TAG
         navController.modalPresentationStyle = .fullScreen
+        
+        navController.navigationBar.tintColor = .black
         navController.navigationBar.barTintColor = .spBackground0
-        navController.navigationBar.backgroundColor = .spBackground0
+        navController.navigationBar.isTranslucent = false
+        
+        let navigationBarBackgroundColor = UIColor.spBackground0
+        let navigationTitleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+        
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = navigationBarBackgroundColor
+            appearance.titleTextAttributes = navigationTitleTextAttributes
+
+            navController.navigationBar.standardAppearance = appearance;
+            navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
+        } else {
+            navController.navigationBar.backgroundColor = navigationBarBackgroundColor
+            navController.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+        }
+        
         return navController
     }
     
-    @IBAction func onClickCloseFullConversation(_ sender: UIButton) {
-        self.closeMainConversation()
+    @IBAction func onClickCloseFullConversation(_ sender: UIBarButtonItem) {
+        containerViewController?.dismiss(animated: true, completion: nil)
     }
     
     private func presentFailureAlert(viewController: UIViewController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
@@ -512,11 +536,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         
         logger.log(level: .verbose, "Inserting main conversation VC before the comment creation VC")
         navigationController?.viewControllers.insert(controller, at: commentVCIndex)
-    }
-    
-    @objc
-    private func closeMainConversation() {
-        containerViewController?.dismiss(animated: true, completion: nil)
     }
     
     private func showWebPage(with urlString: String) {
