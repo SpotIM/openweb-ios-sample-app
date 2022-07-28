@@ -86,6 +86,7 @@ fastlane/test_output
 test_output/
 .DS_Store
 Spot.IM-Development/.DS_Store
+Spot.IM-Development/Spot-IM.Development/Resources/.DS_Store
 Spot.IM-Development/SpotImCore/Resources/.DS_Store
 Spot.IM-Development/SpotImCore/SpotIMSDK/UI/.DS_Store
 Spot.IM-Development/SpotImCore/SpotIMSDK/UI/Views/.DS_Store

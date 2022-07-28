@@ -45,6 +45,7 @@ internal enum SPAnalyticsEvent: Equatable {
         relatedMessage: String?
     )
     case commentPostClicked
+    case createMessageSuccessfully
     case backClicked(SPAnScreenTargetType)          // ⏳
     case loadMoreComments
     case engineStatus(SPEngineStatusType, SPEngineTargetType)
@@ -101,6 +102,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return "create-message-clicked"
         case .commentPostClicked:
             return "comment-post-clicked"
+        case .createMessageSuccessfully:
+            return "create-message-successfully"
         case .backClicked:
             return "back-clicked"
         case .loadMoreComments:
@@ -172,6 +175,8 @@ internal enum SPAnalyticsEvent: Equatable {
             return .createMessageClicked
         case .commentPostClicked:
             return .commentPostClicked
+        case .createMessageSuccessfully:
+            return .createMessageSuccessfully
         case .backClicked:
             return .backClicked
         case .loadMoreComments:
