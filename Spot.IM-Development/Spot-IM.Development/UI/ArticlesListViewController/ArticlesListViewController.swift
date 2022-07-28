@@ -68,6 +68,11 @@ class ArticlesListViewController: UITableViewController {
         SpotIm.configureLogger(logLevel: .verbose, logMethods: [.nsLog,
                                                                 .file(maxFilesNumber: 50)])
         
+        // Intentionally added this commented out part for easy testing in the future of temporality configurations
+        // This will be our infra for adding stuff which is basically "noise", however important for testing stuff for our publishers
+//        let additionalConfigurations: [SPAdditionalConfiguration] = [.suppressFinmbFilter]
+//        SpotIm.setAdditionalConfigurations(configurations: additionalConfigurations)
+        
         // This is the new implementation for publishers with monetization. The app developer should provide the AdsProvider implementation instance
         // to utilize the ad-network dependecies from the app target instead of the SDK.
         SpotIm.setGoogleAdsProvider(googleAdsProvider: GoogleAdsProvider())
