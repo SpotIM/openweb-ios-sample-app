@@ -1057,4 +1057,8 @@ extension SPBaseConversationViewController: OpenUserProfileDelegate {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
     }
+    
+    func getCurrentNavigationController() -> UINavigationController? {
+        return navigationController
+    }
 }
