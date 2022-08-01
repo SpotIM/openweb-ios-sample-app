@@ -12,6 +12,8 @@ import RxSwift
 // Internal protocol
 protocol OWManagerInternalProtocol: AnyObject  {
     var currentSpotId: Observable<OWSpotId> { get }
+    var currentPostId: Observable<OWPostId> { get }
+    var postId: OWPostId? { get }
 }
 
 class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
@@ -26,7 +28,9 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     let analyticsLayer: OWAnalytics
     let uiLayer: OWUI
     fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
+    fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
     fileprivate var _currentNonRxSpotId: OWSpotId? = nil
+    fileprivate var _currentNonRxPostId: OWPostId? = nil
     
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
@@ -49,12 +53,29 @@ extension OWManager {
             _currentSpotId.onNext(newSpotId)
         }
     }
+    
+    var postId: OWPostId? {
+        get {
+           return _currentNonRxPostId
+        }
+        set(newPostId) {
+            _currentNonRxPostId = newPostId
+            _currentPostId.onNext(newPostId)
+        }
+    }
 }
     
 // Internal extension
 extension OWManager {
     var currentSpotId: Observable<OWSpotId> {
         return _currentSpotId
+            .unwrap()
+            .asObservable()
+            .distinctUntilChanged()
+    }
+    
+    var currentPostId: Observable<OWPostId> {
+        return _currentPostId
             .unwrap()
             .asObservable()
             .distinctUntilChanged()
