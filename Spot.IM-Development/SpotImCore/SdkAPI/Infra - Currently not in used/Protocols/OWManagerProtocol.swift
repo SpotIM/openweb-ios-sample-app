@@ -11,7 +11,6 @@ import Foundation
 // Will be a public protocol which expose the different layers of the manager
 protocol OWManagerProtocol {
     var spotId: OWSpotId { get set }
-    var postId: OWPostId? { get set }
     var ui: OWUI { get }
     var analytics: OWAnalytics { get }
 }
