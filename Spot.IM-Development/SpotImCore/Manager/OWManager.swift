@@ -12,7 +12,8 @@ import RxSwift
 // Internal protocol
 protocol OWManagerInternalProtocol: AnyObject  {
     var currentSpotId: Observable<OWSpotId> { get }
-    var currentPostId: Observable<OWPostId?> { get }
+    var currentPostId: Observable<OWPostId> { get }
+    var postId: OWPostId? { get }
 }
 
 class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
@@ -73,8 +74,9 @@ extension OWManager {
             .distinctUntilChanged()
     }
     
-    var currentPostId: Observable<OWPostId?> {
-        return _currentSpotId
+    var currentPostId: Observable<OWPostId> {
+        return _currentPostId
+            .unwrap()
             .asObservable()
             .distinctUntilChanged()
     }
