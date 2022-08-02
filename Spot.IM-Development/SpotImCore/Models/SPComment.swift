@@ -76,7 +76,7 @@ internal struct SPComment: Decodable, Equatable {
         hasNext = (try? container.decode(Bool.self, forKey: .hasNext)) ?? false
         edited = (try? container.decode(Bool.self, forKey: .edited)) ?? false
         deleted = (try? container.decode(Bool.self, forKey: .deleted)) ?? false
-        published = (try? container.decode(Bool.self, forKey: .published)) ?? true
+        published = (try? container.decode(Bool.self, forKey: .published)) ?? false
         rank = try? container.decode(Rank.self, forKey: .rank)
         content = try? container.decode([Content].self, forKey: .content)
         if let content = content {
