@@ -15,7 +15,7 @@ import RxSwift
  */
 protocol OWURLRequestConfiguration: URLRequestConvertible {
     var environment: OWEnvironmentProtocol { get }
-    var endpoint: OWEndpoint { get }
+    var endpoint: OWEndpoints { get }
     func asURLRequest() throws -> URLRequest
 }
 
@@ -45,5 +45,5 @@ extension OWURLRequestConfiguration {
 
 struct OWURLRequestConfigure: OWURLRequestConfiguration {
     var environment: OWEnvironmentProtocol
-    var endpoint: OWEndpoint
+    var endpoint: OWEndpoints
 }
