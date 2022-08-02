@@ -29,6 +29,21 @@ class OWConversationView: UIView {
         return tableView
     }()
     
+    fileprivate lazy var conversationDataSource: OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel> = {
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<ConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+            guard let self = self else { return UITableViewCell() }
+            
+            let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
+            cell.configure(with: item.viewModel)
+            
+            return cell
+        })
+        
+        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
+        dataSource.animationConfiguration = animationConfiguration
+        return dataSource
+    }()
+    
     fileprivate let viewModel: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
     
@@ -54,6 +69,8 @@ fileprivate extension OWConversationView {
     }
     
     func setupObservers() {
-        viewModel.outputs.cellsViewModels
+        viewModel.outputs.conversationDataSourceSections
+            .bind(to: tableView.rx.items(dataSource: conversationDataSource))
+            .disposed(by: disposeBag)
     }
 }
