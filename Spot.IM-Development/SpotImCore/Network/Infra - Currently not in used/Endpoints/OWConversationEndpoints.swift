@@ -62,7 +62,7 @@ enum OWConversationEndpoints: OWEndpoints {
                 "conversation_id": "\(spotKey)_\(id)",
                 "sort_by": mode.rawValue,
                 "offset": offset,
-                "count": PAGE_SIZE,
+                "count": OWConversationEndpointConst.PAGE_SIZE,
                 "parent_id": parentId,
                 "extract_data": page == .first,
                 "depth": parentId.isEmpty ? 2 : 1
