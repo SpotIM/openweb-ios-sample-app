@@ -290,27 +290,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         presentationalController.present(internalNavController, animated: animated)
     }
     
-    private func createBackBarButtonItem() -> UIBarButtonItem {
-        let backButton = UIButton(type: .custom)
-        backButton.frame.size = CGSize(width: 44,height: 44) // set button size to enlarge hit area
-        backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
-        backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal) // Image can be downloaded from here below link
-        backButton.contentHorizontalAlignment = .left
-        backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
-        return UIBarButtonItem(customView: backButton)
-    }
-    
-    private func createNavController() -> UINavigationController {
-        let navController = PresentedContainerNavigationController()
-        navController.view.tag = SPOTIM_NAV_CONTROL_TAG
-        navController.modalPresentationStyle = .fullScreen
-        navController.navigationBar.barTintColor = .spBackground0
-        navController.navigationBar.backgroundColor = .spBackground0
-        return navController
-    }
-    
-    @IBAction func onClickCloseFullConversation(_ sender: UIButton) {
-        self.closeMainConversation()
+    @IBAction func onClickCloseFullConversation(_ sender: UIBarButtonItem) {
+        containerViewController?.dismiss(animated: true, completion: nil)
     }
     
     private func presentFailureAlert(viewController: UIViewController, spNetworkError:SPNetworkError, retryHandler: @escaping (UIAlertAction) -> Void) {
@@ -514,11 +495,6 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         navigationController?.viewControllers.insert(controller, at: commentVCIndex)
     }
     
-    @objc
-    private func closeMainConversation() {
-        containerViewController?.dismiss(animated: true, completion: nil)
-    }
-    
     private func showWebPage(with urlString: String) {
         guard let url = URL(string: urlString) else {
             return
@@ -537,6 +513,59 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
             default: break
             }
         }
+    }
+}
+
+// Custom Navigation Conttoller
+extension SpotImSDKFlowCoordinator {
+    fileprivate struct Metrics {
+        static let backBarButtonSize: CGFloat = 70.0
+        static let backBarButtonImageInsetLeft: CGFloat = -6.0
+        static let backBarButtonTitleInset: CGFloat = 10.0
+        static let navigationTitleFontSize: CGFloat = 20.0
+    }
+    
+    private func createBackBarButtonItem() -> UIBarButtonItem {
+        let backButton = UIButton(frame: CGRect(x: 0, y: 0, width: Metrics.backBarButtonSize, height: Metrics.backBarButtonSize))
+        backButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: Metrics.backBarButtonImageInsetLeft, bottom: 0, right: 0)
+        backButton.titleEdgeInsets = UIEdgeInsets(top: Metrics.backBarButtonTitleInset, left: Metrics.backBarButtonTitleInset, bottom: Metrics.backBarButtonTitleInset, right: 0.0)
+
+        backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
+        backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal) // Image can be downloaded from here below link
+        backButton.contentHorizontalAlignment = .left
+        backButton.addTarget(self, action: #selector(self.onClickCloseFullConversation(_:)), for: .touchUpInside)
+        return UIBarButtonItem(customView: backButton)
+    }
+    
+    private func createNavController() -> UINavigationController {
+        let navController = PresentedContainerNavigationController()
+        navController.view.tag = SPOTIM_NAV_CONTROL_TAG
+        navController.modalPresentationStyle = .fullScreen
+        
+        navController.navigationBar.tintColor = .black
+        navController.navigationBar.barTintColor = .spBackground0
+        navController.navigationBar.isTranslucent = false
+        
+        let navigationBarBackgroundColor = UIColor.spBackground0
+        let navigationTitleTextAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: Metrics.navigationTitleFontSize),
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+        
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = navigationBarBackgroundColor
+            appearance.titleTextAttributes = navigationTitleTextAttributes
+
+            navController.navigationBar.standardAppearance = appearance;
+            navController.navigationBar.scrollEdgeAppearance = navController.navigationBar.standardAppearance
+        } else {
+            navController.navigationBar.backgroundColor = navigationBarBackgroundColor
+            navController.navigationBar.titleTextAttributes = navigationTitleTextAttributes
+        }
+        
+        return navController
     }
 }
 

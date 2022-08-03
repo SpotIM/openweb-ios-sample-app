@@ -31,6 +31,7 @@ protocol MainConversationModelDelegate: AnyObject {
 
 protocol OpenUserProfileDelegate: AnyObject {
     func openProfileWebScreen(userId: String)
+    func getCurrentNavigationController() -> UINavigationController?
 }
 
 protocol CommentsCounterDelegate: AnyObject {
@@ -63,7 +64,7 @@ final class SPMainConversationModel {
     
     fileprivate let disposeBag = DisposeBag()
     let authorTapped = PublishSubject<(user: SPUser, commentId: String?, isTappedOnAvatar: Bool)>()
-    fileprivate let openPublisherUser = PublishSubject<String>()
+    fileprivate let openPublisherUser = PublishSubject<(String, UINavigationController)>()
     
     // This is an ungly soultion until we will split this model to two proper VMs
     // By defualt this model serves the preConversation.
@@ -78,8 +79,8 @@ final class SPMainConversationModel {
         
         let openPublisherUserProfileObservable: Observable<SPViewActionCallbackType> =
         openPublisherUser
-            .map { userId -> SPViewActionCallbackType in
-                return .openUserProfile(userId: userId)
+            .map { userId, navController -> SPViewActionCallbackType in
+                return .openUserProfile(userId: userId, navigationController: navController)
             }
         
         return Observable.merge([
@@ -166,8 +167,9 @@ final class SPMainConversationModel {
                 
                 if SPConfigsDataSource.appConfig?.shared?.usePublisherUserProfile == true,
                    let ssoPublisherId = ssoPublisherId,
-                   !ssoPublisherId.isEmpty {
-                    self.openPublisherUser.onNext(ssoPublisherId)
+                   !ssoPublisherId.isEmpty,
+                   let navController = self.openUserProfileDelegate?.getCurrentNavigationController() {
+                    self.openPublisherUser.onNext((ssoPublisherId, navController))
                 } else {
                     self.openUserProfileDelegate?.openProfileWebScreen(userId: userId)
                 }

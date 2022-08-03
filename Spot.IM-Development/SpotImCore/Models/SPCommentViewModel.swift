@@ -164,6 +164,7 @@ internal struct CommentViewModel {
         updateCommentActionsVM()
         if let status = comment.status,
            comment.userId == SPUserSessionHolder.session.user?.id,
+           !comment.published,
            !comment.deleted, (comment.status == .reject || comment.status == .block || comment.status == .requireApproval || comment.status == .pending) {
             showStatusIndicator = true
             statusIndicationVM.inputs.configure(with: status, isStrictMode: comment.strictMode ?? false, containerWidth: textWidth())
