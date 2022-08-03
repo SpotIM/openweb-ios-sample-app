@@ -13,15 +13,20 @@ import Alamofire
  OWEndpoint - protocol which represent the necessary stuff related to an endpoint
  All endpoints will conform to it
  */
-protocol OWEndpoint {
+protocol OWEndpoints {
     var method: HTTPMethod { get }
     var path: String { get }
     var parameters: Parameters? { get }
     var overrideBaseURL: URL? { get }
+    var additionalMiddlewares: [OWRequestMiddleware]? { get }
 }
 
-extension OWEndpoint {
+extension OWEndpoints {
     var overrideBaseURL: URL? {
+        return nil
+    }
+    
+    var additionalMiddlewares: [OWRequestMiddleware]? {
         return nil
     }
 }

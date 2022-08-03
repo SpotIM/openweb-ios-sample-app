@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
-enum OWAnalyticsEndpoint: OWEndpoint {
+enum OWAnalyticsEndpoints: OWEndpoints {
     case sendEvent(info: SPEventInfo)
     
     // MARK: - HTTPMethod
@@ -68,7 +68,7 @@ extension OWNetworkAPI: OWAnalyticsAPI {
     var analytics: OWAnalyticsAPI { return self }
     
     func sendEvent(info: SPEventInfo) -> OWNetworkResponse<Bool> {
-        let endpoint = OWAnalyticsEndpoint.sendEvent(info: info)
+        let endpoint = OWAnalyticsEndpoints.sendEvent(info: info)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
