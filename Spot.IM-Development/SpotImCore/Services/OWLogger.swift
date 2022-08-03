@@ -180,7 +180,7 @@ fileprivate extension OWLogger {
             switch logMethod {
             case .nsLog:
                 let info = "\(prefix) \(format)"
-                NSLog(info + text)
+                NSLog("%@%@", info, text)
             case .osLog:
                 let osLogger = osLoggers[prefix] ?? OSLog(subsystem: PrivateMetrics.osLoggersSubsystem, category: prefix)
                 let textToLog = format + text
