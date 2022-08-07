@@ -37,7 +37,7 @@ class OWRealtimeService: OWRealtimeServicing {
             .unwrap()
             .asObservable()
             .observe(on: MainScheduler.instance)
-            .share(replay: 1) // Send the last component to new subscribers immediately
+            .share(replay: 1) // Send the last element to new subscribers immediately
     }
     
     func startFetchingData(postId: OWPostId) {
