@@ -32,11 +32,26 @@ final internal class SPUserSession: SPUserSessionType {
 internal class SPUserSessionHolder {
     fileprivate static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
 
-    static var session: SPUserSessionType = {
+    fileprivate static var _session: SPUserSessionType = {
         let session = loadOrCreateGuestUserSession()
         return session
     }()
-
+    
+    static var session: SPUserSessionType {
+        get {
+            let result: SPUserSessionType
+            objc_sync_enter(self)
+            result = _session
+            objc_sync_exit(self)
+            return result
+        }
+        set {
+            objc_sync_enter(self)
+            _session = newValue
+            objc_sync_exit(self)
+        }
+    }
+         
     static func updateSessionUser(user: SPUser) {
         // preserving entered username for unregistered user
         session.user = user
