@@ -16,8 +16,12 @@ class OWConversationVC: UIViewController {
     }
     
     fileprivate let viewModel: OWConversationViewModeling
-    fileprivate let conversationViewVM: OWConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
+    
+    fileprivate lazy var conversationView: OWConversationView = {
+        let conversationView = OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
+        return conversationView
+    }()
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -25,8 +29,6 @@ class OWConversationVC: UIViewController {
     
     init(viewModel: OWConversationViewModeling) {
         self.viewModel = viewModel
-        // We can pass here stuff from the main view model to this view model
-        conversationViewVM = OWConversationViewViewModel()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -42,6 +44,9 @@ class OWConversationVC: UIViewController {
 
 fileprivate extension OWConversationVC {
     func setupViews() {
-        
+        view.addSubview(conversationView)
+        conversationView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 }
