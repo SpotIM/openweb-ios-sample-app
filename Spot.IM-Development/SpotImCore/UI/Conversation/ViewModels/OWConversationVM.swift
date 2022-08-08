@@ -14,7 +14,7 @@ protocol OWConversationViewModelingInputs {
 }
 
 protocol OWConversationViewModelingOutputs {
-    
+    var conversationViewVM: OWConversationViewViewModeling { get }
 }
 
 protocol OWConversationViewModeling {
@@ -27,6 +27,10 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
     var outputs: OWConversationViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
+    
+    lazy var conversationViewVM: OWConversationViewViewModeling = {
+        return OWConversationViewViewModel()
+    }()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
