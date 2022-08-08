@@ -27,10 +27,6 @@ extension Date {
     }()
 
     func timeAgo() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMM"
-        formatter.locale = LocalizationManager.locale
-        
         let calendar = Calendar.current
         let now = Date()
         let earliest = self < now ? self : now
@@ -46,13 +42,30 @@ extension Date {
         let second = components.second ?? 0
 
         switch (weekOfYear, day, hour, minute, second) {
-        case (let week, _, _, _, _)     where week > 0:     return formatter.string(from: self)
+        case (let week, _, _, _, _)     where week > 0:     return formatDate()
         case (_, let day, _, _, _)      where day > 0:      return "\(day)" + LocalizationManager.localizedString(key: "Days")
         case (_, _, let hour, _, _)     where hour > 0:     return "\(hour)" + LocalizationManager.localizedString(key: "Hours")
         case (_, _, _, let minute, _)   where minute > 0:   return "\(minute)" + LocalizationManager.localizedString(key: "Minutes")
         case (_, _, _, _, let second)   where second >= 0:  return LocalizationManager.localizedString(key: "Just now")
-        default:                                            return formatter.string(from: self)
+        default:                                            return formatDate()
         }
+    }
+    
+    fileprivate func formatDate() -> String {
+        let calendar = Calendar.current
+        let formatter = DateFormatter()
+        formatter.locale = LocalizationManager.locale
+        let now = Date()
+        
+        let isInThisYear = calendar.isDate(self, equalTo: now, toGranularity: .year)
+        
+        if isInThisYear {
+            formatter.dateFormat = "d MMM"
+        } else {
+            formatter.dateFormat = "d MMM, yyyy"
+        }
+        
+        return formatter.string(from: self)
     }
 
     func seconds(fromDate date: Date) -> Int {
