@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias TranslationTextOverrides = [String : [String : String]]
+typealias OWTranslationTextOverrides = [String : [String : String]]
 struct SPConfigurationConversation: Decodable {
     
     let readBatchSize: Int?
@@ -17,7 +17,7 @@ struct SPConfigurationConversation: Decodable {
     let communityGuidelinesEnabled: Bool?
     let communityGuidelinesTitle: SPCommunityGuidelinesTitle?
     let disableImageUploadButton: Bool?
-    let translationTextOverrides: TranslationTextOverrides? // [language: [key : text]]
+    let translationTextOverrides: OWTranslationTextOverrides? // [language: [key : text]]
     let subscriberBadgeConfig: OWSubscriberBadgeConfiguration?
     let disableOnlineDotIndicator: Bool?
     let disableVoteDown: Bool?
@@ -48,7 +48,7 @@ struct SPConfigurationConversation: Decodable {
         communityGuidelinesEnabled = try? container.decode(Bool.self, forKey: .communityGuidelinesEnabled)
         communityGuidelinesTitle = try? container.decode(SPCommunityGuidelinesTitle.self, forKey: .communityGuidelinesTitle)
         disableImageUploadButton = try? container.decode(Bool.self, forKey: .disableImageUploadButton)
-        translationTextOverrides = try? container.decode(TranslationTextOverrides.self, forKey: .translationTextOverrides)
+        translationTextOverrides = try? container.decode(OWTranslationTextOverrides.self, forKey: .translationTextOverrides)
         subscriberBadgeConfig = try? container.decode(OWSubscriberBadgeConfiguration.self, forKey: .subscriberBadgeConfig)
         disableOnlineDotIndicator = try? container.decode(Bool.self, forKey: .disableOnlineDotIndicator)
         disableVoteDown = try? container.decode(Bool.self, forKey: .disableVoteDown)
