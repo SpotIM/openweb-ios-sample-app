@@ -133,7 +133,7 @@ class ViewController: UIViewController {
     @IBAction func showCustomSpotConversation(_ sender: UIButton) {
         let spotId = customSpotTextField.text ?? ""
         setup(with: spotId, from: sender)
-        showArticles(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
     
     private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
