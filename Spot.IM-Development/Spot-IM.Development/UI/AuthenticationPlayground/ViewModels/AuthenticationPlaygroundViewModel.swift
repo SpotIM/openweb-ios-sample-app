@@ -165,9 +165,14 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 return self._selectedGenericSSOOptionIndex
                     .take(1)
             }
-            .withLatestFrom(genericSSOOptions) { index, options in
+            .withLatestFrom(genericSSOOptions) { index, options -> GenericSSOAuthentication? in
+                guard !options.isEmpty else {
+                    DLog("There isn't any generic SSO preset")
+                    return nil
+                }
                 return options[index]
             }
+            .unwrap()
             .do(onNext: { [weak self] genricSSO in
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
@@ -253,9 +258,14 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 return self._selectedJWTSSOOptionIndex
                     .take(1)
             }
-            .withLatestFrom(JWTSSOOptions) { index, options in
+            .withLatestFrom(JWTSSOOptions) { index, options -> JWTSSOAuthentication? in
+                guard !options.isEmpty else {
+                    DLog("There isn't any JWT SSO preset")
+                    return nil
+                }
                 return options[index]
             }
+            .unwrap()
             .do(onNext: { [weak self] JWTSSO in
                 self?._JWTSSOAuthenticationStatus.onNext(.inProgress)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
