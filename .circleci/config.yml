@@ -286,6 +286,49 @@ jobs:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
+            
+  release_public_app_job:
+    <<: *ios_config_xcode_13
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_release_version
+
+      - run:
+          name: start release app
+          command: |
+            echo "Start release app with public preset version: $RELEASE_VERSION"
+            pwd
+            ls -l
+
+      - run:
+          name: Configure Apple Key
+          command: |
+            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - 'vendor/bundle'
+
+      - run:
+          name: Run Fastlane Release Sample App
+          command: |
+            bundle exec fastlane release_public_demo_app version:$RELEASE_VERSION
 
 workflows:
   version: 2
@@ -331,6 +374,12 @@ workflows:
             branches:
               only:
                 - /^release/app/.*/
+                
+     - release_public_app_job:
+          filters:
+            branches:
+              only:
+                - /^release/public_app/.*/
                 
   release_multi_workflow:
     jobs:
