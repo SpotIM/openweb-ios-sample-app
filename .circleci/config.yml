@@ -375,7 +375,7 @@ workflows:
               only:
                 - /^release/app/.*/
                 
-     - release_public_app_job:
+      - release_public_app_job:
           filters:
             branches:
               only:
