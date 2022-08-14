@@ -10,8 +10,12 @@ import UIKit
 import SpotImCore
 import GoogleMobileAds
 import RxSwift
+import SnapKit
 
 class ViewController: UIViewController {
+    fileprivate struct Metrics {
+        static let verticalMarginInScrollView: CGFloat = 8
+    }
 
     @IBOutlet weak var appInfoLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
@@ -33,9 +37,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var showMobileSocialGuest: UIButton!
     @IBOutlet weak var autenticationPlaygroundBtn: UIButton!
     @IBOutlet weak var customSpotBtn: UIButton!
-    
-    @IBOutlet weak var authenticationToMobileGuestConstraint: NSLayoutConstraint!
-    @IBOutlet weak var authenticationToDemoSpotConstraint: NSLayoutConstraint!
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -84,8 +85,9 @@ class ViewController: UIViewController {
             showMobileGuest.isHidden = true
             showMobileSocial.isHidden = true
             showMobileSocialGuest.isHidden = true
-            authenticationToMobileGuestConstraint.isActive = false
-            authenticationToDemoSpotConstraint.isActive = true
+            autenticationPlaygroundBtn.snp.updateConstraints { make in
+                make.top.equalTo(showDemoSpotArticlesBtn.snp.bottom).offset(Metrics.verticalMarginInScrollView)
+            }
         #endif
     }
 
