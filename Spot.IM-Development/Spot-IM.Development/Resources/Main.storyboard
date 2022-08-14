@@ -231,7 +231,6 @@ Build: [unknown]</string>
                                     <constraint firstItem="0a5-FQ-Kmm" firstAttribute="leading" secondItem="oSQ-qQ-rrx" secondAttribute="leading" id="KLL-TR-MqK"/>
                                     <constraint firstItem="dNW-kA-umB" firstAttribute="top" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="8" id="LND-Ht-DOA"/>
                                     <constraint firstItem="VlM-lF-gbf" firstAttribute="top" secondItem="BLK-PJ-hZQ" secondAttribute="bottom" constant="8" id="OH9-ma-Wdt"/>
-                                    <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="AZp-Pq-loo" secondAttribute="bottom" constant="8" id="SzH-39-9uq"/>
                                     <constraint firstItem="BLK-PJ-hZQ" firstAttribute="top" secondItem="nhj-w0-03k" secondAttribute="bottom" constant="8" id="W6P-5B-lgT"/>
                                     <constraint firstItem="Ont-uO-1R5" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="Y15-dy-k6X"/>
                                     <constraint firstItem="0a5-FQ-Kmm" firstAttribute="top" secondItem="oSQ-qQ-rrx" secondAttribute="top" id="YOz-AO-48h"/>
@@ -245,11 +244,6 @@ Build: [unknown]</string>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="oSQ-qQ-rrx"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="oLJ-S2-rGK"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="SzH-39-9uq"/>
-                                    </mask>
-                                </variation>
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HBy-no-NuF"/>
@@ -273,8 +267,6 @@ Build: [unknown]</string>
                     <connections>
                         <outlet property="appInfoLabel" destination="TMI-UE-CFh" id="nzs-aY-YgY"/>
                         <outlet property="autenticationPlaygroundBtn" destination="htH-kI-1Pw" id="04w-3f-3CM"/>
-                        <outlet property="authenticationToDemoSpotConstraint" destination="SzH-39-9uq" id="el3-Om-28E"/>
-                        <outlet property="authenticationToMobileGuestConstraint" destination="4Id-a0-l8u" id="ZbU-zc-ngl"/>
                         <outlet property="customSpotBtn" destination="a2z-mA-4Rd" id="5e9-BW-ein"/>
                         <outlet property="customSpotTextField" destination="rRC-QZ-NmV" id="zoq-1e-bJ9"/>
                         <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
