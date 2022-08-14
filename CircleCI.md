@@ -65,7 +65,7 @@ build the app scheme and run unit-tests on the SDK. If one of those fail the job
 
 ## release_public_app_job
 
-1. Same as release_app_job but with a public preset and design to be shared with publishers for testing and etc.
+1. Same as release_app_job but with a public preset and designed to be shared with publishers for testing and etc.
 
 
 ## release_multi_workflow
