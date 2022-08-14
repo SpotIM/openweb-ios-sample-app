@@ -22,7 +22,20 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var customSpotTextField: UITextField!
     @IBOutlet weak var optionsScrollView: UIScrollView!
+    
+    
+    @IBOutlet weak var showDemoTableViewBtn: UIButton!
+    @IBOutlet weak var showDemoSpotArticlesBtn: UIButton!
+    @IBOutlet weak var showFoxNewsBtn: UIButton!
+    @IBOutlet weak var showMobileSSO: UIButton!
+    @IBOutlet weak var showMobileGuest: UIButton!
+    @IBOutlet weak var showMobileSocial: UIButton!
+    @IBOutlet weak var showMobileSocialGuest: UIButton!
     @IBOutlet weak var autenticationPlaygroundBtn: UIButton!
+    @IBOutlet weak var customSpotBtn: UIButton!
+    
+    @IBOutlet weak var authenticationToMobileGuestConstraint: NSLayoutConstraint!
+    @IBOutlet weak var authenticationToDemoSpotConstraint: NSLayoutConstraint!
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -60,6 +73,21 @@ class ViewController: UIViewController {
         logo.clipsToBounds = true
         logo.layer.cornerRadius = 8
         customSpotTextField.returnKeyType = .done
+        setupAppPreset()
+    }
+    
+    private func setupAppPreset() {
+        if let isPublicDemoApp = ProcessInfo.processInfo.environment["DEMO_APP_PRESET"],
+           isPublicDemoApp == "public" {
+            showDemoTableViewBtn.isHidden = true
+            showFoxNewsBtn.isHidden = true
+            showMobileSSO.isHidden = true
+            showMobileGuest.isHidden = true
+            showMobileSocial.isHidden = true
+            showMobileSocialGuest.isHidden = true
+            authenticationToMobileGuestConstraint.isActive = false
+            authenticationToDemoSpotConstraint.isActive = true
+        }
     }
 
     private func setupNavigationBar() {
