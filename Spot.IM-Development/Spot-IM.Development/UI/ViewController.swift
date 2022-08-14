@@ -77,8 +77,7 @@ class ViewController: UIViewController {
     }
     
     private func setupAppPreset() {
-        if let isPublicDemoApp = ProcessInfo.processInfo.environment["DEMO_APP_PRESET"],
-           isPublicDemoApp == "public" {
+        #if PUBLIC_DEMO_APP
             showDemoTableViewBtn.isHidden = true
             showFoxNewsBtn.isHidden = true
             showMobileSSO.isHidden = true
@@ -87,7 +86,7 @@ class ViewController: UIViewController {
             showMobileSocialGuest.isHidden = true
             authenticationToMobileGuestConstraint.isActive = false
             authenticationToDemoSpotConstraint.isActive = true
-        }
+        #endif
     }
 
     private func setupNavigationBar() {
