@@ -119,7 +119,7 @@ platform :ios do
     match(type: "development", readonly: true)
     cocoapods(use_bundle_exec: false)
     gym(
-        scheme: "Spot-IM.Development",
+        scheme: "Spot-IM.PublicDemoApp",
         workspace: "Spot-IM.Development.xcworkspace",
         export_method: "app-store",
         export_options: {
@@ -128,7 +128,7 @@ platform :ios do
                 "im.spot.demo" => "match AppStore im.spot.demo"
             }
         },
-        xcargs: "-allowProvisioningUpdates DEMO_APP_PRESET='public'"
+        xcargs: "-allowProvisioningUpdates"
     )
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
