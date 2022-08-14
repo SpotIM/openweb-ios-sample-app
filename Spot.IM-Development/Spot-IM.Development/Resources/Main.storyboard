@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21208.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="McX-mg-5RD">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21191"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,7 +12,7 @@
         <!--Article View Controller-->
         <scene sceneID="gZq-Jd-NbV">
             <objects>
-                <viewController storyboardIdentifier="articleViewController" id="oc6-g4-D2s" customClass="ArticleViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="articleViewController" id="oc6-g4-D2s" customClass="ArticleViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ftL-P1-6zt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -82,23 +83,39 @@
         <!--View Controller-->
         <scene sceneID="a3e-oC-G0f">
             <objects>
-                <viewController id="COS-Sr-MbI" customClass="ViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="COS-Sr-MbI" customClass="ViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BKE-Ut-tNt">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ELI-s3-pbx">
+                                <rect key="frame" x="306" y="58" width="51" height="28"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="tintColor" systemColor="labelColor"/>
+                                <state key="normal" title="Settings">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <segue destination="afI-iB-Nmt" kind="show" id="HUT-J0-M8W"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMI-UE-CFh">
+                                <rect key="frame" x="16" y="60" width="93" height="24"/>
+                                <string key="text">Version: [unknown]
+Build: [unknown]</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="textColor" red="0.29411764709999999" green="0.30196078430000001" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="spot_logo" translatesAutoresizingMaskIntoConstraints="NO" id="pTy-M9-4cH">
                                 <rect key="frame" x="142.5" y="116" width="90" height="90"/>
                             </imageView>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="pQi-6l-4ah">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="pQi-6l-4ah">
                                 <rect key="frame" x="0.0" y="234" width="375" height="433"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ont-uO-1R5">
                                         <rect key="frame" x="107.5" y="0.0" width="160" height="30"/>
                                         <accessibility key="accessibilityConfiguration" identifier="table"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="Xff-6B-YBx"/>
-                                        </constraints>
                                         <state key="normal" title="Show Demo Table View">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -108,9 +125,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZp-Pq-loo">
                                         <rect key="frame" x="100.5" y="38" width="174" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="zYi-OH-ba9"/>
-                                        </constraints>
                                         <state key="normal" title="Show Demo Spot Articles">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -120,9 +134,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0p1-DY-kYy">
                                         <rect key="frame" x="116" y="114" width="143" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="vof-Hc-A7m"/>
-                                        </constraints>
                                         <state key="normal" title="Show sp_mobileSSO">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -132,9 +143,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLK-PJ-hZQ">
                                         <rect key="frame" x="110.5" y="190" width="154" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="RoJ-27-Jxo"/>
-                                        </constraints>
                                         <state key="normal" title="Show sp_mobileSocial">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -144,9 +152,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VlM-lF-gbf">
                                         <rect key="frame" x="90.5" y="228" width="194" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="2lq-tq-Ls8"/>
-                                        </constraints>
                                         <state key="normal" title="Show sp_mobileSocialGuest">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -156,9 +161,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hsr-To-3uz">
                                         <rect key="frame" x="92" y="76" width="191" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="7Jf-eq-pKe"/>
-                                        </constraints>
                                         <state key="normal" title="Show Fox News (New login)">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -168,9 +170,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhj-w0-03k">
                                         <rect key="frame" x="111" y="152" width="153" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="oZl-57-cHJ"/>
-                                        </constraints>
                                         <state key="normal" title="Show sp_mobileGuest">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -180,9 +179,6 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="htH-kI-1Pw">
                                         <rect key="frame" x="97" y="266" width="181" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="Enw-qr-7Yp"/>
-                                        </constraints>
                                         <state key="normal" title="Authentication Playground">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -212,50 +208,49 @@
                                             </textField>
                                         </subviews>
                                     </stackView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0a5-FQ-Kmm" userLabel="fixContentViewWidth">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="GGX-gN-vGN"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="dNW-kA-umB" secondAttribute="bottom" constant="20" id="29N-EW-y0j"/>
+                                    <constraint firstItem="oSQ-qQ-rrx" firstAttribute="trailing" secondItem="0a5-FQ-Kmm" secondAttribute="trailing" id="21D-rv-OU0"/>
+                                    <constraint firstItem="oSQ-qQ-rrx" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="dNW-kA-umB" secondAttribute="bottom" constant="20" id="29N-EW-y0j"/>
                                     <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="VlM-lF-gbf" secondAttribute="bottom" constant="8" id="4Id-a0-l8u"/>
                                     <constraint firstItem="Hsr-To-3uz" firstAttribute="top" secondItem="AZp-Pq-loo" secondAttribute="bottom" constant="8" id="4af-qS-ulc"/>
+                                    <constraint firstItem="oSQ-qQ-rrx" firstAttribute="bottom" secondItem="dNW-kA-umB" secondAttribute="bottom" priority="750" constant="20" id="5js-hx-dWu"/>
                                     <constraint firstItem="0p1-DY-kYy" firstAttribute="top" secondItem="Hsr-To-3uz" secondAttribute="bottom" constant="8" id="6Fl-i8-XnD"/>
-                                    <constraint firstItem="dNW-kA-umB" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="776-t4-vsn"/>
+                                    <constraint firstItem="dNW-kA-umB" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="776-t4-vsn"/>
                                     <constraint firstItem="nhj-w0-03k" firstAttribute="top" secondItem="0p1-DY-kYy" secondAttribute="bottom" constant="8" id="86j-Lc-zMs"/>
-                                    <constraint firstItem="VlM-lF-gbf" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="A7Q-cB-0dZ"/>
-                                    <constraint firstItem="htH-kI-1Pw" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="DYe-rM-Ygh"/>
-                                    <constraint firstItem="Ont-uO-1R5" firstAttribute="top" secondItem="pQi-6l-4ah" secondAttribute="top" id="E8H-su-82y"/>
+                                    <constraint firstItem="VlM-lF-gbf" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="A7Q-cB-0dZ"/>
+                                    <constraint firstItem="htH-kI-1Pw" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="DYe-rM-Ygh"/>
+                                    <constraint firstItem="Ont-uO-1R5" firstAttribute="top" secondItem="oSQ-qQ-rrx" secondAttribute="top" id="E8H-su-82y"/>
+                                    <constraint firstItem="0a5-FQ-Kmm" firstAttribute="leading" secondItem="oSQ-qQ-rrx" secondAttribute="leading" id="KLL-TR-MqK"/>
                                     <constraint firstItem="dNW-kA-umB" firstAttribute="top" secondItem="htH-kI-1Pw" secondAttribute="bottom" constant="8" id="LND-Ht-DOA"/>
                                     <constraint firstItem="VlM-lF-gbf" firstAttribute="top" secondItem="BLK-PJ-hZQ" secondAttribute="bottom" constant="8" id="OH9-ma-Wdt"/>
+                                    <constraint firstItem="htH-kI-1Pw" firstAttribute="top" secondItem="AZp-Pq-loo" secondAttribute="bottom" constant="8" id="SzH-39-9uq"/>
                                     <constraint firstItem="BLK-PJ-hZQ" firstAttribute="top" secondItem="nhj-w0-03k" secondAttribute="bottom" constant="8" id="W6P-5B-lgT"/>
-                                    <constraint firstItem="Ont-uO-1R5" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="Y15-dy-k6X"/>
-                                    <constraint firstItem="0p1-DY-kYy" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="Zcs-qU-oQf"/>
-                                    <constraint firstItem="nhj-w0-03k" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="azZ-8V-wXB"/>
-                                    <constraint firstItem="AZp-Pq-loo" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="bn7-mg-Yxa"/>
+                                    <constraint firstItem="Ont-uO-1R5" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="Y15-dy-k6X"/>
+                                    <constraint firstItem="0a5-FQ-Kmm" firstAttribute="top" secondItem="oSQ-qQ-rrx" secondAttribute="top" id="YOz-AO-48h"/>
+                                    <constraint firstItem="0p1-DY-kYy" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="Zcs-qU-oQf"/>
+                                    <constraint firstItem="0a5-FQ-Kmm" firstAttribute="width" secondItem="pQi-6l-4ah" secondAttribute="width" id="ahL-aN-eZr"/>
+                                    <constraint firstItem="nhj-w0-03k" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="azZ-8V-wXB"/>
+                                    <constraint firstItem="AZp-Pq-loo" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="bn7-mg-Yxa"/>
                                     <constraint firstItem="AZp-Pq-loo" firstAttribute="top" secondItem="Ont-uO-1R5" secondAttribute="bottom" constant="8" id="dep-oz-YYE"/>
-                                    <constraint firstItem="BLK-PJ-hZQ" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="pBv-Uj-HdC"/>
-                                    <constraint firstItem="Hsr-To-3uz" firstAttribute="centerX" secondItem="pQi-6l-4ah" secondAttribute="centerX" id="uZG-rX-l1v"/>
+                                    <constraint firstItem="BLK-PJ-hZQ" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="pBv-Uj-HdC"/>
+                                    <constraint firstItem="Hsr-To-3uz" firstAttribute="centerX" secondItem="oSQ-qQ-rrx" secondAttribute="centerX" id="uZG-rX-l1v"/>
                                 </constraints>
-                                <viewLayoutGuide key="contentLayoutGuide" id="caL-dx-lJF"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="8ZC-0J-N59"/>
+                                <viewLayoutGuide key="contentLayoutGuide" id="oSQ-qQ-rrx"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="oLJ-S2-rGK"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="SzH-39-9uq"/>
+                                    </mask>
+                                </variation>
                             </scrollView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMI-UE-CFh">
-                                <rect key="frame" x="16" y="60" width="93" height="24"/>
-                                <string key="text">Version: [unknown]
-Build: [unknown]</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                <color key="textColor" red="0.29411764709999999" green="0.30196078430000001" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ELI-s3-pbx">
-                                <rect key="frame" x="306" y="58" width="51" height="28"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="tintColor" systemColor="labelColor"/>
-                                <state key="normal" title="Settings">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <segue destination="afI-iB-Nmt" kind="show" id="HUT-J0-M8W"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HBy-no-NuF"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -264,13 +259,13 @@ Build: [unknown]</string>
                             <constraint firstItem="HBy-no-NuF" firstAttribute="trailing" secondItem="ELI-s3-pbx" secondAttribute="trailing" constant="18" id="6eK-dG-9h6"/>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="16" id="F43-p3-jhL"/>
                             <constraint firstItem="pQi-6l-4ah" firstAttribute="top" secondItem="pTy-M9-4cH" secondAttribute="bottom" constant="28" id="HmN-1p-Spt"/>
+                            <constraint firstItem="pQi-6l-4ah" firstAttribute="width" secondItem="BKE-Ut-tNt" secondAttribute="width" id="UTa-HA-D9z"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="centerX" secondItem="HBy-no-NuF" secondAttribute="centerX" id="baQ-sc-dEe"/>
                             <constraint firstAttribute="bottom" secondItem="pQi-6l-4ah" secondAttribute="bottom" id="jWH-lG-h9a"/>
                             <constraint firstItem="ELI-s3-pbx" firstAttribute="top" secondItem="HBy-no-NuF" secondAttribute="top" constant="14" id="oiJ-MA-b61"/>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="leading" secondItem="BKE-Ut-tNt" secondAttribute="leadingMargin" id="oyg-fO-PeG"/>
                             <constraint firstItem="TMI-UE-CFh" firstAttribute="centerY" secondItem="ELI-s3-pbx" secondAttribute="centerY" id="rcY-cT-MWI"/>
                             <constraint firstItem="pTy-M9-4cH" firstAttribute="top" secondItem="ELI-s3-pbx" secondAttribute="bottom" constant="30" id="rh7-Qf-8O1"/>
-                            <constraint firstItem="pQi-6l-4ah" firstAttribute="width" secondItem="BKE-Ut-tNt" secondAttribute="width" id="wGZ-Da-YeX"/>
                             <constraint firstItem="pQi-6l-4ah" firstAttribute="leading" secondItem="BKE-Ut-tNt" secondAttribute="leading" id="xix-4A-ODI"/>
                         </constraints>
                     </view>
@@ -278,9 +273,19 @@ Build: [unknown]</string>
                     <connections>
                         <outlet property="appInfoLabel" destination="TMI-UE-CFh" id="nzs-aY-YgY"/>
                         <outlet property="autenticationPlaygroundBtn" destination="htH-kI-1Pw" id="04w-3f-3CM"/>
+                        <outlet property="authenticationToDemoSpotConstraint" destination="SzH-39-9uq" id="el3-Om-28E"/>
+                        <outlet property="authenticationToMobileGuestConstraint" destination="4Id-a0-l8u" id="ZbU-zc-ngl"/>
+                        <outlet property="customSpotBtn" destination="a2z-mA-4Rd" id="5e9-BW-ein"/>
                         <outlet property="customSpotTextField" destination="rRC-QZ-NmV" id="zoq-1e-bJ9"/>
                         <outlet property="logo" destination="pTy-M9-4cH" id="yme-2D-cBh"/>
                         <outlet property="optionsScrollView" destination="pQi-6l-4ah" id="d78-Is-hkY"/>
+                        <outlet property="showDemoSpotArticlesBtn" destination="AZp-Pq-loo" id="hA5-fY-12m"/>
+                        <outlet property="showDemoTableViewBtn" destination="Ont-uO-1R5" id="2bt-De-WcF"/>
+                        <outlet property="showFoxNewsBtn" destination="Hsr-To-3uz" id="0zw-8d-TGJ"/>
+                        <outlet property="showMobileGuest" destination="nhj-w0-03k" id="tYk-Pt-78R"/>
+                        <outlet property="showMobileSSO" destination="0p1-DY-kYy" id="jSA-yq-xVf"/>
+                        <outlet property="showMobileSocial" destination="BLK-PJ-hZQ" id="jbh-8a-TUC"/>
+                        <outlet property="showMobileSocialGuest" destination="VlM-lF-gbf" id="eJF-XI-j1l"/>
                         <segue destination="oc6-g4-D2s" kind="show" identifier="showPreConversationSegue" id="03O-tL-zah"/>
                     </connections>
                 </viewController>
@@ -291,7 +296,7 @@ Build: [unknown]</string>
         <!--Fox Authentication View Controller-->
         <scene sceneID="MDj-ZJ-CSk">
             <objects>
-                <viewController storyboardIdentifier="FoxAuthenticationVC" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FoxAuthenticationVC" id="0sS-s2-qdb" customClass="FoxAuthenticationViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hKb-AP-Smg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -359,7 +364,7 @@ Build: [unknown]</string>
         <!--Settings View Controller-->
         <scene sceneID="MLR-79-iDN">
             <objects>
-                <viewController storyboardIdentifier="SettingsViewController" id="afI-iB-Nmt" customClass="SettingsViewController" customModule="AOL" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsViewController" id="afI-iB-Nmt" customClass="SettingsViewController" customModule="Spot_IM_Development" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2kR-Yk-fnP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -520,7 +525,10 @@ Build: [unknown]</string>
         <image name="ArticleStub" width="375" height="972"/>
         <image name="spot_logo" width="90" height="90"/>
         <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>
