@@ -106,6 +106,32 @@ platform :ios do
     )
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
+  
+  lane :release_public_demo_app do |options|
+    increment_build_number()
+    increment_version_number(version_number: options[:version]) # Set a specific version number
+    increment_version_number_in_xcodeproj(version_number: options[:version])
+    match(
+        type: "appstore",
+        readonly: true,
+        api_key_path: "apple_api_key.json"
+    )
+    match(type: "development", readonly: true)
+    cocoapods(use_bundle_exec: false)
+    gym(
+        scheme: "Spot-IM.Development",
+        workspace: "Spot-IM.Development.xcworkspace",
+        export_method: "app-store",
+        export_options: {
+            signingStyle: "manual",
+            provisioningProfiles: {
+                "im.spot.demo" => "match AppStore im.spot.demo"
+            }
+        },
+        xcargs: "-allowProvisioningUpdates DEMO_APP_PRESET='public'"
+    )
+    upload_to_testflight(api_key_path: "apple_api_key.json")
+  end
 
   lane :bump_version do
     increment_version_number_in_xcodeproj(
