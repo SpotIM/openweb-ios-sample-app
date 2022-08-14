@@ -19,18 +19,17 @@ extension GenericSSOAuthentication {
     static let mockModels = Self.createMockModels()
     
     static func createMockModels() -> [GenericSSOAuthentication] {
-        if let isPublicDemoApp = ProcessInfo.processInfo.environment["DEMO_APP_PRESET"],
-           isPublicDemoApp == "public" {
-            return []
-        } else {
-            return [
-                GenericSSOAuthentication(domainName: "Test-Mobile-SSO",
-                                         spotId: "sp_eCIlROSD",
-                                         ssoToken: "",
-                                         user: UserAuthentication(username: "test",
-                                                                  password: "1234",
-                                                                  userToken: "03190715DchJcY"))
-            ]
-        }
+    #if PUBLIC_DEMO_APP
+        return []
+    #else
+        return [
+            GenericSSOAuthentication(domainName: "Test-Mobile-SSO",
+                                     spotId: "sp_eCIlROSD",
+                                     ssoToken: "",
+                                     user: UserAuthentication(username: "test",
+                                                              password: "1234",
+                                                              userToken: "03190715DchJcY"))
+        ]
+    #endif
     }
 }
