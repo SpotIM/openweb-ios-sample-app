@@ -176,7 +176,7 @@ class ViewController: UIViewController {
         return true
     }
     
-    func showInvalidSpotIdMessage() {
+    private func showInvalidSpotIdMessage() {
         let alert = UIAlertController(title: "Alert", message: "Seems like the spotId is invalid, please enter a valid spotId", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
