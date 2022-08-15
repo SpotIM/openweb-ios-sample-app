@@ -223,10 +223,10 @@ fileprivate extension UserNameView {
         viewModel.outputs.shouldShowDeletedOrReportedMessage
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
-                self.userNameLabel.isHidden = shouldShow
                 self.dateLabel.isHidden = shouldShow
                 self.moreButton.isHidden = shouldShow
                 self.subscriberBadgeView.isHidden = shouldShow
+                self.nameAndBadgeStackview.isHidden = shouldShow
                 
                 self.deletedMessageLabel.isHidden = !shouldShow
                 
