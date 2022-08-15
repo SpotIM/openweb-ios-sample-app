@@ -10,8 +10,12 @@ import UIKit
 import SpotImCore
 import GoogleMobileAds
 import RxSwift
+import SnapKit
 
 class ViewController: UIViewController {
+    fileprivate struct Metrics {
+        static let verticalMarginInScrollView: CGFloat = 8
+    }
 
     @IBOutlet weak var appInfoLabel: UILabel!
     @IBOutlet weak var logo: UIImageView!
@@ -22,7 +26,17 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var customSpotTextField: UITextField!
     @IBOutlet weak var optionsScrollView: UIScrollView!
+    
+    
+    @IBOutlet weak var showDemoTableViewBtn: UIButton!
+    @IBOutlet weak var showDemoSpotArticlesBtn: UIButton!
+    @IBOutlet weak var showFoxNewsBtn: UIButton!
+    @IBOutlet weak var showMobileSSO: UIButton!
+    @IBOutlet weak var showMobileGuest: UIButton!
+    @IBOutlet weak var showMobileSocial: UIButton!
+    @IBOutlet weak var showMobileSocialGuest: UIButton!
     @IBOutlet weak var autenticationPlaygroundBtn: UIButton!
+    @IBOutlet weak var customSpotBtn: UIButton!
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -60,6 +74,21 @@ class ViewController: UIViewController {
         logo.clipsToBounds = true
         logo.layer.cornerRadius = 8
         customSpotTextField.returnKeyType = .done
+        setupAppPreset()
+    }
+    
+    private func setupAppPreset() {
+        #if PUBLIC_DEMO_APP
+            showDemoTableViewBtn.isHidden = true
+            showFoxNewsBtn.isHidden = true
+            showMobileSSO.isHidden = true
+            showMobileGuest.isHidden = true
+            showMobileSocial.isHidden = true
+            showMobileSocialGuest.isHidden = true
+            autenticationPlaygroundBtn.snp.updateConstraints { make in
+                make.top.equalTo(showDemoSpotArticlesBtn.snp.bottom).offset(Metrics.verticalMarginInScrollView)
+            }
+        #endif
     }
 
     private func setupNavigationBar() {
@@ -132,8 +161,25 @@ class ViewController: UIViewController {
     
     @IBAction func showCustomSpotConversation(_ sender: UIButton) {
         let spotId = customSpotTextField.text ?? ""
-        setup(with: spotId, from: sender)
-        showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        
+        if validate(spotId: spotId) {
+            setup(with: spotId, from: sender)
+            showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        } else {
+            showInvalidSpotIdMessage()
+        }
+    }
+    
+    private func validate(spotId: String) -> Bool {
+        guard !spotId.contains(" ") else { return false }
+        
+        return true
+    }
+    
+    private func showInvalidSpotIdMessage() {
+        let alert = UIAlertController(title: "Alert", message: "Seems like the spotId is invalid, please enter a valid spotId", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
