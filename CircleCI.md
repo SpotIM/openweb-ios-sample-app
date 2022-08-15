@@ -22,7 +22,7 @@ We currently support 5 types of "jobs":
 
 4. release_app_job - build the Sample App and release a new version to Test-Flight. Triggered by any branch that matches `/^release/app/.*/` for example `release/app/4.2.8`
 
-4. release_public_app_job - build the Sample App for public mode and release a new version to Test-Flight. Triggered by any branch that matches `/^release/public_app/.*/` for example `release/public_app/4.2.8`
+5. release_public_app_job - build the Sample App for public mode and release a new version to Test-Flight. Triggered by any branch that matches `/^release/public_app/.*/` for example `release/public_app/4.2.8`
 
 
 ## default_job
