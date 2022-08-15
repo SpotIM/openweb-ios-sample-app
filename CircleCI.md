@@ -12,7 +12,7 @@ We currently support 2 types of "workflows":
 2. release_multi_workflow - build the SDK XCFramework on multiple Xcode versions. Basically trigger `release_sdk_job` and multiple `release_tag_job` for different Xcode versions. Triggered by any branch that matches `/^release/multi/.*/` for example `release/multi/4.2.8`
 
 
-We currently support 4 types of "jobs":
+We currently support 5 types of "jobs":
 
 1. default_job - build the app scheme and run unit-tests on the SDK. Triggered by any branch that DOES NOT match `/^release/.*/`
 
@@ -21,6 +21,8 @@ We currently support 4 types of "jobs":
 3. release_tag_job - build the SDK XCFramework on Xcode 12.5 and create a tag in the pod repository with the SDK. Triggered by any branch that matches `/^release/tag12.5/.*/` for example `release/tag12.5/4.2.8`
 
 4. release_app_job - build the Sample App and release a new version to Test-Flight. Triggered by any branch that matches `/^release/app/.*/` for example `release/app/4.2.8`
+
+5. release_public_app_job - build the Sample App for public mode and release a new version to Test-Flight. Triggered by any branch that matches `/^release/public_app/.*/` for example `release/public_app/4.2.8`
 
 
 ## default_job
@@ -59,6 +61,11 @@ build the app scheme and run unit-tests on the SDK. If one of those fail the job
 2. Clean and build the Sample App.
 
 3. Release the sample app - upload to Test Flight and automatically notify internal testers.
+
+
+## release_public_app_job
+
+1. Same as release_app_job but with a public preset and designed to be shared with publishers for testing and etc.
 
 
 ## release_multi_workflow
