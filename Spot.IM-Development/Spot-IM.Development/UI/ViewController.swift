@@ -161,8 +161,25 @@ class ViewController: UIViewController {
     
     @IBAction func showCustomSpotConversation(_ sender: UIButton) {
         let spotId = customSpotTextField.text ?? ""
-        setup(with: spotId, from: sender)
-        showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        
+        if validate(spotId: spotId) {
+            setup(with: spotId, from: sender)
+            showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        } else {
+            showInvalidSpotIdMessage()
+        }
+    }
+    
+    private func validate(spotId: String) -> Bool {
+        guard !spotId.contains(" ") else { return false }
+        
+        return true
+    }
+    
+    func showInvalidSpotIdMessage() {
+        let alert = UIAlertController(title: "Alert", message: "Seems like the spotId is invalid, please enter a valid spotId", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
