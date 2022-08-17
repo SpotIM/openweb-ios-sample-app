@@ -10,18 +10,23 @@ import Foundation
 import RxSwift
 
 enum OWCommentCreationCoordinatorResult {
-    
+    case startLoginFlow
+    case commentCreated(comment: SPComment)
 }
 
 class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinatorResult> {
     
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
         // TODO: complete the flow
+//        let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel()
+//        let commentCreationVC = OWCommentCreationVC(viewModel: conversationVM)
         return .empty()
     }
     
     override func showableComponent() -> Observable<OWShowable> {
         // TODO: complete the flow
+//        let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel()
+//        let commentCreationView = OWCommentCreationView(viewModel: conversationVM)
         return .empty()
     }
 }
