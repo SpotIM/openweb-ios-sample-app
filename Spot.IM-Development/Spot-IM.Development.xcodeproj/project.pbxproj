@@ -974,14 +974,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		1640F2C128AD053600FB863B /* CommentCreation */ = {
+		1640F2C128AD053600FB863B /* CommentCreationEntry */ = {
 			isa = PBXGroup;
 			children = (
 				1640F2C228AD055000FB863B /* Models */,
 				1640F2C328AD055700FB863B /* ViewModels */,
 				1640F2C428AD056000FB863B /* Views */,
 			);
-			path = CommentCreation;
+			path = CommentCreationEntry;
 			sourceTree = "<group>";
 		};
 		1640F2C228AD055000FB863B /* Models */ = {
@@ -1789,7 +1789,7 @@
 				3D20A35D27AA90CD003F8513 /* OWSnapKit */,
 				445417AD23685144001D0ED0 /* Base */,
 				3D08E0552874946300E6F1AC /* SharedViews */,
-				1640F2C128AD053600FB863B /* CommentCreation */,
+				1640F2C128AD053600FB863B /* CommentCreationEntry */,
 				3D08E0592875987500E6F1AC /* Conversation */,
 				445417C623685144001D0ED0 /* ViewControllers */,
 				445417DA23685144001D0ED0 /* Views - Old without VMs */,
