@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol OWCoordinator: class {
+protocol OWCoordinator: AnyObject {
     
     // should be weak in realization
     var containerViewController: UIViewController? { get set }
