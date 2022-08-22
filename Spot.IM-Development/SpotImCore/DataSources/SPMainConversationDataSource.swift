@@ -684,6 +684,7 @@ internal final class SPMainConversationDataSource {
     }
 
     private func insertedSections(with insertedCount: Int) -> IndexSet {
+        guard insertedCount > 0 else { return IndexSet() }
         let lowerBound = cellData.count
         let upperBound = self.cellData.count + insertedCount - 1
         var set = IndexSet(lowerBound ..< upperBound)
