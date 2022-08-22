@@ -17,3 +17,4 @@
 "InitializeSDKFirst" = "Initialize SDK first";
 "AutomaticallyDismissAfterLogin" = "Dismiss after successful login";
 "AutomaticallyDismissAfterLoginDescription" = "Will dismiss after half a second for visibility";
+"ConversationCounterTitle" = "Conversation Counter";
