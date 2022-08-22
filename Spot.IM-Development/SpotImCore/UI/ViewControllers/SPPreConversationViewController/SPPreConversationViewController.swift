@@ -77,7 +77,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
         
-        whatYouThinkView.commentCreationEntryView.configure(with: model.preConvCommetEntryVM)
+        whatYouThinkView.commentCreationEntryView.configure(with: model.preConvCommetEntryVM, delegate: self)
     }
     
     override func viewDidLoad() {
@@ -307,7 +307,6 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         view.bringSubviewToFront(whatYouThinkView)
         whatYouThinkView.dropsShadow = false
         whatYouThinkView.showsSeparator = false
-        whatYouThinkView.commentCreationEntryView.delegate = self
         whatYouThinkView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()

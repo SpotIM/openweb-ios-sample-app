@@ -119,7 +119,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         servicesProvider.logger().log(level: .verbose, "FirstComment: Have some comments in the data source")
 
         updateFooterView()
-        footer.commentCreationEntryView.configure(with: model.convCommetEntryVM)
+        footer.commentCreationEntryView.configure(with: model.convCommetEntryVM, delegate: self)
         articleHeader.configure(with: model.articleHeaderVM)
         summaryView.configure(with: model.conversationSummaryVM)
 
@@ -506,7 +506,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func setupFooterView() {
         view.bringSubviewToFront(footer)
-        footer.commentCreationEntryView.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         let bottomPadding: CGFloat
         if #available(iOS 11.0, *), SpotIm.shouldConversationFooterStartFromBottomAnchor {
