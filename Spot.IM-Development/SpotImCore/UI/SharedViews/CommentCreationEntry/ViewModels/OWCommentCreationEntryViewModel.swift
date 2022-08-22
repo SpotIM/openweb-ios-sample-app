@@ -12,6 +12,7 @@ import RxSwift
 protocol OWCommentCreationEntryViewModelingInputs {
     func configureUser(user: SPUser)
     func configureActionText(text: String)
+    func configureDelegate(_ delegate: OWCommentCreationEntryViewDelegate?)
     
     var tapAction: PublishSubject<Void> { get }
 }
@@ -32,13 +33,21 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
     var inputs: OWCommentCreationEntryViewModelingInputs { return self }
     var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
     
-    fileprivate let _actionText = BehaviorSubject<String>(value: LocalizationManager.localizedString(key: "What do you think?"))
+    fileprivate let disposeBag = DisposeBag()
+    
+    internal weak var delegate: OWCommentCreationEntryViewDelegate?
     
     var imageURLProvider: SPImageProvider?
     
     init (imageURLProvider: SPImageProvider?) {
         self.imageURLProvider = imageURLProvider
         setupObservers()
+    }
+    
+    fileprivate let _actionText = BehaviorSubject<String>(value: LocalizationManager.localizedString(key: "What do you think?"))
+    
+    func configureDelegate(_ delegate: OWCommentCreationEntryViewDelegate?) {
+        self.delegate = delegate
     }
     
     var tapAction = PublishSubject<Void>()
@@ -67,6 +76,14 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
 
 fileprivate extension OWCommentCreationEntryViewModel {
     func setupObservers() {
+        outputs.avatarViewVM.outputs.avatarTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.delegate?.userAvatarDidTap()
+        }).disposed(by: disposeBag)
         
+        outputs.actionTapped.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.delegate?.labelContainerDidTap()
+        }).disposed(by: disposeBag)
     }
 }
