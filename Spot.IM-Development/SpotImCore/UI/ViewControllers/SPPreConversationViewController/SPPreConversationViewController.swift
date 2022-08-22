@@ -77,7 +77,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
         
-        whatYouThinkView.userAvatarView.configure(with: model.avatarViewVM)
+        whatYouThinkView.commentCreationEntryView.configure(with: model.commetEntryVM)
     }
     
     override func viewDidLoad() {
@@ -120,7 +120,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             self.stateActionView = nil
         }
         if let user = SPUserSessionHolder.session.user {
-            model.avatarViewVM.inputs.configureUser(user: user)
+            model.commetEntryVM.inputs.configureUser(user: user)
         }
     }
     
@@ -307,7 +307,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         view.bringSubviewToFront(whatYouThinkView)
         whatYouThinkView.dropsShadow = false
         whatYouThinkView.showsSeparator = false
-        whatYouThinkView.delegate = self
+        whatYouThinkView.commentCreationEntryView.delegate = self
         whatYouThinkView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
@@ -413,7 +413,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.stateActionView = nil
         let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")
         footerView.hideShowMoreCommentsButton()
-        whatYouThinkView.setCallToAction(text: callToAction)
+        model.commetEntryVM.inputs.configureActionText(text: callToAction)
     }
     
     override func hideEmptyStateView() {
@@ -421,7 +421,8 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.stateActionView = nil
         
         footerView.showShowMoreCommentsButton()
-        whatYouThinkView.setCallToAction(text: LocalizationManager.localizedString(key: "What do you think?"))
+        let callToAction = LocalizationManager.localizedString(key: "What do you think?")
+        model.commetEntryVM.inputs.configureActionText(text: callToAction)
     }
 
     override func showErrorStateView() {

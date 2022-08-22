@@ -11,7 +11,7 @@ import UIKit
 protocol OWCustomUIDelegate: AnyObject {
     func customizeLoginPromptTextView(textView: UITextView)
     func customizeCommunityQuestionTextView(textView: UITextView)
-    func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool)
+    func customizeSayControl(labelContainer: UIView, label: UILabel, isPreConversation: Bool)
     func customizeConversationFooter(view: UIView)
     func customizeCommunityGuidelines(textView: UITextView)
     func customizeNavigationItemTitle(textView: UITextView)
