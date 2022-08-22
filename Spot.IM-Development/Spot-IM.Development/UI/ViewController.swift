@@ -218,6 +218,10 @@ class ViewController: UIViewController {
             }))
         }
         
+        alert.addAction(UIAlertAction(title: "Conversation Counter", style: .default, handler: { [weak self] action in
+            self?.showConversationCounter(with: spotId)
+        }))
+        
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -226,6 +230,11 @@ class ViewController: UIViewController {
         currentSpotId = spotId
         let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, shouldReinint: shouldReinit)
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    private func showConversationCounter(with spotId: String) {
+        let shouldReinit = spotId != currentSpotId
+        currentSpotId = spotId
     }
     
     private func setSpotId(spotId:String) {
