@@ -77,7 +77,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         adsProvider.bannerDelegate = self
         adsProvider.interstitialDelegate = self
         
-        whatYouThinkView.commentCreationEntryView.configure(with: model.commetEntryVM)
+        whatYouThinkView.commentCreationEntryView.configure(with: model.preConvCommetEntryVM)
     }
     
     override func viewDidLoad() {
@@ -120,7 +120,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
             self.stateActionView = nil
         }
         if let user = SPUserSessionHolder.session.user {
-            model.commetEntryVM.inputs.configureUser(user: user)
+            model.preConvCommetEntryVM.inputs.configureUser(user: user)
         }
     }
     
@@ -413,7 +413,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.stateActionView = nil
         let callToAction = LocalizationManager.localizedString(key: "Be the first to comment")
         footerView.hideShowMoreCommentsButton()
-        model.commetEntryVM.inputs.configureActionText(text: callToAction)
+        model.preConvCommetEntryVM.inputs.configureActionText(text: callToAction)
     }
     
     override func hideEmptyStateView() {
@@ -422,7 +422,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         
         footerView.showShowMoreCommentsButton()
         let callToAction = LocalizationManager.localizedString(key: "What do you think?")
-        model.commetEntryVM.inputs.configureActionText(text: callToAction)
+        model.preConvCommetEntryVM.inputs.configureActionText(text: callToAction)
     }
 
     override func showErrorStateView() {
