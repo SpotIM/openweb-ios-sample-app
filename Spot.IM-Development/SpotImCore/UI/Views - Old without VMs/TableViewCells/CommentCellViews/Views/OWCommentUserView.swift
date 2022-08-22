@@ -48,8 +48,10 @@ final class OWCommentUserView: OWBaseView {
     }
     
     func setDelegate(_ delegate: SPCommentCellDelegate?) {
-        guard let delegate = delegate else { return }
-        self.viewModel.inputs.setDelegate(delegate)
+        guard let delegate = delegate,
+              let vm = self.viewModel
+        else { return }
+        vm.inputs.setDelegate(delegate)
     }
     
     // Handle dark mode \ light mode change
