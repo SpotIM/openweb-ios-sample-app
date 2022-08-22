@@ -119,7 +119,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         servicesProvider.logger().log(level: .verbose, "FirstComment: Have some comments in the data source")
 
         updateFooterView()
-        footer.commentCreationEntryView.configure(with: model.commetEntryVM)
+        footer.commentCreationEntryView.configure(with: model.convCommetEntryVM)
         articleHeader.configure(with: model.articleHeaderVM)
         summaryView.configure(with: model.conversationSummaryVM)
 
@@ -528,7 +528,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
         if let user = SPUserSessionHolder.session.user {
-            model.commetEntryVM.inputs.configureUser(user: user)
+            model.convCommetEntryVM.inputs.configureUser(user: user)
         }
         updateFooterViewCustomUI(footerView: footer)
         model.fetchNavigationAvatar { [weak self] image, _ in
