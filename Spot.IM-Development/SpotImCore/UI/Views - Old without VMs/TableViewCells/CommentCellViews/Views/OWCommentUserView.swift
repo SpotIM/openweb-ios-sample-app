@@ -54,6 +54,7 @@ final class OWCommentUserView: OWBaseView {
     
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
+        backgroundColor = .spBackground0
         userNameView.updateColorsAccordingToStyle()
         avatarImageView.updateColorsAccordingToStyle()
     }
