@@ -546,7 +546,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         } else {
             tableView.addSubview(refreshControl)
         }
-        refreshControl.addTarget(self, action: #selector(reloadConversation), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshControllChanged), for: .valueChanged)
+    }
+    
+    @objc
+    private func refreshControllChanged() {
+        self.reloadConversation(showLoader: false)
     }
 
     private func insertLoaderCell() {
@@ -606,14 +611,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     override func configureErrorAction() -> ConversationStateAction {
         return { [weak self] in
-            self?.showLoader()
             self?.reloadConversation()
         }
     }
 
     override func configureNoInternetAction() -> ConversationStateAction {
         return { [weak self] in
-            self?.showLoader()
             self?.reloadConversation()
         }
     }
