@@ -1163,6 +1163,7 @@
 				73C074FE27A16AB8000FD80D /* UserSubscriberBadge */,
 				3DFBF0CB27676D350049CF1C /* OnlineUsersViewingCounter */,
 				2414F82927EC67B000722D2B /* AvatarView */,
+				1640F2C128AD053600FB863B /* CommentCreationEntry */,
 			);
 			path = SharedViews;
 			sourceTree = "<group>";
@@ -1789,7 +1790,6 @@
 				3D20A35D27AA90CD003F8513 /* OWSnapKit */,
 				445417AD23685144001D0ED0 /* Base */,
 				3D08E0552874946300E6F1AC /* SharedViews */,
-				1640F2C128AD053600FB863B /* CommentCreationEntry */,
 				3D08E0592875987500E6F1AC /* Conversation */,
 				445417C623685144001D0ED0 /* ViewControllers */,
 				445417DA23685144001D0ED0 /* Views - Old without VMs */,
