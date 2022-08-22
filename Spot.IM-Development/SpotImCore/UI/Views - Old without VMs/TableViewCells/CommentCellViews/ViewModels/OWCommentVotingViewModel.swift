@@ -90,7 +90,7 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
                     let recommendText = LocalizationManager.localizedString(key: "Recommend")
                     return "\(recommendText) (\(formattedRankCount))"
                 } else {
-                    return formattedRankCount
+                    return rankUpCount > 0 ? formattedRankCount : ""
                 }
             }
     }
@@ -98,7 +98,7 @@ class OWCommentVotingViewModel: OWCommentVotingViewModeling,
     var rankDownText: Observable<String> {
         _rankDown
             .unwrap()
-            .map { $0.kmFormatted }
+            .map { $0 > 0 ? $0.kmFormatted : "" }
     }
     
     var brandColor: Observable<UIColor> {
