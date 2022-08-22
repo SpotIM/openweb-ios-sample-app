@@ -110,8 +110,11 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     }
     
     @objc
-    internal func reloadConversation() {
+    internal func reloadConversation(showLoader: Bool = true) {
         guard !model.dataSource.isLoading else { return }
+        if showLoader {
+            self.showLoader()
+        }
         let mode = model.sortOption
         servicesProvider.logger().log(level: .verbose, "FirstComment: Calling conversation API")
         model.dataSource.conversation(
