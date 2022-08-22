@@ -611,14 +611,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     override func configureErrorAction() -> ConversationStateAction {
         return { [weak self] in
-            self?.showLoader()
             self?.reloadConversation()
         }
     }
 
     override func configureNoInternetAction() -> ConversationStateAction {
         return { [weak self] in
-            self?.showLoader()
             self?.reloadConversation()
         }
     }
