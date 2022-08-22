@@ -25,8 +25,6 @@ class OWCommentCreationEntryView: UIView {
         static let fontSize: CGFloat = 16
     }
     
-    internal weak var delegate: OWCommentCreationEntryViewDelegate?
-    
     fileprivate lazy var userAvatarView: SPAvatarView = {
         let avatarView = SPAvatarView()
         avatarView.backgroundColor = .clear
@@ -48,6 +46,12 @@ class OWCommentCreationEntryView: UIView {
         return label
     }()
     
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tapGesture = UITapGestureRecognizer()
+        labelContainer.addGestureRecognizer(tapGesture)
+        return tapGesture
+    }()
+    
     fileprivate var viewModel: OWCommentCreationEntryViewModeling!
     fileprivate var disposeBag = DisposeBag()
     
@@ -60,9 +64,10 @@ class OWCommentCreationEntryView: UIView {
         setupViews()
     }
     
-    func configure(with viewModel: OWCommentCreationEntryViewModeling) {
+    func configure(with viewModel: OWCommentCreationEntryViewModeling, delegate: OWCommentCreationEntryViewDelegate) {
         disposeBag = DisposeBag()
         self.viewModel = viewModel
+        self.viewModel.inputs.configureDelegate(delegate)
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
         setupObservers()
     }
@@ -107,21 +112,8 @@ fileprivate extension OWCommentCreationEntryView {
         viewModel.outputs.actionText.bind(to: label.rx.text)
             .disposed(by: disposeBag)
         
-        let tapGesture = UITapGestureRecognizer()
-        labelContainer.addGestureRecognizer(tapGesture)
-        
         tapGesture.rx.event.voidify()
         .bind(to: viewModel.inputs.tapAction)
         .disposed(by: disposeBag)
-        
-        viewModel.outputs.avatarViewVM.outputs.avatarTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.userAvatarDidTap()
-        }).disposed(by: disposeBag)
-        
-        viewModel.outputs.actionTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            self.delegate?.labelContainerDidTap()
-        }).disposed(by: disposeBag)
     }
 }
