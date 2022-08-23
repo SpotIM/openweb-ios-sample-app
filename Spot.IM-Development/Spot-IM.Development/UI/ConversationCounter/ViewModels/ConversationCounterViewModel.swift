@@ -11,7 +11,8 @@ import Alamofire
 import SpotImCore
 
 protocol ConversationCounterViewModelingInputs {
-    var loadConversationCounter: PublishSubject<[String]> { get }
+    var loadConversationCounter: PublishSubject<Void> { get }
+    var userPostIdsInput: BehaviorSubject<String> { get }
 }
 
 protocol ConversationCounterViewModelingOutputs {
@@ -30,18 +31,24 @@ class ConversationCounterViewModel: ConversationCounterViewModeling, Conversatio
     var inputs: ConversationCounterViewModelingInputs { return self }
     var outputs: ConversationCounterViewModelingOutputs { return self }
     
+    fileprivate struct Metrics {
+        static let parsingSeparator: String = ", "
+    }
+    
     let dataModel: ConversationCounterRequiredData
     
     lazy var title: String = {
         return NSLocalizedString("ConversationCounterTitle", comment: "")
     }()
     
-    let loadConversationCounter = PublishSubject<[String]>()
+    let userPostIdsInput = BehaviorSubject<String>(value: "")
+    let loadConversationCounter = PublishSubject<Void>()
     
     fileprivate let _shouldShowError = BehaviorSubject<Bool>(value: false)
-    fileprivate let _showError = PublishSubject<String>()
+    fileprivate let _showError = BehaviorSubject<String?>(value: nil)
     var showError: Observable<String> {
         return _showError
+            .unwrap()
             .asObservable()
     }
     
@@ -90,11 +97,20 @@ fileprivate extension ConversationCounterViewModel {
                 self?._showLoader.onNext(true)
                 self?._shouldShowError.onNext(false)
             })
+            .flatMapLatest { [weak self] _ -> Observable<String> in
+                guard let self = self else { return Observable.empty() }
+                return self.userPostIdsInput
+                    .take(1)
+            }
+            .map { [weak self] userInput -> [String] in
+                guard let self = self else { return [] }
+                return self.parse(postIds: userInput)
+            }
             .subscribe(onNext: { [weak self] postIds in
                 guard let self = self else { return }
                 SpotIm.getConversationCounters(conversationIds: postIds) { [weak self] result in
                     guard let self = self else { return }
-                    self._showLoader.onNext(true)
+                    self._showLoader.onNext(false)
                     
                     switch result {
                     case .success(let commentDic):
@@ -116,5 +132,12 @@ fileprivate extension ConversationCounterViewModel {
                 }
             })
             .disposed(by: disposeBag)
+    }
+    
+    func parse(postIds: String) -> [String] {
+        guard !postIds.isEmpty else { return [] }
+        return postIds
+            .components(separatedBy: Metrics.parsingSeparator)
+            .map { $0.replacingOccurrences(of: " ", with: "") } // Remove extra possible white spaces
     }
 }

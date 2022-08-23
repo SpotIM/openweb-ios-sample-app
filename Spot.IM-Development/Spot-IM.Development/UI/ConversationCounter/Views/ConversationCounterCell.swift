@@ -13,13 +13,13 @@ class ConversationCounterCell: UITableViewCell {
         static let horizontalMargin: CGFloat = 20
         static let verticalMargin: CGFloat = 15
         static let cornerRadius: CGFloat = 12
-        static let height: CGFloat = 60 + 2*verticalMargin
+        static let mainAreaHeight: CGFloat = 120
     }
     
     fileprivate lazy var mainArea: UIView = {
         let view = UIView()
             .corner(radius: Metrics.cornerRadius)
-            .backgroundColor(ColorPalette.midGrey)
+            .backgroundColor(ColorPalette.basicGrey)
         view.apply(shadow: .medium)
         return view
     }()
@@ -28,7 +28,7 @@ class ConversationCounterCell: UITableViewCell {
         let txt = NSLocalizedString("PostId", comment: "") + ": "
         return txt
             .label
-            .font(FontBook.secondaryHeadingMedium)
+            .font(FontBook.secondaryHeading)
             .textColor(ColorPalette.blackish)
     }()
     
@@ -36,7 +36,7 @@ class ConversationCounterCell: UITableViewCell {
         let txt = NSLocalizedString("Comments", comment: "") + ": "
         return txt
             .label
-            .font(FontBook.secondaryHeadingMedium)
+            .font(FontBook.secondaryHeading)
             .textColor(ColorPalette.blue)
     }()
     
@@ -44,7 +44,7 @@ class ConversationCounterCell: UITableViewCell {
         let txt = NSLocalizedString("Replies", comment: "") + ": "
         return txt
             .label
-            .font(FontBook.secondaryHeadingMedium)
+            .font(FontBook.secondaryHeading)
             .textColor(ColorPalette.blue)
     }()
     
@@ -68,11 +68,13 @@ class ConversationCounterCell: UITableViewCell {
 fileprivate extension ConversationCounterCell {
     func setupViews() {
         selectionStyle = .none
-        
+        self.backgroundColor = .clear
+                
         contentView.addSubview(mainArea)
         mainArea.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalMargin)
             make.top.bottom.equalToSuperview().inset(Metrics.verticalMargin)
+            make.height.equalTo(Metrics.mainAreaHeight)
         }
         
         mainArea.addSubview(lblPostId)
@@ -84,13 +86,13 @@ fileprivate extension ConversationCounterCell {
         mainArea.addSubview(lblComments)
         lblComments.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
-            make.top.equalTo(lblPostId.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(lblPostId.snp.bottom).offset(Metrics.verticalMargin/2)
         }
         
         mainArea.addSubview(lblReplies)
         lblReplies.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
-            make.top.equalTo(lblComments.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(lblComments.snp.bottom).offset(Metrics.verticalMargin/2)
         }
     }
     
