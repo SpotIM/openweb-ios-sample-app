@@ -19,23 +19,27 @@ class ConversationCounterVC: UIViewController {
     fileprivate let viewModel: ConversationCounterViewModeling
     fileprivate let disposeBag = DisposeBag()
     
-    fileprivate lazy var lblComments: UILabel = {
-        let txt = NSLocalizedString("Comments", comment: "") + ": "
+    fileprivate lazy var lblPostId: UILabel = {
+        let txt = NSLocalizedString("PostId", comment: "") + ": "
         return txt
             .label
-            .font(FontBook.secondaryHeading)
+            .font(FontBook.mainHeading)
             .textColor(ColorPalette.blackish)
     }()
     
-    fileprivate lazy var lblReplies: UILabel = {
-        let txt = NSLocalizedString("Replies", comment: "") + ": "
-        return txt
-            .label
-            .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.blackish)
+    fileprivate lazy var loader: UIActivityIndicatorView = {
+        let style: UIActivityIndicatorView.Style
+        if #available(iOS 13.0, *) {
+            style = .large
+        } else {
+            style = .whiteLarge
+        }
+        let loader = UIActivityIndicatorView(style: style)
+        loader.isHidden = true
+        return loader
     }()
     
-    init(viewModel: ConversationCounterViewModeling = ConversationCounterViewModel()) {
+    init(viewModel: ConversationCounterViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -64,21 +68,33 @@ fileprivate extension ConversationCounterVC {
     func setupViews() {
         view.backgroundColor = .white
         
-        view.addSubview(lblComments)
-        lblComments.snp.makeConstraints { make in
+        view.addSubview(lblPostId)
+        lblPostId.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(2*Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
-
-        view.addSubview(lblReplies)
-        lblReplies.snp.makeConstraints { make in
-            make.top.equalTo(lblComments.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+        
+       
+        
+        view.addSubview(loader)
+        loader.snp.makeConstraints { make in
+            make.center.equalTo(view.safeAreaLayoutGuide)
         }
     }
 
     func setupObservers() {
         title = viewModel.outputs.title
-              
+        
+        let showLoaderObservable = viewModel.outputs.showLoader
+            .share(replay: 0)
+        
+        showLoaderObservable
+            .map { !$0 }
+            .bind(to: loader.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        showLoaderObservable
+            .bind(to: loader.rx.isAnimating)
+            .disposed(by: disposeBag)
     }
 }

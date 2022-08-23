@@ -164,7 +164,7 @@ class ViewController: UIViewController {
         
         if validate(spotId: spotId) {
             setup(with: spotId, from: sender)
-            showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+            showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId, enableConversationCounter: true)
         } else {
             showInvalidSpotIdMessage()
         }
@@ -182,7 +182,7 @@ class ViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
+    private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false, enableConversationCounter: Bool = false) {
         let showArticles = {
             self.showArticles(with: spotId, authenticationControllerId: authenticationControllerId, showArticleOnTableView: showArticleOnTableView)
         }
@@ -218,9 +218,11 @@ class ViewController: UIViewController {
             }))
         }
         
-        alert.addAction(UIAlertAction(title: "Conversation Counter", style: .default, handler: { [weak self] action in
-            self?.showConversationCounter(with: spotId)
-        }))
+        if (enableConversationCounter) {
+            alert.addAction(UIAlertAction(title: "Conversation Counter", style: .default, handler: { [weak self] action in
+                self?.showConversationCounter(with: spotId)
+            }))
+        }
         
         self.present(alert, animated: true, completion: nil)
     }
@@ -235,6 +237,9 @@ class ViewController: UIViewController {
     private func showConversationCounter(with spotId: String) {
         let shouldReinit = spotId != currentSpotId
         currentSpotId = spotId
+        
+        let requiredData = ConversationCounterRequiredData(spotId: spotId, shouldReinit: shouldReinit)
+        let conversationCounterViewModel: ConversationCounterViewModel = ConversationCounterViewModel(dataModel: requiredData)
     }
     
     private func setSpotId(spotId:String) {
