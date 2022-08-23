@@ -239,7 +239,9 @@ class ViewController: UIViewController {
         currentSpotId = spotId
         
         let requiredData = ConversationCounterRequiredData(spotId: spotId, shouldReinit: shouldReinit)
-        let conversationCounterViewModel: ConversationCounterViewModel = ConversationCounterViewModel(dataModel: requiredData)
+        let viewModel: ConversationCounterViewModel = ConversationCounterViewModel(dataModel: requiredData)
+        let conversationCounterVC = ConversationCounterVC(viewModel: viewModel)
+        navigationController?.pushViewController(conversationCounterVC, animated: true)
     }
     
     private func setSpotId(spotId:String) {

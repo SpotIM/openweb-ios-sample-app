@@ -176,6 +176,8 @@
 		3D3E3AC128B4EB61003B4F05 /* ConversationCounterCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC028B4EB61003B4F05 /* ConversationCounterCellViewModel.swift */; };
 		3D3E3AC328B4F5A4003B4F05 /* ConversationCounterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC228B4F5A4003B4F05 /* ConversationCounterCell.swift */; };
 		3D3E3AC628B4F712003B4F05 /* Shadowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC528B4F712003B4F05 /* Shadowable.swift */; };
+		3D3E3AC828B50CC9003B4F05 /* TableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */; };
+		3D3E3ACA28B50CF9003B4F05 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */; };
 		3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */; };
 		3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C052852482D007420AD /* UIImageView+URL.swift */; };
 		3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C0728524A40007420AD /* UIImage+URL.swift */; };
@@ -622,6 +624,8 @@
 		3D3E3AC028B4EB61003B4F05 /* ConversationCounterCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCounterCellViewModel.swift; sourceTree = "<group>"; };
 		3D3E3AC228B4F5A4003B4F05 /* ConversationCounterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCounterCell.swift; sourceTree = "<group>"; };
 		3D3E3AC528B4F712003B4F05 /* Shadowable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shadowable.swift; sourceTree = "<group>"; };
+		3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TableView+Registration.swift"; sourceTree = "<group>"; };
+		3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRenewerService.swift; sourceTree = "<group>"; };
 		3D6A4C052852482D007420AD /* UIImageView+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URL.swift"; sourceTree = "<group>"; };
@@ -971,6 +975,8 @@
 				3D6A4C052852482D007420AD /* UIImageView+URL.swift */,
 				3D6A4C0728524A40007420AD /* UIImage+URL.swift */,
 				3D3E3AC528B4F712003B4F05 /* Shadowable.swift */,
+				3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */,
+				3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3158,6 +3164,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D3E3AC828B50CC9003B4F05 /* TableView+Registration.swift in Sources */,
+				3D3E3ACA28B50CF9003B4F05 /* Reusable+IndentifierName.swift in Sources */,
 				3DB3D19D282C0433008654CF /* AuthenticationError.swift in Sources */,
 				443B328D236997F00000BB60 /* SettingsViewController.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
