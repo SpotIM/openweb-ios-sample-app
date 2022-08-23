@@ -18,3 +18,6 @@
 "AutomaticallyDismissAfterLogin" = "Dismiss after successful login";
 "AutomaticallyDismissAfterLoginDescription" = "Will dismiss after half a second for visibility";
 "ConversationCounterTitle" = "Conversation Counter";
+"PostId" = "Post Id";
+"Comments" = "Comments";
+"Replies" = "Replies";
