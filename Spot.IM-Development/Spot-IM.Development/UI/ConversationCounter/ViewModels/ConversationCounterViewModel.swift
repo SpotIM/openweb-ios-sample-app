@@ -11,14 +11,14 @@ import Alamofire
 import SpotImCore
 
 protocol ConversationCounterViewModelingInputs {
-    var loadConversationCounter: PublishSubject<String> { get }
+    var loadConversationCounter: PublishSubject<[String]> { get }
 }
 
 protocol ConversationCounterViewModelingOutputs {
     var title: String { get }
-    var comments: Observable<Int> { get }
-    var replies: Observable<Int> { get }
+    var cellsViewModels: Observable<[ConversationCounterCellViewModeling]> { get }
     var showError: Observable<String> { get }
+    var showLoader: Observable<Bool> { get }
 }
 
 protocol ConversationCounterViewModeling {
@@ -30,61 +30,87 @@ class ConversationCounterViewModel: ConversationCounterViewModeling, Conversatio
     var inputs: ConversationCounterViewModelingInputs { return self }
     var outputs: ConversationCounterViewModelingOutputs { return self }
     
+    let dataModel: ConversationCounterRequiredData
+    
     lazy var title: String = {
         return NSLocalizedString("ConversationCounterTitle", comment: "")
     }()
     
-    let loadConversationCounter = PublishSubject<String>()
+    let loadConversationCounter = PublishSubject<[String]>()
     
-    fileprivate let _comments = BehaviorSubject<Int?>(value: nil)
-    var comments: Observable<Int> {
-        return _comments
-            .unwrap()
-            .asObservable()
-    }
-    
-    fileprivate let _replies = BehaviorSubject<Int?>(value: nil)
-    var replies: Observable<Int> {
-        return _replies
-            .unwrap()
-            .asObservable()
-    }
-    
-    fileprivate let _showError = BehaviorSubject<String?>(value: nil)
+    fileprivate let _shouldShowError = BehaviorSubject<Bool>(value: false)
+    fileprivate let _showError = PublishSubject<String>()
     var showError: Observable<String> {
         return _showError
+            .asObservable()
+    }
+    
+    fileprivate let _showLoader = BehaviorSubject<Bool?>(value: nil)
+    var showLoader: Observable<Bool> {
+        return _showLoader
             .unwrap()
             .asObservable()
+    }
+    
+    fileprivate let _cellsViewModels = BehaviorSubject<[ConversationCounterCellViewModeling]?>(value: nil)
+    var cellsViewModels: Observable<[ConversationCounterCellViewModeling]> {
+        return Observable.combineLatest(_cellsViewModels, _shouldShowError, showLoader) { viewModels, shouldShowError, shouldShowLoader in
+            guard !shouldShowLoader, !shouldShowError, let cellVMs = viewModels else { return [] }
+            return cellVMs
+        }
     }
     
     fileprivate let disposeBag = DisposeBag()
     
-    init() {
+    init(dataModel: ConversationCounterRequiredData) {
+        self.dataModel = dataModel
+        initSDK()
         setupObservers()
     }
 }
 
 fileprivate extension ConversationCounterViewModel {
+    func initSDK() {
+        SpotIm.reinit = dataModel.shouldReinit
+        SpotIm.initialize(spotId: dataModel.spotId) { result in
+            switch result {
+            case .failure(let error):
+                DLog("SpotIm.initialize - error: \(error)")
+                self._shouldShowError.onNext(true)
+                self._showError.onNext("Failed SDK initialization - error: \(error)")
+            case .success(_):
+                DLog("SpotIm.initialize successfully")
+            }
+        }
+    }
+    
     func setupObservers() {
         loadConversationCounter
-            .subscribe(onNext: { [weak self] postId in
+            .do(onNext: { [weak self] _ in
+                self?._showLoader.onNext(true)
+                self?._shouldShowError.onNext(false)
+            })
+            .subscribe(onNext: { [weak self] postIds in
                 guard let self = self else { return }
-                SpotIm.getConversationCounters(conversationIds: [postId]) { [weak self] result in
+                SpotIm.getConversationCounters(conversationIds: postIds) { [weak self] result in
                     guard let self = self else { return }
+                    self._showLoader.onNext(true)
+                    
                     switch result {
                     case .success(let commentDic):
-                        guard let counter = commentDic[postId] else {
-                            let err = "Failed to parse the conversation counter for the given postId"
-                            DLog(err)
-                            self._showError.onNext(err)
-                            return
+                        let postIdsKeys = commentDic.keys
+                        var cellViewModels = [ConversationCounterCellViewModeling]()
+                        
+                        for id in postIdsKeys {
+                            guard let counter = commentDic[id] else { continue }
+                            let cellViewModel = (ConversationCounterCellViewModel(counter: counter, postId: id))
+                            cellViewModels.append(cellViewModel)
                         }
-                        let comments = counter.comments
-                        let replies = counter.replies
-                        self._comments.onNext(comments)
-                        self._replies.onNext(replies)
+                        
+                        self._cellsViewModels.onNext(cellViewModels)
                     case .failure(let error):
                         DLog(error)
+                        self._shouldShowError.onNext(true)
                         self._showError.onNext(error.localizedDescription)
                     }
                 }
