@@ -453,6 +453,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         navigationItemLabel.backgroundColor = UIColor.clear
         let attributedTitleText = NSMutableAttributedString(string: text)
         attributedTitleText.addAttribute(.font, value: UIFont.systemFont(ofSize: 20, weight: .regular), range: NSMakeRange(0, attributedTitleText.length))
+        attributedTitleText.addAttribute(.foregroundColor, value: UIColor.black, range: NSMakeRange(0, attributedTitleText.length))
         navigationItemLabel.attributedText = attributedTitleText
         customizeNavigationItemTitle(label: navigationItemLabel)
         return navigationItemLabel
