@@ -32,7 +32,7 @@ public enum CustomizableView {
     case sayControlInMainConversation(labelContainer: OWBaseView, label: OWBaseLabel)
     case conversationFooter(view: UIView)
     case communityGuidelines(textView: UITextView)
-    case navigationItemTitle(textView: UITextView)
+    case navigationItemTitle(label: UILabel)
     case showCommentsButton(button: SPShowCommentsButton)
     case preConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
     case commentCreationActionButton(button: OWBaseButton)
@@ -426,8 +426,8 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         
         let navigationItemTitleText = LocalizationManager.localizedString(key: "Conversation")
         if SpotIm.enableCustomNavigationItemTitle {
-            let navigationItemTextView = getNavigationItemTitleTextView(with: navigationItemTitleText)
-            controller.navigationItem.titleView = navigationItemTextView
+            let navigationItemLabel = getNavigationItemTitleLabel(with: navigationItemTitleText)
+            controller.navigationItem.titleView = navigationItemLabel
         } else {
             controller.title = navigationItemTitleText
         }
@@ -448,17 +448,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         return controller
     }
     
-    private func getNavigationItemTitleTextView(with text: String) -> UITextView {
-        let navigationItemTextView = UITextView()
-        navigationItemTextView.backgroundColor = UIColor.clear
+    private func getNavigationItemTitleLabel(with text: String) -> UILabel {
+        let navigationItemLabel = UILabel()
+        navigationItemLabel.backgroundColor = UIColor.clear
         let attributedTitleText = NSMutableAttributedString(string: text)
         attributedTitleText.addAttribute(.font, value: UIFont.systemFont(ofSize: 20, weight: .regular), range: NSMakeRange(0, attributedTitleText.length))
-        navigationItemTextView.attributedText = attributedTitleText
-        navigationItemTextView.isEditable = false
-        navigationItemTextView.isSelectable = false
-        navigationItemTextView.isScrollEnabled = false
-        customizeNavigationItemTitle(textView: navigationItemTextView)
-        return navigationItemTextView
+        navigationItemLabel.attributedText = attributedTitleText
+        customizeNavigationItemTitle(label: navigationItemLabel)
+        return navigationItemLabel
     }
     
     private func presentContentCreationViewController(controller: SPCommentCreationViewController, _ dataModel: SPMainConversationModel) {
@@ -747,9 +744,9 @@ extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {
     func customizeCommunityGuidelines(textView: UITextView) {
         self.customizeView(.communityGuidelines(textView: textView))
     }
-    func customizeNavigationItemTitle(textView: UITextView) {
+    func customizeNavigationItemTitle(label: UILabel) {
         guard SpotIm.enableCustomNavigationItemTitle else { return }
-        self.customizeView(.navigationItemTitle(textView: textView))
+        self.customizeView(.navigationItemTitle(label: label))
     }
     
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
