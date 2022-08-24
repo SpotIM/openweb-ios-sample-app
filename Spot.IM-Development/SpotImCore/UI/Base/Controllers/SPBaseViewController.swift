@@ -48,7 +48,7 @@ internal class SPBaseViewController: UIViewController {
     }
 
     func updateColorsAccordingToStyle() {
-        let navigationItemTitleView = self.navigationItem.titleView as? UITextView
+        let navigationItemTitleView = self.navigationItem.titleView as? UILabel
 
         if #available(iOS 13.0, *), self.navigationController?.view.tag == SPOTIM_NAV_CONTROL_TAG {
             // back button
@@ -58,7 +58,6 @@ internal class SPBaseViewController: UIViewController {
             
             // title view
             navigationItemTitleView?.textColor = UIColor.spForeground0
-            navigationItemTitleView?.isScrollEnabled = false
         
             // nav bar
             let navBarAppearance = UINavigationBarAppearance()
@@ -71,7 +70,7 @@ internal class SPBaseViewController: UIViewController {
         }
         
         if let navigationItemTitleView = navigationItemTitleView {
-            customUIDelegate?.customizeNavigationItemTitle(textView: navigationItemTitleView)
+            customUIDelegate?.customizeNavigationItemTitle(label: navigationItemTitleView)
         }
     }
     
