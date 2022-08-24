@@ -67,7 +67,7 @@ class OWCommentCreationEntryView: UIView {
     func configure(with viewModel: OWCommentCreationEntryViewModeling, delegate: OWCommentCreationEntryViewDelegate) {
         disposeBag = DisposeBag()
         self.viewModel = viewModel
-        self.viewModel.inputs.configureDelegate(delegate)
+        self.viewModel.inputs.configure(delegate: delegate)
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
         setupObservers()
     }
@@ -109,11 +109,12 @@ fileprivate extension OWCommentCreationEntryView {
     }
     
     func setupObservers() {
-        viewModel.outputs.actionText.bind(to: label.rx.text)
+        viewModel.outputs.ctaText
+            .bind(to: label.rx.text)
             .disposed(by: disposeBag)
         
         tapGesture.rx.event.voidify()
-        .bind(to: viewModel.inputs.tapAction)
+        .bind(to: viewModel.inputs.tap)
         .disposed(by: disposeBag)
     }
 }

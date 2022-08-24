@@ -37,7 +37,7 @@ final class SPMainConversationFooterView: OWBaseView {
         super.init(frame: frame)
         
         clipsToBounds = false
-        setup()
+        setupUI()
         updateColorsAccordingToStyle()
     }
     
@@ -63,11 +63,27 @@ final class SPMainConversationFooterView: OWBaseView {
         self.readOnlyLabel?.textColor = .spForeground3
     }
     
-    private func setup() {
-        addSubviews(bannerContainerView, separatorView, commentCreationEntryView)
-        configureSeparatorView()
-        setupBannerView()
-        configureCommentCreationEntryView()
+    private func setupUI() {
+        addSubview(bannerContainerView)
+        bannerContainerView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            bannerContainerHeight = make.height.equalTo(0.0).constraint
+        }
+        
+        addSubview(separatorView)
+        separatorView.backgroundColor = .spSeparator2
+        separatorView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
+        }
+        
+        addSubview(commentCreationEntryView)
+        commentCreationEntryView.OWSnp.makeConstraints { make in
+            make.top.equalTo(bannerContainerView.OWSnp.bottom).offset(16.0)
+            make.trailing.equalToSuperview().offset(-15)
+            make.leading.equalToSuperview().offset(15.0)
+            make.height.equalTo(48.0)
+        }
     }
     
     func setReadOnlyMode(isPreConversation: Bool = false) {
@@ -110,30 +126,6 @@ final class SPMainConversationFooterView: OWBaseView {
         bannerContainerHeight?.deactivate()
         bannerContainerView.OWSnp.updateConstraints { make in
             bannerContainerHeight = make.height.equalTo(height + 16.0).constraint
-        }
-    }
-    
-    private func setupBannerView() {
-        bannerContainerView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            bannerContainerHeight = make.height.equalTo(0.0).constraint
-        }
-    }
-    
-    private func configureCommentCreationEntryView() {
-        commentCreationEntryView.OWSnp.makeConstraints { make in
-            make.top.equalTo(bannerContainerView.OWSnp.bottom).offset(16.0)
-            make.trailing.equalToSuperview().offset(-15)
-            make.leading.equalToSuperview().offset(15.0)
-            make.height.equalTo(48.0)
-        }
-    }
-
-    private func configureSeparatorView() {
-        separatorView.backgroundColor = .spSeparator2
-        separatorView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(Theme.separatorHeight)
         }
     }
     

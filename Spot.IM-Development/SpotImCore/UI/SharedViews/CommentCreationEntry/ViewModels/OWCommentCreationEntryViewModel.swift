@@ -10,17 +10,17 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationEntryViewModelingInputs {
-    func configureUser(user: SPUser)
-    func configureActionText(text: String)
-    func configureDelegate(_ delegate: OWCommentCreationEntryViewDelegate?)
+    func configure(user: SPUser)
+    func configure(ctaText: String)
+    func configure(delegate: OWCommentCreationEntryViewDelegate?)
     
-    var tapAction: PublishSubject<Void> { get }
+    var tap: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationEntryViewModelingOutputs {
     var avatarViewVM: OWAvatarViewModeling { get }
-    var actionText: Observable<String> { get }
-    var actionTapped: Observable<Void> { get }
+    var ctaText: Observable<String> { get }
+    var tapped: Observable<Void> { get }
 }
 
 protocol OWCommentCreationEntryViewModeling {
@@ -46,14 +46,14 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
     
     fileprivate let _actionText = BehaviorSubject<String>(value: LocalizationManager.localizedString(key: "What do you think?"))
     
-    func configureDelegate(_ delegate: OWCommentCreationEntryViewDelegate?) {
+    func configure(delegate: OWCommentCreationEntryViewDelegate?) {
         self.delegate = delegate
     }
     
-    var tapAction = PublishSubject<Void>()
+    var tap = PublishSubject<Void>()
     
-    var actionTapped: Observable<Void> {
-        tapAction
+    var tapped: Observable<Void> {
+        tap
             .asObserver()
     }
     
@@ -61,15 +61,15 @@ class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCom
         return OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
     }()
     
-    func configureUser(user: SPUser) {
+    func configure(user: SPUser) {
         outputs.avatarViewVM.inputs.configureUser(user: user)
     }
     
-    func configureActionText(text: String) {
-        _actionText.onNext(text)
+    func configure(ctaText: String) {
+        _actionText.onNext(ctaText)
     }
     
-    var actionText: Observable<String> {
+    var ctaText: Observable<String> {
         _actionText.asObserver()
     }
 }
@@ -81,7 +81,7 @@ fileprivate extension OWCommentCreationEntryViewModel {
             self.delegate?.userAvatarDidTap()
         }).disposed(by: disposeBag)
         
-        outputs.actionTapped.subscribe(onNext: { [weak self] _ in
+        outputs.tapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.delegate?.labelContainerDidTap()
         }).disposed(by: disposeBag)
