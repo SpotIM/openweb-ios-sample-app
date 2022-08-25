@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal protocol SPCommentsCreationDelegate: AnyObject {
     func createComment(with dataModel: SPMainConversationModel)
@@ -87,6 +88,8 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
+    
+    fileprivate let disposeBag = DisposeBag()
 
     init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?, openedByPublisher: Bool = false) {
         self.adsProvider = adsProvider
@@ -134,6 +137,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             object: nil)
         
         startRealtimeService()
+        setupObservers()
     }
 
     override func viewDidLayoutSubviews() {
@@ -886,5 +890,16 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
 
         SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .mainConversation, error: error)))
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
+    }
+}
+
+fileprivate extension SPMainConversationViewController {
+    func setupObservers() {
+        communityGuidelinesView.heightChanged
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.resetCollapsableContainerHeight()
+            })
+            .disposed(by: disposeBag)
     }
 }
