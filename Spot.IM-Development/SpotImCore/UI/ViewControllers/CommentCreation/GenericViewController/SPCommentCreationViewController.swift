@@ -909,8 +909,8 @@ extension SPCommentCreationViewController: SPCommentLabelsContainerViewDelegate 
 }
 
 extension SPCommentCreationViewController: SPCommentCreationNewHeaderViewDelegate {
-    func customizeHeaderTitle(textView: UITextView) {
-        customUIDelegate?.customizeNavigationItemTitle(textView: textView)
+    func customizeHeaderTitle(label: UILabel) {
+        customUIDelegate?.customizeNavigationItemTitle(label: label)
     }
 }
 
