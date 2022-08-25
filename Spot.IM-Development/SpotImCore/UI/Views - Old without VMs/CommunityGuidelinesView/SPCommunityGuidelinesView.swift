@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal protocol SPCommunityGuidelinesViewDelegate {
     func clickOnUrl(url: URL)
@@ -23,6 +24,9 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     private var separatorTrailingConstraint: OWConstraint?
     
     var delegate: SPCommunityGuidelinesViewDelegate?
+    
+    // RX although we don't have a proper View Model
+    let heightChanged = PublishSubject<Void>()
 
     // MARK: - Overrides
     
@@ -47,10 +51,18 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     // MARK: - Internal methods
     
     internal func setHtmlText(htmlString: String) {
-        if let titleTextViewAttributedText = getTitleTextViewAttributedText(htmlString: htmlString) {
-            titleTextView.attributedText = titleTextViewAttributedText
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            let titleText = self.getTitleTextViewAttributedText(htmlString: htmlString)
+            DispatchQueue.main.async { [weak self, titleText] in
+                guard let self = self else { return }
+                if let titleTextViewAttributedText = titleText {
+                    self.titleTextView.attributedText = titleTextViewAttributedText
+                    self.heightChanged.onNext(())
+                }
+                self.delegate?.customizeTextView(textView: self.titleTextView)
+            }
         }
-        delegate?.customizeTextView(textView: titleTextView)
     }
     
     internal func setupPreConversationConstraints() {
