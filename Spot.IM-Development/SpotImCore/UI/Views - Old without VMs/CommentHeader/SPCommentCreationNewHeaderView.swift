@@ -26,7 +26,7 @@ enum HeaderMode {
 }
 
 protocol SPCommentCreationNewHeaderViewDelegate: AnyObject {
-    func customizeHeaderTitle(textView: UITextView)
+    func customizeHeaderTitle(label: UILabel)
 }
 
 final class SPCommentCreationNewHeaderView: OWBaseView {
@@ -35,7 +35,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     
     let closeButton: OWBaseButton = .init()
 
-    private let headerTitleTextView: OWBaseTextView = .init()
+    private let headerTitleLabel: OWBaseLabel = .init()
     private let replyingLabel: OWBaseLabel = .init()
     private let commentAuthorLabel: OWBaseLabel = .init()
     private let commentLabel: OWBaseLabel = .init()
@@ -53,8 +53,8 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
-        headerTitleTextView.backgroundColor = .spBackground0
-        headerTitleTextView.textColor = .spForeground0
+        headerTitleLabel.backgroundColor = .spBackground0
+        headerTitleLabel.textColor = .spForeground0
         commentAuthorLabel.backgroundColor = .spBackground0
         commentAuthorLabel.textColor = .spForeground1
         closeButton.backgroundColor = .spBackground0
@@ -63,7 +63,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         separatorView.backgroundColor = .spSeparator2
         closeButton.setImage(UIImage(spNamed: "closeCrossIconNew", supportDarkMode: true), for: .normal)
         
-        delegate?.customizeHeaderTitle(textView: headerTitleTextView)
+        delegate?.customizeHeaderTitle(label: headerTitleLabel)
     }
     
     func hideCommentText() {
@@ -73,7 +73,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
     
     func setupHeader(for headerMode: HeaderMode) {
-        headerTitleTextView.text = headerMode.title
+        headerTitleLabel.text = headerMode.title
     }
     
     // MARK: - Internal methods
@@ -107,7 +107,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
     
     private func setup() {
-        addSubviews(headerTitleTextView, replyingLabel, commentAuthorLabel, closeButton, commentLabel, separatorView)
+        addSubviews(headerTitleLabel, replyingLabel, commentAuthorLabel, closeButton, commentLabel, separatorView)
         setupHeaderTitle()
         setupReplyingLabel()
         setupCommentAuthorLabel()
@@ -118,11 +118,9 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     }
     
     private func setupHeaderTitle() {
-        headerTitleTextView.textAlignment = .center
-        headerTitleTextView.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
-        headerTitleTextView.isEditable = false
-        headerTitleTextView.isSelectable = false
-        headerTitleTextView.OWSnp.makeConstraints { make in
+        headerTitleLabel.textAlignment = .center
+        headerTitleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
+        headerTitleLabel.OWSnp.makeConstraints { make in
             make.height.equalTo(Theme.headerTitleHeight)
             make.top.equalToSuperview().offset(Theme.topOffset)
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
@@ -133,7 +131,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIconNew", supportDarkMode: true), for: .normal)
         closeButton.OWSnp.makeConstraints { make in
-            make.centerY.equalTo(headerTitleTextView)
+            make.centerY.equalTo(headerTitleLabel)
             make.trailing.equalToSuperview().offset(-6.0)
             make.size.equalTo(45.0)
         }
@@ -141,7 +139,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     
     private func setupSeparatorView() {
         separatorView.OWSnp.makeConstraints { make in
-            make.top.equalTo(headerTitleTextView.OWSnp.bottom)
+            make.top.equalTo(headerTitleLabel.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(Theme.separatorHeight)
         }
