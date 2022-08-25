@@ -296,8 +296,8 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .conversationFooter(let view):
             view.backgroundColor = isDarkMode ? #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1) : #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
             break
-        case .navigationItemTitle(let textView):
-            customizeNavigationItemTitle(textView: textView)
+        case .navigationItemTitle(let label):
+            customizeNavigationItemTitle(label: label)
             break
         case .communityGuidelines(let textView):
             customizeComunityGuidelines(textView: textView, isDarkMode: isDarkMode)
@@ -334,8 +334,8 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         }
     }
     
-    private func customizeNavigationItemTitle(textView: UITextView) {
-        if let attributedString = textView.attributedText.mutableCopy() as? NSMutableAttributedString {
+    private func customizeNavigationItemTitle(label: UILabel) {
+        if let attributedString = label.attributedText?.mutableCopy() as? NSMutableAttributedString {
             attributedString.addAttribute(
                 .font,
                 value: UIFont.systemFont(ofSize: 18, weight: .bold),
@@ -346,7 +346,7 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
                 value: UIColor.red,
                 range: NSMakeRange(0,attributedString.length)
             )
-            textView.attributedText = attributedString
+            label.attributedText = attributedString
         }
     }
     

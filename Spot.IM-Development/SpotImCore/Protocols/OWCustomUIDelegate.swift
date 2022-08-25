@@ -14,7 +14,7 @@ protocol OWCustomUIDelegate: AnyObject {
     func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool)
     func customizeConversationFooter(view: UIView)
     func customizeCommunityGuidelines(textView: UITextView)
-    func customizeNavigationItemTitle(textView: UITextView)
+    func customizeNavigationItemTitle(label: UILabel)
     func customizeShowCommentsButton(button: SPShowCommentsButton)
     func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
     func customizeCommentCreationActionButton(button: OWBaseButton)
