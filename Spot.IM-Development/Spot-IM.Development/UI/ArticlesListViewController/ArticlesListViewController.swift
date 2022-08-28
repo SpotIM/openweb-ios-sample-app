@@ -61,7 +61,7 @@ class ArticlesListViewController: UITableViewController {
             case .failure(let error):
                 DLog("SpotIm.initialize - error: \(error)")
             case .success(_):
-                print("SpotIm.initialize successfully")
+                DLog("SpotIm.initialize successfully")
             }
         }
         
