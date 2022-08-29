@@ -21,6 +21,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     // TODO - create comment VM
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
+    var isButtonOnlyModeEnabled: Bool { get }
 }
 
 protocol OWPreConversationViewViewModeling {
@@ -33,12 +34,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let numberOfMessagesToShow: Int
     
     var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
         return _cellsViewModels
             .rx_elements()
             .asObservable()
+    }
+    
+    var isButtonOnlyModeEnabled: Bool {
+        self.numberOfMessagesToShow == 0 || SpotIm.buttonOnlyMode.isEnabled()
     }
     
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> {
@@ -60,8 +66,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return OWCommunityGuidelinesViewModel()
     }()
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, numberOfMessagesToShow: Int) {
         self.servicesProvider = servicesProvider
+        self.numberOfMessagesToShow = numberOfMessagesToShow
         setupObservers()
     }
 }

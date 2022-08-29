@@ -84,7 +84,7 @@
 		24B32B9B28BCB6AA00FB701C /* OWPreConversationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32B9A28BCB6AA00FB701C /* OWPreConversationVM.swift */; };
 		24B32B9D28BCB78000FB701C /* OWPreConversationViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32B9C28BCB78000FB701C /* OWPreConversationViewVM.swift */; };
 		24B32BA028BCBA4A00FB701C /* OWPreConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32B9F28BCBA4A00FB701C /* OWPreConversationView.swift */; };
-		24B32BA228BCD4C200FB701C /* OWPreConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BA128BCD4C200FB701C /* OWPreConversationVC.swift */; };
+		24B32BA528BCEB8900FB701C /* OWPreConversationCellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BA428BCEB8900FB701C /* OWPreConversationCellOption.swift */; };
 		24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88434261C922900EB7BCB /* CommentLabelView.swift */; };
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
@@ -531,7 +531,7 @@
 		24B32B9A28BCB6AA00FB701C /* OWPreConversationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationVM.swift; sourceTree = "<group>"; };
 		24B32B9C28BCB78000FB701C /* OWPreConversationViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationViewVM.swift; sourceTree = "<group>"; };
 		24B32B9F28BCBA4A00FB701C /* OWPreConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationView.swift; sourceTree = "<group>"; };
-		24B32BA128BCD4C200FB701C /* OWPreConversationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationVC.swift; sourceTree = "<group>"; };
+		24B32BA428BCEB8900FB701C /* OWPreConversationCellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationCellOption.swift; sourceTree = "<group>"; };
 		24B88434261C922900EB7BCB /* CommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLabelView.swift; sourceTree = "<group>"; };
 		24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationShared.swift; sourceTree = "<group>"; };
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
@@ -1143,6 +1143,7 @@
 		24B32B9828BCB65C00FB701C /* PreConversation */ = {
 			isa = PBXGroup;
 			children = (
+				24B32BA328BCEB6F00FB701C /* Models */,
 				24B32B9E28BCBA2D00FB701C /* Views */,
 				24B32B9928BCB68200FB701C /* ViewModels */,
 			);
@@ -1162,9 +1163,16 @@
 			isa = PBXGroup;
 			children = (
 				24B32B9F28BCBA4A00FB701C /* OWPreConversationView.swift */,
-				24B32BA128BCD4C200FB701C /* OWPreConversationVC.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		24B32BA328BCEB6F00FB701C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				24B32BA428BCEB8900FB701C /* OWPreConversationCellOption.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
@@ -2934,7 +2942,6 @@
 				3D20A36D27B0124F003F8513 /* OWConstraint.swift in Sources */,
 				4454180323685144001D0ED0 /* SPAnimatedButton.swift in Sources */,
 				3D20A38527B01ED2003F8513 /* OWConstraintMakerRelatable+Extensions.swift in Sources */,
-				24B32BA228BCD4C200FB701C /* OWPreConversationVC.swift in Sources */,
 				3D20A36527B00CAC003F8513 /* OWConstraintDSL.swift in Sources */,
 				3DD72C66280EF07B00117946 /* OWEnvironment.swift in Sources */,
 				3D08E09D28770FFD00E6F1AC /* OWTableViewSectionedDataSource.swift in Sources */,
@@ -3110,6 +3117,7 @@
 				16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */,
 				24B087CB288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift in Sources */,
 				246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */,
+				24B32BA528BCEB8900FB701C /* OWPreConversationCellOption.swift in Sources */,
 				44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */,
 				4454182223685144001D0ED0 /* SPCommentReplyHeaderView.swift in Sources */,
 				445417F923685144001D0ED0 /* UIView+Roundings.swift in Sources */,
