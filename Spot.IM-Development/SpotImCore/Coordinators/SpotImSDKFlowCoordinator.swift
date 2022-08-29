@@ -28,8 +28,8 @@ public protocol SpotImLoginDelegate: AnyObject {
 public enum CustomizableView {
     case loginPrompt(textView: UITextView)
     case communityQuestion(textView: UITextView)
-    case sayControlInPreConversation(labelContainer: OWBaseView, label: OWBaseLabel)
-    case sayControlInMainConversation(labelContainer: OWBaseView, label: OWBaseLabel)
+    case sayControlInPreConversation(labelContainer: UIView, label: UILabel)
+    case sayControlInMainConversation(labelContainer: UIView, label: UILabel)
     case conversationFooter(view: UIView)
     case communityGuidelines(textView: UITextView)
     case navigationItemTitle(label: UILabel)
@@ -734,7 +734,7 @@ extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {
     func customizeCommunityQuestionTextView(textView: UITextView) {
         self.customizeView(.communityQuestion(textView: textView))
     }
-    func customizeSayControl(labelContainer: OWBaseView, label: OWBaseLabel, isPreConversation: Bool) {
+    func customizeSayControl(labelContainer: UIView, label: UILabel, isPreConversation: Bool) {
         let view: CustomizableView = isPreConversation ? .sayControlInPreConversation(labelContainer: labelContainer, label: label) : .sayControlInMainConversation(labelContainer: labelContainer, label: label)
         
         self.customizeView(view)

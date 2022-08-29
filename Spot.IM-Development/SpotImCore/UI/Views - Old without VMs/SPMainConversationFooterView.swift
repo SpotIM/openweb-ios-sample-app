@@ -8,19 +8,8 @@
 
 import UIKit
 
-internal protocol SPMainConversationFooterViewDelegate: AnyObject {
-    
-    func labelContainerDidTap(_ foorterView: SPMainConversationFooterView)
-    
-    func userAvatarDidTap(_ foorterView: SPMainConversationFooterView)
-    
-}
-
 final class SPMainConversationFooterView: OWBaseView {
-    private let cache = NSCache<NSString, UIImage>()
-    private let callToActionLabel: OWBaseLabel = .init()
-    let userAvatarView: SPAvatarView = .init()
-    private let labelContainer: OWBaseView = .init()
+    let commentCreationEntryView: OWCommentCreationEntryView = .init()
     
     private lazy var separatorView: OWBaseView = .init()
     private lazy var bannerContainerView: OWBaseView = .init()
@@ -29,8 +18,6 @@ final class SPMainConversationFooterView: OWBaseView {
     private var bannerContainerHeight: OWConstraint?
     
     private var readOnlyLabel: OWBaseLabel?
-
-    internal weak var delegate: SPMainConversationFooterViewDelegate?
     
     internal var dropsShadow: Bool = false {
         didSet { showSeparatorIfNeeded() }
@@ -50,11 +37,14 @@ final class SPMainConversationFooterView: OWBaseView {
         super.init(frame: frame)
         
         clipsToBounds = false
-        setup()
+        setupUI()
+        updateColorsAccordingToStyle()
     }
     
     func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {
-        customUIDelegate.customizeSayControl(labelContainer: labelContainer, label: callToActionLabel, isPreConversation: isPreConversation)
+        
+        commentCreationEntryView.handleUICustomizations(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
+
         if (!isPreConversation) {
             customUIDelegate.customizeConversationFooter(view: self)
         }
@@ -67,37 +57,40 @@ final class SPMainConversationFooterView: OWBaseView {
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
-        labelContainer.backgroundColor = .spBackground1
-        labelContainer.layer.borderColor = UIColor.spBorder.cgColor
-        callToActionLabel.textColor = .spForeground2
+        commentCreationEntryView.updateColorsAccordingToStyle()
         separatorView.backgroundColor = .spSeparator2
         dropsShadow = !SPUserInterfaceStyle.isDarkMode
         self.readOnlyLabel?.textColor = .spForeground3
     }
-
-    func setCallToAction(text: String) {
-        callToActionLabel.text = text
-    }
     
-    private func setup() {
-        addSubviews(bannerContainerView, labelContainer, userAvatarView, separatorView)
+    private func setupUI() {
+        addSubview(bannerContainerView)
+        bannerContainerView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            bannerContainerHeight = make.height.equalTo(0.0).constraint
+        }
         
-        labelContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(labelContainerTap)))
-        labelContainer.isUserInteractionEnabled = true
+        addSubview(separatorView)
+        separatorView.backgroundColor = .spSeparator2
+        separatorView.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(Theme.separatorHeight)
+        }
         
-        setupUserAvatarView()
-        setupCallToActionLabel()
-        
-        configureSeparatorView()
-        setupBannerView()
+        addSubview(commentCreationEntryView)
+        commentCreationEntryView.OWSnp.makeConstraints { make in
+            make.top.equalTo(bannerContainerView.OWSnp.bottom).offset(16.0)
+            make.trailing.equalToSuperview().offset(-15)
+            make.leading.equalToSuperview().offset(15.0)
+            make.height.equalTo(48.0)
+        }
     }
     
     func setReadOnlyMode(isPreConversation: Bool = false) {
         guard readOnlyLabel == nil else { return }
-        labelContainer.isUserInteractionEnabled = false
-        labelContainer.isHidden = true
-        userAvatarView.isHidden = true
-        
+        commentCreationEntryView.isUserInteractionEnabled = false
+        commentCreationEntryView.isHidden = true
+      
         readOnlyLabel = OWBaseLabel()
         setupReadOnlyLabel(isPreConversation: isPreConversation)
     }
@@ -111,7 +104,7 @@ final class SPMainConversationFooterView: OWBaseView {
         readOnlyLabel.text = LocalizationManager.localizedString(key: "Commenting on this article has ended")
         
         readOnlyLabel.OWSnp.makeConstraints { make in
-            make.centerY.equalTo(labelContainer)
+            make.centerY.equalTo(commentCreationEntryView)
             if (isPreConversation) {
                 make.leading.equalToSuperview().offset(Theme.readOnlyLabelLeading)
             } else {
@@ -136,54 +129,6 @@ final class SPMainConversationFooterView: OWBaseView {
         }
     }
     
-    private func setupBannerView() {
-        bannerContainerView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            bannerContainerHeight = make.height.equalTo(0.0).constraint
-        }
-    }
-    
-    private func setupCallToActionLabel() {
-        labelContainer.backgroundColor = .spBackground1
-        labelContainer.OWSnp.makeConstraints { make in
-            make.top.equalTo(bannerContainerView.OWSnp.bottom).offset(16.0)
-            make.trailing.equalToSuperview().offset(-15)
-            make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(12.0)
-            make.height.equalTo(48.0)
-        }
-        labelContainer.layer.borderColor = UIColor.spBorder.cgColor
-        labelContainer.layer.borderWidth = 1.0
-        labelContainer.addCornerRadius(6.0)
-        labelContainer.addSubview(callToActionLabel)
-        callToActionLabel.textColor = .spForeground2
-        callToActionLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
-        callToActionLabel.text = LocalizationManager.localizedString(key: "What do you think?")
-        
-        callToActionLabel.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.leading.equalToSuperview().offset(Theme.callToActionLeading)
-            make.height.equalTo(Theme.callToActionHeight)
-        }
-    }
-    
-    private func setupUserAvatarView() {
-        userAvatarView.delegate = self
-        userAvatarView.backgroundColor = .clear
-        userAvatarView.OWSnp.makeConstraints { make in
-            make.centerY.equalTo(labelContainer)
-            make.leading.equalToSuperview().offset(Theme.userAvatarLeading)
-            make.size.equalTo(Theme.userAvatarSize)
-        }
-    }
-
-    private func configureSeparatorView() {
-        separatorView.backgroundColor = .spSeparator2
-        separatorView.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(Theme.separatorHeight)
-        }
-    }
-    
     private func dropShadowIfNeeded() {
         guard dropsShadow else {
             layer.shadowPath = nil
@@ -197,40 +142,9 @@ final class SPMainConversationFooterView: OWBaseView {
         layer.shadowOpacity = 0.08
         layer.shadowPath = shadowPath.cgPath
     }
-    
-    private func dropContainerShadowIfNeeded() {
-        guard dropsShadow, !SPUserInterfaceStyle.isDarkMode else {
-            labelContainer.layer.shadowPath = nil
-            return
-        }
-        
-        let containerShadowRect = CGRect(
-            x: 0.0,
-            y: 0.0,
-            width: labelContainer.bounds.width,
-            height: labelContainer.bounds.height)
-        let containerShadowPath = UIBezierPath(rect: containerShadowRect)
-        labelContainer.layer.masksToBounds = false
-        labelContainer.layer.shadowColor = UIColor.black.cgColor
-        labelContainer.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-        labelContainer.layer.shadowRadius = 5.0
-        labelContainer.layer.shadowOpacity = 0.2
-        labelContainer.layer.shadowPath = containerShadowPath.cgPath
-    }
 
     private func showSeparatorIfNeeded() {
         separatorView.isHidden = dropsShadow
-    }
-    
-    @objc
-    private func labelContainerTap() {
-        delegate?.labelContainerDidTap(self)
-    }
-}
-
-extension SPMainConversationFooterView: OWAvatarViewDelegate {
-    func avatarDidTapped() {
-        delegate?.userAvatarDidTap(self)
     }
 }
 
