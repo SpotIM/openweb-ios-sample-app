@@ -113,7 +113,7 @@ fileprivate extension OWManager {
             .subscribe(onNext: { [weak self] spotId in
                 // SpotId was re-set to another spotId
                 guard let self = self else { return }
-                self.servicesProvider.configure.set(spotId: spotId)
+                self.servicesProvider.configure.change(spotId: spotId)
             })
             .disposed(by: disposeBag)
     }
