@@ -122,7 +122,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         servicesProvider.logger().log(level: .verbose, "FirstComment: Have some comments in the data source")
 
         updateFooterView()
-        footer.userAvatarView.configure(with: model.avatarViewVM)
+        footer.commentCreationEntryView.configure(with: model.convCommetEntryVM, delegate: self)
         articleHeader.configure(with: model.articleHeaderVM)
         summaryView.configure(with: model.conversationSummaryVM)
 
@@ -510,7 +510,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func setupFooterView() {
         view.bringSubviewToFront(footer)
-        footer.delegate = self
         footer.dropsShadow = !SPUserInterfaceStyle.isDarkMode
         let bottomPadding: CGFloat
         if #available(iOS 11.0, *), SpotIm.shouldConversationFooterStartFromBottomAnchor {
@@ -532,7 +531,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private func updateFooterView() {
         footer.updateColorsAccordingToStyle()
         if let user = SPUserSessionHolder.session.user {
-            model.avatarViewVM.inputs.configureUser(user: user)
+            model.convCommetEntryVM.inputs.configure(user: user)
         }
         updateFooterViewCustomUI(footerView: footer)
         model.fetchNavigationAvatar { [weak self] image, _ in
