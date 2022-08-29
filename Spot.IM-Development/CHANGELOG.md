@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.1] - 2022-08-29
+### Added
+- Added a spinner while loading a conversation / changing sort option
+### Fixed
+- Edited translation in Hebrew aligned to the mobile web
+- Crash in latest beta of iOS 16 when switching between dark and light mode
+- Navigation controller truncated in iOS 16
+- Profile background color when switching between dark and light mode
+- Removed zero before like/dislike (aligned to mobile web and Android)
+- Fixed overlapped of "STAFF" label when deleting a message
+### Internal
+- Added UI to check Conversation Counter API
+
 ## [1.16.0] - 2022-08-09
 ### Added
 - Support Xcode 14
