@@ -24,3 +24,5 @@
 "PostIdOrIds" = "PostId(s)";
 "Execute" = "Execute";
 "ConversationCounterMultiplePostIdsDescription" = "You can enter multiple post ids by using a delimiter ', '\nExample: \'postId1, postId2, postId3'";
+"BetaNewAPI" = "Beta - New API";
+"NewAPI" = "New API";
