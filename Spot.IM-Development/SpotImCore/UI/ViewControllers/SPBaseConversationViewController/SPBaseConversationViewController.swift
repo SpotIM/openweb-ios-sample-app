@@ -855,8 +855,8 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
     
 }
 
-extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate {
-    func labelContainerDidTap(_ footerView: SPMainConversationFooterView) {
+extension SPBaseConversationViewController: OWCommentCreationEntryViewDelegate {
+    func labelContainerDidTap() {
         guard let delegate = delegate else { return }
         
         if SpotIm.reactNativeShowLoginScreenOnRootVC &&
@@ -868,7 +868,7 @@ extension SPBaseConversationViewController: SPMainConversationFooterViewDelegate
         delegate.createComment(with: model)
     }
     
-    func userAvatarDidTap(_ foorterView: SPMainConversationFooterView) {
+    func userAvatarDidTap() {
         myUserAvatarDidTap()
     }
     

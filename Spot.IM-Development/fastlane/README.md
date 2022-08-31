@@ -68,6 +68,14 @@ Push a new beta build to TestFlight
 
 
 
+### ios release_public_demo_app
+
+```sh
+[bundle exec] fastlane ios release_public_demo_app
+```
+
+
+
 ### ios bump_version
 
 ```sh
