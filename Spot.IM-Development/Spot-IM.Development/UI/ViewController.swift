@@ -366,8 +366,10 @@ fileprivate extension ViewController {
         betaNewAPIBtn.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
+#if NEW_API
                 let betaAPIVC = BetaNewAPIVC()
                 self.navigationController?.pushViewController(betaAPIVC, animated: true)
+#endif
             })
             .disposed(by: disposeBag)
     }

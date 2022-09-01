@@ -8,9 +8,16 @@
 
 import Foundation
 
-// Will be a public protocol
+#if NEW_API
+public protocol OWUI {
+    var flows: OWUIFlows { get }
+    var views: OWUIViews { get }
+    var helpers: OWHelpers { get }
+}
+#else
 protocol OWUI {
     var flows: OWUIFlows { get }
     var views: OWUIViews { get }
     var helpers: OWHelpers { get }
 }
+#endif
