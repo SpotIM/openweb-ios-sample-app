@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
+#if NEW_API
+
 class BetaNewAPIVC: UIViewController {
     fileprivate struct Metrics {
         
@@ -53,3 +55,5 @@ fileprivate extension BetaNewAPIVC {
         title = viewModel.outputs.title
     }
 }
+
+#endif
