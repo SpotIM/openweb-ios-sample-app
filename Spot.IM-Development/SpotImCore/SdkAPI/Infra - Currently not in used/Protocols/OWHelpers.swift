@@ -8,7 +8,12 @@
 
 import Foundation
 
-// Will be a public protocol
+#if NEW_API
+public protocol OWHelpers {
+    var additionalConfigurations: [OWAdditionalConfiguration] { get set }
+}
+#else
 protocol OWHelpers {
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
 }
+#endif

@@ -8,7 +8,12 @@
 
 import Foundation
 
-// Will be a public protocol
+#if NEW_API
+public protocol OWUIViews {
+    
+}
+#else
 protocol OWUIViews {
     
 }
+#endif

@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import SpotImCore
 
+#if NEW_API
+
 protocol BetaNewAPIViewModelingInputs {
     
 }
@@ -40,6 +42,9 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 
 fileprivate extension BetaNewAPIViewModel {
     func setupObservers() {
-        
+        var manager = OpenWeb.manager
+        manager.spotId = "sp_eCIlROSD"
     }
 }
+
+#endif

@@ -8,9 +8,16 @@
 
 import Foundation
 
-// Will be a public protocol
+#if NEW_API
+public protocol OWAnalytics {
+    // TODO: uncomment once `OWCustomBIData` and `OWAnalyticEventCallback` are ready
+//    var customBIData: OWCustomBIData { get set }
+//    func addBICallback(_ callback: OWAnalyticEventCallback)
+}
+#else
 protocol OWAnalytics {
     // TODO: uncomment once `OWCustomBIData` and `OWAnalyticEventCallback` are ready
 //    var customBIData: OWCustomBIData { get set }
 //    func addBICallback(_ callback: OWAnalyticEventCallback)
 }
+#endif

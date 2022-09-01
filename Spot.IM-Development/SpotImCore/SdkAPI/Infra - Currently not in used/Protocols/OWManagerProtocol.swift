@@ -8,9 +8,16 @@
 
 import Foundation
 
-// Will be a public protocol which expose the different layers of the manager
+#if NEW_API
+public protocol OWManagerProtocol {
+    var spotId: OWSpotId { get set }
+    var ui: OWUI { get }
+    var analytics: OWAnalytics { get }
+}
+#else
 protocol OWManagerProtocol {
     var spotId: OWSpotId { get set }
     var ui: OWUI { get }
     var analytics: OWAnalytics { get }
 }
+#endif
