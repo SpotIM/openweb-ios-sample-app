@@ -18,6 +18,8 @@ protocol BetaNewAPIViewModelingInputs {
 
 protocol BetaNewAPIViewModelingOutputs {
     var title: String { get }
+    var preFilledSpotId: Observable<String> { get }
+    var preFilledPostId: Observable<String> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -29,7 +31,26 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     var inputs: BetaNewAPIViewModelingInputs { return self }
     var outputs: BetaNewAPIViewModelingOutputs { return self }
     
+    fileprivate struct Metrics {
+        static let preFilledSpotId: String? = "sp_eCIlROSD"
+        static let preFilledPostId: String? = "sdk1"
+    }
+    
     fileprivate let disposeBag = DisposeBag()
+    
+    fileprivate let _preFilledSpotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
+    var preFilledSpotId: Observable<String> {
+        return _preFilledSpotId
+            .unwrap()
+            .asObservable()
+    }
+    
+    fileprivate let _preFilledPostId = BehaviorSubject<String?>(value: Metrics.preFilledPostId)
+    var preFilledPostId: Observable<String> {
+        return _preFilledPostId
+            .unwrap()
+            .asObservable()
+    }
     
     lazy var title: String = {
         return NSLocalizedString("NewAPI", comment: "")
@@ -42,8 +63,8 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 
 fileprivate extension BetaNewAPIViewModel {
     func setupObservers() {
-        var manager = OpenWeb.manager
-        manager.spotId = "sp_eCIlROSD"
+//        var manager = OpenWeb.manager
+//        manager.spotId = "sp_eCIlROSD"
     }
 }
 

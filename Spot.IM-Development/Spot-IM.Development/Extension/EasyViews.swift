@@ -150,6 +150,11 @@ extension UIButton {
         return self
     }
     
+    @discardableResult func withHorizontalPadding(_ padding: CGFloat) -> Self {
+        self.contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
+        return self
+    }
+    
     @discardableResult func horizontalAlignment(_ align: UIControl.ContentHorizontalAlignment) -> Self {
         self.contentHorizontalAlignment = align
         return self
