@@ -282,6 +282,46 @@ fileprivate extension BetaNewAPIVC {
                 self?.txtFieldPostId.endEditing(true)
             })
             .disposed(by: disposeBag)
+        
+        // Bind text fields
+        txtFieldSpotId.rx.text
+            .unwrap()
+            .bind(to: viewModel.inputs.enteredSpotId)
+            .disposed(by: disposeBag)
+        
+        txtFieldPostId.rx.text
+            .unwrap()
+            .bind(to: viewModel.inputs.enteredPostId)
+            .disposed(by: disposeBag)
+        
+        // Bind buttons
+        btnPreConversation.rx.tap
+            .bind(to: viewModel.inputs.preConversationTapped)
+            .disposed(by: disposeBag)
+        
+        btnFullConversationPushMode.rx.tap
+            .map { PresentationalModeCompact.push }
+            .bind(to: viewModel.inputs.fullConversationTapped)
+            .disposed(by: disposeBag)
+        
+        btnFullConversationPresentMode.rx.tap
+            .map { PresentationalModeCompact.present }
+            .bind(to: viewModel.inputs.fullConversationTapped)
+            .disposed(by: disposeBag)
+        
+        btnCommentCreationPushMode.rx.tap
+            .map { PresentationalModeCompact.push }
+            .bind(to: viewModel.inputs.commentCreationTapped)
+            .disposed(by: disposeBag)
+        
+        btnCommentCreationPresentMode.rx.tap
+            .map { PresentationalModeCompact.present }
+            .bind(to: viewModel.inputs.commentCreationTapped)
+            .disposed(by: disposeBag)
+        
+        btnConversationCounter.rx.tap
+            .bind(to: viewModel.inputs.conversationCounterTapped)
+            .disposed(by: disposeBag)
     }
 }
 
