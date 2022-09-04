@@ -322,6 +322,14 @@ fileprivate extension BetaNewAPIVC {
         btnConversationCounter.rx.tap
             .bind(to: viewModel.inputs.conversationCounterTapped)
             .disposed(by: disposeBag)
+        
+        viewModel.outputs.openMockArticleScreen
+            .subscribe(onNext: { [weak self] settings in
+                let mockArticleVM = MockArticleViewModel(actionSettings: settings)
+                let mockArticleVC = MockArticleVC(viewModel: mockArticleVM)
+                self?.navigationController?.pushViewController(mockArticleVC, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

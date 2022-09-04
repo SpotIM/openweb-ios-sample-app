@@ -34,3 +34,5 @@
 "CommentCreationPushMode" = "Comment Creation - Push Mode";
 "CommentCreationPresentMode" = "Comment Creation - Present Mode";
 "ConversationCounter" = "Conversation Counter";
+"MockArticle" = "Mock Article";
+"MockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";

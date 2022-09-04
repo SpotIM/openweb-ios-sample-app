@@ -166,6 +166,11 @@ extension UIImageView {
         self.contentMode = contentMode
         return self
     }
+    
+    @discardableResult func image(_ image: UIImage) -> Self {
+        self.image = image
+        return self
+    }
 }
 
 extension UITableView {
