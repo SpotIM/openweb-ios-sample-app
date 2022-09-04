@@ -15,12 +15,136 @@ import SnapKit
 
 class BetaNewAPIVC: UIViewController {
     fileprivate struct Metrics {
-        
+        static let verticalMargin: CGFloat = 20
+        static let horizontalMargin: CGFloat = 20
+        static let textFieldHeight: CGFloat = 40
+        static let textFieldCorners: CGFloat = 12
+        static let buttonCorners: CGFloat = 16
+        static let buttonPadding: CGFloat = 10
+        static let buttonHeight: CGFloat = 50
     }
     
     fileprivate let viewModel: BetaNewAPIViewModeling
     fileprivate let disposeBag = DisposeBag()
+    
+    fileprivate lazy var lblSpotId: UILabel = {
+        let txt = NSLocalizedString("SpotId", comment: "") + ":"
+
+        return txt
+            .label
+            .hugContent(axis: .horizontal)
+            .font(FontBook.mainHeading)
+            .textColor(ColorPalette.blackish)
+    }()
+    
+    fileprivate lazy var lblPostId: UILabel = {
+        let txt = NSLocalizedString("PostId", comment: "") + ":"
+
+        return txt
+            .label
+            .hugContent(axis: .horizontal)
+            .font(FontBook.mainHeading)
+            .textColor(ColorPalette.blackish)
+    }()
+    
+    fileprivate lazy var txtFieldSpotId: UITextField = {
+        let txtField = UITextField()
+            .corner(radius: Metrics.textFieldCorners)
+            .border(width: 1.0, color: ColorPalette.blackish)
+        
+        txtField.borderStyle = .roundedRect
+        txtField.autocapitalizationType = .none
+        return txtField
+    }()
+    
+    fileprivate lazy var txtFieldPostId: UITextField = {
+        let txtField = UITextField()
+            .corner(radius: Metrics.textFieldCorners)
+            .border(width: 1.0, color: ColorPalette.blackish)
+        
+        txtField.borderStyle = .roundedRect
+        txtField.autocapitalizationType = .none
+        return txtField
+    }()
+    
+    fileprivate lazy var optionsScrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.backgroundColor = ColorPalette.lightGrey
+        return scroll
+    }()
+    
+    fileprivate lazy var btnPreConversation: UIButton = {
+        let txt = NSLocalizedString("PreConversation", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+
+    fileprivate lazy var btnFullConversationPushMode: UIButton = {
+        let txt = NSLocalizedString("FullConversationPushMode", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+    
+    fileprivate lazy var btnFullConversationPresentMode: UIButton = {
+        let txt = NSLocalizedString("FullConversationPresentMode", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+    
+    fileprivate lazy var btnCommentCreationPushMode: UIButton = {
+        let txt = NSLocalizedString("CommentCreationPushMode", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
    
+    fileprivate lazy var btnCommentCreationPresentMode: UIButton = {
+        let txt = NSLocalizedString("CommentCreationPresentMode", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+    
+    fileprivate lazy var btnConversationCounter: UIButton = {
+        let txt = NSLocalizedString("ConversationCounter", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+    
     init(viewModel: BetaNewAPIViewModeling = BetaNewAPIViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -49,10 +173,115 @@ class BetaNewAPIVC: UIViewController {
 fileprivate extension BetaNewAPIVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.lightGrey
+        
+        view.addSubview(lblSpotId)
+        lblSpotId.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+        }
+        
+        view.addSubview(txtFieldSpotId)
+        txtFieldSpotId.snp.makeConstraints { make in
+            make.centerY.equalTo(lblSpotId)
+            make.leading.equalTo(lblSpotId.snp.trailing).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+            make.height.equalTo(Metrics.textFieldHeight)
+        }
+        
+        view.addSubview(lblPostId)
+        lblPostId.snp.makeConstraints { make in
+            make.top.equalTo(lblSpotId.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+        }
+        
+        view.addSubview(txtFieldPostId)
+        txtFieldPostId.snp.makeConstraints { make in
+            make.centerY.equalTo(lblPostId)
+            make.leading.equalTo(lblPostId.snp.trailing).offset(Metrics.horizontalMargin)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
+            make.height.equalTo(Metrics.textFieldHeight)
+        }
+        
+        view.addSubview(optionsScrollView)
+        optionsScrollView.snp.makeConstraints { make in
+            make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        optionsScrollView.contentLayoutGuide.snp.makeConstraints { make in
+            make.width.equalTo(optionsScrollView.snp.width)
+        }
+        
+        optionsScrollView.addSubview(btnPreConversation)
+        btnPreConversation.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+        }
+        
+        optionsScrollView.addSubview(btnFullConversationPushMode)
+        btnFullConversationPushMode.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnPreConversation.snp.bottom).offset(Metrics.verticalMargin)
+        }
+        
+        optionsScrollView.addSubview(btnFullConversationPresentMode)
+        btnFullConversationPresentMode.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnFullConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
+        }
+        
+        optionsScrollView.addSubview(btnCommentCreationPushMode)
+        btnCommentCreationPushMode.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
+        }
+        
+        optionsScrollView.addSubview(btnCommentCreationPresentMode)
+        btnCommentCreationPresentMode.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.verticalMargin)
+        }
+        
+        optionsScrollView.addSubview(btnConversationCounter)
+        btnConversationCounter.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentCreationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
+            make.bottom.lessThanOrEqualTo(optionsScrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
+        }
     }
 
     func setupObservers() {
         title = viewModel.outputs.title
+        
+        // Pre filled
+        viewModel.outputs.preFilledSpotId
+            .take(1)
+            .bind(to: txtFieldSpotId.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.preFilledPostId
+            .take(1)
+            .bind(to: txtFieldPostId.rx.text)
+            .disposed(by: disposeBag)
+        
+        // Dismiss keyboard
+        txtFieldSpotId.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
+            .subscribe(onNext: { [weak self] _ in
+                self?.txtFieldSpotId.endEditing(true)
+            })
+            .disposed(by: disposeBag)
+        
+        txtFieldPostId.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
+            .subscribe(onNext: { [weak self] _ in
+                self?.txtFieldPostId.endEditing(true)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
