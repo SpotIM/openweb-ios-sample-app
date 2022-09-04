@@ -25,6 +25,8 @@ protocol BetaNewAPIViewModelingOutputs {
     var title: String { get }
     var preFilledSpotId: Observable<String> { get }
     var preFilledPostId: Observable<String> { get }
+    // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
+    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -64,6 +66,13 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
             .asObservable()
     }
     
+    fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
+    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
+        return _openMockArticleScreen
+            .unwrap()
+            .asObservable()
+    }
+    
     lazy var title: String = {
         return NSLocalizedString("NewAPI", comment: "")
     }()
@@ -86,6 +95,23 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: postId)
             .disposed(by: disposeBag)
         
+        let fullConversationTappedModel = fullConversationTapped
+            .withLatestFrom(postId) { mode, postId -> SDKUIFlowActionSettings in
+                let action = SDKUIFlowActionType.fullConversation(presentationalMode: mode)
+                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
+                return model
+            }
+        
+        let commentCreationTappedModel = commentCreationTapped
+            .withLatestFrom(postId) { mode, postId -> SDKUIFlowActionSettings in
+                let action = SDKUIFlowActionType.commentCreation(presentationalMode: mode)
+                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
+                return model
+            }
+        
+        Observable.merge(fullConversationTappedModel, commentCreationTappedModel)
+            .bind(to: _openMockArticleScreen)
+            .disposed(by: disposeBag)
     }
     
     func setSDKSpotId(_ spotId: String) {
