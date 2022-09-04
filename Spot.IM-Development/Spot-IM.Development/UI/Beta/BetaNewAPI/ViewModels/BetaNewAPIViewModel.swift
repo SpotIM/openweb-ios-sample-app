@@ -109,7 +109,14 @@ fileprivate extension BetaNewAPIViewModel {
                 return model
             }
         
-        Observable.merge(fullConversationTappedModel, commentCreationTappedModel)
+        let preConversationTappedModel = preConversationTapped
+            .withLatestFrom(postId) { mode, postId -> SDKUIFlowActionSettings in
+                let action = SDKUIFlowActionType.preConversation
+                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
+                return model
+            }
+        
+        Observable.merge(fullConversationTappedModel, commentCreationTappedModel, preConversationTappedModel)
             .bind(to: _openMockArticleScreen)
             .disposed(by: disposeBag)
     }
