@@ -13,7 +13,12 @@ import SpotImCore
 #if NEW_API
 
 protocol BetaNewAPIViewModelingInputs {
-    
+    var enteredSpotId: PublishSubject<String> { get }
+    var enteredPostId: PublishSubject<String> { get }
+    var preConversationTapped: PublishSubject<Void> { get }
+    var fullConversationTapped: PublishSubject<PresentationalModeCompact> { get }
+    var commentCreationTapped: PublishSubject<PresentationalModeCompact> { get }
+    var conversationCounterTapped: PublishSubject<Void> { get }
 }
 
 protocol BetaNewAPIViewModelingOutputs {
@@ -38,6 +43,13 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     
     fileprivate let disposeBag = DisposeBag()
     
+    let enteredSpotId = PublishSubject<String>()
+    let enteredPostId = PublishSubject<String>()
+    let preConversationTapped = PublishSubject<Void>()
+    let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
+    let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
+    let conversationCounterTapped = PublishSubject<Void>()
+    
     fileprivate let _preFilledSpotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
     var preFilledSpotId: Observable<String> {
         return _preFilledSpotId
@@ -56,6 +68,9 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
         return NSLocalizedString("NewAPI", comment: "")
     }()
     
+    fileprivate let spotId = BehaviorSubject<String>(value: "")
+    fileprivate let postId = BehaviorSubject<String>(value: "")
+    
     init() {
         setupObservers()
     }
@@ -63,8 +78,19 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 
 fileprivate extension BetaNewAPIViewModel {
     func setupObservers() {
-//        var manager = OpenWeb.manager
-//        manager.spotId = "sp_eCIlROSD"
+        Observable.merge(preFilledSpotId, enteredSpotId)
+            .bind(to: spotId)
+            .disposed(by: disposeBag)
+        
+        Observable.merge(preFilledPostId, enteredPostId)
+            .bind(to: postId)
+            .disposed(by: disposeBag)
+        
+    }
+    
+    func setSDKSpotId(_ spotId: String) {
+        var manager = OpenWeb.manager
+        manager.spotId = spotId
     }
 }
 
