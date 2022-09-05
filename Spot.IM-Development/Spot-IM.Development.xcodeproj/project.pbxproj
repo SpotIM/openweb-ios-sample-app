@@ -241,7 +241,7 @@
 		3DFC32C528916760005F1C5A /* OWConversationCellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32C428916760005F1C5A /* OWConversationCellOption.swift */; };
 		3DFC32C828916820005F1C5A /* OWCommentCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32C728916820005F1C5A /* OWCommentCellViewModel.swift */; };
 		3DFC32CA289168A0005F1C5A /* OWReplyCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32C9289168A0005F1C5A /* OWReplyCellViewModel.swift */; };
-		3DFC32CC289168AC005F1C5A /* OWAdViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32CB289168AC005F1C5A /* OWAdViewModel.swift */; };
+		3DFC32CC289168AC005F1C5A /* OWAdCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32CB289168AC005F1C5A /* OWAdCellViewModel.swift */; };
 		3DFC32CE289168C7005F1C5A /* OWSpacerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32CD289168C7005F1C5A /* OWSpacerViewModel.swift */; };
 		3DFC32D128916DD1005F1C5A /* OWCommunityGuidelinesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32D028916DD1005F1C5A /* OWCommunityGuidelinesViewModel.swift */; };
 		3DFC32D828916EA4005F1C5A /* OWCommunityQuestionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC32D728916EA4005F1C5A /* OWCommunityQuestionViewModel.swift */; };
@@ -693,7 +693,7 @@
 		3DFC32C428916760005F1C5A /* OWConversationCellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCellOption.swift; sourceTree = "<group>"; };
 		3DFC32C728916820005F1C5A /* OWCommentCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCellViewModel.swift; sourceTree = "<group>"; };
 		3DFC32C9289168A0005F1C5A /* OWReplyCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReplyCellViewModel.swift; sourceTree = "<group>"; };
-		3DFC32CB289168AC005F1C5A /* OWAdViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdViewModel.swift; sourceTree = "<group>"; };
+		3DFC32CB289168AC005F1C5A /* OWAdCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdCellViewModel.swift; sourceTree = "<group>"; };
 		3DFC32CD289168C7005F1C5A /* OWSpacerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpacerViewModel.swift; sourceTree = "<group>"; };
 		3DFC32D028916DD1005F1C5A /* OWCommunityGuidelinesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityGuidelinesViewModel.swift; sourceTree = "<group>"; };
 		3DFC32D728916EA4005F1C5A /* OWCommunityQuestionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityQuestionViewModel.swift; sourceTree = "<group>"; };
@@ -1103,6 +1103,17 @@
 			path = AdBannerView;
 			sourceTree = "<group>";
 		};
+		16D8D4AB28C6432100895FCB /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3DFC32D928916F66005F1C5A /* Comment */,
+				3DFC32DA28916F6D005F1C5A /* Reply */,
+				3DFC32DB28916F76005F1C5A /* Ad */,
+				3DFC32DC28916F7C005F1C5A /* Spacer */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		2414F82927EC67B000722D2B /* AvatarView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1172,10 +1183,7 @@
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
-				3DFC32DC28916F7C005F1C5A /* Spacer */,
-				3DFC32DB28916F76005F1C5A /* Ad */,
-				3DFC32DA28916F6D005F1C5A /* Reply */,
-				3DFC32D928916F66005F1C5A /* Comment */,
+				16D8D4AB28C6432100895FCB /* Cells */,
 				3DFC32D428916E74005F1C5A /* CommunityQuestion */,
 				3DFC32CF28916D2B005F1C5A /* CommunityGuidelines */,
 				445417F123685144001D0ED0 /* SummaryView */,
@@ -1751,7 +1759,7 @@
 		3DFC32E028916F9A005F1C5A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				3DFC32CB289168AC005F1C5A /* OWAdViewModel.swift */,
+				3DFC32CB289168AC005F1C5A /* OWAdCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -3091,7 +3099,7 @@
 				3D20A38F27B02140003F8513 /* OWLayoutConstraint.swift in Sources */,
 				4416C661237B16C800D3F7B9 /* SPRealtimeDataRequest.swift in Sources */,
 				3DFC32CA289168A0005F1C5A /* OWReplyCellViewModel.swift in Sources */,
-				3DFC32CC289168AC005F1C5A /* OWAdViewModel.swift in Sources */,
+				3DFC32CC289168AC005F1C5A /* OWAdCellViewModel.swift in Sources */,
 				16A12A6D2608DCDA00A7B3F6 /* SPCommunityGuidelinesView.swift in Sources */,
 				3D7E3D692888499D00DDBE0B /* OWHelpers.swift in Sources */,
 				3D20A35F27B0087D003F8513 /* OWLayoutSupport+Extensions.swift in Sources */,
