@@ -80,7 +80,7 @@ class OWPreConversationView: UIView {
 fileprivate extension OWPreConversationView {
     func setupViews() {
         // After building the other views, position the table view in the appropriate place
-        self.addSubviews(adBannerView, tableView)
+        self.addSubviews(adBannerView, tableView, footerView)
         adBannerView.OWSnp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
         }
@@ -110,6 +110,11 @@ fileprivate extension OWPreConversationView {
         }
         tableView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled ? (SpotIm.buttonOnlyMode == .withoutTitle ? adBannerView.OWSnp.bottom : header.OWSnp.bottom) :  tableView.OWSnp.bottom
+        footerView.OWSnp.makeConstraints { make in
+            make.top.equalTo(footerViewTopConstraint)
+            make.leading.trailing.equalToSuperview()
         }
     }
     
