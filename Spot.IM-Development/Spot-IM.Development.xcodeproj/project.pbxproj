@@ -189,6 +189,11 @@
 		3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B8928C4DB07003960CE /* ImageProvider.swift */; };
 		3D611B8C28C4EE10003960CE /* MockArticleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B8B28C4EE10003960CE /* MockArticleVC.swift */; };
 		3D611B8E28C4EE68003960CE /* MockArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B8D28C4EE68003960CE /* MockArticleViewModel.swift */; };
+		3D611B9128C643F2003960CE /* OWArticleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B9028C643F2003960CE /* OWArticleProtocol.swift */; };
+		3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B9228C644B7003960CE /* OWArticleSettingsProtocol.swift */; };
+		3D611B9728C64533003960CE /* OWReadOnlyMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B9628C64533003960CE /* OWReadOnlyMode.swift */; };
+		3D611B9A28C64740003960CE /* OWDefaultCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B9928C64740003960CE /* OWDefaultCompletion.swift */; };
+		3D611B9C28C64791003960CE /* OWError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B9B28C64791003960CE /* OWError.swift */; };
 		3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C052852482D007420AD /* UIImageView+URL.swift */; };
 		3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C0728524A40007420AD /* UIImage+URL.swift */; };
 		3D7E3D692888499D00DDBE0B /* OWHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D682888499D00DDBE0B /* OWHelpers.swift */; };
@@ -649,6 +654,11 @@
 		3D611B8928C4DB07003960CE /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 		3D611B8B28C4EE10003960CE /* MockArticleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockArticleVC.swift; sourceTree = "<group>"; };
 		3D611B8D28C4EE68003960CE /* MockArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockArticleViewModel.swift; sourceTree = "<group>"; };
+		3D611B9028C643F2003960CE /* OWArticleProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleProtocol.swift; sourceTree = "<group>"; };
+		3D611B9228C644B7003960CE /* OWArticleSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleSettingsProtocol.swift; sourceTree = "<group>"; };
+		3D611B9628C64533003960CE /* OWReadOnlyMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWReadOnlyMode.swift; sourceTree = "<group>"; };
+		3D611B9928C64740003960CE /* OWDefaultCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWDefaultCompletion.swift; sourceTree = "<group>"; };
+		3D611B9B28C64791003960CE /* OWError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWError.swift; sourceTree = "<group>"; };
 		3D6A4C052852482D007420AD /* UIImageView+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URL.swift"; sourceTree = "<group>"; };
 		3D6A4C0728524A40007420AD /* UIImage+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+URL.swift"; sourceTree = "<group>"; };
 		3D76FAE2283CD1B700DB18F6 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1249,12 +1259,9 @@
 		3D08E0642875B9F200E6F1AC /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				3D611B9428C644BC003960CE /* Article */,
+				3D611B8F28C643C9003960CE /* Layers */,
 				3D08E0662875BA5300E6F1AC /* OWManagerProtocol.swift */,
-				3D08E06B2875BAEC00E6F1AC /* OWUI.swift */,
-				3D08E0692875BA9A00E6F1AC /* OWUIFlows.swift */,
-				3D08E06F2875BD4F00E6F1AC /* OWUIViews.swift */,
-				3D7E3D682888499D00DDBE0B /* OWHelpers.swift */,
-				3D08E07B2875E37900E6F1AC /* OWAnalytics.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -1275,6 +1282,8 @@
 			children = (
 				3D08E0742875CC7500E6F1AC /* OWPresentationalMode.swift */,
 				3D7E3D6A288849EC00DDBE0B /* OWAdditionalConfiguration.swift */,
+				3D611B9628C64533003960CE /* OWReadOnlyMode.swift */,
+				3D611B9B28C64791003960CE /* OWError.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -1292,6 +1301,7 @@
 		3D08E07F2875E7DE00E6F1AC /* Typealiases */ = {
 			isa = PBXGroup;
 			children = (
+				3D611B9828C64729003960CE /* Completions */,
 				3D100D94286DD17100AA4F85 /* OWTypealiasesFundamentals.swift */,
 			);
 			path = Typealiases;
@@ -1534,6 +1544,35 @@
 				3D611B8928C4DB07003960CE /* ImageProvider.swift */,
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		3D611B8F28C643C9003960CE /* Layers */ = {
+			isa = PBXGroup;
+			children = (
+				3D08E06B2875BAEC00E6F1AC /* OWUI.swift */,
+				3D08E0692875BA9A00E6F1AC /* OWUIFlows.swift */,
+				3D08E06F2875BD4F00E6F1AC /* OWUIViews.swift */,
+				3D7E3D682888499D00DDBE0B /* OWHelpers.swift */,
+				3D08E07B2875E37900E6F1AC /* OWAnalytics.swift */,
+			);
+			path = Layers;
+			sourceTree = "<group>";
+		};
+		3D611B9428C644BC003960CE /* Article */ = {
+			isa = PBXGroup;
+			children = (
+				3D611B9028C643F2003960CE /* OWArticleProtocol.swift */,
+				3D611B9228C644B7003960CE /* OWArticleSettingsProtocol.swift */,
+			);
+			path = Article;
+			sourceTree = "<group>";
+		};
+		3D611B9828C64729003960CE /* Completions */ = {
+			isa = PBXGroup;
+			children = (
+				3D611B9928C64740003960CE /* OWDefaultCompletion.swift */,
+			);
+			path = Completions;
 			sourceTree = "<group>";
 		};
 		3D7E3D6C28884B2C00DDBE0B /* LayersInternals */ = {
@@ -3023,6 +3062,7 @@
 				3D08E06C2875BAEC00E6F1AC /* OWUI.swift in Sources */,
 				24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */,
 				4454188423685154001D0ED0 /* SPDefaultDecoder.swift in Sources */,
+				3D611B9A28C64740003960CE /* OWDefaultCompletion.swift in Sources */,
 				E6A1EC76263169C4006E1517 /* SPLoginPromptView.swift in Sources */,
 				73C0750227A16B1C000FD80D /* OWUserSubscriberBadgeViewModel.swift in Sources */,
 				3D08E0832876FFC500E6F1AC /* OWAnimationConfiguration.swift in Sources */,
@@ -3030,6 +3070,7 @@
 				3DD72C69280EF13100117946 /* OWURLRequestConfigure.swift in Sources */,
 				4454189E23685154001D0ED0 /* SPConversationReadRM.swift in Sources */,
 				3D08E0872877072F00E6F1AC /* OWSectionModel.swift in Sources */,
+				3D611B9728C64533003960CE /* OWReadOnlyMode.swift in Sources */,
 				445418B723685154001D0ED0 /* OWAuthenticationHandler.swift in Sources */,
 				4454187F23685154001D0ED0 /* SPInternalAuthProvider.swift in Sources */,
 				16A12A60260115BE00A7B3F6 /* SPWebSDKProvider.swift in Sources */,
@@ -3202,6 +3243,7 @@
 				4416C661237B16C800D3F7B9 /* SPRealtimeDataRequest.swift in Sources */,
 				3DFC32CA289168A0005F1C5A /* OWReplyViewModel.swift in Sources */,
 				3DFC32CC289168AC005F1C5A /* OWAdViewModel.swift in Sources */,
+				3D611B9C28C64791003960CE /* OWError.swift in Sources */,
 				16A12A6D2608DCDA00A7B3F6 /* SPCommunityGuidelinesView.swift in Sources */,
 				3D7E3D692888499D00DDBE0B /* OWHelpers.swift in Sources */,
 				3D20A35F27B0087D003F8513 /* OWLayoutSupport+Extensions.swift in Sources */,
@@ -3258,6 +3300,7 @@
 				6D22A46623BBA26700DCE08A /* DataRequest+Logging.swift in Sources */,
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
 				3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */,
+				3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */,
 				16BD5F7F2709F16000066505 /* SPUIWindow.swift in Sources */,
 				445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */,
 				445418A523685154001D0ED0 /* SPUser.swift in Sources */,
@@ -3280,6 +3323,7 @@
 				4454188023685154001D0ED0 /* SPImagesFacade.swift in Sources */,
 				3DD72C62280DC23600117946 /* OWPostId+EncodeDecode.swift in Sources */,
 				16A62B6826662F6C00DFE9B7 /* OWCustomUIDelegate.swift in Sources */,
+				3D611B9128C643F2003960CE /* OWArticleProtocol.swift in Sources */,
 				3D08E0752875CC7500E6F1AC /* OWPresentationalMode.swift in Sources */,
 				445418B223685154001D0ED0 /* UIImageView+SPExtensions.swift in Sources */,
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
