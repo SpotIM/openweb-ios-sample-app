@@ -26,7 +26,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
      The below is an example of a function which will be here and also in OWUIFlows protocol.
      We still need to complete a lof of stuff before, however I leave it here intentionally as a reference.
     */
-    /*
+
     func conversation(postId: String, article: OWArticleProtocol,
      presentationalMode: OWPresentationalMode,
      additionalSettings: OWConversationSettingsProtocol? = nil,
@@ -34,5 +34,4 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                       completion: @escaping OWDefaultCompletion) {
         
     }
-    */
 }
