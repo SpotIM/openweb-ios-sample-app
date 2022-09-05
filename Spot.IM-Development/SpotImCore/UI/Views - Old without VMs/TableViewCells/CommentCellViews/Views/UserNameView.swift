@@ -227,6 +227,7 @@ fileprivate extension UserNameView {
                 self.moreButton.isHidden = shouldShow
                 self.subscriberBadgeView.isHidden = shouldShow
                 self.nameAndBadgeStackview.isHidden = shouldShow
+                self.subtitleLabel.isHidden = shouldShow
                 
                 self.deletedMessageLabel.isHidden = !shouldShow
                 
