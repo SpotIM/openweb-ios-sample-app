@@ -1,5 +1,5 @@
 //
-//  OWCommentCreationVM.swift
+//  OWCommentCreationViewVM.swift
 //  SpotImCore
 //
 //  Created by Alon Shprung on 05/09/2022.
