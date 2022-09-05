@@ -17,11 +17,7 @@ class OWPreConversationView: UIView {
         static let whatYouThinkHeight: CGFloat = 64
     }
     
-    private var actualBannerMargin: CGFloat {
-        adBannerView.frame.height == 0 ? 0 : Metrics.bannerViewMargin
-    }
-    
-    fileprivate lazy var adBannerView: SPAdBannerView = .init()
+    // TODO: fileprivate lazy var adBannerView: SPAdBannerView
     fileprivate lazy var header: SPPreConversationHeaderView = .init()
     fileprivate lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
     fileprivate lazy var communityQuestionView: SPCommunityQuestionView = .init()
@@ -57,8 +53,6 @@ class OWPreConversationView: UIView {
         return dataSource
     }()
     
-    fileprivate let adsProvider: AdsProvider
-    
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
     
@@ -68,10 +62,7 @@ class OWPreConversationView: UIView {
     
     init(viewModel: OWPreConversationViewViewModeling, adsProvider: AdsProvider) {
         self.viewModel = viewModel
-        self.adsProvider = adsProvider
         super.init(frame: .zero)
-        adsProvider.bannerDelegate = self
-        adsProvider.interstitialDelegate = self
         setupViews()
         setupObservers()
     }
@@ -80,14 +71,11 @@ class OWPreConversationView: UIView {
 fileprivate extension OWPreConversationView {
     func setupViews() {
         // After building the other views, position the table view in the appropriate place
-        self.addSubviews(adBannerView, tableView, footerView)
-        adBannerView.OWSnp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-        }
+        self.addSubviews(tableView, footerView)
         if SpotIm.buttonOnlyMode != .withoutTitle {
             self.addSubview(header)
             header.OWSnp.makeConstraints { make in
-                make.top.equalTo(adBannerView.OWSnp.bottom).offset(actualBannerMargin)
+                make.top.equalToSuperview()
                 make.leading.trailing.equalToSuperview()
                 make.height.equalTo(Metrics.headerHeight)
             }
@@ -113,7 +101,7 @@ fileprivate extension OWPreConversationView {
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(0.0)
         }
-        let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled ? (SpotIm.buttonOnlyMode == .withoutTitle ? adBannerView.OWSnp.bottom : header.OWSnp.bottom) :  tableView.OWSnp.bottom
+        let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled && SpotIm.buttonOnlyMode == .withoutTitle ? header.OWSnp.bottom :  tableView.OWSnp.bottom
         footerView.OWSnp.makeConstraints { make in
             make.top.equalTo(footerViewTopConstraint)
             make.leading.trailing.equalToSuperview()
@@ -137,45 +125,5 @@ fileprivate extension OWPreConversationView {
             }
             self.layoutIfNeeded()
         }
-    }
-}
-
-extension OWPreConversationView: AdsProviderBannerDelegate {
-    func bannerLoaded(bannerView: UIView, adBannerSize: CGSize, adUnitID: String) {
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
-//
-//        adBannerView.OWSnp.makeConstraints { make in
-//            make.height.equalTo(adBannerSize.height)
-//        }
-//
-//        adBannerView.update(bannerView, height: adBannerSize.height)
-//
-//        bannerVisisilityTracker.startTracking()
-    }
-    
-    func bannerFailedToLoad(error: Error) {
-//        servicesProvider.logger().log(level: .error, "error bannerFailedToLoad - \(error.localizedDescription)")
-//        SPDefaultFailureReporter.shared.report(error: .monetizationError(.bannerFailedToLoad(source: .preConversation, error: error)))
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .banner), source: .conversation)
-    }
-}
-
-extension OWPreConversationView: AdsProviderInterstitialDelegate {
-    func interstitialLoaded() {
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .interstitial), source: .conversation)
-    }
-    
-    func interstitialWillBeShown() {
-//        AdsManager.willShowInterstitial(for: model.dataSource.postId)
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .interstitial), source: .conversation)
-    }
-    
-    func interstitialDidDismiss() {
-        
-    }
-    
-    func interstitialFailedToLoad(error: Error) {
-//        SPDefaultFailureReporter.shared.report(error: .monetizationError(.interstitialFailedToLoad(error: error)))
-//        SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitilizeFailed, .interstitial), source: .conversation)
     }
 }
