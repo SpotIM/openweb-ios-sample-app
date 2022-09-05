@@ -29,7 +29,7 @@ class OWPreConversationViewModel: OWPreConversationViewModeling, OWPreConversati
     fileprivate let servicesProvider: OWSharedServicesProviding
     
     lazy var preConversationViewVM: OWPreConversationViewViewModeling = {
-        return OWPreConversationViewViewModel(numberOfMessagesToShow: 2) // TODO!!
+        return OWPreConversationViewViewModel(numberOfMessagesToShow: 2) // TODO: find where we pull this from
     }()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {

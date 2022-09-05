@@ -33,7 +33,7 @@ class OWPreConversationView: UIView {
             .enforceSemanticAttribute()
             .backgroundColor(.spBackground0)
             .separatorStyle(.none)
-        
+        tableView.isScrollEnabled = false
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
@@ -109,7 +109,9 @@ fileprivate extension OWPreConversationView {
             }
         }
         tableView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(whatYouThinkView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(0.0)
         }
         let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled ? (SpotIm.buttonOnlyMode == .withoutTitle ? adBannerView.OWSnp.bottom : header.OWSnp.bottom) :  tableView.OWSnp.bottom
         footerView.OWSnp.makeConstraints { make in
@@ -120,8 +122,21 @@ fileprivate extension OWPreConversationView {
     
     func setupObservers() {
         viewModel.outputs.preConversationDataSourceSections
+            .do(onNext: { [weak self] _ in
+                self?.updateTableViewHeightIfNeeded()
+            })
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
+    }
+    
+    // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
+    private func updateTableViewHeightIfNeeded() {
+        if (tableView.frame.size.height != tableView.contentSize.height) {
+            tableView.OWSnp.updateConstraints { make in
+                make.height.equalTo(tableView.contentSize.height)
+            }
+            self.layoutIfNeeded()
+        }
     }
 }
 
