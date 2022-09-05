@@ -1114,6 +1114,29 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		16D8D4AC28C643D700895FCB /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				16D8D4AD28C643EA00895FCB /* ViewModels */,
+				16D8D4AE28C643F300895FCB /* Views */,
+			);
+			path = Comment;
+			sourceTree = "<group>";
+		};
+		16D8D4AD28C643EA00895FCB /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		16D8D4AE28C643F300895FCB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		2414F82927EC67B000722D2B /* AvatarView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1184,6 +1207,7 @@
 			isa = PBXGroup;
 			children = (
 				16D8D4AB28C6432100895FCB /* Cells */,
+				16D8D4AC28C643D700895FCB /* Comment */,
 				3DFC32D428916E74005F1C5A /* CommunityQuestion */,
 				3DFC32CF28916D2B005F1C5A /* CommunityGuidelines */,
 				445417F123685144001D0ED0 /* SummaryView */,
