@@ -19,11 +19,17 @@ class OWPreConversationView: UIView {
     
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
     fileprivate lazy var header: SPPreConversationHeaderView = {
-        return SPPreConversationHeaderView(frame: .zero, onlineViewingUsersCounterVM: self.viewModel.outputs.onlineViewingUsersVM)
+        return SPPreConversationHeaderView(onlineViewingUsersCounterVM: self.viewModel.outputs.onlineViewingUsersVM)
     }()
-    fileprivate lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
-    fileprivate lazy var communityQuestionView: SPCommunityQuestionView = .init()
-    fileprivate lazy var whatYouThinkView: SPMainConversationFooterView = .init()
+    fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
+        return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
+    }()
+    fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
+        return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
+    }()
+    fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
+        return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+    }()
     fileprivate lazy var footerView: SPPreConversationFooter = .init()
     
     fileprivate lazy var tableView: UITableView = {
@@ -83,7 +89,7 @@ fileprivate extension OWPreConversationView {
             }
         }
         if !viewModel.outputs.isButtonOnlyModeEnabled {
-            self.addSubviews(communityGuidelinesView, communityQuestionView, whatYouThinkView)
+            self.addSubviews(communityGuidelinesView, communityQuestionView, commentCreationEntryView)
             communityGuidelinesView.OWSnp.makeConstraints { make in
                 make.top.equalTo(header.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
@@ -92,14 +98,14 @@ fileprivate extension OWPreConversationView {
                 make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
             }
-            whatYouThinkView.OWSnp.makeConstraints { make in
+            commentCreationEntryView.OWSnp.makeConstraints { make in
                 make.top.equalTo(communityQuestionView.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
                 make.height.equalTo(Metrics.whatYouThinkHeight)
             }
         }
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(whatYouThinkView.OWSnp.bottom)
+            make.top.equalTo(commentCreationEntryView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(0.0)
         }

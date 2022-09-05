@@ -19,7 +19,8 @@ protocol OWPreConversationViewViewModelingInputs {
 protocol OWPreConversationViewViewModelingOutputs {
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
-    // TODO: createComment VM
+    var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
+    var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var isButtonOnlyModeEnabled: Bool { get }
 }
@@ -34,6 +35,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let imageProvider: SPImageProvider
     fileprivate let numberOfMessagesToShow: Int
     
     var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
@@ -65,9 +67,18 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
         return OWCommunityGuidelinesViewModel()
     }()
+    
+    lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
+        return OWCommunityQuestionViewModel()
+    }()
+    
+    lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
+        return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+    }()
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, numberOfMessagesToShow: Int) {
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, imageProvider: SPImageProvider, numberOfMessagesToShow: Int) {
         self.servicesProvider = servicesProvider
+        self.imageProvider = imageProvider
         self.numberOfMessagesToShow = numberOfMessagesToShow
         setupObservers()
     }
