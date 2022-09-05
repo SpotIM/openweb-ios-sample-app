@@ -11,14 +11,14 @@ import UIKit
 
 enum OWConversationCellOption: CaseIterable {
     static var allCases: [OWConversationCellOption] {
-        return [.comment(viewModel: OWCommentViewModel.stub()),
-                .reply(viewModel: OWReplyViewModel.stub()),
+        return [.comment(viewModel: OWCommentCellViewModel.stub()),
+                .reply(viewModel: OWReplyCellViewModel.stub()),
                 .ad(viewModel: OWAdViewModel.stub()),
                 .spacer(viewModel: OWSpacerViewModel.stub())]
     }
     
-    case comment(viewModel: OWCommentViewModeling)
-    case reply(viewModel: OWReplyViewModeling)
+    case comment(viewModel: OWCommentCellViewModeling)
+    case reply(viewModel: OWReplyCellViewModeling)
     case ad(viewModel: OWAdViewModeling)
     case spacer(viewModel: OWSpacerViewModeling)
 }
