@@ -1103,6 +1103,37 @@
 			path = AdBannerView;
 			sourceTree = "<group>";
 		};
+		16D8D49F28C632F200895FCB /* CommentCreation */ = {
+			isa = PBXGroup;
+			children = (
+				16D8D4A028C6332100895FCB /* Models */,
+				16D8D4A128C6332A00895FCB /* ViewModels */,
+				16D8D4A228C6333300895FCB /* Views */,
+			);
+			path = CommentCreation;
+			sourceTree = "<group>";
+		};
+		16D8D4A028C6332100895FCB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		16D8D4A128C6332A00895FCB /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		16D8D4A228C6333300895FCB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		2414F82927EC67B000722D2B /* AvatarView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1846,6 +1877,7 @@
 				445417AD23685144001D0ED0 /* Base */,
 				3D08E0552874946300E6F1AC /* SharedViews */,
 				3D08E0592875987500E6F1AC /* Conversation */,
+				16D8D49F28C632F200895FCB /* CommentCreation */,
 				445417C623685144001D0ED0 /* ViewControllers */,
 				445417DA23685144001D0ED0 /* Views - Old without VMs */,
 			);
