@@ -24,7 +24,7 @@ class OWPreConversationView: UIView {
     fileprivate lazy var adBannerView: SPAdBannerView = .init()
     fileprivate lazy var header: SPPreConversationHeaderView = .init()
     fileprivate lazy var communityGuidelinesView: SPCommunityGuidelinesView = .init()
-    fileprivate lazy var communityQuestionView = SPCommunityQuestionView()
+    fileprivate lazy var communityQuestionView: SPCommunityQuestionView = .init()
     fileprivate lazy var whatYouThinkView: SPMainConversationFooterView = .init()
     fileprivate lazy var footerView: SPPreConversationFooter = .init()
     
