@@ -30,7 +30,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     func conversation(postId: String, article: OWArticleProtocol,
      presentationalMode: OWPresentationalMode,
      additionalSettings: OWConversationSettingsProtocol? = nil,
-     callbacks: @escaping OWViewActionsCallbacks? = nil,
+     callbacks: OWViewActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
         
     }
