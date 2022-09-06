@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-enum OWError: Error {
+public enum OWError: Error {
 
 }
 #else
