@@ -33,7 +33,12 @@ internal final class SPPreConversationHeaderView: OWBaseView {
     }()
     
     internal weak var delegate: SPPreConversationHeaderViewDelegate?
-
+    
+    init(onlineViewingUsersCounterVM: OWOnlineViewingUsersCounterViewModeling) {
+        super.init(frame: .zero)
+        onlineViewingUsersView.configure(with: onlineViewingUsersCounterVM)
+        setupUI()
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         
