@@ -26,7 +26,7 @@ protocol MockArticleViewModelingOutputs {
     var showPreConversation: Observable<(UIView, CGSize)> { get }
     var updatePreConversationSize: Observable<(UIView, CGSize)> { get }
     var articleImageURL: Observable<URL> { get }
-    var showErrorMessage: Observable<String> { get }
+    var showError: Observable<String> { get }
 }
 
 protocol MockArticleViewModeling {
@@ -59,9 +59,9 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
             .asObservable()
     }
     
-    fileprivate let _showErrorMessage = PublishSubject<String>()
-    var showErrorMessage: Observable<String> {
-        return _showErrorMessage
+    fileprivate let _showError = PublishSubject<String>()
+    var showError: Observable<String> {
+        return _showError
             .asObservable()
     }
     
@@ -171,7 +171,7 @@ fileprivate extension MockArticleViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.preConversation error: \(error)")
-                        self._showErrorMessage.onNext(message)
+                        self._showError.onNext(message)
                     }
                 })
             })
@@ -208,7 +208,7 @@ fileprivate extension MockArticleViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.conversation error: \(message)")
-                        self._showErrorMessage.onNext(message)
+                        self._showError.onNext(message)
                     }
                 })
             })
@@ -244,7 +244,7 @@ fileprivate extension MockArticleViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.commentCreation error: \(message)")
-                        self._showErrorMessage.onNext(message)
+                        self._showError.onNext(message)
                     }
                 })
             })
