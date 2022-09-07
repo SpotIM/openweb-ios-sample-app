@@ -60,6 +60,8 @@
 		16BD5F8A27144F2C00066505 /* OWCommentImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BD5F8927144F2C00066505 /* OWCommentImagePreview.swift */; };
 		16D7F55026CE996800A06693 /* SPAdBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */; };
 		16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F55226D282E100A06693 /* SPAdBannerView.swift */; };
+		16D8D4B028C645E900895FCB /* OWCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4AF28C645E900895FCB /* OWCommentView.swift */; };
+		16D8D4B228C645F400895FCB /* OWCommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */; };
 		24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24000A34268AEADD004C2A78 /* CommentMediaView.swift */; };
 		2414F82D27EC682000722D2B /* OWAvatarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414F82C27EC682000722D2B /* OWAvatarViewModel.swift */; };
 		241B07572643CCA000253944 /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 241B07562643CCA000253944 /* image_placeholder.png */; };
@@ -505,6 +507,8 @@
 		16D7F54F26CE996800A06693 /* SPAdBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerCell.swift; sourceTree = "<group>"; };
 		16D7F55226D282E100A06693 /* SPAdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdBannerView.swift; sourceTree = "<group>"; };
 		16D7F55426D5084C00A06693 /* GoogleAdsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAdsProvider.swift; sourceTree = "<group>"; };
+		16D8D4AF28C645E900895FCB /* OWCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentView.swift; sourceTree = "<group>"; };
+		16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentViewModel.swift; sourceTree = "<group>"; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
 		2414F82C27EC682000722D2B /* OWAvatarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAvatarViewModel.swift; sourceTree = "<group>"; };
 		241B07562643CCA000253944 /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = image_placeholder.png; path = SPAssets.xcassets/image_placeholder.imageset/image_placeholder.png; sourceTree = "<group>"; };
@@ -1126,6 +1130,7 @@
 		16D8D4AD28C643EA00895FCB /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1133,6 +1138,7 @@
 		16D8D4AE28C643F300895FCB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				16D8D4AF28C645E900895FCB /* OWCommentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3002,6 +3008,7 @@
 				16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */,
 				3D20A38D27B020E8003F8513 /* OWConstraintPriorityTarget.swift in Sources */,
 				1640F2C828AD05B100FB863B /* OWCommentCreationEntryViewModel.swift in Sources */,
+				16D8D4B228C645F400895FCB /* OWCommentViewModel.swift in Sources */,
 				3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */,
 				445418BE23685154001D0ED0 /* SPReadingTracker.swift in Sources */,
 				3D08E0B1287722F700E6F1AC /* UI+OWSectionedViewType.swift in Sources */,
@@ -3062,6 +3069,7 @@
 				4454187D23685154001D0ED0 /* OWCoordinator.swift in Sources */,
 				3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */,
 				4454181F23685144001D0ED0 /* SPPreConversationHeaderView.swift in Sources */,
+				16D8D4B028C645E900895FCB /* OWCommentView.swift in Sources */,
 				3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoints.swift in Sources */,
 				441165A52375C4BD00B781F3 /* OWDecodableParser.swift in Sources */,
 				3D08E0AD2877216B00E6F1AC /* Optional+Extensions.swift in Sources */,
