@@ -23,6 +23,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     }
     
     func preConversation(postId: String, article: OWArticleProtocol,
+     presentationalMode: OWPresentationalMode,
      additionalSettings: OWPreConversationSettingsProtocol? = nil,
      callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWViewDynamicSizeCompletion) {
@@ -37,10 +38,11 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         
     }
     
-    func commentCreation(postId: String,
+    func commentCreation(postId: String, article: OWArticleProtocol,
+     presentationalMode: OWPresentationalMode,
      additionalSettings: OWCommentSettingsProtocol? = nil,
      callbacks: OWViewActionsCallbacks? = nil,
-                         completion: @escaping OWViewCompletion) {
+                 completion: @escaping OWDefaultCompletion) {
         
     }
 }
