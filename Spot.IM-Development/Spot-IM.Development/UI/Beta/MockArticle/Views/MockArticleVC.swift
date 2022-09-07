@@ -222,6 +222,57 @@ fileprivate extension MockArticleVC {
                 }
             })
             .disposed(by: disposeBag)
+        
+        // Adding pre conversation
+        viewModel.outputs.showPreConversation
+            .subscribe(onNext: { [weak self] tuple in
+                guard let self = self else { return }
+                
+                let preConversationView = tuple.0
+                let size = tuple.1
+                
+                self.articleView.removeFromSuperview()
+                self.articleScrollView.addSubview(self.articleView)
+                self.articleScrollView.addSubview(preConversationView)
+                
+                preConversationView.snp.makeConstraints { make in
+                    make.height.equalTo(size.height)
+                    make.leading.trailing.bottom.equalTo(self.articleScrollView.contentLayoutGuide)
+                }
+                
+                self.articleView.snp.makeConstraints { make in
+                    make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
+                    make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        // Updating pre conversation size
+        viewModel.outputs.showPreConversation
+            .subscribe(onNext: { [weak self] tuple in
+                guard let self = self else { return }
+                
+                let preConversationView = tuple.0
+                let size = tuple.1
+                
+                preConversationView.snp.updateConstraints { make in
+                    make.height.equalTo(size.height)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        // Showing error if needed
+        viewModel.outputs.showError
+            .subscribe(onNext: { [weak self] message in
+                self?.showError(message: message)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 #endif
