@@ -20,14 +20,14 @@ class OWCommentView: UIView {
         return OWCommentUserView() // TODO - Pass the VM
     }()
     
-    fileprivate lazy var contentView: OWCommentContentView = {
-        let vm = viewModel.outputs.contentVM
-        return OWCommentContentView(viewModel: vm)
-    }()
-    
     fileprivate lazy var statusView: OWCommentStatusIndicationView = {
         let vm = viewModel.outputs.statusIndicationVM
         return OWCommentStatusIndicationView() // TODO - Pass the VM
+    }()
+    
+    fileprivate lazy var contentView: OWCommentContentView = {
+        let vm = viewModel.outputs.contentVM
+        return OWCommentContentView(viewModel: vm)
     }()
     
     fileprivate lazy var actionsView: OWCommentActionsView = {
@@ -52,6 +52,28 @@ class OWCommentView: UIView {
 
 fileprivate extension OWCommentView {
     func setupViews() {
+        addSubview(headerView)
+        headerView.OWSnp.makeConstraints { make in
+            make.top.trailing.leading.equalToSuperview()
+        }
+        
+        addSubview(statusView)
+        statusView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(headerView.OWSnp.bottom)
+        }
+        
+        addSubview(contentView)
+        contentView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(statusView.OWSnp.bottom)
+            make.bottom.equalTo(actionsView.OWSnp.top)
+        }
+
+        addSubview(actionsView)
+        actionsView.OWSnp.makeConstraints { make in
+            make.bottom.leading.trailing.equalToSuperview()
+        }
 
     }
     
