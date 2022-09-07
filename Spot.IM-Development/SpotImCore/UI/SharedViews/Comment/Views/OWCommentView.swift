@@ -15,6 +15,21 @@ class OWCommentView: UIView {
         
     }
     
+    fileprivate lazy var headerView: OWCommentUserView = {
+        let vm = viewModel.outputs.commentUserVM
+        return OWCommentUserView() // TODO - Pass the VM
+    }()
+    
+    fileprivate lazy var statusView: OWCommentStatusIndicationView = {
+        let vm = viewModel.outputs.statusIndicationVM
+        return OWCommentStatusIndicationView() // TODO - Pass the VM
+    }()
+    
+    fileprivate lazy var actionsView: OWCommentActionsView = {
+        let vm = viewModel.outputs.commentActionsVM
+        return OWCommentActionsView() // TODO - Pass the VM
+    }()
+    
     fileprivate let viewModel: OWCommentViewModeling
     fileprivate let disposeBag = DisposeBag()
     
