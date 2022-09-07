@@ -14,7 +14,7 @@ protocol OWCommentCellViewModelingInputs {
 }
 
 protocol OWCommentCellViewModelingOutputs {
-    
+    var commentVM: OWCommentViewModeling { get }
 }
 
 protocol OWCommentCellViewModeling: OWCellViewModel {
@@ -25,6 +25,10 @@ protocol OWCommentCellViewModeling: OWCellViewModel {
 class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModelingInputs, OWCommentCellViewModelingOutputs {
     var inputs: OWCommentCellViewModelingInputs { return self }
     var outputs: OWCommentCellViewModelingOutputs { return self }
+    
+    var commentVM: OWCommentViewModeling {
+        return OWCommentViewModel()
+    }
 }
 
 extension OWCommentCellViewModel {
