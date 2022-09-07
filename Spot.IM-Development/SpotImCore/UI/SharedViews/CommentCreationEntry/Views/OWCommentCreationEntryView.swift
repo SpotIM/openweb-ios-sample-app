@@ -59,6 +59,15 @@ class OWCommentCreationEntryView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    init(with viewModel: OWCommentCreationEntryViewModeling) {
+        super.init(frame: .zero)
+        disposeBag = DisposeBag()
+        self.viewModel = viewModel
+        userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
+        setupObservers()
+        setupViews()
+    }
+    
     init() {
         super.init(frame: .zero)
         setupViews()
