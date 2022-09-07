@@ -40,14 +40,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
     }
 
     internal override var messageLineLimit: Int { SPCommonConstants.commentTextLineLimitPreConv }
-
-    private var actualBannerMargin: CGFloat {
-        adBannerView.frame.height == 0 ? 0 : Theme.bannerViewMargin
-    }
     
     private var totalHeight: CGFloat {
         let result = adBannerView.frame.height +
-            actualBannerMargin +
             header.frame.height +
             communityGuidelinesView.frame.height +
             whatYouThinkView.frame.height +
@@ -246,7 +241,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         let headerHeight = SpotIm.buttonOnlyMode == .withoutTitle ? 0 : Theme.headerHeight
         
         header.OWSnp.makeConstraints { make in
-            make.top.equalTo(adBannerView.OWSnp.bottom).offset(actualBannerMargin)
+            make.top.equalTo(adBannerView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(headerHeight)
         }

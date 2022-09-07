@@ -83,6 +83,14 @@
 		24B087CB288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */; };
 		24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */; };
 		24B087CF288EB51F00CAA0EB /* OWFailureReportEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */; };
+		24B32B9D28BCB78000FB701C /* OWPreConversationViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32B9C28BCB78000FB701C /* OWPreConversationViewVM.swift */; };
+		24B32BA028BCBA4A00FB701C /* OWPreConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32B9F28BCBA4A00FB701C /* OWPreConversationView.swift */; };
+		24B32BA528BCEB8900FB701C /* OWPreConversationCellOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BA428BCEB8900FB701C /* OWPreConversationCellOption.swift */; };
+		24B32BA728C6382D00FB701C /* OWCommunityGuidelinesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BA628C6382D00FB701C /* OWCommunityGuidelinesView.swift */; };
+		24B32BA928C63CFB00FB701C /* OWCommunityQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BA828C63CFB00FB701C /* OWCommunityQuestionView.swift */; };
+		24B32BAE28C8697600FB701C /* OWPreConversationFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */; };
+		24B32BB028C86A0700FB701C /* OWPreConversationFooterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BAF28C86A0700FB701C /* OWPreConversationFooterViewModel.swift */; };
+		24B32BB228C8731A00FB701C /* OWPreConversationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BB128C8731A00FB701C /* OWPreConversationSettings.swift */; };
 		24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88434261C922900EB7BCB /* CommentLabelView.swift */; };
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
@@ -528,6 +536,14 @@
 		24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInternalAuthenticationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailureReportEndpoints.swift; sourceTree = "<group>"; };
+		24B32B9C28BCB78000FB701C /* OWPreConversationViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationViewVM.swift; sourceTree = "<group>"; };
+		24B32B9F28BCBA4A00FB701C /* OWPreConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationView.swift; sourceTree = "<group>"; };
+		24B32BA428BCEB8900FB701C /* OWPreConversationCellOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationCellOption.swift; sourceTree = "<group>"; };
+		24B32BA628C6382D00FB701C /* OWCommunityGuidelinesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OWCommunityGuidelinesView.swift; path = SpotImCore/UI/PreConversation/Models/OWCommunityGuidelinesView.swift; sourceTree = SOURCE_ROOT; };
+		24B32BA828C63CFB00FB701C /* OWCommunityQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OWCommunityQuestionView.swift; path = SpotImCore/UI/PreConversation/Models/OWCommunityQuestionView.swift; sourceTree = SOURCE_ROOT; };
+		24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationFooterView.swift; sourceTree = "<group>"; };
+		24B32BAF28C86A0700FB701C /* OWPreConversationFooterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationFooterViewModel.swift; sourceTree = "<group>"; };
+		24B32BB128C8731A00FB701C /* OWPreConversationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationSettings.swift; sourceTree = "<group>"; };
 		24B88434261C922900EB7BCB /* CommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLabelView.swift; sourceTree = "<group>"; };
 		24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationShared.swift; sourceTree = "<group>"; };
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
@@ -1169,9 +1185,69 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		24B32B9828BCB65C00FB701C /* PreConversation */ = {
+			isa = PBXGroup;
+			children = (
+				24B32BA328BCEB6F00FB701C /* Models */,
+				24B32B9E28BCBA2D00FB701C /* Views */,
+				24B32B9928BCB68200FB701C /* ViewModels */,
+			);
+			path = PreConversation;
+			sourceTree = "<group>";
+		};
+		24B32B9928BCB68200FB701C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				24B32B9C28BCB78000FB701C /* OWPreConversationViewVM.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		24B32B9E28BCBA2D00FB701C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				24B32B9F28BCBA4A00FB701C /* OWPreConversationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		24B32BA328BCEB6F00FB701C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				24B32BA428BCEB8900FB701C /* OWPreConversationCellOption.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		24B32BAA28C8690F00FB701C /* PreConversationFooter */ = {
+			isa = PBXGroup;
+			children = (
+				24B32BAC28C8692E00FB701C /* Views */,
+				24B32BAB28C8692300FB701C /* ViewModels */,
+			);
+			path = PreConversationFooter;
+			sourceTree = "<group>";
+		};
+		24B32BAB28C8692300FB701C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				24B32BAF28C86A0700FB701C /* OWPreConversationFooterViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		24B32BAC28C8692E00FB701C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		3D08E0552874946300E6F1AC /* SharedViews */ = {
 			isa = PBXGroup;
 			children = (
+				24B32BAA28C8690F00FB701C /* PreConversationFooter */,
 				3DFC32DC28916F7C005F1C5A /* Spacer */,
 				3DFC32DB28916F76005F1C5A /* Ad */,
 				3DFC32DA28916F6D005F1C5A /* Reply */,
@@ -1236,6 +1312,7 @@
 				3D08E06F2875BD4F00E6F1AC /* OWUIViews.swift */,
 				3D7E3D682888499D00DDBE0B /* OWHelpers.swift */,
 				3D08E07B2875E37900E6F1AC /* OWAnalytics.swift */,
+				24B32BB128C8731A00FB701C /* OWPreConversationSettings.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -1662,6 +1739,7 @@
 		3DFC32D328916DF6005F1C5A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				24B32BA628C6382D00FB701C /* OWCommunityGuidelinesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1678,6 +1756,7 @@
 		3DFC32D528916E7B005F1C5A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				24B32BA828C63CFB00FB701C /* OWCommunityQuestionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1845,6 +1924,7 @@
 				3D20A35D27AA90CD003F8513 /* OWSnapKit */,
 				445417AD23685144001D0ED0 /* Base */,
 				3D08E0552874946300E6F1AC /* SharedViews */,
+				24B32B9828BCB65C00FB701C /* PreConversation */,
 				3D08E0592875987500E6F1AC /* Conversation */,
 				445417C623685144001D0ED0 /* ViewControllers */,
 				445417DA23685144001D0ED0 /* Views - Old without VMs */,
@@ -2963,6 +3043,8 @@
 				445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */,
 				44689B7D237414850024EFC1 /* SPABData.swift in Sources */,
 				3D20A36F27B0147F003F8513 /* OWConstraintAttributes.swift in Sources */,
+				24B32B9D28BCB78000FB701C /* OWPreConversationViewVM.swift in Sources */,
+				24B32BA728C6382D00FB701C /* OWCommunityGuidelinesView.swift in Sources */,
 				3D20A38727B01F2E003F8513 /* OWConstraintMultiplierTarget.swift in Sources */,
 				4454188223685154001D0ED0 /* SPFailureReporter.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
@@ -3083,6 +3165,7 @@
 				3D20A37D27B01BA1003F8513 /* OWConstraintMakerExtendable.swift in Sources */,
 				3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */,
 				4416C65D237B119200D3F7B9 /* SPRealTimeModel.swift in Sources */,
+				24B32BB228C8731A00FB701C /* OWPreConversationSettings.swift in Sources */,
 				44F247A32379B0F900B36F12 /* OWBaseUIImageView.swift in Sources */,
 				73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */,
 				4454189423685154001D0ED0 /* SPConfigurationInitialization.swift in Sources */,
@@ -3102,6 +3185,7 @@
 				4454181823685144001D0ED0 /* SPBaseTableViewCell.swift in Sources */,
 				445418A423685154001D0ED0 /* SPCommentSortMode.swift in Sources */,
 				3D08E06E2875BB7F00E6F1AC /* OWManager+OWUI.swift in Sources */,
+				24B32BA028BCBA4A00FB701C /* OWPreConversationView.swift in Sources */,
 				1640F2C028ACDA0100FB863B /* OWCommentCreationCoordinator.swift in Sources */,
 				3D08E0892877080300E6F1AC /* OWIdentifiableType.swift in Sources */,
 				3DB3D178281FC123008654CF /* SPLogMethod.swift in Sources */,
@@ -3111,8 +3195,10 @@
 				16A12A92260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift in Sources */,
 				24B087CB288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift in Sources */,
 				246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */,
+				24B32BA528BCEB8900FB701C /* OWPreConversationCellOption.swift in Sources */,
 				44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */,
 				4454182223685144001D0ED0 /* SPCommentReplyHeaderView.swift in Sources */,
+				24B32BAE28C8697600FB701C /* OWPreConversationFooterView.swift in Sources */,
 				445417F923685144001D0ED0 /* UIView+Roundings.swift in Sources */,
 				44F247A12379ADC500B36F12 /* OWBaseButton.swift in Sources */,
 				445417F623685144001D0ED0 /* String+Sizes.swift in Sources */,
@@ -3158,6 +3244,7 @@
 				445418B623685154001D0ED0 /* SPClientSettings.swift in Sources */,
 				3DD72C6C280EF7ED00117946 /* OWEndpoints.swift in Sources */,
 				3D20A36327B00B8A003F8513 /* OWLayoutConstraintItem.swift in Sources */,
+				24B32BA928C63CFB00FB701C /* OWCommunityQuestionView.swift in Sources */,
 				3D20A38927B01FAF003F8513 /* OWConstraintOffsetTarget.swift in Sources */,
 				3DD72C7A280EFA0200117946 /* OWNetworkAPI.swift in Sources */,
 				3DFC32E628917942005F1C5A /* OWCellViewModel.swift in Sources */,
@@ -3170,6 +3257,7 @@
 				4454188023685154001D0ED0 /* SPImagesFacade.swift in Sources */,
 				3DD72C62280DC23600117946 /* OWPostId+EncodeDecode.swift in Sources */,
 				16A62B6826662F6C00DFE9B7 /* OWCustomUIDelegate.swift in Sources */,
+				24B32BB028C86A0700FB701C /* OWPreConversationFooterViewModel.swift in Sources */,
 				3D08E0752875CC7500E6F1AC /* OWPresentationalMode.swift in Sources */,
 				445418B223685154001D0ED0 /* UIImageView+SPExtensions.swift in Sources */,
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
