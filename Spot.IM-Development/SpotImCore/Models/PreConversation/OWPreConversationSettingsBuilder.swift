@@ -8,11 +8,17 @@
 
 import Foundation
 
-struct OWPreConversationSettingsBuilder: OWPreConversationSettingsProtocol {
-    var numberOfComments: Int = 2
+#if NEW_API
+public struct OWPreConversationSettingsBuilder: OWPreConversationSettingsProtocol {
+    public var numberOfComments: Int
     
-    @discardableResult mutating func numberOfComments(num: Int) -> OWPreConversationSettingsBuilder {
+    public init(numberOfComments: Int = 2) {
+        self.numberOfComments = numberOfComments
+    }
+    
+    @discardableResult public mutating func numberOfComments(num: Int) -> OWPreConversationSettingsBuilder {
         self.numberOfComments = num
         return self
     }
 }
+#endif

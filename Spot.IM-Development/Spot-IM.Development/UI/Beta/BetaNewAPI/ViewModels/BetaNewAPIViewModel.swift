@@ -15,7 +15,7 @@ import SpotImCore
 protocol BetaNewAPIViewModelingInputs {
     var enteredSpotId: PublishSubject<String> { get }
     var enteredPostId: PublishSubject<String> { get }
-    var preConversationTapped: PublishSubject<Void> { get }
+    var preConversationTapped: PublishSubject<PresentationalModeCompact> { get }
     var fullConversationTapped: PublishSubject<PresentationalModeCompact> { get }
     var commentCreationTapped: PublishSubject<PresentationalModeCompact> { get }
     var conversationCounterTapped: PublishSubject<Void> { get }
@@ -47,7 +47,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     
     let enteredSpotId = PublishSubject<String>()
     let enteredPostId = PublishSubject<String>()
-    let preConversationTapped = PublishSubject<Void>()
+    let preConversationTapped = PublishSubject<PresentationalModeCompact>()
     let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
     let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
     let conversationCounterTapped = PublishSubject<Void>()
@@ -111,7 +111,7 @@ fileprivate extension BetaNewAPIViewModel {
         
         let preConversationTappedModel = preConversationTapped
             .withLatestFrom(postId) { mode, postId -> SDKUIFlowActionSettings in
-                let action = SDKUIFlowActionType.preConversation
+                let action = SDKUIFlowActionType.preConversation(presentationalMode: mode)
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }

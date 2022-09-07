@@ -9,7 +9,7 @@
 import Foundation
 
 enum SDKUIFlowActionType {
-    case preConversation
+    case preConversation(presentationalMode: PresentationalModeCompact)
     case fullConversation(presentationalMode: PresentationalModeCompact)
     case commentCreation(presentationalMode: PresentationalModeCompact)
 }

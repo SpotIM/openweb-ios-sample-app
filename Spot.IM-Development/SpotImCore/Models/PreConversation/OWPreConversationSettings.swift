@@ -8,6 +8,20 @@
 
 import Foundation
 
-struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
-    let numberOfComments: Int = 2
+#if NEW_API
+public struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
+    public let numberOfComments: Int
+    
+    public init(numberOfComments: Int = 2) {
+        self.numberOfComments = numberOfComments
+    }
 }
+#else
+struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
+    let numberOfComments: Int
+    
+    init(numberOfComments: Int = 2) {
+        self.numberOfComments = numberOfComments
+    }
+}
+#endif

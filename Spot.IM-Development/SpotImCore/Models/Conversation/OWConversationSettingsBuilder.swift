@@ -8,11 +8,17 @@
 
 import Foundation
 
-struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
-    var selectedCommentId: String?
+#if NEW_API
+public struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
+    public var selectedCommentId: String?
     
-    @discardableResult mutating func selectedCommentId(id: String?) -> OWConversationSettingsBuilder {
+    public init(selectedCommentId: String? = nil) {
+        self.selectedCommentId = selectedCommentId
+    }
+    
+    @discardableResult public mutating func selectedCommentId(id: String?) -> OWConversationSettingsBuilder {
         self.selectedCommentId = id
         return self
     }
 }
+#endif
