@@ -21,6 +21,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
+    var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var isButtonOnlyModeEnabled: Bool { get }
 }
@@ -74,6 +75,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
         return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+    }()
+    
+    lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
+        return OWPreConversationFooterViewModel()
     }()
 
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, imageProvider: SPImageProvider, numberOfMessagesToShow: Int) {
