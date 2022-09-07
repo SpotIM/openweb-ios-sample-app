@@ -16,6 +16,7 @@ protocol OWCommentViewModelingInputs {
 
 protocol OWCommentViewModelingOutputs {
     var commentUserVM: OWCommentUserViewModeling { get }
+    var contentVM: OWCommentContentViewModeling { get }
     var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
 }
@@ -34,6 +35,10 @@ class OWCommentViewModel: OWCommentViewModeling,
     
     var commentUserVM: OWCommentUserViewModeling {
         return OWCommentUserViewModel(user: nil, imageProvider: nil)
+    }
+    
+    var contentVM: OWCommentContentViewModeling {
+        return OWCommentContentViewModel()
     }
     
     var statusIndicationVM: OWCommentStatusIndicationViewModeling {
