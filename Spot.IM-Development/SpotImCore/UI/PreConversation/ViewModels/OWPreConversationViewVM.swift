@@ -81,11 +81,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return OWPreConversationFooterViewModel()
     }()
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared, imageProvider: SPImageProvider, numberOfMessagesToShow: Int) {
-        self.servicesProvider = servicesProvider
-        self.imageProvider = imageProvider
-        self.numberOfMessagesToShow = numberOfMessagesToShow
-        setupObservers()
+    init (
+        servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+        imageProvider: SPImageProvider,
+        settings: OWPreConversationSettings) {
+            self.servicesProvider = servicesProvider
+            self.imageProvider = imageProvider
+            self.numberOfMessagesToShow = settings.numberOfComments
+            setupObservers()
     }
 }
 
