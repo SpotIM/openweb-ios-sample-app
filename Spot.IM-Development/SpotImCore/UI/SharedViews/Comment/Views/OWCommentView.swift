@@ -20,6 +20,11 @@ class OWCommentView: UIView {
         return OWCommentUserView() // TODO - Pass the VM
     }()
     
+    fileprivate lazy var contentView: OWCommentContentView = {
+        let vm = viewModel.outputs.contentVM
+        return OWCommentContentView(viewModel: vm)
+    }()
+    
     fileprivate lazy var statusView: OWCommentStatusIndicationView = {
         let vm = viewModel.outputs.statusIndicationVM
         return OWCommentStatusIndicationView() // TODO - Pass the VM
