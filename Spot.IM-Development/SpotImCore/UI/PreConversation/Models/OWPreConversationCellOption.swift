@@ -12,12 +12,10 @@ import UIKit
 enum OWPreConversationCellOption: CaseIterable {
     static var allCases: [OWPreConversationCellOption] {
         return [.comment(viewModel: OWCommentViewModel.stub()),
-                .reply(viewModel: OWReplyViewModel.stub()),
                 .spacer(viewModel: OWSpacerViewModel.stub())]
     }
     
     case comment(viewModel: OWCommentViewModeling)
-    case reply(viewModel: OWReplyViewModeling)
     case spacer(viewModel: OWSpacerViewModeling)
 }
 
@@ -25,8 +23,6 @@ extension OWPreConversationCellOption {
     var viewModel: OWCellViewModel {
         switch self {
         case .comment(let viewModel):
-            return viewModel
-        case .reply(let viewModel):
             return viewModel
         case .spacer(let viewModel):
             return viewModel
@@ -37,8 +33,6 @@ extension OWPreConversationCellOption {
         // TODO: Return the actual cell type once developed
         switch self {
         case .comment:
-            return UITableViewCell.self
-        case .reply:
             return UITableViewCell.self
         case .spacer:
             return UITableViewCell.self
@@ -55,8 +49,6 @@ extension OWPreConversationCellOption: Equatable  {
 //        switch self {
 //        case .comment(let viewModel):
 //            return viewModel.outputs.id
-//        case .reply(let viewModel):
-//            return viewModel.outputs.id
 //        case .spacer(let viewModel):
 //            return viewModel.outputs.id
 //        }
@@ -65,8 +57,6 @@ extension OWPreConversationCellOption: Equatable  {
     static func == (lhs: OWPreConversationCellOption, rhs: OWPreConversationCellOption) -> Bool {
         switch (lhs, rhs) {
         case (.comment(_), .comment(_)):
-            return lhs.identifier == rhs.identifier
-        case (.reply(_), .reply(_)):
             return lhs.identifier == rhs.identifier
         case (.spacer(_), .spacer(_)):
             return lhs.identifier == rhs.identifier
