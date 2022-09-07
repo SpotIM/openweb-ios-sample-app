@@ -201,6 +201,12 @@
 		3D611BA928C7466B003960CE /* OWViewActionsCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BA828C7466B003960CE /* OWViewActionsCallbacks.swift */; };
 		3D611BAB28C7468F003960CE /* OWViewSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BAA28C7468F003960CE /* OWViewSourceType.swift */; };
 		3D611BAD28C746C5003960CE /* OWViewActionCallbackType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BAC28C746C5003960CE /* OWViewActionCallbackType.swift */; };
+		3D611BAF28C89AEB003960CE /* OWViewDynamicSizeCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BAE28C89AEB003960CE /* OWViewDynamicSizeCompletion.swift */; };
+		3D611BB128C89B1B003960CE /* OWViewDynamicSizeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BB028C89B1B003960CE /* OWViewDynamicSizeOption.swift */; };
+		3D611BB328C89BB8003960CE /* OWViewCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BB228C89BB8003960CE /* OWViewCompletion.swift */; };
+		3D611BB528C8AAF4003960CE /* OWCommentSettingsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BB428C8AAF4003960CE /* OWCommentSettingsProtocol.swift */; };
+		3D611BB728C8AB94003960CE /* OWPreConversationSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BB628C8AB94003960CE /* OWPreConversationSettingsBuilder.swift */; };
+		3D611BB928C8AC3C003960CE /* OWConversationSettingsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611BB828C8AC3C003960CE /* OWConversationSettingsBuilder.swift */; };
 		3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C052852482D007420AD /* UIImageView+URL.swift */; };
 		3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6A4C0728524A40007420AD /* UIImage+URL.swift */; };
 		3D7E3D692888499D00DDBE0B /* OWHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D682888499D00DDBE0B /* OWHelpers.swift */; };
@@ -673,6 +679,12 @@
 		3D611BA828C7466B003960CE /* OWViewActionsCallbacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewActionsCallbacks.swift; sourceTree = "<group>"; };
 		3D611BAA28C7468F003960CE /* OWViewSourceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewSourceType.swift; sourceTree = "<group>"; };
 		3D611BAC28C746C5003960CE /* OWViewActionCallbackType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewActionCallbackType.swift; sourceTree = "<group>"; };
+		3D611BAE28C89AEB003960CE /* OWViewDynamicSizeCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewDynamicSizeCompletion.swift; sourceTree = "<group>"; };
+		3D611BB028C89B1B003960CE /* OWViewDynamicSizeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewDynamicSizeOption.swift; sourceTree = "<group>"; };
+		3D611BB228C89BB8003960CE /* OWViewCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWViewCompletion.swift; sourceTree = "<group>"; };
+		3D611BB428C8AAF4003960CE /* OWCommentSettingsProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentSettingsProtocol.swift; sourceTree = "<group>"; };
+		3D611BB628C8AB94003960CE /* OWPreConversationSettingsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationSettingsBuilder.swift; sourceTree = "<group>"; };
+		3D611BB828C8AC3C003960CE /* OWConversationSettingsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSettingsBuilder.swift; sourceTree = "<group>"; };
 		3D6A4C052852482D007420AD /* UIImageView+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+URL.swift"; sourceTree = "<group>"; };
 		3D6A4C0728524A40007420AD /* UIImage+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+URL.swift"; sourceTree = "<group>"; };
 		3D76FAE2283CD1B700DB18F6 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1301,6 +1313,7 @@
 				3D611B9B28C64791003960CE /* OWError.swift */,
 				3D611BAA28C7468F003960CE /* OWViewSourceType.swift */,
 				3D611BAC28C746C5003960CE /* OWViewActionCallbackType.swift */,
+				3D611BB028C89B1B003960CE /* OWViewDynamicSizeOption.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -1589,6 +1602,8 @@
 			isa = PBXGroup;
 			children = (
 				3D611B9928C64740003960CE /* OWDefaultCompletion.swift */,
+				3D611BAE28C89AEB003960CE /* OWViewDynamicSizeCompletion.swift */,
+				3D611BB228C89BB8003960CE /* OWViewCompletion.swift */,
 			);
 			path = Completions;
 			sourceTree = "<group>";
@@ -1598,6 +1613,7 @@
 			children = (
 				3D611B9E28C74469003960CE /* OWConversationSettingsProtocol.swift */,
 				3D611BA028C744E0003960CE /* OWPreConversationSettingsProtocol.swift */,
+				3D611BB428C8AAF4003960CE /* OWCommentSettingsProtocol.swift */,
 			);
 			path = MiscellaneousSettings;
 			sourceTree = "<group>";
@@ -1606,6 +1622,7 @@
 			isa = PBXGroup;
 			children = (
 				3D611BA528C745CA003960CE /* OWPreConversationSettings.swift */,
+				3D611BB628C8AB94003960CE /* OWPreConversationSettingsBuilder.swift */,
 			);
 			path = PreConversation;
 			sourceTree = "<group>";
@@ -2512,6 +2529,7 @@
 				44689B7C237414850024EFC1 /* SPABData.swift */,
 				6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */,
 				3D611BA228C74569003960CE /* OWConversationSettings.swift */,
+				3D611BB828C8AC3C003960CE /* OWConversationSettingsBuilder.swift */,
 			);
 			path = Conversation;
 			sourceTree = "<group>";
@@ -3106,6 +3124,7 @@
 				4454188C23685154001D0ED0 /* SPConfigRequests.swift in Sources */,
 				24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */,
 				3D08E06C2875BAEC00E6F1AC /* OWUI.swift in Sources */,
+				3D611BB928C8AC3C003960CE /* OWConversationSettingsBuilder.swift in Sources */,
 				24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */,
 				4454188423685154001D0ED0 /* SPDefaultDecoder.swift in Sources */,
 				3D611B9A28C64740003960CE /* OWDefaultCompletion.swift in Sources */,
@@ -3119,6 +3138,7 @@
 				3D611B9728C64533003960CE /* OWReadOnlyMode.swift in Sources */,
 				445418B723685154001D0ED0 /* OWAuthenticationHandler.swift in Sources */,
 				4454187F23685154001D0ED0 /* SPInternalAuthProvider.swift in Sources */,
+				3D611BB128C89B1B003960CE /* OWViewDynamicSizeOption.swift in Sources */,
 				16A12A60260115BE00A7B3F6 /* SPWebSDKProvider.swift in Sources */,
 				2440DD0626A6B01300001462 /* SPEventType.swift in Sources */,
 				4454182323685144001D0ED0 /* SPConversationSummaryView.swift in Sources */,
@@ -3163,6 +3183,7 @@
 				3D20A36F27B0147F003F8513 /* OWConstraintAttributes.swift in Sources */,
 				3D20A38727B01F2E003F8513 /* OWConstraintMultiplierTarget.swift in Sources */,
 				4454188223685154001D0ED0 /* SPFailureReporter.swift in Sources */,
+				3D611BAF28C89AEB003960CE /* OWViewDynamicSizeCompletion.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
 				445417FA23685144001D0ED0 /* UIView+Utils.swift in Sources */,
 				16D7F55326D282E100A06693 /* SPAdBannerView.swift in Sources */,
@@ -3272,6 +3293,7 @@
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
 				445418A823685154001D0ED0 /* Dictionary+JSONString.swift in Sources */,
+				3D611BB328C89BB8003960CE /* OWViewCompletion.swift in Sources */,
 				3D20A35C27A975DA003F8513 /* UIView+SemanticAttribute.swift in Sources */,
 				733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */,
 				4454188D23685154001D0ED0 /* FailureReportDataModels.swift in Sources */,
@@ -3301,6 +3323,7 @@
 				3D08E061287599C300E6F1AC /* OWConversationViewVM.swift in Sources */,
 				4454180723685144001D0ED0 /* UserFlowPresentable.swift in Sources */,
 				3D08E09F287712A100E6F1AC /* OWRxDataSourceError.swift in Sources */,
+				3D611BB528C8AAF4003960CE /* OWCommentSettingsProtocol.swift in Sources */,
 				4454188E23685154001D0ED0 /* SPNetworkConstants.swift in Sources */,
 				4454181823685144001D0ED0 /* SPBaseTableViewCell.swift in Sources */,
 				445418A423685154001D0ED0 /* SPCommentSortMode.swift in Sources */,
@@ -3381,6 +3404,7 @@
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
 				3D7E3D7028884D5B00DDBE0B /* SPAdditionalConfiguration.swift in Sources */,
 				4454188823685154001D0ED0 /* SPAnalyticsRequest.swift in Sources */,
+				3D611BB728C8AB94003960CE /* OWPreConversationSettingsBuilder.swift in Sources */,
 				6D0A3314247D44DC003B11C6 /* ViewVisibilityTracker.swift in Sources */,
 				6D22A46A23BC864100DCE08A /* SpotImRequestLogLevel.swift in Sources */,
 				2459B87F263823A8006A0CF0 /* SPCommentCreationModel.swift in Sources */,
