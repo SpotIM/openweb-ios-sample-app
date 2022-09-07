@@ -10,10 +10,14 @@ import Foundation
 
 #if NEW_API
 public enum OWError: Error {
-
+    public var description: String {
+        return ""
+    }
 }
 #else
 enum OWError: Error {
-
+    var description: String {
+        return ""
+    }
 }
 #endif

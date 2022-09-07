@@ -73,8 +73,20 @@ class BetaNewAPIVC: UIViewController {
         return scroll
     }()
     
-    fileprivate lazy var btnPreConversation: UIButton = {
-        let txt = NSLocalizedString("PreConversation", comment: "")
+    fileprivate lazy var btnPreConversationPushMode: UIButton = {
+        let txt = NSLocalizedString("PreConversationPushMode", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+    
+    fileprivate lazy var btnPreConversationPresentMode: UIButton = {
+        let txt = NSLocalizedString("PreConversationPresentMode", comment: "")
 
         return txt
             .button
@@ -212,18 +224,25 @@ fileprivate extension BetaNewAPIVC {
             make.width.equalTo(optionsScrollView.snp.width)
         }
         
-        optionsScrollView.addSubview(btnPreConversation)
-        btnPreConversation.snp.makeConstraints { make in
+        optionsScrollView.addSubview(btnPreConversationPushMode)
+        btnPreConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+        }
+        
+        optionsScrollView.addSubview(btnFullConversationPresentMode)
+        btnFullConversationPresentMode.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
         optionsScrollView.addSubview(btnFullConversationPushMode)
         btnFullConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnPreConversation.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
         optionsScrollView.addSubview(btnFullConversationPresentMode)
@@ -295,7 +314,13 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         // Bind buttons
-        btnPreConversation.rx.tap
+        btnPreConversationPushMode.rx.tap
+            .map { PresentationalModeCompact.push }
+            .bind(to: viewModel.inputs.preConversationTapped)
+            .disposed(by: disposeBag)
+        
+        btnPreConversationPresentMode.rx.tap
+            .map { PresentationalModeCompact.present }
             .bind(to: viewModel.inputs.preConversationTapped)
             .disposed(by: disposeBag)
         

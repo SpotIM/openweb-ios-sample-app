@@ -140,13 +140,17 @@ fileprivate extension MockArticleVC {
     func setupObservers() {
         title = viewModel.outputs.title
         
-        // Binding buttons
+        // Setting those in the VM for integration with the SDK
+        viewModel.inputs.setNavigationController(self.navigationController)
+        viewModel.inputs.setPresentationalVC(self)
+        
+        // Binding button
         btnFullConversation.rx.tap
             .bind(to: viewModel.inputs.fullConversationButtonTapped)
             .disposed(by: disposeBag)
         
         btnCommentCreation.rx.tap
-            .bind(to: viewModel.inputs.fullCommentCreationButtonTapped)
+            .bind(to: viewModel.inputs.commentCreationButtonTapped)
             .disposed(by: disposeBag)
         
         // Setup article image
@@ -178,7 +182,7 @@ fileprivate extension MockArticleVC {
             .unwrap()
         
         // Adding comment creation button if needed
-        let btnCommentCreationObservable = viewModel.outputs.showFullCommentCreationButton
+        let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
             .take(1)
             .do(onNext: { [weak self] mode in
                 guard let self = self else { return }
@@ -220,5 +224,4 @@ fileprivate extension MockArticleVC {
             .disposed(by: disposeBag)
     }
 }
-
 #endif
