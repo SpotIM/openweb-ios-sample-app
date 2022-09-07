@@ -18,6 +18,7 @@ class OWPreConversationView: UIView {
     }
     
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
+    
     fileprivate lazy var header: SPPreConversationHeaderView = {
         return SPPreConversationHeaderView(onlineViewingUsersCounterVM: self.viewModel.outputs.onlineViewingUsersVM)
     }()
@@ -30,7 +31,9 @@ class OWPreConversationView: UIView {
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
     }()
-    fileprivate lazy var footerView: SPPreConversationFooter = .init()
+    fileprivate lazy var footerView: OWPreConversationFooterView = {
+        return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
+    }()
     
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
