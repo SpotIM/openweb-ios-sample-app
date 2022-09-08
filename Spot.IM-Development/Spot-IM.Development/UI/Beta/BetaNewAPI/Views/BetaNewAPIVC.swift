@@ -214,6 +214,7 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.textFieldHeight)
         }
         
+        // Adding scroll view
         view.addSubview(optionsScrollView)
         optionsScrollView.snp.makeConstraints { make in
             make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
@@ -224,6 +225,7 @@ fileprivate extension BetaNewAPIVC {
             make.width.equalTo(optionsScrollView.snp.width)
         }
         
+        // Adding pre conversation buttons
         optionsScrollView.addSubview(btnPreConversationPushMode)
         btnPreConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
@@ -238,18 +240,12 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
-        optionsScrollView.addSubview(btnFullConversationPresentMode)
-        btnFullConversationPresentMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
-        }
-        
+        // Adding full conversation buttons
         optionsScrollView.addSubview(btnFullConversationPushMode)
         btnFullConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
         optionsScrollView.addSubview(btnFullConversationPresentMode)
@@ -259,6 +255,7 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(btnFullConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
+        // Adding comment creation buttons
         optionsScrollView.addSubview(btnCommentCreationPushMode)
         btnCommentCreationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
@@ -273,6 +270,7 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
+        // Adding conversation counter button
         optionsScrollView.addSubview(btnConversationCounter)
         btnConversationCounter.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
