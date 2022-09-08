@@ -14,10 +14,16 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
     
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
-                               callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationVC> {
+                               callbacks: OWViewActionsCallbacks?) -> Observable<Void> {
         invalidExistingFlows()
         prepareRouter(presentationalMode: presentationalMode)
-        return .empty()
+        
+        let conversationCoordinator = OWConversationCoordinator(router: router,
+                                                                conversationData: conversationData,
+                                                                actionsCallbacks: callbacks)
+        
+        return coordinate(to: conversationCoordinator, deepLinkOptions: nil)
+            .voidify()
     }
     
     // TODO: Change to pre conversation view once class will be created
@@ -42,7 +48,6 @@ fileprivate extension OWSDKCoordinator {
         router = OWRouter(navigationController: navigationController)
     }
     
-    // TODO: Complete
     func invalidExistingFlows() {
         removeAllChildCoordinators()
     }
