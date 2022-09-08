@@ -231,11 +231,18 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
         
+        optionsScrollView.addSubview(btnPreConversationPresentMode)
+        btnPreConversationPresentMode.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
+        }
+        
         optionsScrollView.addSubview(btnFullConversationPresentMode)
         btnFullConversationPresentMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
         optionsScrollView.addSubview(btnFullConversationPushMode)
