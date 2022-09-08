@@ -11,6 +11,7 @@ import RxSwift
 
 enum OWConversationCoordinatorResult {
     case openCommentCreation(postId: OWPostId)
+    case popped
 }
 
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
@@ -26,14 +27,31 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
     }
     
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
-        // TODO: complete the flow
-//        let conversationVM: OWConversationViewModeling = OWConversationViewModel()
-//        let conversationVC = OWConversationVC(viewModel: conversationVM)
-        return .empty()
+        
+        let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData)
+        let conversationVC = OWConversationVC(viewModel: conversationVM)
+        let conversationPopped = PublishSubject<Void>()
+        
+        // TODO: decide later on whether 'present' mode will be a custom animation in the NavigationController.
+        // We might override some stuff there
+        // Present mode will currently crash, this infra is only for push
+        router.push(conversationVC,
+                    animated: true,
+                    popCompletion: conversationPopped)
+        
+        // Connect actionsCallbacks
+        // TODO: Complete
+        
+        // TODO: coordinate to comment creation coordinator and authentication screen when needed
+        
+        return conversationPopped
+            .map { OWConversationCoordinatorResult.popped }
+            .asObservable()
     }
     
     override func showableComponent() -> Observable<OWShowable> {
-        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel()
+        // TODO: Complete when we would like to support the conversation as a view
+        let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData)
         let conversationView = OWConversationView(viewModel: conversationViewVM)
         return .just(conversationView)
     }
