@@ -22,7 +22,13 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
                                callbacks: OWViewActionsCallbacks?,
                                deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<Void> {
         invalidateExistingFlows()
-        prepareRouter(presentationalMode: presentationalMode)
+        
+        var presentAnimated: Bool = true
+        if let deepLink = deepLinkOptions, case .commentCreation(_) = deepLink {
+            presentAnimated = false
+        }
+        
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: presentAnimated)
         
         let conversationCoordinator = OWConversationCoordinator(router: router,
                                                                 conversationData: conversationData,
@@ -46,14 +52,17 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
 }
 
 fileprivate extension OWSDKCoordinator {
-    func prepareRouter(presentationalMode: OWPresentationalMode) {
+    func prepareRouter(presentationalMode: OWPresentationalMode, presentAnimated: Bool) {
         invalidateExistingFlows()
         
         let navigationController: UINavigationController
         
         switch presentationalMode {
-        case .present(_):
-            navigationController = OWNavigationController()
+        case .present(let viewController):
+            navigationController = OWNavigationController.shared
+            (navigationController as? OWNavigationController)?.clear()
+            // TODO: We can later on work on a custom transition which looks like the old `present` which cover the whole screen
+            viewController.present(navigationController, animated: presentAnimated)
         case .push(let navController):
             navigationController = navController
         }
