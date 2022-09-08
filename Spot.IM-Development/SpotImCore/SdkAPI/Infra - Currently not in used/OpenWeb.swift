@@ -8,7 +8,12 @@
 
 import Foundation
 
-// Will be a public class and the main access to our API
+#if NEW_API
+public class OpenWeb {
+    public static let manager: OWManagerProtocol = OWManager.manager
+}
+#else
 class OpenWeb {
     static let manager: OWManagerProtocol = OWManager.manager
 }
+#endif
