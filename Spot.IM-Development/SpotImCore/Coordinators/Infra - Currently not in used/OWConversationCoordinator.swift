@@ -15,6 +15,16 @@ enum OWConversationCoordinatorResult {
 
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
     
+    fileprivate let router: OWRoutering
+    fileprivate let conversationData: OWConversationRequiredData
+    fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+
+    init(router: OWRoutering, conversationData: OWConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+        self.router = router
+        self.conversationData = conversationData
+        self.actionsCallbacks = actionsCallbacks
+    }
+    
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
         // TODO: complete the flow
 //        let conversationVM: OWConversationViewModeling = OWConversationViewModel()
