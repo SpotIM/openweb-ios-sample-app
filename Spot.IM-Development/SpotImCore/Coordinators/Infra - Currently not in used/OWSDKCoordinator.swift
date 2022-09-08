@@ -12,7 +12,11 @@ import RxSwift
 class OWSDKCoordinator: OWBaseCoordinator<Void> {
     fileprivate var router: OWRoutering!
     
-    func startConversationFlow() -> Observable<OWConversationVC> {
+    func startConversationFlow(conversationData: OWConversationRequiredData,
+                               presentationalMode: OWPresentationalMode,
+                               callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationVC> {
+        invalidExistingFlows()
+        prepareRouter(presentationalMode: presentationalMode)
         return .empty()
     }
     
@@ -23,15 +27,14 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
 }
 
 fileprivate extension OWSDKCoordinator {
-    // TODO: Complete
-    func prepareForFlow(presentationalMode: OWPresentationalMode) {
+    func prepareRouter(presentationalMode: OWPresentationalMode) {
         invalidExistingFlows()
         
         let navigationController: UINavigationController
         
         switch presentationalMode {
         case .present(_):
-            navigationController = self.createNavController()
+            navigationController = OWNavigationController()
         case .push(let navController):
             navigationController = navController
         }
@@ -41,13 +44,6 @@ fileprivate extension OWSDKCoordinator {
     
     // TODO: Complete
     func invalidExistingFlows() {
-        
-    }
-    
-    func createNavController() -> UINavigationController {
-        let navController = UINavigationController()
-        // TODO: Customization and such
-        
-        return navController
+        removeAllChildCoordinators()
     }
 }
