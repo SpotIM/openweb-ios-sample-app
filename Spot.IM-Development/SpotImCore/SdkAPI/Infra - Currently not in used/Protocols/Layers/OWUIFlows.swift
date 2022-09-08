@@ -24,7 +24,7 @@ public protocol OWUIFlows {
     
     func commentCreation(postId: String, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWCommentSettingsProtocol?,
+                         additionalSettings: OWCommentCreationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWDefaultCompletion)
 }
