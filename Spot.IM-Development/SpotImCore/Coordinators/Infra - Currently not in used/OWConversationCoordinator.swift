@@ -51,12 +51,13 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             }
         }
         
-        // TODO: decide later on whether 'present' mode will be a custom animation in the NavigationController.
-        // We might override some stuff there
-        // Present mode will currently crash, this infra is only for push
-        router.push(conversationVC,
-                    animated: animated,
-                    popCompletion: conversationPopped)
+        if router.isEmpty() {
+            router.setRoot(conversationVC, animated: false)
+        } else {
+            router.push(conversationVC,
+                        animated: animated,
+                        popCompletion: conversationPopped)
+        }
         
         // CTA tapped from conversation screen
         let ctaCommentCreationTapped = conversationVM.outputs.ctaCommentCreationTapped

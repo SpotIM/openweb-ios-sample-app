@@ -16,8 +16,9 @@ protocol OWRoutering {
     func push(_ module: OWPresentable, animated: Bool, popCompletion: PublishSubject<Void>?)
     func pop(animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
-    func setRoot(_ module: OWPresentable)
+    func setRoot(_ module: OWPresentable, animated: Bool)
     func popToRoot(animated: Bool)
+    func isEmpty() -> Bool
 }
 
 class OWRouter: NSObject, OWRoutering {
@@ -62,14 +63,21 @@ class OWRouter: NSObject, OWRoutering {
         }
     }
 
-    func setRoot(_ module: OWPresentable) {
-        navigationController?.setViewControllers([module.toPresentable()], animated: false)
+    func setRoot(_ module: OWPresentable, animated: Bool = false) {
+        navigationController?.setViewControllers([module.toPresentable()], animated: animated)
     }
 
     func popToRoot(animated: Bool) {
         if let controllers = navigationController?.popToRootViewController(animated: animated) {
             controllers.forEach { runCompletion(for: $0) }
         }
+    }
+    
+    func isEmpty() -> Bool {
+        guard let navController = navigationController else { return true }
+        
+        let childs = navController.children
+        return childs.isEmpty
     }
 }
 
