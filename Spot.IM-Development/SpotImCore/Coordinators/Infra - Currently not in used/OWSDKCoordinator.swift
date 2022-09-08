@@ -27,7 +27,7 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
     }
     
     // TODO: Change to pre conversation view once class will be created
-    func startPreConversationFlow() -> Observable<UIView> {
+    func startPreConversationFlow() -> Observable<OWPreConversationView> {
         return .empty()
     }
 }
