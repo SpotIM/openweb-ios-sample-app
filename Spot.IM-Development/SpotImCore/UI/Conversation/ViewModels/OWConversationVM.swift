@@ -27,13 +27,16 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
     var outputs: OWConversationViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let conversationData: OWConversationRequiredData
     
     lazy var conversationViewVM: OWConversationViewViewModeling = {
-        return OWConversationViewViewModel()
+        return OWConversationViewViewModel(conversationData: conversationData)
     }()
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (conversationData: OWConversationRequiredData,
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.conversationData = conversationData
         setupObservers()
     }
 }
