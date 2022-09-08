@@ -71,7 +71,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     
     func commentCreation(postId: String, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
-                         additionalSettings: OWCommentSettingsProtocol? = nil,
+                         additionalSettings: OWCommentCreationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
         setPostId(postId: postId) { result in
@@ -84,6 +84,21 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
             }
         }
         
+        let conversationData = OWConversationRequiredData(article: article,
+                                                          settings: additionalSettings?.conversationSettings)
+        let commentCreationData = OWCommentCreationRequiredData(article: article)
+        
+        _ = sdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
+                                                    commentCreationData: commentCreationData,
+                                                    presentationalMode: presentationalMode,
+                                                    callbacks: callbacks)
+            .take(1)
+            .subscribe(onNext: { _ in
+                completion(.success(()))
+                }, onError: { err in
+                    let error: OWError = err as? OWError ?? OWError.conversationFlow
+                    completion(.failure(error))
+                })
     }
 }
 
