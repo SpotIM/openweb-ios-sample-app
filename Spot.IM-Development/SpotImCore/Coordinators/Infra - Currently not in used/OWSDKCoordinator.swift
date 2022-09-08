@@ -12,9 +12,15 @@ import RxSwift
 class OWSDKCoordinator: OWBaseCoordinator<Void> {
     fileprivate var router: OWRoutering!
     
+    // TODO: Complete pre conversation flow
+    func startPreConversationFlow() -> Observable<OWPreConversationView> {
+        return .empty()
+    }
+    
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
-                               callbacks: OWViewActionsCallbacks?) -> Observable<Void> {
+                               callbacks: OWViewActionsCallbacks?,
+                               deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<Void> {
         invalidateExistingFlows()
         prepareRouter(presentationalMode: presentationalMode)
         
@@ -22,13 +28,20 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
                                                                 conversationData: conversationData,
                                                                 actionsCallbacks: callbacks)
         
-        return coordinate(to: conversationCoordinator, deepLinkOptions: nil)
+        return coordinate(to: conversationCoordinator, deepLinkOptions: deepLinkOptions)
             .voidify()
     }
     
-    // TODO: Change to pre conversation view once class will be created
-    func startPreConversationFlow() -> Observable<OWPreConversationView> {
-        return .empty()
+    func startCommentCreationFlow(conversationData: OWConversationRequiredData,
+                                  commentCreationData: OWCommentCreationRequiredData,
+                               presentationalMode: OWPresentationalMode,
+                               callbacks: OWViewActionsCallbacks?) -> Observable<Void> {
+        
+        let deepLink = OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
+        return startConversationFlow(conversationData: conversationData,
+                                     presentationalMode: presentationalMode,
+                                     callbacks: callbacks,
+                                     deepLinkOptions: deepLink)
     }
 }
 
