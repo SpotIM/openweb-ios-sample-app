@@ -48,7 +48,9 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
     var dataSet = false
 
     func tableView(_ tableView: UITableView, observedEvent: Event<OWElement>) {
-        Binder(self) { dataSource, newSections in
+        Binder(self) { [weak tableView] dataSource, newSections in
+            guard let tableView = tableView else { return }
+            
             #if DEBUG
                 dataSource._dataSourceBound = true
             #endif
