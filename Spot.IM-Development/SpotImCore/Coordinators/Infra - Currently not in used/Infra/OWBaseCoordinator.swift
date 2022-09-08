@@ -25,6 +25,10 @@ class OWBaseCoordinator<ResultType> {
     // Key is an `identifier` of the child coordinator and value is the coordinator itself.
     // Value type is `Any` because Swift doesn't allow to store generic types in the array.
     private var childCoordinators = [UUID: Any]()
+    
+    func removeAllChildCoordinators() {
+        childCoordinators.removeAll()
+    }
 
     // Stores coordinator to the `childCoordinators` dictionary.
     func store<T>(coordinator: OWBaseCoordinator<T>) {
