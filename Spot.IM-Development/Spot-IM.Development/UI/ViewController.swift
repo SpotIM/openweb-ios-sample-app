@@ -38,6 +38,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var autenticationPlaygroundBtn: UIButton!
     @IBOutlet weak var customSpotBtn: UIButton!
     
+    fileprivate lazy var betaNewAPIBtn: UIButton = {
+       let btn = NSLocalizedString("BetaNewAPI", comment: "")
+            .button
+            .textColor(.black)
+            .font(FontBook.paragraph)
+        
+        return btn
+    }()
+    
     fileprivate let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -78,17 +87,33 @@ class ViewController: UIViewController {
     }
     
     private func setupAppPreset() {
-        #if PUBLIC_DEMO_APP
-            showDemoTableViewBtn.isHidden = true
-            showFoxNewsBtn.isHidden = true
-            showMobileSSO.isHidden = true
-            showMobileGuest.isHidden = true
-            showMobileSocial.isHidden = true
-            showMobileSocialGuest.isHidden = true
-            autenticationPlaygroundBtn.snp.updateConstraints { make in
-                make.top.equalTo(showDemoSpotArticlesBtn.snp.bottom).offset(Metrics.verticalMarginInScrollView)
-            }
-        #endif
+#if NEW_API
+        optionsScrollView.addSubview(betaNewAPIBtn)
+        betaNewAPIBtn.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(optionsScrollView.contentLayoutGuide.snp.top).offset(Metrics.verticalMarginInScrollView)
+        }
+        
+        showDemoTableViewBtn.removeFromSuperview()
+        optionsScrollView.addSubview(showDemoTableViewBtn)
+        showDemoTableViewBtn.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(betaNewAPIBtn.snp.bottom).offset(Metrics.verticalMarginInScrollView)
+            make.bottom.equalTo(showDemoSpotArticlesBtn.snp.top).offset(-Metrics.verticalMarginInScrollView)
+        }
+#endif
+        
+#if PUBLIC_DEMO_APP
+        showDemoTableViewBtn.isHidden = true
+        showFoxNewsBtn.isHidden = true
+        showMobileSSO.isHidden = true
+        showMobileGuest.isHidden = true
+        showMobileSocial.isHidden = true
+        showMobileSocialGuest.isHidden = true
+        autenticationPlaygroundBtn.snp.updateConstraints { make in
+            make.top.equalTo(showDemoSpotArticlesBtn.snp.bottom).offset(Metrics.verticalMarginInScrollView)
+        }
+#endif
     }
 
     private func setupNavigationBar() {
@@ -331,10 +356,20 @@ fileprivate extension ViewController {
             .disposed(by: disposeBag)
         
         autenticationPlaygroundBtn.rx.tap
-            .subscribe(onNext: { [weak self] height in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 let autenticationPlaygroundVC = AuthenticationPlaygroundVC()
                 self.navigationController?.pushViewController(autenticationPlaygroundVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        betaNewAPIBtn.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+#if NEW_API
+                let betaAPIVC = BetaNewAPIVC()
+                self.navigationController?.pushViewController(betaAPIVC, animated: true)
+#endif
             })
             .disposed(by: disposeBag)
     }
