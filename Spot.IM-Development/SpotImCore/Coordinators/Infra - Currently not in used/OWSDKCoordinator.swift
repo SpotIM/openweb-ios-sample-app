@@ -15,7 +15,7 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
                                callbacks: OWViewActionsCallbacks?) -> Observable<Void> {
-        invalidExistingFlows()
+        invalidateExistingFlows()
         prepareRouter(presentationalMode: presentationalMode)
         
         let conversationCoordinator = OWConversationCoordinator(router: router,
@@ -34,7 +34,7 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
 
 fileprivate extension OWSDKCoordinator {
     func prepareRouter(presentationalMode: OWPresentationalMode) {
-        invalidExistingFlows()
+        invalidateExistingFlows()
         
         let navigationController: UINavigationController
         
@@ -48,7 +48,7 @@ fileprivate extension OWSDKCoordinator {
         router = OWRouter(navigationController: navigationController)
     }
     
-    func invalidExistingFlows() {
+    func invalidateExistingFlows() {
         removeAllChildCoordinators()
     }
 }
