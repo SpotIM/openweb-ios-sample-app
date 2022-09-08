@@ -19,14 +19,13 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentCreationCoordinatorResult> {
         // TODO: complete the flow
 //        let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel()
-//        let commentCreationVC = OWCommentCreationVC(viewModel: conversationVM)
+//        let commentCreationVC = OWCommentCreationVC(viewModel: commentCreationVM)
         return .empty()
     }
     
     override func showableComponent() -> Observable<OWShowable> {
-        // TODO: complete the flow
-//        let commentCreationVM: OWCommentCreationViewModeling = OWCommentCreationViewModel()
-//        let commentCreationView = OWCommentCreationView(viewModel: conversationVM)
-        return .empty()
+        let commentCreationViewVM: OWCommentCreationViewViewModeling = OWCommentCreationViewViewModel()
+        let commentCreationView = OWCommentCreationView(viewModel: commentCreationViewVM)
+        return .just(commentCreationView)
     }
 }
