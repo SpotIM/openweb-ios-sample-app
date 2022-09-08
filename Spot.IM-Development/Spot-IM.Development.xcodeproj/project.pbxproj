@@ -91,6 +91,7 @@
 		24B32BAE28C8697600FB701C /* OWPreConversationFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */; };
 		24B32BB028C86A0700FB701C /* OWPreConversationFooterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BAF28C86A0700FB701C /* OWPreConversationFooterViewModel.swift */; };
 		24B32BB228C8731A00FB701C /* OWPreConversationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BB128C8731A00FB701C /* OWPreConversationSettings.swift */; };
+		24B32BB428C8B5A600FB701C /* OWPreConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BB328C8B5A600FB701C /* OWPreConversationCoordinator.swift */; };
 		24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88434261C922900EB7BCB /* CommentLabelView.swift */; };
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
@@ -552,6 +553,7 @@
 		24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationFooterView.swift; sourceTree = "<group>"; };
 		24B32BAF28C86A0700FB701C /* OWPreConversationFooterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationFooterViewModel.swift; sourceTree = "<group>"; };
 		24B32BB128C8731A00FB701C /* OWPreConversationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationSettings.swift; sourceTree = "<group>"; };
+		24B32BB328C8B5A600FB701C /* OWPreConversationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationCoordinator.swift; sourceTree = "<group>"; };
 		24B88434261C922900EB7BCB /* CommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLabelView.swift; sourceTree = "<group>"; };
 		24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationShared.swift; sourceTree = "<group>"; };
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
@@ -1787,6 +1789,7 @@
 				3D08E0562874951D00E6F1AC /* Infra */,
 				3D08E0712875C42F00E6F1AC /* OWSDKCoordinator.swift */,
 				3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */,
+				24B32BB328C8B5A600FB701C /* OWPreConversationCoordinator.swift */,
 				1640F2BF28ACDA0100FB863B /* OWCommentCreationCoordinator.swift */,
 			);
 			path = "Infra - Currently not in used";
@@ -3189,6 +3192,7 @@
 				3D08E07E2875E5E600E6F1AC /* OWManager+OWAnalytics.swift in Sources */,
 				3D894A73286C5222001A939C /* OWRealtimeEndpoints.swift in Sources */,
 				16229EDD27EA22DA000AA832 /* OWCommentVotingModel.swift in Sources */,
+				24B32BB428C8B5A600FB701C /* OWPreConversationCoordinator.swift in Sources */,
 				169D58EB27D4EECB009936F3 /* OWCommentVotingView.swift in Sources */,
 				4454188623685154001D0ED0 /* SPCommentFacade.swift in Sources */,
 				4454189923685154001D0ED0 /* SPConfigurationSSO.swift in Sources */,
