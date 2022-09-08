@@ -150,6 +150,11 @@ extension UIButton {
         return self
     }
     
+    @discardableResult func withHorizontalPadding(_ padding: CGFloat) -> Self {
+        self.contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
+        return self
+    }
+    
     @discardableResult func horizontalAlignment(_ align: UIControl.ContentHorizontalAlignment) -> Self {
         self.contentHorizontalAlignment = align
         return self
@@ -159,6 +164,11 @@ extension UIButton {
 extension UIImageView {
     @discardableResult func contentMode(_ contentMode: UIView.ContentMode) -> Self {
         self.contentMode = contentMode
+        return self
+    }
+    
+    @discardableResult func image(_ image: UIImage) -> Self {
+        self.image = image
         return self
     }
 }
