@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 protocol OWRoutering {
-    var navigationController: UINavigationController { get }
+    var navigationController: UINavigationController? { get }
     var rootViewController: UIViewController? { get }
     func present(_ module: OWPresentable, animated: Bool)
     func push(_ module: OWPresentable, animated: Bool, popCompletion: PublishSubject<Void>?)
@@ -23,20 +23,21 @@ protocol OWRoutering {
 class OWRouter: NSObject, OWRoutering {
 
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
-    unowned let navigationController: UINavigationController
+    weak var navigationController: UINavigationController?
+    
     var rootViewController: UIViewController? {
-        return navigationController.viewControllers.first
+        return navigationController?.viewControllers.first
     }
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
         self.completions = [:]
         super.init()
-        self.navigationController.delegate = self
+        self.navigationController?.delegate = self
     }
 
     func present(_ module: OWPresentable, animated: Bool) {
-        navigationController.present(module.toPresentable(),
+        navigationController?.present(module.toPresentable(),
                                      animated: animated,
                                      completion: nil)
     }
@@ -46,27 +47,27 @@ class OWRouter: NSObject, OWRoutering {
             completions[module.toPresentable()] = completion
         }
 
-        navigationController.pushViewController(module.toPresentable(), animated: animated)
+        navigationController?.pushViewController(module.toPresentable(), animated: animated)
     }
 
     func pop(animated: Bool) {
-        if let controller = navigationController.popViewController(animated: animated) {
+        if let controller = navigationController?.popViewController(animated: animated) {
             runCompletion(for: controller)
         }
     }
 
     func dismiss(animated: Bool, completion: PublishSubject<Void>?) {
-        navigationController.dismiss(animated: animated) {
+        navigationController?.dismiss(animated: animated) {
             completion?.onNext()
         }
     }
 
     func setRoot(_ module: OWPresentable) {
-        navigationController.setViewControllers([module.toPresentable()], animated: false)
+        navigationController?.setViewControllers([module.toPresentable()], animated: false)
     }
 
     func popToRoot(animated: Bool) {
-        if let controllers = navigationController.popToRootViewController(animated: animated) {
+        if let controllers = navigationController?.popToRootViewController(animated: animated) {
             controllers.forEach { runCompletion(for: $0) }
         }
     }
