@@ -12,11 +12,12 @@ import RxSwift
 protocol OWRoutering {
     var navigationController: UINavigationController? { get }
     var rootViewController: UIViewController? { get }
-    func present(_ module: OWPresentable, animated: Bool)
+    func start()
+    func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
     func push(_ module: OWPresentable, animated: Bool, popCompletion: PublishSubject<Void>?)
+    func setRoot(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
     func pop(animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
-    func setRoot(_ module: OWPresentable, animated: Bool)
     func popToRoot(animated: Bool)
     func isEmpty() -> Bool
 }
@@ -25,19 +26,39 @@ class OWRouter: NSObject, OWRoutering {
 
     fileprivate var completions: [UIViewController: PublishSubject<Void>]
     weak var navigationController: UINavigationController?
+    fileprivate let presentationalMode: OWPresentationalModeExtended
+    fileprivate var navDisposedBag: DisposeBag!
     
     var rootViewController: UIViewController? {
         return navigationController?.viewControllers.first
     }
 
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, presentationalMode: OWPresentationalModeExtended) {
         self.navigationController = navigationController
         self.completions = [:]
+        self.presentationalMode = presentationalMode
         super.init()
         self.navigationController?.delegate = self
+        if let sdkNavigationController = self.navigationController as? OWNavigationControllerProtocol {
+            setupSDKNavigationObserver(navigationController: sdkNavigationController)
+        }
+    }
+    
+    func start() {
+        guard let navigationController = navigationController else { return }
+        switch presentationalMode {
+        case .present(let viewController, _, let animated):
+            viewController.present(navigationController, animated: animated)
+        case .push(_):
+            // Already handled in coordinator
+            break
+        }
     }
 
-    func present(_ module: OWPresentable, animated: Bool) {
+    func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?) {
+        if let completion = dismissCompletion {
+            completions[module.toPresentable()] = completion
+        }
         navigationController?.present(module.toPresentable(),
                                      animated: animated,
                                      completion: nil)
@@ -51,6 +72,13 @@ class OWRouter: NSObject, OWRoutering {
         navigationController?.pushViewController(module.toPresentable(), animated: animated)
     }
 
+    func setRoot(_ module: OWPresentable, animated: Bool = false, dismissCompletion: PublishSubject<Void>?) {
+        if let completion = dismissCompletion {
+            completions[module.toPresentable()] = completion
+        }
+        navigationController?.setViewControllers([module.toPresentable()], animated: animated)
+    }
+    
     func pop(animated: Bool) {
         if let controller = navigationController?.popViewController(animated: animated) {
             runCompletion(for: controller)
@@ -61,10 +89,6 @@ class OWRouter: NSObject, OWRoutering {
         navigationController?.dismiss(animated: animated) {
             completion?.onNext()
         }
-    }
-
-    func setRoot(_ module: OWPresentable, animated: Bool = false) {
-        navigationController?.setViewControllers([module.toPresentable()], animated: animated)
     }
 
     func popToRoot(animated: Bool) {
@@ -98,5 +122,19 @@ fileprivate extension OWRouter {
         }
         completion.onNext()
         completions.removeValue(forKey: controller)
+    }
+    
+    func setupSDKNavigationObserver(navigationController: OWNavigationControllerProtocol) {
+        navDisposedBag = DisposeBag()
+        
+        navigationController.dismissed
+            .subscribe(onNext: { [ weak self] _ in
+                guard let self = self,
+                      let navController = navigationController as? UINavigationController else { return }
+                let childs = navController.children.reversed()
+                childs.forEach { self.runCompletion(for: $0) }
+                navigationController.clear()
+            })
+            .disposed(by: navDisposedBag)
     }
 }

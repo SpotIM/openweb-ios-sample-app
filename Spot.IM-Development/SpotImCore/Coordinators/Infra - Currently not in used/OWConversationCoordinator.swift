@@ -61,8 +61,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             }
         }
         
+        // Conversation is the initial view in the router so here we start the router
+        router.start()
+        
         if router.isEmpty() {
-            router.setRoot(conversationVC, animated: false)
+            router.setRoot(conversationVC, animated: false, dismissCompletion: conversationPopped)
         } else {
             router.push(conversationVC,
                         animated: animated,

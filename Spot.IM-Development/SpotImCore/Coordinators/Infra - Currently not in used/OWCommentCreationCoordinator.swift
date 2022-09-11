@@ -63,7 +63,6 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             .asObservable()
         
         return Observable.merge(commentCreationPoppedObservable, commentCreatedObservable, commentCreationLoadedToScreenObservable)
-            .debug()
     }
     
     override func showableComponent() -> Observable<OWShowable> {

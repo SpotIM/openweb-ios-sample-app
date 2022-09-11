@@ -15,11 +15,14 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,
                                   callbacks: OWViewActionsCallbacks?) -> Observable<OWViewDynamicSizeOption> {
-        invalidateExistingFlows()
-        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
-        
+
         return Observable.just(())
             .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.invalidateExistingFlows()
+                self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+            })
             .flatMap { [ weak self] _ -> Observable<OWViewDynamicSizeOption> in
                 guard let self = self else { return .empty() }
                 let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
@@ -69,18 +72,21 @@ fileprivate extension OWSDKCoordinator {
         invalidateExistingFlows()
         
         let navigationController: UINavigationController
+        let presentationalModeExtended: OWPresentationalModeExtended
         
         switch presentationalMode {
-        case .present(let viewController):
+        case .present(let viewController, let style):
             navigationController = OWNavigationController.shared
-            (navigationController as? OWNavigationController)?.clear()
-            // TODO: We can later on work on a custom transition which looks like the old `present` which cover the whole screen
-            viewController.present(navigationController, animated: presentAnimated)
+            navigationController.modalPresentationStyle = style.toOSModalPresentationStyle
+            presentationalModeExtended = OWPresentationalModeExtended.present(viewController: viewController,
+                                                                              style: style,
+                                                                              animated: presentAnimated)
         case .push(let navController):
             navigationController = navController
+            presentationalModeExtended = OWPresentationalModeExtended.push(navigationController: navController)
         }
-        
-        router = OWRouter(navigationController: navigationController)
+                
+        router = OWRouter(navigationController: navigationController, presentationalMode: presentationalModeExtended)
     }
     
     func invalidateExistingFlows() {
