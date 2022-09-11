@@ -9,9 +9,19 @@
 import Foundation
 import RxSwift
 
-enum OWCommentCreationCoordinatorResult {
+enum OWCommentCreationCoordinatorResult: OWCoordinatorResultProtocol {
     case popped
     case commentCreated(comment: SPComment)
+    case loadedToScreen
+    
+    var loadedToScreen: Bool {
+        switch self {
+        case .loadedToScreen:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinatorResult> {
@@ -48,7 +58,12 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
             .map { OWCommentCreationCoordinatorResult.popped }
             .asObservable()
         
-        return Observable.merge(commentCreationPoppedObservable, commentCreatedObservable)
+        let commentCreationLoadedToScreenObservable = commentCreationVM.outputs.loadedToScreen
+            .map { OWCommentCreationCoordinatorResult.loadedToScreen }
+            .asObservable()
+        
+        return Observable.merge(commentCreationPoppedObservable, commentCreatedObservable, commentCreationLoadedToScreenObservable)
+            .debug()
     }
     
     override func showableComponent() -> Observable<OWShowable> {

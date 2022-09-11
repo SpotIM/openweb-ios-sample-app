@@ -39,6 +39,7 @@ class OWCommentCreationVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.inputs.viewDidLoad.onNext()
     }
 }
 

@@ -30,7 +30,7 @@ class OWPreConversationView: UIView {
         return "Full Conversation - testing"
             .button
             .backgroundColor(.orange)
-            .textColor(.gray)
+            .textColor(.white)
             .corner(radius: 12.0)
             .withPadding(20)
             .font(UIFont.preferred(style: .regular, of: 20))
@@ -41,7 +41,7 @@ class OWPreConversationView: UIView {
         return "Comment Creation - testing"
             .button
             .backgroundColor(.orange)
-            .textColor(.gray)
+            .textColor(.white)
             .corner(radius: 12.0)
             .withPadding(20)
             .font(UIFont.preferred(style: .regular, of: 20))
@@ -112,7 +112,7 @@ class OWPreConversationView: UIView {
 fileprivate extension OWPreConversationView {
     func setupViews() {
         // TODO: Testing, remove later and use the commented code below
-        self.backgroundColor = .yellow
+        self.backgroundColor = .purple
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.initialHeight)
         }
@@ -170,7 +170,10 @@ fileprivate extension OWPreConversationView {
     }
     
     func setupObservers() {
+        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
+        
         viewModel.outputs.preConversationDataSourceSections
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
                 self?.updateTableViewHeightIfNeeded()
             })

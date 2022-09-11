@@ -248,7 +248,7 @@ fileprivate extension MockArticleVC {
             .disposed(by: disposeBag)
         
         // Updating pre conversation size
-        viewModel.outputs.showPreConversation
+        viewModel.outputs.updatePreConversationSize
             .subscribe(onNext: { [weak self] tuple in
                 guard let self = self else { return }
                 

@@ -9,8 +9,18 @@
 import Foundation
 import RxSwift
 
-enum OWConversationCoordinatorResult {
+enum OWConversationCoordinatorResult: OWCoordinatorResultProtocol {
     case popped
+    case loadedToScreen
+    
+    var loadedToScreen: Bool {
+        switch self {
+        case .loadedToScreen:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
@@ -83,6 +93,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 case .commentCreated(_):
                     // TODO: We will probably would like to push this comment to the table view with a nice highlight animation
                     break
+                case .loadedToScreen:
+                    break
+                    // Nothing
                 case .popped:
                     break
                 }
@@ -95,7 +108,11 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
         
-        return Observable.merge(conversationPoppedObservable, coordinateCommentCreationObservable)
+        let conversationLoadedObservable = conversationVM.outputs.loadedToScreen
+            .map { OWConversationCoordinatorResult.loadedToScreen }
+            .asObservable()
+        
+        return Observable.merge(conversationPoppedObservable, coordinateCommentCreationObservable, conversationLoadedObservable)
     }
     
     override func showableComponent() -> Observable<OWShowable> {

@@ -18,18 +18,23 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
         invalidateExistingFlows()
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
         
-        let preConversationCoordinator = OWPreConversationCoordinator(router: router,
-                                                                preConversationData: preConversationData,
-                                                                actionsCallbacks: callbacks)
-        
-        store(coordinator: preConversationCoordinator)
-        return preConversationCoordinator.showableComponentDynamicSize()
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .flatMap { [ weak self] _ -> Observable<OWViewDynamicSizeOption> in
+                guard let self = self else { return .empty() }
+                let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
+                                                                        preConversationData: preConversationData,
+                                                                        actionsCallbacks: callbacks)
+                
+                self.store(coordinator: preConversationCoordinator)
+                return preConversationCoordinator.showableComponentDynamicSize()
+            }
     }
     
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
                                callbacks: OWViewActionsCallbacks?,
-                               deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<Void> {
+                               deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
         invalidateExistingFlows()
         
         var presentAnimated: Bool = true
@@ -44,13 +49,12 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
                                                                 actionsCallbacks: callbacks)
         
         return coordinate(to: conversationCoordinator, deepLinkOptions: deepLinkOptions)
-            .voidify()
     }
     
     func startCommentCreationFlow(conversationData: OWConversationRequiredData,
                                   commentCreationData: OWCommentCreationRequiredData,
                                presentationalMode: OWPresentationalMode,
-                               callbacks: OWViewActionsCallbacks?) -> Observable<Void> {
+                               callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
         
         let deepLink = OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
         return startConversationFlow(conversationData: conversationData,
