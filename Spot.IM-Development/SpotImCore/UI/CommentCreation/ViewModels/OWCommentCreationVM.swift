@@ -10,13 +10,14 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationViewModelingInputs {
-    
+    var viewDidLoad: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationViewModelingOutputs {
     var commentCreationViewVM: OWCommentCreationViewViewModeling { get }
     var userInitiatedAuthenticationFlow: Observable<Void> { get }
     var commentCreated: Observable<SPComment> { get }
+    var loadedToScreen: Observable<Void> { get }
 }
 
 protocol OWCommentCreationViewModeling {
@@ -43,6 +44,11 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     var commentCreated: Observable<SPComment> {
         // TODO: Complete
         return .never()
+    }
+    
+    var viewDidLoad = PublishSubject<Void>()
+    var loadedToScreen: Observable<Void> {
+        return viewDidLoad.asObservable()
     }
 
     init (commentCreationData: OWCommentCreationRequiredData,
