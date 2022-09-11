@@ -257,7 +257,8 @@ fileprivate extension MockArticleViewModel {
         guard let navController = self.navController,
               let presentationalVC = self.presentationalVC else { return nil }
         
-        let presentationalMode = mode == .push ? OWPresentationalMode.push(navigationController: navController) : OWPresentationalMode.present(viewController: presentationalVC)
+        let presentationalMode = mode == .push ? OWPresentationalMode.push(navigationController: navController) : OWPresentationalMode.present(viewController: presentationalVC) //, style: .fullScreen)
+        // TODO: Add settings for the new API (which present style will be an option)
         return presentationalMode
     }
 }

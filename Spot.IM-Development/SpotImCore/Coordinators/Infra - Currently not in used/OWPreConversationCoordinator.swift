@@ -67,12 +67,12 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
 fileprivate extension OWPreConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
         
-        let openFullConversationObservable = viewModel.outputs.openFullConversation
+        let openFullConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openFullConversation
             .map { _ -> OWDeepLinkOptions? in
                 return nil
             }
         
-        let openCommentConversationObservable = viewModel.outputs.openCommentConversation
+        let openCommentConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentConversation
             .map { [weak self] _ -> OWDeepLinkOptions? in
                 guard let self = self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article)
@@ -81,15 +81,16 @@ fileprivate extension OWPreConversationCoordinator {
         
         // Coordinate to full conversation
         Observable.merge(openFullConversationObservable, openCommentConversationObservable)
-            .subscribe(onNext: { [weak self] deepLink in
-                guard let self = self else { return }
+            .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
+                guard let self = self else { return .empty() }
                 let conversationData = OWConversationRequiredData(article: self.preConversationData.article,
                                                                   settings: nil)
                 let conversationCoordinator = OWConversationCoordinator(router: self.router,
                                                                            conversationData: conversationData,
                                                                            actionsCallbacks: self.actionsCallbacks)
-                _ = self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
-            })
+                return self.coordinate(to: conversationCoordinator, deepLinkOptions: deepLink)
+            }
+            .subscribe()
             .disposed(by: disposeBag)
     }
     
