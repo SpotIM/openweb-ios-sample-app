@@ -25,8 +25,8 @@ public struct OWArticleSettings: OWArticleSettingsProtocol {
 #else
 struct OWArticleSettings: OWArticleSettingsProtocol {
     let section: String
-    let showHeader: Bool = true
-    let readOnlyMode: OWReadOnlyMode = .default
+    let showHeader: Bool
+    let readOnlyMode: OWReadOnlyMode
     
     init(section: String,
                 showHeader: Bool = true,
