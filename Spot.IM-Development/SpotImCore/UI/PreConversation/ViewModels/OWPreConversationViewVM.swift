@@ -13,7 +13,10 @@ import RxSwift
 typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
-    
+    // TODO: Testing - remove later and connect the actual views/actions
+    var fullConversationTap: PublishSubject<Void> { get }
+    var commentCreationTap: PublishSubject<Void> { get }
+    var preConversationChangedSize: PublishSubject<CGSize> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -24,6 +27,9 @@ protocol OWPreConversationViewViewModelingOutputs {
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var isButtonOnlyModeEnabled: Bool { get }
+    var openFullConversation: Observable<Void> { get }
+    var openCommentConversation: Observable<Void> { get }
+    var preConversationPreferredSize: Observable<CGSize> { get }
 }
 
 protocol OWPreConversationViewViewModeling {
@@ -38,6 +44,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: SPImageProvider
     fileprivate let numberOfMessagesToShow: Int
+    fileprivate let disposeBag = DisposeBag()
     
     var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
@@ -80,6 +87,29 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
         return OWPreConversationFooterViewModel()
     }()
+    
+    
+    var fullConversationTap = PublishSubject<Void>()
+    var openFullConversation: Observable<Void> {
+        return fullConversationTap
+            .asObservable()
+    }
+    
+    var commentCreationTap = PublishSubject<Void>()
+
+    var openCommentConversation: Observable<Void> {
+        return commentCreationTap
+            .asObservable()
+    }
+    
+    var preConversationChangedSize = PublishSubject<CGSize>()
+    // BehaviorSubject required since the size set immediately before subscribers establish
+    fileprivate var _preConversationChangedSize = BehaviorSubject<CGSize?>(value: nil)
+    var preConversationPreferredSize: Observable<CGSize> {
+        return _preConversationChangedSize
+            .unwrap()
+            .asObservable()
+    }
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -94,6 +124,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
 fileprivate extension OWPreConversationViewViewModel {
     func setupObservers() {
-        
+        preConversationChangedSize
+            .bind(to: _preConversationChangedSize)
+            .disposed(by: disposeBag)
     }
 }
