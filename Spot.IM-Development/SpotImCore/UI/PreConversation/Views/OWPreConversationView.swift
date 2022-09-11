@@ -101,7 +101,7 @@ class OWPreConversationView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(viewModel: OWPreConversationViewViewModeling, adsProvider: AdsProvider) {
+    init(viewModel: OWPreConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()

@@ -32,7 +32,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationPreferredSize: Observable<CGSize> { get }
 }
 
-protocol OWPreConversationViewViewModeling {
+protocol OWPreConversationViewViewModeling: AnyObject {
     var inputs: OWPreConversationViewViewModelingInputs { get }
     var outputs: OWPreConversationViewViewModelingOutputs { get }
 }
@@ -43,7 +43,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: SPImageProvider
-    fileprivate let numberOfMessagesToShow: Int
+    fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
     
     var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
@@ -51,6 +51,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return _cellsViewModels
             .rx_elements()
             .asObservable()
+    }
+    
+    fileprivate var numberOfMessagesToShow: Int {
+        return preConversationData.settings?.numberOfComments ?? 2
     }
     
     var isButtonOnlyModeEnabled: Bool {
@@ -113,11 +117,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-        imageProvider: SPImageProvider,
-        settings: OWPreConversationSettings) {
+        imageProvider: SPImageProvider = SPCloudinaryImageProvider(apiManager: OWApiManager()),
+        preConversationData: OWPreConversationRequiredData) {
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
-            self.numberOfMessagesToShow = settings.numberOfComments
+            self.preConversationData = preConversationData
             setupObservers()
     }
 }

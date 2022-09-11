@@ -37,6 +37,20 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                 break
             }
         }
+        
+        let preConversationData = OWPreConversationRequiredData(article: article,
+                                                          settings: additionalSettings)
+        
+        _ = sdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
+                                                    presentationalMode: presentationalMode,
+                                                    callbacks: callbacks)
+            .take(1)
+            .subscribe(onNext: { result in
+                completion(.success(result))
+            }, onError: { err in
+                let error: OWError = err as? OWError ?? OWError.conversationFlow
+                completion(.failure(error))
+            })
     }
     
     func conversation(postId: String, article: OWArticleProtocol,

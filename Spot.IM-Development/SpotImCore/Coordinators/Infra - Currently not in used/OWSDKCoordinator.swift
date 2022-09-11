@@ -12,9 +12,18 @@ import RxSwift
 class OWSDKCoordinator: OWBaseCoordinator<Void> {
     fileprivate var router: OWRoutering!
     
-    // TODO: Complete pre conversation flow
-    func startPreConversationFlow() -> Observable<OWPreConversationView> {
-        return .empty()
+    func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
+                                  presentationalMode: OWPresentationalMode,
+                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWViewDynamicSizeOption> {
+        invalidateExistingFlows()
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+        
+        let preConversationCoordinator = OWPreConversationCoordinator(router: router,
+                                                                preConversationData: preConversationData,
+                                                                actionsCallbacks: callbacks)
+        
+        store(coordinator: preConversationCoordinator)
+        return preConversationCoordinator.showableComponentDynamicSize()
     }
     
     func startConversationFlow(conversationData: OWConversationRequiredData,
