@@ -75,7 +75,7 @@ class OWPreConversationView: UIView {
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
         }
-            
+        
         return tableView
     }()
     
@@ -132,41 +132,41 @@ fileprivate extension OWPreConversationView {
         
         
         // After building the other views, position the table view in the appropriate place
-//        self.addSubviews(tableView, footerView)
-//        if SpotIm.buttonOnlyMode != .withoutTitle {
-//            self.addSubview(header)
-//            header.OWSnp.makeConstraints { make in
-//                make.top.equalToSuperview()
-//                make.leading.trailing.equalToSuperview()
-//                make.height.equalTo(Metrics.headerHeight)
-//            }
-//        }
-//        if !viewModel.outputs.isButtonOnlyModeEnabled {
-//            self.addSubviews(communityGuidelinesView, communityQuestionView, commentCreationEntryView)
-//            communityGuidelinesView.OWSnp.makeConstraints { make in
-//                make.top.equalTo(header.OWSnp.bottom)
-//                make.leading.trailing.equalToSuperview()
-//            }
-//            communityQuestionView.OWSnp.makeConstraints { make in
-//                make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
-//                make.leading.trailing.equalToSuperview()
-//            }
-//            commentCreationEntryView.OWSnp.makeConstraints { make in
-//                make.top.equalTo(communityQuestionView.OWSnp.bottom)
-//                make.leading.trailing.equalToSuperview()
-//                make.height.equalTo(Metrics.whatYouThinkHeight)
-//            }
-//        }
-//        tableView.OWSnp.makeConstraints { make in
-//            make.top.equalTo(commentCreationEntryView.OWSnp.bottom)
-//            make.leading.trailing.equalToSuperview()
-//            make.height.equalTo(0.0)
-//        }
-//        let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled && SpotIm.buttonOnlyMode == .withoutTitle ? header.OWSnp.bottom :  tableView.OWSnp.bottom
-//        footerView.OWSnp.makeConstraints { make in
-//            make.top.equalTo(footerViewTopConstraint)
-//            make.leading.trailing.equalToSuperview()
-//        }
+        //        self.addSubviews(tableView, footerView)
+        //        if SpotIm.buttonOnlyMode != .withoutTitle {
+        //            self.addSubview(header)
+        //            header.OWSnp.makeConstraints { make in
+        //                make.top.equalToSuperview()
+        //                make.leading.trailing.equalToSuperview()
+        //                make.height.equalTo(Metrics.headerHeight)
+        //            }
+        //        }
+        //        if !viewModel.outputs.isButtonOnlyModeEnabled {
+        //            self.addSubviews(communityGuidelinesView, communityQuestionView, commentCreationEntryView)
+        //            communityGuidelinesView.OWSnp.makeConstraints { make in
+        //                make.top.equalTo(header.OWSnp.bottom)
+        //                make.leading.trailing.equalToSuperview()
+        //            }
+        //            communityQuestionView.OWSnp.makeConstraints { make in
+        //                make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
+        //                make.leading.trailing.equalToSuperview()
+        //            }
+        //            commentCreationEntryView.OWSnp.makeConstraints { make in
+        //                make.top.equalTo(communityQuestionView.OWSnp.bottom)
+        //                make.leading.trailing.equalToSuperview()
+        //                make.height.equalTo(Metrics.whatYouThinkHeight)
+        //            }
+        //        }
+        //        tableView.OWSnp.makeConstraints { make in
+        //            make.top.equalTo(commentCreationEntryView.OWSnp.bottom)
+        //            make.leading.trailing.equalToSuperview()
+        //            make.height.equalTo(0.0)
+        //        }
+        //        let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled && SpotIm.buttonOnlyMode == .withoutTitle ? header.OWSnp.bottom :  tableView.OWSnp.bottom
+        //        footerView.OWSnp.makeConstraints { make in
+        //            make.top.equalTo(footerViewTopConstraint)
+        //            make.leading.trailing.equalToSuperview()
+        //        }
     }
     
     func setupObservers() {
@@ -179,6 +179,16 @@ fileprivate extension OWPreConversationView {
             })
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
+        
+        btnFullConversation.rx.tap
+            .voidify()
+            .bind(to: viewModel.inputs.fullConversationTap)
+            .disposed(by: disposeBag)
+        
+        btnCommentCreation.rx.tap
+                .voidify()
+                .bind(to: viewModel.inputs.commentCreationTap)
+                .disposed(by: disposeBag)
     }
     
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint

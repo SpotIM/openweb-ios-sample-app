@@ -100,7 +100,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
     
     var commentCreationTap = PublishSubject<Void>()
-
     var openCommentConversation: Observable<Void> {
         return commentCreationTap
             .asObservable()

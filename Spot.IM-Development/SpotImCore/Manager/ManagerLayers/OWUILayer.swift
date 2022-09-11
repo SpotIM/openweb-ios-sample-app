@@ -16,7 +16,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     
     fileprivate let sdkCoordinator: OWSDKCoordinator
     fileprivate let _helpers: OWHelpers
-    fileprivate let disposeBag = DisposeBag()
+    fileprivate var flowDisposeBag: DisposeBag!
     
     init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator(),
          helpers: OWHelpers = OWHelpersInternal()) {
@@ -29,6 +29,8 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                          additionalSettings: OWPreConversationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWViewDynamicSizeCompletion) {
+        prepareForNewFlow()
+        
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -52,7 +54,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
             let error: OWError = err as? OWError ?? OWError.conversationFlow
             completion(.failure(error))
         })
-        .disposed(by: disposeBag)
+        .disposed(by: flowDisposeBag)
     }
     
     func conversation(postId: String, article: OWArticleProtocol,
@@ -60,6 +62,8 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                       additionalSettings: OWConversationSettingsProtocol? = nil,
                       callbacks: OWViewActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
+        prepareForNewFlow()
+        
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -88,7 +92,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
             let error: OWError = err as? OWError ?? OWError.conversationFlow
             completion(.failure(error))
         })
-        .disposed(by: disposeBag)
+        .disposed(by: flowDisposeBag)
     }
     
     func commentCreation(postId: String, article: OWArticleProtocol,
@@ -96,6 +100,8 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                          additionalSettings: OWCommentCreationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
+        prepareForNewFlow()
+        
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -126,7 +132,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
             let error: OWError = err as? OWError ?? OWError.conversationFlow
             completion(.failure(error))
         })
-        .disposed(by: disposeBag)
+        .disposed(by: flowDisposeBag)
     }
 }
 
@@ -139,5 +145,10 @@ fileprivate extension OWUILayer {
         }
         
         manager.postId = postId
+    }
+    
+    func prepareForNewFlow() {
+        // Discard any previous subscription to other flows
+        flowDisposeBag = DisposeBag()
     }
 }
