@@ -16,6 +16,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     
     fileprivate let sdkCoordinator: OWSDKCoordinator
     fileprivate let _helpers: OWHelpers
+    fileprivate let disposeBag = DisposeBag()
     
     init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator(),
          helpers: OWHelpers = OWHelpersInternal()) {
@@ -39,18 +40,19 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         }
         
         let preConversationData = OWPreConversationRequiredData(article: article,
-                                                          settings: additionalSettings)
+                                                                settings: additionalSettings)
         
-        _ = sdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
-                                                    presentationalMode: presentationalMode,
-                                                    callbacks: callbacks)
-            .take(1)
-            .subscribe(onNext: { result in
-                completion(.success(result))
-            }, onError: { err in
-                let error: OWError = err as? OWError ?? OWError.conversationFlow
-                completion(.failure(error))
-            })
+        sdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
+                                                presentationalMode: presentationalMode,
+                                                callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(onNext: { result in
+            completion(.success(result))
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            completion(.failure(error))
+        })
+        .disposed(by: disposeBag)
     }
     
     func conversation(postId: String, article: OWArticleProtocol,
@@ -74,13 +76,19 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         _ = sdkCoordinator.startConversationFlow(conversationData: conversationData,
                                                  presentationalMode: presentationalMode,
                                                  callbacks: callbacks)
-            .take(1)
-            .subscribe(onNext: { _ in
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(onNext: { result in
+            switch result {
+            case .loadedToScreen:
                 completion(.success(()))
-            }, onError: { err in
-                let error: OWError = err as? OWError ?? OWError.conversationFlow
-                completion(.failure(error))
-            })
+            default:
+                break;
+            }
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            completion(.failure(error))
+        })
+        .disposed(by: disposeBag)
     }
     
     func commentCreation(postId: String, article: OWArticleProtocol,
@@ -106,13 +114,19 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                                                     commentCreationData: commentCreationData,
                                                     presentationalMode: presentationalMode,
                                                     callbacks: callbacks)
-            .take(1)
-            .subscribe(onNext: { _ in
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(onNext: { result in
+            switch result {
+            case .loadedToScreen:
                 completion(.success(()))
-                }, onError: { err in
-                    let error: OWError = err as? OWError ?? OWError.conversationFlow
-                    completion(.failure(error))
-                })
+            default:
+                break;
+            }
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            completion(.failure(error))
+        })
+        .disposed(by: disposeBag)
     }
 }
 

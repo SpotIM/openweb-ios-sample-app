@@ -9,8 +9,12 @@
 import UIKit
 import RxSwift
 
-enum OWPreConversationCoordinatorResult {
+enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
     case never
+    
+    var loadedToScreen: Bool {
+        return false
+    }
 }
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {

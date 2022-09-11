@@ -142,6 +142,8 @@ fileprivate extension MockArticleViewModel {
                 }
             }
             .unwrap()
+            // Small delay so the navigation controller will be set from the view controller
+            .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
             .subscribe(onNext: { result in
                 guard let self = self else { return }
                 let mode = result.0

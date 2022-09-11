@@ -31,26 +31,29 @@ class OWBaseCoordinator<ResultType> {
     }
 
     // Stores coordinator to the `childCoordinators` dictionary.
-    func store<T>(coordinator: OWBaseCoordinator<T>) {
+    func store<T: OWCoordinatorResultProtocol>(coordinator: OWBaseCoordinator<T>) {
         childCoordinators[coordinator.identifier] = coordinator
     }
 
     // Release coordinator from the `childCoordinators` dictionary.
-    func free<T>(coordinator: OWBaseCoordinator<T>) {
+    func free<T: OWCoordinatorResultProtocol>(coordinator: OWBaseCoordinator<T>) {
         childCoordinators[coordinator.identifier] = nil
     }
 
     // 1. Stores coordinator in a dictionary of child coordinators.
     // 2. Calls method `start()` on that coordinator.
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.
-    func coordinate<T>(to coordinator: OWBaseCoordinator<T>,
+    func coordinate<T: OWCoordinatorResultProtocol>(to coordinator: OWBaseCoordinator<T>,
                        deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<T> {
         store(coordinator: coordinator)
         return coordinator.start(deepLinkOptions: deepLinkOptions)
-            .do(onNext: { [weak self, weak coordinator] _ in
+            .do(onNext: { [weak self, weak coordinator] result in
                 guard let self = self,
                     let coord = coordinator else { return }
-                self.free(coordinator: coord)
+                
+                if !result.loadedToScreen {
+                    self.free(coordinator: coord)
+                }
             })
     }
 
