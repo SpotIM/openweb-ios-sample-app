@@ -22,9 +22,9 @@ class OWAnalyticsService: OWAnalyticsServicing {
     
     fileprivate let maxEventsForFlush: Int
     fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
-    fileprivate var analyticsEvents: [OWAnalyticEvent] = []
+    fileprivate var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
     
-    fileprivate let flushEventsQueue = DispatchQueue(label: "OpenWebSDKAnalyticsDispatchQueue", qos: .background) // Serial queue
+    fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
     
     init(maxEventsForFlush: Int = Metrics.maxEvents,
@@ -40,11 +40,7 @@ class OWAnalyticsService: OWAnalyticsServicing {
     }
     
     func sendAnalyticEvents(events: [OWAnalyticEvent]) {
-        flushEventsQueue.async { [weak self] in
-            guard let self = self else { return }
-            self.analyticsEvents.append(contentsOf: events)
-            self.flushEventsIfNeeded()
-        }
+        analyticsEvents.append(contentsOf: events) // TODO: should be done on flushEventsQueue
     }
     
 }
@@ -61,19 +57,24 @@ fileprivate extension OWAnalyticsService {
         let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.netwokAPI().analytics
         
         Observable.just(())
-            .flatMap {
-                // TODO: shoule be api.sendEvents(events: analyticsEvents)
-                return api.sendEvents(events: self.analyticsEvents)
+            .flatMap { [weak self] _ -> Observable<[OWAnalyticEvent]> in
+                guard let self = self else { return .empty()}
+                return self.analyticsEvents
+                    .rx_elements()
+                    .asObservable()
+            }
+            .flatMap { items -> Observable<Bool> in
+                return api.sendEvents(events: items)
                     .response
                     .exponentialRetry(maxAttempts: 2, millisecondsDelay: 1000)
                     .take(1)
-                    .do(onNext: { [weak self] _ in
-                        guard let self = self else { return }
-                        self.analyticsEvents = []
-                    }, onError: { error in
-                        OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents error \(error.localizedDescription)")
-                    })
             }
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.analyticsEvents.removeAll()
+            }, onError: { error in
+                OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents error \(error.localizedDescription)")
+            })
             .subscribe()
     }
 }
@@ -86,12 +87,10 @@ fileprivate extension OWAnalyticsService {
                 guard let self = self else { return false }
                 return !self.analyticsEvents.isEmpty
             }
+            .observe(on: flushEventsQueue)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.flushEventsQueue.async { [weak self] in
-                    guard let self = self else { return }
-                    self.flushEvents()
-                }
+                self.flushEvents()
             })
             .disposed(by: disposeBag)
     }
