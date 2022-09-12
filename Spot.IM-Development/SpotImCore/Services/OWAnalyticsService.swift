@@ -60,8 +60,30 @@ fileprivate extension OWAnalyticsService {
     
     // TODO: perhaps some retry/report is needed if `analytics.sendEvents` fails ?
     func flushEvents() {
-        OWSharedServicesProvider.shared.netwokAPI().analytics.sendEvents(events: analyticsEvents)
-        analyticsEvents = []
+        let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.netwokAPI().analytics
+        let dummyEvent = SPEventInfo(eventType: "aaa", source: "aaa", isRegistered: true, splitName: "aaa", itemType: nil, targetType: nil, segment: nil, lang: nil, domain: nil, userId: nil, messageId: nil, relatedMessageId: nil, readingSeconds: nil, itemId: nil, totalComments: nil, engineStatusType: nil, publisherCustomData: nil, targetUrl: nil)
+        
+        Observable.just(())
+            .flatMap {
+                // TODO: shoule be api.sendEvents(events: analyticsEvents)
+                return api.sendEvent(info: dummyEvent)
+                    .response
+                    .take(1)
+                    .do(onNext: { [weak self] res in
+                        guard let self = self else { return }
+                        if res {
+                            self.analyticsEvents = []
+                        } else {
+                            OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents result is false")
+                            // TODO: should we self.analyticsEvents = [] ?
+                        }
+                    }, onError: { error in
+                        OWSharedServicesProvider.shared.logger().log(level: .error, "flushEvents error \(error.localizedDescription)")
+                        // TODO: should we self.analyticsEvents = [] ?
+                    })
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 }
 
