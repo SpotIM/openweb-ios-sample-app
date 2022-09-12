@@ -65,6 +65,7 @@ fileprivate extension OWAnalyticsService {
                 // TODO: shoule be api.sendEvents(events: analyticsEvents)
                 return api.sendEvents(events: self.analyticsEvents)
                     .response
+                    .exponentialRetry(maxAttempts: 2, millisecondsDelay: 1000)
                     .take(1)
                     .do(onNext: { [weak self] _ in
                         guard let self = self else { return }
