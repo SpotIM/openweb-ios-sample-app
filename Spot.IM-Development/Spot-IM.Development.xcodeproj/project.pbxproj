@@ -1835,7 +1835,6 @@
 				3DB3D177281FC123008654CF /* SPLogMethod.swift */,
 				3DB3D179281FC60B008654CF /* SPLogLevel.swift */,
 				3D7E3D6F28884D5B00DDBE0B /* SPAdditionalConfiguration.swift */,
-				24993F8B28CF094200452AF8 /* OWAnalyticEvent.swift */,
 			);
 			path = SPPublicModels;
 			sourceTree = "<group>";
@@ -2602,6 +2601,7 @@
 				3D26B5AD28CA36B100A1DAD2 /* CommentCreation */,
 				44689B7A237414340024EFC1 /* Configs */,
 				4454185523685154001D0ED0 /* SPComment.swift */,
+				24993F8B28CF094200452AF8 /* OWAnalyticEvent.swift */,
 				4454185623685154001D0ED0 /* SPCommentViewModel.swift */,
 				16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */,
 				4454185923685154001D0ED0 /* SPAnalyticsEvent.swift */,
