@@ -24,6 +24,9 @@ internal final class UserNameView: OWBaseView {
         static let badgeHorizontalInset: CGFloat = 4
         static let badgeVerticalInset: CGFloat = 2
         static let subtitleTopPadding: CGFloat = 6
+        static let identifier = "user_name_view_id"
+        static let moreBtnIdentifier = "user_name_menu_button_id"
+        static let deletedLblIdentifier = "deleted_message_label_button_id"
     }
     
     fileprivate var viewModel: OWUserNameViewModeling!
@@ -34,8 +37,16 @@ internal final class UserNameView: OWBaseView {
     private let nameAndBadgeStackview = UIStackView()
     private let subtitleLabel: OWBaseLabel = .init()
     private let dateLabel: OWBaseLabel = .init()
-    private let moreButton: OWBaseButton = .init()
-    private let deletedMessageLabel: OWBaseLabel = .init()
+    private lazy var moreButton: OWBaseButton = {
+        let btn = OWBaseButton()
+        btn.accessibilityIdentifier = Metrics.moreBtnIdentifier
+        return btn
+    }()
+    private lazy var deletedMessageLabel: OWBaseLabel = {
+        let lbl = OWBaseLabel()
+        lbl.accessibilityIdentifier = Metrics.deletedLblIdentifier
+        return lbl
+    }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
         return OWUserSubscriberBadgeView()
     }()
@@ -44,7 +55,7 @@ internal final class UserNameView: OWBaseView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        self.accessibilityIdentifier = Metrics.identifier
         setupViews()
         applyAccessibility()
     }

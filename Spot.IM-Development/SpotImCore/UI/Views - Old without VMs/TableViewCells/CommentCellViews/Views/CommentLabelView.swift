@@ -9,6 +9,9 @@
 import UIKit
 
 internal final class CommentLabelView: OWBaseView {
+    fileprivate struct Metrics {
+        static let identifier = "comment_label_id"
+    }
     
     private let labelContainer: OWBaseView = .init()
     private let iconImageView: OWBaseUIImageView = .init()
@@ -21,6 +24,7 @@ internal final class CommentLabelView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
     }
     

@@ -9,7 +9,10 @@
 import UIKit
 
 internal final class ShowMoreRepliesView: OWBaseView {
-
+    fileprivate struct Metrics {
+        static let identifier = "show_more_replies_id"
+    }
+    
     weak var delegate: ShowMoreRepliesViewDelegate?
     var collapsedTitle: String?
     var expandedTitle: String?
@@ -20,7 +23,7 @@ internal final class ShowMoreRepliesView: OWBaseView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        self.accessibilityIdentifier = Metrics.identifier
         clipsToBounds = true
         setupUI()
     }
