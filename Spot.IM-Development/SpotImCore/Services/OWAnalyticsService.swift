@@ -40,19 +40,13 @@ class OWAnalyticsService: OWAnalyticsServicing {
     }
     
     func sendAnalyticEvents(events: [OWAnalyticEvent]) {
-        analyticsEvents.append(contentsOf: events) // TODO: should be done on flushEventsQueue
+        analyticsEvents.append(contentsOf: events)
     }
     
 }
 
 fileprivate extension OWAnalyticsService {
-    func flushEventsIfNeeded() {
-        if analyticsEvents.count >= maxEventsForFlush {
-            flushEvents()
-        }
-    }
     
-    // TODO: perhaps some retry/report is needed if `analytics.sendEvents` fails ?
     func flushEvents() {
         let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.netwokAPI().analytics
         
@@ -91,6 +85,17 @@ fileprivate extension OWAnalyticsService {
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.flushEvents()
+            })
+            .disposed(by: disposeBag)
+        
+        analyticsEvents
+            .rx_elements()
+            .observe(on: flushEventsQueue)
+            .subscribe(onNext: { [weak self] events in
+                guard let self = self else { return }
+                if events.count >= self.maxEventsForFlush {
+                    self.flushEvents()
+                }
             })
             .disposed(by: disposeBag)
     }
