@@ -32,5 +32,7 @@ class OWCommentCreationView: UIView {
 fileprivate extension OWCommentCreationView {
     func setupViews() {
 
+        // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
+        self.backgroundColor = .blue
     }
 }

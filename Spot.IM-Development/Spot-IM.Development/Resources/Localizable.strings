@@ -28,7 +28,8 @@
 "NewAPI" = "New API";
 "SpotId" = "Spot Id";
 "PostId" = "Post Id";
-"PreConversation" = "Pre Conversation";
+"PreConversationPushMode" = "Pre Conversation - Push Mode";
+"PreConversationPresentMode" = "Pre Conversation - Present Mode";
 "FullConversationPushMode" = "Full Conversation - Push Mode";
 "FullConversationPresentMode" = "Full Conversation - Present Mode";
 "CommentCreationPushMode" = "Comment Creation - Push Mode";
