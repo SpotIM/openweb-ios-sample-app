@@ -55,7 +55,7 @@ fileprivate extension OWAnalyticsService {
                 guard let self = self else { return .empty()}
                 return self.analyticsEvents
                     .rx_elements()
-                    .asObservable()
+                    .take(1)
             }
             .flatMap { items -> Observable<Bool> in
                 return api.sendEvents(events: items)
@@ -76,26 +76,25 @@ fileprivate extension OWAnalyticsService {
 // Rx
 fileprivate extension OWAnalyticsService {
     func setupObservers() {
-        appLifeCycle.didEnterBackground
+        let backgroundObservable = appLifeCycle.didEnterBackground
             .filter { [weak self] in
                 guard let self = self else { return false }
                 return !self.analyticsEvents.isEmpty
             }
+        
+        let maxEventObservable = analyticsEvents
+            .rx_elements()
+            .filter { [weak self] events in
+                guard let self = self else { return false }
+                return events.count >= self.maxEventsForFlush
+            }
+            .voidify()
+        
+        Observable.merge(backgroundObservable, maxEventObservable)
             .observe(on: flushEventsQueue)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 self.flushEvents()
-            })
-            .disposed(by: disposeBag)
-        
-        analyticsEvents
-            .rx_elements()
-            .observe(on: flushEventsQueue)
-            .subscribe(onNext: { [weak self] events in
-                guard let self = self else { return }
-                if events.count >= self.maxEventsForFlush {
-                    self.flushEvents()
-                }
             })
             .disposed(by: disposeBag)
     }
