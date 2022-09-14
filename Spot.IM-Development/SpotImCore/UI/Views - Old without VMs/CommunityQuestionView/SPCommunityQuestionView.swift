@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 internal final class SPCommunityQuestionView: OWBaseView {
+    fileprivate struct Metrics {
+        static let identifier = "community_question_id"
+    }
     
     private lazy var questionTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
@@ -22,6 +25,7 @@ internal final class SPCommunityQuestionView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.accessibilityIdentifier = Metrics.identifier
     }
     
     func customizeCommunityQuestion(customUIDelegate: OWCustomUIDelegate) {

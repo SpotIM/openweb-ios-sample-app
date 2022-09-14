@@ -21,6 +21,7 @@ class OWCommentStatusIndicationView: OWBaseView {
         
         static let fontSize: CGFloat = 15
         
+        static let identifier = "comment_status_indication_view_id"
     }
     
     private let iconImageView: OWBaseUIImageView = {
@@ -41,7 +42,7 @@ class OWCommentStatusIndicationView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
     }
     

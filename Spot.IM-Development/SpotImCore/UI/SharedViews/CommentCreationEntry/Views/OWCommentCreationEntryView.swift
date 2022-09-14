@@ -23,6 +23,7 @@ class OWCommentCreationEntryView: UIView {
         static let callToActionLeading: CGFloat = 12
         static let callToActionHeight: CGFloat = 48
         static let fontSize: CGFloat = 16
+        static let identifier = "comment_creation_entry_id"
     }
     
     fileprivate lazy var userAvatarView: SPAvatarView = {
@@ -61,6 +62,7 @@ class OWCommentCreationEntryView: UIView {
     
     init(with viewModel: OWCommentCreationEntryViewModeling) {
         super.init(frame: .zero)
+        self.accessibilityIdentifier = Metrics.identifier
         disposeBag = DisposeBag()
         self.viewModel = viewModel
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
