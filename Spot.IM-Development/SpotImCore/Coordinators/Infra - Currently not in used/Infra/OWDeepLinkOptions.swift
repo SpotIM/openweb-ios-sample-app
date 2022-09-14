@@ -11,7 +11,7 @@ import Foundation
 import Foundation
 
 enum OWDeepLinkOptions {
-    case postId(spotId: String)
-    case newComment(spotId: String, postId: String)
-    case authentication(spotId: String)
+    case highlightComment(commentId: String)
+    case commentCreation(commentCreationData: OWCommentCreationRequiredData)
+    case authentication
 }

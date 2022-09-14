@@ -13,7 +13,7 @@ import RxSwift
 protocol OWManagerInternalProtocol: AnyObject  {
     var currentSpotId: Observable<OWSpotId> { get }
     var currentPostId: Observable<OWPostId> { get }
-    var postId: OWPostId? { get }
+    var postId: OWPostId? { get set }
 }
 
 class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
