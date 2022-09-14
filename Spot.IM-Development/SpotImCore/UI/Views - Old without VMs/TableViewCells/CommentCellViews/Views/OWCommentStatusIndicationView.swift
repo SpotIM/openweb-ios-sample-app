@@ -21,7 +21,7 @@ class OWCommentStatusIndicationView: OWBaseView {
         
         static let fontSize: CGFloat = 15
         
-        static let identifier = "comment_statuc_indication_view_id"
+        static let identifier = "comment_status_indication_view_id"
     }
     
     private let iconImageView: OWBaseUIImageView = {

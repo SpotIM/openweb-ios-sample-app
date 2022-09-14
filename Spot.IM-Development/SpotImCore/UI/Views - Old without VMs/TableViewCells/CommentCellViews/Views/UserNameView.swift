@@ -26,7 +26,7 @@ internal final class UserNameView: OWBaseView {
         static let subtitleTopPadding: CGFloat = 6
         static let identifier = "user_name_view_id"
         static let moreBtnIdentifier = "user_name_menu_button_id"
-        static let deletedLblIdentifier = "deleted_message_label_button_id"
+        static let deletedLblIdentifier = "deleted_message_label_id"
     }
     
     fileprivate var viewModel: OWUserNameViewModeling!
