@@ -18,12 +18,24 @@ protocol SPPreConversationFooterDelegate: AnyObject {
 }
 
 internal final class SPPreConversationFooter: OWBaseView {
-    
+    fileprivate struct Metrics {
+        static let identifier = "pre_conversation_footer_id"
+        static let termsBtnIdentifier = "terms_button_id"
+        static let privacyBtnIdentifier = "privacy_button_id"
+    }
     private lazy var separatorView: OWBaseView = .init()
     private lazy var showMoreCommentsButton: SPShowCommentsButton = .init()
-    private lazy var termsButton: OWBaseButton = .init()
+    private lazy var termsButton: OWBaseButton = {
+        let btn = OWBaseButton()
+        btn.accessibilityIdentifier = Metrics.termsBtnIdentifier
+        return btn
+    }()
     private lazy var dotLabel: OWBaseLabel = .init()
-    private lazy var privacyButton: OWBaseButton = .init()
+    private lazy var privacyButton: OWBaseButton = {
+        let btn = OWBaseButton()
+        btn.accessibilityIdentifier = Metrics.privacyBtnIdentifier
+        return btn
+    }()
     private lazy var spotIMIcon: OWBaseUIImageView = .init()
     private lazy var addSpotIMButton: OWBaseButton = .init()
     private lazy var openwebLinkView: OWBaseView = .init()
@@ -37,7 +49,7 @@ internal final class SPPreConversationFooter: OWBaseView {
 
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
-
+        self.accessibilityIdentifier = Metrics.identifier
         setup()
     }
     

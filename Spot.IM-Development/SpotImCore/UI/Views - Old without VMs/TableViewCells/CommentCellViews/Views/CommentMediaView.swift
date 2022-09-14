@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 
 internal class CommentMediaView: OWBaseView {
+    fileprivate struct Metrics {
+        static let identifier = "comment_media_view_id"
+    }
+    
     private let gifWebView: GifWebView = .init()
     private let imageView: OWBaseUIImageView = .init()
     
@@ -20,6 +24,7 @@ internal class CommentMediaView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.accessibilityIdentifier = Metrics.identifier
         self.backgroundColor = .clear
     }
     

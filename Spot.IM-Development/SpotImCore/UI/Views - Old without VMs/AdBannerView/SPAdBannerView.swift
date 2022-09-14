@@ -9,12 +9,17 @@
 import UIKit
 
 internal final class SPAdBannerView: OWBaseView {
+    fileprivate struct Metrics {
+        static let identifier = "ad_banner_id"
+    }
+    
     private lazy var bannerContainerView: OWBaseView = .init()
     private var bannerView: UIView?
     private var bannerContainerHeight: OWConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.accessibilityIdentifier = Metrics.identifier
         
         self.addSubview(bannerContainerView)
         
