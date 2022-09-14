@@ -33,7 +33,8 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
     var outputs: OWConversationViewViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+    fileprivate let conversationData: OWConversationRequiredData
+
     var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
         return _cellsViewModels
@@ -63,9 +64,12 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel()
     }()
-
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    
+ 
+    init (conversationData: OWConversationRequiredData,
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.conversationData = conversationData
         setupObservers()
     }
 }

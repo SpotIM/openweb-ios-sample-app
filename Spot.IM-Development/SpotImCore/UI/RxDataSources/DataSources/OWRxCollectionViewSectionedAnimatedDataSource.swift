@@ -44,7 +44,9 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
     var dataSet = false
 
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<Element>) {
-        Binder(self) { dataSource, newSections in
+        Binder(self) { [weak collectionView] dataSource, newSections in
+            guard let collectionView = collectionView else { return }
+            
             #if DEBUG
                 dataSource._dataSourceBound = true
             #endif

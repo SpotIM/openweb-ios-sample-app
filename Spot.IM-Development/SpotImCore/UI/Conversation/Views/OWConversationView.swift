@@ -66,6 +66,10 @@ fileprivate extension OWConversationView {
         tableView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        // TODO: Remove the ugly green when actually starting to work on the UI, this is only for integration purposes at the moment
+        self.backgroundColor = .green
+        tableView.backgroundColor = .green
     }
     
     func setupObservers() {

@@ -10,11 +10,17 @@ import Foundation
 import RxSwift
 
 protocol OWConversationViewModelingInputs {
-    
+    // String is the commentId
+    var highlightComment: PublishSubject<String> { get }
+    var viewDidLoad: PublishSubject<Void> { get }
 }
 
 protocol OWConversationViewModelingOutputs {
     var conversationViewVM: OWConversationViewViewModeling { get }
+    var ctaCommentCreationTapped: Observable<Void> { get }
+    var userInitiatedAuthenticationFlow: Observable<Void> { get }
+    var highlightedComment: Observable<String> { get }
+    var loadedToScreen: Observable<Void> { get }
 }
 
 protocol OWConversationViewModeling {
@@ -27,19 +33,58 @@ class OWConversationViewModel: OWConversationViewModeling, OWConversationViewMod
     var outputs: OWConversationViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let conversationData: OWConversationRequiredData
+    fileprivate let disposeBag = DisposeBag()
     
     lazy var conversationViewVM: OWConversationViewViewModeling = {
-        return OWConversationViewViewModel()
+        return OWConversationViewViewModel(conversationData: conversationData)
     }()
+    
+    var ctaCommentCreationTapped: Observable<Void> {
+        // TODO: Complete
+        return .never()
+    }
+    
+    var userInitiatedAuthenticationFlow: Observable<Void> {
+        // TODO: Complete
+        return .never()
+    }
+    
+    var highlightComment = PublishSubject<String>()
+    
+    fileprivate var _highlightedComment = BehaviorSubject<String?>(value: nil)
+    var highlightedComment: Observable<String> {
+        return _highlightedComment
+            .unwrap()
+            .asObservable()
+    }
+    
+    var viewDidLoad = PublishSubject<Void>()
+    var _viewDidLoad = BehaviorSubject<Void?>(value: nil)
+    var loadedToScreen: Observable<Void> {
+        return _viewDidLoad
+            .unwrap()
+            .asObservable()
+    }
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init (conversationData: OWConversationRequiredData,
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.conversationData = conversationData
         setupObservers()
     }
 }
 
 fileprivate extension OWConversationViewModel {
     func setupObservers() {
+        // Using BehaviorSubject behind the scene as the view create only after the coordinator initiated `viewModel.inputs.highlightComment.onNext(...)`
+        highlightComment
+            .bind(to: _highlightedComment)
+            .disposed(by: disposeBag)
         
+        // Same reason
+        viewDidLoad
+            .bind(to: _viewDidLoad)
+            .disposed(by: disposeBag)
     }
 }
