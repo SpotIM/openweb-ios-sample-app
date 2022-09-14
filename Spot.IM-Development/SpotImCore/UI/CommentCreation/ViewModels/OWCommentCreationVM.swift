@@ -10,11 +10,14 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationViewModelingInputs {
-    
+    var viewDidLoad: PublishSubject<Void> { get }
 }
 
 protocol OWCommentCreationViewModelingOutputs {
     var commentCreationViewVM: OWCommentCreationViewViewModeling { get }
+    var userInitiatedAuthenticationFlow: Observable<Void> { get }
+    var commentCreated: Observable<SPComment> { get }
+    var loadedToScreen: Observable<Void> { get }
 }
 
 protocol OWCommentCreationViewModeling {
@@ -27,13 +30,31 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
     var outputs: OWCommentCreationViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
-    lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
-        return OWCommentCreationViewViewModel()
-    }()
+    fileprivate let commentCreationData: OWCommentCreationRequiredData
 
-    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
+        return OWCommentCreationViewViewModel(commentCreationData: commentCreationData)
+    }()
+    
+    var userInitiatedAuthenticationFlow: Observable<Void> {
+        // TODO: Complete
+        return .never()
+    }
+    
+    var commentCreated: Observable<SPComment> {
+        // TODO: Complete
+        return .never()
+    }
+    
+    var viewDidLoad = PublishSubject<Void>()
+    var loadedToScreen: Observable<Void> {
+        return viewDidLoad.asObservable()
+    }
+
+    init (commentCreationData: OWCommentCreationRequiredData,
+          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
+        self.commentCreationData = commentCreationData
         setupObservers()
     }
 }

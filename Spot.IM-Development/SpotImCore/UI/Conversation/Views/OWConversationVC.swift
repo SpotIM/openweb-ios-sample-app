@@ -39,6 +39,7 @@ class OWConversationVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.inputs.viewDidLoad.onNext()
     }
 }
 
