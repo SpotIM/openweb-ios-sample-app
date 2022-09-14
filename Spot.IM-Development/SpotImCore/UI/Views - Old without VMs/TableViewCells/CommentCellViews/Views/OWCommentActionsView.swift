@@ -16,6 +16,7 @@ final class OWCommentActionsView: OWBaseView {
     fileprivate struct Metrics {
         static let fontSize: CGFloat = 16.0
         static let baseOffset: CGFloat = 14
+        static let identifier = "comment_actions_view_id"
     }
     
     fileprivate var viewModel: OWCommentActionsViewModeling!
@@ -35,7 +36,7 @@ final class OWCommentActionsView: OWBaseView {
     override init(frame: CGRect) {
         replyDefaultTitle = LocalizationManager.localizedString(key: "Reply")
         super.init(frame: frame)
-        
+        self.accessibilityIdentifier = Metrics.identifier
         clipsToBounds = true
         setupUI()
     }

@@ -10,10 +10,14 @@ import Foundation
 import UIKit
 
 public class SPShowCommentsButton: OWBaseButton {
+    fileprivate struct Metrics {
+        static let identifier = "show_comments_button_id"
+    }
     private var commentsCount: String?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.accessibilityIdentifier = Metrics.identifier
     }
     
     internal func setCommentsCount(commentsCount: String?) {
