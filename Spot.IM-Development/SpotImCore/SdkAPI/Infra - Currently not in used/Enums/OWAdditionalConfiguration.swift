@@ -16,5 +16,4 @@ public enum OWAdditionalConfiguration {
 enum OWAdditionalConfiguration {
     case suppressFinmbFilter
 }
-
 #endif

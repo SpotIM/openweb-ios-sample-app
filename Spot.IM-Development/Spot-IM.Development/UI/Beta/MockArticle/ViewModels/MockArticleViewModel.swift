@@ -13,15 +13,20 @@ import SpotImCore
 #if NEW_API
 
 protocol MockArticleViewModelingInputs {
+    func setNavigationController(_ navController: UINavigationController?)
+    func setPresentationalVC(_ viewController: UIViewController)
     var fullConversationButtonTapped: PublishSubject<Void> { get }
-    var fullCommentCreationButtonTapped: PublishSubject<Void> { get }
+    var commentCreationButtonTapped: PublishSubject<Void> { get }
 }
 
 protocol MockArticleViewModelingOutputs {
     var title: String { get }
     var showFullConversationButton: Observable<PresentationalModeCompact> { get }
-    var showFullCommentCreationButton: Observable<PresentationalModeCompact> { get }
+    var showCommentCreationButton: Observable<PresentationalModeCompact> { get }
+    var showPreConversation: Observable<(UIView, CGSize)> { get }
+    var updatePreConversationSize: Observable<(UIView, CGSize)> { get }
     var articleImageURL: Observable<URL> { get }
+    var showError: Observable<String> { get }
 }
 
 protocol MockArticleViewModeling {
@@ -37,6 +42,9 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
     
     fileprivate let imageProviderAPI: ImageProviding
     
+    fileprivate weak var navController: UINavigationController?
+    fileprivate weak var presentationalVC: UIViewController?
+    
     fileprivate let _articleImageURL = BehaviorSubject<URL?>(value: nil)
     var articleImageURL: Observable<URL> {
         return _articleImageURL
@@ -51,8 +59,26 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
             .asObservable()
     }
     
+    fileprivate let _showError = PublishSubject<String>()
+    var showError: Observable<String> {
+        return _showError
+            .asObservable()
+    }
+    
+    fileprivate let _showPreConversation = PublishSubject<(UIView, CGSize)>()
+    var showPreConversation: Observable<(UIView, CGSize)> {
+        return _showPreConversation
+            .asObservable()
+    }
+    
+    fileprivate let _updatePreConversationSize = PublishSubject<(UIView, CGSize)>()
+    var updatePreConversationSize: Observable<(UIView, CGSize)> {
+        return _updatePreConversationSize
+            .asObservable()
+    }
+    
     let fullConversationButtonTapped = PublishSubject<Void>()
-    var fullCommentCreationButtonTapped = PublishSubject<Void>()
+    var commentCreationButtonTapped = PublishSubject<Void>()
     
     var showFullConversationButton: Observable<PresentationalModeCompact> {
         return actionSettings
@@ -68,7 +94,7 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
             
     }
     
-    var showFullCommentCreationButton: Observable<PresentationalModeCompact> {
+    var showCommentCreationButton: Observable<PresentationalModeCompact> {
         return actionSettings
             // Map here is also like a filter
             .map { settings in
@@ -91,6 +117,14 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
         _actionSettings.onNext(actionSettings)
         setupObservers()
     }
+    
+    func setNavigationController(_ navController: UINavigationController?) {
+        self.navController = navController
+    }
+    
+    func setPresentationalVC(_ viewController: UIViewController) {
+        presentationalVC = viewController
+    }
 }
 
 fileprivate extension MockArticleViewModel {
@@ -98,17 +132,134 @@ fileprivate extension MockArticleViewModel {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.onNext(articleURL)
         
+        // Pre conversation
+        actionSettings
+            .map { settings -> (PresentationalModeCompact, String)? in
+                if case .preConversation(let mode) = settings.actionType {
+                    return (mode, settings.postId)
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
+            // Small delay so the navigation controller will be set from the view controller
+            .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
+            .subscribe(onNext: { result in
+                guard let self = self else { return }
+                let mode = result.0
+                let postId = result.1
+
+                var manager = OpenWeb.manager
+                let flows = manager.ui.flows
+
+                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+
+                flows.preConversation(postId: postId,
+                                   article: OWArticle.stub(),
+                                   presentationalMode: presentationalMode,
+                                   additionalSettings: nil,
+                                   callbacks: nil,
+                                   completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let viewDynamicSizeOption):
+                        switch viewDynamicSizeOption {
+                        case .viewInitialSize(let preConversationView, let initialSize):
+                            self._showPreConversation.onNext((preConversationView, initialSize))
+                        case .updateSize(let preConversationView, let newSize):
+                            break
+                            self._updatePreConversationSize.onNext((preConversationView, newSize))
+                        }
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.preConversation error: \(error)")
+                        self._showError.onNext(message)
+                    }
+                })
+            })
+            .disposed(by: disposeBag)
+            
+        
+        // Full conversation
         fullConversationButtonTapped
-            .subscribe(onNext: { _ in
-                // TODO: Complete with the new SDK API
+            .withLatestFrom(showFullConversationButton)
+            .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
+                return (mode, settings.postId)
+            }
+            .subscribe(onNext: { result in
+                guard let self = self else { return }
+                let mode = result.0
+                let postId = result.1
+                
+                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+                
+                flows.conversation(postId: postId,
+                                   article: OWArticle.stub(),
+                                   presentationalMode: presentationalMode,
+                                   additionalSettings: nil,
+                                   callbacks: nil,
+                                   completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(_):
+                        // All good
+                        break
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.conversation error: \(message)")
+                        self._showError.onNext(message)
+                    }
+                })
             })
             .disposed(by: disposeBag)
 
-        fullCommentCreationButtonTapped
-            .subscribe(onNext: { _ in
-                // TODO: Complete with the new SDK API
+        // Comment creation
+        commentCreationButtonTapped
+            .withLatestFrom(showCommentCreationButton)
+            .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
+                return (mode, settings.postId)
+            }
+            .subscribe(onNext: { result in
+                guard let self = self else { return }
+                let mode = result.0
+                let postId = result.1
+                
+                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+                
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+                
+                flows.commentCreation(postId: postId,
+                                      article: OWArticle.stub(),
+                                      presentationalMode: presentationalMode,
+                                      additionalSettings: nil,
+                                      callbacks: nil,
+                                      completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(_):
+                        // All good
+                        break
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.commentCreation error: \(message)")
+                        self._showError.onNext(message)
+                    }
+                })
             })
             .disposed(by: disposeBag)
+    }
+                       
+    func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
+        guard let navController = self.navController,
+              let presentationalVC = self.presentationalVC else { return nil }
+        
+        let presentationalMode = mode == .push ? OWPresentationalMode.push(navigationController: navController) : OWPresentationalMode.present(viewController: presentationalVC) //, style: .fullScreen)
+        // TODO: Add settings for the new API (which present style will be an option)
+        return presentationalMode
     }
 }
 

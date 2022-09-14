@@ -73,8 +73,20 @@ class BetaNewAPIVC: UIViewController {
         return scroll
     }()
     
-    fileprivate lazy var btnPreConversation: UIButton = {
-        let txt = NSLocalizedString("PreConversation", comment: "")
+    fileprivate lazy var btnPreConversationPushMode: UIButton = {
+        let txt = NSLocalizedString("PreConversationPushMode", comment: "")
+
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+    
+    fileprivate lazy var btnPreConversationPresentMode: UIButton = {
+        let txt = NSLocalizedString("PreConversationPresentMode", comment: "")
 
         return txt
             .button
@@ -202,6 +214,7 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.textFieldHeight)
         }
         
+        // Adding scroll view
         view.addSubview(optionsScrollView)
         optionsScrollView.snp.makeConstraints { make in
             make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
@@ -212,18 +225,27 @@ fileprivate extension BetaNewAPIVC {
             make.width.equalTo(optionsScrollView.snp.width)
         }
         
-        optionsScrollView.addSubview(btnPreConversation)
-        btnPreConversation.snp.makeConstraints { make in
+        // Adding pre conversation buttons
+        optionsScrollView.addSubview(btnPreConversationPushMode)
+        btnPreConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
         
+        optionsScrollView.addSubview(btnPreConversationPresentMode)
+        btnPreConversationPresentMode.snp.makeConstraints { make in
+            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
+        }
+        
+        // Adding full conversation buttons
         optionsScrollView.addSubview(btnFullConversationPushMode)
         btnFullConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnPreConversation.snp.bottom).offset(Metrics.verticalMargin)
+            make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
         optionsScrollView.addSubview(btnFullConversationPresentMode)
@@ -233,6 +255,7 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(btnFullConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
+        // Adding comment creation buttons
         optionsScrollView.addSubview(btnCommentCreationPushMode)
         btnCommentCreationPushMode.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
@@ -247,6 +270,7 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.verticalMargin)
         }
         
+        // Adding conversation counter button
         optionsScrollView.addSubview(btnConversationCounter)
         btnConversationCounter.snp.makeConstraints { make in
             make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
@@ -295,7 +319,13 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         // Bind buttons
-        btnPreConversation.rx.tap
+        btnPreConversationPushMode.rx.tap
+            .map { PresentationalModeCompact.push }
+            .bind(to: viewModel.inputs.preConversationTapped)
+            .disposed(by: disposeBag)
+        
+        btnPreConversationPresentMode.rx.tap
+            .map { PresentationalModeCompact.present }
             .bind(to: viewModel.inputs.preConversationTapped)
             .disposed(by: disposeBag)
         
