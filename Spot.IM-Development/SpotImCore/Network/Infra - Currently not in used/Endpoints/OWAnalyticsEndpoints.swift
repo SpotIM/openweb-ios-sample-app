@@ -61,6 +61,7 @@ enum OWAnalyticsEndpoints: OWEndpoints {
 
 protocol OWAnalyticsAPI {
     func sendEvent(info: SPEventInfo) -> OWNetworkResponse<Bool>
+    func sendEvents(events: [OWAnalyticEvent]) -> OWNetworkResponse<Bool>
 }
 
 extension OWNetworkAPI: OWAnalyticsAPI {
@@ -71,5 +72,12 @@ extension OWNetworkAPI: OWAnalyticsAPI {
         let endpoint = OWAnalyticsEndpoints.sendEvent(info: info)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
+    }
+    
+    // TODO: send events to BE and return real res
+    func sendEvents(events: [OWAnalyticEvent]) -> OWNetworkResponse<Bool> {
+        let progress = PublishSubject<Progress>()
+        let res = OWNetworkResponse<Bool>(progress: progress, response: .empty())
+        return res
     }
 }

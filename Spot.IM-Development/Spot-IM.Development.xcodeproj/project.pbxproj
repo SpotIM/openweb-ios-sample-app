@@ -82,6 +82,9 @@
 		247C017D27FED5CC006A3962 /* OWCommentStatusIndicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C017C27FED5CC006A3962 /* OWCommentStatusIndicationView.swift */; };
 		247C017F27FED861006A3962 /* OWCommentStatusIndicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C017E27FED861006A3962 /* OWCommentStatusIndicationViewModel.swift */; };
 		247C01812805A4D3006A3962 /* OWImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C01802805A4D3006A3962 /* OWImageType.swift */; };
+		24993F8A28CF058000452AF8 /* OWAnalyticEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24993F8928CF058000452AF8 /* OWAnalyticEventType.swift */; };
+		24993F8C28CF094200452AF8 /* OWAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24993F8B28CF094200452AF8 /* OWAnalyticEvent.swift */; };
+		24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */; };
 		249BCDFA27F5962E00703CC9 /* OWArticleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */; };
 		249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */; };
 		24B087CB288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */; };
@@ -578,6 +581,9 @@
 		247C017C27FED5CC006A3962 /* OWCommentStatusIndicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentStatusIndicationView.swift; sourceTree = "<group>"; };
 		247C017E27FED861006A3962 /* OWCommentStatusIndicationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentStatusIndicationViewModel.swift; sourceTree = "<group>"; };
 		247C01802805A4D3006A3962 /* OWImageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImageType.swift; sourceTree = "<group>"; };
+		24993F8928CF058000452AF8 /* OWAnalyticEventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEventType.swift; sourceTree = "<group>"; };
+		24993F8B28CF094200452AF8 /* OWAnalyticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticEvent.swift; sourceTree = "<group>"; };
+		24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsService.swift; sourceTree = "<group>"; };
 		249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleHeaderViewModel.swift; sourceTree = "<group>"; };
 		249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryViewModel.swift; sourceTree = "<group>"; };
 		24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInternalAuthenticationEndpoints.swift; sourceTree = "<group>"; };
@@ -1450,6 +1456,7 @@
 			children = (
 				3D08E0742875CC7500E6F1AC /* OWPresentationalMode.swift */,
 				3D7E3D6A288849EC00DDBE0B /* OWAdditionalConfiguration.swift */,
+				24993F8928CF058000452AF8 /* OWAnalyticEventType.swift */,
 				3D611B9628C64533003960CE /* OWReadOnlyMode.swift */,
 				3D611B9B28C64791003960CE /* OWError.swift */,
 				3D611BAA28C7468F003960CE /* OWViewSourceType.swift */,
@@ -2594,6 +2601,7 @@
 				3D26B5AD28CA36B100A1DAD2 /* CommentCreation */,
 				44689B7A237414340024EFC1 /* Configs */,
 				4454185523685154001D0ED0 /* SPComment.swift */,
+				24993F8B28CF094200452AF8 /* OWAnalyticEvent.swift */,
 				4454185623685154001D0ED0 /* SPCommentViewModel.swift */,
 				16A12A91260B7EE700A7B3F6 /* SPCommunityGuidelinesTitle.swift */,
 				4454185923685154001D0ED0 /* SPAnalyticsEvent.swift */,
@@ -2672,6 +2680,7 @@
 		4454187123685154001D0ED0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */,
 				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
 				3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */,
@@ -3414,6 +3423,7 @@
 				449F5F74237C5D7300F81EA3 /* OWMulticastDelegate.swift in Sources */,
 				3D08E08F287708FC00E6F1AC /* OWAnimatableSectionModelType+ItemPath.swift in Sources */,
 				16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */,
+				24993F8C28CF094200452AF8 /* OWAnalyticEvent.swift in Sources */,
 				445418B023685154001D0ED0 /* WeakRef+Generic.swift in Sources */,
 				4454188123685154001D0ED0 /* SPAnalyticsFacade.swift in Sources */,
 				3D08E0A728771B9D00E6F1AC /* OWViewTransition.swift in Sources */,
@@ -3445,6 +3455,7 @@
 				3DD72C76280EF95200117946 /* OWRequestLogger.swift in Sources */,
 				445418A623685154001D0ED0 /* SPShareLink.swift in Sources */,
 				3DD72C7F28159B2E00117946 /* OWAnalyticsEndpoints.swift in Sources */,
+				24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */,
 				24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */,
 				4454181423685144001D0ED0 /* SPMainConversationFooterView.swift in Sources */,
 				3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */,
@@ -3578,6 +3589,7 @@
 				4454188723685154001D0ED0 /* SPFailureReportRequest.swift in Sources */,
 				4454188923685154001D0ED0 /* SPRequest.swift in Sources */,
 				3D08E0A928771D0500E6F1AC /* OWChangeset.swift in Sources */,
+				24993F8A28CF058000452AF8 /* OWAnalyticEventType.swift in Sources */,
 				3DBEEDD928C9DDAB0076963E /* OWConversationRequiredData.swift in Sources */,
 				3D20A37B27B01B0C003F8513 /* OWConstraintMakerEditable.swift in Sources */,
 				3D08E09B28770DEA00E6F1AC /* Array+Extensions.swift in Sources */,
