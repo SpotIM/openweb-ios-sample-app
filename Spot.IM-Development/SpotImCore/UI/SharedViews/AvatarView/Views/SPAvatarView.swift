@@ -19,7 +19,10 @@ protocol OWAvatarViewDelegate: AnyObject {
 }
 
 final class SPAvatarView: OWBaseView {
-
+    fileprivate struct Metrics {
+        static let identifier = "user_avatar_view_id"
+    }
+    
     weak var delegate: OWAvatarViewDelegate?
     
     private let avatarImageView: OWBaseUIImageView = .init()
@@ -33,7 +36,7 @@ final class SPAvatarView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        self.accessibilityIdentifier = Metrics.identifier
         setup()
         applyAccessibility()
     }

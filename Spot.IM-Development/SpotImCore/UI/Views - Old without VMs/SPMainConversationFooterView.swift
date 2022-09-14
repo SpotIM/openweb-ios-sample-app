@@ -9,6 +9,10 @@
 import UIKit
 
 final class SPMainConversationFooterView: OWBaseView {
+    fileprivate struct Metrics {
+        static let identifier = "main_conversation_footer_id"
+    }
+    
     let commentCreationEntryView: OWCommentCreationEntryView = .init()
     
     private lazy var separatorView: OWBaseView = .init()
@@ -35,7 +39,7 @@ final class SPMainConversationFooterView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        self.accessibilityIdentifier = Metrics.identifier
         clipsToBounds = false
         setupUI()
         updateColorsAccordingToStyle()
