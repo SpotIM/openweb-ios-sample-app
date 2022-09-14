@@ -79,7 +79,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWKeychain(servicesProvider: self)
     }()
     
-    fileprivate lazy var _analyticsService: OWAnalyticsService = {
+    fileprivate lazy var _analyticsService: OWAnalyticsServicing = {
         return OWAnalyticsService()
     }()
     
