@@ -202,7 +202,7 @@ jobs:
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.3
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.0
             
   release_tag_13_4_job:
     <<: *ios_config_xcode_13_4
@@ -213,6 +213,16 @@ jobs:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
             bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.4
+            
+  release_tag_14_job:
+    <<: *ios_config_xcode_14
+    steps:
+      - release_tag
+
+      - run:
+          name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
+          command: |
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 14.0
 
   release_app_job:
     <<: *ios_config_xcode_14
@@ -319,13 +329,19 @@ workflows:
           filters:
             branches:
               only:
-                - /^release/tag13.3/.*/
+                - /^release/tag13.0/.*/
                 
       - release_tag_13_4_job:
           filters:
             branches:
               only:
                 - /^release/tag13.4/.*/
+                
+      - release_tag_14_job:
+          filters:
+            branches:
+              only:
+                - /^release/tag14.0/.*/
 
       - release_app_job:
           filters:
