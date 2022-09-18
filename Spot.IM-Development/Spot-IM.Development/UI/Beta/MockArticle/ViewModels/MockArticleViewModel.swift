@@ -144,7 +144,7 @@ fileprivate extension MockArticleViewModel {
             .unwrap()
             // Small delay so the navigation controller will be set from the view controller
             .delay(.milliseconds(50), scheduler: ConcurrentDispatchQueueScheduler(qos: .userInteractive))
-            .subscribe(onNext: { result in
+            .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 let mode = result.0
                 let postId = result.1
@@ -186,7 +186,7 @@ fileprivate extension MockArticleViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
-            .subscribe(onNext: { result in
+            .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 let mode = result.0
                 let postId = result.1
@@ -222,7 +222,7 @@ fileprivate extension MockArticleViewModel {
             .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
                 return (mode, settings.postId)
             }
-            .subscribe(onNext: { result in
+            .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
                 let mode = result.0
                 let postId = result.1
