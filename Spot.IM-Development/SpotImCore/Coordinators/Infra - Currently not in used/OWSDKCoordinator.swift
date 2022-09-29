@@ -40,12 +40,7 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
                                deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
         invalidateExistingFlows()
         
-        var presentAnimated: Bool = true
-        if let deepLink = deepLinkOptions, case .commentCreation(_) = deepLink {
-            presentAnimated = false
-        }
-        
-        prepareRouter(presentationalMode: presentationalMode, presentAnimated: presentAnimated)
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
         
         let conversationCoordinator = OWConversationCoordinator(router: router,
                                                                 conversationData: conversationData,
