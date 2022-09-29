@@ -279,6 +279,7 @@
 		3DD72C7D280F053A00117946 /* OWSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C7C280F053A00117946 /* OWSession.swift */; };
 		3DD72C7F28159B2E00117946 /* OWAnalyticsEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C7E28159B2E00117946 /* OWAnalyticsEndpoints.swift */; };
 		3DD72C812818297500117946 /* OWLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD72C802818297500117946 /* OWLogger.swift */; };
+		3DDA9A2E28E49E3900FE3B86 /* OWScreenPushStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */; };
 		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
 		3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */; };
@@ -787,6 +788,7 @@
 		3DD72C7C280F053A00117946 /* OWSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSession.swift; sourceTree = "<group>"; };
 		3DD72C7E28159B2E00117946 /* OWAnalyticsEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsEndpoints.swift; sourceTree = "<group>"; };
 		3DD72C802818297500117946 /* OWLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLogger.swift; sourceTree = "<group>"; };
+		3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWScreenPushStyle.swift; sourceTree = "<group>"; };
 		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
 		3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSharedServicesProvider.swift; sourceTree = "<group>"; };
@@ -1994,6 +1996,7 @@
 				3DEDF61528C9D48800F87056 /* OWNavigationController.swift */,
 				3D26B5BA28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift */,
 				3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */,
+				3DDA9A2D28E49E3900FE3B86 /* OWScreenPushStyle.swift */,
 			);
 			path = NavigationController;
 			sourceTree = "<group>";
@@ -3301,6 +3304,7 @@
 				73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */,
 				445418A123685154001D0ED0 /* SPConversation.swift in Sources */,
 				4454181323685144001D0ED0 /* SPEmptyConversationActionView.swift in Sources */,
+				3DDA9A2E28E49E3900FE3B86 /* OWScreenPushStyle.swift in Sources */,
 				445418AD23685154001D0ED0 /* UIImage+SPExtensions.swift in Sources */,
 				441165A12375BBC100B781F3 /* OWApiManager.swift in Sources */,
 				3DD72C74280EF90100117946 /* OWNetworkLogging.swift in Sources */,
