@@ -14,7 +14,7 @@ protocol OWRoutering {
     var rootViewController: UIViewController? { get }
     func start()
     func present(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
-    func push(_ module: OWPresentable, animated: Bool, popCompletion: PublishSubject<Void>?)
+    func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle, animated: Bool, popCompletion: PublishSubject<Void>?)
     func setRoot(_ module: OWPresentable, animated: Bool, dismissCompletion: PublishSubject<Void>?)
     func pop(animated: Bool)
     func dismiss(animated: Bool, completion: PublishSubject<Void>?)
@@ -64,12 +64,23 @@ class OWRouter: NSObject, OWRoutering {
                                      completion: nil)
     }
 
-    func push(_ module: OWPresentable, animated: Bool, popCompletion: PublishSubject<Void>?) {
+    func push(_ module: OWPresentable, pushStyle: OWScreenPushStyle = .regular, animated: Bool, popCompletion: PublishSubject<Void>?) {
         if let completion = popCompletion {
             completions[module.toPresentable()] = completion
         }
 
-        navigationController?.pushViewController(module.toPresentable(), animated: animated)
+        switch pushStyle {
+        case .regular:
+            navigationController?.pushViewController(module.toPresentable(), animated: animated)
+        case .presentStyle:
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            transition.type = .moveIn
+            transition.subtype = .fromTop
+            navigationController?.view.layer.add(transition, forKey: kCATransition)
+            navigationController?.pushViewController(module.toPresentable(), animated: false)
+        }
     }
 
     func setRoot(_ module: OWPresentable, animated: Bool = false, dismissCompletion: PublishSubject<Void>?) {
