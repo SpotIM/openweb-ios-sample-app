@@ -44,6 +44,7 @@ class OWCommentCreationCoordinator: OWBaseCoordinator<OWCommentCreationCoordinat
         let commentCreationPopped = PublishSubject<Void>()
         
         router.push(commentCreationVC,
+                    pushStyle: .presentStyle,
                     animated: true,
                     popCompletion: commentCreationPopped)
         

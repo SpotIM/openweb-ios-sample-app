@@ -68,6 +68,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             router.setRoot(conversationVC, animated: false, dismissCompletion: conversationPopped)
         } else {
             router.push(conversationVC,
+                        pushStyle: .regular,
                         animated: animated,
                         popCompletion: conversationPopped)
         }
