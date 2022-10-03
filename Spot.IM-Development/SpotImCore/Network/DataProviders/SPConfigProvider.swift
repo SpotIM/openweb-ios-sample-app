@@ -8,10 +8,10 @@
 
 import Foundation
 import Alamofire
-import PromiseKit
+import RxSwift
 
 internal protocol SPConfigProvider {
-    func fetchConfigs() -> Promise<SpotConfig>
+    func fetchConfigs() -> Observable<SpotConfig>
 }
 
 internal struct SpotConfig {
@@ -23,40 +23,43 @@ internal struct SpotConfig {
 internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvider {
     
     /// app and ads configurations
-    func fetchConfigs() -> Promise<SpotConfig> {
-        return Promise<SpotConfig> { seal in
-            guard let spotKey = SPClientSettings.main.spotKey else {
-                let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-                return seal.reject(SPNetworkError.custom(message))
-            }
-            
-            getConfig(spotId: spotKey).then { config -> Promise<(SPSpotConfiguration, OWAbTests)> in
+    func fetchConfigs() -> Observable<SpotConfig> {
+        guard let spotKey = SPClientSettings.main.spotKey else {
+            let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
+            return Observable.error(SPNetworkError.custom(message))
+        }
+        
+        return self.getConfig(spotId: spotKey)
+            .flatMap { [weak self] config -> Observable<(SPSpotConfiguration, OWAbTests)> in
+                guard let self = self else { return .empty() }
                 if config.mobileSdk.enabled ?? false {
                     return self.getAbTests(spotId: spotKey, config: config).map { (config, $0) }
                 } else {
-                    return Promise.value((config, OWAbTests(tests: [])))
+                    return Observable.just((config, OWAbTests(tests: [])))
                 }
-            }.then { configAndAbTest -> Promise<SpotConfig> in
-                if configAndAbTest.0.mobileSdk.enabled ?? false && configAndAbTest.0.initialization?.monetized ?? false {
-                    return self.getAdsConfig(spotId: spotKey).map { return SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: $0) }
-                } else {
-                    return Promise.value(SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: nil))
-                }
-            }.done { spotConfig in
-                seal.fulfill(spotConfig)
-            }.catch { error in
-                seal.reject(error)
             }
-        }
+            .flatMap { [weak self] configAndAbTest -> Observable<SpotConfig> in
+                guard let self = self else { return .empty() }
+                
+                if configAndAbTest.0.mobileSdk.enabled ?? false && configAndAbTest.0.initialization?.monetized ?? false {
+                    return self.getAdsConfig(spotId: spotKey)
+                        .map { SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: $0) }
+                } else {
+                    return Observable.just(SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: nil))
+                }
+            }
     }
     
-    private func getConfig(spotId: String) -> Promise<SPSpotConfiguration> {
-        return Promise<SPSpotConfiguration> { seal in
-            let spRequest = SPConfigRequests.config(spotId: spotId)
+    private func getConfig(spotId: String) -> Observable<SPSpotConfiguration> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else {
+                return Disposables.create()
+            }
             
+            let spRequest = SPConfigRequests.config(spotId: spotId)
             let headers = HTTPHeaders.basic(with: spotId)
             
-            manager.execute(
+            let task = self.manager.execute(
                 request: spRequest,
                 parser: OWDecodableParser<SPSpotConfiguration>(),
                 headers: headers
@@ -64,7 +67,8 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                 switch result {
                 case .success(let appConfig):
                     SPConfigsDataSource.appConfig = appConfig
-                    seal.fulfill(appConfig)
+                    observer.onNext(appConfig)
+                    observer.onCompleted()
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -73,21 +77,29 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    seal.reject(SpotImError.internalError(error.localizedDescription))
+                    observer.onError(SpotImError.internalError(error.localizedDescription))
                 }
             }
-
+            
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
-    private func getAdsConfig(spotId: String) -> Promise<SPAdsConfiguration> {
-        return Promise<SPAdsConfiguration> { seal in
+    
+    private func getAdsConfig(spotId: String) -> Observable<SPAdsConfiguration> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else {
+                return Disposables.create()
+            }
+            
             let spRequest = SPAdsConfigRequest.adsConfig
             let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
             let hour = Int(Date.hourFormatter.string(from: Date()))!
             let params: [String: Any] = ["day": dayName, "hour": hour]
             let headers = HTTPHeaders.basic(with: spotId)
             
-            manager.execute(
+            let task = self.manager.execute(
                 request: spRequest,
                 parameters: params,
                 parser: OWDecodableParser<SPAdsConfiguration>(),
@@ -96,7 +108,8 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                 switch result {
                 case .success(let configuration):
                     SPConfigsDataSource.adsConfig = configuration
-                    seal.fulfill(configuration)
+                    observer.onNext(configuration)
+                    observer.onCompleted()
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -105,26 +118,34 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    seal.reject(SpotImError.internalError(error.localizedDescription))
+                    observer.onError(SpotImError.internalError(error.localizedDescription))
                 }
+            }
+            
+            return Disposables.create {
+                task.cancel()
             }
         }
     }
     
-    private func getAbTests(spotId: String, config: SPSpotConfiguration) -> Promise<OWAbTests> {
-        return Promise<OWAbTests> { seal in
-            // THIS IS THE FINAL RESULT OF THE ONLY TEST WE HAD ON IOS
+    private func getAbTests(spotId: String, config: SPSpotConfiguration) -> Observable<OWAbTests> {
+        return Observable.create { observer in
             var tests = [SPABData(testName: "33", group: "D")]
             if let monetized = config.initialization?.monetized, monetized {
                 tests = [SPABData(testName: "33", group: "B")]
             }
-            seal.fulfill(OWAbTests(tests: tests))
             
-            // REMOVING THIS CALL UNTIL WE WILL HAVE ACTIVE TESTS BACK ON IOS TO REDUCE STRESS FROM BE
+            observer.onNext(OWAbTests(tests: tests))
+            observer.onCompleted()
+            
+            return Disposables.create()
+        }
+        
+        // REMOVING THIS CALL UNTIL WE WILL HAVE ACTIVE TESTS BACK ON IOS TO REDUCE STRESS FROM BE
 //            let spRequest = SPConfigRequests.abTestData
 //
 //            let headers = HTTPHeaders.basic(with: spotId)
-            
+        
 //            manager.execute(
 //                request: spRequest,
 //                parser: DecodableParser<AbTests>(),
@@ -145,7 +166,5 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
 //                    seal.reject(SpotImError.internalError(error.localizedDescription))
 //                }
 //            }
-        }
     }
-
 }
