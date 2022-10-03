@@ -15,7 +15,9 @@ class OWRxTableViewSectionedReloadDataSource<Section: OWSectionModelType>: OWTab
     typealias Element = [Section]
 
     func tableView(_ tableView: UITableView, observedEvent: Event<Element>) {
-        Binder(self) { dataSource, element in
+        Binder(self) { [weak tableView] dataSource, element in
+            guard let tableView = tableView else { return }
+            
             #if DEBUG
                 dataSource._dataSourceBound = true
             #endif

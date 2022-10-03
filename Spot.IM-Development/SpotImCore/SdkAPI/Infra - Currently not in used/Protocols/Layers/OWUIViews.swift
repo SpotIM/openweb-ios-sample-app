@@ -1,5 +1,5 @@
 //
-//  OWUIFlows.swift
+//  OWUIViews.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 06/07/2022.
@@ -8,7 +8,12 @@
 
 import Foundation
 
-// Will be a public protocol
-protocol OWUIFlows {
+#if NEW_API
+public protocol OWUIViews {
     
 }
+#else
+protocol OWUIViews {
+    
+}
+#endif

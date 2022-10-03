@@ -15,6 +15,9 @@ internal protocol SPCommunityGuidelinesViewDelegate {
 }
 
 internal final class SPCommunityGuidelinesView: OWBaseView {
+    fileprivate struct Metrics {
+        static let identifier = "community_guidelines_id"
+    }
     
     private lazy var titleTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
@@ -32,7 +35,7 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        self.accessibilityIdentifier = Metrics.identifier
         setup()
     }
     
