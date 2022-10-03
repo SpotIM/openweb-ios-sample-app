@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.2] - 2022-09-18
+### Changes
+- We are using Xcode 14 for Cocoapods and the main tag. Other Xcode tags will be available as usual
+### Fixed
+- Some scenarios in which a text overlap when a message was deleted
+### Internal
+- Added accessibility identifiers in the pre conversation screen, first step towards QA automation
+- Infra mechanism for improved event tracking 
+- Refactoring coordinator layer for flows navigation
+- Infrastructure for a future easier and more readable API
+
 ## [1.16.1] - 2022-08-29
 ### Added
 - Added a spinner while loading a conversation / changing sort option

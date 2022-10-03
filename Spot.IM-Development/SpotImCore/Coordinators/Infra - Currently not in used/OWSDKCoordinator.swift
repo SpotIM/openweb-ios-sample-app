@@ -12,42 +12,79 @@ import RxSwift
 class OWSDKCoordinator: OWBaseCoordinator<Void> {
     fileprivate var router: OWRoutering!
     
-    func startConversationFlow() -> Observable<OWConversationVC> {
-        return .empty()
+    func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
+                                  presentationalMode: OWPresentationalMode,
+                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWViewDynamicSizeOption> {
+
+        return Observable.just(())
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.invalidateExistingFlows()
+                self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+            })
+            .flatMap { [ weak self] _ -> Observable<OWViewDynamicSizeOption> in
+                guard let self = self else { return .empty() }
+                let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
+                                                                        preConversationData: preConversationData,
+                                                                        actionsCallbacks: callbacks)
+                
+                self.store(coordinator: preConversationCoordinator)
+                return preConversationCoordinator.showableComponentDynamicSize()
+            }
     }
     
-    // TODO: Change to pre conversation view once class will be created
-    func startPreConversationFlow() -> Observable<UIView> {
-        return .empty()
+    func startConversationFlow(conversationData: OWConversationRequiredData,
+                               presentationalMode: OWPresentationalMode,
+                               callbacks: OWViewActionsCallbacks?,
+                               deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
+        invalidateExistingFlows()
+        
+        prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
+        
+        let conversationCoordinator = OWConversationCoordinator(router: router,
+                                                                conversationData: conversationData,
+                                                                actionsCallbacks: callbacks)
+        
+        return coordinate(to: conversationCoordinator, deepLinkOptions: deepLinkOptions)
+    }
+    
+    func startCommentCreationFlow(conversationData: OWConversationRequiredData,
+                                  commentCreationData: OWCommentCreationRequiredData,
+                               presentationalMode: OWPresentationalMode,
+                               callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
+        
+        let deepLink = OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
+        return startConversationFlow(conversationData: conversationData,
+                                     presentationalMode: presentationalMode,
+                                     callbacks: callbacks,
+                                     deepLinkOptions: deepLink)
     }
 }
 
 fileprivate extension OWSDKCoordinator {
-    // TODO: Complete
-    func prepareForFlow(presentationalMode: OWPresentationalMode) {
-        invalidExistingFlows()
+    func prepareRouter(presentationalMode: OWPresentationalMode, presentAnimated: Bool) {
+        invalidateExistingFlows()
         
         let navigationController: UINavigationController
+        let presentationalModeExtended: OWPresentationalModeExtended
         
         switch presentationalMode {
-        case .present(_):
-            navigationController = self.createNavController()
+        case .present(let viewController, let style):
+            navigationController = OWNavigationController.shared
+            navigationController.modalPresentationStyle = style.toOSModalPresentationStyle
+            presentationalModeExtended = OWPresentationalModeExtended.present(viewController: viewController,
+                                                                              style: style,
+                                                                              animated: presentAnimated)
         case .push(let navController):
             navigationController = navController
+            presentationalModeExtended = OWPresentationalModeExtended.push(navigationController: navController)
         }
-        
-        router = OWRouter(navigationController: navigationController)
+                
+        router = OWRouter(navigationController: navigationController, presentationalMode: presentationalModeExtended)
     }
     
-    // TODO: Complete
-    func invalidExistingFlows() {
-        
-    }
-    
-    func createNavController() -> UINavigationController {
-        let navController = UINavigationController()
-        // TODO: Customization and such
-        
-        return navController
+    func invalidateExistingFlows() {
+        removeAllChildCoordinators()
     }
 }

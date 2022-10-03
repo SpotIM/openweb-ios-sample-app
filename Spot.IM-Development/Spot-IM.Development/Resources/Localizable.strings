@@ -24,3 +24,16 @@
 "PostIdOrIds" = "PostId(s)";
 "Execute" = "Execute";
 "ConversationCounterMultiplePostIdsDescription" = "You can enter multiple post ids by using a delimiter ', '\nExample: \'postId1, postId2, postId3'";
+"BetaNewAPI" = "Beta - New API";
+"NewAPI" = "New API";
+"SpotId" = "Spot Id";
+"PostId" = "Post Id";
+"PreConversationPushMode" = "Pre Conversation - Push Mode";
+"PreConversationPresentMode" = "Pre Conversation - Present Mode";
+"FullConversationPushMode" = "Full Conversation - Push Mode";
+"FullConversationPresentMode" = "Full Conversation - Present Mode";
+"CommentCreationPushMode" = "Comment Creation - Push Mode";
+"CommentCreationPresentMode" = "Comment Creation - Present Mode";
+"ConversationCounter" = "Conversation Counter";
+"MockArticle" = "Mock Article";
+"MockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";
