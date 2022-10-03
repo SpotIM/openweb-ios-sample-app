@@ -8,8 +8,14 @@
 
 import UIKit
 
-// Will be a public protocol
-enum OWPresentationalMode {
-    case present(viewController: UIViewController)
+#if NEW_API
+public enum OWPresentationalMode {
+    case present(viewController: UIViewController, style: OWModalPresentationStyle = .pageSheet)
     case push(navigationController: UINavigationController)
 }
+#else
+enum OWPresentationalMode {
+    case present(viewController: UIViewController, style: OWModalPresentationStyle = .pageSheet)
+    case push(navigationController: UINavigationController)
+}
+#endif

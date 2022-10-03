@@ -9,16 +9,6 @@ references:
     macos:
       xcode: "13.0.0"
     working_directory: ~/project/Spot.IM-Development
-
-  ios_config_xcode_13_2: &ios_config_xcode_13_2
-    macos:
-      xcode: "13.2.0"
-    working_directory: ~/project/Spot.IM-Development
-    
-  ios_config_xcode_13_3: &ios_config_xcode_13_3
-    macos:
-      xcode: "13.3.0"
-    working_directory: ~/project/Spot.IM-Development
     
   ios_config_xcode_13_4: &ios_config_xcode_13_4
     macos:
@@ -88,7 +78,7 @@ commands:
 
 jobs:
   default_job:
-    <<: *ios_config_xcode_13
+    <<: *ios_config_xcode_14
     steps:
       - checkout:
           path: ~/project
@@ -136,7 +126,7 @@ jobs:
           destination: scan-output
 
   release_sdk_job:
-    <<: *ios_config_xcode_13
+    <<: *ios_config_xcode_14
     steps:
       - checkout:
           path: ~/project
@@ -203,26 +193,16 @@ jobs:
           name: Create a "Github Release" on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
             bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
-
-  release_tag_13_2_job:
-    <<: *ios_config_xcode_13_2
-    steps:
-      - release_tag
-
-      - run:
-          name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
-          command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.2
             
-  release_tag_13_3_job:
-    <<: *ios_config_xcode_13_3
+  release_tag_13_job:
+    <<: *ios_config_xcode_13
     steps:
       - release_tag
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.3
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.0
             
   release_tag_13_4_job:
     <<: *ios_config_xcode_13_4
@@ -242,10 +222,10 @@ jobs:
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 14
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 14.0
 
   release_app_job:
-    <<: *ios_config_xcode_13
+    <<: *ios_config_xcode_14
     steps:
       - checkout:
           path: ~/project
@@ -288,7 +268,7 @@ jobs:
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
             
   release_public_app_job:
-    <<: *ios_config_xcode_13
+    <<: *ios_config_xcode_14
     steps:
       - checkout:
           path: ~/project
@@ -344,18 +324,12 @@ workflows:
             branches:
               only:
                 - /^release/sdk/.*/
-
-      - release_tag_13_2_job:
-          filters:
-            branches:
-              only:
-                - /^release/tag13.2/.*/
                 
-      - release_tag_13_3_job:
+      - release_tag_13_job:
           filters:
             branches:
               only:
-                - /^release/tag13.3/.*/
+                - /^release/tag13.0/.*/
                 
       - release_tag_13_4_job:
           filters:
@@ -389,18 +363,10 @@ workflows:
               only:
                 - /^release/multi/.*/
 
-      - release_tag_13_2_job:
-          requires:
-           - release_sdk_job
-                
-      - release_tag_13_3_job:
+      - release_tag_13_job:
           requires:
            - release_sdk_job
                 
       - release_tag_13_4_job:
-          requires:
-           - release_sdk_job
-           
-      - release_tag_14_job:
           requires:
            - release_sdk_job

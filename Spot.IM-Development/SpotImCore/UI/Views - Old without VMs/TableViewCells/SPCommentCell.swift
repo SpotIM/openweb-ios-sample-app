@@ -21,6 +21,9 @@ extension MessageItemContainable {
 }
 
 internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable {
+    fileprivate struct Metrics {
+        static let identifier = "comment_cell_id"
+    }
     
     weak var delegate: SPCommentCellDelegate? {
         didSet {
@@ -55,7 +58,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
     }
     

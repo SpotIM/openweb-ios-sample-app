@@ -16,6 +16,7 @@ class OWUserSubscriberBadgeView: UIView {
     
     fileprivate struct Metrics {
         static let subscriberBadgeIconSize: CGFloat = 20.0
+        static let identifier = "subscriber_badge_view_id"
     }
     
     fileprivate var viewModel: OWUserSubscriberBadgeViewModeling!
@@ -35,6 +36,7 @@ class OWUserSubscriberBadgeView: UIView {
     
     init() {
         super.init(frame: .zero)
+        self.accessibilityIdentifier = Metrics.identifier
         setupViews()
     }
     

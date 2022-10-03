@@ -13,6 +13,13 @@ protocol SPPreConversationHeaderViewDelegate: AnyObject {
 }
 
 internal final class SPPreConversationHeaderView: OWBaseView {
+    fileprivate struct Metrics {
+        static let counterLeading: CGFloat = 5
+        static let titleFontSize: CGFloat = 25
+        static let counterFontSize: CGFloat = 16
+        static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
+        static let identifier = "pre_conversation_header_view_id"
+    }
     
     private lazy var titleLabel: OWBaseLabel = {
         let lbl = OWBaseLabel()
@@ -33,7 +40,13 @@ internal final class SPPreConversationHeaderView: OWBaseView {
     }()
     
     internal weak var delegate: SPPreConversationHeaderViewDelegate?
-
+    
+    init(onlineViewingUsersCounterVM: OWOnlineViewingUsersCounterViewModeling) {
+        super.init(frame: .zero)
+        self.accessibilityIdentifier = Metrics.identifier
+        onlineViewingUsersView.configure(with: onlineViewingUsersCounterVM)
+        setupUI()
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -94,14 +107,5 @@ internal final class SPPreConversationHeaderView: OWBaseView {
             make.centerY.equalTo(titleLabel)
             make.trailing.equalToSuperview().offset(-Metrics.margins.right)
         }
-    }
-}
-
-private extension SPPreConversationHeaderView {
-    private enum Metrics {
-        static let counterLeading: CGFloat = 5
-        static let titleFontSize: CGFloat = 25
-        static let counterFontSize: CGFloat = 16
-        static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
     }
 }
