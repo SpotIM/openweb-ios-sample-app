@@ -11,12 +11,12 @@ import UIKit
 
 enum OWPreConversationCellOption: CaseIterable {
     static var allCases: [OWPreConversationCellOption] {
-        return [.comment(viewModel: OWCommentViewModel.stub()),
-                .spacer(viewModel: OWSpacerViewModel.stub())]
+        return [.comment(viewModel: OWCommentCellViewModel.stub()),
+                .spacer(viewModel: OWSpacerCellViewModel.stub())]
     }
     
-    case comment(viewModel: OWCommentViewModeling)
-    case spacer(viewModel: OWSpacerViewModeling)
+    case comment(viewModel: OWCommentCellViewModeling)
+    case spacer(viewModel: OWSpacerCellViewModeling)
 }
 
 extension OWPreConversationCellOption {
