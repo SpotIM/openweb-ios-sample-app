@@ -8,7 +8,7 @@
 
 import Foundation
 import Alamofire
-import PromiseKit
+import RxSwift
 
 class NetworkDataProvider {
 
@@ -47,7 +47,7 @@ internal protocol SPConversationsDataProvider {
                   loadingFinished: (() -> Void)?,
                   completion: @escaping (_ response: SPConversationReadRM?, _ error: SPNetworkError?) -> Void)
 
-    func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]>
+    func commnetsCounters(conversationIds: [String]) -> Observable<[String: SPConversationCounters]>
     func conversationAsync(postId: String, articleUrl: String)
     func copy(modifyingOffset newOffset: Int?, hasNext: Bool?) -> SPConversationsDataProvider
 }
@@ -151,23 +151,22 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         }
     }
 
-    internal func commnetsCounters(conversationIds: [String]) -> Promise<[String: SPConversationCounters]> {
-        return Promise { seal in
-            let spRequest = SPConversationRequest.commentsCounters
-            guard let spotKey = SPClientSettings.main.spotKey else {
+    internal func commnetsCounters(conversationIds: [String]) -> Observable<[String: SPConversationCounters]> {
+        return Observable.create { [weak self] observer in
+            guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-                seal.reject(SPNetworkError.custom(message))
-                return
+                observer.onError(SPNetworkError.custom(message))
+                return Disposables.create()
             }
             
-            // TODO: (Fedin) make sting constants for this
+            let spRequest = SPConversationRequest.commentsCounters
             let parameters: [String: Any] = [
                 "conversation_ids": conversationIds,
             ]
             let headers = HTTPHeaders.basic(
                 with: spotKey)
-
-            manager.execute(
+            
+            let task = self.manager.execute(
                 request: spRequest,
                 parameters: parameters,
                 parser: OWDecodableParser<[String:[String: SPConversationCounters]]>(),
@@ -176,9 +175,10 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                 switch result {
                 case .success(let counters):
                     if let dic = counters["counts"] {
-                        seal.fulfill(dic)
+                        observer.onNext(dic)
+                        observer.onCompleted()
                     } else {
-                        seal.reject(SPNetworkError.custom("Bad response: no key 'counts' in json"))
+                        observer.onError(SPNetworkError.custom("Bad response: no key 'counts' in json"))
                     }
                 case .failure(let error):
                     let rawReport = RawReportModel(
@@ -188,8 +188,12 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    seal.reject(error)
+                    observer.onError(error)
                 }
+            }
+            
+            return Disposables.create {
+                task.cancel()
             }
         }
     }

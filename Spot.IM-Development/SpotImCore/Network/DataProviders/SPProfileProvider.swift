@@ -8,15 +8,16 @@
 
 import Foundation
 import Alamofire
-import PromiseKit
+import RxSwift
 
 internal final class SPProfileProvider: NetworkDataProvider {
     
-    func getSingleUseToken() -> Promise<String?> {
-        return Promise<String?> { seal in
-            guard let spotKey = SPClientSettings.main.spotKey else {
+    func getSingleUseToken() -> Observable<String?> {
+        return Observable.create { [weak self] observer in
+            guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
                 let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
-                return seal.reject(SPNetworkError.custom(message))
+                observer.onError(SPNetworkError.custom(message))
+                return Disposables.create()
             }
             
             let spRequest = SPProfileRequest.createSingleUseToken
@@ -25,8 +26,8 @@ internal final class SPProfileProvider: NetworkDataProvider {
             if let openwebToken = SPUserSessionHolder.session.openwebToken {
                 requestParams["open_web_token"] = openwebToken
             }
-
-            manager.execute(
+            
+            let task = self.manager.execute(
                 request: spRequest,
                 parameters: requestParams,
                 parser: OWDecodableParser<[String: String]>(),
@@ -34,7 +35,8 @@ internal final class SPProfileProvider: NetworkDataProvider {
             ) { result, response in
                 switch result {
                 case .success(let dictionary):
-                    seal.fulfill(dictionary["single_use_token"])
+                    observer.onNext(dictionary["single_use_token"])
+                    observer.onCompleted()
                 case .failure(let error):
                     let rawReport = RawReportModel(
                         url: spRequest.method.rawValue + " " + spRequest.url.absoluteString,
@@ -43,8 +45,12 @@ internal final class SPProfileProvider: NetworkDataProvider {
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    seal.reject(SpotImError.internalError(error.localizedDescription))
+                    observer.onError(SpotImError.internalError(error.localizedDescription))
                 }
+            }
+            
+            return Disposables.create {
+                task.cancel()
             }
         }
     }
