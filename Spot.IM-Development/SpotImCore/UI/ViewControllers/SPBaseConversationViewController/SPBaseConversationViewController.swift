@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, OWUserAuthFlowDelegateContainable {
     
@@ -1047,15 +1048,16 @@ extension SPBaseConversationViewController: OpenUserProfileDelegate {
         
         if isMyProfile {
             // add singleUseTicket to params when navigating to profile screen
-            SpotIm.profileProvider.getSingleUseToken().done { singleUseToken in
-                params.singleUseTicket = singleUseToken
-            }
-            .ensure {
-                SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
-            }
-            .catch { [weak self] error in
-                self?.servicesProvider.logger().log(level: .verbose, "Failed to get single use token: \(error)")
-            }
+            _ = SpotIm.profileProvider.getSingleUseToken()
+                .take(1)
+                .observe(on: MainScheduler.asyncInstance)
+                .subscribe(onNext: { [weak self] singleUseToken in
+                    guard let self = self else { return }
+                    params.singleUseTicket = singleUseToken
+                    SPWebSDKProvider.openWebModule(delegate: self.webPageDelegate, params: params)
+                }, onError: { [weak self] error in
+                    self?.servicesProvider.logger().log(level: .verbose, "Failed to get single use token: \(error)")
+                })
         } else {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
