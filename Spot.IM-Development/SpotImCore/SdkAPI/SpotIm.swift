@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import PromiseKit
 import RxSwift
 
 public enum SpotImError: Error {
@@ -96,7 +95,7 @@ private struct InitResult {
 public typealias InitizlizeCompletionHandler = (Swift.Result<Void, SpotImError>) -> Void
 
 public class SpotIm {
-    private static var configurationPromise: Promise<SpotConfig>?
+    private static var configuration: SpotConfig?
     private static let apiManager: OWApiManager = OWApiManager()
     internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     internal static let profileProvider: SPProfileProvider = SPProfileProvider(apiManager: SpotIm.apiManager)
@@ -144,7 +143,7 @@ public class SpotIm {
             SpotIm.reinit = false
             SpotIm.spotId = nil
             SPUserSessionHolder.resetUserSession()
-            configurationPromise = nil
+            configuration = nil
             LocalizationManager.reset()
         }
 
@@ -258,17 +257,19 @@ public class SpotIm {
     public static func getConversationCounters(conversationIds: [String], completion: @escaping ((Swift.Result<[String: SpotImConversationCounters], SpotImError>) -> Void)) {
         execute(call: { _ in
             let encodedConversationIds = conversationIds.map { ($0 as OWPostId).encoded }
-            conversationDataProvider.commnetsCounters(conversationIds: encodedConversationIds).done { countersData in
-                let counters = Dictionary<String, SpotImConversationCounters>(uniqueKeysWithValues: countersData.map { key, value in
-                    let decodedConversationId = (key as OWPostId).decoded
-                    let conversationCounter = SpotImConversationCounters(comments: value.comments, replies: value.replies)
-                    return (decodedConversationId, conversationCounter)
+            _ = conversationDataProvider.commnetsCounters(conversationIds: encodedConversationIds)
+                .take(1)
+                .subscribe(onNext: { countersData in
+                    let counters = Dictionary<String, SpotImConversationCounters>(uniqueKeysWithValues: countersData.map { key, value in
+                        let decodedConversationId = (key as OWPostId).decoded
+                        let conversationCounter = SpotImConversationCounters(comments: value.comments, replies: value.replies)
+                        return (decodedConversationId, conversationCounter)
+                    })
+                    
+                    completion(.success(counters))
+                }, onError: { error in
+                    completion(.failure(.internalError(error.localizedDescription)))
                 })
-
-                completion(.success(counters))
-            }.catch { error in
-                completion(.failure(.internalError(error.localizedDescription)))
-            }
         }) { error in
             completion(.failure(error))
         }
@@ -434,24 +435,13 @@ public class SpotIm {
     }
 
     private static func getConfig(spotId: String) -> Observable<SpotConfig> {
-        return Observable.create { observer in
-            let configuration: Promise<SpotConfig>
-            if let configurationPromise = self.configurationPromise, !configurationPromise.isRejected {
-                configuration = configurationPromise
-            } else {
-                let result = SPClientSettings.main.setup(spotId: spotId)
-                self.configurationPromise = result
-                configuration = self.configurationPromise!
-            }
-
-            configuration.done { config in
-                observer.onNext(config)
-                observer.onCompleted()
-            }.catch { error in
-                return observer.onError(error)
-            }
-            
-            return Disposables.create()
+        if let configuration = self.configuration {
+            return Observable.just(configuration)
+        } else {
+            return SPClientSettings.main.setup(spotId: spotId)
+                .do(onNext: { config in
+                    SpotIm.configuration = config
+                })
         }
     }
 

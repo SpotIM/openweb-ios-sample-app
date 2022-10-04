@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import PromiseKit
+import RxSwift
 
 public class SPClientSettings {
     
@@ -22,7 +22,7 @@ public class SPClientSettings {
     private(set) var spotKey: String?
     private var configProvider: SPDefaultConfigProvider!
 
-    internal func  setup(spotId: String) -> Promise<SpotConfig> {
+    internal func  setup(spotId: String) -> Observable<SpotConfig> {
         self.spotKey = spotId
         UIFont.loadAllFonts
         
