@@ -14,13 +14,13 @@ enum OWConversationCellOption: CaseIterable {
         return [.comment(viewModel: OWCommentCellViewModel.stub()),
                 .reply(viewModel: OWReplyCellViewModel.stub()),
                 .ad(viewModel: OWAdCellViewModel.stub()),
-                .spacer(viewModel: OWSpacerViewModel.stub())]
+                .spacer(viewModel: OWSpacerCellViewModel.stub())]
     }
     
     case comment(viewModel: OWCommentCellViewModeling)
     case reply(viewModel: OWReplyCellViewModeling)
     case ad(viewModel: OWAdCellViewModeling)
-    case spacer(viewModel: OWSpacerViewModeling)
+    case spacer(viewModel: OWSpacerCellViewModeling)
 }
 
 extension OWConversationCellOption {
