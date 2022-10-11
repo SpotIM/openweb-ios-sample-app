@@ -348,7 +348,7 @@ internal struct CommentViewModel {
         } else {
             attributes = [
                 .foregroundColor: UIColor.steelGrey,
-                .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
+                .font: UIFont.preferred(style: .italic, of: Theme.deletedFontSize),
                 .paragraphStyle: paragraphStyle
             ]
         }
