@@ -39,15 +39,6 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
-  - PromiseKit (6.17.1):
-    - PromiseKit/CorePromise (= 6.17.1)
-    - PromiseKit/Foundation (= 6.17.1)
-    - PromiseKit/UIKit (= 6.17.1)
-  - PromiseKit/CorePromise (6.17.1)
-  - PromiseKit/Foundation (6.17.1):
-    - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.17.1):
-    - PromiseKit/CorePromise
   - PromisesObjC (2.0.0)
   - RxCocoa (6.5.0):
     - RxRelay (= 6.5.0)
@@ -60,7 +51,6 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 5.6.2)
   - Google-Mobile-Ads-SDK (= 8.0)
-  - PromiseKit (~> 6.17.1)
   - RxCocoa (~> 6.5)
   - RxSwift (~> 6.5)
   - SnapKit (~> 5.6.0)
@@ -73,7 +63,6 @@ SPEC REPOS:
     - GoogleUserMessagingPlatform
     - GoogleUtilities
     - nanopb
-    - PromiseKit
     - PromisesObjC
     - RxCocoa
     - RxRelay
@@ -87,13 +76,12 @@ SPEC CHECKSUMS:
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  PromiseKit: ee485df3d4dc570594d7e7aecae6352697dc6a4c
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
   RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: 2eee1563b2a8013ed5499638235da64b32635479
+PODFILE CHECKSUM: e6945c833074b7129b2333bfdfedf56d02d5aaaa
 
 COCOAPODS: 1.11.2
