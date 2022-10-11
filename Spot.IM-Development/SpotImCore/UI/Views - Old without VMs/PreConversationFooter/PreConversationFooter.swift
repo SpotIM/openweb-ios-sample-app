@@ -173,7 +173,8 @@ internal final class SPPreConversationFooter: OWBaseView {
         let title = LocalizationManager.localizedString(key: "Terms")
         termsButton.setTitle(title, for: .normal)
         termsButton.setTitleColor(.coolGrey, for: .normal)
-        termsButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
+        // Intentionally using Open Sans font which we are using it in OpenWeb
+        termsButton.titleLabel?.font = .openSans(style: .regular, of: Theme.bottomRowSize)
         termsButton.addTarget(self, action: #selector(showTerms), for: .touchUpInside)
 
         termsButton.OWSnp.makeConstraints { make in
@@ -187,7 +188,7 @@ internal final class SPPreConversationFooter: OWBaseView {
     private func setupDotLabel() {
         dotLabel.text = "·"
         dotLabel.textColor = .coolGrey
-        dotLabel.font = .preferred(style: .regular, of: Theme.bottomRowSize)
+        dotLabel.font = .openSans(style: .regular, of: Theme.bottomRowSize)
         dotLabel.OWSnp.makeConstraints { make in
             make.leading.equalTo(termsButton.OWSnp.trailing).offset(5.0)
             make.trailing.equalTo(privacyButton.OWSnp.leading).offset(-5.0)
@@ -199,7 +200,8 @@ internal final class SPPreConversationFooter: OWBaseView {
         let title = LocalizationManager.localizedString(key: "Privacy")
         privacyButton.setTitle(title, for: .normal)
         privacyButton.setTitleColor(.coolGrey, for: .normal)
-        privacyButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
+        // Intentionally using Open Sans font which we are using it in OpenWeb
+        privacyButton.titleLabel?.font = .openSans(style: .regular, of: Theme.bottomRowSize)
         privacyButton.addTarget(self, action: #selector(showPrivacy), for: .touchUpInside)
 
         privacyButton.OWSnp.makeConstraints { make in
@@ -221,7 +223,8 @@ internal final class SPPreConversationFooter: OWBaseView {
         let title = LocalizationManager.localizedString(key: "Powered by OpenWeb")
         addSpotIMButton.setTitle(title, for: .normal)
         addSpotIMButton.setTitleColor(.coolGrey, for: .normal)
-        addSpotIMButton.titleLabel?.font = .preferred(style: .regular, of: Theme.bottomRowSize)
+        // Intentionally using Open Sans font which we are using it in OpenWeb
+        addSpotIMButton.titleLabel?.font = .openSans(style: .regular, of: Theme.bottomRowSize)
         addSpotIMButton.addTarget(self, action: #selector(showAddSpotIM), for: .touchUpInside)
 
         addSpotIMButton.OWSnp.makeConstraints { make in
