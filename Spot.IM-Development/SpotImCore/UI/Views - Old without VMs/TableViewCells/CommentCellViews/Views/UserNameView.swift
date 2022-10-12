@@ -182,7 +182,7 @@ fileprivate extension UserNameView {
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
             .foregroundColor: UIColor.spForeground3,
-            .font: UIFont.preferred(style: .regularItalic, of: 17.0),
+            .font: UIFont.preferred(style: .italic, of: 17.0),
             .paragraphStyle: paragraphStyle
         ]
 

@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         // Custom fonts example
-        // SpotIm.customFontFamiliy = "BigShouldersDisplay"
+//         SpotIm.customFontFamily = "Roboto"
         
         UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
         UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
