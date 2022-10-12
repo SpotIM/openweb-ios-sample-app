@@ -65,7 +65,7 @@ internal final class SPCommunityQuestionView: OWBaseView {
         questionTextView.text = ""
         questionTextView.isEditable = false
         questionTextView.isScrollEnabled = false
-        questionTextView.font = UIFont.openSans(style: .regularItalic, of: Theme.questionFontSize)
+        questionTextView.font = UIFont.preferred(style: .italic, of: Theme.questionFontSize)
         questionTextView.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
             questionBottomConstraint = make.bottom.equalTo(separatorView.OWSnp.top).offset(-Theme.QuestionBottomOffsetFullConversation).constraint
