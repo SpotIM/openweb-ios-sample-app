@@ -270,7 +270,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         if isDeleted {
             attributes = [
                 .foregroundColor: UIColor.spForeground3,
-                .font: UIFont.openSans(style: .regularItalic, of: Theme.deletedFontSize),
+                .font: UIFont.preferred(style: .italic, of: Theme.deletedFontSize),
                 .paragraphStyle: paragraphStyle
             ]
         } else {

@@ -4,10 +4,11 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>BigShouldersDisplay-Bold.ttf</string>
-		<string>BigShouldersDisplay-Medium.ttf</string>
-		<string>BigShouldersDisplay-Regular.ttf</string>
-		<string>BigShouldersDisplay-Light.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Italic.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Regular.ttf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
