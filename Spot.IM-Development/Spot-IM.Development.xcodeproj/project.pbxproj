@@ -298,6 +298,11 @@
 		3DDA9A4128F5919600FE3B86 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A3C28F5919600FE3B86 /* Roboto-Regular.ttf */; };
 		3DDA9A4228F5919600FE3B86 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A3D28F5919600FE3B86 /* Roboto-Bold.ttf */; };
 		3DDA9A4328F5919600FE3B86 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DDA9A3E28F5919600FE3B86 /* Roboto-Light.ttf */; };
+		3DDA9A4628F8523A00FE3B86 /* OWSkeletonShimmeringConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4528F8523A00FE3B86 /* OWSkeletonShimmeringConfiguration.swift */; };
+		3DDA9A4828F852A300FE3B86 /* OWShimmeringDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4728F852A300FE3B86 /* OWShimmeringDirection.swift */; };
+		3DDA9A4A28F8582100FE3B86 /* OWSkeletonShimmeringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4928F8582100FE3B86 /* OWSkeletonShimmeringService.swift */; };
+		3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4B28F8620D00FE3B86 /* OWWeakEncapsulation.swift */; };
+		3DDA9A4E28F86A4100FE3B86 /* Double+Equal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4D28F86A4100FE3B86 /* Double+Equal.swift */; };
 		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
 		3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */; };
@@ -802,6 +807,11 @@
 		3DDA9A3C28F5919600FE3B86 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		3DDA9A3D28F5919600FE3B86 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		3DDA9A3E28F5919600FE3B86 /* Roboto-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Light.ttf"; sourceTree = "<group>"; };
+		3DDA9A4528F8523A00FE3B86 /* OWSkeletonShimmeringConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSkeletonShimmeringConfiguration.swift; sourceTree = "<group>"; };
+		3DDA9A4728F852A300FE3B86 /* OWShimmeringDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWShimmeringDirection.swift; sourceTree = "<group>"; };
+		3DDA9A4928F8582100FE3B86 /* OWSkeletonShimmeringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSkeletonShimmeringService.swift; sourceTree = "<group>"; };
+		3DDA9A4B28F8620D00FE3B86 /* OWWeakEncapsulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWWeakEncapsulation.swift; sourceTree = "<group>"; };
+		3DDA9A4D28F86A4100FE3B86 /* Double+Equal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Equal.swift"; sourceTree = "<group>"; };
 		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
 		3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSharedServicesProvider.swift; sourceTree = "<group>"; };
@@ -2081,6 +2091,16 @@
 			path = Roboto;
 			sourceTree = "<group>";
 		};
+		3DDA9A4428F851ED00FE3B86 /* SkeletonShimmering */ = {
+			isa = PBXGroup;
+			children = (
+				3DDA9A4528F8523A00FE3B86 /* OWSkeletonShimmeringConfiguration.swift */,
+				3DDA9A4728F852A300FE3B86 /* OWShimmeringDirection.swift */,
+				3DDA9A4928F8582100FE3B86 /* OWSkeletonShimmeringService.swift */,
+			);
+			path = SkeletonShimmering;
+			sourceTree = "<group>";
+		};
 		3DE0FE3A27D6481B0097B17B /* Infra - Currently not in used */ = {
 			isa = PBXGroup;
 			children = (
@@ -2620,6 +2640,7 @@
 				3D9C5825281AF64F002D0FCB /* OWFiles.swift */,
 				168DC7D22873243E009A88B6 /* OWTypealiasesInternal.swift */,
 				3D08E0B9287AF3BC00E6F1AC /* OWObservableArray.swift */,
+				3DDA9A4B28F8620D00FE3B86 /* OWWeakEncapsulation.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2660,6 +2681,7 @@
 				3DD72C61280DC23600117946 /* OWPostId+EncodeDecode.swift */,
 				3DF6871F285B387B00A67230 /* UIAlertController+Rx.swift */,
 				3DFC32E528917942005F1C5A /* OWCellViewModel.swift */,
+				3DDA9A4D28F86A4100FE3B86 /* Double+Equal.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2667,6 +2689,7 @@
 		4454187123685154001D0ED0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3DDA9A4428F851ED00FE3B86 /* SkeletonShimmering */,
 				24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */,
 				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
@@ -3419,6 +3442,7 @@
 				24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */,
 				3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */,
 				3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */,
+				3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */,
 				3DE0FE4527D75A9E0097B17B /* OWShowable.swift in Sources */,
 				3DD72C76280EF95200117946 /* OWRequestLogger.swift in Sources */,
 				445418A623685154001D0ED0 /* SPShareLink.swift in Sources */,
@@ -3483,7 +3507,9 @@
 				3D611BB328C89BB8003960CE /* OWViewCompletion.swift in Sources */,
 				3D20A35C27A975DA003F8513 /* UIView+SemanticAttribute.swift in Sources */,
 				733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */,
+				3DDA9A4E28F86A4100FE3B86 /* Double+Equal.swift in Sources */,
 				4454188D23685154001D0ED0 /* FailureReportDataModels.swift in Sources */,
+				3DDA9A4A28F8582100FE3B86 /* OWSkeletonShimmeringService.swift in Sources */,
 				3D7E3D6B288849EC00DDBE0B /* OWAdditionalConfiguration.swift in Sources */,
 				249BCDFA27F5962E00703CC9 /* OWArticleHeaderViewModel.swift in Sources */,
 				5DBD33E42397F98F003DE0BF /* OWBaseStackView.swift in Sources */,
@@ -3597,6 +3623,7 @@
 				3DB3D17A281FC60C008654CF /* SPLogLevel.swift in Sources */,
 				4454188023685154001D0ED0 /* SPImagesFacade.swift in Sources */,
 				3DD72C62280DC23600117946 /* OWPostId+EncodeDecode.swift in Sources */,
+				3DDA9A4628F8523A00FE3B86 /* OWSkeletonShimmeringConfiguration.swift in Sources */,
 				3D611BBE28C8B6CF003960CE /* OWArticle.swift in Sources */,
 				16A62B6826662F6C00DFE9B7 /* OWCustomUIDelegate.swift in Sources */,
 				3D611B9128C643F2003960CE /* OWArticleProtocol.swift in Sources */,
@@ -3614,6 +3641,7 @@
 				24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */,
 				3D20A36B27B01153003F8513 /* OWConstraintDescription.swift in Sources */,
 				3D20A36927B01078003F8513 /* OWConstraintConfig.swift in Sources */,
+				3DDA9A4828F852A300FE3B86 /* OWShimmeringDirection.swift in Sources */,
 				3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
 				166F796D281012BE009F45CE /* SPViewActionsCallbacks.swift in Sources */,
