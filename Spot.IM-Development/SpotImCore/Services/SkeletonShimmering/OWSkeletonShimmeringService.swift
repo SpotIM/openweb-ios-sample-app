@@ -1,0 +1,91 @@
+//
+//  OWSkeletonShimmeringService.swift
+//  SpotImCore
+//
+//  Created by Alon Haiut on 13/10/2022.
+//  Copyright © 2022 Spot.IM. All rights reserved.
+//
+
+import UIKit
+import RxSwift
+
+protocol OWSkeletonShimmeringServicing {
+    func applySkeleton(to view: UIView)
+    func removeAllSkeletons()
+}
+
+class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
+    fileprivate let config: OWSkeletonShimmeringConfiguration
+    fileprivate let scheduler: SchedulerType
+    fileprivate var weakViews: [OWWeakEncapsulation<UIView>] = []
+    fileprivate var disposeBag: DisposeBag!
+    fileprivate let isServiceRunning = BehaviorSubject<Bool>(value: false)
+    
+    init(config: OWSkeletonShimmeringConfiguration,
+         scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKSkeletonShimmeringServiceQueue")) {
+        self.config = config
+        self.scheduler = scheduler
+    }
+    
+    func applySkeleton(to view: UIView) {
+        let weakView = OWWeakEncapsulation(value: view)
+        weakViews.append(weakView)
+        
+        // TODO: Append skelaton layers to the view
+        
+        _ = isServiceRunning
+            .take(1)
+            .observe(on: scheduler)
+            .filter { !$0 }
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.isServiceRunning.onNext(true)
+                self.startService()
+            })
+    }
+    
+    func removeAllSkeletons() {
+        weakViews.forEach { weakView in
+            guard let view = weakView.value() else { return }
+            // TODO: Remove skelaton layers
+        }
+        weakViews.removeAll()
+        stopService()
+    }
+}
+
+fileprivate extension OWSkeletonShimmeringService {
+    func stopService() {
+        _ = Observable.just(())
+            .take(1)
+                .observe(on: scheduler)
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.disposeBag = nil // Cancel existing run of the service
+                    self.isServiceRunning.onNext(false)
+                })
+    }
+    
+    func startService() {
+        disposeBag = DisposeBag()
+        
+        Observable<Int>
+            .interval(.milliseconds(100), scheduler: scheduler)
+            .observe(on: scheduler)
+            .filter { [weak self] num in
+                guard let self = self else { return false }
+                let intervalInSeconds = TimeInterval(num + 1) / 100 // Interval passed so far
+                let reminder = intervalInSeconds.truncatingRemainder(dividingBy: self.config.duration)
+                // Return true if the time which passed so far is a multiplier of the config duration
+                return Double.equal(reminder, 0.0, precise: 10)
+            }
+            .startWith(0) // Start immediately
+            .voidify()
+            .delay(.milliseconds(10), scheduler: scheduler) // 10 milliseconds delay cause usually when we will start the service, a few skeleton views will be created, so let's sync their shimmering
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // TODO: Apply animation on the view
+            })
+            .disposed(by: disposeBag)
+    }
+}
