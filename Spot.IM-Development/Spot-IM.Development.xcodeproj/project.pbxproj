@@ -303,6 +303,9 @@
 		3DDA9A4A28F8582100FE3B86 /* OWSkeletonShimmeringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4928F8582100FE3B86 /* OWSkeletonShimmeringService.swift */; };
 		3DDA9A4C28F8620D00FE3B86 /* OWWeakEncapsulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4B28F8620D00FE3B86 /* OWWeakEncapsulation.swift */; };
 		3DDA9A4E28F86A4100FE3B86 /* Double+Equal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A4D28F86A4100FE3B86 /* Double+Equal.swift */; };
+		3DDA9A5128FEF9DB00FE3B86 /* OWSkeletonShimmeringProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A5028FEF9DB00FE3B86 /* OWSkeletonShimmeringProtocol.swift */; };
+		3DDA9A5528FF01AC00FE3B86 /* OWInitializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A5428FF01AC00FE3B86 /* OWInitializable.swift */; };
+		3DDA9A5728FF01DE00FE3B86 /* OWAssociatedSkeletonShimmering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A5628FF01DE00FE3B86 /* OWAssociatedSkeletonShimmering.swift */; };
 		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
 		3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */; };
@@ -812,6 +815,9 @@
 		3DDA9A4928F8582100FE3B86 /* OWSkeletonShimmeringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSkeletonShimmeringService.swift; sourceTree = "<group>"; };
 		3DDA9A4B28F8620D00FE3B86 /* OWWeakEncapsulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWWeakEncapsulation.swift; sourceTree = "<group>"; };
 		3DDA9A4D28F86A4100FE3B86 /* Double+Equal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Equal.swift"; sourceTree = "<group>"; };
+		3DDA9A5028FEF9DB00FE3B86 /* OWSkeletonShimmeringProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSkeletonShimmeringProtocol.swift; sourceTree = "<group>"; };
+		3DDA9A5428FF01AC00FE3B86 /* OWInitializable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInitializable.swift; sourceTree = "<group>"; };
+		3DDA9A5628FF01DE00FE3B86 /* OWAssociatedSkeletonShimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAssociatedSkeletonShimmering.swift; sourceTree = "<group>"; };
 		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
 		3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSharedServicesProvider.swift; sourceTree = "<group>"; };
@@ -2101,6 +2107,16 @@
 			path = SkeletonShimmering;
 			sourceTree = "<group>";
 		};
+		3DDA9A5228FF018400FE3B86 /* SkeletonShimmering */ = {
+			isa = PBXGroup;
+			children = (
+				3DDA9A5028FEF9DB00FE3B86 /* OWSkeletonShimmeringProtocol.swift */,
+				3DDA9A5428FF01AC00FE3B86 /* OWInitializable.swift */,
+				3DDA9A5628FF01DE00FE3B86 /* OWAssociatedSkeletonShimmering.swift */,
+			);
+			path = SkeletonShimmering;
+			sourceTree = "<group>";
+		};
 		3DE0FE3A27D6481B0097B17B /* Infra - Currently not in used */ = {
 			isa = PBXGroup;
 			children = (
@@ -2302,6 +2318,7 @@
 		445417C223685144001D0ED0 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				3DDA9A5228FF018400FE3B86 /* SkeletonShimmering */,
 				445417C323685144001D0ED0 /* AlertControllerPresentable.swift */,
 				445417C423685144001D0ED0 /* UserFlowPresentable.swift */,
 				445417C523685144001D0ED0 /* OWKeyboardHandable.swift */,
@@ -3499,6 +3516,7 @@
 				3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */,
 				3D08E0672875BA5300E6F1AC /* OWManagerProtocol.swift in Sources */,
 				4454181E23685144001D0ED0 /* ShowMoreRepliesView.swift in Sources */,
+				3DDA9A5128FEF9DB00FE3B86 /* OWSkeletonShimmeringProtocol.swift in Sources */,
 				3D08E06A2875BA9A00E6F1AC /* OWUIFlows.swift in Sources */,
 				3D08E09928770C4500E6F1AC /* FloatingPointType+OWIdentifiableType.swift in Sources */,
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
@@ -3612,6 +3630,7 @@
 				3DD72C6C280EF7ED00117946 /* OWEndpoints.swift in Sources */,
 				3D20A36327B00B8A003F8513 /* OWLayoutConstraintItem.swift in Sources */,
 				24B32BA928C63CFB00FB701C /* OWCommunityQuestionView.swift in Sources */,
+				3DDA9A5528FF01AC00FE3B86 /* OWInitializable.swift in Sources */,
 				3D20A38927B01FAF003F8513 /* OWConstraintOffsetTarget.swift in Sources */,
 				3DD72C7A280EFA0200117946 /* OWNetworkAPI.swift in Sources */,
 				3DFC32E628917942005F1C5A /* OWCellViewModel.swift in Sources */,
@@ -3644,6 +3663,7 @@
 				3DDA9A4828F852A300FE3B86 /* OWShimmeringDirection.swift in Sources */,
 				3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */,
 				4454189223685154001D0ED0 /* SPConfigurationReactions.swift in Sources */,
+				3DDA9A5728FF01DE00FE3B86 /* OWAssociatedSkeletonShimmering.swift in Sources */,
 				166F796D281012BE009F45CE /* SPViewActionsCallbacks.swift in Sources */,
 				3D894A71286B18E7001A939C /* OpenWeb.swift in Sources */,
 				441165A92379720500B781F3 /* SPCloudinaryRequests.swift in Sources */,
