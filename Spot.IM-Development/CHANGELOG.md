@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.3] - 2022-10-19
+### Changes
+- Bump development target to iOS 11
+- OpenSans is now our default font. We removed extra fonts to reduce the SDK binary size. For custom font please refer to our documentation
+### Internal
+- Removed PromiseKit! One less dependency
+
 ## [1.16.2] - 2022-09-18
 ### Changes
 - We are using Xcode 14 for Cocoapods and the main tag. Other Xcode tags will be available as usual
@@ -12,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some scenarios in which a text overlap when a message was deleted
 ### Internal
 - Added accessibility identifiers in the pre conversation screen, first step towards QA automation
-- Infra mechanism for improved event tracking 
+- Infra mechanism for improved event tracking
 - Refactoring coordinator layer for flows navigation
 - Infrastructure for a future easier and more readable API
 
@@ -38,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve the UI of the navigation controller header in presented mode
 - A rare crash caused by NSLog
 - A possible crash when changing the user session
-- Changing username to a random one when a user is deleted (GDPR compliant) 
+- Changing username to a random one when a user is deleted (GDPR compliant)
 ### Internal
 - Improve the infrastructure for network endpoints
 - More infrastructure for conversation refactor
@@ -127,7 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.10.1] - 2022-03-20
 ### Fixed
-- New API for open the comment creation screen changed a little bit to support present mode with a root view controller 
+- New API for open the comment creation screen changed a little bit to support present mode with a root view controller
 
 ## [1.10.0] - 2022-03-15
 ### Added
