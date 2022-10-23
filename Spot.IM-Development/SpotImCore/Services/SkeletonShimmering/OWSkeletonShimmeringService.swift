@@ -10,7 +10,8 @@ import UIKit
 import RxSwift
 
 protocol OWSkeletonShimmeringServicing {
-    func applySkeleton(to view: UIView)
+    func addSkeleton(to view: UIView)
+    func removeSkeleton(from view: UIView)
     func removeAllSkeletons()
 }
 
@@ -27,11 +28,9 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
         self.scheduler = scheduler
     }
     
-    func applySkeleton(to view: UIView) {
+    func addSkeleton(to view: UIView) {
         let weakView = OWWeakEncapsulation(value: view)
         weakViews.append(weakView)
-        
-        // TODO: Append skelaton layers to the view
         
         _ = isServiceRunning
             .take(1)
@@ -44,10 +43,32 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
             })
     }
     
+    func removeSkeleton(from view: UIView) {
+         guard let weakViewIndex = weakViews.firstIndex(where: { weakView in
+            guard let aView = weakView.value() else { return false }
+            return aView === view
+         }) else { return }
+        
+        weakViews.remove(at: weakViewIndex)
+        
+        // Stop service if we removed the last skeleton view
+        if weakViews.isEmpty {
+            _ = isServiceRunning
+                .take(1)
+                .observe(on: scheduler)
+                .filter { $0 }
+                .subscribe(onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    self.stopService()
+                    self.isServiceRunning.onNext(false)
+                })
+        }
+    }
+    
     func removeAllSkeletons() {
         weakViews.forEach { weakView in
             guard let view = weakView.value() else { return }
-            // TODO: Remove skelaton layers
+            (view as? OWSkeletonShimmeringProtocol)?.removeSkeletonShimmering()
         }
         weakViews.removeAll()
         stopService()
