@@ -6,8 +6,10 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol OWInitializable {
     init()
 }
+
+extension CALayer: OWInitializable {}
