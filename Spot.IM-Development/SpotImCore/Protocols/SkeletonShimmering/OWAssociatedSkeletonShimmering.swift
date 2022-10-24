@@ -11,5 +11,5 @@ import Foundation
 struct OWAssociatedSkeletonShimmering {
     static var skeletonLayerIdentifier = "OWSkeletonLayerIdentifier"
     static var shimmeringLayerIdentifier = "OWShimmeringLayerIdentifier"
-    static var shimmeringLayerAnimationIdentifier = "OWShimmeringLayerIdentifier"
+    static var shimmeringLayerAnimationIdentifier = "OWShimmeringLayerAnimationIdentifier"
 }

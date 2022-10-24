@@ -29,7 +29,8 @@ extension OWSkeletonShimmeringProtocol where Self: UIView {
         self.layer.addSublayer(shimmeringLayer)
         self.clipsToBounds = true
         
-        let skeletonShimmeringService = OWSharedServicesProvider.shared.logger()
+        let skeletonShimmeringService = OWSharedServicesProvider.shared.skeletonShimmeringService()
+        skeletonShimmeringService.addSkeleton(to: self)
     }
     
     func removeSkeletonShimmering() {
@@ -46,6 +47,9 @@ extension OWSkeletonShimmeringProtocol where Self: UIView {
         shimmeringLayer.removeFromSuperlayer()
         removeLayer(forIdentifier: OWAssociatedSkeletonShimmering.skeletonLayerIdentifier)
         removeLayer(forIdentifier: OWAssociatedSkeletonShimmering.shimmeringLayerIdentifier)
+        
+        let skeletonShimmeringService = OWSharedServicesProvider.shared.skeletonShimmeringService()
+        skeletonShimmeringService.removeSkeleton(from: self)
     }
     
     func getSkeletonLayer() -> CALayer? {
