@@ -105,7 +105,21 @@ fileprivate extension OWSkeletonShimmeringService {
             .delay(.milliseconds(10), scheduler: scheduler) // 10 milliseconds delay cause usually when we will start the service, a few skeleton views will be created, so let's sync their shimmering
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                // TODO: Apply animation on the view
+                // Apply animation on each skeletone view
+                self.weakViews.forEach { weakView in
+                    guard let skeletonShimmeringView = weakView.value() as? OWSkeletonShimmeringProtocol,
+                          let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
+                    
+                    let animation = CABasicAnimation(keyPath: "transform.translation.x")
+                    animation.duration = self.config.duration
+                    let viewWidth = (skeletonShimmeringView as? UIView)?.frame.width ?? 0
+                    animation.fromValue = self.config.shimmeringDirection == .leftToRight ? 0 : viewWidth
+                    animation.toValue = self.config.shimmeringDirection == .leftToRight ? viewWidth : 0
+                    animation.repeatCount = .zero
+                    animation.autoreverses = false
+                    animation.fillMode = CAMediaTimingFillMode.forwards
+                    shimmeringLayer.add(animation, forKey: OWAssociatedSkeletonShimmering.shimmeringLayerAnimationIdentifier)
+                }
             })
             .disposed(by: disposeBag)
     }
