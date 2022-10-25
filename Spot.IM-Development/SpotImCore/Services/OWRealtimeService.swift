@@ -47,6 +47,7 @@ class OWRealtimeService: OWRealtimeServicing {
             .flatMap { [weak self] spotId -> Observable<SPSpotConfiguration> in
                 guard let self = self else { return .empty()}
                 return self.servicesProvider.spotConfigurationService().config(spotId: spotId)
+                    .take(1)
             }
             .flatMap { [weak self] config -> Observable<String?> in
                 // Continue only if real time service is enabled according to the config
@@ -107,7 +108,7 @@ fileprivate extension OWRealtimeService {
                 guard let self = self else { return .empty() }
                 let api: OWRealtimeAPI = self.servicesProvider.netwokAPI().realtime
                 // Fetch from API
-                return api.fetchData(postId: postId)
+                return api.fetchData(fullConversationId: "\(OWManager.manager.spotId)_\(postId)")
                     .response
             }
             .do(onNext: { [weak self] _ in
