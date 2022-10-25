@@ -147,6 +147,8 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
 fileprivate extension OWCommentSkeletonShimmeringCell {
     func setupUI() {
+        self.selectionStyle = .none
+        
         self.addSubview(mainSkeletonShimmeringView)
         mainSkeletonShimmeringView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
