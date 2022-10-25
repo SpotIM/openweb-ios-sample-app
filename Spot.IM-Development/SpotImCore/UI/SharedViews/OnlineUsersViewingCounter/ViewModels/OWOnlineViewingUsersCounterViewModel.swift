@@ -40,9 +40,18 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
 
    
     var viewingCount: Observable<String> {
-        return model.unwrap()
-            .map { $0.count }
-            .map { $0.decimalFormatted }
+//        return model.unwrap()
+//            .map { $0.count }
+//            .map { $0.decimalFormatted }
+        return OWSharedServicesProvider.shared.realtimeService().realtimeData
+            .map { realtimeData in
+                try realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(OWManager.manager.postId)")
+            }
+            .unwrap()
+            .map {
+                $0.decimalFormatted
+            }
+            .asObservable()
     }
     
     lazy var image: UIImage = {

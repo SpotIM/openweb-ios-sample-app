@@ -62,7 +62,7 @@ extension OWManager {
             _currentNonRxPostId = newPostId
             _currentPostId.onNext(newPostId)
             if let newPostId = newPostId {
-                OWSharedServicesProvider.shared.realtimeService().startFetchingData(postId: newPostId)
+                self.servicesProvider.realtimeService().startFetchingData(postId: newPostId)
             }
         }
     }
