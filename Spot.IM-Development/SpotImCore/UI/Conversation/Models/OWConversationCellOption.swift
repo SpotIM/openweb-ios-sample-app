@@ -47,7 +47,7 @@ extension OWConversationCellOption {
         case .comment:
             return UITableViewCell.self
         case .commentSkeletonShimmering:
-            return UITableViewCell.self
+            return OWCommentSkeletonShimmeringCell.self
         case .reply:
             return UITableViewCell.self
         case .ad:

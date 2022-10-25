@@ -8,23 +8,26 @@
 
 import UIKit
 
-class OWCommentSkeletonShimmeringCell: UITableViewCell, OWSkeletonShimmeringProtocol {
+class OWCommentSkeletonShimmeringCell: UITableViewCell {
     
     fileprivate struct Metrics {
-        static let avatarSize: CGFloat = 50
+        static let avatarSize: CGFloat = 60
         static let userNameWidthRatio: CGFloat = 1/6
-        static let userNameHeight: CGFloat = 25
-        static let timeWidthRatio: CGFloat = 1/5
-        static let timeHeight: CGFloat = 20
-        static let messageHeight: CGFloat = 25
+        static let userNameHeight: CGFloat = 15
+        static let timeWidthRatio: CGFloat = 1/4
+        static let timeHeight: CGFloat = 10
+        static let spaceBetweenUserNameAndTime: CGFloat = 10
+        static let messageHeight: CGFloat = 10
         static let messageLineNumbers: Int = 3
-        static let spaceBetweenMessageLines: CGFloat = 15
+        static let spaceBetweenMessageLines: CGFloat = 5
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 20
     }
-
-    fileprivate lazy var mainView: UIView = {
-        let view = UIView()
+    
+    fileprivate var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
+    
+    fileprivate lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
+        let view = OWSkeletonShimmeringView()
 
         view.addSubview(avatarSkeleton)
         avatarSkeleton.OWSnp.makeConstraints { make in
@@ -35,13 +38,15 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell, OWSkeletonShimmeringProt
         view.addSubview(userNameSkeleton)
         userNameSkeleton.OWSnp.makeConstraints { make in
             make.top.equalTo(avatarSkeleton)
+            make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(Metrics.horizontalOffset)
             make.height.equalTo(Metrics.userNameHeight)
             make.width.equalToSuperview().multipliedBy(Metrics.userNameWidthRatio)
         }
         
         view.addSubview(timeSkeleton)
         timeSkeleton.OWSnp.makeConstraints { make in
-            make.top.equalTo(userNameSkeleton.OWSnp.bottom)
+            make.leading.equalTo(userNameSkeleton)
+            make.top.equalTo(userNameSkeleton.OWSnp.bottom).offset(Metrics.spaceBetweenUserNameAndTime)
             make.height.equalTo(Metrics.timeHeight)
             make.width.equalToSuperview().multipliedBy(Metrics.timeWidthRatio)
         }
@@ -108,7 +113,9 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell, OWSkeletonShimmeringProt
     
     fileprivate lazy var messageLinesSkeleton: [UIView] = {
         let numOfLines = Metrics.messageLineNumbers
-        let views = Array(repeating: UIView().backgroundColor(UIColor.skeletonBackgroundColor), count: numOfLines)
+        let views = (0 ..< numOfLines).map { _ in
+            return UIView().backgroundColor(UIColor.skeletonBackgroundColor)
+        }
         
         return views
     }()
@@ -121,12 +128,27 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell, OWSkeletonShimmeringProt
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func configure(with viewModel: OWCellViewModel) {
+        guard let vm = viewModel as? OWCommentSkeletonShimmeringCellViewModeling else { return }
+        // In this skeleton shimmering cell we will probably won't do anything with view model, but still let's save it
+        self.viewModel = vm
+        
+        // Start shimmering effect
+        mainSkeletonShimmeringView.addSkeletonShimmering()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // Stop shimmering effect
+        mainSkeletonShimmeringView.removeSkeletonShimmering()
+    }
 }
 
 fileprivate extension OWCommentSkeletonShimmeringCell {
     func setupUI() {
-        self.addSubview(mainView)
-        mainView.OWSnp.makeConstraints { make in
+        self.addSubview(mainSkeletonShimmeringView)
+        mainSkeletonShimmeringView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
         }
