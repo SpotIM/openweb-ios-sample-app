@@ -22,6 +22,10 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
     fileprivate var disposeBag: DisposeBag!
     fileprivate let isServiceRunning = BehaviorSubject<Bool>(value: false)
     
+    fileprivate struct Metrics {
+        static var animationKey = "transform.translation.x"
+    }
+    
     init(config: OWSkeletonShimmeringConfiguration,
          scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKSkeletonShimmeringServiceQueue")) {
         self.config = config
@@ -119,7 +123,7 @@ fileprivate extension OWSkeletonShimmeringService {
                     guard let skeletonShimmeringView = weakView.value(),
                           let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
 
-                    let animation = CABasicAnimation(keyPath: "transform.translation.x")
+                    let animation = CABasicAnimation(keyPath: Metrics.animationKey)
                     animation.duration = self.config.duration
                     let viewWidth = skeletonShimmeringView.frame.width
                     animation.fromValue = self.config.shimmeringDirection == .leftToRight ? viewWidth : -viewWidth
