@@ -43,11 +43,14 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
 //        return model.unwrap()
 //            .map { $0.count }
 //            .map { $0.decimalFormatted }
+        guard let postId = OWManager.manager.postId else { return .empty()}
+        
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
-                try realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(OWManager.manager.postId)")
+                try realtimeData.data?.onlineViewingUsersCount("\(OWManager.manager.spotId)_\(postId)")
             }
             .unwrap()
+            .map { $0.count }
             .map {
                 $0.decimalFormatted
             }
