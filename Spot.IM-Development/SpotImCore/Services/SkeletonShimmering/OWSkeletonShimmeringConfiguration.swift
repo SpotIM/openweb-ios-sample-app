@@ -22,7 +22,7 @@ struct OWSkeletonShimmeringConfiguration {
 
 extension OWSkeletonShimmeringConfiguration {
     static let `default` = OWSkeletonShimmeringConfiguration(shimmeringDirection: .rightToLeft,
-                                                             duration: 2.0,
+                                                             duration: 1.0,
                                                              backgroundColor: UIColor.skeletonBackgroundColor,
                                                              highlightColor: UIColor.skeletonHighlightColor)
     
