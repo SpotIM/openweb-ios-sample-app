@@ -71,6 +71,13 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
         self.servicesProvider = servicesProvider
         self.conversationData = conversationData
         setupObservers()
+        
+        // Testing comment skeleton shimmering cells
+        let skeletonCellVMs = (0 ..< 50).map { _ in
+            return OWCommentSkeletonShimmeringCellViewModel()
+        }
+        let skeletonCells = skeletonCellVMs.map { OWConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
+        _cellsViewModels.append(contentsOf: skeletonCells)
     }
 }
 

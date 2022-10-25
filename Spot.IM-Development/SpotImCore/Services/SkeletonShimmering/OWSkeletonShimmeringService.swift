@@ -29,6 +29,14 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
     }
     
     func addSkeleton(to view: UIView) {
+        guard let skeletonLayer = view.getSkeletonLayer(),
+              let shimmeringLayer = view.getShimmeringLayer() else { return }
+        
+        skeletonLayer.backgroundColor = config.backgroundColor.cgColor
+        shimmeringLayer.colors = [config.backgroundColor.cgColor, config.highlightColor.cgColor, config.backgroundColor.cgColor]
+        shimmeringLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        shimmeringLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        
         let weakView = OWWeakEncapsulation(value: view)
         weakViews.append(weakView)
         
@@ -95,7 +103,7 @@ fileprivate extension OWSkeletonShimmeringService {
             .observe(on: scheduler)
             .filter { [weak self] num in
                 guard let self = self else { return false }
-                let intervalInSeconds = TimeInterval(num + 1) / 100 // Interval passed so far
+                let intervalInSeconds = TimeInterval(num + 1) / 10 // Interval passed so far
                 let reminder = intervalInSeconds.truncatingRemainder(dividingBy: self.config.duration)
                 // Return true if the time which passed so far is a multiplier of the config duration
                 return Double.equal(reminder, 0.0, precise: 10)
@@ -103,18 +111,19 @@ fileprivate extension OWSkeletonShimmeringService {
             .startWith(0) // Start immediately
             .voidify()
             .delay(.milliseconds(10), scheduler: scheduler) // 10 milliseconds delay cause usually when we will start the service, a few skeleton views will be created, so let's sync their shimmering
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
                 // Apply animation on each skeletone view
                 self.weakViews.forEach { weakView in
-                    guard let skeletonShimmeringView = weakView.value() as? OWSkeletonShimmeringProtocol,
+                    guard let skeletonShimmeringView = weakView.value(),
                           let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
-                    
+
                     let animation = CABasicAnimation(keyPath: "transform.translation.x")
                     animation.duration = self.config.duration
-                    let viewWidth = (skeletonShimmeringView as? UIView)?.frame.width ?? 0
-                    animation.fromValue = self.config.shimmeringDirection == .leftToRight ? 0 : viewWidth
-                    animation.toValue = self.config.shimmeringDirection == .leftToRight ? viewWidth : 0
+                    let viewWidth = skeletonShimmeringView.frame.width
+                    animation.fromValue = self.config.shimmeringDirection == .leftToRight ? viewWidth : -viewWidth
+                    animation.toValue = self.config.shimmeringDirection == .leftToRight ? -viewWidth : viewWidth
                     animation.repeatCount = .zero
                     animation.autoreverses = false
                     animation.fillMode = CAMediaTimingFillMode.forwards
