@@ -111,7 +111,7 @@ fileprivate extension OWSkeletonShimmeringService {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                // Apply animation on each skeletone view
+                // Apply animation on each skeleton view
                 self.weakViews.forEach { weakView in
                     guard let skeletonShimmeringView = weakView.value(),
                           let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
