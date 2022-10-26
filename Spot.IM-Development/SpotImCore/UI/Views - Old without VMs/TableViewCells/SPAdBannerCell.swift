@@ -13,7 +13,11 @@ protocol SPAdBannerCellDelegate: AnyObject {
 }
 
 internal final class SPAdBannerCell: SPBaseTableViewCell {
-    
+    fileprivate struct Metrics {
+        static let identifier = "ad_banner_cell_id"
+        static let adBannerIdentifier = "ad_banner_id"
+        static let closeButtonIdentifier = "close_button_id"
+    }
     weak var delegate: SPAdBannerCellDelegate?
     
     private lazy var adBannerView: SPAdBannerView = .init()
@@ -24,6 +28,13 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupUI()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        adBannerView.accessibilityIdentifier = Metrics.adBannerIdentifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
     }
     
     func updateColorsAccordingToStyle() {

@@ -11,6 +11,7 @@ import UIKit
 internal final class SPAdBannerView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "ad_banner_id"
+        static let bannerIdentifier = "banner_id"
     }
     
     private lazy var bannerContainerView: OWBaseView = .init()
@@ -19,11 +20,14 @@ internal final class SPAdBannerView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
-        
         self.addSubview(bannerContainerView)
-        
         setupBannerContainerView()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        bannerView?.accessibilityIdentifier = Metrics.bannerIdentifier
     }
     
     // Handle dark mode \ light mode change

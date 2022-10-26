@@ -18,6 +18,7 @@ class SPBaseTableViewCell: UITableViewCell {
         
         selectionStyle = .none
         contentView.backgroundColor = .spBackground0
+        contentView.accessibilityIdentifier = "content_view_id"
     }
     
     @available(*,

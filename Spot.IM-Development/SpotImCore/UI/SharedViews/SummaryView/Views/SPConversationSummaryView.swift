@@ -16,6 +16,27 @@ internal protocol SPConversationSummaryViewDelegate: AnyObject {
 
 final class SPConversationSummaryView: OWBaseView {
 
+    fileprivate struct Metrics {
+        static let separatorHeight: CGFloat = 1.0
+        static let separatorWidth: CGFloat = 1.0
+        static let insetTiny: CGFloat = 9.0
+        static let insetShort: CGFloat = 10.0
+        static let sortButtonFontSize: CGFloat = 15.0
+        static let commentsFontSize: CGFloat = 15.0
+        static let newCommentsFontSize: CGFloat = 13.0
+        static let sideOffset: CGFloat = 16.0
+        static let viewShadowOpacity: Float = 0.08
+        static let horizontalMarginBetweenSeparator: CGFloat = 9.5
+        static let topMarginBetweenSeparator: CGFloat = 15.5
+        
+        static let identifier = "conversation_summary_id"
+        static let commentsCountLabelIdentifier = "comments_count_label_id"
+        static let sortButtonIdentifier = "sort_button_id"
+        static let onlineViewingUsersIdentifier = "online_viewing_users_id"
+        static let bottomHorizontalSeparatorIdentifier = "bottom_horizontal_separator_id"
+        static let verticalSeparatorBetweenCommentsAndViewingUsersIdentifier = "vertical_separator_between_comments_and_viewing_users_id"
+    }
+    
     private lazy var commentsCountLabel: OWBaseLabel = {
         let lbl = OWBaseLabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.commentsFontSize)
@@ -82,6 +103,16 @@ final class SPConversationSummaryView: OWBaseView {
         super.init(frame: frame)
         
         setupUI()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        commentsCountLabel.accessibilityIdentifier = Metrics.commentsCountLabelIdentifier
+        sortButton.accessibilityIdentifier = Metrics.sortButtonIdentifier
+        onlineViewingUsersView.accessibilityIdentifier = Metrics.onlineViewingUsersIdentifier
+        bottomHorizontalSeparator.accessibilityIdentifier = Metrics.bottomHorizontalSeparatorIdentifier
+        verticalSeparatorBetweenCommentsAndViewingUsers.accessibilityIdentifier = Metrics.verticalSeparatorBetweenCommentsAndViewingUsersIdentifier
     }
     
     // Handle dark mode \ light mode change
@@ -190,19 +221,4 @@ extension SPConversationSummaryView {
         layer.shadowOpacity = Metrics.viewShadowOpacity
         layer.shadowPath = shadowPath.cgPath
     }
-}
-
-private enum Metrics {
-    
-    static let separatorHeight: CGFloat = 1.0
-    static let separatorWidth: CGFloat = 1.0
-    static let insetTiny: CGFloat = 9.0
-    static let insetShort: CGFloat = 10.0
-    static let sortButtonFontSize: CGFloat = 15.0
-    static let commentsFontSize: CGFloat = 15.0
-    static let newCommentsFontSize: CGFloat = 13.0
-    static let sideOffset: CGFloat = 16.0
-    static let viewShadowOpacity: Float = 0.08
-    static let horizontalMarginBetweenSeparator: CGFloat = 9.5
-    static let topMarginBetweenSeparator: CGFloat = 15.5
 }
