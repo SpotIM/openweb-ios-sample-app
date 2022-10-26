@@ -24,6 +24,9 @@ class OWCommentCreationEntryView: UIView {
         static let callToActionHeight: CGFloat = 48
         static let fontSize: CGFloat = 16
         static let identifier = "comment_creation_entry_id"
+        static let avatarIdentifier = "avatar_id"
+        static let labelContainerIdentifier = "label_container_id"
+        static let labelIdentifier = "label_id"
     }
     
     fileprivate lazy var userAvatarView: SPAvatarView = {
@@ -62,12 +65,18 @@ class OWCommentCreationEntryView: UIView {
     
     init(with viewModel: OWCommentCreationEntryViewModeling) {
         super.init(frame: .zero)
-        self.accessibilityIdentifier = Metrics.identifier
         disposeBag = DisposeBag()
         self.viewModel = viewModel
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
         setupObservers()
         setupViews()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        userAvatarView.accessibilityIdentifier = Metrics.avatarIdentifier
+        labelContainer.accessibilityIdentifier = Metrics.labelContainerIdentifier
+        label.accessibilityIdentifier = Metrics.labelIdentifier
     }
     
     init() {
@@ -96,7 +105,7 @@ class OWCommentCreationEntryView: UIView {
 
 fileprivate extension OWCommentCreationEntryView {
     func setupViews() {
-        
+        applyAccessibility()
         addSubview(userAvatarView)
         userAvatarView.OWSnp.makeConstraints { make in
             make.centerY.leading.equalToSuperview()
