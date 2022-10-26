@@ -23,7 +23,6 @@ extension MessageItemContainable {
 internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable {
     fileprivate struct Metrics {
         static let identifier = "comment_cell_id"
-        static let contentViewIdentifier = "content_view_id"
         static let messageIdentifier = "message_id"
         static let userCommentIdentifier = "user_comment_id"
         static let statusIndicationIdentifier = "status_indication_id"
@@ -138,7 +137,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        contentView.accessibilityIdentifier = Metrics.contentViewIdentifier
         headerView.accessibilityIdentifier = Metrics.headerIdentifier
         userView.accessibilityIdentifier = Metrics.userCommentIdentifier
         commentLabelView.accessibilityIdentifier = Metrics.commentLabelIdentifier
