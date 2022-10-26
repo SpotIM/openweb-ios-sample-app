@@ -8,6 +8,28 @@
 
 import UIKit
 
+/*
+ - Basically everything is done almost automatically!
+ - All you need to do is create a view which inherit from OWSkeletonShimmeringView.
+   Inside that view, add all the subviews which you would like - they can look however you want.
+ - The skeleton shimmering service and protocols will take care for everything related to the UI colors and etc.
+ - Once you would like to show the skeleton simmering, call .addSkeletonShimmering() on the main view which inherit from OWSkeletonShimmeringView.
+ - When you would like to end the shimmering effect, just call .removeSkeletonShimmering() on this view.
+ - .removeSkeletonShimmering() function will be called automatically when the view removed from the UI hierarchy - so in case the whole view purpose is only for showing skeleton shimmering, all you will need to do is to call .addSkeletonShimmering().
+ 
+ - Example:
+ fileprivate lazy var mainSkeletonShimmeringView: OWSkeletonShimmeringView = {
+         let view = OWSkeletonShimmeringView()
+
+        // Add subviews to this view
+         
+         return view
+ }()
+
+ // Start shimmering effect later on inside the code
+ mainSkeletonShimmeringView.addSkeletonShimmering()
+ */
+
 class OWSkeletonShimmeringView: UIView, OWSkeletonShimmeringProtocol {
     
     override func layoutSubviews() {
