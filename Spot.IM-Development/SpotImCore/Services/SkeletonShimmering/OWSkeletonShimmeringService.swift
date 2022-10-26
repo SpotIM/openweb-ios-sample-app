@@ -103,15 +103,8 @@ fileprivate extension OWSkeletonShimmeringService {
         disposeBag = DisposeBag()
         
         Observable<Int>
-            .interval(.milliseconds(100), scheduler: scheduler)
+            .interval(.milliseconds(config.duration), scheduler: scheduler)
             .observe(on: scheduler)
-            .filter { [weak self] num in
-                guard let self = self else { return false }
-                let intervalInSeconds = TimeInterval(num + 1) / 10 // Interval passed so far
-                let reminder = intervalInSeconds.truncatingRemainder(dividingBy: self.config.duration)
-                // Return true if the time which passed so far is a multiplier of the config duration
-                return Double.equal(reminder, 0.0, precise: 10)
-            }
             .startWith(0) // Start immediately
             .voidify()
             .delay(.milliseconds(10), scheduler: scheduler) // 10 milliseconds delay cause usually when we will start the service, a few skeleton views will be created, so let's sync their shimmering
@@ -124,7 +117,7 @@ fileprivate extension OWSkeletonShimmeringService {
                           let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
 
                     let animation = CABasicAnimation(keyPath: Metrics.animationKey)
-                    animation.duration = self.config.duration
+                    animation.duration = CFTimeInterval(self.config.duration / 1000) // Convert to seconds
                     let viewWidth = skeletonShimmeringView.frame.width
                     animation.fromValue = self.config.shimmeringDirection == .leftToRight ? viewWidth : -viewWidth
                     animation.toValue = self.config.shimmeringDirection == .leftToRight ? -viewWidth : viewWidth
