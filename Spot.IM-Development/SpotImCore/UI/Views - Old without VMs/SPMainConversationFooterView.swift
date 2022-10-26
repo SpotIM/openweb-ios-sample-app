@@ -11,6 +11,11 @@ import UIKit
 final class SPMainConversationFooterView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "main_conversation_footer_id"
+        static let commentCreationEntryIdentifier = "comment_creation_entry_id"
+        static let separatorIdentifier = "separator_id"
+        static let bannerContainerIdentifier = "banner_container_id"
+        static let bannerIdentifier = "banner_id"
+        static let readOnlyIdentifier = "readOnly_id"
     }
     
     let commentCreationEntryView: OWCommentCreationEntryView = .init()
@@ -39,10 +44,19 @@ final class SPMainConversationFooterView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         clipsToBounds = false
         setupUI()
         updateColorsAccordingToStyle()
+        setupAccessibilityIdentifiers()
+    }
+    
+    private func setupAccessibilityIdentifiers() {
+        self.accessibilityIdentifier = Metrics.identifier
+        commentCreationEntryView.accessibilityIdentifier = Metrics.commentCreationEntryIdentifier
+        separatorView.accessibilityIdentifier = Metrics.separatorIdentifier
+        bannerContainerView.accessibilityIdentifier = Metrics.bannerContainerIdentifier
+        bannerView?.accessibilityIdentifier = Metrics.bannerIdentifier
+        readOnlyLabel?.accessibilityIdentifier = Metrics.readOnlyIdentifier
     }
     
     func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {
@@ -102,7 +116,7 @@ final class SPMainConversationFooterView: OWBaseView {
     func setupReadOnlyLabel(isPreConversation: Bool) {
         guard let readOnlyLabel = self.readOnlyLabel else { return }
         addSubview(readOnlyLabel)
-        
+        setupAccessibilityIdentifiers()
         readOnlyLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
         readOnlyLabel.textColor = .spForeground3
         readOnlyLabel.text = LocalizationManager.localizedString(key: "Commenting on this article has ended")
@@ -121,6 +135,7 @@ final class SPMainConversationFooterView: OWBaseView {
         self.bannerView?.removeFromSuperview()
         self.bannerView = bannerView
         bannerContainerView.addSubview(bannerView)
+        setupAccessibilityIdentifiers()
         bannerView.OWSnp.makeConstraints { make in
             make.height.equalTo(height)
             make.centerX.equalToSuperview()

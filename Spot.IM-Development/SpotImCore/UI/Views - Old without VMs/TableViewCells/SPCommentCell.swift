@@ -23,6 +23,17 @@ extension MessageItemContainable {
 internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable {
     fileprivate struct Metrics {
         static let identifier = "comment_cell_id"
+        static let contentViewIdentifier = "content_view_id"
+        static let messageIdentifier = "message_id"
+        static let userCommentIdentifier = "user_comment_id"
+        static let statusIndicationIdentifier = "status_indication_id"
+        static let commentLabelIdentifier = "comment_label_id"
+        static let replyActionsIdentifier = "reply_actions_id"
+        static let moreRepliesIdentifier = "more_replies_id"
+        static let headerIdentifier = "header_id"
+        static let separatorIdentifier = "separator_id"
+        static let commentMediaIdentifier = "comment_media_id"
+        static let opacityIdentifier = "opacity_id"
     }
     
     weak var delegate: SPCommentCellDelegate? {
@@ -58,7 +69,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
     }
     
@@ -123,6 +133,22 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         configureCommentMediaView()
         configureReplyActionsView()
         configureMoreRepliesView()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        contentView.accessibilityIdentifier = Metrics.contentViewIdentifier
+        headerView.accessibilityIdentifier = Metrics.headerIdentifier
+        userView.accessibilityIdentifier = Metrics.userCommentIdentifier
+        commentLabelView.accessibilityIdentifier = Metrics.commentLabelIdentifier
+        messageView.accessibilityIdentifier = Metrics.messageIdentifier
+        commentMediaView.accessibilityIdentifier = Metrics.commentMediaIdentifier
+        replyActionsView.accessibilityIdentifier = Metrics.replyActionsIdentifier
+        moreRepliesView.accessibilityIdentifier = Metrics.moreRepliesIdentifier
+        separatorView.accessibilityIdentifier = Metrics.separatorIdentifier
+        opacityView.accessibilityIdentifier = Metrics.opacityIdentifier
+        statusIndicationView.accessibilityIdentifier = Metrics.statusIndicationIdentifier
     }
     
     private func configureStatusIndicationView() {
@@ -195,7 +221,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         }
     }
     
-    private func configureReplyActionsView() {        
+    private func configureReplyActionsView() {
         replyActionsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentMediaView.OWSnp.bottom)
             make.leading.equalToSuperview().offset(Theme.leadingOffset)

@@ -25,8 +25,14 @@ internal final class UserNameView: OWBaseView {
         static let badgeVerticalInset: CGFloat = 2
         static let subtitleTopPadding: CGFloat = 6
         static let identifier = "user_name_view_id"
-        static let moreBtnIdentifier = "user_name_menu_button_id"
-        static let deletedLblIdentifier = "deleted_message_label_id"
+        static let userNameLabelIdentifier = "user_name_label_id"
+        static let badgeTagLabelIdentifier = "badge_tag_label_id"
+        static let moreButtonIdentifier = "user_name_menu_button_id"
+        static let nameAndBadgeStackviewIdentifier = "name_and_badge_stackview_id"
+        static let subtitleLabelIdentifier = "name_and_badge_stackview_id"
+        static let dateLabelIdentifier = "date_label_id"
+        static let deletedMessageLabelIdentifier = "deleted_message_label_id"
+        static let subscriberBadgeViewIdentifier = "subscriber_badge_id"
     }
     
     fileprivate var viewModel: OWUserNameViewModeling!
@@ -39,12 +45,10 @@ internal final class UserNameView: OWBaseView {
     private let dateLabel: OWBaseLabel = .init()
     private lazy var moreButton: OWBaseButton = {
         let btn = OWBaseButton()
-        btn.accessibilityIdentifier = Metrics.moreBtnIdentifier
         return btn
     }()
     private lazy var deletedMessageLabel: OWBaseLabel = {
         let lbl = OWBaseLabel()
-        lbl.accessibilityIdentifier = Metrics.deletedLblIdentifier
         return lbl
     }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
@@ -55,7 +59,6 @@ internal final class UserNameView: OWBaseView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         setupViews()
         applyAccessibility()
     }
@@ -274,8 +277,18 @@ fileprivate extension UserNameView {
 // MARK: Accessibility
 
 extension UserNameView {
-  func applyAccessibility() {
-    moreButton.accessibilityTraits = .button
-    moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
-  }
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
+        badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
+        moreButton.accessibilityIdentifier = Metrics.moreButtonIdentifier
+        nameAndBadgeStackview.accessibilityIdentifier = Metrics.nameAndBadgeStackviewIdentifier
+        subtitleLabel.accessibilityIdentifier = Metrics.subtitleLabelIdentifier
+        dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
+        deletedMessageLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
+        subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
+        
+        moreButton.accessibilityTraits = .button
+        moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+    }
 }
