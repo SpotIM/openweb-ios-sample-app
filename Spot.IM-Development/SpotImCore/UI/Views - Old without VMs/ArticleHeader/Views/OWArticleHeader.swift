@@ -10,6 +10,14 @@ import UIKit
 import RxSwift
 
 internal final class OWArticleHeader: OWBaseView {
+    fileprivate struct Metrics {
+        static let identifier = "article_header_id"
+        static let conversationImageIdentifier = "conversation_image_id"
+        static let conversationTitleIdentifier = "conversation_title_id"
+        static let conversationAuthorIdentifier = "conversation_author_id"
+        static let separatorIdentifier = "separator_id"
+        static let titlesContainerIdentifier = "titles_container_id"
+    }
     
     private lazy var conversationImageView: OWBaseUIImageView = .init()
     private lazy var conversationTitleLabel: OWBaseLabel = .init()
@@ -26,6 +34,16 @@ internal final class OWArticleHeader: OWBaseView {
         super.init(frame: frame)
         
         setup()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        conversationImageView.accessibilityIdentifier = Metrics.conversationImageIdentifier
+        conversationTitleLabel.accessibilityIdentifier = Metrics.conversationTitleIdentifier
+        conversationAuthorLabel.accessibilityIdentifier = Metrics.conversationAuthorIdentifier
+        separatorView.accessibilityIdentifier = Metrics.separatorIdentifier
+        titlesContainer.accessibilityIdentifier = Metrics.titlesContainerIdentifier
     }
     
     func configure(with viewModel: OWArticleHeaderViewModeling) {
