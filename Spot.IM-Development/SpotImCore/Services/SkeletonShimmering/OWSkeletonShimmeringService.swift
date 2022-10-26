@@ -91,12 +91,12 @@ fileprivate extension OWSkeletonShimmeringService {
     func stopService() {
         _ = Observable.just(())
             .take(1)
-                .observe(on: scheduler)
-                .subscribe(onNext: { [weak self] _ in
-                    guard let self = self else { return }
-                    self.disposeBag = nil // Cancel existing run of the service
-                    self.isServiceRunning.onNext(false)
-                })
+            .observe(on: scheduler)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                self.disposeBag = nil // Cancel existing run of the service
+                self.isServiceRunning.onNext(false)
+            })
     }
     
     func startService() {
