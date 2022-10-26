@@ -11,7 +11,7 @@ import UIKit
 
 struct OWSkeletonShimmeringConfiguration {
     var shimmeringDirection: OWShimmeringDirection
-    let duration: TimeInterval // In seconds
+    let duration: Int // In milliseconds
     let backgroundColor: UIColor
     let highlightColor: UIColor
     
@@ -22,7 +22,7 @@ struct OWSkeletonShimmeringConfiguration {
 
 extension OWSkeletonShimmeringConfiguration {
     static let `default` = OWSkeletonShimmeringConfiguration(shimmeringDirection: .rightToLeft,
-                                                             duration: 1.0,
+                                                             duration: 1000,
                                                              backgroundColor: UIColor.skeletonBackgroundColor,
                                                              highlightColor: UIColor.skeletonHighlightColor)
     
