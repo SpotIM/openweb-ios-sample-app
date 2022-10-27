@@ -21,7 +21,27 @@ class SPCommentCreationViewController: SPBaseViewController,
                                        OWLoaderPresentable,
                                        OWUserAuthFlowDelegateContainable,
                                        OWUserPresentable {
-    
+    fileprivate struct Metrics {
+        static let identifier = "comment_reply_id"
+        static let topContainerIdentifier = "top_container_id"
+        static let topContainerStackIdentifier = "top_container_stack_id"
+        static let commentContentScrollViewIdentifier = "comment_content_scrollView_id"
+        static let textInputViewContainerIdentifier = "text_input_view_container_id"
+        static let imagePreviewIdentifier = "image_preview_id"
+        static let usernameIdentifier = "username_id"
+        static let activityIndicatorIdentifier = "activity_indicator_id"
+        static let mainContainerIdentifier = "main_container_id"
+        static let footerIdentifier = "footer_id"
+        static let scrollViewIdentifier = "scroll_view_id"
+        static let commentLabelsContainerIdentifier = "comment_labels_container_id"
+        static let commentContentScrollIdentifier = "comment_content_scroll_view_id"
+        static let closeButtonIdentifier = "close_button_id"
+        static let commentHeaderIdentifier = "comment_header_id"
+        static let commentNewHeaderIdentifier = "comment_new_header_id"
+        static let commentingContainerIdentifier = "commenting_container_id"
+        static let commentingOnLabelIdentifier = "commenting_on_label_id"
+        static let articleIdentifier = "article_id"
+    }
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: OWAuthenticationHandler?
@@ -111,6 +131,29 @@ class SPCommentCreationViewController: SPBaseViewController,
             topContainerView.bringSubviewToFront(closeButton)
         }
         usernameView.configureAvatarViewModel(with: model.avatarViewVM)
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.view.accessibilityIdentifier = Metrics.identifier
+        topContainerView.accessibilityIdentifier = Metrics.topContainerIdentifier
+        topContainerStack.accessibilityIdentifier = Metrics.topContainerStackIdentifier
+        commentContentScrollView.accessibilityIdentifier = Metrics.commentContentScrollViewIdentifier
+        textInputViewContainer.accessibilityIdentifier = Metrics.textInputViewContainerIdentifier
+        imagePreviewView.accessibilityIdentifier = Metrics.imagePreviewIdentifier
+        usernameView.accessibilityIdentifier = Metrics.usernameIdentifier
+        activityIndicator.accessibilityIdentifier = Metrics.activityIndicatorIdentifier
+        mainContainerView.accessibilityIdentifier = Metrics.mainContainerIdentifier
+        footerView.accessibilityIdentifier = Metrics.footerIdentifier
+        scrollView.accessibilityIdentifier = Metrics.scrollViewIdentifier
+        commentLabelsContainer.accessibilityIdentifier = Metrics.commentLabelsContainerIdentifier
+        commentContentScrollView.accessibilityIdentifier = Metrics.commentContentScrollIdentifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        commentHeaderView.accessibilityIdentifier = Metrics.commentHeaderIdentifier
+        commentNewHeaderView.accessibilityIdentifier = Metrics.commentNewHeaderIdentifier
+        commentingContainer.accessibilityIdentifier = Metrics.commentingContainerIdentifier
+        commentingOnLabel.accessibilityIdentifier = Metrics.commentingOnLabelIdentifier
+        articleView.accessibilityIdentifier = Metrics.articleIdentifier
     }
     
     @objc override func overrideUserInterfaceStyleDidChange() {

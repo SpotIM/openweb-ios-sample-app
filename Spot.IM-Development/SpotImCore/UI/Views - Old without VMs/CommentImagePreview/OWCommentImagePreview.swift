@@ -13,7 +13,12 @@ protocol OWCommentImagePreviewDelegate: AnyObject {
 }
 
 final class OWCommentImagePreview: OWBaseView {
-    
+    fileprivate struct Metrics {
+        static let identifier = "comment_image_preview_id"
+        static let imageIdentifier = "image_id"
+        static let loaderIdentifier = "loader_id"
+        static let removeButtonIdentifier = "remove_button_id"
+    }
     private let imageView: OWBaseUIImageView = .init()
     private let loaderView: SPLoaderView = .init(backgroundOpacity: 0.4)
     

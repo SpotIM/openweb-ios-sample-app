@@ -9,7 +9,9 @@
 import UIKit
 
 public class OWBaseLabel: UILabel {
-    
+    fileprivate struct Metrics {
+        static let identifier = "base_label_id"
+    }
     // edge inset can be set to label (padding), default is no padding (insets = 0)
     var insets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     
@@ -18,6 +20,7 @@ public class OWBaseLabel: UILabel {
         
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
+        self.accessibilityIdentifier = Metrics.identifier
     }
     
     public override func drawText(in rect: CGRect) {
