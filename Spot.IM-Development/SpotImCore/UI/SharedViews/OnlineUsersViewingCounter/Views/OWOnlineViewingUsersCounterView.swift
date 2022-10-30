@@ -16,8 +16,8 @@ class OWOnlineViewingUsersCounterView: UIView {
         static let horizontalMargin: CGFloat = 6
         static let viewersFontSize: CGFloat = 15.0
         static let identifier = "online_viewing_users_counter_id"
-        static let imgViewIconIdentifier = "img_view_icon_id"
-        static let lblViewersNumberIdentifier = "lbl_viewers_number_id"
+        static let imgViewIconIdentifier = "online_viewing_users_img_view_icon_id"
+        static let lblViewersNumberIdentifier = "online_viewing_users_lbl_viewers_number_id"
     }
     
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
