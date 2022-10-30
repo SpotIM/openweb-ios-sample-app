@@ -14,6 +14,8 @@ internal extension UIColor {
     static let lightBlue = #colorLiteral(red: 0.7590701394, green: 0.96344834, blue: 0.9764705896, alpha: 1)
     static let lighterPink = #colorLiteral(red: 1, green: 0.9147674944, blue: 0.8733279043, alpha: 1)
     static let lightPink = #colorLiteral(red: 1, green: 0.7809498291, blue: 0.9853027483, alpha: 1)
+    static let skeletonBackgroundColor = UIColor(red: 210.0/255.0, green: 210.0/255.0, blue: 210.0/255.0, alpha: 1.0)
+    static let skeletonHighlightColor = UIColor(red: 235.0/255.0, green: 235.0/255.0, blue: 235.0/255.0, alpha: 1.0)
 
     // from design
     static let darkSkyBlue = #colorLiteral(red: 0.5490196078, green: 0.7450980392, blue: 0.8392156863, alpha: 1)     // #8CBED6
