@@ -11,7 +11,7 @@ import UIKit
 final class MessageContainerView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "message_container_id"
-        static let mainTextLabelIdentifier = "main_text_label_id"
+        static let mainTextLabelIdentifier = "message_container_main_text_label_id"
     }
     
     weak var delegate: MessageContainerViewDelegate?
