@@ -73,7 +73,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
     
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
-        return OWOnlineViewingUsersCounterViewModel()
+        return OWOnlineViewingUsersCounterViewModelNew()
     }()
     
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
