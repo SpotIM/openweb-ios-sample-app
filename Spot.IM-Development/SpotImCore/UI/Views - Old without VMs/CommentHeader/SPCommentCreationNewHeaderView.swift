@@ -30,7 +30,14 @@ protocol SPCommentCreationNewHeaderViewDelegate: AnyObject {
 }
 
 final class SPCommentCreationNewHeaderView: OWBaseView {
-    
+    fileprivate struct Metrics {
+        static let identifier = "comment_creation_new_header_view_id"
+        static let closeButtonIdentifier = "comment_creation_new_header_view_close_button_id"
+        static let headerTitleLabelIdentifier = "comment_creation_new_header_view_header_title_label_id"
+        static let replyingLabelIdentifier = "comment_creation_new_header_view_replying_label_id"
+        static let commentAuthorLabelIdentifier = "comment_creation_new_header_view_comment_author_label_id"
+        static let commentLabelIdentifier = "comment_creation_new_header_view_comment_label_id"
+    }
     weak var delegate: SPCommentCreationNewHeaderViewDelegate?
     
     let closeButton: OWBaseButton = .init()
@@ -48,6 +55,16 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         super.init(frame: frame)
         
         setup()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        headerTitleLabel .accessibilityIdentifier = Metrics.headerTitleLabelIdentifier
+        replyingLabel.accessibilityIdentifier = Metrics.replyingLabelIdentifier
+        commentAuthorLabel.accessibilityIdentifier = Metrics.commentAuthorLabelIdentifier
+        commentLabel.accessibilityIdentifier = Metrics.commentLabelIdentifier
     }
     
     // Handle dark mode \ light mode change
