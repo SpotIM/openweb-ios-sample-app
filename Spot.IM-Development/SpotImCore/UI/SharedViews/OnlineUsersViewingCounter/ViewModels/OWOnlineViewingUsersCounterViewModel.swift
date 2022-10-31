@@ -57,16 +57,6 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
 class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewModeling, OWOnlineViewingUsersCounterViewModelingInputs, OWOnlineViewingUsersCounterViewModelingOutputs {
     var inputs: OWOnlineViewingUsersCounterViewModelingInputs { return self }
     var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { return self }
-    
-    fileprivate var model = BehaviorSubject<RealTimeOnlineViewingUsersModel?>(value: nil)
-
-    init (_ model: RealTimeOnlineViewingUsersModel) {
-        configureModel(model)
-    }
-    
-    // Allow creation without a model due to current limitations
-    // Idealy we will never create a VM without a model or services
-    init () {}
 
     var viewingCount: Observable<String> {
         guard let postId = OWManager.manager.postId else { return .empty()}
@@ -88,6 +78,5 @@ class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewMo
     }()
     
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
-        self.model.onNext(model)
     }
 }
