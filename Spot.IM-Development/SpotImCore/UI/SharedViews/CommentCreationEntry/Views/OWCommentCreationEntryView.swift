@@ -24,9 +24,7 @@ class OWCommentCreationEntryView: UIView {
         static let callToActionHeight: CGFloat = 48
         static let fontSize: CGFloat = 16
         static let identifier = "comment_creation_entry_id"
-        static let avatarIdentifier = "avatar_id"
-        static let labelContainerIdentifier = "label_container_id"
-        static let labelIdentifier = "label_id"
+        static let labelIdentifier = "comment_creation_entry_label_id"
     }
     
     fileprivate lazy var userAvatarView: SPAvatarView = {
@@ -74,8 +72,6 @@ class OWCommentCreationEntryView: UIView {
     
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        userAvatarView.accessibilityIdentifier = Metrics.avatarIdentifier
-        labelContainer.accessibilityIdentifier = Metrics.labelContainerIdentifier
         label.accessibilityIdentifier = Metrics.labelIdentifier
     }
     

@@ -31,6 +31,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func userDefaults() -> OWUserDefaultsProtocol
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
+    func skeletonShimmeringService() -> OWSkeletonShimmeringServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -99,6 +100,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWSpotConfigurationService(servicesProvider: self)
     }()
     
+    fileprivate lazy var _skeletonShimmeringService: OWSkeletonShimmeringServicing = {
+        return OWSkeletonShimmeringService(config: OWSkeletonShimmeringConfiguration.default)
+    }()
+    
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -146,6 +151,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func analyticsService() -> OWAnalyticsServicing {
         return _analyticsService
     }
+    
+    func skeletonShimmeringService() -> OWSkeletonShimmeringServicing {
+        return _skeletonShimmeringService
+    }
 }
 
 // Configure
@@ -162,5 +171,6 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     func change(spotId : OWSpotId) {
         // Stop / re-create services which depend on spot id
         _realtimeService.stopFetchingData()
+        _skeletonShimmeringService.removeAllSkeletons()
     }
 }

@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentCreationView: UIView {
     fileprivate struct Metrics {
-        static let identifier = "comment_creation_id"
+        static let identifier = "comment_creation_view_id"
     }
     
     fileprivate let viewModel: OWCommentCreationViewViewModeling
