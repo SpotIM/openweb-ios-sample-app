@@ -15,6 +15,9 @@ class OWOnlineViewingUsersCounterView: UIView {
     fileprivate struct Metrics {
         static let horizontalMargin: CGFloat = 6
         static let viewersFontSize: CGFloat = 15.0
+        static let identifier = "online_viewing_users_counter_id"
+        static let imgViewIconIdentifier = "online_viewing_users_img_view_icon_id"
+        static let lblViewersNumberIdentifier = "online_viewing_users_lbl_viewers_number_id"
     }
     
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
@@ -64,6 +67,13 @@ fileprivate extension OWOnlineViewingUsersCounterView {
             make.centerY.trailing.equalToSuperview()
             make.leading.equalTo(imgViewIcon.OWSnp.trailing).offset(Metrics.horizontalMargin)
         }
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        imgViewIcon.accessibilityIdentifier = Metrics.imgViewIconIdentifier
+        lblViewersNumber.accessibilityIdentifier = Metrics.lblViewersNumberIdentifier
     }
     
     func configureViews() {
