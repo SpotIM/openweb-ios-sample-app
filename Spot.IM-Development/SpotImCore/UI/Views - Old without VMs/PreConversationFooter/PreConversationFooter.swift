@@ -20,20 +20,21 @@ protocol SPPreConversationFooterDelegate: AnyObject {
 internal final class SPPreConversationFooter: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "pre_conversation_footer_id"
-        static let termsBtnIdentifier = "terms_button_id"
-        static let privacyBtnIdentifier = "privacy_button_id"
+        static let showMoreCommentsButtonIdentifier = "pre_conversation_footer_show_more_comments_button_id"
+        static let termsButtonIdentifier = "pre_conversation_footer_show_terms_button_id"
+        static let privacyButtonIdentifier = "pre_conversation_footer_show_privacy_button_id"
+        static let spotIMIconIdentifier = "pre_conversation_footer_ow_icon_id"
+        static let addSpotIMButtonIdentifier = "pre_conversation_footer_open_ow_web_button_id"
     }
     private lazy var separatorView: OWBaseView = .init()
     private lazy var showMoreCommentsButton: SPShowCommentsButton = .init()
     private lazy var termsButton: OWBaseButton = {
         let btn = OWBaseButton()
-        btn.accessibilityIdentifier = Metrics.termsBtnIdentifier
         return btn
     }()
     private lazy var dotLabel: OWBaseLabel = .init()
     private lazy var privacyButton: OWBaseButton = {
         let btn = OWBaseButton()
-        btn.accessibilityIdentifier = Metrics.privacyBtnIdentifier
         return btn
     }()
     private lazy var spotIMIcon: OWBaseUIImageView = .init()
@@ -49,8 +50,17 @@ internal final class SPPreConversationFooter: OWBaseView {
 
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         setup()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        showMoreCommentsButton.accessibilityIdentifier = Metrics.showMoreCommentsButtonIdentifier
+        termsButton.accessibilityIdentifier = Metrics.termsButtonIdentifier
+        privacyButton.accessibilityIdentifier = Metrics.privacyButtonIdentifier
+        spotIMIcon.accessibilityIdentifier = Metrics.spotIMIconIdentifier
+        addSpotIMButton.accessibilityIdentifier = Metrics.addSpotIMButtonIdentifier
     }
     
     // Handle dark mode \ light mode change
