@@ -56,6 +56,7 @@ internal final class OWPreConversationHeaderView: OWBaseView {
     
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
+        self.backgroundColor = .clear
         titleLabel.textColor = .spForeground0
         counterLabel.textColor = .spForeground1
         updateCustomUI()
@@ -93,6 +94,12 @@ fileprivate extension OWPreConversationHeaderView {
             .startWith("")
             .bind(to: counterLabel.rx.text)
             .disposed(by: disposeBag)
+        
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] _ in
+                self?.updateColorsAccordingToStyle()
+            }).disposed(by: disposeBag)
     }
 }
 
