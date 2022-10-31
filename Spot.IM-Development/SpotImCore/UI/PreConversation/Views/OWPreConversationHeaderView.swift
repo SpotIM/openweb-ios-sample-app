@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 protocol OWPreConversationHeaderViewDelegate: AnyObject {
     func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel)
@@ -37,15 +39,17 @@ internal final class OWPreConversationHeaderView: OWBaseView {
     }()
     
     private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
-       return OWOnlineViewingUsersCounterView()  // TODO: use VM
+        return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
     }()
     
     internal weak var delegate: OWPreConversationHeaderViewDelegate?
+    fileprivate var viewModel: OWPreConversationHeaderViewModeling
+    fileprivate let disposeBag = DisposeBag()
     
-    init(onlineViewingUsersCounterVM: OWOnlineViewingUsersCounterViewModeling) {
+    init(viewModel: OWPreConversationHeaderViewModeling) {
+        self.viewModel = viewModel
         super.init(frame: .zero)
         self.accessibilityIdentifier = Metrics.identifier
-        onlineViewingUsersView.configure(with: onlineViewingUsersCounterVM) // TODO: do not use configure :)
         setupUI()
         setupObservers()
     }
@@ -59,17 +63,6 @@ internal final class OWPreConversationHeaderView: OWBaseView {
     
     private func updateCustomUI() {
         delegate?.updateHeaderCustomUI(titleLabel: titleLabel, counterLabel: counterLabel)
-    }
-
-    // TODO: should be set from VM
-    internal func set(commentCount: String?) {
-        counterLabel.fadeTransition(1.0)
-        if let commentCount = commentCount {
-            counterLabel.text = "(\(commentCount))"
-        } else {
-            counterLabel.text = nil
-        }
-        updateCustomUI()
     }
 }
 
@@ -96,7 +89,10 @@ fileprivate extension OWPreConversationHeaderView {
     }
     
     func setupObservers() {
-        
+        viewModel.outputs.commentsCount
+            .startWith("")
+            .bind(to: counterLabel.rx.text)
+            .disposed(by: disposeBag)
     }
 }
 
