@@ -45,6 +45,14 @@ class OWOnlineViewingUsersCounterView: UIView {
         setupViews()
     }
     
+    init(viewModel: OWOnlineViewingUsersCounterViewModeling) {
+        super.init(frame: .zero)
+        self.viewModel = viewModel
+        setupViews()
+        disposeBag = DisposeBag()
+        configureViews()
+    }
+    
     func configure(with viewModel: OWOnlineViewingUsersCounterViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()

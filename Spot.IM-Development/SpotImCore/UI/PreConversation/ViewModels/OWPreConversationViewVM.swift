@@ -20,7 +20,7 @@ protocol OWPreConversationViewViewModelingInputs {
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
-    var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
+    var preConversationHeaderVM: OWPreConversationHeaderViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
@@ -72,8 +72,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
     }
     
-    lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
-        return OWOnlineViewingUsersCounterViewModelNew()
+    lazy var preConversationHeaderVM: OWPreConversationHeaderViewModeling = {
+        return OWPreConversationHeaderViewModel()
     }()
     
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {

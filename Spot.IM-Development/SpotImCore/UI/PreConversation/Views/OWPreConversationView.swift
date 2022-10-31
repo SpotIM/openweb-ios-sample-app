@@ -49,7 +49,7 @@ class OWPreConversationView: UIView {
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
     
     fileprivate lazy var header: OWPreConversationHeaderView = {
-        return OWPreConversationHeaderView(onlineViewingUsersCounterVM: self.viewModel.outputs.onlineViewingUsersVM)
+        return OWPreConversationHeaderView(viewModel: self.viewModel.outputs.preConversationHeaderVM)
     }()
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
