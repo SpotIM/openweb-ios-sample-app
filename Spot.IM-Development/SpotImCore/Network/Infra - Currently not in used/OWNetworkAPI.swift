@@ -106,7 +106,6 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
                         observer.onNext(value)
                         observer.onCompleted()
                     case .failure(let error):
-                        print(error)
                         observer.onError(error)
                     }
                 })
