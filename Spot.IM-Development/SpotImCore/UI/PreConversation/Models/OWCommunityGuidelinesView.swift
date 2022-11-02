@@ -75,6 +75,13 @@ extension OWCommunityGuidelinesView {
                 self.titleTextView.attributedText = attString
             })
             .disposed(by: disposeBag)
+        
+        viewModel.outputs.showSeparator
+            .bind(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.separatorView.isHidden = !isVisible
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -83,6 +90,7 @@ extension OWCommunityGuidelinesView: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
 //        delegate?.clickOnUrl(url: URL)
 //        SPAnalyticsHolder.default.log(event: .communityGuidelinesLinkClicked(targetUrl: URL.absoluteString), source: .conversation)
+        viewModel.inputs.urlClicked.onNext(URL)
         return false
     }
     
