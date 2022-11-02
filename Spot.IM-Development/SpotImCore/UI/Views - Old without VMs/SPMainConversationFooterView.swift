@@ -11,11 +11,8 @@ import UIKit
 final class SPMainConversationFooterView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "main_conversation_footer_id"
-        static let commentCreationEntryIdentifier = "comment_creation_entry_id"
-        static let separatorIdentifier = "separator_id"
-        static let bannerContainerIdentifier = "banner_container_id"
-        static let bannerIdentifier = "banner_id"
-        static let readOnlyIdentifier = "readOnly_id"
+        static let commentCreationEntryIdentifier = "main_conversation_footer_comment_creation_entry_id"
+        static let readOnlyLabelIdentifier = "main_conversation_footer_readOnly_label_id"
     }
     
     let commentCreationEntryView: OWCommentCreationEntryView = .init()
@@ -53,10 +50,7 @@ final class SPMainConversationFooterView: OWBaseView {
     private func setupAccessibilityIdentifiers() {
         self.accessibilityIdentifier = Metrics.identifier
         commentCreationEntryView.accessibilityIdentifier = Metrics.commentCreationEntryIdentifier
-        separatorView.accessibilityIdentifier = Metrics.separatorIdentifier
-        bannerContainerView.accessibilityIdentifier = Metrics.bannerContainerIdentifier
-        bannerView?.accessibilityIdentifier = Metrics.bannerIdentifier
-        readOnlyLabel?.accessibilityIdentifier = Metrics.readOnlyIdentifier
+        readOnlyLabel?.accessibilityIdentifier = Metrics.readOnlyLabelIdentifier
     }
     
     func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {

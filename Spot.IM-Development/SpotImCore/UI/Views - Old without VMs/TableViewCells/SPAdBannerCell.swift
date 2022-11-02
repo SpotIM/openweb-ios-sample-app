@@ -15,8 +15,7 @@ protocol SPAdBannerCellDelegate: AnyObject {
 internal final class SPAdBannerCell: SPBaseTableViewCell {
     fileprivate struct Metrics {
         static let identifier = "ad_banner_cell_id"
-        static let adBannerIdentifier = "ad_banner_id"
-        static let closeButtonIdentifier = "close_button_id"
+        static let closeButtonIdentifier = "ad_banner_cell_close_button_id"
     }
     weak var delegate: SPAdBannerCellDelegate?
     
@@ -33,7 +32,6 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
     
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        adBannerView.accessibilityIdentifier = Metrics.adBannerIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
     }
     

@@ -25,14 +25,12 @@ internal final class UserNameView: OWBaseView {
         static let badgeVerticalInset: CGFloat = 2
         static let subtitleTopPadding: CGFloat = 6
         static let identifier = "user_name_view_id"
-        static let userNameLabelIdentifier = "user_name_label_id"
-        static let badgeTagLabelIdentifier = "badge_tag_label_id"
-        static let moreButtonIdentifier = "user_name_menu_button_id"
-        static let nameAndBadgeStackviewIdentifier = "name_and_badge_stackview_id"
-        static let subtitleLabelIdentifier = "name_and_badge_stackview_id"
-        static let dateLabelIdentifier = "date_label_id"
-        static let deletedMessageLabelIdentifier = "deleted_message_label_id"
-        static let subscriberBadgeViewIdentifier = "subscriber_badge_id"
+        static let userNameLabelIdentifier = "user_name_view_user_name_label_id"
+        static let badgeTagLabelIdentifier = "user_name_view_badge_tag_label_id"
+        static let moreButtonIdentifier = "user_name_view_more_button_id"
+        static let dateLabelIdentifier = "user_name_view_date_label_id"
+        static let deletedMessageLabelIdentifier = "user_name_view_deleted_message_label_id"
+        static let subscriberBadgeViewIdentifier = "user_name_view_subscriber_badge_view_id"
     }
     
     fileprivate var viewModel: OWUserNameViewModeling!
@@ -282,8 +280,6 @@ extension UserNameView {
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
         badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         moreButton.accessibilityIdentifier = Metrics.moreButtonIdentifier
-        nameAndBadgeStackview.accessibilityIdentifier = Metrics.nameAndBadgeStackviewIdentifier
-        subtitleLabel.accessibilityIdentifier = Metrics.subtitleLabelIdentifier
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         deletedMessageLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier

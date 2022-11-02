@@ -23,16 +23,14 @@ extension MessageItemContainable {
 internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable {
     fileprivate struct Metrics {
         static let identifier = "comment_cell_id"
-        static let messageIdentifier = "message_id"
-        static let userCommentIdentifier = "user_comment_id"
-        static let statusIndicationIdentifier = "status_indication_id"
-        static let commentLabelIdentifier = "comment_label_id"
-        static let replyActionsIdentifier = "reply_actions_id"
-        static let moreRepliesIdentifier = "more_replies_id"
-        static let headerIdentifier = "header_id"
-        static let separatorIdentifier = "separator_id"
-        static let commentMediaIdentifier = "comment_media_id"
-        static let opacityIdentifier = "opacity_id"
+        static let contentViewIdentifier = "comment_cell_content_view_id"
+        static let messageIdentifier = "comment_cell_message_id"
+        static let userCommentIdentifier = "comment_cell_user_comment_id"
+        static let statusIndicationIdentifier = "comment_cell_status_indication_id"
+        static let commentLabelIdentifier = "comment_cell_comment_label_id"
+        static let replyActionsIdentifier = "comment_cell_reply_actions_id"
+        static let moreRepliesIdentifier = "comment_cell_more_replies_id"
+        static let headerIdentifier = "comment_cell_header_id"
     }
     
     weak var delegate: SPCommentCellDelegate? {
@@ -141,11 +139,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         userView.accessibilityIdentifier = Metrics.userCommentIdentifier
         commentLabelView.accessibilityIdentifier = Metrics.commentLabelIdentifier
         messageView.accessibilityIdentifier = Metrics.messageIdentifier
-        commentMediaView.accessibilityIdentifier = Metrics.commentMediaIdentifier
         replyActionsView.accessibilityIdentifier = Metrics.replyActionsIdentifier
         moreRepliesView.accessibilityIdentifier = Metrics.moreRepliesIdentifier
-        separatorView.accessibilityIdentifier = Metrics.separatorIdentifier
-        opacityView.accessibilityIdentifier = Metrics.opacityIdentifier
         statusIndicationView.accessibilityIdentifier = Metrics.statusIndicationIdentifier
     }
     
