@@ -58,7 +58,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
     }()
     
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
-        return OWCommunityGuidelinesViewModel()
+        return OWCommunityGuidelinesViewModel(paddedStyle: false)
     }()
     
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {

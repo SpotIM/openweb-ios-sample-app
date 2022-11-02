@@ -15,8 +15,8 @@ internal final class OWCommunityGuidelinesView: OWBaseView {
         static let identifier = "community_guidelines_id"
         static let titleHorizontalOffset: CGFloat = 16.0
         static let separatorHeight: CGFloat = 1.0
-        static let separatorHorizontalOffsetPreConversation: CGFloat = 16.0
-        static let titleBottomOffsetPreConversation: CGFloat = 8.0 // TODO: pre/full conversation offset&constraints logic should be in conversation/pre-conversation views!
+        static let separatorHorizontalOffset: CGFloat = 16.0
+        static let separatorTopPadding: CGFloat = 8.0
     }
     
     fileprivate lazy var titleTextView: OWBaseTextView = {
@@ -62,8 +62,15 @@ extension OWCommunityGuidelinesView {
         }
         
         separatorView.OWSnp.makeConstraints { make in
-            make.top.equalTo(titleTextView.OWSnp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.bottom.equalToSuperview()
+            if (viewModel.inputs.paddedStyle) {
+                make.top.equalTo(titleTextView.OWSnp.bottom).offset(Metrics.separatorTopPadding)
+                make.leading.equalToSuperview().offset(Metrics.separatorHorizontalOffset)
+                make.trailing.equalToSuperview().offset(-Metrics.separatorHorizontalOffset)
+            } else {
+                make.top.equalTo(titleTextView.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
             make.height.equalTo(Metrics.separatorHeight)
         }
     }
