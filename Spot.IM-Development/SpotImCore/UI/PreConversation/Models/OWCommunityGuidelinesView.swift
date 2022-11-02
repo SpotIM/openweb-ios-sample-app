@@ -69,8 +69,11 @@ extension OWCommunityGuidelinesView {
     }
     
     fileprivate func setupObservers() {
-        viewModel.outputs.communityGuidelinesHtmlText
-            .bind(to: titleTextView.rx.text)
+        viewModel.outputs.communityGuidelinesHtmlAttributedString
+            .bind(onNext: { [weak self] attString in
+                guard let self = self else { return }
+                self.titleTextView.attributedText = attString
+            })
             .disposed(by: disposeBag)
     }
 }
