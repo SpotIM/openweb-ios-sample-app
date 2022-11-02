@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
-    
+    var urlClicked: PublishSubject<URL> { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
-    var communityGuidelinesHtmlText: Observable<String?> { get }
+    var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> { get }
     var showSeparator: Observable<Bool> { get }
 }
 
@@ -27,17 +27,25 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
     var inputs: OWCommunityGuidelinesViewModelingInputs { return self }
     var outputs: OWCommunityGuidelinesViewModelingOutputs { return self }
     
-    var communityGuidelinesHtmlText: Observable<String?> {
-        OWSharedServicesProvider.shared.spotConfigurationService().config(spotId: OWManager.manager.spotId)
-            .map { config in
+    fileprivate var queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue")
+    
+    let urlClicked = PublishSubject<URL>()
+    var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> {
+        OWSharedServicesProvider.shared.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .observe(on: queueScheduler)
+            .map { config -> String? in
                 guard let conversationConfig = config.conversation,
-                      conversationConfig.communityGuidelinesEnabled ?? false else { return nil}
+                      conversationConfig.communityGuidelinesEnabled == true else { return nil }
                 return config.conversation?.communityGuidelinesTitle?.value
             }
             .unwrap()
             .map { [weak self] communityGuidelines in
-                return self?.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelines)
+                guard let self = self else { return nil }
+                let string = self.getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelines)
+                return self.getTitleTextViewAttributedText(htmlString: string)
             }
+            .observe(on: MainScheduler.instance)
             .asObservable()
     }
     
@@ -47,10 +55,25 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             .asObservable()
     }
     
+    init() {
+        setupObservers()
+    }
 }
 
-extension OWCommunityGuidelinesViewModel {
-    private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: String) -> String {
+fileprivate extension OWCommunityGuidelinesViewModel {
+    func setupObservers() {
+        let _ = urlClicked
+            .do(onNext: { url in
+                // TODO: open link - we should have some coordinator ho handle the opening SafariViewController.
+                // TODO: have some OWSafariViewController that will inherit from SFSafariViewController and will have needed configuration with proper ViewModel
+                // TODO: send analytics using new infra
+                // SPAnalyticsHolder.default.log(event: .communityGuidelinesLinkClicked(targetUrl: URL.absoluteString), source: .conversation)
+            })
+    }
+}
+
+fileprivate extension OWCommunityGuidelinesViewModel {
+    func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: String) -> String {
         var htmlString = communityGuidelinesTitle
         
         // remove <p> and </p> tags to control the text height by the sdk
@@ -58,5 +81,32 @@ extension OWCommunityGuidelinesViewModel {
         htmlString = htmlString.replacingOccurrences(of: "</p>", with: "")
         
         return htmlString
+    }
+    
+    func getTitleTextViewAttributedText(htmlString: String) -> NSMutableAttributedString? {
+        if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
+            htmlMutableAttributedString.addAttribute(
+                .font,
+                value: UIFont.preferred(style: .medium, of: Metrics.communityGuidelinesFontSize),
+                range: NSMakeRange(0, htmlMutableAttributedString.length)
+            )
+            htmlMutableAttributedString.addAttribute(
+                .underlineStyle,
+                value: NSNumber(value: false),
+                range: NSMakeRange(0, htmlMutableAttributedString.length)
+            )
+            htmlMutableAttributedString.addAttribute(
+                .foregroundColor,
+                value: UIColor.spForeground0,
+                range: NSMakeRange(0, htmlMutableAttributedString.length)
+            )
+            return htmlMutableAttributedString
+        } else {
+            return nil
+        }
+    }
+    
+    struct Metrics {
+        static let communityGuidelinesFontSize = 15.0
     }
 }
