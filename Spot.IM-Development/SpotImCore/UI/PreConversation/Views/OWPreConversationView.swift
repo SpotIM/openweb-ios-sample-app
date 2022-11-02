@@ -121,6 +121,14 @@ fileprivate extension OWPreConversationView {
             make.top.leading.trailing.equalToSuperview()
         }
         
+        if !viewModel.outputs.isButtonOnlyModeEnabled {
+            self.addSubviews(communityGuidelinesView)
+            communityGuidelinesView.OWSnp.makeConstraints { make in
+                make.top.equalTo(header.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
+        }
+        
         self.addSubview(btnCommentCreation)
         btnCommentCreation.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
