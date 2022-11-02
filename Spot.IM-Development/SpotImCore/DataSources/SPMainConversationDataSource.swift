@@ -812,7 +812,8 @@ extension SPMainConversationDataSource {
             replyingToDisplayName: displayName,
             color: .brandColor,
             user: user,
-            imageProvider: dataProvider.imageURLProvider
+            imageProvider: dataProvider.imageURLProvider,
+            conversationModel: conversationModel
         )
         
         cachedCommentReply = viewModel
