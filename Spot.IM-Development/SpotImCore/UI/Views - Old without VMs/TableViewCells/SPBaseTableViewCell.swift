@@ -9,7 +9,6 @@
 import UIKit
 
 class SPBaseTableViewCell: UITableViewCell {
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -18,7 +17,6 @@ class SPBaseTableViewCell: UITableViewCell {
         
         selectionStyle = .none
         contentView.backgroundColor = .spBackground0
-        contentView.accessibilityIdentifier = "content_view_id"
     }
     
     @available(*,
