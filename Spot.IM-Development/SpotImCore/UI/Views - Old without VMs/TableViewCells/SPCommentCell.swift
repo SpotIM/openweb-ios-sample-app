@@ -135,7 +135,6 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        contentView.accessibilityIdentifier = Metrics.contentViewIdentifier
         headerView.accessibilityIdentifier = Metrics.headerIdentifier
         userView.accessibilityIdentifier = Metrics.userCommentIdentifier
         commentLabelView.accessibilityIdentifier = Metrics.commentLabelIdentifier
