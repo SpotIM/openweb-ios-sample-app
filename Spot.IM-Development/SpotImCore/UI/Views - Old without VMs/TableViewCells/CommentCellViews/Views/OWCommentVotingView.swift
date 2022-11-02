@@ -17,12 +17,10 @@ final class OWCommentVotingView: OWBaseView {
         static let voteButtonInset: CGFloat = 4.0
         static let fontSize: CGFloat = 16.0
         static let identifier = "comment_voting_view_id"
-        static let stackViewIdentifier = "stackview_id"
-        static let rankUpButtonIdentifier = "rank_up_button_id"
-        static let rankDownButtonIdentifier = "rank_down_button_id"
-        static let rankUpLabelIdentifier = "rank_up_label_id"
-        static let rankDownLabelIdentifier = "rank_down_label_id"
-        static let seperetorIdentifier = "seperetor_id"
+        static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
+        static let rankDownButtonIdentifier = "comment_voting_view_rank_down_button_id"
+        static let rankUpLabelIdentifier = "comment_voting_view_rank_up_label_id"
+        static let rankDownLabelIdentifier = "comment_voting_view_rank_down_label_id"
     }
     
     fileprivate var viewModel: OWCommentVotingViewModeling!
@@ -239,12 +237,10 @@ fileprivate extension OWCommentVotingView {
 fileprivate extension OWCommentVotingView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
-        stackView.accessibilityIdentifier = Metrics.stackViewIdentifier
         rankUpButton.accessibilityIdentifier = Metrics.rankUpButtonIdentifier
         rankDownButton.accessibilityIdentifier = Metrics.rankDownButtonIdentifier
         rankUpLabel.accessibilityIdentifier = Metrics.rankUpLabelIdentifier
         rankDownLabel.accessibilityIdentifier = Metrics.rankDownLabelIdentifier
-        seperetorView.accessibilityIdentifier = Metrics.seperetorIdentifier
         
         rankUpButton.accessibilityTraits = .button
         rankUpButton.accessibilityLabel = LocalizationManager.localizedString(key: "Up vote button")
