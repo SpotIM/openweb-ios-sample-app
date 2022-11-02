@@ -11,6 +11,7 @@ import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
     var urlClicked: PublishSubject<URL> { get }
+    var paddedStyle: Bool { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
@@ -30,6 +31,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
     fileprivate var queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue")
     
     let urlClicked = PublishSubject<URL>()
+    let paddedStyle: Bool
+    
     var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> {
         OWSharedServicesProvider.shared.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
@@ -59,7 +62,8 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             .asObservable()
     }
     
-    init() {
+    init(paddedStyle: Bool = false) {
+        self.paddedStyle = paddedStyle
         setupObservers()
     }
 }
