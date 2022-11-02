@@ -21,7 +21,12 @@ class SPCommentCreationViewController: SPBaseViewController,
                                        OWLoaderPresentable,
                                        OWUserAuthFlowDelegateContainable,
                                        OWUserPresentable {
-    
+    fileprivate struct Metrics {
+        static let identifier = "comment_reply_view_id"
+        static let activityIndicatorIdentifier = "comment_reply_view_activity_indicator_id"
+        static let closeButtonIdentifier = "comment_reply_view_close_button_id"
+        static let commentingOnLabelIdentifier = "comment_reply_view_commenting_on_label_id"
+    }
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
     private var authHandler: OWAuthenticationHandler?
@@ -111,6 +116,14 @@ class SPCommentCreationViewController: SPBaseViewController,
             topContainerView.bringSubviewToFront(closeButton)
         }
         usernameView.configureAvatarViewModel(with: model.avatarViewVM)
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.view.accessibilityIdentifier = Metrics.identifier
+        activityIndicator.accessibilityIdentifier = Metrics.activityIndicatorIdentifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        commentingOnLabel.accessibilityIdentifier = Metrics.commentingOnLabelIdentifier
     }
     
     @objc override func overrideUserInterfaceStyleDidChange() {

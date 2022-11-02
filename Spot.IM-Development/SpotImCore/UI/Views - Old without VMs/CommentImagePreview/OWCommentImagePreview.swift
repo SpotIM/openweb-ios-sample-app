@@ -13,7 +13,12 @@ protocol OWCommentImagePreviewDelegate: AnyObject {
 }
 
 final class OWCommentImagePreview: OWBaseView {
-    
+    fileprivate struct Metrics {
+        static let identifier = "comment_image_preview_id"
+        static let imageViewIdentifier = "comment_image_preview_image_view_id"
+        static let loaderViewIdentifier = "comment_image_preview_loader_view_id"
+        static let removeButtonIdentifier = "comment_image_preview_remove_button_id"
+    }
     private let imageView: OWBaseUIImageView = .init()
     private let loaderView: SPLoaderView = .init(backgroundOpacity: 0.4)
     
@@ -44,6 +49,14 @@ final class OWCommentImagePreview: OWBaseView {
         super.init(frame: frame)
         setup()
         updateColorsAccordingToStyle()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        imageView.accessibilityIdentifier = Metrics.imageViewIdentifier
+        loaderView.accessibilityIdentifier = Metrics.loaderViewIdentifier
+        removeButton.accessibilityIdentifier = Metrics.removeButtonIdentifier
     }
     
     // Handle dark mode \ light mode change

@@ -22,7 +22,10 @@ internal protocol SPTextInputViewDelegate: AnyObject {
 }
 
 final class SPCommentTextInputView: OWBaseView, SPTextInputView {
-
+    fileprivate struct Metrics {
+        static let identifier = "comment_text_input_view_id"
+        static let textInputViewIdentifier = "comment_text_input_view_text_input_view_id"
+    }
     enum CommentType {
         case comment, reply
     }
@@ -42,6 +45,12 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         setupUI()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        textInputView.accessibilityIdentifier = Metrics.textInputViewIdentifier
     }
     
     // Handle dark mode \ light mode change

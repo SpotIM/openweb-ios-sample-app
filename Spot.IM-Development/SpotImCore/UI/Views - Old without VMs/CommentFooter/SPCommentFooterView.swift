@@ -19,7 +19,11 @@ enum SPCommentFooterContentButtonType {
 }
 
 final class SPCommentFooterView: OWBaseView {
-    
+    fileprivate struct Metrics {
+        static let identifier = "comment_footer_view_id"
+        static let postButtonIdentifier = "comment_footer_view_post_button_id"
+        static let addImageButtonIdentifier = "comment_footer_view_add_image_button_id"
+    }
     private let postButton: OWBaseButton = .init()
     private let footerSeperator: OWBaseView = .init()
     
@@ -34,6 +38,13 @@ final class SPCommentFooterView: OWBaseView {
         super.init(frame: frame)
         
         setup()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        postButton.accessibilityIdentifier = Metrics.postButtonIdentifier
+        addImageButton.accessibilityIdentifier = Metrics.addImageButtonIdentifier
     }
     
     // Handle dark mode \ light mode change
