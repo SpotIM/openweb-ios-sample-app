@@ -49,9 +49,13 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             .asObservable()
     }
     
-    fileprivate var _showSeparator = BehaviorSubject<Bool>(value: true)
     var showSeparator: Observable<Bool> {
-        return _showSeparator
+        OWSharedServicesProvider.shared.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { config in
+                // TODO: separator should be hidden when no community question or in button only mode (not really related to config)
+                return true
+            }
             .asObservable()
     }
     
