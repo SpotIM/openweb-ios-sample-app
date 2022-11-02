@@ -30,7 +30,11 @@ internal final class OWCommunityGuidelinesView: OWBaseView {
         return textView
     }()
     
-    private lazy var separatorView: OWBaseView = .init()
+    private lazy var separatorView: OWBaseView = {
+        let view = OWBaseView()
+        view.backgroundColor = .spSeparator2
+        return view
+    }()
     
     fileprivate let viewModel: OWCommunityGuidelinesViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -89,6 +93,18 @@ extension OWCommunityGuidelinesView {
                 self.separatorView.isHidden = !isVisible
             })
             .disposed(by: disposeBag)
+        
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] _ in
+                self?.updateColorsAccordingToStyle()
+            }).disposed(by: disposeBag)
+    }
+    
+    // Handle dark mode \ light mode change
+    func updateColorsAccordingToStyle() {
+        separatorView.backgroundColor = .spSeparator2
+//        delegate?.customizeTextView(textView: titleTextView)
     }
 }
 
