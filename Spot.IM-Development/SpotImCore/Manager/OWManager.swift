@@ -28,6 +28,7 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     let analyticsLayer: OWAnalytics
     let uiLayer: OWUI
     let monetizationLayer: OWMonetization
+    let authenticationLayer: OWUIAuthentication
     fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
     fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
     fileprivate var _currentNonRxSpotId: OWSpotId? = nil
@@ -36,11 +37,13 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
                  uiLayer: OWUI = OWUILayer(),
-                 monetizationLayer: OWMonetization = OWMonetizationLayer()) {
+                 monetizationLayer: OWMonetization = OWMonetizationLayer(),
+                 authenticationLayer: OWUIAuthentication = OWUIAuthenticationLayer()) {
         self.servicesProvider = servicesProvider
         self.analyticsLayer = analyticsLayer
         self.uiLayer = uiLayer
         self.monetizationLayer = monetizationLayer
+        self.authenticationLayer = authenticationLayer
         setupObservers()
     }
 }
