@@ -6,10 +6,19 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+protocol OWUIAuthenticationInternalProtocol {
+    func triggerPublisherDisplayLoginFlow(navController: UINavigationController)
+}
 
 class OWUIAuthenticationLayer: OWUIAuthentication {
     var displayLoginFlow: OWLoginFlowCallback? { return self._displayLoginFlow }
     
     fileprivate var _displayLoginFlow: OWLoginFlowCallback? = nil
+    
+    func triggerPublisherDisplayLoginFlow(navController: UINavigationController) {
+        guard let callback = _displayLoginFlow else { return }
+        callback(navController)
+    }
 }
