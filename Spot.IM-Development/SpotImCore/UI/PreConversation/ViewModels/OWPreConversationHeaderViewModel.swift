@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWPreConversationHeaderViewModelingInputs {
+    var customizeTitleLabelUI: PublishSubject<UILabel> { get }
+    var customizeCounterLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWPreConversationHeaderViewModelingOutputs {
@@ -26,6 +28,9 @@ class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWP
     
     var inputs: OWPreConversationHeaderViewModelingInputs { return self }
     var outputs: OWPreConversationHeaderViewModelingOutputs { return self }
+    
+    var customizeTitleLabelUI = PublishSubject<UILabel>()
+    var customizeCounterLabelUI = PublishSubject<UILabel>()
     
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
         return OWOnlineViewingUsersCounterViewModelNew()
