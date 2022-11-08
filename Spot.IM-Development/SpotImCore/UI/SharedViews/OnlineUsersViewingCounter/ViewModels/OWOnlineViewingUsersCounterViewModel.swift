@@ -11,6 +11,7 @@ import UIKit
 import RxSwift
 
 protocol OWOnlineViewingUsersCounterViewModelingInputs {
+    // TODO: once old view is removed this configureModel function should be removed
     func configureModel(_ model: RealTimeOnlineViewingUsersModel)
 }
 
@@ -63,7 +64,7 @@ class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewMo
         
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
-                try realtimeData.data?.onlineViewingUsersCount("\(OWManager.manager.spotId)_\(postId)")
+                try? realtimeData.data?.onlineViewingUsersCount("\(OWManager.manager.spotId)_\(postId)")
             }
             .unwrap()
             .map { $0.count }
@@ -77,6 +78,7 @@ class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewMo
         return UIImage(spNamed: "viewingUsers", supportDarkMode: false)!
     }()
     
+    // TODO: once old view is removed this configureModel function should be removed
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
     }
 }
