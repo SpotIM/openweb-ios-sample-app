@@ -21,10 +21,18 @@ struct OWSkeletonShimmeringConfiguration {
 }
 
 extension OWSkeletonShimmeringConfiguration {
-    static let `default` = OWSkeletonShimmeringConfiguration(shimmeringDirection: .rightToLeft,
-                                                             duration: 1000,
-                                                             backgroundColor: UIColor.skeletonBackgroundColor,
-                                                             highlightColor: UIColor.skeletonHighlightColor)
+    static let `default` = {
+        let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
+        let skeletonColor = OWColorPalette.shared.color(type: .skeletonColor,
+                                                       themeStyle: currentStyle)
+        let shimmeringColor = OWColorPalette.shared.color(type: .skeletonShimmeringColor,
+                                                       themeStyle: currentStyle)
+        let config = OWSkeletonShimmeringConfiguration(shimmeringDirection: .rightToLeft,
+                                          duration: 1000,
+                                          backgroundColor: skeletonColor,
+                                          highlightColor: shimmeringColor)
+        return config
+    }()
     
     static var defaultLeftToRight: OWSkeletonShimmeringConfiguration = {
         var config = OWSkeletonShimmeringConfiguration.default

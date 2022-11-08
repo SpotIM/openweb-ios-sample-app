@@ -18,10 +18,17 @@ import RxSwift
 protocol OWThemeStyleServicing {
     func setStyle(style: OWThemeStyle)
     var style: Observable<OWThemeStyle> { get }
+    var currentStyle: OWThemeStyle { get } // Non RX way to retrieve the current style as sometimes it might be required
 }
 
 class OWThemeStyleService: OWThemeStyleServicing {
     fileprivate let _style = BehaviorSubject<OWThemeStyle>(value: .light)
+    fileprivate var _currentStyle: OWThemeStyle = .light
+    fileprivate let disposeBag = DisposeBag()
+    
+    init() {
+        setupObservers()
+    }
     
     func setStyle(style: OWThemeStyle) {
         _style.onNext(style)
@@ -30,7 +37,23 @@ class OWThemeStyleService: OWThemeStyleServicing {
     lazy var style: Observable<OWThemeStyle> = {
         return _style
             .asObservable()
+            .observe(on: MainScheduler.instance)
             .share(replay: 1)
     }()
+    
+    var currentStyle: OWThemeStyle {
+        return _currentStyle
+    }
+}
+
+fileprivate extension OWThemeStyleService {
+    func setupObservers() {
+        _style
+            .asObservable()
+            .subscribe(onNext: { [weak self] themeStyle in
+                self?._currentStyle = themeStyle
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
