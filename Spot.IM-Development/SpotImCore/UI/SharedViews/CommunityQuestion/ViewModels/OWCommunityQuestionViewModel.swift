@@ -15,7 +15,7 @@ protocol OWCommunityQuestionViewModelingInputs {
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
-    
+    var communityQuestionString: Observable<String?> { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -26,4 +26,19 @@ protocol OWCommunityQuestionViewModeling {
 class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunityQuestionViewModelingInputs, OWCommunityQuestionViewModelingOutputs {
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
+    
+    fileprivate var queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityQuestionVMQueue")
+    
+    var communityQuestionString: Observable<String?> {
+        // TODO: get question from conversation!
+        OWSharedServicesProvider.shared.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .observe(on: queueScheduler)
+            .map { config -> String? in
+                "SOME QUESTION!"
+            }
+            .unwrap()
+            .observe(on: MainScheduler.instance)
+            .asObservable()
+    }
 }
