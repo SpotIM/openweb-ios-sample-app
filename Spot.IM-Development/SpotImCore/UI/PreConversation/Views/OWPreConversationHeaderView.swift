@@ -10,11 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol OWPreConversationHeaderViewDelegate: AnyObject {
-    func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel)
-}
-
-internal final class OWPreConversationHeaderView: OWBaseView {
+class OWPreConversationHeaderView: UIView {
     fileprivate struct Metrics {
         static let counterLeading: CGFloat = 5
         static let titleFontSize: CGFloat = 25
@@ -23,18 +19,20 @@ internal final class OWPreConversationHeaderView: OWBaseView {
         static let identifier = "pre_conversation_header_view_id"
     }
     
-    private lazy var titleLabel: OWBaseLabel = {
-        let lbl = OWBaseLabel()
+    private lazy var titleLabel: UILabel = {
+        let lbl = UILabel()
         lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
-        lbl.textColor = .spForeground0
+        lbl.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         lbl.text = LocalizationManager.localizedString(key: "Conversation")
         return lbl
     }()
     
-    private lazy var counterLabel: OWBaseLabel = {
-        let lbl = OWBaseLabel()
+    private lazy var counterLabel: UILabel = {
+        let lbl = UILabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.counterFontSize)
-        lbl.textColor = .spForeground1
+        lbl.textColor = OWColorPalette.shared.color(type: .foreground1Color,
+                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         return lbl
     }()
     
@@ -42,7 +40,6 @@ internal final class OWPreConversationHeaderView: OWBaseView {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
     }()
     
-    internal weak var delegate: OWPreConversationHeaderViewDelegate?
     fileprivate var viewModel: OWPreConversationHeaderViewModeling
     fileprivate let disposeBag = DisposeBag()
     
@@ -54,16 +51,13 @@ internal final class OWPreConversationHeaderView: OWBaseView {
         setupObservers()
     }
     
-    // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
-        self.backgroundColor = .clear
-        titleLabel.textColor = .spForeground0
-        counterLabel.textColor = .spForeground1
-        updateCustomUI()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func updateCustomUI() {
-        delegate?.updateHeaderCustomUI(titleLabel: titleLabel, counterLabel: counterLabel)
+        viewModel.inputs.customizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.customizeCounterLabelUI.onNext(counterLabel)
     }
 }
 
@@ -97,8 +91,14 @@ fileprivate extension OWPreConversationHeaderView {
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] _ in
-                self?.updateColorsAccordingToStyle()
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                                                                        themeStyle: currentStyle)
+                self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color,
+                                                                          themeStyle: currentStyle)
+                self.updateCustomUI()
             }).disposed(by: disposeBag)
     }
 }

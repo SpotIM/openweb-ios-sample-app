@@ -9,7 +9,13 @@
 import UIKit
 
 final class SPCommentReplyHeaderView: OWBaseView {
-    
+    fileprivate struct Metrics {
+        static let identifier = "comment_reply_header_view_id"
+        static let closeButtonIdentifier = "comment_reply_header_view_close_button_id"
+        static let replyingLabelIdentifier = "comment_reply_header_view_reply_label_id"
+        static let commentAuthorLabelIdentifier = "comment_reply_header_view_comment_author_label_id"
+        static let commentLabelIdentifier = "comment_reply_header_view_comment_label_id"
+    }
     let closeButton: OWBaseButton = .init()
 
     private let replyingLabel: OWBaseLabel = .init()
@@ -23,6 +29,15 @@ final class SPCommentReplyHeaderView: OWBaseView {
         super.init(frame: frame)
         
         setup()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
+        replyingLabel.accessibilityIdentifier = Metrics.replyingLabelIdentifier
+        commentAuthorLabel.accessibilityIdentifier = Metrics.commentAuthorLabelIdentifier
+        commentLabel.accessibilityIdentifier = Metrics.commentLabelIdentifier
     }
     
     // Handle dark mode \ light mode change
