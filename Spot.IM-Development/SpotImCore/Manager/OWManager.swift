@@ -25,25 +25,30 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     // Memebers variables
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
-    let analyticsLayer: OWAnalytics
-    let uiLayer: OWUI
-    let monetizationLayer: OWMonetization
-    let authenticationLayer: OWUIAuthentication
     fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
     fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
     fileprivate var _currentNonRxSpotId: OWSpotId? = nil
     fileprivate var _currentNonRxPostId: OWPostId? = nil
     
+    // Layers
+    let analyticsLayer: OWAnalytics
+    let uiLayer: OWUI
+    let monetizationLayer: OWMonetization
+    let authenticationLayer: OWUIAuthentication
+    let customizationsLayer: OWCustomizations
+    
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
                  uiLayer: OWUI = OWUILayer(),
                  monetizationLayer: OWMonetization = OWMonetizationLayer(),
-                 authenticationLayer: OWUIAuthentication = OWUIAuthenticationLayer()) {
+                 authenticationLayer: OWUIAuthentication = OWUIAuthenticationLayer(),
+                 customizationsLayer: OWCustomizations = OWCustomizationsLayer()) {
         self.servicesProvider = servicesProvider
         self.analyticsLayer = analyticsLayer
         self.uiLayer = uiLayer
         self.monetizationLayer = monetizationLayer
         self.authenticationLayer = authenticationLayer
+        self.customizationsLayer = customizationsLayer
         setupObservers()
     }
 }

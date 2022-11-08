@@ -64,7 +64,13 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     }
     
     func triggerElementCallback(_ element: OWCustomizableElement, sourceType: OWViewSourceType) {
-        let themeStyle = OWSharedServicesProvider.shared.themeStyleService()
+        let themeStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
+        let postId = OWManager.manager.postId
+        
+        callbacks.forEach { optionalCallback in
+            guard let actualCallback = optionalCallback.value() else { return }
+            actualCallback(element, sourceType, themeStyle, postId)
+        }
     }
     
     fileprivate var _fontFamily: String? = nil
