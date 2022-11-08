@@ -33,7 +33,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     fileprivate lazy var lblViewersNumber: UILabel = {
         let lbl = UILabel()
             .font(UIFont.preferred(style: .regular, of: Metrics.viewersFontSize))
-            .textColor(.spForeground3)
+            .textColor(.spForeground3) // TODO: once new infra is complete use OWColorPalette
 
         return lbl
     }()
@@ -89,6 +89,15 @@ fileprivate extension OWOnlineViewingUsersCounterView {
             .startWith("0")
             .bind(to: lblViewersNumber.rx.text)
             .disposed(by: disposeBag)
+        
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                
+                self.lblViewersNumber.textColor = OWColorPalette.shared.color(type: .foreground3Color,
+                                                                        themeStyle: currentStyle)
+            }).disposed(by: disposeBag)
     }
 }
 
