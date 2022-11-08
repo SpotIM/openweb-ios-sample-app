@@ -18,7 +18,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     }
     
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    fileprivate let disposeBag = DisposeBag()
     
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
@@ -49,13 +49,12 @@ class OWOnlineViewingUsersCounterView: UIView {
         super.init(frame: .zero)
         self.viewModel = viewModel
         setupViews()
-        disposeBag = DisposeBag()
         configureViews()
     }
     
+    // TODO: once old view is removed this configure function should be removed
     func configure(with viewModel: OWOnlineViewingUsersCounterViewModeling) {
         self.viewModel = viewModel
-        disposeBag = DisposeBag()
         configureViews()
     }
 }

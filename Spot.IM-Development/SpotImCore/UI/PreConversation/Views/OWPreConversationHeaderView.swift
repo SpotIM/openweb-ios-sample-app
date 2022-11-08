@@ -10,10 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol OWPreConversationHeaderViewDelegate: AnyObject {
-    func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel)
-}
-
 class OWPreConversationHeaderView: UIView {
     fileprivate struct Metrics {
         static let counterLeading: CGFloat = 5
@@ -42,7 +38,6 @@ class OWPreConversationHeaderView: UIView {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
     }()
     
-    internal weak var delegate: OWPreConversationHeaderViewDelegate?
     fileprivate var viewModel: OWPreConversationHeaderViewModeling
     fileprivate let disposeBag = DisposeBag()
     
@@ -58,16 +53,8 @@ class OWPreConversationHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
-        self.backgroundColor = .clear
-        titleLabel.textColor = .spForeground0
-        counterLabel.textColor = .spForeground1
-        updateCustomUI()
-    }
-    
     private func updateCustomUI() {
-        delegate?.updateHeaderCustomUI(titleLabel: titleLabel, counterLabel: counterLabel)
+        // TODO: use VM for UI customization
     }
 }
 
@@ -102,7 +89,12 @@ fileprivate extension OWPreConversationHeaderView {
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] _ in
-                self?.updateColorsAccordingToStyle()
+                guard let self = self else { return }
+                
+                self.backgroundColor = .clear
+                self.titleLabel.textColor = .spForeground0
+                self.counterLabel.textColor = .spForeground1
+                self.updateCustomUI()
             }).disposed(by: disposeBag)
     }
 }
