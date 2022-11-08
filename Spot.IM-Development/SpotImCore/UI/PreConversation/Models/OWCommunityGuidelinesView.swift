@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 // TODO: complete
-internal final class OWCommunityGuidelinesView: OWBaseView {
+class OWCommunityGuidelinesView: UIView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
         static let titleHorizontalOffset: CGFloat = 16.0
@@ -19,8 +19,8 @@ internal final class OWCommunityGuidelinesView: OWBaseView {
         static let separatorTopPadding: CGFloat = 8.0
     }
     
-    fileprivate lazy var titleTextView: OWBaseTextView = {
-        let textView = OWBaseTextView()
+    fileprivate lazy var titleTextView: UITextView = {
+        let textView = UITextView()
         textView.delegate = self
         textView.isEditable = false
         textView.isSelectable = true
@@ -30,9 +30,10 @@ internal final class OWCommunityGuidelinesView: OWBaseView {
         return textView
     }()
     
-    private lazy var separatorView: OWBaseView = {
-        let view = OWBaseView()
-        view.backgroundColor = .spSeparator2
+    private lazy var separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         return view
     }()
     
@@ -46,7 +47,11 @@ internal final class OWCommunityGuidelinesView: OWBaseView {
         setupViews()
         setupObservers()
     }
-
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
 
 extension OWCommunityGuidelinesView {
@@ -96,15 +101,12 @@ extension OWCommunityGuidelinesView {
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] _ in
-                self?.updateColorsAccordingToStyle()
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
+                                                                                 themeStyle: currentStyle)
+                // TODO: custon UI
             }).disposed(by: disposeBag)
-    }
-    
-    // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
-        separatorView.backgroundColor = .spSeparator2
-//        delegate?.customizeTextView(textView: titleTextView)
     }
 }
 
