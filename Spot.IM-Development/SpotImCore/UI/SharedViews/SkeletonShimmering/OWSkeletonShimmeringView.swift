@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 /*
  - Basically everything is done almost automatically!
@@ -31,6 +32,7 @@ import UIKit
  */
 
 class OWSkeletonShimmeringView: UIView, OWSkeletonShimmeringProtocol {
+    let disposeBag = DisposeBag()
     
     override func layoutSubviews() {
         super.layoutSubviews()
