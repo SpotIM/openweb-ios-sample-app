@@ -17,6 +17,8 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<Void> { get }
     var preConversationChangedSize: PublishSubject<CGSize> { get }
+    
+    var viewInitialized: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
@@ -113,6 +115,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .unwrap()
             .asObservable()
     }
+    
+    var viewInitialized = PublishSubject<Void>()
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -129,6 +133,16 @@ fileprivate extension OWPreConversationViewViewModel {
     func setupObservers() {
         preConversationChangedSize
             .bind(to: _preConversationChangedSize)
+            .disposed(by: disposeBag)
+        
+        viewInitialized
+            .bind(onNext: { [weak self] in
+                guard let self = self,
+                      let postId = OWManager.manager.postId
+                else { return }
+                
+                self.servicesProvider.realtimeService().startFetchingData(postId: postId)
+            })
             .disposed(by: disposeBag)
     }
 }
