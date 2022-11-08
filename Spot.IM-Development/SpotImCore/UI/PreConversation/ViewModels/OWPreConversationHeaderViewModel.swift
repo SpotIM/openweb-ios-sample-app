@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 protocol OWPreConversationHeaderViewModelingInputs {
+    var customizeTitleLabelUI: PublishSubject<UILabel> { get }
+    var customizeCounterLabelUI: PublishSubject<UILabel> { get }
 }
 
 protocol OWPreConversationHeaderViewModelingOutputs {
@@ -27,6 +29,9 @@ class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWP
     var inputs: OWPreConversationHeaderViewModelingInputs { return self }
     var outputs: OWPreConversationHeaderViewModelingOutputs { return self }
     
+    var customizeTitleLabelUI = PublishSubject<UILabel>()
+    var customizeCounterLabelUI = PublishSubject<UILabel>()
+    
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
         return OWOnlineViewingUsersCounterViewModelNew()
     }()
@@ -36,10 +41,12 @@ class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWP
         
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
-                if let count = try realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") {
-                    return count > 0 ? "(\(count))" : ""
-                }
-                return ""
+                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
+                return count
+            }
+            .unwrap()
+            .map { count in
+                return count > 0 ? "(\(count))" : ""
             }
             .asObservable()
     }
