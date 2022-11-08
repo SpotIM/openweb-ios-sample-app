@@ -103,6 +103,7 @@ class OWPreConversationView: UIView {
     init(viewModel: OWPreConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
     }
