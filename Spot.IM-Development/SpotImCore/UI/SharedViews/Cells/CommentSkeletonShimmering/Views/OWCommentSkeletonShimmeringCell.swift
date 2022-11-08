@@ -92,29 +92,35 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
     fileprivate lazy var avatarSkeleton: UIView = {
         let view = UIView()
             .corner(radius: Metrics.avatarSize / 2)
-            .backgroundColor(UIColor.skeletonBackgroundColor)
+            .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         
         return view
     }()
     
     fileprivate lazy var userNameSkeleton: UIView = {
         let view = UIView()
-            .backgroundColor(UIColor.skeletonBackgroundColor)
+            .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         
         return view
     }()
     
     fileprivate lazy var timeSkeleton: UIView = {
         let view = UIView()
-            .backgroundColor(UIColor.skeletonBackgroundColor)
+            .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         
         return view
     }()
     
     fileprivate lazy var messageLinesSkeleton: [UIView] = {
+        let color = OWColorPalette.shared.color(type: .skeletonColor,
+                                                     themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+        
         let numOfLines = Metrics.messageLineNumbers
         let views = (0 ..< numOfLines).map { _ in
-            return UIView().backgroundColor(UIColor.skeletonBackgroundColor)
+            return UIView().backgroundColor(color)
         }
         
         return views
