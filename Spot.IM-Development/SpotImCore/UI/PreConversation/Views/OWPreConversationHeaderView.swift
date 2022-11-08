@@ -14,7 +14,7 @@ protocol OWPreConversationHeaderViewDelegate: AnyObject {
     func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel)
 }
 
-internal final class OWPreConversationHeaderView: OWBaseView {
+class OWPreConversationHeaderView: UIView {
     fileprivate struct Metrics {
         static let counterLeading: CGFloat = 5
         static let titleFontSize: CGFloat = 25
@@ -23,16 +23,16 @@ internal final class OWPreConversationHeaderView: OWBaseView {
         static let identifier = "pre_conversation_header_view_id"
     }
     
-    private lazy var titleLabel: OWBaseLabel = {
-        let lbl = OWBaseLabel()
+    private lazy var titleLabel: UILabel = {
+        let lbl = UILabel()
         lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
         lbl.textColor = .spForeground0
         lbl.text = LocalizationManager.localizedString(key: "Conversation")
         return lbl
     }()
     
-    private lazy var counterLabel: OWBaseLabel = {
-        let lbl = OWBaseLabel()
+    private lazy var counterLabel: UILabel = {
+        let lbl = UILabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.counterFontSize)
         lbl.textColor = .spForeground1
         return lbl
@@ -52,6 +52,10 @@ internal final class OWPreConversationHeaderView: OWBaseView {
         self.accessibilityIdentifier = Metrics.identifier
         setupUI()
         setupObservers()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // Handle dark mode \ light mode change
