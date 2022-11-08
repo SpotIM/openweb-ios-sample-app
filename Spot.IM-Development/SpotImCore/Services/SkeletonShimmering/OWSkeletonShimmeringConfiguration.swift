@@ -21,7 +21,7 @@ struct OWSkeletonShimmeringConfiguration {
 }
 
 extension OWSkeletonShimmeringConfiguration {
-    static let `default` = {
+    static let `default`: OWSkeletonShimmeringConfiguration = {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
         let skeletonColor = OWColorPalette.shared.color(type: .skeletonColor,
                                                        themeStyle: currentStyle)

@@ -22,7 +22,8 @@ class OWPreConversationHeaderView: UIView {
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
-        lbl.textColor = .spForeground0
+        lbl.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         lbl.text = LocalizationManager.localizedString(key: "Conversation")
         return lbl
     }()
@@ -30,7 +31,8 @@ class OWPreConversationHeaderView: UIView {
     private lazy var counterLabel: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.counterFontSize)
-        lbl.textColor = .spForeground1
+        lbl.textColor = OWColorPalette.shared.color(type: .foreground1Color,
+                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
         return lbl
     }()
     
@@ -89,12 +91,13 @@ fileprivate extension OWPreConversationHeaderView {
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 
-                self.backgroundColor = .clear
-                self.titleLabel.textColor = .spForeground0
-                self.counterLabel.textColor = .spForeground1
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                                                                        themeStyle: currentStyle)
+                self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color,
+                                                                          themeStyle: currentStyle)
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
     }
