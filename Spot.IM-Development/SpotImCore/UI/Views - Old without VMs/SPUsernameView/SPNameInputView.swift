@@ -9,6 +9,10 @@
 import UIKit
 
 internal final class SPNameInputView: OWBaseView, SPTextInputView {
+    fileprivate struct Metrics {
+        static let identifier = "name_input_view_id"
+        static let usernameIdentifier = "name_input_view_username_id"
+    }
     private lazy var avatarUserView: SPAvatarView = .init()
     private lazy var usernameTextView: OWInputTextView = .init()
     private lazy var separatorView: UIView = .init()
@@ -35,6 +39,12 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         super.init(frame: frame)
 
         setup()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        usernameTextView.accessibilityIdentifier = Metrics.usernameIdentifier
     }
 
     func makeFirstResponder() {

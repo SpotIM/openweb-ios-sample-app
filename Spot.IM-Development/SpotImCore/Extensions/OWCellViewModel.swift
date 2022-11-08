@@ -7,12 +7,5 @@
 //
 
 import Foundation
-import UIKit
 
-protocol OWCellViewModel {}
-
-extension UITableViewCell {
-    func configure(with viewModel: OWCellViewModel) {
-        fatalError("configure(with viewModel:) has not been implemented, please override this method")
-    }
-}
+@objc protocol OWCellViewModel {}

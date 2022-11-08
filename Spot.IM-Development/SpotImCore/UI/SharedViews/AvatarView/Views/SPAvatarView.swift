@@ -21,6 +21,9 @@ protocol OWAvatarViewDelegate: AnyObject {
 final class SPAvatarView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "user_avatar_view_id"
+        static let avatarImageIdentifier = "avatar_image_id"
+        static let avatarButtonIdentifier = "avatar_button_id"
+        static let onlineIndicatorIdentifier = "online_indicator_id"
     }
     
     weak var delegate: OWAvatarViewDelegate?
@@ -36,7 +39,6 @@ final class SPAvatarView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         setup()
         applyAccessibility()
     }
@@ -142,8 +144,13 @@ final class SPAvatarView: OWBaseView {
 // MARK: Accessibility
 
 extension SPAvatarView {
-  func applyAccessibility() {
-    avatarButton.accessibilityTraits = .image
-    avatarButton.accessibilityLabel = LocalizationManager.localizedString(key: "Profile image")
-  }
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        avatarImageView.accessibilityIdentifier = Metrics.avatarImageIdentifier
+        avatarButton.accessibilityIdentifier = Metrics.avatarButtonIdentifier
+        onlineIndicatorView.accessibilityIdentifier = Metrics.onlineIndicatorIdentifier
+        
+        avatarButton.accessibilityTraits = .image
+        avatarButton.accessibilityLabel = LocalizationManager.localizedString(key: "Profile image")
+    }
 }
