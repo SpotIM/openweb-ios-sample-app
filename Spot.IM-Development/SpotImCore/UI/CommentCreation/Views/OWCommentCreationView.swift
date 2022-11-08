@@ -12,7 +12,7 @@ import RxCocoa
 
 class OWCommentCreationView: UIView {
     fileprivate struct Metrics {
-        
+        static let identifier = "comment_creation_view_id"
     }
     
     fileprivate let viewModel: OWCommentCreationViewViewModeling
@@ -26,6 +26,11 @@ class OWCommentCreationView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
     }
 }
 

@@ -17,6 +17,7 @@ internal protocol SPCommunityGuidelinesViewDelegate {
 internal final class SPCommunityGuidelinesView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
+        static let titleTextIdentifier = "community_guidelines_title_text_id"
     }
     
     private lazy var titleTextView: OWBaseTextView = .init()
@@ -35,8 +36,13 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         setup()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        titleTextView.accessibilityIdentifier = Metrics.titleTextIdentifier
     }
     
     // Handle dark mode \ light mode change

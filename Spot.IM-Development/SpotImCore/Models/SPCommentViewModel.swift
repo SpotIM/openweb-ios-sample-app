@@ -68,8 +68,8 @@ internal struct CommentViewModel {
         replyingToDisplayName: String? = nil,
         color: UIColor? = nil,
         user: SPUser? = nil,
-        imageProvider: SPImageProvider? = nil) {
-        
+        imageProvider: SPImageProvider? = nil,
+        conversationModel: SPMainConversationModel? = nil) {
         commentUserVM = OWCommentUserViewModel(user: user, imageProvider: imageProvider)
         isDeleted = comment.deleted
         isEdited = comment.edited
@@ -171,6 +171,7 @@ internal struct CommentViewModel {
         } else {
             showStatusIndicator = false
         }
+        self.conversationModel = conversationModel
     }
     
     func getCommentTextFromHtmlString(htmlString: String) -> String? {

@@ -11,6 +11,7 @@ import UIKit
 final class MessageContainerView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "message_container_id"
+        static let mainTextLabelIdentifier = "message_container_main_text_label_id"
     }
     
     weak var delegate: MessageContainerViewDelegate?
@@ -19,9 +20,14 @@ final class MessageContainerView: OWBaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         setupUI()
         setupGestureRecognizer()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        mainTextLabel.accessibilityIdentifier = Metrics.mainTextLabelIdentifier
     }
     
     func setMessage(
