@@ -17,6 +17,7 @@ final class OWCommentActionsView: OWBaseView {
         static let fontSize: CGFloat = 16.0
         static let baseOffset: CGFloat = 14
         static let identifier = "comment_actions_view_id"
+        static let replyButtonIdentifier = "comment_actions_view_reply_button_id"
     }
     
     fileprivate var viewModel: OWCommentActionsViewModeling!
@@ -36,9 +37,14 @@ final class OWCommentActionsView: OWBaseView {
     override init(frame: CGRect) {
         replyDefaultTitle = LocalizationManager.localizedString(key: "Reply")
         super.init(frame: frame)
-        self.accessibilityIdentifier = Metrics.identifier
         clipsToBounds = true
         setupUI()
+        applyAccessibility()
+    }
+    
+    private func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        replyButton.accessibilityIdentifier = Metrics.replyButtonIdentifier
     }
     
     func configure(with viewModel: OWCommentActionsViewModeling, delegate: CommentActionsDelegate) {
