@@ -36,10 +36,12 @@ class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWP
         
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
-                if let count = try realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") {
-                    return count > 0 ? "(\(count))" : ""
-                }
-                return ""
+                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
+                return count
+            }
+            .unwrap()
+            .map { count in
+                return count > 0 ? "(\(count))" : ""
             }
             .asObservable()
     }
