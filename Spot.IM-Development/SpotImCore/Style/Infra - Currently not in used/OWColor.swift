@@ -19,6 +19,7 @@ struct OWColor {
         case foreground0Color
         case foreground1Color
         case foreground3Color
+        case separatorColor
         
         var `default`: OWColor {
             switch self {
@@ -40,6 +41,9 @@ struct OWColor {
             case .foreground3Color:
                 return OWColor(lightThemeColor: UIColor(red: 123.0/255.0, green: 127.0/255.0, blue: 131.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 182.0/255.0, green: 185.0/255.0, blue: 187.0/255.0, alpha: 1.0))
+            case .separatorColor:
+                return OWColor(lightThemeColor: UIColor(red: 240.0/255.0, green: 241.0/255.0, blue: 241.0/255.0, alpha: 1.0),
+                               darkThemeColor: UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.15))
             }
         }
     }
