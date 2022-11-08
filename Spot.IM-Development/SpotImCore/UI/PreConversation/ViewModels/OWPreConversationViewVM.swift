@@ -144,5 +144,19 @@ fileprivate extension OWPreConversationViewViewModel {
                 self.servicesProvider.realtimeService().startFetchingData(postId: postId)
             })
             .disposed(by: disposeBag)
+        
+        preConversationHeaderVM.inputs.customizeCounterLabelUI
+            .asObservable()
+            .bind(onNext: { label in
+                // TODO: custom UI
+            })
+            .disposed(by: disposeBag)
+        
+        preConversationHeaderVM.inputs.customizeTitleLabelUI
+            .asObservable()
+            .bind(onNext: { label in
+                // TODO: custom UI
+            })
+            .disposed(by: disposeBag)
     }
 }
