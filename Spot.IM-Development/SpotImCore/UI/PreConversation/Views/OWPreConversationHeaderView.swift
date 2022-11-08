@@ -54,7 +54,8 @@ class OWPreConversationHeaderView: UIView {
     }
     
     private func updateCustomUI() {
-        // TODO: use VM for UI customization
+        viewModel.inputs.customizeTitleLabelUI.onNext(titleLabel)
+        viewModel.inputs.customizeCounterLabelUI.onNext(counterLabel)
     }
 }
 
