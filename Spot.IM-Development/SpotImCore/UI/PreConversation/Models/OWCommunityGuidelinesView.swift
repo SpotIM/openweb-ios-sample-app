@@ -14,9 +14,6 @@ class OWCommunityGuidelinesView: UIView {
     fileprivate struct Metrics {
         static let identifier = "community_guidelines_id"
         static let titleHorizontalOffset: CGFloat = 16.0
-        static let separatorHeight: CGFloat = 1.0
-        static let separatorHorizontalOffset: CGFloat = 16.0
-        static let separatorTopPadding: CGFloat = 8.0
     }
     
     fileprivate lazy var titleTextView: UITextView = {
@@ -28,13 +25,6 @@ class OWCommunityGuidelinesView: UIView {
         textView.dataDetectorTypes = [.link]
         textView.backgroundColor = .clear
         return textView
-    }()
-    
-    private lazy var separatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
-                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        return view
     }()
     
     fileprivate let viewModel: OWCommunityGuidelinesViewModeling
@@ -57,9 +47,9 @@ class OWCommunityGuidelinesView: UIView {
 extension OWCommunityGuidelinesView {
     fileprivate func setupViews() {
         self.backgroundColor = .clear
-        self.addSubviews(titleTextView, separatorView)
+        self.addSubviews(titleTextView)
         titleTextView.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.bottom.equalToSuperview()
             // avoide device notch in landscape
             if #available(iOS 11.0, *) {
                 make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.titleHorizontalOffset)
@@ -68,19 +58,6 @@ extension OWCommunityGuidelinesView {
                 make.leading.equalToSuperview().offset(Metrics.titleHorizontalOffset)
                 make.trailing.equalToSuperview().offset(-Metrics.titleHorizontalOffset)
             }
-        }
-        
-        separatorView.OWSnp.makeConstraints { make in
-            make.bottom.equalToSuperview()
-            if (viewModel.inputs.paddedStyle) {
-                make.top.equalTo(titleTextView.OWSnp.bottom).offset(Metrics.separatorTopPadding)
-                make.leading.equalToSuperview().offset(Metrics.separatorHorizontalOffset)
-                make.trailing.equalToSuperview().offset(-Metrics.separatorHorizontalOffset)
-            } else {
-                make.top.equalTo(titleTextView.OWSnp.bottom)
-                make.leading.trailing.equalToSuperview()
-            }
-            make.height.equalTo(Metrics.separatorHeight)
         }
     }
     
@@ -92,19 +69,11 @@ extension OWCommunityGuidelinesView {
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.showSeparator
-            .bind(onNext: { [weak self] isVisible in
-                guard let self = self else { return }
-                self.separatorView.isHidden = !isVisible
-            })
-            .disposed(by: disposeBag)
-        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
-                                                                                 themeStyle: currentStyle)
+                // guard let self = self else { return }
+                
                 // TODO: custon UI
             }).disposed(by: disposeBag)
     }

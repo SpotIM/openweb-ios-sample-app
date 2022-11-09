@@ -35,7 +35,7 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
             .config(spotId: OWManager.manager.spotId)
             .observe(on: queueScheduler)
             .map { config -> String? in
-                "SOME QUESTION!"
+                "Some Question!"
             }
             .unwrap()
             .observe(on: MainScheduler.instance)

@@ -22,6 +22,9 @@ class OWPreConversationView: UIView {
         // TODO: Testing - remove later
         static let initialHeight: CGFloat = 400
         static let changedHeight: CGFloat = 700
+        
+        static let separatorHeight: CGFloat = 1.0
+        static let separatorHorizontalOffset: CGFloat = 16.0
     }
     
     // TODO: Testing - remove later (hard coded cause only for testing)
@@ -56,6 +59,12 @@ class OWPreConversationView: UIView {
     }()
     fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
         return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
+    }()
+    fileprivate lazy var separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+        return view
     }()
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
@@ -123,10 +132,20 @@ fileprivate extension OWPreConversationView {
         }
         
         if !viewModel.outputs.isButtonOnlyModeEnabled {
-            self.addSubviews(communityGuidelinesView)
+            self.addSubviews(communityGuidelinesView, communityQuestionView, separatorView)
             communityGuidelinesView.OWSnp.makeConstraints { make in
                 make.top.equalTo(header.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
+            }
+            communityQuestionView.OWSnp.makeConstraints { make in
+                make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
+            separatorView.OWSnp.makeConstraints { make in
+                make.top.equalTo(communityQuestionView.OWSnp.bottom)
+                make.leading.equalToSuperview().offset(Metrics.separatorHorizontalOffset)
+                make.trailing.equalToSuperview().offset(-Metrics.separatorHorizontalOffset)
+                make.height.equalTo(Metrics.separatorHeight)
             }
         }
         
@@ -202,6 +221,14 @@ fileprivate extension OWPreConversationView {
                 .voidify()
                 .bind(to: viewModel.inputs.commentCreationTap)
                 .disposed(by: disposeBag)
+                
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
+                                                                   themeStyle: currentStyle)
+            }).disposed(by: disposeBag)
     }
     
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
