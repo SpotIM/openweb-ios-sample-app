@@ -92,6 +92,30 @@ fileprivate extension OWPreConversationCoordinator {
             }
             .subscribe()
             .disposed(by: disposeBag)
+        
+        let openSafariViewControllerObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.communityGuidelinesViewModel
+            .inputs.urlClicked
+            .asObservable()
+            .map { url -> OWDeepLinkOptions? in
+                return OWDeepLinkOptions.safari(url: url)
+            }
+        
+        openSafariViewControllerObservable
+            .map { [weak self] deepLink -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                // TODO: handle better with no switch-case
+                switch deepLink {
+                case .safari(let url):
+                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                                   url: url,
+                                                                   actionsCallbacks: self.actionsCallbacks)
+                    return self.coordinate(to: safariCoordinator, deepLinkOptions: deepLink)
+                    
+                default: return .empty()
+                }
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
     
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
