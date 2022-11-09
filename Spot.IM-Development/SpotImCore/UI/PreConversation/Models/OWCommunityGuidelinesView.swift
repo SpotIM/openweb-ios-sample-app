@@ -80,10 +80,7 @@ extension OWCommunityGuidelinesView {
 }
 
 extension OWCommunityGuidelinesView: UITextViewDelegate {
-    // TODO: !!
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-//        delegate?.clickOnUrl(url: URL)
-//        SPAnalyticsHolder.default.log(event: .communityGuidelinesLinkClicked(targetUrl: URL.absoluteString), source: .conversation)
         viewModel.inputs.urlClicked.onNext(URL)
         return false
     }
