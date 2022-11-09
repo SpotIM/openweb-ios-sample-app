@@ -11,7 +11,6 @@ import RxSwift
 
 protocol OWCommunityGuidelinesViewModelingInputs {
     var urlClicked: PublishSubject<URL> { get }
-    var paddedStyle: Bool { get }
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
@@ -30,7 +29,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
     fileprivate var queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue")
     
     let urlClicked = PublishSubject<URL>()
-    let paddedStyle: Bool
     
     var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> {
         OWSharedServicesProvider.shared.spotConfigurationService()
@@ -49,23 +47,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             }
             .observe(on: MainScheduler.instance)
             .asObservable()
-    }
-    
-    init(paddedStyle: Bool = false) {
-        self.paddedStyle = paddedStyle
-        setupObservers()
-    }
-}
-
-fileprivate extension OWCommunityGuidelinesViewModel {
-    func setupObservers() {
-        let _ = urlClicked
-            .do(onNext: { url in
-                // TODO: open link - we should have some coordinator ho handle the opening SafariViewController.
-                // TODO: have some OWSafariViewController that will inherit from SFSafariViewController and will have needed configuration with proper ViewModel
-                // TODO: send analytics using new infra
-                // SPAnalyticsHolder.default.log(event: .communityGuidelinesLinkClicked(targetUrl: URL.absoluteString), source: .conversation)
-            })
     }
 }
 
