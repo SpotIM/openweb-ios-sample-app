@@ -21,6 +21,7 @@ class OWCommunityQuestionView: UIView {
         let textView = UITextView()
         textView.isEditable = false
         textView.isScrollEnabled = false
+        textView.isSelectable = false
         textView.backgroundColor = .clear
         textView.font = UIFont.preferred(style: .bold, of: Metrics.fontSize)
         textView.textColor = OWColorPalette.shared.color(type: .foreground0Color,
@@ -48,6 +49,7 @@ class OWCommunityQuestionView: UIView {
 fileprivate extension OWCommunityQuestionView {
     func setupViews() {
         self.backgroundColor = .clear
+        self.addSubviews(questionTextView)
         
         questionTextView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
@@ -67,5 +69,14 @@ fileprivate extension OWCommunityQuestionView {
             .communityQuestionString
             .bind(to: questionTextView.rx.text)
             .disposed(by: disposeBag)
+        
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.questionTextView.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                                                                              themeStyle: currentStyle)
+                // TODO: custon UI
+            }).disposed(by: disposeBag)
     }
 }

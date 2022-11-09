@@ -16,7 +16,6 @@ protocol OWCommunityGuidelinesViewModelingInputs {
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> { get }
-    var showSeparator: Observable<Bool> { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -49,16 +48,6 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
                 return self.getTitleTextViewAttributedText(htmlString: string)
             }
             .observe(on: MainScheduler.instance)
-            .asObservable()
-    }
-    
-    var showSeparator: Observable<Bool> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
-            .config(spotId: OWManager.manager.spotId)
-            .map { config in
-                // TODO: separator should be hidden when no community question or in button only mode (not really related to config)
-                return true
-            }
             .asObservable()
     }
     
