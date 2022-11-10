@@ -12,13 +12,13 @@ defaults:
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-12
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode_13.0.app
+        run: sudo xcode-select -switch /Applications/Xcode_14.0.app
 
       - name: Xcode version
         run: /usr/bin/xcodebuild -version
@@ -37,7 +37,7 @@ jobs:
           -workspace Spot-IM.Development.xcworkspace \
           -scheme SpotImCore \
           -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 11 Pro' \
+          -destination 'platform=iOS Simulator,name=iPhone 14 Pro' \
           build
 
       - name: Sample App - Build
@@ -46,5 +46,5 @@ jobs:
           -workspace Spot-IM.Development.xcworkspace \
           -scheme Spot-IM.Development \
           -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 11 Pro' \
+          -destination 'platform=iOS Simulator,name=iPhone 14 Pro' \
           build
