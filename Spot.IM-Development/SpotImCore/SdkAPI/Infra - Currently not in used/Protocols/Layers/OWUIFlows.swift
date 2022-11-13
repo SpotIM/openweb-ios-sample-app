@@ -30,6 +30,22 @@ public protocol OWUIFlows {
 }
 #else
 protocol OWUIFlows {
+    func preConversation(postId: String, article: OWArticleProtocol,
+                         presentationalMode: OWPresentationalMode,
+                         additionalSettings: OWPreConversationSettingsProtocol?,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWViewDynamicSizeCompletion)
     
+    func conversation(postId: String, article: OWArticleProtocol,
+                      presentationalMode: OWPresentationalMode,
+                      additionalSettings: OWConversationSettingsProtocol?,
+                      callbacks: OWViewActionsCallbacks?,
+                      completion: @escaping OWDefaultCompletion)
+    
+    func commentCreation(postId: String, article: OWArticleProtocol,
+                         presentationalMode: OWPresentationalMode,
+                         additionalSettings: OWCommentCreationSettingsProtocol?,
+                         callbacks: OWViewActionsCallbacks?,
+                         completion: @escaping OWDefaultCompletion)
 }
 #endif
