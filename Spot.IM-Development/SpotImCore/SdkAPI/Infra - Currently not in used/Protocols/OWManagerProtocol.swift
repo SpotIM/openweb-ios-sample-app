@@ -15,7 +15,7 @@ public protocol OWManagerProtocol {
     var analytics: OWAnalytics { get }
     var monetization: OWMonetization { get }
     var authentication: OWAuthentication { get }
-    var customizations: OWCustomizations { get }
+    var helpers: OWHelpers { get }
 }
 #else
 protocol OWManagerProtocol {
@@ -24,6 +24,6 @@ protocol OWManagerProtocol {
     var analytics: OWAnalytics { get }
     var monetization: OWMonetization { get }
     var authentication: OWAuthentication { get }
-    var customizations: OWCustomizations { get }
+    var helpers: OWHelpers { get }
 }
 #endif
