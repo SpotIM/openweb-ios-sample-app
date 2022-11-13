@@ -14,7 +14,7 @@ public protocol OWManagerProtocol {
     var ui: OWUI { get }
     var analytics: OWAnalytics { get }
     var monetization: OWMonetization { get }
-    var authentication: OWUIAuthentication { get }
+    var authentication: OWAuthentication { get }
     var customizations: OWCustomizations { get }
 }
 #else
@@ -23,7 +23,7 @@ protocol OWManagerProtocol {
     var ui: OWUI { get }
     var analytics: OWAnalytics { get }
     var monetization: OWMonetization { get }
-    var authentication: OWUIAuthentication { get }
+    var authentication: OWAuthentication { get }
     var customizations: OWCustomizations { get }
 }
 #endif

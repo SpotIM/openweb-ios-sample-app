@@ -10,7 +10,7 @@ import Foundation
 
 #if NEW_API
 public protocol OWCustomizations {
-//    var adsProvider: OWAdsProvider { get set }
+    
 }
 #else
 protocol OWCustomizations {
