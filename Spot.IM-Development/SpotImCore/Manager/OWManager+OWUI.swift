@@ -13,4 +13,5 @@ extension OWManager: OWUI {
     var flows: OWUIFlows { return uiLayer as! OWUILayer }
     var views: OWUIViews { return uiLayer as! OWUILayer }
     var helpers: OWHelpers { return (uiLayer as! OWUILayer).helpers }
+    var authenticationUI: OWUIAuthentication { return (uiLayer as! OWUILayer).authenticationUI }
 }

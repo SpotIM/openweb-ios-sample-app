@@ -13,11 +13,13 @@ public protocol OWUI {
     var flows: OWUIFlows { get }
     var views: OWUIViews { get }
     var helpers: OWHelpers { get }
+    var authenticationUI: OWUIAuthentication { get }
 }
 #else
 protocol OWUI {
     var flows: OWUIFlows { get }
     var views: OWUIViews { get }
     var helpers: OWHelpers { get }
+    var authenticationUI: OWUIAuthentication { get }
 }
 #endif

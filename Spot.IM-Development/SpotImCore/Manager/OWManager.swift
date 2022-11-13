@@ -34,14 +34,14 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     let analyticsLayer: OWAnalytics
     let uiLayer: OWUI
     let monetizationLayer: OWMonetization
-    let authenticationLayer: OWUIAuthentication
+    let authenticationLayer: OWAuthentication
     let customizationsLayer: OWCustomizations
     
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
                  uiLayer: OWUI = OWUILayer(),
                  monetizationLayer: OWMonetization = OWMonetizationLayer(),
-                 authenticationLayer: OWUIAuthentication = OWUIAuthenticationLayer(),
+                 authenticationLayer: OWAuthentication = OWAuthenticationLayer(),
                  customizationsLayer: OWCustomizations = OWCustomizationsLayer()) {
         self.servicesProvider = servicesProvider
         self.analyticsLayer = analyticsLayer
