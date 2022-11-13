@@ -10,7 +10,7 @@ import Foundation
 
 #if NEW_API
 public protocol OWCustomizations {
-    
+    // TODO: Complete
 }
 #else
 protocol OWCustomizations {

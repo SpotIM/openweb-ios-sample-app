@@ -10,15 +10,15 @@ import Foundation
 
 class OWAuthenticationLayer: OWAuthentication {
     func sso(_ flowType: OWSSOFlowType) {
-        
+        // TODO: Complete
     }
     
     func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion) {
-        
+        // TODO: Complete
     }
     
     func logout(completion: @escaping OWDefaultCompletion) {
-        
+        // TODO: Complete
     }
     
     var shouldDisplayLoginPrompt: Bool {
