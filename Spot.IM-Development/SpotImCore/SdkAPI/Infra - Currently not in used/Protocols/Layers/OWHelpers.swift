@@ -10,7 +10,7 @@ import Foundation
 
 #if NEW_API
 public protocol OWHelpers {
-    var additionalConfigurations: [OWAdditionalConfiguration] { get set }
+//    var additionalConfigurations: [OWAdditionalConfiguration] { get set }
 }
 #else
 protocol OWHelpers {
