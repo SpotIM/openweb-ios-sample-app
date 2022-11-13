@@ -9,5 +9,26 @@
 import Foundation
 
 class OWAuthenticationLayer: OWAuthentication {
+    func sso(_ flowType: OWSSOFlowType) {
+        
+    }
     
+    func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion) {
+        
+    }
+    
+    func logout(completion: @escaping OWDefaultCompletion) {
+        
+    }
+    
+    var shouldDisplayLoginPrompt: Bool {
+        get {
+            return _shouldDisplayLoginPrompt
+        }
+        set(newValue) {
+            _shouldDisplayLoginPrompt = newValue
+        }
+    }
+    
+    fileprivate var _shouldDisplayLoginPrompt: Bool = false
 }
