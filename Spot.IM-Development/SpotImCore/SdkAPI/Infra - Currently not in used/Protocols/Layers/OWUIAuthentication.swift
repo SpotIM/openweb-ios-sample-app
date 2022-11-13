@@ -10,7 +10,7 @@ import Foundation
 
 #if NEW_API
 public protocol OWUIAuthentication {
-//    var displayLoginFlow: OWLoginFlowCallback? { get set }
+    var displayLoginFlow: OWLoginFlowCallback? { get set }
 }
 #else
 protocol OWUIAuthentication {

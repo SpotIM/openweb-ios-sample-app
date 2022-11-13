@@ -10,7 +10,7 @@ import Foundation
 
 #if NEW_API
 public protocol OWMonetization {
-//    var adsProvider: OWAdsProvider { get set }
+    // TODO: Complete
 }
 #else
 protocol OWMonetization {

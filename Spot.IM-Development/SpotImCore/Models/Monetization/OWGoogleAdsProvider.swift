@@ -10,5 +10,5 @@ import Foundation
 
 // TODO: Should be public once the new API is ready
 struct OWGoogleAdsProvider {
-    
+    // TODO: Complete
 }
