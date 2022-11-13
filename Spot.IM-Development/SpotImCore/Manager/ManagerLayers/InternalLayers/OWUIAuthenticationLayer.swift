@@ -13,7 +13,14 @@ protocol OWUIAuthenticationInternalProtocol {
 }
 
 class OWUIAuthenticationLayer: OWUIAuthentication {
-    var displayLoginFlow: OWLoginFlowCallback? { return self._displayLoginFlow }
+    var displayLoginFlow: OWLoginFlowCallback? {
+        get {
+            return self._displayLoginFlow
+        }
+        set(newValue) {
+            self._displayLoginFlow = newValue
+        }
+    }
     
     fileprivate var _displayLoginFlow: OWLoginFlowCallback? = nil
     
