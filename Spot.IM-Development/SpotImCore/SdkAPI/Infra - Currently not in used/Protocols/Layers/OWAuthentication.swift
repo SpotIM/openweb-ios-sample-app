@@ -14,6 +14,9 @@ public protocol OWAuthentication {
 }
 #else
 protocol OWAuthentication {
-    
+    func sso(_ flowType: OWSSOFlowType)
+    func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion)
+    func logout(completion: @escaping OWDefaultCompletion)
+    var shouldDisplayLoginPrompt: Bool { get set }
 }
 #endif

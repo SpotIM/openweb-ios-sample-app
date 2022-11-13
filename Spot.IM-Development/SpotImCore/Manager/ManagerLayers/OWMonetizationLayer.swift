@@ -9,7 +9,14 @@
 import Foundation
 
 class OWMonetizationLayer: OWMonetization {
-    var adsProvider: OWAdsProvider { return self._adsProvider }
+    var adsProvider: OWAdsProvider {
+        get {
+            return self._adsProvider
+        }
+        set(newValue) {
+            _adsProvider = newValue
+        }
+    }
     
     fileprivate var _adsProvider: OWAdsProvider = .none
 }
