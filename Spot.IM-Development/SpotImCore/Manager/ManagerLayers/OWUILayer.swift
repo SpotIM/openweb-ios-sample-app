@@ -12,19 +12,19 @@ import RxSwift
 class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
-    var helpers: OWHelpers { return self._helpers }
+    var customizations: OWCustomizations { return self._customizations}
     var authenticationUI: OWUIAuthentication { return self._authenticationUI }
     
     fileprivate let sdkCoordinator: OWSDKCoordinator
-    fileprivate let _helpers: OWHelpers
+    fileprivate let _customizations: OWCustomizations
     fileprivate let _authenticationUI: OWUIAuthentication
     fileprivate var flowDisposeBag: DisposeBag!
     
     init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator(),
-         helpers: OWHelpers = OWHelpersLayer(),
+         customizations: OWCustomizations = OWCustomizationsLayer(),
          authenticationUI: OWUIAuthentication = OWUIAuthenticationLayer()) {
         self.sdkCoordinator = sdkCoordinator
-        self._helpers = helpers
+        self._customizations = customizations
         self._authenticationUI = authenticationUI
     }
     

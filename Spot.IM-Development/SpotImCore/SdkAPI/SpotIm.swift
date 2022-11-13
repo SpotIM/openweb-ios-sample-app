@@ -391,7 +391,12 @@ public class SpotIm {
      */
     public static func setAdditionalConfigurations(configurations: [SPAdditionalConfiguration]) {
         let additionalConfigurations: [OWAdditionalConfiguration] = configurations.map { $0.toOWPrefix }
-        var helpers = openWebManager.ui.helpers
+        // TODO: This whole guard should be deleted once the new API will be declared entirely with public access level
+        guard var helpers = openWebManager.helpers as? OWHelpersLayer else {
+            let logger = OWSharedServicesProvider.shared.logger()
+            logger.log(level: .error, "Casting to internal `OWHelpersLayer` class failed")
+            return
+        }
         helpers.additionalConfigurations = additionalConfigurations
     }
 

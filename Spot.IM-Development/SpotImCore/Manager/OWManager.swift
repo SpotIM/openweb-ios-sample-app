@@ -35,20 +35,20 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     let uiLayer: OWUI
     let monetizationLayer: OWMonetization
     let authenticationLayer: OWAuthentication
-    let customizationsLayer: OWCustomizations
+    let helpersLayer: OWHelpers
     
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
                  uiLayer: OWUI = OWUILayer(),
                  monetizationLayer: OWMonetization = OWMonetizationLayer(),
                  authenticationLayer: OWAuthentication = OWAuthenticationLayer(),
-                 customizationsLayer: OWCustomizations = OWCustomizationsLayer()) {
+                 helpersLayer: OWHelpers = OWHelpersLayer()) {
         self.servicesProvider = servicesProvider
         self.analyticsLayer = analyticsLayer
         self.uiLayer = uiLayer
         self.monetizationLayer = monetizationLayer
         self.authenticationLayer = authenticationLayer
-        self.customizationsLayer = customizationsLayer
+        self.helpersLayer = helpersLayer
         setupObservers()
     }
 }
