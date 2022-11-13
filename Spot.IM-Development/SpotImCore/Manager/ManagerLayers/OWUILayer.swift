@@ -13,15 +13,19 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
     var helpers: OWHelpers { return self._helpers }
+    var authenticationUI: OWUIAuthentication { return self._authenticationUI }
     
     fileprivate let sdkCoordinator: OWSDKCoordinator
     fileprivate let _helpers: OWHelpers
+    fileprivate let _authenticationUI: OWUIAuthentication
     fileprivate var flowDisposeBag: DisposeBag!
     
     init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator(),
-         helpers: OWHelpers = OWHelpersInternal()) {
+         helpers: OWHelpers = OWHelpersLayer(),
+         authenticationUI: OWUIAuthentication = OWUIAuthenticationLayer()) {
         self.sdkCoordinator = sdkCoordinator
         self._helpers = helpers
+        self._authenticationUI = authenticationUI
     }
     
     func preConversation(postId: String, article: OWArticleProtocol,
