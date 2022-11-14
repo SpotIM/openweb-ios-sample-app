@@ -145,17 +145,13 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
-        preConversationHeaderVM.inputs.customizeCounterLabelUI
-            .asObservable()
+        Observable.merge(
+            preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
+            preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
+        )
             .bind(onNext: { label in
-                // TODO: custom UI
-            })
-            .disposed(by: disposeBag)
-        
-        preConversationHeaderVM.inputs.customizeTitleLabelUI
-            .asObservable()
-            .bind(onNext: { label in
-                // TODO: custom UI
+//            TODO: custom UI
+//            TODO: Map to the appropriate case
             })
             .disposed(by: disposeBag)
     }
