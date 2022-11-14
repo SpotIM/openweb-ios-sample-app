@@ -90,14 +90,15 @@ fileprivate extension OWOnlineViewingUsersCounterView {
             .bind(to: lblViewersNumber.rx.text)
             .disposed(by: disposeBag)
         
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
-                guard let self = self else { return }
-                
-                self.lblViewersNumber.textColor = OWColorPalette.shared.color(type: .foreground3Color,
-                                                                        themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
+//        TODO: Uncomment once we handle theme changes correctly with themeStyleService
+//        OWSharedServicesProvider.shared.themeStyleService()
+//            .style
+//            .subscribe(onNext: { [weak self] currentStyle in
+//                guard let self = self else { return }
+//
+//                self.lblViewersNumber.textColor = OWColorPalette.shared.color(type: .foreground3Color,
+//                                                                        themeStyle: currentStyle)
+//            }).disposed(by: disposeBag)
     }
 }
 
