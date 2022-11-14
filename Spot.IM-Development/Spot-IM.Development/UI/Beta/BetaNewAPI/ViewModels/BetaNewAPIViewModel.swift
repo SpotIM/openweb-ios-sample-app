@@ -117,6 +117,10 @@ fileprivate extension BetaNewAPIViewModel {
             }
         
         Observable.merge(fullConversationTappedModel, commentCreationTappedModel, preConversationTappedModel)
+            .withLatestFrom(spotId) { [weak self] model, spotId -> SDKUIFlowActionSettings in
+                self?.setSDKSpotId(spotId)
+                return model
+            }
             .bind(to: _openMockArticleScreen)
             .disposed(by: disposeBag)
     }
