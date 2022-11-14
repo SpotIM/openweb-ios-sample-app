@@ -17,10 +17,12 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<Void> { get }
     var preConversationChangedSize: PublishSubject<CGSize> { get }
+    
+    var viewInitialized: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
-    var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
+    var preConversationHeaderVM: OWPreConversationHeaderViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
@@ -72,8 +74,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
     }
     
-    lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
-        return OWOnlineViewingUsersCounterViewModel()
+    lazy var preConversationHeaderVM: OWPreConversationHeaderViewModeling = {
+        return OWPreConversationHeaderViewModel()
     }()
     
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
@@ -113,6 +115,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .unwrap()
             .asObservable()
     }
+    
+    var viewInitialized = PublishSubject<Void>()
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -129,6 +133,26 @@ fileprivate extension OWPreConversationViewViewModel {
     func setupObservers() {
         preConversationChangedSize
             .bind(to: _preConversationChangedSize)
+            .disposed(by: disposeBag)
+        
+        viewInitialized
+            .bind(onNext: { [weak self] in
+                guard let self = self,
+                      let postId = OWManager.manager.postId
+                else { return }
+                
+                self.servicesProvider.realtimeService().startFetchingData(postId: postId)
+            })
+            .disposed(by: disposeBag)
+        
+        Observable.merge(
+            preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
+            preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
+        )
+            .bind(onNext: { label in
+//            TODO: custom UI
+//            TODO: Map to the appropriate case
+            })
             .disposed(by: disposeBag)
     }
 }

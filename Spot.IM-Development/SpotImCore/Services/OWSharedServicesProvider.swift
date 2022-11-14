@@ -165,10 +165,18 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     }
     
     func set(spotId: OWSpotId) {
-        
+        _ = SPClientSettings.main.setup(spotId: spotId)
+            .take(1)
+            .do(onNext: { config in
+                LocalizationManager.setLocale(config.appConfig.mobileSdk.locale ?? "en")
+            })
+            .subscribe()
     }
     
     func change(spotId : OWSpotId) {
+        _ = SPClientSettings.main.setup(spotId: spotId)
+            .take(1)
+            .subscribe()
         // Stop / re-create services which depend on spot id
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()

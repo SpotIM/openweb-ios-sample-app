@@ -12,7 +12,6 @@ import RxCocoa
 
 class OWPreConversationView: UIView {
     fileprivate struct Metrics {
-        static let headerHeight: CGFloat = 50
         static let bannerViewMargin: CGFloat = 40
         static let whatYouThinkHeight: CGFloat = 64
         
@@ -49,8 +48,8 @@ class OWPreConversationView: UIView {
     
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
     
-    fileprivate lazy var header: SPPreConversationHeaderView = {
-        return SPPreConversationHeaderView(onlineViewingUsersCounterVM: self.viewModel.outputs.onlineViewingUsersVM)
+    fileprivate lazy var header: OWPreConversationHeaderView = {
+        return OWPreConversationHeaderView(viewModel: self.viewModel.outputs.preConversationHeaderVM)
     }()
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
@@ -104,6 +103,7 @@ class OWPreConversationView: UIView {
     init(viewModel: OWPreConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
     }
@@ -115,6 +115,11 @@ fileprivate extension OWPreConversationView {
         self.backgroundColor = .purple
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.initialHeight)
+        }
+        
+        self.addSubviews(header)
+        header.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
         }
         
         self.addSubview(btnCommentCreation)

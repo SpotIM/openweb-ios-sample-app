@@ -21,7 +21,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     }
     
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    fileprivate let disposeBag = DisposeBag()
     
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
@@ -33,7 +33,7 @@ class OWOnlineViewingUsersCounterView: UIView {
     fileprivate lazy var lblViewersNumber: UILabel = {
         let lbl = UILabel()
             .font(UIFont.preferred(style: .regular, of: Metrics.viewersFontSize))
-            .textColor(.spForeground3)
+            .textColor(.spForeground3) // TODO: once new infra is complete use OWColorPalette
 
         return lbl
     }()
@@ -48,9 +48,16 @@ class OWOnlineViewingUsersCounterView: UIView {
         setupViews()
     }
     
+    init(viewModel: OWOnlineViewingUsersCounterViewModeling) {
+        super.init(frame: .zero)
+        self.viewModel = viewModel
+        setupViews()
+        configureViews()
+    }
+    
+    // TODO: once old view is removed this configure function should be removed
     func configure(with viewModel: OWOnlineViewingUsersCounterViewModeling) {
         self.viewModel = viewModel
-        disposeBag = DisposeBag()
         configureViews()
     }
 }
@@ -82,6 +89,16 @@ fileprivate extension OWOnlineViewingUsersCounterView {
             .startWith("0")
             .bind(to: lblViewersNumber.rx.text)
             .disposed(by: disposeBag)
+        
+//        TODO: Uncomment once we handle theme changes correctly with themeStyleService
+//        OWSharedServicesProvider.shared.themeStyleService()
+//            .style
+//            .subscribe(onNext: { [weak self] currentStyle in
+//                guard let self = self else { return }
+//
+//                self.lblViewersNumber.textColor = OWColorPalette.shared.color(type: .foreground3Color,
+//                                                                        themeStyle: currentStyle)
+//            }).disposed(by: disposeBag)
     }
 }
 

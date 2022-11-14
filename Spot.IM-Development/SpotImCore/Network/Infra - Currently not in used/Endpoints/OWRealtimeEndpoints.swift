@@ -11,7 +11,7 @@ import Alamofire
 import RxSwift
 
 enum OWRealtimeEndpoints: OWEndpoints {
-    case fetchData(postId: OWPostId)
+    case fetchData(fullConversationId: String)
     
     // MARK: - HTTPMethod
     var method: HTTPMethod {
@@ -32,31 +32,31 @@ enum OWRealtimeEndpoints: OWEndpoints {
     // MARK: - Parameters
     var parameters: Parameters? {
         switch self {
-        case .fetchData(let postId):
-            return fetchDataParameters(postId: postId)
+        case .fetchData(let fullConversationId):
+            return fetchDataParameters(fullConversationId: fullConversationId)
         }
     }
 }
 
 protocol OWRealtimeAPI {
-    func fetchData(postId: OWPostId) -> OWNetworkResponse<RealTimeModel>
+    func fetchData(fullConversationId: String) -> OWNetworkResponse<RealTimeModel>
 }
 
 extension OWNetworkAPI: OWRealtimeAPI {
     // Access by .realtime for readability
     var realtime: OWRealtimeAPI { return self }
     
-    func fetchData(postId: OWPostId) -> OWNetworkResponse<RealTimeModel> {
-        let endpoint = OWRealtimeEndpoints.fetchData(postId: postId)
+    func fetchData(fullConversationId: String) -> OWNetworkResponse<RealTimeModel> {
+        let endpoint = OWRealtimeEndpoints.fetchData(fullConversationId: fullConversationId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
 }
 
 fileprivate extension OWRealtimeEndpoints {
-    func fetchDataParameters(postId: OWPostId) -> [String: Any] {
+    func fetchDataParameters(fullConversationId: String) -> [String: Any] {
         let timestamp: Int = Int((Date()).timeIntervalSince1970)
-        let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: postId]
+        let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: fullConversationId]
         let withMessageIds = conversationId.merging([RealtimeAPIKeys.messageIds: []]) { first, _ in first }
         
         return [
