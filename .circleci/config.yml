@@ -5,19 +5,12 @@ version: 2.1
 
 references:
   # Docker image configurations
-  ios_config_xcode_13: &ios_config_xcode_13
+  ios_config_xcode: &ios_config_xcode
+    parameters:
+      xcode:
+       type: string
     macos:
-      xcode: "13.0.0"
-    working_directory: ~/project/Spot.IM-Development
-    
-  ios_config_xcode_13_4: &ios_config_xcode_13_4
-    macos:
-      xcode: "13.4.0"
-    working_directory: ~/project/Spot.IM-Development
-    
-  ios_config_xcode_14: &ios_config_xcode_14
-    macos:
-      xcode: "14.0.0"
+      xcode: << parameters.xcode >>
     working_directory: ~/project/Spot.IM-Development
 
   define_var_release_version: &define_var_release_version
@@ -78,7 +71,7 @@ commands:
 
 jobs:
   default_job:
-    <<: *ios_config_xcode_14
+    <<: *ios_config_xcode
     steps:
       - checkout:
           path: ~/project
@@ -124,9 +117,9 @@ jobs:
       - store_artifacts:
           path: test_output
           destination: scan-output
-
+    
   release_sdk_job:
-    <<: *ios_config_xcode_14
+    <<: *ios_config_xcode
     steps:
       - checkout:
           path: ~/project
@@ -194,38 +187,18 @@ jobs:
           command: |
             bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
             
-  release_tag_13_job:
-    <<: *ios_config_xcode_13
+  release_tag:
+    <<: *ios_config_xcode
     steps:
       - release_tag
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.0
-            
-  release_tag_13_4_job:
-    <<: *ios_config_xcode_13_4
-    steps:
-      - release_tag
-
-      - run:
-          name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
-          command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 13.4
-            
-  release_tag_14_job:
-    <<: *ios_config_xcode_14
-    steps:
-      - release_tag
-
-      - run:
-          name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
-          command: |
-            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION 14.0
+            bash -x ./update_public_pod_repo_with_tag.sh $RELEASE_VERSION << parameters.xcode >>
 
   release_app_job:
-    <<: *ios_config_xcode_14
+    <<: *ios_config_xcode
     steps:
       - checkout:
           path: ~/project
@@ -268,7 +241,7 @@ jobs:
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
             
   release_public_app_job:
-    <<: *ios_config_xcode_14
+    <<: *ios_config_xcode
     steps:
       - checkout:
           path: ~/project
@@ -318,42 +291,49 @@ workflows:
           filters:
             branches:
               ignore: /^release/.*/
+          xcode: "14.0.0"
 
       - release_sdk_job:
           filters:
             branches:
               only:
                 - /^release/sdk/.*/
+          xcode: "14.0.0"
                 
-      - release_tag_13_job:
+      - release_tag:
           filters:
             branches:
               only:
                 - /^release/tag13.0/.*/
+          xcode: "13.0.0"
                 
-      - release_tag_13_4_job:
+      - release_tag:
           filters:
             branches:
               only:
                 - /^release/tag13.4/.*/
+          xcode: "13.4.0"
                 
-      - release_tag_14_job:
+      - release_tag:
           filters:
             branches:
               only:
-                - /^release/tag14.0/.*/
+                - /^release/tag14.1/.*/
+          xcode: "14.1.0"
 
       - release_app_job:
           filters:
             branches:
               only:
                 - /^release/app/.*/
+          xcode: "14.0.0"
                 
       - release_public_app_job:
           filters:
             branches:
               only:
                 - /^release/public_app/.*/
+          xcode: "14.0.0"
                 
   release_multi_workflow:
     jobs:
@@ -362,11 +342,19 @@ workflows:
             branches:
               only:
                 - /^release/multi/.*/
+          xcode: "14.0.0"
+      
+      - release_tag:
+          requires:
+            - "release_sdk_job"
+          xcode: "13.0.0"
 
-      - release_tag_13_job:
+      - release_tag:
           requires:
-           - release_sdk_job
-                
-      - release_tag_13_4_job:
+            - "release_sdk_job"
+          xcode: "13.4.0"
+
+      - release_tag:
           requires:
-           - release_sdk_job
+            - "release_sdk_job"
+          xcode: "14.1.0"
