@@ -11,11 +11,15 @@ import UIKit
 import SafariServices
 
 class OWSafariViewController: SFSafariViewController {
-    private let options: OWSafariViewControllerOptions
+    private let viewModel: OWSafariViewModel
     
-    init(options: OWSafariViewControllerOptions) {
-        self.options = options
-        super.init(url: options.url, configuration: .init())
+    init(viewModel: OWSafariViewModel) {
+        self.viewModel = viewModel
+        super.init(url: viewModel.outputs.options.url, configuration: .init())
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        viewModel.inputs.viewDidLoad.onNext()
+    }
 }

@@ -13,6 +13,7 @@ import SafariServices
 // TODO
 enum OWSafariTabCoordinatorResult: OWCoordinatorResultProtocol {
     case loadedToScreen
+    case popped
     
     var loadedToScreen: Bool {
         switch self {
@@ -38,11 +39,21 @@ class OWSafariTabCoordinator: OWBaseCoordinator<OWSafariTabCoordinatorResult> {
     
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWSafariTabCoordinatorResult> {
         let safariOptions = OWSafariViewControllerOptions(url: url)
-        let safariVC = OWSafariViewController(options: safariOptions)
+        let safariVM = OWSafariViewModel(options: safariOptions)
+        let safariVC = OWSafariViewController(viewModel: safariVM)
         
         let safariVCPopped = PublishSubject<Void>()
         
         router.present(safariVC, animated: true, dismissCompletion: safariVCPopped)
-        return .empty() // TODO: complete with propper result
+        
+        let safariVCPoppedObservable = safariVCPopped
+            .map { OWSafariTabCoordinatorResult.popped }
+            .asObservable()
+        
+        let safariVCLoadedToScreenObservable = safariVM.inputs.viewDidLoad
+            .map { OWSafariTabCoordinatorResult.loadedToScreen }
+            .asObservable()
+        
+        return Observable.merge(safariVCPoppedObservable, safariVCLoadedToScreenObservable)
     }
 }
