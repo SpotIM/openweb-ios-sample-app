@@ -240,4 +240,17 @@ fileprivate extension OWPreConversationView {
             self.layoutIfNeeded()
         }
     }
+    
+    internal override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            let state = UIApplication.shared.applicationState
+            if #available(iOS 12.0, *) {
+                if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
+                    // traitCollectionDidChange() is called multiple times, see: https://stackoverflow.com/a/63380259/583425
+                    if state != .background {
+                        OWSharedServicesProvider.shared.themeStyleService().setStyle(style: self.traitCollection.userInterfaceStyle == .dark ? OWThemeStyle.dark : OWThemeStyle.light)
+                    }
+                }
+            }
+    }
 }

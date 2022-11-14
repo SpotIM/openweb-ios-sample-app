@@ -98,6 +98,7 @@
 		24A24A10291B9D7000D72755 /* OWSafariTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */; };
 		24A24A14291BABB300D72755 /* OWSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A13291BABB300D72755 /* OWSafariViewController.swift */; };
 		24A24A18291BAC7C00D72755 /* OWSafariViewControllerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */; };
+		24A24A1A291BEAB300D72755 /* OWSafariViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */; };
 		24B087CB288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */; };
 		24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */; };
 		24B087CF288EB51F00CAA0EB /* OWFailureReportEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */; };
@@ -611,6 +612,7 @@
 		24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariTabCoordinator.swift; sourceTree = "<group>"; };
 		24A24A13291BABB300D72755 /* OWSafariViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewController.swift; sourceTree = "<group>"; };
 		24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewControllerOptions.swift; sourceTree = "<group>"; };
+		24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewModel.swift; sourceTree = "<group>"; };
 		24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInternalAuthenticationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailureReportEndpoints.swift; sourceTree = "<group>"; };
@@ -1445,6 +1447,7 @@
 			children = (
 				24A24A13291BABB300D72755 /* OWSafariViewController.swift */,
 				24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */,
+				24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */,
 			);
 			path = OWSafariViewController;
 			sourceTree = "<group>";
@@ -3565,6 +3568,7 @@
 				3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoints.swift in Sources */,
 				441165A52375C4BD00B781F3 /* OWDecodableParser.swift in Sources */,
 				3DDA9A5E2906D16800FE3B86 /* OWCommentSkeletonShimmeringCell.swift in Sources */,
+				24A24A1A291BEAB300D72755 /* OWSafariViewModel.swift in Sources */,
 				3D08E0AD2877216B00E6F1AC /* Optional+Extensions.swift in Sources */,
 				3D20A37727B017AF003F8513 /* OWConstraintLayoutGuideDSL.swift in Sources */,
 				3D08E09528770B8700E6F1AC /* IntegerType+OWIdentifiableType.swift in Sources */,
