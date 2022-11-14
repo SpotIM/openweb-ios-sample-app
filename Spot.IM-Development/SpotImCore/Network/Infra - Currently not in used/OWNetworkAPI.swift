@@ -85,7 +85,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
     }
 
     @discardableResult
-    func performRequest<T: Decodable>(route: OWURLRequestConfiguration, decoder: JSONDecoder = JSONDecoder()) -> OWNetworkResponse<T> {
+    func performRequest<T: Decodable>(route: OWURLRequestConfiguration, decoder: JSONDecoder = defaultDecoder) -> OWNetworkResponse<T> {
         let progress = PublishSubject<Progress>()
 
         let request = requestAfterPerformingMiddlewares(with: route.urlRequest!, additionalMiddlewares: route.endpoint.additionalMiddlewares ?? [])

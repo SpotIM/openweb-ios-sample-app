@@ -11,6 +11,7 @@ import UIKit
 import RxSwift
 
 protocol OWOnlineViewingUsersCounterViewModelingInputs {
+    // TODO: once old view is removed this configureModel function should be removed
     func configureModel(_ model: RealTimeOnlineViewingUsersModel)
 }
 
@@ -38,7 +39,6 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     // Idealy we will never create a VM without a model or services
     init () {}
 
-   
     var viewingCount: Observable<String> {
         return model.unwrap()
             .map { $0.count }
@@ -51,5 +51,34 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
     
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
         self.model.onNext(model)
+    }
+}
+
+// New VM using new services
+class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewModeling, OWOnlineViewingUsersCounterViewModelingInputs, OWOnlineViewingUsersCounterViewModelingOutputs {
+    var inputs: OWOnlineViewingUsersCounterViewModelingInputs { return self }
+    var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { return self }
+
+    var viewingCount: Observable<String> {
+        guard let postId = OWManager.manager.postId else { return .empty()}
+        
+        return OWSharedServicesProvider.shared.realtimeService().realtimeData
+            .map { realtimeData in
+                try? realtimeData.data?.onlineViewingUsersCount("\(OWManager.manager.spotId)_\(postId)")
+            }
+            .unwrap()
+            .map { $0.count }
+            .map {
+                $0.decimalFormatted
+            }
+            .asObservable()
+    }
+    
+    lazy var image: UIImage = {
+        return UIImage(spNamed: "viewingUsers", supportDarkMode: false)!
+    }()
+    
+    // TODO: once old view is removed this configureModel function should be removed
+    func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
     }
 }
