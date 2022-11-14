@@ -391,7 +391,7 @@ public class SpotIm {
      */
     public static func setAdditionalConfigurations(configurations: [SPAdditionalConfiguration]) {
         let additionalConfigurations: [OWAdditionalConfiguration] = configurations.map { $0.toOWPrefix }
-        var helpers = openWebManager.ui.helpers
+        var helpers = openWebManager.helpers
         helpers.additionalConfigurations = additionalConfigurations
     }
 

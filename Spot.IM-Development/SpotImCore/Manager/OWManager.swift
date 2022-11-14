@@ -17,7 +17,6 @@ protocol OWManagerInternalProtocol: AnyObject  {
 }
 
 class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
-    
     // Singleton, will be public access once a new API will be ready.
     // Publishers and SDK consumers will basically interact with the manager / public encapsulation of it.
     static let manager = OWManager()
@@ -25,19 +24,30 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     // Memebers variables
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
-    let analyticsLayer: OWAnalytics
-    let uiLayer: OWUI
     fileprivate let _currentSpotId = BehaviorSubject<OWSpotId?>(value: nil)
     fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
     fileprivate var _currentNonRxSpotId: OWSpotId? = nil
     fileprivate var _currentNonRxPostId: OWPostId? = nil
     
+    // Layers
+    let analyticsLayer: OWAnalytics
+    let uiLayer: OWUI
+    let monetizationLayer: OWMonetization
+    let authenticationLayer: OWAuthentication
+    let helpersLayer: OWHelpers
+    
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
-                 uiLayer: OWUI = OWUILayer()) {
+                 uiLayer: OWUI = OWUILayer(),
+                 monetizationLayer: OWMonetization = OWMonetizationLayer(),
+                 authenticationLayer: OWAuthentication = OWAuthenticationLayer(),
+                 helpersLayer: OWHelpers = OWHelpersLayer()) {
         self.servicesProvider = servicesProvider
         self.analyticsLayer = analyticsLayer
         self.uiLayer = uiLayer
+        self.monetizationLayer = monetizationLayer
+        self.authenticationLayer = authenticationLayer
+        self.helpersLayer = helpersLayer
         setupObservers()
     }
 }

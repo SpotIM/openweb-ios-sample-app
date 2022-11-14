@@ -15,11 +15,6 @@
 import Foundation
 import RxSwift
 
-enum OWThemeStyle {
-    case light
-    case dark
-}
-
 protocol OWThemeStyleServicing {
     func setStyle(style: OWThemeStyle)
     var style: Observable<OWThemeStyle> { get }
