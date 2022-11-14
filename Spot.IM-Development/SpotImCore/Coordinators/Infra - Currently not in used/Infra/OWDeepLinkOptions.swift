@@ -14,5 +14,4 @@ enum OWDeepLinkOptions {
     case highlightComment(commentId: String)
     case commentCreation(commentCreationData: OWCommentCreationRequiredData)
     case authentication
-    case safari(url: URL)
 }
