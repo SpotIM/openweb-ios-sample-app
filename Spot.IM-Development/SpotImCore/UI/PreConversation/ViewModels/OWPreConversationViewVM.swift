@@ -145,6 +145,22 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
+        viewInitialized
+            .bind(onNext: { [weak self] in
+                guard let self = self,
+                      let postId = OWManager.manager.postId
+                else { return }
+                
+                self.servicesProvider.netwokAPI().conversation.conversationRead(postId: postId, mode: SPCommentSortMode.best, page: SPPaginationPage.first, parentId: "", offset: 0).response
+                    .bind(onNext: { conversation in
+                        if let communityQuestion = conversation.conversation?.communityQuestion {
+                            self.communityQuestionViewModel.inputs.communityQuestionInput.onNext(communityQuestion)
+                        }
+                    })
+                    .disposed(by: self.disposeBag) // TODO: is it needed?
+            })
+            .disposed(by: disposeBag)
+        
         Observable.merge(
             preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
             preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
