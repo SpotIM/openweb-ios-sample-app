@@ -11,11 +11,10 @@ import RxSwift
 
 // TODO: complete
 protocol OWCommunityQuestionViewModelingInputs {
-    var communityQuestionInput: PublishSubject<String?> { get }
+    var communityQuestionString: PublishSubject<String?> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
-    var communityQuestionString: Observable<String?> { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -27,21 +26,5 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
     
-    fileprivate var queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityQuestionVMQueue")
-    
-    var communityQuestionInput = PublishSubject<String?>()
-    var communityQuestionString: Observable<String?> {
-        communityQuestionInput.asObservable()
-        
-        // TODO: get question from conversation!
-//        OWSharedServicesProvider.shared.spotConfigurationService()
-//            .config(spotId: OWManager.manager.spotId)
-//            .observe(on: queueScheduler)
-//            .map { config -> String? in
-//                "Some Question!"
-//            }
-//            .unwrap()
-//            .observe(on: MainScheduler.instance)
-//            .asObservable()
-    }
+    var communityQuestionString = PublishSubject<String?>()
 }

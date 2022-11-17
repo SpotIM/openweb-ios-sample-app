@@ -10,7 +10,6 @@ import Foundation
 import RxSwift
 import SafariServices
 
-// TODO
 enum OWSafariTabCoordinatorResult: OWCoordinatorResultProtocol {
     case loadedToScreen
     case popped
