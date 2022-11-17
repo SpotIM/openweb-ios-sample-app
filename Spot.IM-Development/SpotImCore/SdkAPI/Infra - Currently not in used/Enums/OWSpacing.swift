@@ -6,7 +6,7 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 #if NEW_API
 public enum OWSpacing {
