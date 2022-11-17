@@ -29,6 +29,7 @@ class OWCommunityQuestionView: UIView {
         return textView
     }()
     
+    fileprivate var heightConstraint: OWConstraint?
     fileprivate let viewModel: OWCommunityQuestionViewModeling
     fileprivate let disposeBag = DisposeBag()
     
@@ -61,13 +62,30 @@ fileprivate extension OWCommunityQuestionView {
                 make.leading.equalToSuperview().offset(Metrics.questionHorizontalOffset)
                 make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset)
             }
-        }
+            heightConstraint = make.height.equalTo(0).constraint
+        }        
     }
     
     func setupObservers() {
-        viewModel.outputs
+        viewModel.inputs
             .communityQuestionString
+            .asObservable()
+            .observe(on: MainScheduler.instance)
             .bind(to: questionTextView.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.inputs
+            .communityQuestionString
+            .asObservable()
+            .observe(on: MainScheduler.instance)
+            .bind(onNext: { [weak self] question in
+                guard let self = self else { return }
+                if let questionString = question, !questionString.isEmpty {
+                    self.heightConstraint?.deactivate()
+                } else {
+                    self.heightConstraint?.activate()
+                }
+            })
             .disposed(by: disposeBag)
         
         OWSharedServicesProvider.shared.themeStyleService()
