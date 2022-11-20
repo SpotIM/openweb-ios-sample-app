@@ -31,15 +31,7 @@ platform :ios do
     setup_circle_ci
   end
 
-  desc "Push a new beta build to TestFlight"
-  lane :beta do
-    match(type: "appstore", readonly: true)
-    match(type: "development", readonly: true)
-    increment_build_number(build_number: Time.now.to_i.to_s[0..7])
-    build_app(workspace: "Spot-IM.Development.xcworkspace", scheme: "Spot-IM.Development")
-    upload_to_testflight
-  end
-
+  desc "Run unit tests"
   lane :unit_tests do |options|
     cocoapods()
     scan(
@@ -48,13 +40,12 @@ platform :ios do
       device: "iPhone 12 Pro",
     )
   end
-
-  lane :release_pod do |options|
-    increment_version_number(version_number: options[:version]) # Set a specific version number)
-    build_release_sdk()
-  end
-
-  lane :build_release_sdk do
+  
+  # Excpect parameter `version`
+  desc "Build a release version of the SDK"
+  lane :build_release_sdk do |options|
+    set_version(version:options[:version]) # Set a specific version number
+    increment_build_number(build_number: 0) # Set build to 0, this will allow sample apps which deploy afterwards to start with build 1.
     cocoapods(use_bundle_exec: false)
     xcodebuild(
       scheme: "Package SpotImCoreSDK",
@@ -64,26 +55,16 @@ platform :ios do
       build: true
     )
   end
-
-  lane :prepare_demo_app do
-    match(type: "appstore", readonly: true)
-    match(type: "development", readonly: true)
-    increment_build_number_in_xcodeproj
-
-    build_app(workspace: "Spot-IM.Development.xcworkspace",
-      scheme: "Spot-IM.Development",
-      export_options: {
-        method: "app-store",
-        provisioningProfiles: {
-            "im.spot.demo" => "match AppStore im.spot.demo"
-        }
-    })
-  end
-
+  
+  # Excpect parameter `version`
+  desc "Release Sample App (internal preset)"
   lane :release_demo_app do |options|
-    increment_build_number()
-    increment_version_number(version_number: options[:version]) # Set a specific version number
-    increment_version_number_in_xcodeproj(version_number: options[:version])
+    # Set a build in the following range
+    internal_sample_app_build_low_threshold = 1
+    internal_sample_app_build_high_threshold = 50
+    increment_build_in_range(build_low:internal_sample_app_build_low_threshold, build_high:internal_sample_app_build_high_threshold)
+    # Set a specific version number
+    set_version(version:options[:version])
     match(
         type: "appstore",
         readonly: true,
@@ -106,17 +87,15 @@ platform :ios do
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
   
+  # Excpect parameter `version`
+  desc "Release Sample App (public preset)"
   lane :release_public_demo_app do |options|
-    public_sample_app_build_threshold = 100
-    build_number = get_build_number()
-    puts build_number
-    if build_number.to_i < public_sample_app_build_threshold.to_i
-      puts "Increment build number to 100 for public sample app"
-      increment_build_number(build_number: public_sample_app_build_threshold)
-    end
-    increment_build_number()
-    increment_version_number(version_number: options[:version]) # Set a specific version number
-    increment_version_number_in_xcodeproj(version_number: options[:version])
+    # Set a build in the following range
+    public_sample_app_build_low_threshold = 100
+    public_sample_app_build_high_threshold = 150
+    increment_build_in_range(build_low:public_sample_app_build_low_threshold, build_high:public_sample_app_build_high_threshold)
+    # Set a specific version number
+    set_version(version:options[:version])
     match(
         type: "appstore",
         readonly: true,
@@ -138,12 +117,46 @@ platform :ios do
     )
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
-
-  lane :bump_version do
-    increment_version_number_in_xcodeproj(
-      bump_type: 'patch',
-      scheme: 'Spot-IM.Development'
-    )
-    increment_build_number_in_xcodeproj
+  
+  # Excpect parameter `version`
+  desc "Set version in xcode target and project plists"
+  lane :set_version do |options|
+    increment_version_number(version_number: options[:version]) # Set a specific version number
+    increment_version_number_in_xcodeproj(version_number: options[:version])
+    increment_build_number(build_number: 1) # Set build to 1
+  end
+  
+  # Excpect parameters `build_low` and `build_high`
+  desc "Increment build if it is in range, or set build to lower end"
+  lane :increment_build_in_range do |options|
+    current_build_number = get_build_number()
+    puts current_build_number
+    if current_build_number.to_i < options[:build_low].to_i || current_build_number.to_i >= options[:build_high].to_i
+      puts "Set build number to lower range which is #{options[:build_low]}"
+      increment_build_number(build_number: options[:build_low])
+    else
+      # Increment build by one
+      new_build_number = current_build_number.to_i + 1
+      puts "Set build number to #{new_build_number}"
+      increment_build_number(build_number: new_build_number)
+    end
+  end
+  
+  # This method used for internal testing. Decided to keep it here for convenient. Excpect parameter `build`.
+  desc "Set build to specific number"
+  lane :set_build do |options|
+    increment_build_number(build_number: options[:build])
+  end
+    
+  # TODO: Remove after finish testing
+  lane :set_version_wrapper do |options|
+      set_version(version:options[:version])
+  end
+  
+  # TODO: Remove after finish testing
+  lane :increment_build_in_range_wrapper do
+    build_low_threshold = 100
+    build_high_threshold = 150
+    increment_build_in_range(build_low:public_sample_app_build_low_threshold, build_high:public_sample_app_build_high_threshold)
   end
 end
