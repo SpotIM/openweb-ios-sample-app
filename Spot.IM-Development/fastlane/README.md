@@ -15,10 +15,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios beta
+### ios unit_tests
 
 ```sh
-[bundle exec] fastlane ios beta
+[bundle exec] fastlane ios unit_tests
 ```
 
 The setup_circle_ci fastlane action will perform the following actions:
@@ -26,23 +26,7 @@ The setup_circle_ci fastlane action will perform the following actions:
   Switch match to readonly mode to make sure CI does not create new code signing certificates or provisioning profiles.
   Set up log and test result paths to be easily collectible.
 
-Push a new beta build to TestFlight
-
-### ios unit_tests
-
-```sh
-[bundle exec] fastlane ios unit_tests
-```
-
-
-
-### ios release_pod
-
-```sh
-[bundle exec] fastlane ios release_pod
-```
-
-
+Run unit tests
 
 ### ios build_release_sdk
 
@@ -50,15 +34,7 @@ Push a new beta build to TestFlight
 [bundle exec] fastlane ios build_release_sdk
 ```
 
-
-
-### ios prepare_demo_app
-
-```sh
-[bundle exec] fastlane ios prepare_demo_app
-```
-
-
+Build a release version of the SDK
 
 ### ios release_demo_app
 
@@ -66,7 +42,7 @@ Push a new beta build to TestFlight
 [bundle exec] fastlane ios release_demo_app
 ```
 
-
+Release Sample App (internal preset)
 
 ### ios release_public_demo_app
 
@@ -74,12 +50,44 @@ Push a new beta build to TestFlight
 [bundle exec] fastlane ios release_public_demo_app
 ```
 
+Release Sample App (public preset)
 
-
-### ios bump_version
+### ios set_version
 
 ```sh
-[bundle exec] fastlane ios bump_version
+[bundle exec] fastlane ios set_version
+```
+
+Set version in xcode target and project plists
+
+### ios increment_build_in_range
+
+```sh
+[bundle exec] fastlane ios increment_build_in_range
+```
+
+Increment build if it is in range, or set build to lower end
+
+### ios set_build
+
+```sh
+[bundle exec] fastlane ios set_build
+```
+
+Set build to specific number
+
+### ios set_version_wrapper
+
+```sh
+[bundle exec] fastlane ios set_version_wrapper
+```
+
+
+
+### ios increment_build_in_range_wrapper
+
+```sh
+[bundle exec] fastlane ios increment_build_in_range_wrapper
 ```
 
 
