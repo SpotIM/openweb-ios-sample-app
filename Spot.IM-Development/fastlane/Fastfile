@@ -123,7 +123,13 @@ platform :ios do
   lane :set_version do |options|
     increment_version_number(version_number: options[:version]) # Set a specific version number
     increment_version_number_in_xcodeproj(version_number: options[:version])
-    increment_build_number(build_number: 1) # Set build to 1
+    # Set version inside OpenWebSettings plist
+    update_plist(
+        plist_path: "SpotImCore/Resources/OpenWebSettings.plist",
+        block: proc do |plist|
+            plist[:sdkVersion] = options[:version]
+        end
+    )
   end
   
   # Excpect parameters `build_low` and `build_high`
