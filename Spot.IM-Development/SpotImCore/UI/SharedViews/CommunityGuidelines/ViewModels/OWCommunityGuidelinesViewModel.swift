@@ -14,7 +14,7 @@ protocol OWCommunityGuidelinesViewModelingInputs {
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
-    var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> { get }
+    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
 }
 
@@ -37,7 +37,7 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
         urlClicked.asObservable()
     }
     
-    var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> {
+    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
         OWSharedServicesProvider.shared.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))

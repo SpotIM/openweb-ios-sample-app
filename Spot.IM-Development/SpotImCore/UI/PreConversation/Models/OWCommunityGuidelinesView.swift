@@ -65,10 +65,7 @@ extension OWCommunityGuidelinesView {
     
     fileprivate func setupObservers() {
         viewModel.outputs.communityGuidelinesHtmlAttributedString
-            .bind(onNext: { [weak self] attString in
-                guard let self = self else { return }
-                self.titleTextView.attributedText = attString
-            })
+            .bind(to: titleTextView.rx.attributedText)
             .disposed(by: disposeBag)
         
         // disable selecting text - we need it to allow click on links
