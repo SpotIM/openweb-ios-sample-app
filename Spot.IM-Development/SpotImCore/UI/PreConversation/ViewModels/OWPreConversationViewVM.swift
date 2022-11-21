@@ -158,7 +158,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     .conversation
                     .conversationRead(postId: postId, mode: SPCommentSortMode.best, page: SPPaginationPage.first, parentId: "", offset: 0)
                     .response
-                    .bind(onNext: { conversation in
+                    .subscribe(onNext: { conversation in
                         if let communityQuestion = conversation.conversation?.communityQuestion {
                             self.communityQuestionViewModel.inputs.communityQuestionString.onNext(communityQuestion)
                         }

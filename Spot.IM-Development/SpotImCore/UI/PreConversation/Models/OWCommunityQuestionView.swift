@@ -19,13 +19,13 @@ class OWCommunityQuestionView: UIView {
     
     fileprivate lazy var questionTextView: UITextView = {
         let textView = UITextView()
-        textView.isEditable = false
-        textView.isScrollEnabled = false
-        textView.isSelectable = false
-        textView.backgroundColor = .clear
-        textView.font = UIFont.preferred(style: .bold, of: Metrics.fontSize)
-        textView.textColor = OWColorPalette.shared.color(type: .foreground0Color,
-                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+            .isEditable(false)
+            .isScrollEnabled(false)
+            .isSelectable(false)
+            .backgroundColor(.clear)
+            .font(UIFont.preferred(style: .bold, of: Metrics.fontSize))
+            .textColor(OWColorPalette.shared.color(type: .foreground0Color,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         return textView
     }()
     
@@ -67,24 +67,25 @@ fileprivate extension OWCommunityQuestionView {
     }
     
     func setupObservers() {
-        viewModel.inputs
-            .communityQuestionString
-            .asObservable()
-            .observe(on: MainScheduler.instance)
+        let communityQuestionObservable = viewModel.outputs
+                    .communityQuestionString
+                    .asObservable()
+                    .observe(on: MainScheduler.instance)
+                    .share(replay: 0)
+        
+        communityQuestionObservable
             .bind(to: questionTextView.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel.inputs
-            .communityQuestionString
-            .asObservable()
-            .observe(on: MainScheduler.instance)
-            .bind(onNext: { [weak self] question in
-                guard let self = self else { return }
-                if let questionString = question, !questionString.isEmpty {
-                    self.heightConstraint?.deactivate()
-                } else {
-                    self.heightConstraint?.activate()
-                }
+        communityQuestionObservable
+            .subscribe(onNext: {
+                [weak self] question in
+                    guard let self = self else { return }
+                    if let questionString = question, !questionString.isEmpty {
+                        self.heightConstraint?.deactivate()
+                    } else {
+                        self.heightConstraint?.activate()
+                    }
             })
             .disposed(by: disposeBag)
         

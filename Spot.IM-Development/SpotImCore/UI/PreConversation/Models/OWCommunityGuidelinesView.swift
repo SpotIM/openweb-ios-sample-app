@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 // TODO: complete
 class OWCommunityGuidelinesView: UIView {
@@ -18,12 +19,13 @@ class OWCommunityGuidelinesView: UIView {
     
     fileprivate lazy var titleTextView: UITextView = {
         let textView = UITextView()
-        textView.delegate = self
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.isScrollEnabled = false
-        textView.dataDetectorTypes = [.link]
-        textView.backgroundColor = .clear
+            .backgroundColor(.clear)
+            .delegate(self)
+            .isEditable(false)
+            .isSelectable(true)
+            .isScrollEnabled(false)
+            .dataDetectorTypes([.link])
+        
         return textView
     }()
     
@@ -33,7 +35,6 @@ class OWCommunityGuidelinesView: UIView {
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        self.accessibilityIdentifier = Metrics.identifier
         setupViews()
         setupObservers()
     }
@@ -46,6 +47,7 @@ class OWCommunityGuidelinesView: UIView {
 
 extension OWCommunityGuidelinesView {
     fileprivate func setupViews() {
+        self.accessibilityIdentifier = Metrics.identifier
         self.backgroundColor = .clear
         self.addSubviews(titleTextView)
         titleTextView.OWSnp.makeConstraints { make in

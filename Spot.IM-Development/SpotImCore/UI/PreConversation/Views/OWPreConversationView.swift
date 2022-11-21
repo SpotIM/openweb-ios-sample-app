@@ -61,10 +61,9 @@ class OWPreConversationView: UIView {
         return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
     }()
     fileprivate lazy var separatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
-                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        return view
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
         return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
