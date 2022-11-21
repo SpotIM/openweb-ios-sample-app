@@ -11,7 +11,7 @@ import Foundation
 internal final class SPWebSDKProvider {
     
     fileprivate struct Settings {
-        static let helpers: OWHelpersInternal = OpenWeb.manager.ui.helpers as! OWHelpersInternal
+        static let helpers: OWHelpersLayer = OpenWeb.manager.helpers as! OWHelpersLayer
         static let tenantConfigCommentsFilter: String = "tenant_config.user-profile.keys_to_filter_comments"
     }
     
