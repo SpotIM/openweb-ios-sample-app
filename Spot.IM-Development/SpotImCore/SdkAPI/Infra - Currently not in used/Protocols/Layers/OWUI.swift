@@ -12,12 +12,14 @@ import Foundation
 public protocol OWUI {
     var flows: OWUIFlows { get }
     var views: OWUIViews { get }
-    var helpers: OWHelpers { get }
+    var customizations: OWCustomizations { get }
+    var authenticationUI: OWUIAuthentication { get }
 }
 #else
 protocol OWUI {
     var flows: OWUIFlows { get }
     var views: OWUIViews { get }
-    var helpers: OWHelpers { get }
+    var customizations: OWCustomizations { get }
+    var authenticationUI: OWUIAuthentication { get }
 }
 #endif
