@@ -59,6 +59,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var imageType: Observable<OWImageType> {
         self.user
             .map {
+                if ($0.isMuted) { return .defaultImage }
                 if let url = self.imageURLProvider?.imageURL(with: $0.imageId, size: nil) {
                     return .custom(url: url)
                 }
