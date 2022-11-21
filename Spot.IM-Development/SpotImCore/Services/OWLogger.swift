@@ -112,7 +112,7 @@ class OWLogger {
     init(logLevel: OWLogLevel, logMethods: [OWLogMethod],
          queue: DispatchQueue = DispatchQueue(label: "OpenWebSDKLoggerQueue", qos: .utility),
          appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle(),
-         prefix: String = "OpenWebSDKLogger", sdkVer: String = (Bundle.spot.shortVersion ?? "na"),
+         prefix: String = "OpenWebSDKLogger", sdkVer: String = (OWSettingsWrapper.sdkVersion() ?? "na"),
          hostBundleName: String = Bundle.main.bundleName ?? "",
          maxItemsPerLogFile: Int = 100) {
         self.logLevel = logLevel
