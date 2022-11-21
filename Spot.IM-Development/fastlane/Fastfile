@@ -153,16 +153,4 @@ platform :ios do
   lane :set_build do |options|
     increment_build_number(build_number: options[:build])
   end
-    
-  # TODO: Remove after finish testing
-  lane :set_version_wrapper do |options|
-      set_version(version:options[:version])
-  end
-  
-  # TODO: Remove after finish testing
-  lane :increment_build_in_range_wrapper do
-    build_low_threshold = 100
-    build_high_threshold = 150
-    increment_build_in_range(build_low:public_sample_app_build_low_threshold, build_high:public_sample_app_build_high_threshold)
-  end
 end
