@@ -40,7 +40,7 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
             OWHTTPHeaderName.platform: UIDevice.current.deviceTypeXPlatformHeader(),
             OWHTTPHeaderName.moblieGWVersion: "v1.0.0",
             OWHTTPHeaderName.platformVersion: UIDevice.current.systemVersion,
-            OWHTTPHeaderName.sdkVersion: Bundle.spot.shortVersion ?? "na",
+            OWHTTPHeaderName.sdkVersion: OWSettingsWrapper.sdkVersion() ?? "na",
             OWHTTPHeaderName.appVersion: Bundle.main.shortVersion ?? "na",
             OWHTTPHeaderName.appScheme: Bundle.main.bundleIdentifier ?? "na",
             OWHTTPHeaderName.userAgent: extendedAgent(),
