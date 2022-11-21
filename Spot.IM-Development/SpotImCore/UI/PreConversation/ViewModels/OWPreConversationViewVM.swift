@@ -137,7 +137,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
         
         viewInitialized
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 guard let self = self,
                       let postId = OWManager.manager.postId
                 else { return }
@@ -148,7 +148,7 @@ fileprivate extension OWPreConversationViewViewModel {
         
         viewInitialized
             .observe(on: self.queueScheduler)
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 guard let self = self,
                       let postId = OWManager.manager.postId
                 else { return }
