@@ -71,6 +71,14 @@ extension OWCommunityGuidelinesView {
             })
             .disposed(by: disposeBag)
         
+        // disable selecting text - we need it to allow click on links
+        titleTextView.rx.didChangeSelection
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.titleTextView.selectedTextRange = nil
+            })
+            .disposed(by: disposeBag)
+        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -85,10 +93,5 @@ extension OWCommunityGuidelinesView: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         viewModel.inputs.urlClicked.onNext(URL)
         return false
-    }
-    
-    // disable selecting text - we need it to allow click on links
-    func textViewDidChangeSelection(_ textView: UITextView) {
-        textView.selectedTextRange = nil
     }
 }
