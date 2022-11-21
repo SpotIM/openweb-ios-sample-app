@@ -54,22 +54,15 @@ fileprivate extension OWCommunityQuestionView {
         
         questionTextView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            // avoide device notch in landscape
-            if #available(iOS 11.0, *) {
-                make.leading.equalTo(safeAreaLayoutGuide).offset(Metrics.questionHorizontalOffset)
-                make.trailing.equalTo(safeAreaLayoutGuide).offset(-Metrics.questionHorizontalOffset)
-            } else {
-                make.leading.equalToSuperview().offset(Metrics.questionHorizontalOffset)
-                make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset)
-            }
+            make.leading.equalToSuperview().offset(Metrics.questionHorizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset)
             heightConstraint = make.height.equalTo(0).constraint
         }        
     }
     
     func setupObservers() {
         let communityQuestionObservable = viewModel.outputs
-                    .communityQuestionString
-                    .asObservable()
+                    .communityQuestionOutput
                     .observe(on: MainScheduler.instance)
                     .share(replay: 0)
         
