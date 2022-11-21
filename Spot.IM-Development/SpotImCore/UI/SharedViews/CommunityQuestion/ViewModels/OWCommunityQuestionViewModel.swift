@@ -15,6 +15,7 @@ protocol OWCommunityQuestionViewModelingInputs {
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
+    var communityQuestionString: PublishSubject<String?> { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
