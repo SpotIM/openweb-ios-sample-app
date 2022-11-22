@@ -9,7 +9,7 @@
 import Foundation
 
 struct GenericSSOAuthentication {
-    let domainName: String
+    let displayName: String
     let spotId: String
     let ssoToken: String
     let user: UserAuthentication
@@ -23,13 +23,44 @@ extension GenericSSOAuthentication {
         return []
     #else
         return [
-            GenericSSOAuthentication(domainName: "Test-Mobile-SSO",
+            // All those Users are for The demo spot `sp_eCIlROSD`
+            GenericSSOAuthentication(displayName: "Alon Haiut",
                                      spotId: "sp_eCIlROSD",
-                                     ssoToken: "",
+                                     ssoToken: "03190715DchJcY",
+                                     user: UserAuthentication(username: "Alon H",
+                                                              password: "12345",
+                                                              userId: "27")),
+            GenericSSOAuthentication(displayName: "Alon Shprung",
+                                     spotId: "sp_eCIlROSD",
+                                     ssoToken: "03190715DchJcY",
+                                     user: UserAuthentication(username: "Alon S",
+                                                              password: "12345",
+                                                              userId: "28")),
+            GenericSSOAuthentication(displayName: "Nogah Melamed",
+                                     spotId: "sp_eCIlROSD",
+                                     ssoToken: "03190715DchJcY",
+                                     user: UserAuthentication(username: "Nogah M",
+                                                              password: "12345",
+                                                              userId: "29")),
+            GenericSSOAuthentication(displayName: "Refael Sommer",
+                                     spotId: "sp_eCIlROSD",
+                                     ssoToken: "03190715DchJcY",
+                                     user: UserAuthentication(username: "Refael S",
+                                                              password: "12345",
+                                                              userId: "30")),
+            GenericSSOAuthentication(displayName: "Revital Pisman",
+                                     spotId: "sp_eCIlROSD",
+                                     ssoToken: "03190715DchJcY",
+                                     user: UserAuthentication(username: "Revital P",
+                                                              password: "12345",
+                                                              userId: "31")),
+            GenericSSOAuthentication(displayName: "Test-User",
+                                     spotId: "sp_eCIlROSD",
+                                     ssoToken: "03190715DchJcY",
                                      user: UserAuthentication(username: "test",
                                                               password: "1234",
-                                                              userToken: "03190715DchJcY"))
+                                                              userId: "1"))
         ]
-    #endif
+#endif
     }
 }
