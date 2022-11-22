@@ -223,7 +223,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         
         view.addSubview(lblGenericSSOStatus)
         lblGenericSSOStatus.snp.makeConstraints { make in
-            make.top.equalTo(lblGenericSSO.snp.bottom).offset(Metrics.verticalBigMargin)
+            make.top.equalTo(lblGenericSSO.snp.bottom).offset(1.5*Metrics.verticalBigMargin)
             make.leading.equalTo(lblGenericSSO).offset(Metrics.horizontalMargin)
         }
         
@@ -255,7 +255,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         
         view.addSubview(lblJWTSSOStatus)
         lblJWTSSOStatus.snp.makeConstraints { make in
-            make.top.equalTo(lblJWTSSO.snp.bottom).offset(Metrics.verticalBigMargin)
+            make.top.equalTo(lblJWTSSO.snp.bottom).offset(1.5*Metrics.verticalBigMargin)
             make.leading.equalTo(lblJWTSSO).offset(Metrics.horizontalMargin)
         }
         
