@@ -301,7 +301,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         
         viewModel.outputs.genericSSOOptions
             .map { options in
-                return options.map { $0.domainName }
+                return options.map { $0.displayName }
             }
             .bind(to: pickerGenericSSO.rx.itemTitles) { _, item in
                 return item
@@ -310,7 +310,7 @@ fileprivate extension AuthenticationPlaygroundVC {
         
         viewModel.outputs.JWTSSOOptions
             .map { options in
-                return options.map { $0.domainName }
+                return options.map { $0.displayName }
             }
             .bind(to: pickerJWTSSO.rx.itemTitles) { _, item in
                 return item
