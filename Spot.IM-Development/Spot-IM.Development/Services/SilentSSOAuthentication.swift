@@ -50,7 +50,7 @@ class SilentSSOAuthentication: SilentSSOAuthenticationProtocol {
             .flatMapLatest { [weak self] codeA, token -> Observable<String> in
                 // Get codeB
                 guard let self = self else { return .empty() }
-                return self.codeB(codeA: codeA, token: token, user: genericSSO.user)
+                return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
             }
             .flatMapLatest { [weak self] codeB -> Observable<String> in
                 // Complete SSO
@@ -139,12 +139,12 @@ fileprivate extension SilentSSOAuthentication {
         }
     }
     
-    func codeB(codeA: String, token: String, user: UserAuthentication) -> Observable<String> {
+    func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String> {
         return Observable.create { observer in
             DemoUserAuthentication.getCodeB(with: codeA,
-                                                accessToken: token,
-                                                username: user.username,
-                                                accessTokenNetwork: user.userToken) { codeB, error in
+                                            accessToken: token,
+                                            username: genericSSO.user.username,
+                                            accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
                 guard let codeB = codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")
