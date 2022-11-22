@@ -267,9 +267,9 @@ extension ArticleWebViewController: SpotImLoginDelegate {
     }
     
     func renewSSOAuthentication(userId: String) {
-        let spotIdWithTestLoginUser = "sp_eCIlROSD"
-        if self.spotId == spotIdWithTestLoginUser,
-           let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.spotId == spotIdWithTestLoginUser }) {
+        let demoSpotId = "sp_eCIlROSD"
+        if self.spotId == demoSpotId,
+           let genericSSO = GenericSSOAuthentication.mockModels.first(where: { $0.user.userId == userId }) {
             _ = silentSSOAuthentication.silentGenericSSO(for: genericSSO, ignoreLoginStatus: true)
                 .take(1) // No need to disposed since we only take 1
                 .subscribe(onNext: { userId in
