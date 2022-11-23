@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 // TODO: complete
 class OWCommunityGuidelinesView: UIView {
@@ -18,12 +19,13 @@ class OWCommunityGuidelinesView: UIView {
     
     fileprivate lazy var titleTextView: UITextView = {
         let textView = UITextView()
-        textView.delegate = self
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.isScrollEnabled = false
-        textView.dataDetectorTypes = [.link]
-        textView.backgroundColor = .clear
+            .backgroundColor(.clear)
+            .delegate(self)
+            .isEditable(false)
+            .isSelectable(true)
+            .isScrollEnabled(false)
+            .dataDetectorTypes([.link])
+        
         return textView
     }()
     
@@ -33,7 +35,6 @@ class OWCommunityGuidelinesView: UIView {
     init(with viewModel: OWCommunityGuidelinesViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        self.accessibilityIdentifier = Metrics.identifier
         setupViews()
         setupObservers()
     }
@@ -46,6 +47,7 @@ class OWCommunityGuidelinesView: UIView {
 
 extension OWCommunityGuidelinesView {
     fileprivate func setupViews() {
+        self.accessibilityIdentifier = Metrics.identifier
         self.backgroundColor = .clear
         self.addSubviews(titleTextView)
         titleTextView.OWSnp.makeConstraints { make in
@@ -63,9 +65,14 @@ extension OWCommunityGuidelinesView {
     
     fileprivate func setupObservers() {
         viewModel.outputs.communityGuidelinesHtmlAttributedString
-            .bind(onNext: { [weak self] attString in
+            .bind(to: titleTextView.rx.attributedText)
+            .disposed(by: disposeBag)
+        
+        // disable selecting text - we need it to allow click on links
+        titleTextView.rx.didChangeSelection
+            .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.titleTextView.attributedText = attString
+                self.titleTextView.selectedTextRange = nil
             })
             .disposed(by: disposeBag)
         
@@ -83,10 +90,5 @@ extension OWCommunityGuidelinesView: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         viewModel.inputs.urlClicked.onNext(URL)
         return false
-    }
-    
-    // disable selecting text - we need it to allow click on links
-    func textViewDidChangeSelection(_ textView: UITextView) {
-        textView.selectedTextRange = nil
     }
 }

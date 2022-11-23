@@ -15,6 +15,7 @@ protocol OWSafariViewModelingInputs {
 
 protocol OWSafariViewModelingOutputs {
     var options: OWSafariViewControllerOptions { get }
+    var screenLoaded: Observable<Void> { get }
 }
 
 protocol OWSafariViewModeling {
@@ -29,6 +30,9 @@ class OWSafariViewModel: OWSafariViewModeling, OWSafariViewModelingInputs, OWSaf
     var options: OWSafariViewControllerOptions
 
     var viewDidLoad = PublishSubject<Void>()
+    var screenLoaded: Observable<Void> {
+        viewDidLoad.asObservable()
+    }
     
     init(options: OWSafariViewControllerOptions) {
         self.options = options

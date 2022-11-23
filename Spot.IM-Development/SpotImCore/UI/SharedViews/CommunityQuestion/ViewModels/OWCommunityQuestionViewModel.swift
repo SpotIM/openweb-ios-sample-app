@@ -15,6 +15,7 @@ protocol OWCommunityQuestionViewModelingInputs {
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
+    var communityQuestionOutput: Observable<String?> { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -27,4 +28,7 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
     
     var communityQuestionString = PublishSubject<String?>()
+    var communityQuestionOutput: Observable<String?> {
+        communityQuestionString.asObservable()
+    }
 }
