@@ -14,7 +14,8 @@ protocol OWCommunityGuidelinesViewModelingInputs {
 }
 
 protocol OWCommunityGuidelinesViewModelingOutputs {
-    var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> { get }
+    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
+    var urlClickedOutput: Observable<URL> { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -23,17 +24,23 @@ protocol OWCommunityGuidelinesViewModeling {
 }
 
 class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommunityGuidelinesViewModelingInputs, OWCommunityGuidelinesViewModelingOutputs {
+    struct Metrics {
+        static let communityGuidelinesFontSize = 15.0
+    }
+    
     var inputs: OWCommunityGuidelinesViewModelingInputs { return self }
     var outputs: OWCommunityGuidelinesViewModelingOutputs { return self }
     
-    fileprivate var queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue")
-    
     let urlClicked = PublishSubject<URL>()
     
-    var communityGuidelinesHtmlAttributedString: Observable<NSMutableAttributedString?> {
+    var urlClickedOutput: Observable<URL> {
+        urlClicked.asObservable()
+    }
+    
+    var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
         OWSharedServicesProvider.shared.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
-            .observe(on: queueScheduler)
+            .observe(on: SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKCommunityGuidelinesVMQueue"))
             .map { config -> String? in
                 guard let conversationConfig = config.conversation,
                       conversationConfig.communityGuidelinesEnabled == true else { return nil }
@@ -82,9 +89,5 @@ fileprivate extension OWCommunityGuidelinesViewModel {
         } else {
             return nil
         }
-    }
-    
-    struct Metrics {
-        static let communityGuidelinesFontSize = 15.0
     }
 }

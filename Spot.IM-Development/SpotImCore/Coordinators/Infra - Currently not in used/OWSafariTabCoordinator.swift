@@ -49,7 +49,7 @@ class OWSafariTabCoordinator: OWBaseCoordinator<OWSafariTabCoordinatorResult> {
             .map { OWSafariTabCoordinatorResult.popped }
             .asObservable()
         
-        let safariVCLoadedToScreenObservable = safariVM.inputs.viewDidLoad
+        let safariVCLoadedToScreenObservable = safariVM.outputs.screenLoaded
             .map { OWSafariTabCoordinatorResult.loadedToScreen }
             .asObservable()
         
