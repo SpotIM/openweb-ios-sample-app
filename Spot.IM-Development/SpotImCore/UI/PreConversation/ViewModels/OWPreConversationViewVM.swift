@@ -47,7 +47,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate let imageProvider: SPImageProvider
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
-    fileprivate var queueScheduler: SerialDispatchQueueScheduler = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKPreConversationVMQueue")
     
     var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
@@ -137,7 +136,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
         
         viewInitialized
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 guard let self = self,
                       let postId = OWManager.manager.postId
                 else { return }
@@ -147,24 +146,26 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
         
         viewInitialized
-            .observe(on: self.queueScheduler)
-            .bind(onNext: { [weak self] in
+            .flatMap { [weak self] _ -> Observable<SPConversationReadRM?> in
                 guard let self = self,
-                      let postId = OWManager.manager.postId
-                else { return }
+                      let postId = OWManager.manager.postId else { return .empty() }
                 
-                self.servicesProvider
+                return self.servicesProvider
                     .netwokAPI()
                     .conversation
                     .conversationRead(postId: postId, mode: SPCommentSortMode.best, page: SPPaginationPage.first, parentId: "", offset: 0)
                     .response
-                    .bind(onNext: { conversation in
-                        if let communityQuestion = conversation.conversation?.communityQuestion {
-                            self.communityQuestionViewModel.inputs.communityQuestionString.onNext(communityQuestion)
-                        }
-                    })
-                    .disposed(by: self.disposeBag) // TODO: is it needed?
-            })
+                    .map { response -> SPConversationReadRM? in
+                        return response
+                    }
+            }
+            .asDriver(onErrorJustReturn: nil)
+            .asObservable()
+            .unwrap()
+            .map { conversation in
+                conversation.conversation?.communityQuestion
+            }
+            .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
             .disposed(by: disposeBag)
         
         Observable.merge(

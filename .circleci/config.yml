@@ -304,13 +304,6 @@ workflows:
           filters:
             branches:
               only:
-                - /^release/tag13.0/.*/
-          xcode: "13.0.0"
-                
-      - release_tag:
-          filters:
-            branches:
-              only:
                 - /^release/tag13.4/.*/
           xcode: "13.4.0"
                 
@@ -343,11 +336,6 @@ workflows:
               only:
                 - /^release/multi/.*/
           xcode: "14.0.0"
-      
-      - release_tag:
-          requires:
-            - "release_sdk_job"
-          xcode: "13.0.0"
 
       - release_tag:
           requires:

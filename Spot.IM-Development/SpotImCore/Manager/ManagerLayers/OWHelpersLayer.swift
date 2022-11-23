@@ -12,7 +12,7 @@ protocol OWHelpersInternalProtocol {
     var shouldSuppressFinmbFilter: Bool { get }
 }
 
-class OWHelpersInternal: OWHelpers, OWHelpersInternalProtocol {
+class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
     
     fileprivate var configurations: [OWAdditionalConfiguration] = []
     
@@ -22,7 +22,7 @@ class OWHelpersInternal: OWHelpers, OWHelpersInternalProtocol {
 }
 
 // Will be public extension
-extension OWHelpersInternal {
+extension OWHelpersLayer {
     var additionalConfigurations: [OWAdditionalConfiguration] {
         get {
            return configurations
