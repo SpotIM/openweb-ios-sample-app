@@ -155,9 +155,9 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         self.updateFooterViewCustomUI(footerView: self.whatYouThinkView)
         self.communityQuestionView.updateColorsAccordingToStyle()
         self.updateCommunityQuestionCustomUI(communityQuestionView: communityQuestionView)
-        self.communityGuidelinesView.updateColorsAccordingToStyle()
+        self.communityGuidelinesView.updateColorsAccordingToStyle(source: .preConversation)
         if let htmlString = self.communityGuidelinesHtmlString {
-            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+            communityGuidelinesView.setHtmlText(htmlString: htmlString, source: .preConversation)
         }
         self.header.updateColorsAccordingToStyle()
         self.footerView.updateColorsAccordingToStyle()
@@ -288,7 +288,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
         if let htmlString = getCommunityGuidelinesTextIfExists() {
             communityGuidelinesHtmlString = htmlString
             communityGuidelinesView.delegate = self
-            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+            communityGuidelinesView.setHtmlText(htmlString: htmlString, source: .preConversation)
             communityGuidelinesView.setupPreConversationConstraints()
         } else {
             communityGuidelinesView.isHidden = true
@@ -558,14 +558,14 @@ extension SPPreConversationViewController { // UITableViewDataSource
 
 extension SPPreConversationViewController: SPPreConversationHeaderViewDelegate {
     func updateHeaderCustomUI(titleLabel: UILabel, counterLabel: UILabel) {
-        customUIDelegate?.customizePreConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel)
+        customUIDelegate?.customizeView(.header(titleLabel: titleLabel, counterLabel: counterLabel), source: .preConversation)
     }
 }
 
 extension SPPreConversationViewController: SPPreConversationFooterDelegate {
     
     func updateMoreCommentsButtonCustomUI(button: SPShowCommentsButton) {
-        customUIDelegate?.customizeShowCommentsButton(button: button)
+        customUIDelegate?.customizeView(.showCommentsButton(button: button), source: .preConversation)
     }
     
     

@@ -136,7 +136,10 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     
     internal func updateCommunityQuestionCustomUI(communityQuestionView: SPCommunityQuestionView) {
         guard let customUIDelegate = self.customUIDelegate else { return }
-        communityQuestionView.customizeCommunityQuestion(customUIDelegate: customUIDelegate)
+        communityQuestionView.customizeCommunityQuestion (
+            customUIDelegate: customUIDelegate,
+            source: runtimeSource
+        )
     }
     internal func updateFooterViewCustomUI(footerView: SPMainConversationFooterView, isPreConversation: Bool = false) {
         guard let customUIDelegate = self.customUIDelegate else { return }
@@ -259,7 +262,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
             )
         )
         if isReadOnlyModeEnabled(), let label = stateActionView?.messageLabel {
-            customUIDelegate?.customizeEmptyStateReadOnlyLabel(label: label)
+            customUIDelegate?.customizeView(.emptyStateReadOnlyLabel(label: label), source: runtimeSource)
         }
     }
     
@@ -1019,8 +1022,8 @@ extension SPBaseConversationViewController: SPCommunityGuidelinesViewDelegate {
     func clickOnUrl(url: URL) {
         webPageDelegate?.openWebPage(with: SPWebSDKProvider.urlWithDarkModeParam(url: url).absoluteString)
     }
-    func customizeTextView(textView: UITextView) {
-        customUIDelegate?.customizeCommunityGuidelines(textView: textView)
+    func customizeTextView(textView: UITextView, source: SPViewSourceType) {
+        customUIDelegate?.customizeView(.communityGuidelines(textView: textView), source: source)
     }
 }
 

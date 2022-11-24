@@ -171,7 +171,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     func updateLoginPromptVisibily() {
         if self.shouldDisplayLoginPrompt && SPUserSessionHolder.session.user?.id == nil {
             // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-            self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+            self.customUIDelegate?.customizeView(.loginPrompt(textView: loginPromptView.getTextView()), source: .conversation)
         }
         else {
             loginPromptView.isHidden = true
@@ -198,14 +198,14 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         self.loginPromptView.updateColorsAccordingToStyle()
         self.communityQuestionView.updateColorsAccordingToStyle()
         self.updateCommunityQuestionCustomUI(communityQuestionView: self.communityQuestionView)
-        self.communityGuidelinesView.updateColorsAccordingToStyle()
+        self.communityGuidelinesView.updateColorsAccordingToStyle(source: .conversation)
         if let htmlString = self.communityGuidelinesHtmlString {
-            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+            communityGuidelinesView.setHtmlText(htmlString: htmlString, source: .conversation)
         }
         self.updateEmptyStateViewAccordingToStyle()
         self.typingIndicationView?.updateColorsAccordingToStyle()
         // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
-        self.customUIDelegate?.customizeLoginPromptTextView(textView: loginPromptView.getTextView())
+        self.customUIDelegate?.customizeView(.loginPrompt(textView: loginPromptView.getTextView()), source: .conversation)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -426,7 +426,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if let htmlString = getCommunityGuidelinesTextIfExists() {
             communityGuidelinesHtmlString = htmlString
             shouldDisplayCommunityGuidelines = true
-            communityGuidelinesView.setHtmlText(htmlString: htmlString)
+            communityGuidelinesView.setHtmlText(htmlString: htmlString, source: .conversation)
             communityGuidelinesView.delegate = self
             collapsableContainer.bringSubviewToFront(communityGuidelinesView)
             communityGuidelinesView.clipsToBounds = true

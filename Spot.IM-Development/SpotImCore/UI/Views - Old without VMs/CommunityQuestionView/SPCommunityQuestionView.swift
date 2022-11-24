@@ -28,8 +28,8 @@ internal final class SPCommunityQuestionView: OWBaseView {
         self.accessibilityIdentifier = Metrics.identifier
     }
     
-    func customizeCommunityQuestion(customUIDelegate: OWCustomUIDelegate) {
-        customUIDelegate.customizeCommunityQuestionTextView(textView: questionTextView)
+    func customizeCommunityQuestion(customUIDelegate: OWCustomUIDelegate, source: SPViewSourceType) {
+        customUIDelegate.customizeView(.communityQuestion(textView: questionTextView), source: source)
     }
     
     // Handle dark mode \ light mode change
