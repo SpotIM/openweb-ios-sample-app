@@ -11,5 +11,5 @@ import Foundation
 struct UserAuthentication {
     let username: String
     let password: String
-    let userToken: String
+    let userId: String
 }

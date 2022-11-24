@@ -173,22 +173,22 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 return options[index]
             }
             .unwrap()
-            .do(onNext: { [weak self] genricSSO in
+            .do(onNext: { [weak self] genericSSO in
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
             })
-            .withLatestFrom(shouldInitializeSDK) { genricSSO, shouldInitializeSDK -> GenericSSOAuthentication in
+            .withLatestFrom(shouldInitializeSDK) { genericSSO, shouldInitializeSDK -> GenericSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if (shouldInitializeSDK) {
                     SpotIm.reinit = true
-                    SpotIm.initialize(spotId: genricSSO.spotId)
+                    SpotIm.initialize(spotId: genericSSO.spotId)
                 }
-                return genricSSO
+                return genericSSO
             }
-            .flatMapLatest { [weak self] genricSSO -> Observable<(String, GenericSSOAuthentication)> in
+            .flatMapLatest { [weak self] genericSSO -> Observable<(String, GenericSSOAuthentication)> in
                 // 3. Login user if needed
-                guard let self = self else { return.just(("", genricSSO)) }
-                return self.login(user: genricSSO.user)
+                guard let self = self else { return.just(("", genericSSO)) }
+                return self.login(user: genericSSO.user)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
                         if value == nil {
@@ -196,10 +196,10 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                         }
                     })
                     .unwrap()
-                    .map { ($0, genricSSO) }
+                    .map { ($0, genericSSO) }
                     
             }
-            .flatMapLatest { [weak self] token, genricSSO -> Observable<(String, String, GenericSSOAuthentication)> in
+            .flatMapLatest { [weak self] token, genericSSO -> Observable<(String, String, GenericSSOAuthentication)> in
                 // 4. Start SSO
                 guard let self = self else { return Observable.empty() }
                 return self.startSSO()
@@ -210,12 +210,12 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                         }
                     })
                     .unwrap()
-                    .map { ($0, token, genricSSO) }
+                    .map { ($0, token, genericSSO) }
             }
-            .flatMapLatest { [weak self] codeA, token, genricSSO -> Observable<String> in
+            .flatMapLatest { [weak self] codeA, token, genericSSO -> Observable<String> in
             // 5. Retrieving Code B
             guard let self = self else { return Observable.empty() }
-                return self.codeB(codeA: codeA, token: token, user: genricSSO.user)
+                return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
                         if value == nil {
@@ -382,12 +382,12 @@ fileprivate extension AuthenticationPlaygroundViewModel {
         }
     }
     
-    func codeB(codeA: String, token: String, user: UserAuthentication) -> Observable<String?> {
+    func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String?> {
         return Observable.create { observer in
             DemoUserAuthentication.getCodeB(with: codeA,
-                                                accessToken: token,
-                                                username: user.username,
-                                                accessTokenNetwork: user.userToken) { codeB, error in
+                                            accessToken: token,
+                                            username: genericSSO.user.username,
+                                            accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
                 guard let codeB = codeB else {
                     let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
                     DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")
