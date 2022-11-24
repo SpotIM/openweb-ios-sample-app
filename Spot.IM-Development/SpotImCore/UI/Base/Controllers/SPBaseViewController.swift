@@ -39,6 +39,21 @@ internal class SPBaseViewController: UIViewController {
                    object: nil)
     }
     
+    var runtimeSource: SPViewSourceType {
+        var source: SPViewSourceType = .preConversation
+        switch self {
+            case is SPMainConversationViewController:
+                source = .conversation
+            case is SPPreConversationViewController:
+                source = .preConversation
+            case is SPCommentCreationViewController:
+                source = .createComment
+            default:
+                break
+        }
+        return source
+    }
+    
     @objc func overrideUserInterfaceStyleDidChange() {
         self.updateColorsAccordingToStyle()
     }
@@ -70,7 +85,8 @@ internal class SPBaseViewController: UIViewController {
         }
         
         if let navigationItemTitleView = navigationItemTitleView {
-            customUIDelegate?.customizeNavigationItemTitle(label: navigationItemTitleView)
+            
+            customUIDelegate?.customizeView(.navigationItemTitle(label: navigationItemTitleView), source: runtimeSource)
         }
     }
     

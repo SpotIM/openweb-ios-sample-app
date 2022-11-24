@@ -286,14 +286,18 @@ extension ArticleWebViewController: SpotImLoginDelegate {
 }
 
 extension ArticleWebViewController: SpotImCustomUIDelegate {    
-    func customizeView(view: CustomizableView, isDarkMode: Bool, postId: String) {
-        print("SpotImCustomUIDelegate customizeView callback receive with postId: \(postId)")
+    func customizeView(view: CustomizableView, isDarkMode: Bool, source: SPViewSourceType?, postId: String) {
+        var log = "SpotImCustomUIDelegate customizeView callback receive with postId: \(postId)"
+        if let s = source {
+            log = "\(log) and with source: \(s.description)"
+        }
+        print(log)
         guard spotId == "sp_mobileGuest" else { return }
         switch view {
         case .loginPrompt(let textView):
             customizeLoginPromptTextView(textView: textView)
             break
-        case .conversationFooter(let view):
+        case .footer(let view):
             view.backgroundColor = isDarkMode ? #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1) : #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
             break
         case .navigationItemTitle(let label):
@@ -305,17 +309,19 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         case .communityQuestion(let textView):
             customizeCommunityQuestionTextView(textView: textView, isDarkMode: isDarkMode)
             break
-        case .sayControlInPreConversation(let labelContainer, let label):
-            label.textColor = isDarkMode ? UIColor.blue : UIColor.red
-            break
-        case .sayControlInMainConversation(let labelContainer, let label):
-            label.textColor = isDarkMode ? UIColor.blue : UIColor.red
+        case .sayControl(_, let label):
+            //Example of differentiating between sayControl from preConversation to Conversation
+            if source == .preConversation {
+                label.textColor = isDarkMode ? UIColor.blue : UIColor.red
+            } else {
+                label.textColor = isDarkMode ? UIColor.blue : UIColor.red
+            }
             break
         case .showCommentsButton(let button):
             button.setTitleColor(isDarkMode ? UIColor.blue : UIColor.red, for: .normal)
             button.setTitle("comments " + (button.getCommentsCount() ?? ""), for: .normal)
             break
-        case .preConversationHeader(let titleLabel, let counterLabel):
+        case .header(let titleLabel, let counterLabel):
             titleLabel.text = "Comments"
             counterLabel.isHidden = true
             break
