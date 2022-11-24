@@ -254,7 +254,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         let labelHeight: CGFloat
         if let commentLabels = dataModel.commentLabels,
-           dataModel.isDeletedOrReported() == false,
+           dataModel.isHiddenComment() == false,
            commentLabels.count > 0 {
             let selectedCommentLabel = commentLabels[0]
             commentLabelView.setLabel(
@@ -282,7 +282,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
         replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount)
         replyActionsView.setIsDisabled(isDisabled: dataModel.showStatusIndicator)
         replyActionsView.OWSnp.updateConstraints { make in
-            make.height.equalTo(dataModel.isDeletedOrReported() ? 0.0 : Theme.replyActionsViewHeight)
+            make.height.equalTo(dataModel.isHiddenComment() ? 0.0 : Theme.replyActionsViewHeight)
         }
     }
     
@@ -319,7 +319,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
             setNeedsLayout()
             layoutIfNeeded()
         }
-        if dataModel.isDeletedOrReported() {
+        if dataModel.isHiddenComment() {
             messageView.setMessage(
                 "",
                 attributes: attributes(isDeleted: true),
@@ -342,7 +342,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
-        guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
+        guard !dataModel.isHiddenComment() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
             commentMediaViewTopConstraint?.update(offset: SPCommonConstants.emptyCommentMediaTopPadding)
             commentMediaView.OWSnp.updateConstraints { make in
                 make.height.equalTo(0)
