@@ -923,7 +923,7 @@ extension SPCommentCreationViewController: SPCommentLabelsContainerViewDelegate 
 
 extension SPCommentCreationViewController: SPCommentCreationNewHeaderViewDelegate {
     func customizeHeaderTitle(label: UILabel) {
-        customUIDelegate?.customizeNavigationItemTitle(label: label)
+        customUIDelegate?.customizeView(.navigationItemTitle(label: label), source: .createComment)
     }
 }
 
@@ -933,7 +933,7 @@ extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
     }
     
     func updatePostCommentButtonCustomUI(button: OWBaseButton) {
-        customUIDelegate?.customizeCommentCreationActionButton(button: button)
+        customUIDelegate?.customizeView(.commentCreationActionButton(button: button), source: .createComment)
     }
 }
 

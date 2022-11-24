@@ -58,11 +58,11 @@ final class SPMainConversationFooterView: OWBaseView {
         commentCreationEntryView.handleUICustomizations(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
 
         if (!isPreConversation) {
-            customUIDelegate.customizeConversationFooter(view: self)
+            customUIDelegate.customizeView(.footer(view: self), source: .conversation)
         }
         
         if let readOnlyLabel = readOnlyLabel {
-            customUIDelegate.customizeReadOnlyLabel(label: readOnlyLabel)
+            customUIDelegate.customizeView(.readOnlyLabel(label: readOnlyLabel), source: .conversation)
         }
     }
     
