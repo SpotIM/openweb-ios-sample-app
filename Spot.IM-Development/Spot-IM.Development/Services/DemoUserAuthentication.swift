@@ -14,7 +14,7 @@ internal class DemoUserAuthentication {
     /*
      Using a mock sso server for the demo login which is valid in our demo spot `sp_eCIlROSD`.
      Base URL defined as it is in `demo-publisher` github repository.
-     The actual server responses arriving and implemented in sso-mock-server github repository.
+     The actual server responses arriving and implemented in `sso-mock-server` github repository.
      */
     
     fileprivate struct Metrics {
