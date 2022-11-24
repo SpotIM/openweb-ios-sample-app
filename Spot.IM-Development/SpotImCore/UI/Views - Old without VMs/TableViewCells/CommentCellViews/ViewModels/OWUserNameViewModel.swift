@@ -27,7 +27,7 @@ protocol OWUserNameViewModelingOutputs {
     var dateText: Observable<String> { get }
     var badgeTitle: Observable<String> { get }
     var isUsernameOneRow: Observable<Bool> { get }
-    var deletedOrReportedText: Observable<String> { get }
+    var hiddenCommentReasonText: Observable<String> { get }
     
     var userNameTapped: Observable<Void> { get }
     var moreTapped: Observable<OWUISource> { get }
@@ -110,20 +110,27 @@ class OWUserNameViewModel: OWUserNameViewModeling,
             .map { $0.isUsernameOneRow() }
     }
     
-    var deletedOrReportedText: Observable<String> {
+    var hiddenCommentReasonText: Observable<String> {
         _model
             .unwrap()
             .map { model in
-                guard model.isDeletedOrReported() else { return "" }
-                let isReported = model.isReported
-                return LocalizationManager.localizedString(key: isReported ? "This message was reported." : "This message was deleted.")
+                guard model.isHiddenComment() else { return "" }
+                let localizationKey: String
+                if (model.isCommentAuthorMuted) {
+                    localizationKey = "This user is muted."
+                } else if (model.isReported) {
+                    localizationKey = "This message was reported."
+                } else {
+                    localizationKey = "This message was deleted."
+                }
+                return LocalizationManager.localizedString(key: localizationKey)
             }
     }
     
     var shouldShowDeletedOrReportedMessage: Observable<Bool> {
         _model
             .unwrap()
-            .map { $0.isDeletedOrReported() }
+            .map { $0.isHiddenComment() }
     }
     
     var userNameTapped: Observable<Void> {
