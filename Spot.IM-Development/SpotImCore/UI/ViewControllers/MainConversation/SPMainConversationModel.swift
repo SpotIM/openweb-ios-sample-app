@@ -304,6 +304,16 @@ final class SPMainConversationModel {
             }
             actions.append(shareAction)
         }
+        
+        if availability.isMuteable,
+           let authorId = viewModel?.authorId {
+        let muteAction = UIAlertAction(
+            title: LocalizationManager.localizedString(key: "Mute"),
+            style: .default) { [weak self] _ in
+                self?.commentsActionDelegate?.prepareFlowForAction(.mute(userId: authorId), sender: sender)
+            }
+            actions.append(muteAction)
+        }
 
         if availability.isReportable {
             let reportAction = UIAlertAction(
@@ -349,7 +359,7 @@ final class SPMainConversationModel {
     }
     
     func commentActionsAvailability(viewModel: CommentViewModel?) -> CommentActionAvailability {
-        guard let viewModel = viewModel else { return (false, false, false, false) }
+        guard let viewModel = viewModel else { return (false, false, false, false, false) }
         
         let shouldDisableShareComment = SPConfigsDataSource.appConfig?.conversation?.disableShareComment ?? false
         
@@ -357,8 +367,9 @@ final class SPMainConversationModel {
         let isEditable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isReportable = !viewModel.isDeleted && !(viewModel.authorId == SPUserSessionHolder.session.user?.id)
         let isShareable = !shouldDisableShareComment && !viewModel.showStatusIndicator
+        let isMuteable = !viewModel.isStaff && (viewModel.authorId != SPUserSessionHolder.session.user?.id)
         
-        return (isDeletable, isEditable, isReportable, isShareable)
+        return (isDeletable, isEditable, isReportable, isMuteable, isShareable)
     }
     
     func adsGroup() -> AdsABGroup {
@@ -433,6 +444,22 @@ extension SPMainConversationModel {
         )
     }
     
+    func muteComment(with id: String, completion: @escaping (Error?) -> Void) {
+        let parameters: [String: Any] = [APIKeys.userId: id]
+        
+        commentUpdater.muteComment(
+            parameters: parameters,
+            postId: dataSource.postId,
+            success: {  [weak self] in
+                self?.dataSource.muteComment(userId: id)
+                completion(nil)
+            },
+            failure: { error in
+                completion(error)
+            }
+        )
+    }
+    
     func reportComment(with id: String, completion: @escaping (Error?) -> Void) {
         let commentViewModel = dataSource.commentViewModel(id)
         
@@ -462,6 +489,7 @@ extension SPMainConversationModel {
     private enum APIKeys {
         static let messageId = "message_id"
         static let parentId = "parent_Id"
+        static let userId = "user_id"
     }
 }
 
@@ -564,6 +592,7 @@ enum ActionType {
     case report(commentId: String, replyingToID: String?)
     case edit(commentId: String, replyingToID: String?)
     case share(commentId: String, replyingToID: String?)
+    case mute(userId: String)
 }
 
 enum RealTimeViewType {

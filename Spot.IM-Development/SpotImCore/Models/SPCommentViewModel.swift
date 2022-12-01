@@ -50,6 +50,7 @@ internal struct CommentViewModel {
     var commentTextCollapsed: Bool = true
     var showStatusIndicator: Bool = false
     var anyHiddenReply: Bool = false
+    private (set) var isStaff: Bool = false
 
     var brandColor: UIColor = .brandColor
 
@@ -157,6 +158,7 @@ internal struct CommentViewModel {
             displayName = user.displayName
             userAvatar = imageProvider?.imageURL(with: user.imageId, size: nil)
             badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
+            isStaff = user.isStaff
         }
 
         self.replyingToCommentId = replyingToCommentId
@@ -303,6 +305,10 @@ internal struct CommentViewModel {
         if isDeleted {
             self.showStatusIndicator = false
         }
+    }
+    
+    mutating func setIsMuted(isMuted: Bool) {
+        self.isCommentAuthorMuted = isMuted
     }
 
     private enum Theme {
