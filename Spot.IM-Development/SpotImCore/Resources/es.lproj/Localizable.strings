@@ -102,3 +102,6 @@
 "Your comment has been rejected." = "Su comentario ha sido rechazado.";
 "Hold on, your comment is waiting for approval." = "Espere: su comentario está a la espera de aprobación.";
 "Your comment is waiting for approval due to the site’s policy." = "Tu comentario está a la espera de aprobación debido a la política del sitio.";
+"Mute" = "Silenciar";
+"Mute User" = "Silenciar usuario";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "Al silenciar a este usuario, no podrás ver su actividad. Para deshacer o editar tus usuarios silenciados, entra en la configuración de tu cuenta";

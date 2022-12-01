@@ -102,3 +102,6 @@
 "Your comment has been rejected." = "تم رفض تعليقك.";
 "Hold on, your comment is waiting for approval." = "انتظر، لا يزال تعليقك بانتظار الموافقة.";
 "Your comment is waiting for approval due to the site’s policy." = "تعليقك بانتظار الموافقة بموجب سياسة الموقع.";
+"Mute" = "كتم";
+"Mute User" = "كتم المستخدم";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "كتم هذا المستخدم لن يسمح لك برؤية أي إجراء يقوم به. لإلغاء الكتم أو إدارة الحسابات المكتومة، ادخل إلى إعدادات الملف الشخصي الخاص بك";
