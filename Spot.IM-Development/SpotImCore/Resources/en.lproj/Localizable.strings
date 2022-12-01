@@ -104,3 +104,6 @@
 "Hold on, your comment is waiting for approval." = "Hold on, your comment is waiting for approval.";
 "Your comment is waiting for approval due to the site’s policy." = "Your comment is waiting for approval due to the site’s policy.";
 "No available options" = "No available options";
+"Mute" = "Mute";
+"Mute User" = "Mute User";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings";

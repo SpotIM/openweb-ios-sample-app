@@ -102,3 +102,6 @@
 "Your comment has been rejected." = "O seu comentário foi rejeitado.";
 "Hold on, your comment is waiting for approval." = "Aguarde, o seu comentário está à espera de aprovação.";
 "Your comment is waiting for approval due to the site’s policy." = "O seu comentário aguarda aprovação devido à política do Website.";
+"Mute" = "Mudo";
+"Mute User" = "Ativar mudo para usuário";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "Cancelar mudo para este usuário não permitirá ver nenhuma ação que ele realizar. Para reverter ou gerenciar seus usuários com mudo ativado, insira as configurações do seu perfil";

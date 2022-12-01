@@ -103,3 +103,6 @@
 "Your comment has been rejected." = "תגובתך נדחתה.";
 "Hold on, your comment is waiting for approval." = "המתן בסבלנות, תגובתך ממתינה לאישור.";
 "Your comment is waiting for approval due to the site’s policy." = "התגובה שלך ממתינה לאישור, בכפוף למדיניות האתר.";
+"Mute" = "השתק";
+"Mute User" = "השתק משתמש";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "לאחר השתקת משתמש לא תוכלו לראות את הפעילות שלו\/ה. לביצוע שינויים או ניהול המשתמשים שהושתקו היכנסו להגדרות הפרופיל";
