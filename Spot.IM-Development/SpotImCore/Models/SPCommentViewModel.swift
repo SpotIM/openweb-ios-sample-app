@@ -299,7 +299,7 @@ internal struct CommentViewModel {
         self.commentActionsVM.inputs.configure(with: model)
     }
     
-    mutating func setIsDeleted(isDeleted: Bool) {
+    mutating func setIsDeleted(_ isDeleted: Bool) {
         self.isDeleted = isDeleted
         // hide status indicator after deleting a comment
         if isDeleted {
@@ -307,7 +307,7 @@ internal struct CommentViewModel {
         }
     }
     
-    mutating func setIsMuted(isMuted: Bool) {
+    mutating func setIsMuted(_ isMuted: Bool) {
         self.isCommentAuthorMuted = isMuted
     }
 

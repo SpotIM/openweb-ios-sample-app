@@ -15,19 +15,19 @@ internal enum OWMuteRequest: SPRequest {
     
     internal var method: HTTPMethod {
         switch self {
-        case .mute: return .post
+            case .mute: return .post
         }
     }
     
     internal var pathString: String {
         switch self {
-        case .mute: return "/user/mute-user"
+            case .mute: return "/user/mute-user"
         }
     }
     
     internal var url: URL! {
         switch self {
-        case .mute: return URL(string: APIConstants.baseURLString + pathString)
+            case .mute: return URL(string: APIConstants.baseURLString + pathString)
         }
     }
 }
