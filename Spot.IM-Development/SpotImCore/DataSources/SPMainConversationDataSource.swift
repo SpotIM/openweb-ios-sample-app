@@ -673,12 +673,25 @@ internal final class SPMainConversationDataSource {
         return nil
     }
     
-    func indexPathsOfComments(for userId: String?) -> [IndexPath] {
+    func indexPathsOfComments(for userId: String) -> [IndexPath] {
         var indexPaths = [IndexPath]()
         for (sectionIndex, section) in cellData.enumerated() {
+            let repliesIndexPaths = indexPathsOfMutedCommentReplies(for: userId, section: sectionIndex)
+            indexPaths.append(contentsOf: repliesIndexPaths)
+            
             if let index = section.firstIndex(where: { $0.authorId == userId }) {
                 indexPaths.append(IndexPath(row: index, section: sectionIndex))
             }
+        }
+        return indexPaths
+    }
+    
+    private func indexPathsOfMutedCommentReplies(for userId: String, section: Int) -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        for i in 0..<cellData[section].count
+        where cellData[section][i].authorId == userId {
+            let indexPath = IndexPath(item: i, section: section)
+            indexPaths.append(indexPath)
         }
         return indexPaths
     }
@@ -749,7 +762,7 @@ extension SPMainConversationDataSource {
         
         handleDeletedCommentReplies(commentId: id, sectionIndexPath: indexPath)
         if isSoft {
-            (cellData[indexPath.section])[indexPath.row].setIsDeleted(isDeleted: true)
+            (cellData[indexPath.section])[indexPath.row].setIsDeleted(true)
             delegate?.reload(shouldBeScrolledToTop: false)
         } else {
             let removeSection = (indexPath.row == 0 && isCascade) || cellData[indexPath.section].count == 1
@@ -974,10 +987,11 @@ extension SPMainConversationDataSource {
         guard !indexPaths.isEmpty else { return }
         
         for indexPath in indexPaths {
-            (cellData[indexPath.section])[indexPath.row].setIsMuted(isMuted: true)
+            var commentVM = cellData[indexPath.section][indexPath.row]
+            commentVM.setIsMuted(true)
+            cellData[indexPath.section][indexPath.row] = commentVM
         }
         
         delegate?.reload(shouldBeScrolledToTop: false)
-        
     }
 }
