@@ -675,23 +675,15 @@ internal final class SPMainConversationDataSource {
     
     func indexPathsOfComments(for userId: String) -> [IndexPath] {
         var indexPaths = [IndexPath]()
-        for (sectionIndex, section) in cellData.enumerated() {
-            let repliesIndexPaths = indexPathsOfMutedCommentReplies(for: userId, section: sectionIndex)
-            indexPaths.append(contentsOf: repliesIndexPaths)
-            
-            if let index = section.firstIndex(where: { $0.authorId == userId }) {
-                indexPaths.append(IndexPath(row: index, section: sectionIndex))
+        for sectionIndex in 0..<cellData.count {
+            let sectionData = cellData[sectionIndex]
+            for rawIndex in 0..<sectionData.count {
+                let commentVM = sectionData[rawIndex]
+                if commentVM.authorId == userId {
+                    let indexPath = IndexPath(row: rawIndex, section: sectionIndex)
+                    indexPaths.append(indexPath)
+                }
             }
-        }
-        return indexPaths
-    }
-    
-    private func indexPathsOfMutedCommentReplies(for userId: String, section: Int) -> [IndexPath] {
-        var indexPaths = [IndexPath]()
-        for i in 0..<cellData[section].count
-        where cellData[section][i].authorId == userId {
-            let indexPath = IndexPath(item: i, section: section)
-            indexPaths.append(indexPath)
         }
         return indexPaths
     }
