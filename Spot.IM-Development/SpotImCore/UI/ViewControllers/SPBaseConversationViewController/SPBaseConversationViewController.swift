@@ -984,11 +984,12 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         let muteAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Mute"),
             style: .destructive) { [weak self] _ in
-                self?.showLoader()
-                self?.model.muteComment(with: userId) { error in
-                    self?.hideLoader()
+                guard let self = self else { return }
+                self.showLoader()
+                self.model.muteComment(with: userId) { error in
+                    self.hideLoader()
                     if let error = error {
-                        self?.showAlert(
+                        self.showAlert(
                             title: LocalizationManager.localizedString(key: "Oops..."),
                             message: error.localizedDescription
                         )

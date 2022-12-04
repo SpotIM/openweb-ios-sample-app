@@ -444,14 +444,14 @@ extension SPMainConversationModel {
         )
     }
     
-    func muteComment(with id: String, completion: @escaping (Error?) -> Void) {
-        let parameters: [String: Any] = [APIKeys.userId: id]
+    func muteComment(with userId: String, completion: @escaping (Error?) -> Void) {
+        let parameters: [String: Any] = [APIKeys.userId: userId]
         
         commentUpdater.muteComment(
             parameters: parameters,
             postId: dataSource.postId,
             success: {  [weak self] in
-                self?.dataSource.muteComment(userId: id)
+                self?.dataSource.muteComment(userId: userId)
                 completion(nil)
             },
             failure: { error in
