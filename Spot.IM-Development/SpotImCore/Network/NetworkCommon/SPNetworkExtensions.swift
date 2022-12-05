@@ -14,7 +14,7 @@ internal extension HTTPHeaders {
     
     static func basic(with spotId: String, postId: String = "default") -> HTTPHeaders {
         let iosVersion = UIDevice.current.systemVersion
-        let frameworkVersion = Bundle.spot.shortVersion ?? "na"
+        let frameworkVersion = OWSettingsWrapper.sdkVersion() ?? "na"
         let hostVerion = Bundle.main.shortVersion ?? "na"
         let scheme = Bundle.main.bundleIdentifier ?? "na"
         let agent = extendedAgent()

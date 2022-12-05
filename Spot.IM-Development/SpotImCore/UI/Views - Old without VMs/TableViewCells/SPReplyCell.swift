@@ -55,7 +55,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         
         textViewLeadingConstraint?.update(offset: data.depthOffset())
         let replyActionsViewHeight: CGFloat
-        if data.isDeletedOrReported() {
+        if data.isHiddenComment() {
             messageView.setMessage("",
                                    attributes: attributes(isDeleted: true),
                                    clippedTextSettings: SPClippedTextSettings(
@@ -98,8 +98,8 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     }
     
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
-        guard !dataModel.isDeletedOrReported() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
-            commentMediaViewTopConstraint?.update(offset: dataModel.isDeletedOrReported() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding)
+        guard !dataModel.isHiddenComment() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
+            commentMediaViewTopConstraint?.update(offset: dataModel.isHiddenComment() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding)
             commentMediaView.OWSnp.updateConstraints { make in
                 make.height.equalTo(0)
                 make.width.equalTo(0)
@@ -153,7 +153,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         let height: CGFloat
         if let commentLabels = dataModel.commentLabels,
-           dataModel.isDeletedOrReported() == false,
+           dataModel.isHiddenComment() == false,
            commentLabels.count > 0 {
             let selectedCommentLabel =  commentLabels[0]
             commentLabelView.setLabel(

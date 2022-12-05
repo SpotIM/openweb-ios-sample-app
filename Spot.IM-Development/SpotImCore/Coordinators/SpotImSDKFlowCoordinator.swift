@@ -28,20 +28,19 @@ public protocol SpotImLoginDelegate: AnyObject {
 public enum CustomizableView {
     case loginPrompt(textView: UITextView)
     case communityQuestion(textView: UITextView)
-    case sayControlInPreConversation(labelContainer: UIView, label: UILabel)
-    case sayControlInMainConversation(labelContainer: UIView, label: UILabel)
-    case conversationFooter(view: UIView)
+    case sayControl(labelContainer: UIView, label: UILabel)
+    case footer(view: UIView)
     case communityGuidelines(textView: UITextView)
     case navigationItemTitle(label: UILabel)
     case showCommentsButton(button: SPShowCommentsButton)
-    case preConversationHeader(titleLabel: UILabel, counterLabel: UILabel)
+    case header(titleLabel: UILabel, counterLabel: UILabel)
     case commentCreationActionButton(button: OWBaseButton)
     case readOnlyLabel(label: UILabel)
     case emptyStateReadOnlyLabel(label: UILabel)
 }
 
 public protocol SpotImCustomUIDelegate: AnyObject {
-    func customizeView(view: CustomizableView, isDarkMode: Bool, postId: String)
+    func customizeView(view: CustomizableView, isDarkMode: Bool, source: SPViewSourceType?, postId: String)
 }
 
 internal protocol SPSafariWebPageDelegate: AnyObject {
@@ -426,7 +425,7 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         
         let navigationItemTitleText = LocalizationManager.localizedString(key: "Conversation")
         if SpotIm.enableCustomNavigationItemTitle {
-            let navigationItemLabel = getNavigationItemTitleLabel(with: navigationItemTitleText)
+            let navigationItemLabel = getNavigationItemTitleLabel(with: navigationItemTitleText, source: .conversation)
             controller.navigationItem.titleView = navigationItemLabel
         } else {
             controller.title = navigationItemTitleText
@@ -448,14 +447,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         return controller
     }
     
-    private func getNavigationItemTitleLabel(with text: String) -> UILabel {
+    private func getNavigationItemTitleLabel(with text: String, source: SPViewSourceType) -> UILabel {
         let navigationItemLabel = UILabel()
         navigationItemLabel.backgroundColor = UIColor.clear
         let attributedTitleText = NSMutableAttributedString(string: text)
         attributedTitleText.addAttribute(.font, value: UIFont.systemFont(ofSize: 20, weight: .regular), range: NSMakeRange(0, attributedTitleText.length))
         attributedTitleText.addAttribute(.foregroundColor, value: UIColor.black, range: NSMakeRange(0, attributedTitleText.length))
         navigationItemLabel.attributedText = attributedTitleText
-        customizeNavigationItemTitle(label: navigationItemLabel)
+        customizeView(.navigationItemTitle(label: navigationItemLabel), source: source)
         return navigationItemLabel
     }
     
@@ -718,50 +717,10 @@ extension SpotImSDKFlowCoordinator: SSOAthenticationDelegate {
     }
 }
 
-extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {
-    private func customizeView(_ view: CustomizableView) {
+extension SpotImSDKFlowCoordinator: OWCustomUIDelegate {    
+    func customizeView(_ view: CustomizableView, source: SPViewSourceType) {
         guard let postId = self.postId else { return }
-        customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode, postId: postId)
-    }
-    
-    func customizeShowCommentsButton(button: SPShowCommentsButton) {
-        self.customizeView(.showCommentsButton(button: button))
-    }
-    
-    func customizeLoginPromptTextView(textView: UITextView) {
-        self.customizeView(.loginPrompt(textView: textView))
-    }
-    func customizeCommunityQuestionTextView(textView: UITextView) {
-        self.customizeView(.communityQuestion(textView: textView))
-    }
-    func customizeSayControl(labelContainer: UIView, label: UILabel, isPreConversation: Bool) {
-        let view: CustomizableView = isPreConversation ? .sayControlInPreConversation(labelContainer: labelContainer, label: label) : .sayControlInMainConversation(labelContainer: labelContainer, label: label)
-        
-        self.customizeView(view)
-    }
-    func customizeConversationFooter(view: UIView) {
-        self.customizeView(.conversationFooter(view: view))
-    }
-    func customizeCommunityGuidelines(textView: UITextView) {
-        self.customizeView(.communityGuidelines(textView: textView))
-    }
-    func customizeNavigationItemTitle(label: UILabel) {
-        guard SpotIm.enableCustomNavigationItemTitle else { return }
-        self.customizeView(.navigationItemTitle(label: label))
-    }
-    
-    func customizePreConversationHeader(titleLabel: UILabel, counterLabel: UILabel) {
-        self.customizeView(.preConversationHeader(titleLabel: titleLabel, counterLabel: counterLabel))
-    }
-    func customizeCommentCreationActionButton(button: OWBaseButton) {
-        self.customizeView(.commentCreationActionButton(button: button))
-    }
-    
-    func customizeReadOnlyLabel(label: UILabel) {
-        self.customizeView(.readOnlyLabel(label: label))
-    }
-    func customizeEmptyStateReadOnlyLabel(label: UILabel) {
-        self.customizeView(.emptyStateReadOnlyLabel(label: label))
+        customUIDelegate?.customizeView(view: view, isDarkMode: SPUserInterfaceStyle.isDarkMode, source: source, postId: postId)
     }
 }
 

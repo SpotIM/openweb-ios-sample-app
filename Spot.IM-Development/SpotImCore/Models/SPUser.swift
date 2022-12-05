@@ -16,7 +16,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     
     enum CodingKeys: String, CodingKey {
         case id, userId, displayName, userName, imageId, registered,
-        isAdmin, isModerator, isCommunityModerator, isSuperAdmin, isJournalist, badgeType, points, tokenExpiration, ssoData, ssoPrimaryKey
+        isAdmin, isModerator, isCommunityModerator, isSuperAdmin, isJournalist, isMuted, badgeType, points, tokenExpiration, ssoData, ssoPrimaryKey
     }
     
     // all users
@@ -31,6 +31,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     var isCommunityModerator: Bool
     var isSuperAdmin: Bool
     var isJournalist: Bool
+    let isMuted: Bool
     let badgeType: String
     let tokenExpiration: Int?
     let ssoData: SPSSOData?
@@ -100,6 +101,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
         ssoData = try? container.decode(SPSSOData?.self, forKey: .ssoData)
         id = id ?? userId
         ssoPublisherId = try? container.decode(String.self, forKey: .ssoPrimaryKey)
+        isMuted = (try? container.decode(Bool.self, forKey: .isMuted)) ?? false
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -119,6 +121,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
         try container.encode(tokenExpiration, forKey: .tokenExpiration)
         try container.encode(ssoData, forKey: .ssoData)
         try container.encode(ssoPublisherId, forKey: .ssoPrimaryKey)
+        try container.encode(isMuted, forKey: .isMuted)
     }
     
     func imageURL(size: CGSize) -> URL? {

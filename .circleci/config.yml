@@ -61,7 +61,7 @@ commands:
       - run:
           name: Run Fastlane Build Release
           command: |
-            bundle exec fastlane build_release_sdk
+            bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
 
       - run:
          name: After Running Fastlane Release
@@ -159,7 +159,7 @@ jobs:
       - run:
           name: Run Fastlane Release
           command: |
-            bundle exec fastlane release_pod version:$RELEASE_VERSION
+            bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
 
       - run:
          name: After Running Fastlane Release

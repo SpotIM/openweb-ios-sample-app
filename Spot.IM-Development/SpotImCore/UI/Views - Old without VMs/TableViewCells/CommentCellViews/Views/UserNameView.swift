@@ -45,7 +45,7 @@ internal final class UserNameView: OWBaseView {
         let btn = OWBaseButton()
         return btn
     }()
-    private lazy var deletedMessageLabel: OWBaseLabel = {
+    private lazy var hiddenCommentReasonLabel: OWBaseLabel = {
         let lbl = OWBaseLabel()
         return lbl
     }()
@@ -72,7 +72,7 @@ internal final class UserNameView: OWBaseView {
         subtitleLabel.backgroundColor = .spBackground0
         dateLabel.textColor = .spForeground3
         dateLabel.backgroundColor = .spBackground0
-        deletedMessageLabel.backgroundColor = .spBackground0
+        hiddenCommentReasonLabel.backgroundColor = .spBackground0
     }
     
     func configure(with viewModel: OWUserNameViewModeling) {
@@ -87,7 +87,7 @@ internal final class UserNameView: OWBaseView {
 
 fileprivate extension UserNameView {
     func setupViews() {
-        addSubviews(deletedMessageLabel,
+        addSubviews(hiddenCommentReasonLabel,
                     userNameLabel,
                     badgeTagLabel,
                     moreButton,
@@ -98,7 +98,7 @@ fileprivate extension UserNameView {
         
         // Setup deleted label
         
-        deletedMessageLabel.OWSnp.makeConstraints { make in
+        hiddenCommentReasonLabel.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
@@ -174,7 +174,7 @@ fileprivate extension UserNameView {
     }
 
     
-    func getDeletedOrReportedAttributedString(with message: String) -> NSAttributedString {
+    func getHidenCommentReasonString(with message: String) -> NSAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
@@ -241,7 +241,7 @@ fileprivate extension UserNameView {
                 self.nameAndBadgeStackview.isHidden = shouldShow
                 self.subtitleLabel.isHidden = shouldShow
                 
-                self.deletedMessageLabel.isHidden = !shouldShow
+                self.hiddenCommentReasonLabel.isHidden = !shouldShow
                 
             }).disposed(by: disposeBag)
         
@@ -263,11 +263,11 @@ fileprivate extension UserNameView {
                 self.nameAndBadgeStackview.axis = isOneRow ? .horizontal : .vertical
             }).disposed(by: disposeBag)
         
-        viewModel.outputs.deletedOrReportedText
+        viewModel.outputs.hiddenCommentReasonText
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
-                self.deletedMessageLabel.attributedText =
-                self.getDeletedOrReportedAttributedString(with: text)
+                self.hiddenCommentReasonLabel.attributedText =
+                self.getHidenCommentReasonString(with: text)
             }).disposed(by: disposeBag)
     }
 }
@@ -281,7 +281,7 @@ extension UserNameView {
         badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         moreButton.accessibilityIdentifier = Metrics.moreButtonIdentifier
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
-        deletedMessageLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
+        hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
         
         moreButton.accessibilityTraits = .button
