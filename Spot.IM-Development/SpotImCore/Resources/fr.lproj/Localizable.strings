@@ -51,7 +51,7 @@
 "Comment reported successfully" = "Commentaire signalé avec succès";
 "Reporting this comment will send it for review and hide it from your view" = "Une fois signalé ce commentaire sera examiné et rendu invisible pour vous";
 "Copy Comment to Clipboard" = "Copier le commentaire dans le presse-papier";
-"Your comment has been rejected" = "Votre commentaire a été rejeté";
+"This comment violated our policy." = "Ce message a violé notre politique";
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "Il semblerait que votre commentaire ne respecte pas notre politique. Nous vous recommandons d'essayer une nouvelle formulation.";
 "Got it" = "Bien compris";
 "Be the first to comment" = "Soyez le premier à commenter";
