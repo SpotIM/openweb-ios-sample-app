@@ -87,7 +87,7 @@ fileprivate extension OWCommentStatusIndicationViewModel {
     func indicationText(status: SPComment.CommentStatus, isStrictMode: Bool) -> String {
         switch(status) {
         case .reject, .block:
-            return LocalizationManager.localizedString(key: "Your comment has been rejected.")
+            return LocalizationManager.localizedString(key: "This comment violated our policy.")
         case .requireApproval, .pending:
             return isStrictMode ?
             LocalizationManager.localizedString(key: "Your comment is waiting for approval due to the site’s policy.") :
