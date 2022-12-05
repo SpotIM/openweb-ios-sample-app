@@ -92,6 +92,21 @@ fileprivate extension OWPreConversationCoordinator {
             }
             .subscribe()
             .disposed(by: disposeBag)
+        
+        let openSafariViewControllerObservable: Observable<URL> = viewModel.outputs.communityGuidelinesViewModel
+            .outputs.urlClickedOutput
+        
+        // Coordinate to safari tab
+        openSafariViewControllerObservable
+            .map { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                    let safariCoordinator = OWSafariTabCoordinator(router: self.router,
+                                                                   url: url,
+                                                                   actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: safariCoordinator, deepLinkOptions: .none)
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
     }
     
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
