@@ -33,14 +33,14 @@ extension OWPreConversationCellOption {
         // TODO: Return the actual cell type once developed
         switch self {
         case .comment:
-            return UITableViewCell.self
+            return OWCommentCell.self
         case .spacer:
             return UITableViewCell.self
         }
     }
 }
 
-extension OWPreConversationCellOption: Equatable  {
+extension OWPreConversationCellOption: Equatable {
     var identifier: String {
         return ""
         // TODO: Once developed, return id of the comment/reply/ad for each.

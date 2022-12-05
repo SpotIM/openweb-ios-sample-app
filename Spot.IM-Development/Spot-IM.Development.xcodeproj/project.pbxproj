@@ -116,6 +116,7 @@
 		24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */; };
 		24BB7C1A290FD50900F49BAA /* OWPreConversationHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BB7C19290FD50900F49BAA /* OWPreConversationHeaderViewModel.swift */; };
 		24C3423829067133004189EA /* OWPreConversationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3423729067133004189EA /* OWPreConversationHeaderView.swift */; };
+		24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535D293E20BC00A74427 /* OWCommentCell.swift */; };
 		3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */; };
 		3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05C287598F800E6F1AC /* OWConversationView.swift */; };
 		3D08E05F2875994300E6F1AC /* OWConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05E2875994300E6F1AC /* OWConversationVC.swift */; };
@@ -657,6 +658,7 @@
 		24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLabelConfiguration.swift; sourceTree = "<group>"; };
 		24BB7C19290FD50900F49BAA /* OWPreConversationHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationHeaderViewModel.swift; sourceTree = "<group>"; };
 		24C3423729067133004189EA /* OWPreConversationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationHeaderView.swift; sourceTree = "<group>"; };
+		24E7535D293E20BC00A74427 /* OWCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCell.swift; sourceTree = "<group>"; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		2C9BF800CBE1B5708054E2BF /* Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; sourceTree = "<group>"; };
 		30B6E37C443F3D1D9FABA6D3 /* Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
@@ -1218,6 +1220,7 @@
 		1628A74B28EB0D8E0019B5EC /* Comment */ = {
 			isa = PBXGroup;
 			children = (
+				24E7535C293E209600A74427 /* Views */,
 				1628A74C28EB0D8E0019B5EC /* ViewModels */,
 			);
 			path = Comment;
@@ -1561,6 +1564,14 @@
 			isa = PBXGroup;
 			children = (
 				24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		24E7535C293E209600A74427 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				24E7535D293E20BC00A74427 /* OWCommentCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3608,6 +3619,7 @@
 				3D08E0B8287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift in Sources */,
 				169D58E727D4E4E9009936F3 /* OWCommentActionsViewModel.swift in Sources */,
 				2440DD0826A98DED00001462 /* SPShowCommentsButton.swift in Sources */,
+				24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */,
 				16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */,
 				3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */,
 				168DC7D32873243E009A88B6 /* OWTypealiasesInternal.swift in Sources */,
