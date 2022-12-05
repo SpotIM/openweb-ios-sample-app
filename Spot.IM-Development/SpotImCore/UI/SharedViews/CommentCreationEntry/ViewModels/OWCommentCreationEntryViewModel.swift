@@ -134,6 +134,8 @@ class OWCommentCreationEntryViewModelNew: OWCommentCreationEntryViewModeling, OW
 
 fileprivate extension OWCommentCreationEntryViewModelNew {
     func setupObservers() {
+        // TODO: should set the avatar viewModel according to the current connected user (not in infra yet)
+        // TODO: open current user profile on click (once current user infra is ready)
         outputs.avatarViewVM.outputs.avatarTapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
 //            self.delegate?.userAvatarDidTap()
