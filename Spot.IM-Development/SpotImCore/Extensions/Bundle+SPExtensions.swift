@@ -9,7 +9,7 @@
 import UIKit
 
 extension Bundle {
-    static let spot = Bundle(for: BundleToken.self)
+    static let spot = Bundle(for: OWBundleToken.self)
     
     var shortVersion: String? {
         return self.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -45,4 +45,4 @@ extension Bundle {
 }
 
 
-private final class BundleToken {}
+private final class OWBundleToken {}

@@ -103,7 +103,13 @@ class OWCommentCreationEntryView: UIView {
     }
     
     func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {
-        customUIDelegate.customizeSayControl(labelContainer: labelContainer, label: label, isPreConversation: isPreConversation)
+        customUIDelegate.customizeView (
+            .sayControl (
+                labelContainer: labelContainer,
+                label: label
+            ),
+            source: isPreConversation ? .preConversation : .conversation
+        )
     }
 }
 

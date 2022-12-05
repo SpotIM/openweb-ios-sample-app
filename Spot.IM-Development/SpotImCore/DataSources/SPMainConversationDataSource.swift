@@ -613,6 +613,11 @@ internal final class SPMainConversationDataSource {
                                              replyingToCommentId: replyingToCommentId,
                                              replyingToDisplayName: replyingToDisplayName)
 
+            if viewModel.isCommentAuthorMuted && (comment.replies == nil || comment.replies?.isEmpty == true) {
+                // if comment is muted without replies - we filter out this comment
+                return
+            }
+            
             section.append(viewModel)
 
             guard let replies = comment.replies, !replies.isEmpty else {
