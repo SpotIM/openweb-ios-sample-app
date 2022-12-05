@@ -352,9 +352,10 @@ final class SPMainConversationModel {
         guard let viewModel = viewModel else { return (false, false, false, false) }
         
         let shouldDisableShareComment = SPConfigsDataSource.appConfig?.conversation?.disableShareComment ?? false
+        let shouldDisableEditComment = !(SPConfigsDataSource.appConfig?.conversation?.showCommentEditOption ?? true)
         
         let isDeletable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
-        let isEditable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
+        let isEditable = !shouldDisableEditComment && !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isReportable = !viewModel.isDeleted && !(viewModel.authorId == SPUserSessionHolder.session.user?.id)
         let isShareable = !shouldDisableShareComment && !viewModel.showStatusIndicator
         

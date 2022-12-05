@@ -11,7 +11,7 @@ import RxSwift
 
 internal protocol SPCommunityGuidelinesViewDelegate {
     func clickOnUrl(url: URL)
-    func customizeTextView(textView: UITextView)
+    func customizeTextView(textView: UITextView, source: SPViewSourceType)
 }
 
 internal final class SPCommunityGuidelinesView: OWBaseView {
@@ -46,11 +46,11 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     }
     
     // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
+    func updateColorsAccordingToStyle(source: SPViewSourceType) {
         backgroundColor = .spBackground0
         titleTextView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
-        delegate?.customizeTextView(textView: titleTextView)
+        delegate?.customizeTextView(textView: titleTextView, source: source)
     }
     
     func setSeperatorVisible(isVisible: Bool) {
@@ -59,7 +59,7 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
 
     // MARK: - Internal methods
     
-    internal func setHtmlText(htmlString: String) {
+    internal func setHtmlText(htmlString: String, source: SPViewSourceType) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             let titleText = self.getTitleTextViewAttributedText(htmlString: htmlString)
@@ -69,7 +69,7 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
                     self.titleTextView.attributedText = titleTextViewAttributedText
                     self.heightChanged.onNext(())
                 }
-                self.delegate?.customizeTextView(textView: self.titleTextView)
+                self.delegate?.customizeTextView(textView: self.titleTextView, source: source)
             }
         }
     }
