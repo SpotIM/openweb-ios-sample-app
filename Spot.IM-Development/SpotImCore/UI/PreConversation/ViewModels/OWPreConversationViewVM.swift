@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 // Our sections is just a string as we will flat all the comments, replies, ads and everything into cells
-typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWConversationCellOption>
+typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
     // TODO: Testing - remove later and connect the actual views/actions
@@ -48,8 +48,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
     
-    var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
-    fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
+    var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
+    fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
         return _cellsViewModels
             .rx_elements()
             .asObservable()
@@ -156,6 +156,13 @@ fileprivate extension OWPreConversationViewViewModel {
                     .conversationRead(postId: postId, mode: SPCommentSortMode.best, page: SPPaginationPage.first, parentId: "", offset: 0)
                     .response
                     .map { response -> SPConversationReadRM? in
+                        guard let comments = response.conversation?.comments else { return nil }
+                        var viewModels = [OWPreConversationCellOption]()
+                        for comment in comments {
+                            let vm = OWCommentCellViewModel()
+                            viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+                        }
+                        self._cellsViewModels.append(contentsOf: viewModels)
                         return response
                     }
             }

@@ -20,7 +20,7 @@ class OWPreConversationView: UIView {
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 400
+        static let initialHeight: CGFloat = 800
         static let changedHeight: CGFloat = 700
         
         static let separatorHeight: CGFloat = 1.0
@@ -132,7 +132,7 @@ fileprivate extension OWPreConversationView {
         }
         
         if !viewModel.outputs.isButtonOnlyModeEnabled {
-            self.addSubviews(communityGuidelinesView, communityQuestionView, separatorView, commentCreationEntryView)
+            self.addSubviews(communityGuidelinesView, communityQuestionView, separatorView, commentCreationEntryView, tableView)
             communityGuidelinesView.OWSnp.makeConstraints { make in
                 make.top.equalTo(header.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
@@ -151,6 +151,10 @@ fileprivate extension OWPreConversationView {
                 make.top.equalTo(separatorView.OWSnp.bottom).offset(16)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
                 make.trailing.equalToSuperview()
+            }
+            tableView.OWSnp.makeConstraints { make in
+                make.top.equalTo(commentCreationEntryView.OWSnp.bottom)
+                make.leading.trailing.bottom.equalToSuperview() // TODO: bottom constraint
             }
         }
         
@@ -240,12 +244,12 @@ fileprivate extension OWPreConversationView {
     
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
     private func updateTableViewHeightIfNeeded() {
-        if (tableView.frame.size.height != tableView.contentSize.height) {
-            tableView.OWSnp.updateConstraints { make in
-                make.height.equalTo(tableView.contentSize.height)
-            }
-            self.layoutIfNeeded()
-        }
+//        if (tableView.frame.size.height != tableView.contentSize.height) {
+//            tableView.OWSnp.updateConstraints { make in
+//                make.height.equalTo(tableView.contentSize.height)
+//            }
+//            self.layoutIfNeeded()
+//        }
     }
 //    TODO: Remove comment for updating light/dark mode (For debug testing)
 //    internal override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
