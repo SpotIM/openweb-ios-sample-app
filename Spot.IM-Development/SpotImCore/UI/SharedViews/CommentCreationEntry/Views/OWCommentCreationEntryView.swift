@@ -35,25 +35,21 @@ class OWCommentCreationEntryView: UIView {
     
     fileprivate lazy var labelContainer: UIView = {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
-        let labelContainer = UIView()
-        labelContainer.layer.borderWidth = 1.0
-        labelContainer.addCornerRadius(6.0)
-        labelContainer.isUserInteractionEnabled = true
-        labelContainer.backgroundColor = OWColorPalette.shared.color(type: .background1Color,
-                                                                     themeStyle: currentStyle)
-        labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor,
-                                                                       themeStyle: currentStyle).cgColor
-        return labelContainer
+        return UIView()
+            .border(
+                width: 1.0,
+                color: OWColorPalette.shared.color(type: .borderColor, themeStyle: currentStyle))
+            .corner(radius: 6.0)
+            .backgroundColor(OWColorPalette.shared.color(type: .background1Color, themeStyle: currentStyle))
+            .userInteractionEnabled(true)
     }()
     
     fileprivate lazy var label: UILabel = {
         let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
-        let label = UILabel()
-        label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
-        label.text = LocalizationManager.localizedString(key: "What do you think?")
-        label.textColor = OWColorPalette.shared.color(type: .foreground2Color,
-                                                      themeStyle: currentStyle)
-        return label
+        return UILabel()
+            .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
+            .text(LocalizationManager.localizedString(key: "What do you think?"))
+            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
     }()
     
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
