@@ -76,7 +76,7 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
     
     internal func setupPreConversationConstraints() {
         separatorLeadingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
-        separatorTrailingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
+        separatorTrailingConstraint?.update(offset: -Theme.separatorHorizontalOffsetPreConversation)
         titleBottomConstraint?.update(offset: -Theme.titleBottomOffsetPreConversation)
     }
     

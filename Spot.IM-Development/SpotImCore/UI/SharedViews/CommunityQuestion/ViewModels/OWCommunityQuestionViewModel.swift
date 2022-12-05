@@ -11,11 +11,11 @@ import RxSwift
 
 // TODO: complete
 protocol OWCommunityQuestionViewModelingInputs {
-    
+    var communityQuestionString: PublishSubject<String?> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
-    
+    var communityQuestionOutput: Observable<String?> { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -26,4 +26,9 @@ protocol OWCommunityQuestionViewModeling {
 class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunityQuestionViewModelingInputs, OWCommunityQuestionViewModelingOutputs {
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
+    
+    var communityQuestionString = PublishSubject<String?>()
+    var communityQuestionOutput: Observable<String?> {
+        communityQuestionString.asObservable()
+    }
 }
