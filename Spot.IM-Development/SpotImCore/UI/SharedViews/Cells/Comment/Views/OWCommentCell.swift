@@ -33,8 +33,8 @@ fileprivate extension OWCommentCell {
     func setupUI() {
         self.addSubviews(view)
         view.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(30)
+            make.leading.trailing.top.bottom.equalToSuperview()
+            make.height.equalTo(20)
         }
     }
     
