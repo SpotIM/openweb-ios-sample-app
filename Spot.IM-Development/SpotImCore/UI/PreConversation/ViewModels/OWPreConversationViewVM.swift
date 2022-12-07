@@ -87,7 +87,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
     
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
-        return OWCommentCreationEntryViewModelNew(imageURLProvider: imageProvider)
+        return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
     }()
     
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
@@ -178,7 +178,7 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
-        let _ = commentCreationEntryViewModel.outputs
+        _ = commentCreationEntryViewModel.outputs
             .tapped
             .bind(to: commentCreationTap)
             .disposed(by: disposeBag)

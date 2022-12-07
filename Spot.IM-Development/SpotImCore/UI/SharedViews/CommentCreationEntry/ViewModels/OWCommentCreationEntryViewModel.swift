@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationEntryViewModelingInputs {
+    // TODO: configure functions should be removed from protocol once refactor complete
     func configure(user: SPUser)
     func configure(ctaText: String)
     func configure(delegate: OWCommentCreationEntryViewDelegate?)
@@ -90,16 +91,16 @@ fileprivate extension OWCommentCreationEntryViewModel {
 }
 
 // TODO: View Model for new infra. Old one should be deleted
-class OWCommentCreationEntryViewModelNew: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
+class OWCommentCreationEntryViewModelV2: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
     
     var inputs: OWCommentCreationEntryViewModelingInputs { return self }
     var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
     
     fileprivate let disposeBag = DisposeBag()
     
-    var imageURLProvider: SPImageProvider?
+    var imageURLProvider: SPImageProvider
     
-    init (imageURLProvider: SPImageProvider?) {
+    init (imageURLProvider: SPImageProvider) {
         self.imageURLProvider = imageURLProvider
         setupObservers()
     }
@@ -132,12 +133,13 @@ class OWCommentCreationEntryViewModelNew: OWCommentCreationEntryViewModeling, OW
     }
 }
 
-fileprivate extension OWCommentCreationEntryViewModelNew {
+fileprivate extension OWCommentCreationEntryViewModelV2 {
     func setupObservers() {
         // TODO: should set the avatar viewModel according to the current connected user (not in infra yet)
         // TODO: open current user profile on click (once current user infra is ready)
-        outputs.avatarViewVM.outputs.avatarTapped.subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
+        outputs.avatarViewVM.outputs.avatarTapped
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
 //            self.delegate?.userAvatarDidTap()
         }).disposed(by: disposeBag)
     }
