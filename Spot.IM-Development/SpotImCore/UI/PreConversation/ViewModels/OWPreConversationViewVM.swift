@@ -158,7 +158,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     .map { response -> SPConversationReadRM? in
                         guard let comments = response.conversation?.comments else { return nil }
                         var viewModels = [OWPreConversationCellOption]()
-                        for comment in comments {
+                        for comment in comments.prefix(self.numberOfMessagesToShow) {
                             let vm = OWCommentCellViewModel()
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                         }
