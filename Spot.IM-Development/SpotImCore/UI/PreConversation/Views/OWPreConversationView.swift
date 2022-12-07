@@ -244,12 +244,12 @@ fileprivate extension OWPreConversationView {
     
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
     private func updateTableViewHeightIfNeeded() {
-        if (tableView.frame.size.height != tableView.contentSize.height) {
-            tableView.OWSnp.updateConstraints { make in
-                make.height.equalTo(tableView.contentSize.height)
-            }
-            self.layoutIfNeeded()
-        }
+//        if (tableView.frame.size.height != tableView.contentSize.height) {
+//            tableView.OWSnp.updateConstraints { make in
+//                make.height.equalTo(tableView.contentSize.height)
+//            }
+//            self.layoutIfNeeded()
+//        }
     }
 //    TODO: Remove comment for updating light/dark mode (For debug testing)
 //    internal override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
