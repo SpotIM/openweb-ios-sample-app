@@ -125,6 +125,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
+            let skeletonCellVMs = (0 ..< numberOfMessagesToShow).map { _ in
+                return OWCommentSkeletonShimmeringCellViewModel()
+            }
+            let skeletonCells = skeletonCellVMs.map { OWPreConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
+            _cellsViewModels.append(contentsOf: skeletonCells)
             setupObservers()
     }
 }
@@ -162,6 +167,7 @@ fileprivate extension OWPreConversationViewViewModel {
                             let vm = OWCommentCellViewModel()
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                         }
+                        self._cellsViewModels.removeAll()
                         self._cellsViewModels.append(contentsOf: viewModels)
                         return response
                     }
