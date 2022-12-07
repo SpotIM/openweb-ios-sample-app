@@ -15,10 +15,8 @@ import SpotImCore
 protocol BetaNewAPIViewModelingInputs {
     var enteredSpotId: PublishSubject<String> { get }
     var enteredPostId: PublishSubject<String> { get }
-    var preConversationTapped: PublishSubject<PresentationalModeCompact> { get }
-    var fullConversationTapped: PublishSubject<PresentationalModeCompact> { get }
-    var commentCreationTapped: PublishSubject<PresentationalModeCompact> { get }
-    var conversationCounterTapped: PublishSubject<Void> { get }
+    var uiFlowsTapped: PublishSubject<Void> { get }
+    var miscellaneousTapped: PublishSubject<Void> { get }
 }
 
 protocol BetaNewAPIViewModelingOutputs {
@@ -26,7 +24,8 @@ protocol BetaNewAPIViewModelingOutputs {
     var preFilledSpotId: Observable<String> { get }
     var preFilledPostId: Observable<String> { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
-    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> { get }
+    var openUIFlows: Observable<SDKConversationDataModel> { get }
+    var openMiscellaneous: Observable<Void> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -47,10 +46,8 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     
     let enteredSpotId = PublishSubject<String>()
     let enteredPostId = PublishSubject<String>()
-    let preConversationTapped = PublishSubject<PresentationalModeCompact>()
-    let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
-    let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
-    let conversationCounterTapped = PublishSubject<Void>()
+    let uiFlowsTapped = PublishSubject<Void>()
+    let miscellaneousTapped = PublishSubject<Void>()
     
     fileprivate let _preFilledSpotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
     var preFilledSpotId: Observable<String> {
@@ -66,11 +63,14 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
             .asObservable()
     }
     
-    fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
-    var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
-        return _openMockArticleScreen
-            .unwrap()
-            .asObservable()
+    fileprivate let _openUIFlows = PublishSubject<SDKConversationDataModel>()
+    var openUIFlows: Observable<SDKConversationDataModel> {
+        return _openUIFlows.asObservable()
+    }
+    
+    fileprivate let _openMiscellaneous = PublishSubject<Void>()
+    var openMiscellaneous: Observable<Void> {
+        return _openMiscellaneous.asObservable()
     }
     
     lazy var title: String = {
@@ -95,33 +95,17 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: postId)
             .disposed(by: disposeBag)
         
-        let fullConversationTappedModel = fullConversationTapped
-            .withLatestFrom(postId) { mode, postId -> SDKUIFlowActionSettings in
-                let action = SDKUIFlowActionType.fullConversation(presentationalMode: mode)
-                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
-                return model
-            }
-        
-        let commentCreationTappedModel = commentCreationTapped
-            .withLatestFrom(postId) { mode, postId -> SDKUIFlowActionSettings in
-                let action = SDKUIFlowActionType.commentCreation(presentationalMode: mode)
-                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
-                return model
-            }
-        
-        let preConversationTappedModel = preConversationTapped
-            .withLatestFrom(postId) { mode, postId -> SDKUIFlowActionSettings in
-                let action = SDKUIFlowActionType.preConversation(presentationalMode: mode)
-                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
-                return model
-            }
-        
-        Observable.merge(fullConversationTappedModel, commentCreationTappedModel, preConversationTappedModel)
-            .withLatestFrom(spotId) { [weak self] model, spotId -> SDKUIFlowActionSettings in
+        uiFlowsTapped
+            .withLatestFrom(spotId)
+            .withLatestFrom(postId) { [weak self] spotId, postId -> SDKConversationDataModel in
                 self?.setSDKSpotId(spotId)
-                return model
+                return SDKConversationDataModel(postId: postId, spotId: spotId)
             }
-            .bind(to: _openMockArticleScreen)
+            .bind(to: _openUIFlows)
+            .disposed(by: disposeBag)
+        
+        miscellaneousTapped
+            .bind(to: _openMiscellaneous)
             .disposed(by: disposeBag)
     }
     

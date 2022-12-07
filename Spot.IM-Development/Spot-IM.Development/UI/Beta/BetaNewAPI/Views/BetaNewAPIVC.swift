@@ -15,10 +15,11 @@ import SnapKit
 
 class BetaNewAPIVC: UIViewController {
     fileprivate struct Metrics {
-        static let verticalMargin: CGFloat = 20
-        static let horizontalMargin: CGFloat = 20
+        static let verticalMargin: CGFloat = 40
+        static let horizontalMargin: CGFloat = 50
         static let textFieldHeight: CGFloat = 40
         static let textFieldCorners: CGFloat = 12
+        static let buttonVerticalMargin: CGFloat = 20
         static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
@@ -67,15 +68,9 @@ class BetaNewAPIVC: UIViewController {
         return txtField
     }()
     
-    fileprivate lazy var optionsScrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        scroll.backgroundColor = ColorPalette.lightGrey
-        return scroll
-    }()
-    
-    fileprivate lazy var btnPreConversationPushMode: UIButton = {
-        let txt = NSLocalizedString("PreConversationPushMode", comment: "")
-
+    fileprivate lazy var btnUIFlows: UIButton = {
+        let txt = NSLocalizedString("UIFlows", comment: "")
+        
         return txt
             .button
             .backgroundColor(ColorPalette.blue)
@@ -85,21 +80,9 @@ class BetaNewAPIVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
     
-    fileprivate lazy var btnPreConversationPresentMode: UIButton = {
-        let txt = NSLocalizedString("PreConversationPresentMode", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-
-    fileprivate lazy var btnFullConversationPushMode: UIButton = {
-        let txt = NSLocalizedString("FullConversationPushMode", comment: "")
-
+    fileprivate lazy var btnMiscellaneous: UIButton = {
+        let txt = NSLocalizedString("Miscellaneous", comment: "")
+        
         return txt
             .button
             .backgroundColor(ColorPalette.blue)
@@ -109,53 +92,6 @@ class BetaNewAPIVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
     
-    fileprivate lazy var btnFullConversationPresentMode: UIButton = {
-        let txt = NSLocalizedString("FullConversationPresentMode", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-    
-    fileprivate lazy var btnCommentCreationPushMode: UIButton = {
-        let txt = NSLocalizedString("CommentCreationPushMode", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-   
-    fileprivate lazy var btnCommentCreationPresentMode: UIButton = {
-        let txt = NSLocalizedString("CommentCreationPresentMode", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
-    
-    fileprivate lazy var btnConversationCounter: UIButton = {
-        let txt = NSLocalizedString("ConversationCounter", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
-    }()
     
     init(viewModel: BetaNewAPIViewModeling = BetaNewAPIViewModel()) {
         self.viewModel = viewModel
@@ -184,7 +120,7 @@ class BetaNewAPIVC: UIViewController {
 
 fileprivate extension BetaNewAPIVC {
     func setupViews() {
-        view.backgroundColor = ColorPalette.lightGrey
+        view.backgroundColor = .white
         
         view.addSubview(lblSpotId)
         lblSpotId.snp.makeConstraints { make in
@@ -195,7 +131,7 @@ fileprivate extension BetaNewAPIVC {
         view.addSubview(txtFieldSpotId)
         txtFieldSpotId.snp.makeConstraints { make in
             make.centerY.equalTo(lblSpotId)
-            make.leading.equalTo(lblSpotId.snp.trailing).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(lblSpotId.snp.trailing).offset(0.3*Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
@@ -209,74 +145,27 @@ fileprivate extension BetaNewAPIVC {
         view.addSubview(txtFieldPostId)
         txtFieldPostId.snp.makeConstraints { make in
             make.centerY.equalTo(lblPostId)
-            make.leading.equalTo(lblPostId.snp.trailing).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(lblPostId.snp.trailing).offset(0.3*Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
         
-        // Adding scroll view
-        view.addSubview(optionsScrollView)
-        optionsScrollView.snp.makeConstraints { make in
+        // Adding UIFlows button
+        view.addSubview(btnUIFlows)
+        btnUIFlows.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
-        optionsScrollView.contentLayoutGuide.snp.makeConstraints { make in
-            make.width.equalTo(optionsScrollView.snp.width)
-        }
-        
-        // Adding pre conversation buttons
-        optionsScrollView.addSubview(btnPreConversationPushMode)
-        btnPreConversationPushMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+        // Adding miscellaneous button
+        view.addSubview(btnMiscellaneous)
+        btnMiscellaneous.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
-        }
-        
-        optionsScrollView.addSubview(btnPreConversationPresentMode)
-        btnPreConversationPresentMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
-        }
-        
-        // Adding full conversation buttons
-        optionsScrollView.addSubview(btnFullConversationPushMode)
-        btnFullConversationPushMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
-        }
-        
-        optionsScrollView.addSubview(btnFullConversationPresentMode)
-        btnFullConversationPresentMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnFullConversationPushMode.snp.bottom).offset(Metrics.verticalMargin)
-        }
-        
-        // Adding comment creation buttons
-        optionsScrollView.addSubview(btnCommentCreationPushMode)
-        btnCommentCreationPushMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
-        }
-        
-        optionsScrollView.addSubview(btnCommentCreationPresentMode)
-        btnCommentCreationPresentMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.verticalMargin)
-        }
-        
-        // Adding conversation counter button
-        optionsScrollView.addSubview(btnConversationCounter)
-        btnConversationCounter.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
-            make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnCommentCreationPresentMode.snp.bottom).offset(Metrics.verticalMargin)
-            make.bottom.lessThanOrEqualTo(optionsScrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
+            make.top.equalTo(btnUIFlows.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
     }
 
@@ -319,45 +208,31 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         // Bind buttons
-        btnPreConversationPushMode.rx.tap
+        btnUIFlows.rx.tap
             .map { PresentationalModeCompact.push }
-            .bind(to: viewModel.inputs.preConversationTapped)
+            .bind(to: viewModel.inputs.uiFlowsTapped)
             .disposed(by: disposeBag)
         
-        btnPreConversationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present }
-            .bind(to: viewModel.inputs.preConversationTapped)
+        viewModel.outputs.openUIFlows
+            .subscribe(onNext: { [weak self] dataModel in
+                guard let self = self else { return }
+                let uiFlowsVM = UIFlowsViewModel(dataModel: dataModel)
+                let uiFlowsVC = UIFlowsVC(viewModel: uiFlowsVM)
+                self.navigationController?.pushViewController(uiFlowsVC, animated: true)
+            })
             .disposed(by: disposeBag)
         
-        btnFullConversationPushMode.rx.tap
+        btnMiscellaneous.rx.tap
             .map { PresentationalModeCompact.push }
-            .bind(to: viewModel.inputs.fullConversationTapped)
+            .bind(to: viewModel.inputs.miscellaneousTapped)
             .disposed(by: disposeBag)
         
-        btnFullConversationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present }
-            .bind(to: viewModel.inputs.fullConversationTapped)
-            .disposed(by: disposeBag)
-        
-        btnCommentCreationPushMode.rx.tap
-            .map { PresentationalModeCompact.push }
-            .bind(to: viewModel.inputs.commentCreationTapped)
-            .disposed(by: disposeBag)
-        
-        btnCommentCreationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present }
-            .bind(to: viewModel.inputs.commentCreationTapped)
-            .disposed(by: disposeBag)
-        
-        btnConversationCounter.rx.tap
-            .bind(to: viewModel.inputs.conversationCounterTapped)
-            .disposed(by: disposeBag)
-        
-        viewModel.outputs.openMockArticleScreen
-            .subscribe(onNext: { [weak self] settings in
-                let mockArticleVM = MockArticleViewModel(actionSettings: settings)
-                let mockArticleVC = MockArticleVC(viewModel: mockArticleVM)
-                self?.navigationController?.pushViewController(mockArticleVC, animated: true)
+        viewModel.outputs.openMiscellaneous
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                let miscellaneousVM = MiscellaneousViewModel()
+                let miscellaneousVC = MiscellaneousVC(viewModel: miscellaneousVM)
+                self.navigationController?.pushViewController(miscellaneousVC, animated: true)
             })
             .disposed(by: disposeBag)
     }
