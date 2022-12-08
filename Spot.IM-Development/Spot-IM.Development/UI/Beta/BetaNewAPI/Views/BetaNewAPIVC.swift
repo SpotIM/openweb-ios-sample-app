@@ -80,6 +80,18 @@ class BetaNewAPIVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
     
+    fileprivate lazy var btnUIViews: UIButton = {
+        let txt = NSLocalizedString("UIViews", comment: "")
+        
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+    
     fileprivate lazy var btnMiscellaneous: UIButton = {
         let txt = NSLocalizedString("Miscellaneous", comment: "")
         
@@ -159,12 +171,21 @@ fileprivate extension BetaNewAPIVC {
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
+        // Adding UIViews button
+        view.addSubview(btnUIViews)
+        btnUIViews.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnUIFlows.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+        }
+        
         // Adding miscellaneous button
         view.addSubview(btnMiscellaneous)
         btnMiscellaneous.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(btnUIFlows.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.top.equalTo(btnUIViews.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
     }
@@ -218,6 +239,20 @@ fileprivate extension BetaNewAPIVC {
                 guard let self = self else { return }
                 let uiFlowsVM = UIFlowsViewModel(dataModel: dataModel)
                 let uiFlowsVC = UIFlowsVC(viewModel: uiFlowsVM)
+                self.navigationController?.pushViewController(uiFlowsVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        btnUIViews.rx.tap
+            .map { PresentationalModeCompact.push }
+            .bind(to: viewModel.inputs.uiViewsTapped)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.openUIViews
+            .subscribe(onNext: { [weak self] dataModel in
+                guard let self = self else { return }
+                let uiFlowsVM = UIViewsViewModel(dataModel: dataModel)
+                let uiFlowsVC = UIViewsVC(viewModel: uiFlowsVM)
                 self.navigationController?.pushViewController(uiFlowsVC, animated: true)
             })
             .disposed(by: disposeBag)

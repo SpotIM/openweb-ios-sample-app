@@ -141,7 +141,7 @@ fileprivate extension UIFlowsVC {
         // Adding pre conversation buttons
         optionsScrollView.addSubview(btnPreConversationPushMode)
         btnPreConversationPushMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
@@ -149,17 +149,16 @@ fileprivate extension UIFlowsVC {
         
         optionsScrollView.addSubview(btnPreConversationPresentMode)
         btnPreConversationPresentMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
         // Adding full conversation buttons
         optionsScrollView.addSubview(btnFullConversationPushMode)
         btnFullConversationPushMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
@@ -167,7 +166,7 @@ fileprivate extension UIFlowsVC {
         
         optionsScrollView.addSubview(btnFullConversationPresentMode)
         btnFullConversationPresentMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnFullConversationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
@@ -176,7 +175,7 @@ fileprivate extension UIFlowsVC {
         // Adding comment creation buttons
         optionsScrollView.addSubview(btnCommentCreationPushMode)
         btnCommentCreationPushMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
@@ -184,7 +183,7 @@ fileprivate extension UIFlowsVC {
         
         optionsScrollView.addSubview(btnCommentCreationPresentMode)
         btnCommentCreationPresentMode.snp.makeConstraints { make in
-            make.centerX.equalTo(optionsScrollView.contentLayoutGuide)
+            make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
