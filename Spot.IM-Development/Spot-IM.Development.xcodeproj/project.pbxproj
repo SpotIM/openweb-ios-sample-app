@@ -522,6 +522,8 @@
 		8DCBE866293DEFC600C8677C /* MiscellaneousVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE865293DEFC600C8677C /* MiscellaneousVC.swift */; };
 		8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE867293DFC7700C8677C /* MicellaneousViewModel.swift */; };
 		8DCBE86A2940B14B00C8677C /* SDKConversationDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE8692940B14B00C8677C /* SDKConversationDataModel.swift */; };
+		8DCBE8702940D98B00C8677C /* UIViewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */; };
+		8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE8712940D99E00C8677C /* UIViewsViewModel.swift */; };
 		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
 		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
@@ -1097,6 +1099,8 @@
 		8DCBE865293DEFC600C8677C /* MiscellaneousVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscellaneousVC.swift; sourceTree = "<group>"; };
 		8DCBE867293DFC7700C8677C /* MicellaneousViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicellaneousViewModel.swift; sourceTree = "<group>"; };
 		8DCBE8692940B14B00C8677C /* SDKConversationDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKConversationDataModel.swift; sourceTree = "<group>"; };
+		8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsVC.swift; sourceTree = "<group>"; };
+		8DCBE8712940D99E00C8677C /* UIViewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsViewModel.swift; sourceTree = "<group>"; };
 		9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1902,6 +1906,7 @@
 				3D611B7528BFA8B1003960CE /* BetaNewAPI */,
 				3D611B8028C4D88F003960CE /* MockArticle */,
 				8DCBE85A293CEF7D00C8677C /* UIFlows */,
+				8DCBE86C2940D93300C8677C /* UIViews */,
 				8DCBE862293DEF7700C8677C /* Miscellaneous */,
 			);
 			path = Beta;
@@ -3165,6 +3170,31 @@
 			path = "Shared Models";
 			sourceTree = "<group>";
 		};
+		8DCBE86C2940D93300C8677C /* UIViews */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE86E2940D95900C8677C /* Views */,
+				8DCBE86D2940D94E00C8677C /* ViewModels */,
+			);
+			path = UIViews;
+			sourceTree = "<group>";
+		};
+		8DCBE86D2940D94E00C8677C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE8712940D99E00C8677C /* UIViewsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8DCBE86E2940D95900C8677C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -3959,6 +3989,7 @@
 				3DB3D19B282AFEB4008654CF /* ColorPalette.swift in Sources */,
 				3D611B8C28C4EE10003960CE /* MockArticleVC.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
+				8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */,
 				8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */,
 				3DB3D199282AFDD2008654CF /* FontBook.swift in Sources */,
 				3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */,
@@ -3991,6 +4022,7 @@
 				0E1125E423054335006B1489 /* ArticleWebViewController.swift in Sources */,
 				3DB3D180282A4A70008654CF /* UserAuthentication.swift in Sources */,
 				3DB3D196282AFBCB008654CF /* EasyViews.swift in Sources */,
+				8DCBE8702940D98B00C8677C /* UIViewsVC.swift in Sources */,
 				3DB3D186282A5029008654CF /* AuthenticationPlaygroundVC.swift in Sources */,
 				5D00B74422E9B7A600EFC1B0 /* DemoUserAuthentication.swift in Sources */,
 				3D3E3ABA28B3A28A003B4F05 /* ConversationCounterVC.swift in Sources */,

@@ -36,6 +36,11 @@
 "CommentCreationPresentMode" = "Comment Creation - Present Mode";
 "ConversationCounter" = "Conversation Counter";
 "UIFlows" = "UI Flows";
+"UIViews" = "UI Views";
 "Miscellaneous" = "Miscellaneous";
 "MockArticle" = "Mock Article";
 "MockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";
+"PreConversation" = "Pre Conversation";
+"FullConversation" = "Full Conversation";
+"CommentCreation" = "Comment Creation";
+"IndependentAdUnit" = "IAU - Independent Ad Unit";

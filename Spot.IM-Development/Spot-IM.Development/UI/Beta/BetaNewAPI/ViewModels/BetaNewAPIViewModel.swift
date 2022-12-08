@@ -16,6 +16,7 @@ protocol BetaNewAPIViewModelingInputs {
     var enteredSpotId: PublishSubject<String> { get }
     var enteredPostId: PublishSubject<String> { get }
     var uiFlowsTapped: PublishSubject<Void> { get }
+    var uiViewsTapped: PublishSubject<Void> { get }
     var miscellaneousTapped: PublishSubject<Void> { get }
 }
 
@@ -25,6 +26,7 @@ protocol BetaNewAPIViewModelingOutputs {
     var preFilledPostId: Observable<String> { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openUIFlows: Observable<SDKConversationDataModel> { get }
+    var openUIViews: Observable<SDKConversationDataModel> { get }
     var openMiscellaneous: Observable<Void> { get }
 }
 
@@ -47,6 +49,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let enteredSpotId = PublishSubject<String>()
     let enteredPostId = PublishSubject<String>()
     let uiFlowsTapped = PublishSubject<Void>()
+    let uiViewsTapped = PublishSubject<Void>()
     let miscellaneousTapped = PublishSubject<Void>()
     
     fileprivate let _preFilledSpotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
@@ -66,6 +69,11 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     fileprivate let _openUIFlows = PublishSubject<SDKConversationDataModel>()
     var openUIFlows: Observable<SDKConversationDataModel> {
         return _openUIFlows.asObservable()
+    }
+    
+    fileprivate let _openUIViews = PublishSubject<SDKConversationDataModel>()
+    var openUIViews: Observable<SDKConversationDataModel> {
+        return _openUIViews.asObservable()
     }
     
     fileprivate let _openMiscellaneous = PublishSubject<Void>()
@@ -102,6 +110,15 @@ fileprivate extension BetaNewAPIViewModel {
                 return SDKConversationDataModel(postId: postId, spotId: spotId)
             }
             .bind(to: _openUIFlows)
+            .disposed(by: disposeBag)
+        
+        uiViewsTapped
+            .withLatestFrom(spotId)
+            .withLatestFrom(postId) { [weak self] spotId, postId -> SDKConversationDataModel in
+                self?.setSDKSpotId(spotId)
+                return SDKConversationDataModel(postId: postId, spotId: spotId)
+            }
+            .bind(to: _openUIViews)
             .disposed(by: disposeBag)
         
         miscellaneousTapped
