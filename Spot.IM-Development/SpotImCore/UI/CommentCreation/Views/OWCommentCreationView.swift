@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCommentCreationView: UIView {
+class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_view_id"
     }
@@ -36,7 +36,8 @@ class OWCommentCreationView: UIView {
 
 fileprivate extension OWCommentCreationView {
     func setupViews() {
-
+        self.useAsThemeStyleInjector()
+        
         // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
         self.backgroundColor = .blue
     }
