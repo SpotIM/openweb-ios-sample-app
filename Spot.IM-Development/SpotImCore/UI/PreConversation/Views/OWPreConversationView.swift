@@ -14,6 +14,7 @@ class OWPreConversationView: UIView {
     fileprivate struct Metrics {
         static let bannerViewMargin: CGFloat = 40
         static let whatYouThinkHeight: CGFloat = 64
+        static let commentCreationTopPadding: CGFloat = 16
         
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
         // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
@@ -24,7 +25,7 @@ class OWPreConversationView: UIView {
         static let changedHeight: CGFloat = 700
         
         static let separatorHeight: CGFloat = 1.0
-        static let separatorHorizontalOffset: CGFloat = 16.0
+        static let horizontalOffset: CGFloat = 16.0
     }
     
     // TODO: Testing - remove later (hard coded cause only for testing)
@@ -66,7 +67,8 @@ class OWPreConversationView: UIView {
                                                            themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
-        return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+        let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+        return view
     }()
     fileprivate lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
@@ -131,7 +133,7 @@ fileprivate extension OWPreConversationView {
         }
         
         if !viewModel.outputs.isButtonOnlyModeEnabled {
-            self.addSubviews(communityGuidelinesView, communityQuestionView, separatorView)
+            self.addSubviews(communityGuidelinesView, communityQuestionView, separatorView, commentCreationEntryView)
             communityGuidelinesView.OWSnp.makeConstraints { make in
                 make.top.equalTo(header.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
@@ -142,11 +144,18 @@ fileprivate extension OWPreConversationView {
             }
             separatorView.OWSnp.makeConstraints { make in
                 make.top.equalTo(communityQuestionView.OWSnp.bottom)
-                make.leading.equalToSuperview().offset(Metrics.separatorHorizontalOffset)
-                make.trailing.equalToSuperview().offset(-Metrics.separatorHorizontalOffset)
+                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+                make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
                 make.height.equalTo(Metrics.separatorHeight)
             }
+            commentCreationEntryView.OWSnp.makeConstraints { make in
+                make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationTopPadding)
+                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+                make.trailing.equalToSuperview()
+            }
         }
+        
+        
         
         self.addSubview(btnCommentCreation)
         btnCommentCreation.OWSnp.makeConstraints { make in

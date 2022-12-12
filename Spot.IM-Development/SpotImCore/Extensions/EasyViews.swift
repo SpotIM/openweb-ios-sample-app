@@ -53,6 +53,11 @@ extension UIView {
         self.tintColor = color
         return self
     }
+    
+    @discardableResult func userInteractionEnabled(_ isEnabled: Bool) -> Self {
+        self.isUserInteractionEnabled = isEnabled
+        return self
+    }
 }
 
 extension UILabel {
@@ -73,6 +78,11 @@ extension UILabel {
     
     @discardableResult func textColor(_ color: UIColor) -> UILabel {
         self.textColor = color
+        return self
+    }
+    
+    @discardableResult func text(_ text: String?) -> UILabel {
+        self.text = text
         return self
     }
     
