@@ -22,7 +22,7 @@ class SettingsViewController: UIViewController {
     
     private var navBarHiddenOldValue = false
     var isCustomDarkModeEnabled: Bool {
-        get { UserDefaults.standard.bool(forKey: "demo.isCustomDarkModeEnabled") }
+        get { UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.isCustomDarkModeEnabled, defaultValue: false) }
         set { setCustomDarkMode(enabled: newValue) }
     }
     
@@ -42,13 +42,13 @@ class SettingsViewController: UIViewController {
     }
     
     var readOnlyModeIndex: Int {
-        get { UserDefaults.standard.integer(forKey: "demo.isReadOnlyEnabled") }
-        set { UserDefaults.standard.set(newValue, forKey: "demo.isReadOnlyEnabled") }
+        get { UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Int>.isReadOnlyEnabled, defaultValue: 0) }
+        set { UserDefaultsProvider.shared.save(value: newValue, forKey: .isReadOnlyEnabled) }
     }
     
     var interfaceStyle: Int {
-        get { UserDefaults.standard.integer(forKey: "demo.interfaceStyle") }
-        set { UserDefaults.standard.set(newValue, forKey: "demo.interfaceStyle") }
+        get { UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Int>.interfaceStyle, defaultValue: 0) }
+        set { UserDefaultsProvider.shared.save(value: newValue, forKey: .interfaceStyle) }
     }
     
     var buttonOnlyModeIndex: Int {
@@ -138,7 +138,7 @@ class SettingsViewController: UIViewController {
     
 
     private func setCustomDarkMode(enabled: Bool) {
-        UserDefaults.standard.set(enabled, forKey: "demo.isCustomDarkModeEnabled")
+        UserDefaultsProvider.shared.save(value: enabled, forKey: .isCustomDarkModeEnabled)
         modeControl.isHidden = !enabled
 
         if enabled {
