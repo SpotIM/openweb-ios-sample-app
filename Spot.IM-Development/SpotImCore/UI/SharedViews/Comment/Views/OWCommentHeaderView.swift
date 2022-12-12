@@ -29,8 +29,9 @@ final class OWCommentHeaderView: UIView {
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
+        static let dateLabelIdentifier = "comment_header_date_label_id"
 //        static let moreButtonIdentifier = "user_name_view_more_button_id"
-//        static let dateLabelIdentifier = "user_name_view_date_label_id"
+        
 //        static let deletedMessageLabelIdentifier = "user_name_view_deleted_message_label_id"
     }
     
@@ -55,6 +56,12 @@ final class OWCommentHeaderView: UIView {
         return OWUserSubscriberBadgeView()
     }()
     fileprivate lazy var subtitleLabel: UILabel = {
+        return UILabel()
+            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .userInteractionEnabled(false)
+    }()
+    fileprivate lazy var dateLabel: UILabel = {
         return UILabel()
             .font(.preferred(style: .medium, of: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
@@ -104,7 +111,7 @@ final class OWCommentHeaderView: UIView {
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
-        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel)
+        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel, dateLabel)
         
         // Setup avatar
         avatarImageView.OWSnp.makeConstraints { make in
@@ -132,6 +139,12 @@ fileprivate extension OWCommentHeaderView {
             make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
             make.leading.equalTo(userNameLabel)
 //            make.trailing.equalTo(dateLabel.OWSnp.leading)
+        }
+        
+        dateLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(subtitleLabel)
+            make.leading.equalTo(subtitleLabel.OWSnp.trailing)
+//            make.trailing.lessThanOrEqualTo(moreButton.OWSnp.leading)
         }
     }
     
@@ -161,6 +174,10 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: subtitleLabel.rx.text)
             .disposed(by: disposeBag)
         
+        viewModel.outputs.dateText
+            .bind(to: dateLabel.rx.text)
+            .disposed(by: disposeBag)
+        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -179,9 +196,10 @@ extension OWCommentHeaderView {
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
         badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
+        dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         
 //        moreButton.accessibilityIdentifier = Metrics.moreButtonIdentifier
-//        dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
+        
 //        hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
         
 //
