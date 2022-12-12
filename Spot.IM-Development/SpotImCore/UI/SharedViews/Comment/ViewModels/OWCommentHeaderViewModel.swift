@@ -11,7 +11,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentHeaderViewModelingInputs {
-    func configure(with model: CommentViewModel)
+//    func configure(with model: CommentViewModel)
     
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
@@ -19,6 +19,7 @@ protocol OWCommentHeaderViewModelingInputs {
 
 protocol OWCommentHeaderViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
+    var avatarVM: OWAvatarViewModeling { get }
     
     var shouldShowDeletedOrReportedMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
@@ -47,12 +48,19 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     fileprivate let disposeBag = DisposeBag()
     
-    fileprivate let _model = BehaviorSubject<CommentViewModel?>(value: nil)
+    fileprivate let _model = BehaviorSubject<SPComment?>(value: nil)
 
-    init(user: SPUser, model: CommentViewModel) {
+    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    
+    // TODO: image provider
+    init(user: SPUser, model: SPComment, imageProvider: SPImageProvider? = nil) {
+        avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         subscriberBadgeVM.inputs.configureUser(user: user)
         _model.onNext(model)
+        _user.onNext(user)
     }
+    
+    let avatarVM: OWAvatarViewModeling
     
     var tapUserName = PublishSubject<Void>()
     var tapMore = PublishSubject<OWUISource>()
@@ -63,7 +71,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model
             .unwrap()
             .map({ model -> String? in
-                return model.replyingToDisplayName
+                return "model.replyingToDisplayName"  // TODO
             })
             .unwrap()
             .map({ $0.isEmpty ? ""
@@ -75,53 +83,59 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model
             .unwrap()
             .map({ model in
-                let timestamp = model.timestamp ?? ""
-                return (model.replyingToDisplayName?.isEmpty ?? true)
+                guard let writtenAt = model.writtenAt else { return ""}
+                let timestamp = Date(timeIntervalSince1970: writtenAt).timeAgo()
+                return ("model.replyingToDisplayName?".isEmpty ?? true) // TODO
                     ? timestamp : " · ".appending(timestamp)
             })
     }
     
     var badgeTitle: Observable<String> {
-        _model
+        _user
             .unwrap()
-            .map({ model -> String in
-                return (model.badgeTitle ?? "")
+            .map({ [weak self] user -> String in
+                guard let self = self else { return "" }
+                return self.getUserBadgeUsingConfig(user: user)?.uppercased() ?? ""
             })
     }
     
     var nameText: Observable<String> {
-        _model
+        _user
             .unwrap()
-            .map({ model -> String in
-                return (model.displayName ?? "")
+            .map({ user -> String in
+                return user.displayName ?? ""
             })
     }
     
     var nameTextStyle: Observable<SPFontStyle> {
         _model
             .unwrap()
-            .map { $0.replyingToCommentId == nil ? .bold : .medium }
+            .map { $0.isReply ? .medium : .bold}
     }
     
     var isUsernameOneRow: Observable<Bool> {
         _model
             .unwrap()
-            .map { $0.isUsernameOneRow() }
+            .map { _ in
+//                $0.isUsernameOneRow()
+                false // TODO
+            }
     }
     
     var hiddenCommentReasonText: Observable<String> {
         _model
             .unwrap()
             .map { model in
-                guard model.isHiddenComment() else { return "" }
+                guard model.deleted else { return "" } // TODO!!!!
                 let localizationKey: String
-                if (model.isCommentAuthorMuted) {
-                    localizationKey = "This user is muted."
-                } else if (model.isReported) {
-                    localizationKey = "This message was reported."
-                } else {
+//                if (model.isCommentAuthorMuted) {
+//                    localizationKey = "This user is muted."
+//                } else if (model.isReported) {
+//                    localizationKey = "This message was reported."
+//                } else {
                     localizationKey = "This message was deleted."
-                }
+//                }
+                // TODO
                 return LocalizationManager.localizedString(key: localizationKey)
             }
     }
@@ -129,7 +143,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var shouldShowDeletedOrReportedMessage: Observable<Bool> {
         _model
             .unwrap()
-            .map { $0.isHiddenComment() }
+            .map { $0.deleted } // TODO!!
     }
     
     var userNameTapped: Observable<Void> {
@@ -142,7 +156,31 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .asObservable()
     }
     
-    func configure(with model: CommentViewModel) {
-        _model.onNext(model)
+//    func configure(with model: CommentViewModel) {
+//        _model.onNext(model)
+//    }
+}
+
+extension OWCommentHeaderViewModel {
+    // TODO!!
+    private func getUserBadgeUsingConfig(user: SPUser) -> String? {
+        guard user.isStaff else { return nil }
+        
+        if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
+           let translations = conversationConfig.translationTextOverrides,
+           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
+        {
+            if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
+                return adminBadge
+            } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {
+                return jurnalistBadge
+            } else if user.isModerator, let moderatorBadge = currentTranslation[BadgesOverrideKeys.moderator.rawValue] {
+                return moderatorBadge
+            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue]  {
+                return communityModeratorBadge
+            }
+        }
+        return user.authorityTitle
     }
+
 }

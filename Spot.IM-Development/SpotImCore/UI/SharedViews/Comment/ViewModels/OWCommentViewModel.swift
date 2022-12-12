@@ -19,6 +19,8 @@ protocol OWCommentViewModelingOutputs {
     var contentVM: OWCommentContentViewModeling { get }
     var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
+    
+    var commentHeaderVM: OWCommentHeaderViewModeling? { get }
 }
 
 protocol OWCommentViewModeling {
@@ -49,8 +51,11 @@ class OWCommentViewModel: OWCommentViewModeling,
         return OWCommentActionsViewModel()
     }
     
-    init(comment: SPComment) {
-        commentUserVM = OWCommentUserViewModel(user: comment.users?[comment.userId ?? ""] ?? nil, imageProvider: nil)
+    var commentHeaderVM: OWCommentHeaderViewModeling? = nil // TODO!!! should not be optional
+    
+    init(comment: SPComment, user: SPUser) {
+        commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
+        commentHeaderVM = OWCommentHeaderViewModel(user: user, model: comment)
     }
     
     // TODO: DELETE!
