@@ -14,6 +14,7 @@ class OWPreConversationView: UIView {
     fileprivate struct Metrics {
         static let bannerViewMargin: CGFloat = 40
         static let whatYouThinkHeight: CGFloat = 64
+        static let commentCreationTopPadding: CGFloat = 16
         
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
         // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
@@ -148,7 +149,7 @@ fileprivate extension OWPreConversationView {
                 make.height.equalTo(Metrics.separatorHeight)
             }
             commentCreationEntryView.OWSnp.makeConstraints { make in
-                make.top.equalTo(separatorView.OWSnp.bottom).offset(16)
+                make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationTopPadding)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
                 make.trailing.equalToSuperview()
             }
