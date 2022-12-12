@@ -21,28 +21,41 @@ final class OWCommentHeaderView: UIView {
         static let avatarSideSize: CGFloat = 39.0
         static let avatarImageViewTrailingOffset: CGFloat = 11.0
         static let usernameFontSize: CGFloat = 16.0
+        static let badgeLabelFontSize: CGFloat = 12.0
+        static let badgeLeadingPadding: CGFloat = 4
+        
+        static let identifier = "comment_header_view_id"
+        static let userNameLabelIdentifier = "comment_header_user_name_label_id"
+        static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
+//        static let moreButtonIdentifier = "user_name_view_more_button_id"
+//        static let dateLabelIdentifier = "user_name_view_date_label_id"
+//        static let deletedMessageLabelIdentifier = "user_name_view_deleted_message_label_id"
+//        static let subscriberBadgeViewIdentifier = "user_name_view_subscriber_badge_view_id"
     }
     
     fileprivate var viewModel: OWCommentHeaderViewModeling!
     fileprivate var disposeBag: DisposeBag!
         
     fileprivate let avatarImageView: SPAvatarView = SPAvatarView()
-    
     fileprivate lazy var userNameLabel: UILabel = {
         return UILabel()
+            .userInteractionEnabled(false)
+            .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
     }()
-    
-    private let userNameView: UserNameView = .init()
-    
+    fileprivate lazy var badgeTagLabel: UILabel = {
+        return UILabel()
+            .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
+            .border(width: 1, color: .brandColor)
+            .corner(radius: 3)
+            .textColor(.brandColor)
+            // TODO: inset!
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         setupViews()
-    }
-     // TODO: empty init + configure should be deleted once refactor is done
-    init() {
-        super.init(frame: .zero)
-        setupViews()
+        applyAccessibility()
     }
     
     required init?(coder: NSCoder) {
@@ -80,7 +93,7 @@ final class OWCommentHeaderView: UIView {
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
-        addSubviews(avatarImageView, userNameLabel)
+        addSubviews(avatarImageView, userNameLabel, badgeTagLabel)
         
         // Setup avatar
         avatarImageView.OWSnp.makeConstraints { make in
@@ -90,12 +103,13 @@ fileprivate extension OWCommentHeaderView {
         }
         
         // Setup user name view
-//        userNameView.OWSnp.makeConstraints { make in
-//            make.trailing.top.equalToSuperview()
-//            make.height.equalTo(Metrics.userViewHeight)
-//        }
         userNameLabel.OWSnp.makeConstraints { make in
-            make.trailing.top.equalToSuperview()
+            make.top.equalToSuperview()
+        }
+        
+        badgeTagLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(userNameLabel.OWSnp.centerY)
+            make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.badgeLeadingPadding)
         }
     }
     
@@ -111,5 +125,38 @@ fileprivate extension OWCommentHeaderView {
                     .preferred(style: style, of: Metrics.usernameFontSize)
                 )
             }).disposed(by: disposeBag)
+        
+        viewModel.outputs.badgeTitle
+            .bind(to: badgeTagLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.badgeTitle
+            .map { $0.isEmpty }
+            .bind(to: badgeTagLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.userNameLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color, themeStyle: currentStyle)
+            }).disposed(by: disposeBag)
+    }
+}
+
+// MARK: Accessibility
+
+extension OWCommentHeaderView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
+        badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
+//        moreButton.accessibilityIdentifier = Metrics.moreButtonIdentifier
+//        dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
+//        hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
+//        subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
+//
+//        moreButton.accessibilityTraits = .button
+//        moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
     }
 }
