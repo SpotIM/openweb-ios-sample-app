@@ -18,6 +18,8 @@ protocol BetaNewAPIViewModelingInputs {
     var uiFlowsTapped: PublishSubject<Void> { get }
     var uiViewsTapped: PublishSubject<Void> { get }
     var miscellaneousTapped: PublishSubject<Void> { get }
+    var selectPresetTapped: PublishSubject<Void> { get }
+    var settingsTapped: PublishSubject<Void> { get }
 }
 
 protocol BetaNewAPIViewModelingOutputs {
@@ -28,6 +30,8 @@ protocol BetaNewAPIViewModelingOutputs {
     var openUIFlows: Observable<SDKConversationDataModel> { get }
     var openUIViews: Observable<SDKConversationDataModel> { get }
     var openMiscellaneous: Observable<Void> { get }
+    var showSelectPreset: Observable<Void> { get }
+    var openSettings: Observable<Void> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -51,6 +55,8 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let uiFlowsTapped = PublishSubject<Void>()
     let uiViewsTapped = PublishSubject<Void>()
     let miscellaneousTapped = PublishSubject<Void>()
+    let selectPresetTapped = PublishSubject<Void>()
+    let settingsTapped = PublishSubject<Void>()
     
     fileprivate let _preFilledSpotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
     var preFilledSpotId: Observable<String> {
@@ -79,6 +85,16 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     fileprivate let _openMiscellaneous = PublishSubject<Void>()
     var openMiscellaneous: Observable<Void> {
         return _openMiscellaneous.asObservable()
+    }
+    
+    fileprivate let _showSelectPreset = PublishSubject<Void>()
+    var showSelectPreset: Observable<Void> {
+        return _showSelectPreset.asObservable()
+    }
+    
+    fileprivate let _openSettings = PublishSubject<Void>()
+    var openSettings: Observable<Void> {
+        return _openSettings.asObservable()
     }
     
     lazy var title: String = {
@@ -123,6 +139,14 @@ fileprivate extension BetaNewAPIViewModel {
         
         miscellaneousTapped
             .bind(to: _openMiscellaneous)
+            .disposed(by: disposeBag)
+        
+        selectPresetTapped
+            .bind(to: _showSelectPreset)
+            .disposed(by: disposeBag)
+
+        settingsTapped
+            .bind(to: _openSettings)
             .disposed(by: disposeBag)
     }
     
