@@ -20,17 +20,18 @@ final class OWCommentHeaderView: UIView {
         static let userViewExpandedHeight: CGFloat = 69.0
         static let avatarSideSize: CGFloat = 39.0
         static let avatarImageViewTrailingOffset: CGFloat = 11.0
-        static let usernameFontSize: CGFloat = 16.0
+        static let fontSize: CGFloat = 16.0
         static let badgeLabelFontSize: CGFloat = 12.0
         static let badgeLeadingPadding: CGFloat = 4
+        static let subtitleTopPadding: CGFloat = 6
         
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
+        static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
 //        static let moreButtonIdentifier = "user_name_view_more_button_id"
 //        static let dateLabelIdentifier = "user_name_view_date_label_id"
 //        static let deletedMessageLabelIdentifier = "user_name_view_deleted_message_label_id"
-//        static let subscriberBadgeViewIdentifier = "user_name_view_subscriber_badge_view_id"
     }
     
     fileprivate var viewModel: OWCommentHeaderViewModeling!
@@ -50,6 +51,15 @@ final class OWCommentHeaderView: UIView {
             .textColor(.brandColor)
             // TODO: inset!
     }()
+    private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
+        return OWUserSubscriberBadgeView()
+    }()
+    fileprivate lazy var subtitleLabel: UILabel = {
+        return UILabel()
+            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .userInteractionEnabled(false)
+    }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -65,6 +75,7 @@ final class OWCommentHeaderView: UIView {
     func configure(with model: OWCommentHeaderViewModeling) {
         self.viewModel = model
         avatarImageView.configure(with: viewModel.outputs.avatarVM)
+        subscriberBadgeView.configure(with: viewModel.outputs.subscriberBadgeVM)
         
         disposeBag = DisposeBag()
         setupObservers()
@@ -93,7 +104,7 @@ final class OWCommentHeaderView: UIView {
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
-        addSubviews(avatarImageView, userNameLabel, badgeTagLabel)
+        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel)
         
         // Setup avatar
         avatarImageView.OWSnp.makeConstraints { make in
@@ -111,6 +122,17 @@ fileprivate extension OWCommentHeaderView {
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
             make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.badgeLeadingPadding)
         }
+        
+        subscriberBadgeView.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(userNameLabel.OWSnp.centerY)
+            make.leading.equalTo(badgeTagLabel.OWSnp.trailing).offset(5.0)
+        }
+        
+        subtitleLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
+            make.leading.equalTo(userNameLabel)
+//            make.trailing.equalTo(dateLabel.OWSnp.leading)
+        }
     }
     
     func setupObservers() {
@@ -122,7 +144,7 @@ fileprivate extension OWCommentHeaderView {
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self.userNameLabel.font(
-                    .preferred(style: style, of: Metrics.usernameFontSize)
+                    .preferred(style: style, of: Metrics.fontSize)
                 )
             }).disposed(by: disposeBag)
         
@@ -135,11 +157,16 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: badgeTagLabel.rx.isHidden)
             .disposed(by: disposeBag)
         
+        viewModel.outputs.subtitleText
+            .bind(to: subtitleLabel.rx.text)
+            .disposed(by: disposeBag)
+        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.userNameLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color, themeStyle: currentStyle)
+                self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
 }
@@ -151,10 +178,12 @@ extension OWCommentHeaderView {
         self.accessibilityIdentifier = Metrics.identifier
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
         badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
+        subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
+        
 //        moreButton.accessibilityIdentifier = Metrics.moreButtonIdentifier
 //        dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
 //        hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
-//        subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
+        
 //
 //        moreButton.accessibilityTraits = .button
 //        moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
