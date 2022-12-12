@@ -1,8 +1,8 @@
 //
-//  OWUserNameViewModel.swift
+//  OWCommentUserNameViewModel.swift
 //  SpotImCore
 //
-//  Created by Alon Shprung on 27/06/2022.
+//  Created by  Nogah Melamed on 12/12/2022.
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
@@ -10,14 +10,14 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-protocol OWUserNameViewModelingInputs {
+protocol OWCommentUserNameViewModelingInputs {
     func configure(with model: CommentViewModel)
     
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
 
-protocol OWUserNameViewModelingOutputs {
+protocol OWCommentUserNameViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
     
     var shouldShowDeletedOrReportedMessage: Observable<Bool> { get }
@@ -33,27 +33,27 @@ protocol OWUserNameViewModelingOutputs {
     var moreTapped: Observable<OWUISource> { get }
 }
 
-protocol OWUserNameViewModeling {
-    var inputs: OWUserNameViewModelingInputs { get }
-    var outputs: OWUserNameViewModelingOutputs { get }
+protocol OWCommentUserNameViewModeling {
+    var inputs: OWCommentUserNameViewModelingInputs { get }
+    var outputs: OWCommentUserNameViewModelingOutputs { get }
 }
 
-class OWUserNameViewModel: OWUserNameViewModeling,
-                              OWUserNameViewModelingInputs,
-                              OWUserNameViewModelingOutputs {
+class OWCommentUserNameViewModel: OWCommentUserNameViewModeling,
+                                  OWCommentUserNameViewModelingInputs,
+                                  OWCommentUserNameViewModelingOutputs {
 
-    var inputs: OWUserNameViewModelingInputs { return self }
-    var outputs: OWUserNameViewModelingOutputs { return self }
+    var inputs: OWCommentUserNameViewModelingInputs { return self }
+    var outputs: OWCommentUserNameViewModelingOutputs { return self }
     
     fileprivate let disposeBag = DisposeBag()
     
     fileprivate let _model = BehaviorSubject<CommentViewModel?>(value: nil)
 
-    init(user: SPUser?) {
-        if let user = user {
-            subscriberBadgeVM.inputs.configureUser(user: user)
-        }
-    }
+//    init(user: SPUser?) {
+//        if let user = user {
+//            subscriberBadgeVM.inputs.configureUser(user: user)
+//        }
+//    }
     
     init(user: SPUser?, model: CommentViewModel) {
         if let user = user {
