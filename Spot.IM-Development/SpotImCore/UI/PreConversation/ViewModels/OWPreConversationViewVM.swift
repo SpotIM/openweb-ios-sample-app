@@ -165,6 +165,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         var viewModels = [OWPreConversationCellOption]()
                         for comment in comments.prefix(self.numberOfMessagesToShow) {
                             let vm = OWCommentCellViewModel()
+                            vm.outputs.commentVM
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                         }
                         self._cellsViewModels.removeAll()

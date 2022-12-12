@@ -1,8 +1,8 @@
 //
-//  OWCommentUserView.swift
+//  OWCommentHeaderView.swift
 //  SpotImCore
 //
-//  Created by Alon Shprung on 20/06/2022.
+//  Created by  Nogah Melamed on 07/12/2022.
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class OWCommentUserView: OWBaseView {
+final class OWCommentHeaderView: UIView {
     
     fileprivate struct Metrics {
         static let topOffset: CGFloat = 14.0
@@ -47,6 +47,10 @@ final class OWCommentUserView: OWBaseView {
         }
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func configure(with model: CommentViewModel) {
         self.viewModel = model.commentUserVM
         disposeBag = DisposeBag()
@@ -75,7 +79,7 @@ final class OWCommentUserView: OWBaseView {
     }
 }
 
-fileprivate extension OWCommentUserView {
+fileprivate extension OWCommentHeaderView {
     func setupViews() {
         addSubviews(avatarImageView, userNameView)
         
