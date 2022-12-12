@@ -1333,7 +1333,6 @@
 				24000A34268AEADD004C2A78 /* CommentMediaView.swift */,
 				161470CF28609BFF00CFBC9D /* OWCommentUserView.swift */,
 				247C017C27FED5CC006A3962 /* OWCommentStatusIndicationView.swift */,
-				24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1346,7 +1345,6 @@
 				161470D128609C9900CFBC9D /* OWCommentUserViewModel.swift */,
 				161470D32869DF7500CFBC9D /* OWUserNameViewModel.swift */,
 				247C017E27FED861006A3962 /* OWCommentStatusIndicationViewModel.swift */,
-				24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1424,6 +1422,7 @@
 			children = (
 				16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */,
 				16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */,
+				24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1431,6 +1430,7 @@
 		16D8D4AE28C643F300895FCB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */,
 				1628A75828EB0E220019B5EC /* OWCommentContentView.swift */,
 				1628A74428EB08540019B5EC /* OWCommentView.swift */,
 			);

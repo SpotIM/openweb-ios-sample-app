@@ -26,9 +26,23 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
     var inputs: OWCommentCellViewModelingInputs { return self }
     var outputs: OWCommentCellViewModelingOutputs { return self }
     
+    fileprivate var comment: SPComment? = nil
+    fileprivate var user: SPUser? = nil
+    
     var commentVM: OWCommentViewModeling {
-        return OWCommentViewModel()
+        if let comment = comment, let user = user {
+            return OWCommentViewModel(comment: comment, user: user)
+        } else {
+            return OWCommentViewModel()
+        }
     }
+    
+    init(comment: SPComment, user: SPUser?) {
+        self.comment = comment
+        self.user = user
+    }
+    
+    init() {}
 }
 
 extension OWCommentCellViewModel {

@@ -16,8 +16,7 @@ class OWCommentCell: UITableViewCell {
     }()
     
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
-        let vm = viewModel.outputs.commentVM.outputs.commentUserVM
-        return OWCommentHeaderView(viewModel: vm)
+        return OWCommentHeaderView()
     }()
     
     fileprivate var viewModel: OWCommentCellViewModeling!
@@ -35,6 +34,7 @@ class OWCommentCell: UITableViewCell {
         guard let vm = viewModel as? OWCommentCellViewModeling else { return }
         
         self.viewModel = vm
+        self.commentHeaderView.configure(with: self.viewModel.outputs.commentVM.outputs.commentHeaderVM as! OWCommentHeaderViewModeling)
         setupUI()
         setupObservers()
     }
