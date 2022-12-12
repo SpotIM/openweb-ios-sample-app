@@ -76,7 +76,7 @@ class OWPreConversationView: UIView {
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
-            .backgroundColor(.spBackground0)
+            .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
         // Register cells
@@ -153,8 +153,10 @@ fileprivate extension OWPreConversationView {
                 make.trailing.equalToSuperview()
             }
             tableView.OWSnp.makeConstraints { make in
-                make.top.equalTo(commentCreationEntryView.OWSnp.bottom)
-                make.leading.trailing.bottom.equalToSuperview() // TODO: bottom constraint
+                make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(16) // TODO
+                make.leading.equalToSuperview().offset(16)
+                make.trailing.equalToSuperview().offset(-16)
+                make.bottom.equalToSuperview() // TODO: bottom constraint
             }
         }
         

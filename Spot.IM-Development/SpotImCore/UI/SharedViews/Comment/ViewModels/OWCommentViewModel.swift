@@ -33,9 +33,9 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
     
-    var commentUserVM: OWCommentUserViewModeling {
-        return OWCommentUserViewModel(user: nil, imageProvider: nil)
-    }
+    var commentUserVM: OWCommentUserViewModeling// {
+//        return OWCommentUserViewModel(user: nil, imageProvider: nil)
+//    }
     
     var contentVM: OWCommentContentViewModeling {
         return OWCommentContentViewModel()
@@ -47,5 +47,14 @@ class OWCommentViewModel: OWCommentViewModeling,
     
     var commentActionsVM: OWCommentActionsViewModeling {
         return OWCommentActionsViewModel()
+    }
+    
+    init(comment: SPComment) {
+        commentUserVM = OWCommentUserViewModel(user: comment.users?[comment.userId ?? ""] ?? nil, imageProvider: nil)
+    }
+    
+    // TODO: DELETE!
+    init() {
+        commentUserVM = OWCommentUserViewModel(user: nil, imageProvider: nil)
     }
 }

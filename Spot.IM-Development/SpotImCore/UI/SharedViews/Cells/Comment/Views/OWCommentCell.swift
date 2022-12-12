@@ -15,9 +15,16 @@ class OWCommentCell: UITableViewCell {
             .backgroundColor(UIColor.blue)
     }()
     
+    fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
+        let vm = viewModel.outputs.commentVM.outputs.commentUserVM
+        return OWCommentHeaderView(viewModel: vm)
+    }()
+    
+    fileprivate var viewModel: OWCommentCellViewModeling!
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.setupUI()
+//        self.setupUI()
     }
     
     required init?(coder: NSCoder) {
@@ -25,17 +32,24 @@ class OWCommentCell: UITableViewCell {
     }
     
     override func configure(with viewModel: OWCellViewModel) {
+        guard let vm = viewModel as? OWCommentCellViewModeling else { return }
+        
+        self.viewModel = vm
         setupUI()
+        setupObservers()
     }
 }
 
 fileprivate extension OWCommentCell {
     func setupUI() {
-        self.addSubviews(view)
-        view.OWSnp.makeConstraints { make in
+        self.addSubviews(commentHeaderView)
+        commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
-            make.height.equalTo(20)
+            make.height.equalTo(50)
         }
     }
     
+    func setupObservers() {
+        
+    }
 }
