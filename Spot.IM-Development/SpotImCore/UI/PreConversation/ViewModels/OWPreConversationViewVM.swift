@@ -87,7 +87,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
     
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
-        return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+        return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
     }()
     
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
@@ -176,6 +176,11 @@ fileprivate extension OWPreConversationViewViewModel {
 //            TODO: custom UI
 //            TODO: Map to the appropriate case
             })
+            .disposed(by: disposeBag)
+        
+        _ = commentCreationEntryViewModel.outputs
+            .tapped
+            .bind(to: commentCreationTap)
             .disposed(by: disposeBag)
     }
 }
