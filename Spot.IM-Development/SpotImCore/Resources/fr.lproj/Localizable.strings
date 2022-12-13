@@ -102,3 +102,6 @@
 "No available options" = "Aucune option disponible";
 "Hold on, your comment is waiting for approval." = "Merci de patienter, votre commentaire est en attente d'approbation.";
 "Your comment is waiting for approval due to the site’s policy." = "Votre commentaire est en attente d'approbation en raison de la politique du site.";
+"Mute" = "Son désactivé";
+"Mute User" = "Utilisateur muet";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "Le fait de couper le son de cet utilisateur ne vous permettra pas de voir les actions qu'il a effectuées. Pour annuler ou gérer les utilisateurs muets, allez dans les paramètres de votre profil";
