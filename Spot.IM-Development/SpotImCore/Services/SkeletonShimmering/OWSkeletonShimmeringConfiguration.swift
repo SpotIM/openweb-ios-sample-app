@@ -12,8 +12,8 @@ import UIKit
 struct OWSkeletonShimmeringConfiguration {
     var shimmeringDirection: OWShimmeringDirection
     let duration: Int // In milliseconds
-    let backgroundColor: UIColor
-    let highlightColor: UIColor
+    let backgroundColor: OWColor.OWType
+    let highlightColor: OWColor.OWType
     
     mutating func direction(_ direction: OWShimmeringDirection) {
         shimmeringDirection = direction
@@ -22,15 +22,10 @@ struct OWSkeletonShimmeringConfiguration {
 
 extension OWSkeletonShimmeringConfiguration {
     static let `default`: OWSkeletonShimmeringConfiguration = {
-        let currentStyle = OWSharedServicesProvider.shared.themeStyleService().currentStyle
-        let skeletonColor = OWColorPalette.shared.color(type: .skeletonColor,
-                                                       themeStyle: currentStyle)
-        let shimmeringColor = OWColorPalette.shared.color(type: .skeletonShimmeringColor,
-                                                       themeStyle: currentStyle)
         let config = OWSkeletonShimmeringConfiguration(shimmeringDirection: .rightToLeft,
                                           duration: 1000,
-                                          backgroundColor: skeletonColor,
-                                          highlightColor: shimmeringColor)
+                                          backgroundColor: .skeletonColor,
+                                          highlightColor: .skeletonShimmeringColor)
         return config
     }()
     
