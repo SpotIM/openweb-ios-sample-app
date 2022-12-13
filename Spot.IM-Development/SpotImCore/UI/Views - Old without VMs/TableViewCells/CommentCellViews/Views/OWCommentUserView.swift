@@ -33,19 +33,6 @@ final class OWCommentUserView: OWBaseView {
         
         setupViews()
     }
-     // TODO: empty init + configure should be deleted once refactor is done
-    init(viewModel: OWCommentUserViewModeling) {
-        super.init(frame: .zero)
-        setupViews()
-        self.viewModel = viewModel
-        
-        avatarImageView.configure(with: viewModel.outputs.avatarVM)
-        userNameView.configure(with: viewModel.outputs.userNameVM)
-        
-        userNameView.OWSnp.updateConstraints { make in
-            make.height.equalTo(44.0)
-        }
-    }
     
     func configure(with model: CommentViewModel) {
         self.viewModel = model.commentUserVM
