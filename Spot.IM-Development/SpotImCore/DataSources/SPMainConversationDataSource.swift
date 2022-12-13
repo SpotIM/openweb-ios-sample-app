@@ -22,7 +22,7 @@ internal protocol SPMainConversationDataSourceDelegate: NSObjectProtocol {
     
 }
 
-typealias CommentActionAvailability = (isDeletable: Bool, isEditable: Bool, isReportable: Bool, isShareable: Bool)
+typealias CommentActionAvailability = (isDeletable: Bool, isEditable: Bool, isReportable: Bool, isMuteable: Bool, isShareable: Bool)
 typealias DeletedIndexPathsInfo = (indexPathes: [IndexPath], shouldRemoveSection: Bool)
 
 internal final class SPMainConversationDataSource {
@@ -672,6 +672,21 @@ internal final class SPMainConversationDataSource {
         }
         return nil
     }
+    
+    func indexPathsOfComments(for userId: String) -> [IndexPath] {
+        var indexPaths = [IndexPath]()
+        for sectionIndex in 0..<cellData.count {
+            let sectionData = cellData[sectionIndex]
+            for rawIndex in 0..<sectionData.count {
+                let commentVM = sectionData[rawIndex]
+                if commentVM.authorId == userId {
+                    let indexPath = IndexPath(row: rawIndex, section: sectionIndex)
+                    indexPaths.append(indexPath)
+                }
+            }
+        }
+        return indexPaths
+    }
 
     // the index of row if the structure was flat
     // so if there are two sections with two rows each, the row [1, 1] absolute index is 3
@@ -739,7 +754,7 @@ extension SPMainConversationDataSource {
         
         handleDeletedCommentReplies(commentId: id, sectionIndexPath: indexPath)
         if isSoft {
-            (cellData[indexPath.section])[indexPath.row].setIsDeleted(isDeleted: true)
+            (cellData[indexPath.section])[indexPath.row].setIsDeleted(true)
             delegate?.reload(shouldBeScrolledToTop: false)
         } else {
             let removeSection = (indexPath.row == 0 && isCascade) || cellData[indexPath.section].count == 1
@@ -957,5 +972,18 @@ extension SPMainConversationDataSource {
         }
         let processedComments = self.processed(sortedComments)
         self.cellData.insert(contentsOf: processedComments, at: self.shouldShowBanner ? 1 : 0)
+    }
+    
+    func muteComment(userId: String) {
+        let indexPaths = indexPathsOfComments(for: userId)
+        guard !indexPaths.isEmpty else { return }
+        
+        for indexPath in indexPaths {
+            var commentVM = cellData[indexPath.section][indexPath.row]
+            commentVM.setIsMuted(true)
+            cellData[indexPath.section][indexPath.row] = commentVM
+        }
+        
+        delegate?.reload(shouldBeScrolledToTop: false)
     }
 }
