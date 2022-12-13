@@ -20,6 +20,8 @@ final class OWCommentHeaderView: UIView {
         static let badgeLeadingPadding: CGFloat = 4
         static let subtitleTopPadding: CGFloat = 6
         static let optionButtonSize: CGFloat = 44
+        static let badgeHorizontalInset: CGFloat = 4
+        static let badgeVerticalInset: CGFloat = 2
         
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -44,11 +46,13 @@ final class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
     }()
     fileprivate lazy var badgeTagLabel: UILabel = {
-        return UILabel()
+        let label: OWBaseLabel = OWBaseLabel()
             .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
             .border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .corner(radius: 3)
-            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)) as! OWBaseLabel
+        label.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
+        return label
             // TODO: inset!
     }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
