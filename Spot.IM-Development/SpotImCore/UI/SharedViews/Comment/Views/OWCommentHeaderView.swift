@@ -39,7 +39,10 @@ final class OWCommentHeaderView: UIView {
     fileprivate var viewModel: OWCommentHeaderViewModeling!
     fileprivate var disposeBag: DisposeBag!
         
-    fileprivate let avatarImageView: SPAvatarView = SPAvatarView()
+    fileprivate lazy var avatarImageView: SPAvatarView = {
+        return SPAvatarView()
+            .backgroundColor(.clear)
+    }()
     fileprivate lazy var userNameLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)

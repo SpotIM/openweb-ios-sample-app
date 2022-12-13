@@ -123,7 +123,7 @@ class OWPreConversationView: UIView {
 fileprivate extension OWPreConversationView {
     func setupViews() {
         // TODO: Testing, remove later and use the commented code below
-        self.backgroundColor = .purple
+//        self.backgroundColor = .purple
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.initialHeight)
         }
