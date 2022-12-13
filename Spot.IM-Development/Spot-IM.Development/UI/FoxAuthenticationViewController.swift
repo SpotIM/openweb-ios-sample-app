@@ -20,7 +20,7 @@ class FoxAuthenticationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
+        self.shouldPresentFullConInNewNavStack = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack, defaultValue: false)
         title = "Authentication"
     }
     
