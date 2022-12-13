@@ -21,7 +21,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
     var avatarVM: OWAvatarViewModeling { get }
     
-    var shouldShowDeletedOrReportedMessage: Observable<Bool> { get }
+    var shouldShowHiddenCommentMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
     var nameTextStyle: Observable<SPFontStyle> { get }
     var subtitleText: Observable<String> { get }
@@ -151,7 +151,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         }
     }
     
-    var shouldShowDeletedOrReportedMessage: Observable<Bool> {
+    var shouldShowHiddenCommentMessage: Observable<Bool> {
         hiddenCommentReasonText
             .map { !$0.isEmpty }
     }
@@ -165,10 +165,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         tapMore
             .asObservable()
     }
-    
-//    func configure(with model: CommentViewModel) {
-//        _model.onNext(model)
-//    }
 }
 
 fileprivate extension OWCommentHeaderViewModel {
