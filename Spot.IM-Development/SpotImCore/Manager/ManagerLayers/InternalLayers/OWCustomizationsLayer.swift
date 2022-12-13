@@ -49,6 +49,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
         set(newEnforcement) {
             _themeEnforcement = newEnforcement
+            OWSharedServicesProvider.shared.themeStyleService().setEnforcement(enforcement: _themeEnforcement)
         }
     }
     

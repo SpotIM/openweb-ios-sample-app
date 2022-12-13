@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWConversationView: UIView {
+class OWConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         
     }
@@ -61,6 +61,8 @@ class OWConversationView: UIView {
 
 fileprivate extension OWConversationView {
     func setupViews() {
+        self.useAsThemeStyleInjector()
+        
         // After building the other views, position the table view in the appropriate place
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in

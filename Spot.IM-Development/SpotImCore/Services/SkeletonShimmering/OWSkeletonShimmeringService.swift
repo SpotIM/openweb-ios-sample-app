@@ -19,25 +19,37 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
     fileprivate let config: OWSkeletonShimmeringConfiguration
     fileprivate let scheduler: SchedulerType
     fileprivate var weakViews: [OWWeakEncapsulation<UIView>] = []
-    fileprivate var disposeBag: DisposeBag!
+    fileprivate var serviceDisposeBag: DisposeBag!
+    fileprivate let generalDisposeBag = DisposeBag()
     fileprivate let isServiceRunning = BehaviorSubject<Bool>(value: false)
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
     
     fileprivate struct Metrics {
         static var animationKey = "transform.translation.x"
     }
     
     init(config: OWSkeletonShimmeringConfiguration,
-         scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKSkeletonShimmeringServiceQueue")) {
+         scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKSkeletonShimmeringServiceQueue"),
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.config = config
         self.scheduler = scheduler
+        self.servicesProvider = servicesProvider
+        
+        setupObservers()
     }
     
     func addSkeleton(to view: UIView) {
         guard let skeletonLayer = view.getSkeletonLayer(),
               let shimmeringLayer = view.getShimmeringLayer() else { return }
         
-        skeletonLayer.backgroundColor = config.backgroundColor.cgColor
-        shimmeringLayer.colors = [config.backgroundColor.cgColor, config.highlightColor.cgColor, config.backgroundColor.cgColor]
+        let currentStyle = servicesProvider.themeStyleService().currentStyle
+        let backgroundColor = OWColorPalette.shared.color(type: config.backgroundColor,
+                                                          themeStyle: currentStyle)
+        let highlightColor = OWColorPalette.shared.color(type: config.highlightColor,
+                                                         themeStyle: currentStyle)
+        
+        skeletonLayer.backgroundColor = backgroundColor.cgColor
+        shimmeringLayer.colors = [backgroundColor.cgColor, highlightColor.cgColor, backgroundColor.cgColor]
         shimmeringLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         shimmeringLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         
@@ -56,10 +68,10 @@ class OWSkeletonShimmeringService: OWSkeletonShimmeringServicing {
     }
     
     func removeSkeleton(from view: UIView) {
-         guard let weakViewIndex = weakViews.firstIndex(where: { weakView in
+        guard let weakViewIndex = weakViews.firstIndex(where: { weakView in
             guard let aView = weakView.value() else { return false }
             return aView === view
-         }) else { return }
+        }) else { return }
         
         weakViews.remove(at: weakViewIndex)
         
@@ -94,13 +106,13 @@ fileprivate extension OWSkeletonShimmeringService {
             .observe(on: scheduler)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                self.disposeBag = nil // Cancel existing run of the service
+                self.serviceDisposeBag = nil // Cancel existing run of the service
                 self.isServiceRunning.onNext(false)
             })
     }
     
     func startService() {
-        disposeBag = DisposeBag()
+        serviceDisposeBag = DisposeBag()
         
         Observable<Int>
             .interval(.milliseconds(config.duration), scheduler: scheduler)
@@ -115,7 +127,7 @@ fileprivate extension OWSkeletonShimmeringService {
                 self.weakViews.forEach { weakView in
                     guard let skeletonShimmeringView = weakView.value(),
                           let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
-
+                    
                     let animation = CABasicAnimation(keyPath: Metrics.animationKey)
                     animation.duration = CFTimeInterval(self.config.duration / 1000) // Convert to seconds
                     let viewWidth = skeletonShimmeringView.frame.width
@@ -127,6 +139,28 @@ fileprivate extension OWSkeletonShimmeringService {
                     shimmeringLayer.add(animation, forKey: OWAssociatedSkeletonShimmering.shimmeringLayerAnimationIdentifier)
                 }
             })
-            .disposed(by: disposeBag)
+            .disposed(by: serviceDisposeBag)
+    }
+    
+    func setupObservers() {
+        servicesProvider.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] style in
+                guard let self = self else { return }
+                let backgroundColor = OWColorPalette.shared.color(type: self.config.backgroundColor,
+                                                                  themeStyle: style)
+                let highlightColor = OWColorPalette.shared.color(type: self.config.highlightColor,
+                                                                 themeStyle: style)
+                
+                self.weakViews.forEach { weakView in
+                    guard let skeletonShimmeringView = weakView.value(),
+                          let skeletonLayer = skeletonShimmeringView.getSkeletonLayer(),
+                          let shimmeringLayer = skeletonShimmeringView.getShimmeringLayer() else { return }
+                    
+                    skeletonLayer.backgroundColor = backgroundColor.cgColor
+                    shimmeringLayer.colors = [backgroundColor.cgColor, highlightColor.cgColor, backgroundColor.cgColor]
+                }
+            })
+            .disposed(by: generalDisposeBag)
     }
 }

@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationView: UIView {
+class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let bannerViewMargin: CGFloat = 40
         static let whatYouThinkHeight: CGFloat = 64
@@ -123,6 +123,9 @@ fileprivate extension OWPreConversationView {
     func setupViews() {
         // TODO: Testing, remove later and use the commented code below
         self.backgroundColor = .purple
+        
+        self.useAsThemeStyleInjector()
+        
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.initialHeight)
         }
@@ -248,17 +251,4 @@ fileprivate extension OWPreConversationView {
             self.layoutIfNeeded()
         }
     }
-//    TODO: Remove comment for updating light/dark mode (For debug testing)
-//    internal override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-//            super.traitCollectionDidChange(previousTraitCollection)
-//            let state = UIApplication.shared.applicationState
-//            if #available(iOS 12.0, *) {
-//                if previousTraitCollection?.userInterfaceStyle != self.traitCollection.userInterfaceStyle {
-//                    // traitCollectionDidChange() is called multiple times, see: https://stackoverflow.com/a/63380259/583425
-//                    if state != .background {
-//                        OWSharedServicesProvider.shared.themeStyleService().setStyle(style: self.traitCollection.userInterfaceStyle == .dark ? OWThemeStyle.dark : OWThemeStyle.light)
-//                    }
-//                }
-//            }
-//    }
 }
