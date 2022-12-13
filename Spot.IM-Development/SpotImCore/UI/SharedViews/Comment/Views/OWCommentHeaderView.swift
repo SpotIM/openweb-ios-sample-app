@@ -31,7 +31,7 @@ final class OWCommentHeaderView: UIView {
         static let badgeTagLabelIdentifier = "comment_header_user_badge_tag_label_id"
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
         static let dateLabelIdentifier = "comment_header_date_label_id"
-//        static let moreButtonIdentifier = "user_name_view_more_button_id"
+        static let optionButtonIdentifier = "comment_header_option_button_id"
         
 //        static let deletedMessageLabelIdentifier = "user_name_view_deleted_message_label_id"
     }
@@ -106,13 +106,6 @@ final class OWCommentHeaderView: UIView {
               let vm = self.viewModel
         else { return }
 //        vm.inputs.setDelegate(delegate)
-    }
-    
-    // Handle dark mode \ light mode change
-    func updateColorsAccordingToStyle() {
-        backgroundColor = .spBackground0
-//        userNameView.updateColorsAccordingToStyle()
-        avatarImageView.updateColorsAccordingToStyle()
     }
 }
 
@@ -191,6 +184,14 @@ fileprivate extension OWCommentHeaderView {
             .bind(to: dateLabel.rx.text)
             .disposed(by: disposeBag)
         
+        optionButton.rx.tap.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            self.viewModel.inputs.tapMore.onNext(self.optionButton)
+            // TODO: handle tap!
+        }).disposed(by: disposeBag)
+        
+        
+        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -210,13 +211,15 @@ extension OWCommentHeaderView {
         badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
+        optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
+        optionButton.accessibilityTraits = .button
+        optionButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
         
-//        moreButton.accessibilityIdentifier = Metrics.moreButtonIdentifier
+//
         
 //        hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
         
 //
-//        moreButton.accessibilityTraits = .button
-//        moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
+
     }
 }
