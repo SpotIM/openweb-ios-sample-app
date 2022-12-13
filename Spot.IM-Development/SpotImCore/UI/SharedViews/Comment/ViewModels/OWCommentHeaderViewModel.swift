@@ -132,29 +132,28 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             }
     }
     
-    // TODO: !!
     var hiddenCommentReasonText: Observable<String> {
-        _model
-            .unwrap()
-            .map { model in
-                guard model.deleted else { return "" }
-                let localizationKey: String
-//                if (model.isCommentAuthorMuted) {
-//                    localizationKey = "This user is muted."
-//                } else if (model.isReported) {
-//                    localizationKey = "This message was reported."
-//                } else {
-                    localizationKey = "This message was deleted."
-//                }
-                // TODO
-                return LocalizationManager.localizedString(key: localizationKey)
+        Observable.combineLatest(_model, _user) { model, user in
+                guard let model = model,
+                      let user = user else { return "" }
+            let localizationKey: String
+            if user.isMuted {
+                localizationKey = "This user is muted."
+            } else if let id = model.id,
+                      let _ = SPUserSessionHolder.session.reportedComments[id] { // TODO: is reported - should be in new infra?
+                localizationKey = "This message was reported."
+            } else if model.deleted {
+                localizationKey = "This message was deleted."
+            } else {
+                return "This message was deleted."
             }
+            return LocalizationManager.localizedString(key: localizationKey)
+        }
     }
     
     var shouldShowDeletedOrReportedMessage: Observable<Bool> {
-        _model
-            .unwrap()
-            .map { $0.deleted } // TODO!!
+        hiddenCommentReasonText
+            .map { !$0.isEmpty }
     }
     
     var userNameTapped: Observable<Void> {
@@ -172,9 +171,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 //    }
 }
 
-extension OWCommentHeaderViewModel {
-    // TODO!!
-    private func getUserBadgeUsingConfig(user: SPUser, conversationConfig: SPConfigurationConversation) -> String? {
+fileprivate extension OWCommentHeaderViewModel {
+    func getUserBadgeUsingConfig(user: SPUser, conversationConfig: SPConfigurationConversation) -> String? {
         guard user.isStaff else { return nil }
         
         if let translations = conversationConfig.translationTextOverrides,
@@ -192,5 +190,4 @@ extension OWCommentHeaderViewModel {
         }
         return user.authorityTitle
     }
-
 }

@@ -29,8 +29,7 @@ final class OWCommentHeaderView: UIView {
         static let subscriberBadgeViewIdentifier = "comment_header_user_subscriber_badge_view_id"
         static let dateLabelIdentifier = "comment_header_date_label_id"
         static let optionButtonIdentifier = "comment_header_option_button_id"
-        
-//        static let deletedMessageLabelIdentifier = "user_name_view_deleted_message_label_id"
+        static let hiddenMessageLabelIdentifier = "comment_header_hidden_message_label_id"
     }
     
     fileprivate var viewModel: OWCommentHeaderViewModeling!
@@ -53,7 +52,6 @@ final class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)) as! OWBaseLabel
         label.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
         return label
-            // TODO: inset!
     }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
         return OWUserSubscriberBadgeView()
@@ -75,6 +73,13 @@ final class OWCommentHeaderView: UIView {
         return UIButton()
             .image(image, state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8))
+    }()
+    private lazy var hiddenCommentReasonLabel: UILabel = {
+        return UILabel()
+            .isHidden(true)
+            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .font(.preferred(style: .italic, of: 17))
+            .lineSpacing(3.5)
     }()
 
     override init(frame: CGRect) {
@@ -107,7 +112,7 @@ final class OWCommentHeaderView: UIView {
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
-        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel, dateLabel, optionButton)
+        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel, dateLabel, optionButton, hiddenCommentReasonLabel)
         
         // Setup avatar
         avatarImageView.OWSnp.makeConstraints { make in
@@ -134,7 +139,6 @@ fileprivate extension OWCommentHeaderView {
         subtitleLabel.OWSnp.makeConstraints { make in
             make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
             make.leading.equalTo(userNameLabel)
-//            make.trailing.equalTo(dateLabel.OWSnp.leading)
         }
         
         dateLabel.OWSnp.makeConstraints { make in
@@ -147,6 +151,12 @@ fileprivate extension OWCommentHeaderView {
             make.size.equalTo(Metrics.optionButtonSize)
             make.centerY.equalTo(userNameLabel)
             make.trailing.equalToSuperview()
+        }
+        
+        hiddenCommentReasonLabel.OWSnp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.centerY.equalTo(avatarImageView.OWSnp.centerY)
+            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(Metrics.avatarImageViewTrailingOffset)
         }
     }
     
@@ -186,6 +196,22 @@ fileprivate extension OWCommentHeaderView {
             // TODO: handle tap!
         }).disposed(by: disposeBag)
         
+        viewModel.outputs.hiddenCommentReasonText
+            .bind(to: hiddenCommentReasonLabel.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldShowDeletedOrReportedMessage
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self = self else { return }
+                self.dateLabel.isHidden = shouldShow
+                self.optionButton.isHidden = shouldShow
+                self.subscriberBadgeView.isHidden = shouldShow
+                self.userNameLabel.isHidden = shouldShow
+                self.badgeTagLabel.isHidden = shouldShow
+                self.subtitleLabel.isHidden = shouldShow
+                
+                self.hiddenCommentReasonLabel.isHidden = !shouldShow
+            }).disposed(by: disposeBag)
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -209,12 +235,6 @@ extension OWCommentHeaderView {
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
         optionButton.accessibilityTraits = .button
         optionButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
-        
-//
-        
-//        hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
-        
-//
-
+        hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.hiddenMessageLabelIdentifier
     }
 }
