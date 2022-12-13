@@ -24,6 +24,7 @@ final class OWCommentHeaderView: UIView {
         static let badgeLabelFontSize: CGFloat = 12.0
         static let badgeLeadingPadding: CGFloat = 4
         static let subtitleTopPadding: CGFloat = 6
+        static let optionButtonSize: CGFloat = 44
         
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -66,6 +67,12 @@ final class OWCommentHeaderView: UIView {
             .font(.preferred(style: .medium, of: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
             .userInteractionEnabled(false)
+    }()
+    fileprivate lazy var optionButton: UIButton = {
+        let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
+        return UIButton()
+            .image(image, state: .normal)
+            .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8))
     }()
 
     override init(frame: CGRect) {
@@ -111,7 +118,7 @@ final class OWCommentHeaderView: UIView {
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
-        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel, dateLabel)
+        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel, dateLabel, optionButton)
         
         // Setup avatar
         avatarImageView.OWSnp.makeConstraints { make in
@@ -144,7 +151,13 @@ fileprivate extension OWCommentHeaderView {
         dateLabel.OWSnp.makeConstraints { make in
             make.top.equalTo(subtitleLabel)
             make.leading.equalTo(subtitleLabel.OWSnp.trailing)
-//            make.trailing.lessThanOrEqualTo(moreButton.OWSnp.leading)
+            make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
+        }
+        
+        optionButton.OWSnp.makeConstraints { make in
+            make.size.equalTo(Metrics.optionButtonSize)
+            make.centerY.equalTo(userNameLabel)
+            make.trailing.equalToSuperview()
         }
     }
     
