@@ -10,9 +10,7 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-protocol OWCommentHeaderViewModelingInputs {
-//    func configure(with model: CommentViewModel)
-    
+protocol OWCommentHeaderViewModelingInputs {    
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }

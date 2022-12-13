@@ -102,27 +102,18 @@ final class OWCommentHeaderView: UIView {
         prepareForReuse()
         setupObservers()
     }
-    
-//    func setDelegate(_ delegate: SPCommentCellDelegate?) {
-//        guard let delegate = delegate,
-//              let vm = self.viewModel
-//        else { return }
-////        vm.inputs.setDelegate(delegate)
-//    }
 }
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
         addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel, dateLabel, optionButton, hiddenCommentReasonLabel)
         
-        // Setup avatar
         avatarImageView.OWSnp.makeConstraints { make in
             make.leading.top.equalToSuperview()
             make.trailing.equalTo(userNameLabel.OWSnp.leading).offset(-Metrics.avatarImageViewTrailingOffset)
             make.size.equalTo(Metrics.avatarSideSize)
         }
         
-        // Setup user name view
         userNameLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
         }
