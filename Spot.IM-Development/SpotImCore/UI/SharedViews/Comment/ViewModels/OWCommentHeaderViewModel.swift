@@ -92,13 +92,21 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             })
     }
     
-    var badgeTitle: Observable<String> {
-        _user
+    
+    fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
+        OWSharedServicesProvider.shared.spotConfigurationService()
+            .config(spotId: OWManager.manager.spotId)
+            .map { config -> SPConfigurationConversation? in
+                return config.conversation
+            }
             .unwrap()
-            .map({ [weak self] user -> String in
-                guard let self = self else { return "" }
-                return self.getUserBadgeUsingConfig(user: user)?.uppercased() ?? ""
-            })
+    }
+    var badgeTitle: Observable<String> {
+        Observable.combineLatest(_user, conversationConfig) { [weak self] user, conversationConfig in
+                guard let self = self,
+                      let user = user else { return "" }
+            return self.getUserBadgeUsingConfig(user: user, conversationConfig: conversationConfig)?.uppercased() ?? ""
+        }
     }
     
     var nameText: Observable<String> {
@@ -124,11 +132,12 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             }
     }
     
+    // TODO: !!
     var hiddenCommentReasonText: Observable<String> {
         _model
             .unwrap()
             .map { model in
-                guard model.deleted else { return "" } // TODO!!!!
+                guard model.deleted else { return "" }
                 let localizationKey: String
 //                if (model.isCommentAuthorMuted) {
 //                    localizationKey = "This user is muted."
@@ -165,11 +174,10 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
 extension OWCommentHeaderViewModel {
     // TODO!!
-    private func getUserBadgeUsingConfig(user: SPUser) -> String? {
+    private func getUserBadgeUsingConfig(user: SPUser, conversationConfig: SPConfigurationConversation) -> String? {
         guard user.isStaff else { return nil }
         
-        if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
-           let translations = conversationConfig.translationTextOverrides,
+        if let translations = conversationConfig.translationTextOverrides,
            let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
         {
             if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {

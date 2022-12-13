@@ -187,7 +187,6 @@ fileprivate extension OWCommentHeaderView {
         }).disposed(by: disposeBag)
         
         
-        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
