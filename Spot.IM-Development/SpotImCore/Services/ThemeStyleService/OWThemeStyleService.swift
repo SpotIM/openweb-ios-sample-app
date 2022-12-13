@@ -16,6 +16,7 @@ import Foundation
 import RxSwift
 
 protocol OWThemeStyleServicing {
+    func setEnforcement(enforcement: OWThemeStyleEnforcement)
     func setStyle(style: OWThemeStyle)
     var style: Observable<OWThemeStyle> { get }
     var currentStyle: OWThemeStyle { get } // Non RX way to retrieve the current style as sometimes it might be required
@@ -24,19 +25,32 @@ protocol OWThemeStyleServicing {
 class OWThemeStyleService: OWThemeStyleServicing {
     fileprivate let _style = BehaviorSubject<OWThemeStyle>(value: .light)
     fileprivate var _currentStyle: OWThemeStyle = .light
+    fileprivate var _enforcement: OWThemeStyleEnforcement = .none
     fileprivate let disposeBag = DisposeBag()
-    
+   
     init() {
         setupObservers()
     }
     
+    func setEnforcement(enforcement: OWThemeStyleEnforcement) {
+        _enforcement = enforcement
+        
+        if case let OWThemeStyleEnforcement.theme(style) = enforcement {
+            _style.onNext(style)
+        }
+    }
+    
     func setStyle(style: OWThemeStyle) {
-        _style.onNext(style)
+        // No need to log anything in case the enforcement is not none, as it's very common that traitCollection will change but we will not actually change the style
+        if _enforcement == .none {
+            _style.onNext(style)
+        }
     }
     
     lazy var style: Observable<OWThemeStyle> = {
         return _style
             .asObservable()
+            .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
             .share(replay: 1)
     }()
@@ -48,8 +62,7 @@ class OWThemeStyleService: OWThemeStyleServicing {
 
 fileprivate extension OWThemeStyleService {
     func setupObservers() {
-        _style
-            .asObservable()
+        style
             .subscribe(onNext: { [weak self] themeStyle in
                 self?._currentStyle = themeStyle
             })

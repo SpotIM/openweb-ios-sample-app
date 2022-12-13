@@ -916,6 +916,8 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         case .share(let commentId, let replyingToID):
             showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
             break
+        case .mute(let userId):
+            showCommentMuteFlow(userId)
         }
     }
     
@@ -976,6 +978,31 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             message: LocalizationManager.localizedString(key: "Reporting this comment will send it for review and hide it from your view"),
             actions: [noAction, yesAction])
         SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
+    }
+    
+    private func showCommentMuteFlow(_ userId: String) {
+        let muteAction = UIAlertAction(
+            title: LocalizationManager.localizedString(key: "Mute"),
+            style: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+                self.showLoader()
+                self.model.muteComment(with: userId) { error in
+                    self.hideLoader()
+                    if let error = error {
+                        self.showAlert(
+                            title: LocalizationManager.localizedString(key: "Oops..."),
+                            message: error.localizedDescription
+                        )
+                    }
+                }
+        }
+        
+        let cancelAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
+                                     style: .default)
+        showAlert(
+            title: LocalizationManager.localizedString(key: "Mute User"),
+            message: LocalizationManager.localizedString(key: "Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings"),
+            actions: [muteAction, cancelAction])
     }
     
     private func showCommentShareFlow(_ commentId: String, sender: OWUISource, replyingToID: String?) {

@@ -13,6 +13,7 @@ typealias SuccessHandler = () -> Void
 typealias CommentHandler = (SPComment) -> Void
 typealias DeleteCommentHandler = (SPCommentDelete) -> Void
 typealias ShareCommentHandler = (URL?) -> Void
+typealias MuteCommentHandler = () -> Void
 typealias ErrorHandler = (Error) -> Void
 
 internal protocol SPCommentUpdater {
@@ -31,6 +32,9 @@ internal protocol SPCommentUpdater {
     
     func editComment(parameters: [String: Any], postId: String,
                      success: @escaping CommentHandler, failure: @escaping ErrorHandler)
+    
+    func muteComment(parameters: [String: Any], postId: String,
+                      success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler)
     
     func shareComment(parameters: [String: Any], postId: String,
                       success: @escaping ShareCommentHandler, failure: @escaping ErrorHandler)
@@ -185,6 +189,32 @@ internal final class SPCommentFacade: SPCommentUpdater {
                            headers: headers) { (result, response) in
                             switch result {
                             case .success:
+                                success()
+                            case .failure(_):
+                                failure(SPNetworkError.default)
+                            }
+        }
+    }
+    
+    func muteComment(parameters: [String : Any], postId: String, success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler) {
+        guard let spotKey = SPClientSettings.main.spotKey
+            else {
+                failure(SPNetworkError.custom("Please provide Spot Key"))
+                return
+        }
+        
+        let request = OWMuteRequest.mute
+        let headers = HTTPHeaders.basic(with: spotKey,
+                                        postId: postId)
+        
+        apiManager.execute(request: request,
+                           parameters: parameters,
+                           encoding: APIConstants.encoding,
+                           parser: OWEmptyParser(),
+                           headers: headers) { (result, response) in
+            
+                            switch result {
+                            case .success(_):
                                 success()
                             case .failure(_):
                                 failure(SPNetworkError.default)
