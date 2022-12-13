@@ -52,7 +52,6 @@
 "Comment reported successfully" = "Comment reported successfully";
 "Reporting this comment will send it for review and hide it from your view" = "Reporting this comment will send it for review and hide it from your view";
 "Copy Comment to Clipboard" = "Copy Comment to Clipboard";
-"Your comment has been rejected" = "Your comment has been rejected";
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "It seems like your comment has violated our policy. We recommend you try again with different phrasing.";
 "Got it" = "Got it";
 "Be the first to comment" = "Be the first to comment";
@@ -100,7 +99,7 @@
 "Edit a Comment" = "Edit a Comment";
 "Edit a comment" = "Edit a comment";
 "Recommend" = "Recommend";
-"Your comment has been rejected." = "Your comment has been rejected.";
+"This comment violated our policy." = "This comment violated our policy.";
 "Hold on, your comment is waiting for approval." = "Hold on, your comment is waiting for approval.";
 "Your comment is waiting for approval due to the site’s policy." = "Your comment is waiting for approval due to the site’s policy.";
 "No available options" = "No available options";
