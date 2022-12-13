@@ -13,11 +13,6 @@ import RxCocoa
 final class OWCommentHeaderView: UIView {
     
     fileprivate struct Metrics {
-        static let topOffset: CGFloat = 14.0
-        static let topCollapsedOffset: CGFloat = 38.0
-        static let leadingOffset: CGFloat = 16.0
-        static let userViewHeight: CGFloat = 44.0
-        static let userViewExpandedHeight: CGFloat = 69.0
         static let avatarSideSize: CGFloat = 39.0
         static let avatarImageViewTrailingOffset: CGFloat = 11.0
         static let fontSize: CGFloat = 16.0
@@ -51,9 +46,9 @@ final class OWCommentHeaderView: UIView {
     fileprivate lazy var badgeTagLabel: UILabel = {
         return UILabel()
             .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
-            .border(width: 1, color: .brandColor)
+            .border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .corner(radius: 3)
-            .textColor(.brandColor)
+            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             // TODO: inset!
     }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
@@ -96,12 +91,6 @@ final class OWCommentHeaderView: UIView {
         
         disposeBag = DisposeBag()
         setupObservers()
-//        userNameView.configure(with: viewModel.outputs.userNameVM)
-
-//        let userViewHeight = model.usernameViewHeight()
-//        userNameView.OWSnp.updateConstraints { make in
-//            make.height.equalTo(userViewHeight)
-//        }
     }
     
     func setDelegate(_ delegate: SPCommentCellDelegate?) {
