@@ -55,13 +55,6 @@ class OWUserNameViewModel: OWUserNameViewModeling,
         }
     }
     
-    init(user: SPUser?, model: CommentViewModel) {
-        if let user = user {
-            subscriberBadgeVM.inputs.configureUser(user: user)
-        }
-        _model.onNext(model)
-    }
-    
     var tapUserName = PublishSubject<Void>()
     var tapMore = PublishSubject<OWUISource>()
     
