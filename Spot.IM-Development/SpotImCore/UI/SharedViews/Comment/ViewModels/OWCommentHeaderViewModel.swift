@@ -52,12 +52,15 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     
+    fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
+    
     // TODO: image provider
-    init(user: SPUser, model: SPComment, imageProvider: SPImageProvider? = nil) {
+    init(user: SPUser, replyTo: SPUser?, model: SPComment, imageProvider: SPImageProvider? = nil) {
         avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         subscriberBadgeVM.inputs.configureUser(user: user)
         _model.onNext(model)
         _user.onNext(user)
+        _replyToUser.onNext(replyTo)
     }
     
     let avatarVM: OWAvatarViewModeling
@@ -68,10 +71,10 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
     
     var subtitleText: Observable<String> {
-        _model
+        _replyToUser
             .unwrap()
-            .map({ model -> String? in
-                return "model.replyingToDisplayName"  // TODO
+            .map({ user -> String? in
+                return user.displayName
             })
             .unwrap()
             .map({ $0.isEmpty ? ""
@@ -85,8 +88,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .map({ model in
                 guard let writtenAt = model.writtenAt else { return ""}
                 let timestamp = Date(timeIntervalSince1970: writtenAt).timeAgo()
-                return ("model.replyingToDisplayName?".isEmpty ?? true) // TODO
-                    ? timestamp : " · ".appending(timestamp)
+                return model.isReply ? " · ".appending(timestamp) : timestamp
             })
     }
     
