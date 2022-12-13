@@ -28,18 +28,20 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
     
     fileprivate var comment: SPComment? = nil
     fileprivate var user: SPUser? = nil
+    fileprivate var replyTo: SPUser? = nil
     
     var commentVM: OWCommentViewModeling {
         if let comment = comment, let user = user {
-            return OWCommentViewModel(comment: comment, user: user)
+            return OWCommentViewModel(comment: comment, user: user, replyTo: replyTo)
         } else {
             return OWCommentViewModel()
         }
     }
     
-    init(comment: SPComment, user: SPUser?) {
+    init(comment: SPComment, user: SPUser?, replyTo: SPUser?) {
         self.comment = comment
         self.user = user
+        self.replyTo = replyTo
     }
     
     init() {}
