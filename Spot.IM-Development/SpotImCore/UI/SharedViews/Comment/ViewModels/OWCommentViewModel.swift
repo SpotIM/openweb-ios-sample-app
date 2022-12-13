@@ -53,9 +53,9 @@ class OWCommentViewModel: OWCommentViewModeling,
     
     var commentHeaderVM: OWCommentHeaderViewModeling? = nil // TODO!!! should not be optional
     
-    init(comment: SPComment, user: SPUser) {
+    init(comment: SPComment, user: SPUser, replyTo: SPUser?) {
         commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
-        commentHeaderVM = OWCommentHeaderViewModel(user: user, model: comment)
+        commentHeaderVM = OWCommentHeaderViewModel(user: user, replyTo: replyTo, model: comment)
     }
     
     // TODO: DELETE!

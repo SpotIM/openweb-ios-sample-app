@@ -164,7 +164,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         guard let comments = response.conversation?.comments else { return nil }
                         var viewModels = [OWPreConversationCellOption]()
                         for comment in comments.prefix(self.numberOfMessagesToShow) {
-                            let vm = OWCommentCellViewModel(comment: comment, user: response.conversation?.users?[comment.userId ?? ""])
+                            // TODO: replies
+                            let vm = OWCommentCellViewModel(comment: comment, user: response.conversation?.users?[comment.userId ?? ""], replyTo: nil)
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                         }
                         self._cellsViewModels.removeAll()
