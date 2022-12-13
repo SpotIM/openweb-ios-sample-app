@@ -143,7 +143,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             } else if model.deleted {
                 localizationKey = "This message was deleted."
             } else {
-                return "This message was deleted."
+                return ""
             }
             return LocalizationManager.localizedString(key: localizationKey)
         }
