@@ -1038,7 +1038,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         let gotItAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Got it"),
                                         style: .default)
         showAlert(
-            title: LocalizationManager.localizedString(key: "Your comment has been rejected"),
+            title: LocalizationManager.localizedString(key: "This comment violated our policy."),
             message: LocalizationManager.localizedString(key: "It seems like your comment has violated our policy. We recommend you try again with different phrasing."),
             actions: [copyAction, gotItAction]
         )

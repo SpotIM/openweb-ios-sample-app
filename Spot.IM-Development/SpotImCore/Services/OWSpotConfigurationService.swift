@@ -37,6 +37,7 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
             return .just(cacheConfig)
         } else {
             return isCurrentlyFetching
+                .take(1)
                 .flatMap { [weak self] isFetching -> Observable<SPSpotConfiguration> in
                     guard let self = self else { return .empty() }
                     if !isFetching {
@@ -80,6 +81,7 @@ fileprivate extension OWSpotConfigurationService {
                         guard let self = self else { return  }
                         self.isCurrentlyFetching.onNext(false)
                         self._configWhichJustFetched.onNext(config)
+                        self.cacheConfigService[spotId] = config
                     }, onError: {[weak self] error in
                         guard let self = self else { return  }
                         self.isCurrentlyFetching.onNext(false)

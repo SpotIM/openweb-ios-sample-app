@@ -51,7 +51,6 @@
 "Comment reported successfully" = "تم الابلاغ عن التعليق بنجاح";
 "Reporting this comment will send it for review and hide it from your view" = "الابلاغ عن هذا التعليق سيتم ارساله الى المدير واخفاء التعليق من التعليقات لديك.";
 "Copy Comment to Clipboard" = "نسخ التعليق";
-"Your comment has been rejected" = "نشر التعليق قد رفض";
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "يبدو أن التعليق الذي كتبته ينتهك سياستنا.  نوصي بمحاولة إعادة صياغة محتوى الرد.";
 "Got it" = "فهمت";
 "Be the first to comment" = "كن أول من يعلق...";
@@ -99,7 +98,7 @@
 "Edit a Comment" = "تحرير تعليق";
 "Edit a comment" = "تحرير تعليق";
 "Recommend" = "يوصي";
-"Your comment has been rejected." = "تم رفض تعليقك.";
+"This comment violated our policy." = "انتهك هذا المنشور سياستنا";
 "Hold on, your comment is waiting for approval." = "انتظر، لا يزال تعليقك بانتظار الموافقة.";
 "Your comment is waiting for approval due to the site’s policy." = "تعليقك بانتظار الموافقة بموجب سياسة الموقع.";
 "Mute" = "كتم";

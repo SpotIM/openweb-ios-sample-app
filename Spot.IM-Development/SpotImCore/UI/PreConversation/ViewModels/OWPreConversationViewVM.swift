@@ -87,7 +87,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
     
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
-        return OWCommentCreationEntryViewModel(imageURLProvider: imageProvider)
+        return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
     }()
     
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
@@ -136,13 +136,36 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
         
         viewInitialized
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 guard let self = self,
                       let postId = OWManager.manager.postId
                 else { return }
                 
                 self.servicesProvider.realtimeService().startFetchingData(postId: postId)
             })
+            .disposed(by: disposeBag)
+        
+        viewInitialized
+            .flatMap { [weak self] _ -> Observable<SPConversationReadRM?> in
+                guard let self = self,
+                      let postId = OWManager.manager.postId else { return .empty() }
+                
+                return self.servicesProvider
+                    .netwokAPI()
+                    .conversation
+                    .conversationRead(postId: postId, mode: SPCommentSortMode.best, page: SPPaginationPage.first, parentId: "", offset: 0)
+                    .response
+                    .map { response -> SPConversationReadRM? in
+                        return response
+                    }
+            }
+            .asDriver(onErrorJustReturn: nil)
+            .asObservable()
+            .unwrap()
+            .map { conversation in
+                conversation.conversation?.communityQuestion
+            }
+            .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
             .disposed(by: disposeBag)
         
         Observable.merge(
@@ -153,6 +176,11 @@ fileprivate extension OWPreConversationViewViewModel {
 //            TODO: custom UI
 //            TODO: Map to the appropriate case
             })
+            .disposed(by: disposeBag)
+        
+        _ = commentCreationEntryViewModel.outputs
+            .tapped
+            .bind(to: commentCreationTap)
             .disposed(by: disposeBag)
     }
 }

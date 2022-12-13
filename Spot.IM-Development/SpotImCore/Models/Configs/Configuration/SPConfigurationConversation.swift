@@ -23,6 +23,7 @@ struct SPConfigurationConversation: Decodable {
     let disableVoteDown: Bool?
     let disableVoteUp: Bool?
     let disableShareComment: Bool?
+    let showCommentEditOption: Bool?
     
     enum CodingKeys: String, CodingKey {
         case subscriberBadgeConfig = "subscriberBadge"
@@ -36,7 +37,8 @@ struct SPConfigurationConversation: Decodable {
              translationTextOverrides,
              disableOnlineDotIndicator,
              disableVoteDown,
-             disableVoteUp
+             disableVoteUp,
+             showCommentEditOption
     }
     
     init(from decoder: Decoder) throws {
@@ -54,5 +56,6 @@ struct SPConfigurationConversation: Decodable {
         disableVoteDown = try? container.decode(Bool.self, forKey: .disableVoteDown)
         disableVoteUp = try? container.decode(Bool.self, forKey: .disableVoteUp)
         disableShareComment = try? container.decode(Bool.self, forKey: .disableShareComment)
+        showCommentEditOption = try? container.decode(Bool.self, forKey: .showCommentEditOption)
     }
 }

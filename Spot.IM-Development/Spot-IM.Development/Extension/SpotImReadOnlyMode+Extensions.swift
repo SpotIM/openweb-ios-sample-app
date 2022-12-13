@@ -11,7 +11,7 @@ import SpotImCore
 
 extension SpotImReadOnlyMode {
     static func parseSampleAppManualConfig() -> SpotImReadOnlyMode {
-        let readOnlyModeRawValue = UserDefaults.standard.integer(forKey: "demo.isReadOnlyEnabled")
+        let readOnlyModeRawValue = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Int>.isReadOnlyEnabled, defaultValue: 0)
         let readOnlyMode: SpotImReadOnlyMode
         switch readOnlyModeRawValue {
         case 1:

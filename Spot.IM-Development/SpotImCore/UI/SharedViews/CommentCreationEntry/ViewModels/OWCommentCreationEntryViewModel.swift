@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationEntryViewModelingInputs {
+    // TODO: configure functions should be removed from protocol once refactor complete
     func configure(user: SPUser)
     func configure(ctaText: String)
     func configure(delegate: OWCommentCreationEntryViewDelegate?)
@@ -28,6 +29,7 @@ protocol OWCommentCreationEntryViewModeling {
     var outputs: OWCommentCreationEntryViewModelingOutputs { get }
 }
 
+// TODO: Old view model, should be deleted once new infra complete
 class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
     
     var inputs: OWCommentCreationEntryViewModelingInputs { return self }
@@ -84,6 +86,61 @@ fileprivate extension OWCommentCreationEntryViewModel {
         outputs.tapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.delegate?.labelContainerDidTap()
+        }).disposed(by: disposeBag)
+    }
+}
+
+// TODO: View Model for new infra. Old one should be deleted
+class OWCommentCreationEntryViewModelV2: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
+    
+    var inputs: OWCommentCreationEntryViewModelingInputs { return self }
+    var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
+    
+    fileprivate let disposeBag = DisposeBag()
+    
+    var imageURLProvider: SPImageProvider
+    
+    init (imageURLProvider: SPImageProvider) {
+        self.imageURLProvider = imageURLProvider
+        setupObservers()
+    }
+    
+    fileprivate let _actionText = BehaviorSubject<String>(value: LocalizationManager.localizedString(key: "What do you think?"))
+    
+    var tap = PublishSubject<Void>()
+    
+    var tapped: Observable<Void> {
+        tap
+            .asObserver()
+    }
+    
+    lazy var avatarViewVM: OWAvatarViewModeling = {
+        return OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
+    }()
+    
+    var ctaText: Observable<String> {
+        _actionText.asObserver()
+    }
+    
+    // TODO: configure functions should be removed from protocol once refactor complete
+    func configure(user: SPUser) {
+    }
+    
+    func configure(ctaText: String) {
+    }
+    
+    func configure(delegate: OWCommentCreationEntryViewDelegate?) {
+    }
+}
+
+fileprivate extension OWCommentCreationEntryViewModelV2 {
+    func setupObservers() {
+        // TODO: should set the avatar viewModel according to the current connected user (not in infra yet)
+        // TODO: open current user profile on click (once current user infra is ready)
+        outputs.avatarViewVM.outputs.avatarTapped
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+//            self.delegate?.userAvatarDidTap()
         }).disposed(by: disposeBag)
     }
 }
