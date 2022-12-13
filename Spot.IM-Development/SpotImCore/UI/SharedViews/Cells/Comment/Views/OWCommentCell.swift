@@ -10,11 +10,6 @@ import Foundation
 import UIKit
 
 class OWCommentCell: UITableViewCell {
-    fileprivate lazy var view: UIView = {
-        return UIView()
-            .backgroundColor(UIColor.blue)
-    }()
-    
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
@@ -42,6 +37,7 @@ class OWCommentCell: UITableViewCell {
 
 fileprivate extension OWCommentCell {
     func setupUI() {
+        self.backgroundColor = .clear
         self.addSubviews(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
