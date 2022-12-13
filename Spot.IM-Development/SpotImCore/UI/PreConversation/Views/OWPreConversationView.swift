@@ -80,6 +80,7 @@ class OWPreConversationView: UIView {
             .backgroundColor(UIColor.clear)
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
+        tableView.allowsSelection = false
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)

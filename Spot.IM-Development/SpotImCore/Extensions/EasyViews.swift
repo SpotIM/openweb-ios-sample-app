@@ -164,6 +164,16 @@ extension UIButton {
         self.contentHorizontalAlignment = align
         return self
     }
+    
+    @discardableResult func image(_ image: UIImage?, state: UIControl.State) -> Self {
+        self.setImage(image, for: state)
+        return self
+    }
+    
+    @discardableResult func imageEdgeInsets(_ imageEdgeInsets: UIEdgeInsets) -> Self {
+        self.imageEdgeInsets = imageEdgeInsets
+        return self
+    }
 }
 
 extension UIImageView {
