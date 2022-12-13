@@ -59,9 +59,9 @@ internal final class ArticleWebViewController: UIViewController {
         self.metadata = metadata
         self.url = url
         self.authenticationControllerId = authenticationControllerId
-        self.shouldShowOpenFullConversationButton = UserDefaults.standard.bool(forKey: "shouldShowOpenFullConversation")
-        self.shouldShowOpenCommentButton = UserDefaults.standard.bool(forKey: "shouldOpenComment")
-        self.shouldPresentFullConInNewNavStack = UserDefaults.standard.bool(forKey: "shouldPresentInNewNavStack")
+        self.shouldShowOpenFullConversationButton = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldShowOpenFullConversation, defaultValue: false)
+        self.shouldShowOpenCommentButton = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldOpenComment, defaultValue: false)
+        self.shouldPresentFullConInNewNavStack = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack, defaultValue: false)
         
         super.init(nibName: nil, bundle: nil)
     }
