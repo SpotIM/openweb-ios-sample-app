@@ -24,7 +24,10 @@ class BetaNewAPIVC: UIViewController {
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
         static let pickerHeight: CGFloat = 250
-        static let toolbarPickerHeight: CGFloat = 40
+        static let toolbarPickerHeight: CGFloat = 50
+        static let animatePickerDuration: CGFloat = 0.6
+        static let animatePickerDamping: CGFloat = 0.5
+        static let animatePickerVelocity: CGFloat = 0.5
     }
     
     fileprivate let viewModel: BetaNewAPIViewModeling
@@ -33,13 +36,13 @@ class BetaNewAPIVC: UIViewController {
     fileprivate lazy var settingsRightBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
-                               target: self,
-                               action: #selector(showSettings))
+                               target: nil,
+                               action: nil)
     }()
     
-    private lazy var spotPresetSelectionView: UIView = {
+    fileprivate lazy var conversationPresetSelectionView: UIView = {
         let spotPresetSelection = UIView()
-        spotPresetSelection.backgroundColor = .gray
+        spotPresetSelection.backgroundColor = ColorPalette.midGrey
         
         spotPresetSelection.addSubview(toolbarPicker)
         toolbarPicker.snp.makeConstraints { (make) in
@@ -49,28 +52,42 @@ class BetaNewAPIVC: UIViewController {
         
         spotPresetSelection.addSubview(presetPicker)
         presetPicker.snp.makeConstraints { (make) in
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.width.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(toolbarPicker.snp.bottom)
         }
         
         return spotPresetSelection
     }()
 
-    private lazy var presetPicker: UIPickerView = {
+    fileprivate lazy var presetPicker: UIPickerView = {
         return UIPickerView()
     }()
 
-    private lazy var toolbarPicker: UIToolbar = {
+    fileprivate lazy var toolbarPicker: UIToolbar = {
         var toolbar = UIToolbar()
-        toolbar.barStyle = .default
-        toolbar.barTintColor = .gray
-        toolbar.tintColor = .white
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneTapped))
+        toolbar.barTintColor = ColorPalette.darkGrey
+        toolbar.tintColor = ColorPalette.blackish
+        
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-
-        toolbar.setItems([spaceButton, doneButton], animated: false)
+        
+        let title = NSLocalizedString("PresetSelection", comment: "").label
+            .font(FontBook.paragraphBold)
+            .barButtonItem
+        
+        toolbar.setItems([spaceButton, title, spaceButton, btnDone.barButtonItem], animated: false)
         return toolbar
+    }()
+    
+    fileprivate lazy var btnDone: UIButton = {
+        let txt = NSLocalizedString("Done", comment: "")
+        
+        return txt
+            .button
+            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.extraLightGrey)
+            .font(FontBook.paragraphBold)
+            .corner(radius: Metrics.buttonCorners)
+            .withPadding(Metrics.buttonPadding)
     }()
     
     fileprivate lazy var btnSelectPreset: UIButton = {
@@ -79,7 +96,7 @@ class BetaNewAPIVC: UIViewController {
         return txt
             .button
             .backgroundColor(ColorPalette.darkGrey)
-            .textColor(.white)
+            .textColor(ColorPalette.white)
             .corner(radius: Metrics.buttonCorners)
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
@@ -161,7 +178,7 @@ class BetaNewAPIVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
     
-    fileprivate var selectedAnswer: SpotPreset?
+    fileprivate var selectedAnswer: ConversationPreset?
     
     init(viewModel: BetaNewAPIViewModeling = BetaNewAPIViewModel()) {
         self.viewModel = viewModel
@@ -186,8 +203,6 @@ class BetaNewAPIVC: UIViewController {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = settingsRightBarItem
-        
-        setupPicker()
         setupObservers()
     }
 }
@@ -261,14 +276,14 @@ fileprivate extension BetaNewAPIVC {
         }
         
         // Setup preset picker and its container.
-        view.addSubview(spotPresetSelectionView)
-        spotPresetSelectionView.snp.makeConstraints { (make) in
+        view.addSubview(conversationPresetSelectionView)
+        conversationPresetSelectionView.snp.makeConstraints { (make) in
             make.height.equalTo(Metrics.pickerHeight)
             make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
             make.bottom.equalToSuperview().inset(-Metrics.pickerHeight)
         }
     }
-
+    
     func setupObservers() {
         title = viewModel.outputs.title
         
@@ -312,15 +327,6 @@ fileprivate extension BetaNewAPIVC {
             .bind(to: viewModel.inputs.selectPresetTapped)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.showSelectPreset
-            .subscribe { [weak self] _ in
-                guard let self = self else { return }
-
-                self.view.endEditing(true)
-                self.showPresetPicker(true)
-            }
-            .disposed(by: disposeBag)
-        
         btnUIFlows.rx.tap
             .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.uiFlowsTapped)
@@ -355,60 +361,92 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         viewModel.outputs.openMiscellaneous
-            .subscribe(onNext: { [weak self] _ in
+            .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
-                let miscellaneousVM = MiscellaneousViewModel()
+                let miscellaneousVM = MiscellaneousViewModel(dataModel: dataModel)
                 let miscellaneousVC = MiscellaneousVC(viewModel: miscellaneousVM)
                 self.navigationController?.pushViewController(miscellaneousVC, animated: true)
             })
             .disposed(by: disposeBag)
-    }
-    
-    func setupPicker() {
-        presetPicker.dataSource = self
-        presetPicker.delegate = self
-    }
-    
-    @objc
-    func showSettings() {
-        viewModel.inputs.settingsTapped.onNext()
-    }
-    
-    @objc
-    func doneTapped() {
-        if let selectedAnswer = self.selectedAnswer {
-            txtFieldSpotId.rx.text.onNext(selectedAnswer.spotId)
-            txtFieldPostId.rx.text.onNext(selectedAnswer.postId)
-            self.selectedAnswer = nil
-        }
-        showPresetPicker(false)
-    }
-}
-
-extension BetaNewAPIVC: UIPickerViewDelegate, UIPickerViewDataSource {
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return SpotPreset.mockModels.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return SpotPreset.mockModels[row].displayName
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.selectedAnswer = SpotPreset.mockModels[row]
+        
+        settingsRightBarItem.rx.tap
+            .map { PresentationalModeCompact.push }
+            .bind(to: viewModel.inputs.settingsTapped)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.openSettings
+            .subscribe(onNext: { [weak self] in
+                
+                // TODO: Open settings screen
+            })
+            .disposed(by: disposeBag)
+        
+        // Bind select preset
+        let _showPresetPicker = PublishSubject<Bool>()
+        
+        _showPresetPicker.subscribe(onNext: { [weak self] isShown in
+            guard let self = self else { return }
+            self.showPresetPicker(isShown)
+        })
+        .disposed(by: disposeBag)
+        
+        viewModel.outputs.showSelectPreset
+            .withLatestFrom(viewModel.outputs.shouldShowSelectPreset)
+            .filter({ !$0 })
+            .subscribe { _showPresetPicker.onNext(!$0) }
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldShowSelectPreset
+            .skip(1)
+            .filter { !$0 }
+            .subscribe { _showPresetPicker.onNext($0) }
+            .disposed(by: disposeBag)
+        
+        btnDone.rx.tap
+            .map { false }
+            .do(onNext: { _showPresetPicker.onNext($0) })
+            .voidify()
+            .bind(to: viewModel.inputs.doneSelectPresetTapped)
+            .disposed(by: disposeBag)
+        
+        // Bind picker
+        presetPicker.rx.itemSelected
+            .map { event in
+                return event.row
+            }
+            .distinctUntilChanged()
+            .bind(to: viewModel.inputs.selectedConversationPresetIndex)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.conversationPresets
+            .map { options in
+                return options.map { $0.displayName }
+            }
+            .bind(to: presetPicker.rx.itemTitles) { _, item in
+                return item
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.conversationPresetUpdated
+            .subscribe { [weak self] dataModel in
+                self?.txtFieldSpotId.rx.text.onNext(dataModel.spotId)
+                self?.txtFieldPostId.rx.text.onNext(dataModel.postId)
+            }
+            .disposed(by: disposeBag)
     }
 }
 
 fileprivate extension BetaNewAPIVC {
     
     func showPresetPicker(_ isShown: Bool) {
-        UIView.animate(withDuration: 0.3) {
-            self.spotPresetSelectionView.snp.updateConstraints { update in
+        if isShown {
+            self.view.endEditing(true)
+        }
+        UIView.animate(withDuration: Metrics.animatePickerDuration,
+                       delay: 0.0,
+                       usingSpringWithDamping: Metrics.animatePickerDamping,
+                       initialSpringVelocity: Metrics.animatePickerVelocity) {
+            self.conversationPresetSelectionView.snp.updateConstraints { update in
                 update.bottom.equalToSuperview().inset(isShown ? 0 : -Metrics.pickerHeight)
             }
             self.view.layoutIfNeeded()

@@ -25,6 +25,7 @@ class ColorPalette {
     static var purple = UIColor(r: 163, g: 88, b: 223)
     static var pink = UIColor(r: 246, g: 95, b: 124)
     static var highlightBlue = UIColor(r: 204, g: 233, b: 255)
+    static var white = UIColor(r: 255, g: 255, b: 255)
 }
 
 fileprivate extension UIColor {
