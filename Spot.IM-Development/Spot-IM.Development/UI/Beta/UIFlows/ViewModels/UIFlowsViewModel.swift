@@ -32,7 +32,7 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
     var inputs: UIFlowsViewModelingInputs { return self }
     var outputs: UIFlowsViewModelingOutputs { return self }
     
-    let dataModel: SDKConversationDataModel
+    fileprivate let dataModel: SDKConversationDataModel
     
     fileprivate let disposeBag = DisposeBag()
     

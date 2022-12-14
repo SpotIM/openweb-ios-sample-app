@@ -28,6 +28,8 @@ class MiscellaneousViewModel: MiscellaneousViewModeling, MiscellaneousViewModeli
     var inputs: MiscellaneousViewModelingInputs { return self }
     var outputs: MiscellaneousViewModelingOutputs { return self }
     
+    fileprivate let dataModel: SDKConversationDataModel
+    
     fileprivate let disposeBag = DisposeBag()
     
     let conversationCounterTapped = PublishSubject<Void>()
@@ -36,7 +38,8 @@ class MiscellaneousViewModel: MiscellaneousViewModeling, MiscellaneousViewModeli
         return NSLocalizedString("Miscellaneous", comment: "")
     }()
     
-    init() {
+    init(dataModel: SDKConversationDataModel) {
+        self.dataModel = dataModel
         setupObservers()
     }
 }

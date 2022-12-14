@@ -31,7 +31,7 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     var inputs: UIViewsViewModelingInputs { return self }
     var outputs: UIViewsViewModelingOutputs { return self }
     
-    let dataModel: SDKConversationDataModel
+    fileprivate let dataModel: SDKConversationDataModel
     
     fileprivate let disposeBag = DisposeBag()
     

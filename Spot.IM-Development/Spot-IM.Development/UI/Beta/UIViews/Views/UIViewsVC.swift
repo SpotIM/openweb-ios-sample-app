@@ -88,11 +88,6 @@ class UIViewsVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
-    }
-    
     override func loadView() {
         super.loadView()
         setupViews()
