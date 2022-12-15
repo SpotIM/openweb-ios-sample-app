@@ -49,7 +49,8 @@ final class OWCommentHeaderView: UIView {
             .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
             .border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .corner(radius: 3)
-            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)) as! OWBaseLabel
+            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+            .isHidden(true)
         label.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
         return label
     }()
@@ -153,7 +154,14 @@ fileprivate extension OWCommentHeaderView {
     }
     
     func prepareForReuse() {
-        setViewsVisibillity(isHiddenMessage: false)
+        self.dateLabel.isHidden = false
+        self.optionButton.isHidden = false
+        self.userNameLabel.isHidden = false
+        self.subtitleLabel.isHidden = false
+        self.subscriberBadgeView.isHidden = false
+        
+        self.badgeTagLabel.isHidden = true
+        self.hiddenCommentReasonLabel.isHidden = true
     }
     
     func setupObservers() {
@@ -197,9 +205,19 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.shouldShowHiddenCommentMessage
-            .subscribe(onNext: { [weak self] shouldShow in
-                guard let self = self else { return }
-                self.setViewsVisibillity(isHiddenMessage: shouldShow)
+            .subscribe(onNext: { [weak self] isHiddenMessage in
+                guard let self = self,
+                      isHiddenMessage
+                else { return }
+                
+                self.dateLabel.isHidden = isHiddenMessage
+                self.optionButton.isHidden = isHiddenMessage
+                self.subscriberBadgeView.isHidden = isHiddenMessage
+                self.userNameLabel.isHidden = isHiddenMessage
+                self.badgeTagLabel.isHidden = isHiddenMessage
+                self.subtitleLabel.isHidden = isHiddenMessage
+                
+                self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
             }).disposed(by: disposeBag)
         
         OWSharedServicesProvider.shared.themeStyleService()
@@ -211,17 +229,6 @@ fileprivate extension OWCommentHeaderView {
                 self.dateLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
-    }
-    
-    func setViewsVisibillity(isHiddenMessage: Bool) {
-        self.dateLabel.isHidden = isHiddenMessage
-        self.optionButton.isHidden = isHiddenMessage
-        self.subscriberBadgeView.isHidden = isHiddenMessage
-        self.userNameLabel.isHidden = isHiddenMessage
-        self.badgeTagLabel.isHidden = isHiddenMessage
-        self.subtitleLabel.isHidden = isHiddenMessage
-        
-        self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
     }
 }
 
