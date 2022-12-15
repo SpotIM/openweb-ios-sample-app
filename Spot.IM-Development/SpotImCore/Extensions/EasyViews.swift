@@ -58,10 +58,15 @@ extension UIView {
         self.isUserInteractionEnabled = isEnabled
         return self
     }
+    
+    @discardableResult func isHidden(_ hidden: Bool) -> Self {
+        self.isHidden = hidden
+        return self
+    }
 }
 
 extension UILabel {
-    @discardableResult func font(_ font: UIFont) -> UILabel {
+    @discardableResult func font(_ font: UIFont) -> Self {
         self.font = font
         return self
     }
@@ -76,7 +81,7 @@ extension UILabel {
         return self
     }
     
-    @discardableResult func textColor(_ color: UIColor) -> UILabel {
+    @discardableResult func textColor(_ color: UIColor) -> Self {
         self.textColor = color
         return self
     }
@@ -125,11 +130,6 @@ extension UILabel {
         text.addAttribute(NSAttributedString.Key.kern, value: spacing, range: NSRange(location: 0, length: text.length - 1))
         self.attributedText = text
         
-        return self
-    }
-    
-    @discardableResult func isHidden(_ hidden: Bool) -> UILabel {
-        self.isHidden = hidden
         return self
     }
 }
