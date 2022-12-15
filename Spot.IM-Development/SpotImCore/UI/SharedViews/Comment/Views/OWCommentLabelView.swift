@@ -28,6 +28,7 @@ class OWCommentLabelView: UIView {
         static var borderOpacityDarkMode: CGFloat = 0.7
         static var borderOpacityLightMode: CGFloat = 0.4
     }
+    fileprivate var heightConstraint: OWConstraint?
     
     fileprivate lazy var labelContainer: UIView = {
         return UIView()
@@ -58,7 +59,7 @@ class OWCommentLabelView: UIView {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
-        // TODO: prepareForReuse
+        // TODO: prepareForReuse()?
     }
     
     required init?(coder: NSCoder) {
@@ -73,7 +74,7 @@ fileprivate extension OWCommentLabelView {
         
         labelContainer.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.height.equalTo(Metrics.commentLabelViewHeight)
+            heightConstraint = make.height.equalTo(0).constraint
         }
         
         iconImageView.OWSnp.makeConstraints { make in
@@ -123,8 +124,15 @@ fileprivate extension OWCommentLabelView {
                 self.setUIColors(state: state, labelColor: color, currentStyle: style)
             }
             .disposed(by: disposeBag)
+        
+        viewModel.outputs.commentLabel
+            .subscribe(onNext: { [weak self] label in
+                guard let self = self else { return }
+                self.heightConstraint?.update(offset: label == nil ? 0 : Metrics.commentLabelViewHeight)
+            })
+            .disposed(by: disposeBag)
     }
-    
+        
     func setUIColors(state: LabelState, labelColor: UIColor, currentStyle: OWThemeStyle) {
         // set background, border, image and text colors according to state
         let isDarkMode = currentStyle == .dark
