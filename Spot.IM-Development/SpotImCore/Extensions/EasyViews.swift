@@ -63,6 +63,16 @@ extension UIView {
         self.isHidden = hidden
         return self
     }
+    
+    @discardableResult func tintAdjustmentMode(_ tintAdjustmentMode: TintAdjustmentMode) -> Self {
+        self.tintAdjustmentMode = tintAdjustmentMode
+        return self
+    }
+    
+    @discardableResult func clipsToBounds(_ clipsToBounds: Bool) -> Self {
+        self.clipsToBounds = clipsToBounds
+        return self
+    }
 }
 
 extension UILabel {

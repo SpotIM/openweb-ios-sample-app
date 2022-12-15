@@ -10,8 +10,16 @@ import Foundation
 import UIKit
 
 class OWCommentCell: UITableViewCell {
+    fileprivate struct Metrics {
+        static let leadingOffset: CGFloat = 16.0
+        static let commentLabelTopPadding: CGFloat = 10.0
+    }
+    
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
+    }()
+    fileprivate lazy var commentLabelView: OWCommentLabelView = {
+        return OWCommentLabelView()
     }()
     
     fileprivate var viewModel: OWCommentCellViewModeling!
@@ -29,7 +37,9 @@ class OWCommentCell: UITableViewCell {
         guard let vm = viewModel as? OWCommentCellViewModeling else { return }
         
         self.viewModel = vm
-        self.commentHeaderView.configure(with: self.viewModel.outputs.commentVM.outputs.commentHeaderVM as! OWCommentHeaderViewModeling)
+        self.commentHeaderView.configure(with: self.viewModel.outputs.commentVM.outputs.commentHeaderVM!)
+        self.commentLabelView.configure(viewModel: self.viewModel.outputs.commentVM.outputs.commentLabelVM!)
+        
         setupUI()
         setupObservers()
     }
@@ -38,10 +48,17 @@ class OWCommentCell: UITableViewCell {
 fileprivate extension OWCommentCell {
     func setupUI() {
         self.backgroundColor = .clear
-        self.addSubviews(commentHeaderView)
+        self.addSubviews(commentHeaderView, commentLabelView)
+        
         commentHeaderView.OWSnp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-            make.height.equalTo(50)
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(50) // TODO: remove
+        }
+        
+        commentLabelView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
+            make.leading.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
     

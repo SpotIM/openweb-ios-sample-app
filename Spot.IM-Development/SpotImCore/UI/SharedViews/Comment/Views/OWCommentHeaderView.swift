@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-final class OWCommentHeaderView: UIView {
+class OWCommentHeaderView: UIView {
     
     fileprivate struct Metrics {
         static let avatarSideSize: CGFloat = 39.0
