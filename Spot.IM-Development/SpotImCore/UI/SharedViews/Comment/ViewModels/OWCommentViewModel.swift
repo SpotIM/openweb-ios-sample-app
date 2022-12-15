@@ -21,6 +21,7 @@ protocol OWCommentViewModelingOutputs {
     var commentActionsVM: OWCommentActionsViewModeling { get }
     
     var commentHeaderVM: OWCommentHeaderViewModeling? { get }
+    var commentLabelVM: OWCommentLabelViewModeling? { get }
 }
 
 protocol OWCommentViewModeling {
@@ -52,10 +53,12 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
     
     var commentHeaderVM: OWCommentHeaderViewModeling? = nil // TODO!!! should not be optional
+    var commentLabelVM: OWCommentLabelViewModeling? = nil
     
     init(comment: SPComment, user: SPUser, replyTo: SPUser?) {
         commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel(user: user, replyTo: replyTo, model: comment)
+        commentLabelVM = OWCommentLabelViewModel(comment: comment)
     }
     
     // TODO: DELETE ?
