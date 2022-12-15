@@ -20,6 +20,13 @@ class OWCommentLabelView: UIView {
         static let iconImageWidth: CGFloat = 14.0
         static let iconTrailingOffset: CGFloat = 5.0
         static let commentLabelViewHeight: CGFloat = 28.0
+        
+        static var opacityDarkMode: CGFloat = 0.2
+        static var opacityLightMode: CGFloat = 0.1
+        static var selectedOpacityDarkMode: CGFloat = 0.7
+        static var selectedOpacityLightMode: CGFloat = 1
+        static var borderOpacityDarkMode: CGFloat = 0.7
+        static var borderOpacityLightMode: CGFloat = 0.4
     }
     
     fileprivate lazy var labelContainer: UIView = {
@@ -101,39 +108,42 @@ fileprivate extension OWCommentLabelView {
             .bind(to: self.label.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.state
-            .withLatestFrom(viewModel.outputs.commentLabel) { state, label -> (LabelState, CommentLabel)? in
-                guard let label = label else { return nil }
-                return (state, label)
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .withLatestFrom(viewModel.outputs.state) { style, state -> (OWThemeStyle, LabelState) in
+                return (style, state)
+            }
+            .withLatestFrom(viewModel.outputs.commentLabel) { data, label -> (OWThemeStyle, LabelState, UIColor)? in
+                guard let color = label?.color else { return nil }
+                return (data.0, data.1, color)
             }
             .unwrap()
-            .subscribe(onNext: { [weak self] labelData in
+            .subscribe { [weak self] (style, state, color) in
                 guard let self = self else { return }
-                self.setUIColors(state: labelData.0, labelColor: labelData.1.color)
-            })
+                self.setUIColors(state: state, labelColor: color, currentStyle: style)
+            }
             .disposed(by: disposeBag)
-        
     }
     
-    func setUIColors(state: LabelState, labelColor: UIColor) {
+    func setUIColors(state: LabelState, labelColor: UIColor, currentStyle: OWThemeStyle) {
         // set background, border, image and text colors according to state
-        // TODO: opacity should be set here and handle dark/light change propely
+        let isDarkMode = currentStyle == .dark
         switch state {
             case .notSelected:
                 labelContainer.backgroundColor = .clear
                 labelContainer.layer.borderWidth = 1
-                labelContainer.layer.borderColor = labelColor.withAlphaComponent(UIColor.commentLabelBorderOpacity).cgColor
+            labelContainer.layer.borderColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.borderOpacityDarkMode : Metrics.borderOpacityLightMode).cgColor
                 iconImageView.tintColor = labelColor
                 label.textColor = labelColor
                 break
             case .selected:
-                self.labelContainer.backgroundColor = labelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
+                self.labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.selectedOpacityDarkMode : Metrics.selectedOpacityLightMode)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = .white
                 label.textColor = .white
                 break
             case .readOnly:
-                labelContainer.backgroundColor = labelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
+                labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.opacityDarkMode : Metrics.opacityLightMode)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = labelColor
                 label.textColor = labelColor
