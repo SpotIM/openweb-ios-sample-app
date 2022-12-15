@@ -53,7 +53,7 @@ extension OWPreConversationCellOption: Equatable {
         // This is necessary so we won't have UI animations/flickering when loading the same data.
         switch self {
         case .comment(let viewModel):
-            return ""
+            return viewModel.outputs.id
         case .commentSkeletonShimmering(let viewModel):
             return viewModel.outputs.id
         case .spacer(let viewModel):
