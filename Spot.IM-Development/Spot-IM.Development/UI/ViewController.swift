@@ -256,7 +256,22 @@ class ViewController: UIViewController {
         let shouldReinit = spotId != currentSpotId
         currentSpotId = spotId
         let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, shouldReinint: shouldReinit)
-        navigationController?.pushViewController(controller, animated: true)
+        
+        //This is for testing with a Tabbar
+        setNavController(forController: controller, shouldAddTabBar: false)
+    }
+    
+    private func setNavController(forController controller: UIViewController, shouldAddTabBar: Bool) {
+        if shouldAddTabBar {
+            let navController = UINavigationController(rootViewController: controller)
+            let tabbar = UITabBarController()
+            tabbar.viewControllers = [
+                navController
+            ]
+            navigationController?.pushViewController(tabbar, animated: true)
+        } else {
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     private func showConversationCounter(with spotId: String) {

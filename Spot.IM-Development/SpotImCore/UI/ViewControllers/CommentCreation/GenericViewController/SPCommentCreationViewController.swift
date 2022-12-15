@@ -647,7 +647,6 @@ extension SPCommentCreationViewController {
                 make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             } else {
                 make.leading.trailing.bottom.equalTo(view)
-
             }
         }
         scrollView.addSubview(mainContainerView)
@@ -827,7 +826,7 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
             else { return }
         let bottomPadding: CGFloat
         if #available(iOS 11.0, *) {
-            bottomPadding = UIApplication.shared.windows[0].safeAreaInsets.bottom
+            bottomPadding = tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows[0].safeAreaInsets.bottom 
         } else {
             bottomPadding = 0
         }
