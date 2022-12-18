@@ -151,22 +151,18 @@ fileprivate extension UIViewsVC {
         
         // Bind buttons
         btnPreConversation.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.preConversationTapped)
             .disposed(by: disposeBag)
         
         btnFullConversation.rx.tap
-            .map { PresentationalModeCompact.present }
             .bind(to: viewModel.inputs.fullConversationTapped)
             .disposed(by: disposeBag)
         
         btnCommentCreation.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.commentCreationTapped)
             .disposed(by: disposeBag)
         
         btnIndependentAdUnit.rx.tap
-            .map { PresentationalModeCompact.present }
             .bind(to: viewModel.inputs.independentAdUnitTapped)
             .disposed(by: disposeBag)
     }
