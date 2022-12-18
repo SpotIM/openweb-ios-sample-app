@@ -51,7 +51,6 @@
 "Comment reported successfully" = "Comentario reportado exitosamente";
 "Reporting this comment will send it for review and hide it from your view" = "Al reportar este comentario, será enviado a revisión y ocultado de usted.";
 "Copy Comment to Clipboard" = "Copiar comentario";
-"Your comment has been rejected" = "Su comentario ha sido rechazado.";
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "Parece que su comentario ha violado nuestra política de moderación. Le recomendamos que intente nuevamente con una frase distinta.";
 "Got it" = "Comprendido";
 "Be the first to comment" = "Sean los primeros en comentar";
@@ -99,6 +98,9 @@
 "Edit a Comment" = "Editar un comentario";
 "Edit a Comment" = "Editar un comentario";
 "Recommend" = "Me Gusta";
-"Your comment has been rejected." = "Su comentario ha sido rechazado.";
+"This comment violated our policy." = "Esta publicación infringe nuestra política";
 "Hold on, your comment is waiting for approval." = "Espere: su comentario está a la espera de aprobación.";
 "Your comment is waiting for approval due to the site’s policy." = "Tu comentario está a la espera de aprobación debido a la política del sitio.";
+"Mute" = "Silenciar";
+"Mute User" = "Silenciar usuario";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "Al silenciar a este usuario, no podrás ver su actividad. Para deshacer o editar tus usuarios silenciados, entra en la configuración de tu cuenta";

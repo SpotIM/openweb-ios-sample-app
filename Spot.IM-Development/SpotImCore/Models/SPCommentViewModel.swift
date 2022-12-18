@@ -50,6 +50,7 @@ internal struct CommentViewModel {
     var commentTextCollapsed: Bool = true
     var showStatusIndicator: Bool = false
     var anyHiddenReply: Bool = false
+    private (set) var isStaff: Bool = false
 
     var brandColor: UIColor = .brandColor
 
@@ -157,6 +158,7 @@ internal struct CommentViewModel {
             displayName = user.displayName
             userAvatar = imageProvider?.imageURL(with: user.imageId, size: nil)
             badgeTitle = getUserBadgeUsingConfig(user: user)?.uppercased()
+            isStaff = user.isStaff
         }
 
         self.replyingToCommentId = replyingToCommentId
@@ -297,12 +299,16 @@ internal struct CommentViewModel {
         self.commentActionsVM.inputs.configure(with: model)
     }
     
-    mutating func setIsDeleted(isDeleted: Bool) {
+    mutating func setIsDeleted(_ isDeleted: Bool) {
         self.isDeleted = isDeleted
         // hide status indicator after deleting a comment
         if isDeleted {
             self.showStatusIndicator = false
         }
+    }
+    
+    mutating func setIsMuted(_ isMuted: Bool) {
+        self.isCommentAuthorMuted = isMuted
     }
 
     private enum Theme {

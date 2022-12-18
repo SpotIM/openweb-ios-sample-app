@@ -76,22 +76,6 @@ Increment build if it is in range, or set build to lower end
 
 Set build to specific number
 
-### ios set_version_wrapper
-
-```sh
-[bundle exec] fastlane ios set_version_wrapper
-```
-
-
-
-### ios increment_build_in_range_wrapper
-
-```sh
-[bundle exec] fastlane ios increment_build_in_range_wrapper
-```
-
-
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

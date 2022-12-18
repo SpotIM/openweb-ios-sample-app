@@ -53,6 +53,11 @@ extension UIView {
         self.tintColor = color
         return self
     }
+    
+    @discardableResult func userInteractionEnabled(_ isEnabled: Bool) -> Self {
+        self.isUserInteractionEnabled = isEnabled
+        return self
+    }
 }
 
 extension UILabel {
@@ -73,6 +78,11 @@ extension UILabel {
     
     @discardableResult func textColor(_ color: UIColor) -> UILabel {
         self.textColor = color
+        return self
+    }
+    
+    @discardableResult func text(_ text: String?) -> UILabel {
+        self.text = text
         return self
     }
     
@@ -203,6 +213,43 @@ extension String {
     
     var url: URL? {
         return URL(string: self)
+    }
+}
+
+extension UITextView {
+    @discardableResult func delegate(_ delegate: UITextViewDelegate) -> Self {
+        self.delegate = delegate
+        return self
+    }
+    
+    @discardableResult func isEditable(_ editable: Bool) -> Self {
+        self.isEditable = editable
+        return self
+    }
+    
+    @discardableResult func isSelectable(_ selectable: Bool) -> Self {
+        self.isSelectable = selectable
+        return self
+    }
+    
+    @discardableResult func isScrollEnabled(_ scrollEnabled: Bool) -> Self {
+        self.isScrollEnabled = scrollEnabled
+        return self
+    }
+    
+    @discardableResult func dataDetectorTypes(_ dataDetectorTypes: UIDataDetectorTypes) -> Self {
+        self.dataDetectorTypes = dataDetectorTypes
+        return self
+    }
+    
+    @discardableResult func font(_ font: UIFont) -> Self {
+        self.font = font
+        return self
+    }
+    
+    @discardableResult func textColor(_ textColor: UIColor) -> Self {
+        self.textColor = textColor
+        return self
     }
 }
 

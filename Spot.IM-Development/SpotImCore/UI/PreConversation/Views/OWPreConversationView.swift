@@ -10,10 +10,11 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationView: UIView {
+class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let bannerViewMargin: CGFloat = 40
         static let whatYouThinkHeight: CGFloat = 64
+        static let commentCreationTopPadding: CGFloat = 16
         
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
         // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
@@ -22,6 +23,9 @@ class OWPreConversationView: UIView {
         // TODO: Testing - remove later
         static let initialHeight: CGFloat = 400
         static let changedHeight: CGFloat = 700
+        
+        static let separatorHeight: CGFloat = 1.0
+        static let horizontalOffset: CGFloat = 16.0
     }
     
     // TODO: Testing - remove later (hard coded cause only for testing)
@@ -57,8 +61,14 @@ class OWPreConversationView: UIView {
     fileprivate lazy var communityQuestionView: OWCommunityQuestionView = {
         return OWCommunityQuestionView(with: self.viewModel.outputs.communityQuestionViewModel)
     }()
+    fileprivate lazy var separatorView: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor,
+                                                           themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+    }()
     fileprivate lazy var commentCreationEntryView: OWCommentCreationEntryView = {
-        return OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+        let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
+        return view
     }()
     fileprivate lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
@@ -113,6 +123,9 @@ fileprivate extension OWPreConversationView {
     func setupViews() {
         // TODO: Testing, remove later and use the commented code below
         self.backgroundColor = .purple
+        
+        self.useAsThemeStyleInjector()
+        
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.initialHeight)
         }
@@ -121,6 +134,31 @@ fileprivate extension OWPreConversationView {
         header.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
         }
+        
+        if !viewModel.outputs.isButtonOnlyModeEnabled {
+            self.addSubviews(communityGuidelinesView, communityQuestionView, separatorView, commentCreationEntryView)
+            communityGuidelinesView.OWSnp.makeConstraints { make in
+                make.top.equalTo(header.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
+            communityQuestionView.OWSnp.makeConstraints { make in
+                make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
+                make.leading.trailing.equalToSuperview()
+            }
+            separatorView.OWSnp.makeConstraints { make in
+                make.top.equalTo(communityQuestionView.OWSnp.bottom)
+                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+                make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+                make.height.equalTo(Metrics.separatorHeight)
+            }
+            commentCreationEntryView.OWSnp.makeConstraints { make in
+                make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationTopPadding)
+                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+                make.trailing.equalToSuperview()
+            }
+        }
+        
+        
         
         self.addSubview(btnCommentCreation)
         btnCommentCreation.OWSnp.makeConstraints { make in
@@ -194,6 +232,14 @@ fileprivate extension OWPreConversationView {
                 .voidify()
                 .bind(to: viewModel.inputs.commentCreationTap)
                 .disposed(by: disposeBag)
+                
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
+                                                                   themeStyle: currentStyle)
+            }).disposed(by: disposeBag)
     }
     
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint

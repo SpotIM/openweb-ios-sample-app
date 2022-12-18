@@ -95,6 +95,10 @@
 		24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */; };
 		249BCDFA27F5962E00703CC9 /* OWArticleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */; };
 		249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */; };
+		24A24A10291B9D7000D72755 /* OWSafariTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */; };
+		24A24A14291BABB300D72755 /* OWSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A13291BABB300D72755 /* OWSafariViewController.swift */; };
+		24A24A18291BAC7C00D72755 /* OWSafariViewControllerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */; };
+		24A24A1A291BEAB300D72755 /* OWSafariViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */; };
 		24B087CB288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */; };
 		24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */; };
 		24B087CF288EB51F00CAA0EB /* OWFailureReportEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */; };
@@ -203,6 +207,9 @@
 		3D26B5BE28CE492A00A1DAD2 /* OWModalPresentationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */; };
 		3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */; };
 		3D29A2DC283BA544002BE318 /* SilentSSOAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */; };
+		3D33C0EA29460CAF0062BFC9 /* OWDummyThemeStyleUpdaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33C0E929460CAF0062BFC9 /* OWDummyThemeStyleUpdaterView.swift */; };
+		3D33C0EC29461C4A0062BFC9 /* OWThemeStyleInjectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33C0EB29461C4A0062BFC9 /* OWThemeStyleInjectorProtocol.swift */; };
+		3D33C0EE294624060062BFC9 /* OWThemeStyleUpdaterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33C0ED294624060062BFC9 /* OWThemeStyleUpdaterProtocol.swift */; };
 		3D3E3ABA28B3A28A003B4F05 /* ConversationCounterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AB928B3A28A003B4F05 /* ConversationCounterVC.swift */; };
 		3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3ABB28B3A2A4003B4F05 /* ConversationCounterViewModel.swift */; };
 		3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3ABE28B4EA04003B4F05 /* ConversationCounterRequiredData.swift */; };
@@ -525,6 +532,8 @@
 		8DCBE8702940D98B00C8677C /* UIViewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */; };
 		8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE8712940D99E00C8677C /* UIViewsViewModel.swift */; };
 		8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE87729478ECD00C8677C /* ConversationPreset.swift */; };
+        8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
+        9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
 		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
 		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
@@ -639,6 +648,10 @@
 		24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsService.swift; sourceTree = "<group>"; };
 		249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleHeaderViewModel.swift; sourceTree = "<group>"; };
 		249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryViewModel.swift; sourceTree = "<group>"; };
+		24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariTabCoordinator.swift; sourceTree = "<group>"; };
+		24A24A13291BABB300D72755 /* OWSafariViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewController.swift; sourceTree = "<group>"; };
+		24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewControllerOptions.swift; sourceTree = "<group>"; };
+		24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewModel.swift; sourceTree = "<group>"; };
 		24B087CA288E747200CAA0EB /* OWInternalAuthenticationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInternalAuthenticationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CC288E801700CAA0EB /* OWConversationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationEndpoints.swift; sourceTree = "<group>"; };
 		24B087CE288EB51F00CAA0EB /* OWFailureReportEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFailureReportEndpoints.swift; sourceTree = "<group>"; };
@@ -754,6 +767,9 @@
 		3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWModalPresentationStyle.swift; sourceTree = "<group>"; };
 		3D26B5BF28CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentSSOAuthentication.swift; sourceTree = "<group>"; };
+		3D33C0E929460CAF0062BFC9 /* OWDummyThemeStyleUpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWDummyThemeStyleUpdaterView.swift; sourceTree = "<group>"; };
+		3D33C0EB29461C4A0062BFC9 /* OWThemeStyleInjectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleInjectorProtocol.swift; sourceTree = "<group>"; };
+		3D33C0ED294624060062BFC9 /* OWThemeStyleUpdaterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleUpdaterProtocol.swift; sourceTree = "<group>"; };
 		3D3E3AB928B3A28A003B4F05 /* ConversationCounterVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCounterVC.swift; sourceTree = "<group>"; };
 		3D3E3ABB28B3A2A4003B4F05 /* ConversationCounterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCounterViewModel.swift; sourceTree = "<group>"; };
 		3D3E3ABE28B4EA04003B4F05 /* ConversationCounterRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCounterRequiredData.swift; sourceTree = "<group>"; };
@@ -1103,7 +1119,9 @@
 		8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsVC.swift; sourceTree = "<group>"; };
 		8DCBE8712940D99E00C8677C /* UIViewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsViewModel.swift; sourceTree = "<group>"; };
 		8DCBE87729478ECD00C8677C /* ConversationPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationPreset.swift; sourceTree = "<group>"; };
+        8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
 		BD93F797FEABA3B540FA1DF3 /* Pods-Shared-SpotImCore.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
@@ -1502,6 +1520,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		24A24A12291BAB9700D72755 /* OWSafariViewController */ = {
+			isa = PBXGroup;
+			children = (
+				24A24A13291BABB300D72755 /* OWSafariViewController.swift */,
+				24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */,
+				24A24A19291BEAB300D72755 /* OWSafariViewModel.swift */,
+			);
+			path = OWSafariViewController;
+			sourceTree = "<group>";
+		};
 		24B32B9828BCB65C00FB701C /* PreConversation */ = {
 			isa = PBXGroup;
 			children = (
@@ -1828,8 +1856,20 @@
 			children = (
 				5D00B74322E9B7A600EFC1B0 /* DemoUserAuthentication.swift */,
 				3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */,
+				9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		3D33C0E829460C760062BFC9 /* ThemeStyleService */ = {
+			isa = PBXGroup;
+			children = (
+				3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */,
+				3D33C0E929460CAF0062BFC9 /* OWDummyThemeStyleUpdaterView.swift */,
+				3D33C0EB29461C4A0062BFC9 /* OWThemeStyleInjectorProtocol.swift */,
+				3D33C0ED294624060062BFC9 /* OWThemeStyleUpdaterProtocol.swift */,
+			);
+			path = ThemeStyleService;
 			sourceTree = "<group>";
 		};
 		3D3E3AB628B3A267003B4F05 /* ConversationCounter */ = {
@@ -2315,6 +2355,7 @@
 				24B32BB328C8B5A600FB701C /* OWPreConversationCoordinator.swift */,
 				3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */,
 				1640F2BF28ACDA0100FB863B /* OWCommentCreationCoordinator.swift */,
+				24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */,
 			);
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
@@ -2499,6 +2540,7 @@
 		445417C623685144001D0ED0 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				24A24A12291BAB9700D72755 /* OWSafariViewController */,
 				445417C723685144001D0ED0 /* CommentCreation */,
 				445417D023685144001D0ED0 /* SPBaseConversationViewController */,
 				445417D323685144001D0ED0 /* SPPreConversationViewController */,
@@ -2730,6 +2772,7 @@
 				441165A82379720500B781F3 /* SPCloudinaryRequests.swift */,
 				4416C660237B16C800D3F7B9 /* SPRealtimeDataRequest.swift */,
 				2421B8FC2670A69200B0C9FF /* SPProfileRequest.swift */,
+				8DCBE85729376A7400C8677C /* OWMuteRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -2881,10 +2924,10 @@
 			isa = PBXGroup;
 			children = (
 				3DDA9A4428F851ED00FE3B86 /* SkeletonShimmering */,
+				3D33C0E829460C760062BFC9 /* ThemeStyleService */,
 				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
 				24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */,
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
-				3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */,
 				3DD72C802818297500117946 /* OWLogger.swift */,
 				3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */,
 				3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */,
@@ -3640,6 +3683,7 @@
 				3DD72C66280EF07B00117946 /* OWEnvironment.swift in Sources */,
 				3D08E09D28770FFD00E6F1AC /* OWTableViewSectionedDataSource.swift in Sources */,
 				4454180E23685144001D0ED0 /* OWLoaderPresentable.swift in Sources */,
+				3D33C0EA29460CAF0062BFC9 /* OWDummyThemeStyleUpdaterView.swift in Sources */,
 				3D26B5BB28CE17EC00A1DAD2 /* OWPresentationalModeExtended.swift in Sources */,
 				4454189823685154001D0ED0 /* SPSpotConfiguration.swift in Sources */,
 				3DDA9A6C2919160900FE3B86 /* OWMonetization.swift in Sources */,
@@ -3738,6 +3782,7 @@
 				3DD72C76280EF95200117946 /* OWRequestLogger.swift in Sources */,
 				445418A623685154001D0ED0 /* SPShareLink.swift in Sources */,
 				3DD72C7F28159B2E00117946 /* OWAnalyticsEndpoints.swift in Sources */,
+				24A24A18291BAC7C00D72755 /* OWSafariViewControllerOptions.swift in Sources */,
 				24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */,
 				1628A75428EB0D8E0019B5EC /* OWAdCellViewModel.swift in Sources */,
 				24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */,
@@ -3758,6 +3803,7 @@
 				3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoints.swift in Sources */,
 				441165A52375C4BD00B781F3 /* OWDecodableParser.swift in Sources */,
 				3DDA9A5E2906D16800FE3B86 /* OWCommentSkeletonShimmeringCell.swift in Sources */,
+				24A24A1A291BEAB300D72755 /* OWSafariViewModel.swift in Sources */,
 				3D08E0AD2877216B00E6F1AC /* Optional+Extensions.swift in Sources */,
 				3D20A37727B017AF003F8513 /* OWConstraintLayoutGuideDSL.swift in Sources */,
 				3D08E09528770B8700E6F1AC /* IntegerType+OWIdentifiableType.swift in Sources */,
@@ -3804,6 +3850,7 @@
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
 				445418A823685154001D0ED0 /* Dictionary+JSONString.swift in Sources */,
+				24A24A14291BABB300D72755 /* OWSafariViewController.swift in Sources */,
 				3D611BB328C89BB8003960CE /* OWViewCompletion.swift in Sources */,
 				3D20A35C27A975DA003F8513 /* UIView+SemanticAttribute.swift in Sources */,
 				733170F02742530000728324 /* SPCommentCreationDTO.swift in Sources */,
@@ -3822,6 +3869,7 @@
 				4416C65D237B119200D3F7B9 /* SPRealTimeModel.swift in Sources */,
 				3DDA9A7F291A55BA00FE3B86 /* OWCustomizations.swift in Sources */,
 				44F247A32379B0F900B36F12 /* OWBaseUIImageView.swift in Sources */,
+				24A24A10291B9D7000D72755 /* OWSafariTabCoordinator.swift in Sources */,
 				73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */,
 				3D26B5AF28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift in Sources */,
 				4454189423685154001D0ED0 /* SPConfigurationInitialization.swift in Sources */,
@@ -3849,6 +3897,7 @@
 				3D08E0892877080300E6F1AC /* OWIdentifiableType.swift in Sources */,
 				3DB3D178281FC123008654CF /* SPLogMethod.swift in Sources */,
 				3D08E07A2875E30D00E6F1AC /* OWAnalyticsLayer.swift in Sources */,
+				3D33C0EC29461C4A0062BFC9 /* OWThemeStyleInjectorProtocol.swift in Sources */,
 				244FD0A426661A3300BFBC8F /* SPCommunityQuestionView.swift in Sources */,
 				445417FC23685144001D0ED0 /* UIBarButton+UIImage.swift in Sources */,
 				3DEDF61628C9D48800F87056 /* OWNavigationController.swift in Sources */,
@@ -3872,6 +3921,7 @@
 				3D08E0722875C42F00E6F1AC /* OWSDKCoordinator.swift in Sources */,
 				3D08E0912877095C00E6F1AC /* OWAnimatableSectionModel.swift in Sources */,
 				3D20A37127B015D4003F8513 /* OWConstraintInsetTarget.swift in Sources */,
+				3D33C0EE294624060062BFC9 /* OWThemeStyleUpdaterProtocol.swift in Sources */,
 				3D20A38B27B02027003F8513 /* OWConstraintPriority.swift in Sources */,
 				24B087CF288EB51F00CAA0EB /* OWFailureReportEndpoints.swift in Sources */,
 				24C3423829067133004189EA /* OWPreConversationHeaderView.swift in Sources */,
@@ -3929,6 +3979,7 @@
 				44F247A52379B23100B36F12 /* OWBaseScrollView.swift in Sources */,
 				3D20A39127B0219A003F8513 /* OWConstraintRelatableTarget.swift in Sources */,
 				3DB3D17A281FC60C008654CF /* SPLogLevel.swift in Sources */,
+				8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */,
 				4454188023685154001D0ED0 /* SPImagesFacade.swift in Sources */,
 				3DD72C62280DC23600117946 /* OWPostId+EncodeDecode.swift in Sources */,
 				3DDA9A4628F8523A00FE3B86 /* OWSkeletonShimmeringConfiguration.swift in Sources */,
@@ -4015,6 +4066,7 @@
 				3DB3D19F2831A5E8008654CF /* AuthenticationMetrics.swift in Sources */,
 				8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */,
 				3DB3D192282A82B4008654CF /* Array+Unwrap.swift in Sources */,
+				9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */,
 				5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */,
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
 				3DB3D190282A7F7C008654CF /* AuthenticationStatus.swift in Sources */,
@@ -4167,7 +4219,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4195,7 +4247,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4234,7 +4286,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4345,7 +4397,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4373,7 +4425,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4412,7 +4464,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4464,7 +4516,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4505,7 +4557,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4667,7 +4719,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4701,7 +4753,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -4729,7 +4781,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4754,7 +4806,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.18.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
