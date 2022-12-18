@@ -15,6 +15,7 @@ enum SPNetworkErrorCode: Int {
     case emptyResponse = 10002
     case noInternet = 10003
     case requestFailed = 10004
+    case missingStatusCode = 10005
     
 }
 
@@ -25,6 +26,7 @@ public enum SPNetworkError: Error {
     case emptyResponse
     case noInternet
     case requestFailed
+    case missingStatusCode
     
 }
 
@@ -46,6 +48,9 @@ extension SPNetworkError: LocalizedError {
         
         case .requestFailed:
             return LocalizationManager.localizedString(key: "Load conversation request failed")
+            
+        case .missingStatusCode:
+            return LocalizationManager.localizedString(key: "Missing status code")
         }
     }
 }
@@ -74,6 +79,8 @@ extension SPNetworkError: CustomNSError {
         case .requestFailed:
             return SPNetworkErrorCode.requestFailed.rawValue
             
+        case .missingStatusCode:
+            return SPNetworkErrorCode.missingStatusCode.rawValue
         }
     }
 }

@@ -52,7 +52,6 @@
 "Report" = "דיווח תגובה";
 "Report Comment" = "דיווח תגובה";
 "Reporting this comment will send it for review and hide it from your view" = "דיווח על תגובה זו ישלח לאדמין, כמו כן, התגובה תוסתר מהתצוגה שלך.";
-"Your comment has been rejected" = "פרסום התגובה לא אושר";
 "It seems like your comment has violated our policy. We recommend you try again with different phrasing." = "התגובה שכתבת ככל הנראה הפרה את המדיניות שלנו. אנו ממליצים לנסות לנסח שוב את תוכן התגובה.";
 "Reporting this comment will send it for review and hide it from your view" = "דיווח על תגובה זו ישלח לאדמין, כמו כן, התגובה תוסתר מהתצוגה שלך.";
 "Got it" = "תודה, קיבלתי";
@@ -100,6 +99,9 @@
 "Edit a Comment" = "ערוך תגובה";
 "Edit a comment" = "ערוך תגובה";
 "Recommend" = "המלץ/י";
-"Your comment has been rejected." = "תגובתך נדחתה.";
+"This comment violated our policy." = "תגובה זו הפרה את המדיניות שלנו.";
 "Hold on, your comment is waiting for approval." = "המתן בסבלנות, תגובתך ממתינה לאישור.";
 "Your comment is waiting for approval due to the site’s policy." = "התגובה שלך ממתינה לאישור, בכפוף למדיניות האתר.";
+"Mute" = "השתק";
+"Mute User" = "השתק משתמש";
+"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "לאחר השתקת משתמש לא תוכלו לראות את הפעילות שלו\/ה. לביצוע שינויים או ניהול המשתמשים שהושתקו היכנסו להגדרות הפרופיל";

@@ -9,8 +9,9 @@
 import Foundation
 
 protocol OWUserDefaultsProtocol {
-    func save<T>(value: T, forKey key: OWUserDefaults.OWKey<T>)
     func get<T>(key: OWUserDefaults.OWKey<T>) -> T?
+    func get<T>(key: OWUserDefaults.OWKey<T>, defaultValue: T) -> T
+    func save<T>(value: T, forKey key: OWUserDefaults.OWKey<T>)
     func remove<T>(key: OWUserDefaults.OWKey<T>)
 }
 
@@ -57,6 +58,10 @@ class OWUserDefaults : OWUserDefaultsProtocol {
         }
         
         return valueToReturn
+    }
+    
+    func get<T>(key: OWKey<T>, defaultValue: T) -> T {
+        return get(key: key) ?? defaultValue
     }
     
     func remove<T>(key: OWKey<T>) {
