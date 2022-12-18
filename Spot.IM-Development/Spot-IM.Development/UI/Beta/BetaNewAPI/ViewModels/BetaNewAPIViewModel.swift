@@ -27,16 +27,14 @@ protocol BetaNewAPIViewModelingInputs {
 protocol BetaNewAPIViewModelingOutputs {
     var title: String { get }
     var conversationPresets: Observable<[ConversationPreset]> { get }
-    var preFilledSpotId: Observable<String> { get }
-    var preFilledPostId: Observable<String> { get }
-    var showSelectPreset: Observable<Void> { get }
+    var spotId: Observable<String> { get }
+    var postId: Observable<String> { get }
     var shouldShowSelectPreset: Observable<Bool> { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openUIFlows: Observable<SDKConversationDataModel> { get }
     var openUIViews: Observable<SDKConversationDataModel> { get }
     var openMiscellaneous: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
-    var conversationPresetUpdated: PublishSubject<SDKConversationDataModel> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -63,24 +61,24 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let selectPresetTapped = PublishSubject<Void>()
     let settingsTapped = PublishSubject<Void>()
     let doneSelectPresetTapped = PublishSubject<Void>()
-    let conversationPresetUpdated = PublishSubject<SDKConversationDataModel>()
     
     fileprivate let _shouldShowSelectPreset = BehaviorSubject<Bool>(value: false)
     var shouldShowSelectPreset: Observable<Bool> {
         return _shouldShowSelectPreset
+            .distinctUntilChanged()
             .asObservable()
     }
     
-    fileprivate let _preFilledSpotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
-    var preFilledSpotId: Observable<String> {
-        return _preFilledSpotId
+    fileprivate let _spotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
+    var spotId: Observable<String> {
+        return _spotId
             .unwrap()
             .asObservable()
     }
     
-    fileprivate let _preFilledPostId = BehaviorSubject<String?>(value: Metrics.preFilledPostId)
-    var preFilledPostId: Observable<String> {
-        return _preFilledPostId
+    fileprivate let _postId = BehaviorSubject<String?>(value: Metrics.preFilledPostId)
+    var postId: Observable<String> {
+        return _postId
             .unwrap()
             .asObservable()
     }
@@ -98,11 +96,6 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     fileprivate let _openMiscellaneous = PublishSubject<SDKConversationDataModel>()
     var openMiscellaneous: Observable<SDKConversationDataModel> {
         return _openMiscellaneous.asObservable()
-    }
-    
-    fileprivate let _showSelectPreset = PublishSubject<Void>()
-    var showSelectPreset: Observable<Void> {
-        return _showSelectPreset.asObservable()
     }
     
     fileprivate let _openSettings = PublishSubject<Void>()
@@ -123,9 +116,6 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
             .asObservable()
     }
     
-    fileprivate let spotId = BehaviorSubject<String>(value: "")
-    fileprivate let postId = BehaviorSubject<String>(value: "")
-    
     init() {
         setupObservers()
     }
@@ -133,12 +123,12 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 
 fileprivate extension BetaNewAPIViewModel {
     func setupObservers() {
-        Observable.merge(preFilledSpotId, enteredSpotId)
-            .bind(to: spotId)
+        enteredSpotId
+            .bind(to: _spotId)
             .disposed(by: disposeBag)
         
-        Observable.merge(preFilledPostId, enteredPostId)
-            .bind(to: postId)
+        enteredPostId
+            .bind(to: _postId)
             .disposed(by: disposeBag)
         
         let conversationDataModelObservable = spotId
@@ -163,7 +153,8 @@ fileprivate extension BetaNewAPIViewModel {
             .disposed(by: disposeBag)
         
         selectPresetTapped
-            .bind(to: _showSelectPreset)
+            .map { true }
+            .bind(to: _shouldShowSelectPreset)
             .disposed(by: disposeBag)
 
         settingsTapped
@@ -175,8 +166,8 @@ fileprivate extension BetaNewAPIViewModel {
                          miscellaneousTapped.voidify(),
                          settingsTapped.voidify(),
                          enteredSpotId.voidify(),
-                         enteredPostId.voidify())
-            .map { false }
+                         enteredPostId.voidify(),
+                         doneSelectPresetTapped)
             .subscribe(onNext: { [weak self] _ in
                 
                 self?._shouldShowSelectPreset.onNext(false)
@@ -190,19 +181,20 @@ fileprivate extension BetaNewAPIViewModel {
                 
         doneSelectPresetTapped
             .withLatestFrom(_selectedConversationPresetIndex)
-        .withLatestFrom(conversationPresets) { index, presets -> SDKConversationDataModel? in
-            guard !presets.isEmpty else {
-                DLog("There isn't any conversation preset")
-                return nil
+            .withLatestFrom(conversationPresets) { index, presets -> SDKConversationDataModel? in
+                guard !presets.isEmpty else {
+                    DLog("There isn't any conversation preset")
+                    return nil
+                }
+                return presets[index].conversationDataModel
             }
-            return presets[index].conversationDataModel
-        }
-        .unwrap()
-        .do(onNext: { [weak self] dataModel in
-            self?.conversationPresetUpdated.onNext(dataModel)
-        })
-        .subscribe()
-        .disposed(by: disposeBag)
+            .unwrap()
+            .do(onNext: { [weak self] dataModel in
+                self?._spotId.onNext(dataModel.spotId)
+                self?._postId.onNext(dataModel.postId)
+            })
+            .subscribe()
+            .disposed(by: disposeBag)
             
     }
     
