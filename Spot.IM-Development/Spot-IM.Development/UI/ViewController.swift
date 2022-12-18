@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        currentSpotId = UserDefaults.standard.string(forKey: "spotIdKey") ?? ""
+        currentSpotId = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.spotIdKey, defaultValue: "")
         setupUI()
         fillVersionAndBuildNumber()
         
@@ -218,13 +218,13 @@ class ViewController: UIViewController {
             showArticles()
         }))
         alert.addAction(UIAlertAction(title: "Full-Conversation - Push", style: .default, handler: { action in
-            UserDefaults.standard.setValue(true, forKey: "shouldShowOpenFullConversation")
-            UserDefaults.standard.setValue(false, forKey: "shouldPresentInNewNavStack")
+            UserDefaultsProvider.shared.save(value: true, forKey: .shouldShowOpenFullConversation)
+            UserDefaultsProvider.shared.save(value: false, forKey: .shouldPresentInNewNavStack)
             showArticles()
         }))
         alert.addAction(UIAlertAction(title: "Full-Conversation - Present", style: .default, handler: { action in
-            UserDefaults.standard.setValue(true, forKey: "shouldShowOpenFullConversation")
-            UserDefaults.standard.setValue(true, forKey: "shouldPresentInNewNavStack")
+            UserDefaultsProvider.shared.save(value: true, forKey: .shouldShowOpenFullConversation)
+            UserDefaultsProvider.shared.save(value: true, forKey: .shouldPresentInNewNavStack)
             showArticles()
         }))
         
@@ -232,13 +232,13 @@ class ViewController: UIViewController {
         
         if (readOnlyMode != .enable) {
             alert.addAction(UIAlertAction(title: "Comment - (Conversation Push)", style: .default, handler: { action in
-                UserDefaults.standard.setValue(true, forKey: "shouldOpenComment")
-                UserDefaults.standard.setValue(false, forKey: "shouldPresentInNewNavStack")
+                UserDefaultsProvider.shared.save(value: true, forKey: .shouldOpenComment)
+                UserDefaultsProvider.shared.save(value: false, forKey: .shouldPresentInNewNavStack)
                 showArticles()
             }))
             alert.addAction(UIAlertAction(title: "Comment - (Conversation Present)", style: .default, handler: { action in
-                UserDefaults.standard.setValue(true, forKey: "shouldOpenComment")
-                UserDefaults.standard.setValue(true, forKey: "shouldPresentInNewNavStack")
+                UserDefaultsProvider.shared.save(value: true, forKey: .shouldOpenComment)
+                UserDefaultsProvider.shared.save(value: true, forKey: .shouldPresentInNewNavStack)
                 showArticles()
             }))
         }
@@ -256,7 +256,22 @@ class ViewController: UIViewController {
         let shouldReinit = spotId != currentSpotId
         currentSpotId = spotId
         let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, shouldReinint: shouldReinit)
-        navigationController?.pushViewController(controller, animated: true)
+        
+        //This is for testing with a Tabbar
+        setNavController(forController: controller, shouldAddTabBar: false)
+    }
+    
+    private func setNavController(forController controller: UIViewController, shouldAddTabBar: Bool) {
+        if shouldAddTabBar {
+            let navController = UINavigationController(rootViewController: controller)
+            let tabbar = UITabBarController()
+            tabbar.viewControllers = [
+                navController
+            ]
+            navigationController?.pushViewController(tabbar, animated: true)
+        } else {
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     private func showConversationCounter(with spotId: String) {
@@ -270,7 +285,7 @@ class ViewController: UIViewController {
     }
     
     private func setSpotId(spotId:String) {
-        UserDefaults.standard.setValue(spotId, forKey: "spotIdKey")
+        UserDefaultsProvider.shared.save(value: spotId, forKey: .spotIdKey)
         SpotIm.darkModeBackgroundColor = #colorLiteral(red: 0.06274509804, green: 0.07058823529, blue: 0.2117647059, alpha: 1)
     }
 

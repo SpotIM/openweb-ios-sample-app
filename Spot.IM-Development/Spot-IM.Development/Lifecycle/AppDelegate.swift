@@ -21,10 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Custom fonts example
 //         SpotIm.customFontFamily = "Roboto"
         
-        UserDefaults.standard.removeObject(forKey: "shouldShowOpenFullConversation")
-        UserDefaults.standard.removeObject(forKey: "shouldPresentInNewNavStack")
-        UserDefaults.standard.removeObject(forKey: "shouldOpenComment")
-        
+        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldShowOpenFullConversation)
+        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack)
+        UserDefaultsProvider.shared.remove(key: UserDefaultsProvider.UDKey<Bool>.shouldOpenComment)
+    
         return true
     }
 }

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.0] - 2022-12-08
+### Features
+- Support mute feature.
+- Support hiding edit option according to backend configuration.
+### Changes
+- Add source field to the customizeView in SpotImCustomUIDelegate (see documentation for the full changes).
+- Better description for rejected comments.
+### Internal
+- UI for pre conversation community guidelines questions.
+- Fix SDK version which sent in network headers.
+- Added mock users for testing.
+- Added beta scheme.
+
 ## [1.17.0] - 2022-11-16
 ### Bugs
 - Fixed the issue where a user couldn't enter his/her profile screen after pressing on the avatar from a comment which was just created
