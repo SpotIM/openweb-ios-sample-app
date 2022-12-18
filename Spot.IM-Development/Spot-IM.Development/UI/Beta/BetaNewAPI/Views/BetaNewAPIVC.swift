@@ -286,15 +286,12 @@ fileprivate extension BetaNewAPIVC {
     
     func setupObservers() {
         title = viewModel.outputs.title
-        
-        // Pre filled
-        viewModel.outputs.preFilledSpotId
-            .take(1)
+
+        viewModel.outputs.spotId
             .bind(to: txtFieldSpotId.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel.outputs.preFilledPostId
-            .take(1)
+        viewModel.outputs.postId
             .bind(to: txtFieldPostId.rx.text)
             .disposed(by: disposeBag)
         
@@ -328,7 +325,6 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         btnUIFlows.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.uiFlowsTapped)
             .disposed(by: disposeBag)
         
@@ -342,21 +338,19 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         btnUIViews.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.uiViewsTapped)
             .disposed(by: disposeBag)
         
         viewModel.outputs.openUIViews
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
-                let uiFlowsVM = UIViewsViewModel(dataModel: dataModel)
-                let uiFlowsVC = UIViewsVC(viewModel: uiFlowsVM)
-                self.navigationController?.pushViewController(uiFlowsVC, animated: true)
+                let uiViewsVM = UIViewsViewModel(dataModel: dataModel)
+                let uiViewsVC = UIViewsVC(viewModel: uiViewsVM)
+                self.navigationController?.pushViewController(uiViewsVC, animated: true)
             })
             .disposed(by: disposeBag)
         
         btnMiscellaneous.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.miscellaneousTapped)
             .disposed(by: disposeBag)
         
@@ -370,7 +364,6 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         settingsRightBarItem.rx.tap
-            .map { PresentationalModeCompact.push }
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
         
@@ -382,29 +375,13 @@ fileprivate extension BetaNewAPIVC {
             .disposed(by: disposeBag)
         
         // Bind select preset
-        let _showPresetPicker = PublishSubject<Bool>()
-        
-        _showPresetPicker.subscribe(onNext: { [weak self] isShown in
-            guard let self = self else { return }
-            self.showPresetPicker(isShown)
-        })
-        .disposed(by: disposeBag)
-        
-        viewModel.outputs.showSelectPreset
-            .withLatestFrom(viewModel.outputs.shouldShowSelectPreset)
-            .filter({ !$0 })
-            .subscribe { _showPresetPicker.onNext(!$0) }
-            .disposed(by: disposeBag)
-        
         viewModel.outputs.shouldShowSelectPreset
             .skip(1)
-            .filter { !$0 }
-            .subscribe { _showPresetPicker.onNext($0) }
+            .subscribe { [weak self] in self?.showPresetPicker($0) }
             .disposed(by: disposeBag)
         
         btnDone.rx.tap
             .map { false }
-            .do(onNext: { _showPresetPicker.onNext($0) })
             .voidify()
             .bind(to: viewModel.inputs.doneSelectPresetTapped)
             .disposed(by: disposeBag)
@@ -424,13 +401,6 @@ fileprivate extension BetaNewAPIVC {
             }
             .bind(to: presetPicker.rx.itemTitles) { _, item in
                 return item
-            }
-            .disposed(by: disposeBag)
-        
-        viewModel.outputs.conversationPresetUpdated
-            .subscribe { [weak self] dataModel in
-                self?.txtFieldSpotId.rx.text.onNext(dataModel.spotId)
-                self?.txtFieldPostId.rx.text.onNext(dataModel.postId)
             }
             .disposed(by: disposeBag)
     }
