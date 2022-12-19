@@ -47,8 +47,8 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     var outputs: BetaNewAPIViewModelingOutputs { return self }
     
     fileprivate struct Metrics {
-        static let preFilledSpotId: String? = "sp_eCIlROSD"
-        static let preFilledPostId: String? = "sdk1"
+        static let preFilledSpotId: String = "sp_eCIlROSD"
+        static let preFilledPostId: String = "sdk1"
     }
     
     fileprivate let disposeBag = DisposeBag()
@@ -69,17 +69,15 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
             .asObservable()
     }
     
-    fileprivate let _spotId = BehaviorSubject<String?>(value: Metrics.preFilledSpotId)
+    fileprivate let _spotId = BehaviorSubject<String>(value: Metrics.preFilledSpotId)
     var spotId: Observable<String> {
         return _spotId
-            .unwrap()
             .asObservable()
     }
     
-    fileprivate let _postId = BehaviorSubject<String?>(value: Metrics.preFilledPostId)
+    fileprivate let _postId = BehaviorSubject<String>(value: Metrics.preFilledPostId)
     var postId: Observable<String> {
         return _postId
-            .unwrap()
             .asObservable()
     }
     
@@ -133,7 +131,6 @@ fileprivate extension BetaNewAPIViewModel {
         
         let conversationDataModelObservable = spotId
                     .withLatestFrom(postId) { [weak self] spotId, postId -> SDKConversationDataModel in
-                        self?.setSDKSpotId(spotId)
                         return SDKConversationDataModel(spotId: spotId, postId: postId)
                     }
         
@@ -171,6 +168,16 @@ fileprivate extension BetaNewAPIViewModel {
             .subscribe(onNext: { [weak self] _ in
                 
                 self?._shouldShowSelectPreset.onNext(false)
+            })
+            .disposed(by: disposeBag)
+        
+        Observable.merge(uiFlowsTapped.voidify(),
+                         uiViewsTapped.voidify(),
+                         miscellaneousTapped.voidify())
+            .withLatestFrom(spotId)
+            .subscribe(onNext: { [weak self] spotId in
+                
+                self?.setSDKSpotId(spotId)
             })
             .disposed(by: disposeBag)
         
