@@ -12,30 +12,88 @@ import RxCocoa
 
 class OWCommentContentView: UIView {
     fileprivate struct Metrics {
-        
+        static let fontSize: CGFloat = 16.0
+        static let commentMediaTopPadding: CGFloat = 12.0
+        static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
     
-    fileprivate let viewModel: OWCommentContentViewModeling
+    fileprivate lazy var textLabel: UILabel = {
+       return UILabel()
+            .numberOfLines(0)
+            .font(.preferred(style: .regular, of: Metrics.fontSize))
+    }()
+    
+    fileprivate lazy var mediaView: CommentMediaView = {
+        return CommentMediaView()
+    }()
+    
+    fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate let disposeBag = DisposeBag()
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(viewModel: OWCommentContentViewModeling) {
-        self.viewModel = viewModel
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupViews()
+    }
+    
+    func configure(with viewModel: OWCommentContentViewModeling) {
+        self.viewModel = viewModel
         setupObservers()
     }
 }
 
 fileprivate extension OWCommentContentView {
     func setupViews() {
-
+        self.addSubviews(textLabel, mediaView)
+        
+        textLabel.OWSnp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        
+        mediaView.OWSnp.makeConstraints { make in
+            make.top.equalTo(textLabel.OWSnp.bottom).offset(Metrics.emptyCommentMediaTopPadding)
+            make.leading.bottom.equalToSuperview()
+            make.trailing.lessThanOrEqualToSuperview()
+            make.size.equalTo(0)
+        }
     }
     
     func setupObservers() {
-
+        viewModel.outputs.attributedString
+            .bind(onNext: { [weak self] attributedString in
+                self?.textLabel.attributedText = attributedString
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.imageUrl
+            .unwrap()
+            .subscribe(onNext: { [weak self] url in
+                guard let self = self else { return }
+                self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
+            })
+            .disposed(by: disposeBag)
+                
+        viewModel.outputs.gifUrl
+            .unwrap()
+            .subscribe(onNext: { [weak self] url in
+                guard let self = self else { return }
+                self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.mediaSize
+            .bind(onNext: { [weak self] size in
+                guard let self = self else { return }
+                self.mediaView.OWSnp.updateConstraints { make in
+                    make.size.equalTo(size ?? 0)
+                    make.top.equalTo(self.textLabel.OWSnp.bottom).offset(
+                        size != nil && size != CGSize.zero ? Metrics.commentMediaTopPadding : Metrics.emptyCommentMediaTopPadding
+                    )
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }

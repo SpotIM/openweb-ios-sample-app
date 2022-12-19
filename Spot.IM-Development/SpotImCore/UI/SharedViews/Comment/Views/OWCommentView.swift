@@ -27,7 +27,7 @@ class OWCommentView: UIView {
     
     fileprivate lazy var contentView: OWCommentContentView = {
         let vm = viewModel.outputs.contentVM
-        return OWCommentContentView(viewModel: vm)
+        return OWCommentContentView()
     }()
     
     fileprivate lazy var actionsView: OWCommentActionsView = {
