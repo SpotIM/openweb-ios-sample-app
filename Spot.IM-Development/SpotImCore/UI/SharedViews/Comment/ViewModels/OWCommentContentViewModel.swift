@@ -70,7 +70,9 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     
     var imageUrl: Observable<URL?> {
         _comment
-            .map { URL(string: $0?.image?.imageId ?? "") } // TODO: the url should be build using the image id
+            .map { [weak self] comment in
+                return self?.imageURL(with: comment?.image?.imageId, size: nil)
+            }
             .asObservable()
     }
     
@@ -136,24 +138,27 @@ fileprivate extension OWCommentContentViewModel {
         return CGSize(width: CGFloat(width), height: CGFloat(height))
     }
     
-//    func getMediaSize() -> CGSize {
-//        guard let mediaHeight = commentMediaOriginalHeight,
-//              let mediaWidth = commentMediaOriginalWidth
-//        else { return CGSize(width: 0, height: 0) }
-//        let leadingOffset: CGFloat = depthOffset()
-//        let maxWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset
-//
-//        // calculate media width according to height ratio
-//        var height = Theme.commentMediaMaxHeight
-//        var ratio: Float = Float(height / Float(mediaHeight))
-//        var width = ratio * Float(mediaWidth)
-//        // if width > cell - recalculate size
-//        if width > Float(maxWidth) {
-//            width = (Float)(maxWidth)
-//            ratio = Float(width / Float(mediaWidth))
-//            height = (ratio * Float(mediaHeight))
-//        }
-//
-//        return CGSize(width: CGFloat(width), height: CGFloat(height))
-//    }
+    // TODO: should be in some imageprovider
+    func imageURL(with id: String?, size: CGSize? = nil) -> URL? {
+        guard var id = id else { return nil }
+        
+        if id.hasPrefix(SPImageRequestConstants.placeholderImagePrefix) {
+            id.removeFirst(SPImageRequestConstants.placeholderImagePrefix.count)
+            id = SPImageRequestConstants.avatarPathComponent.appending(id)
+        }
+        return URL(string: cloudinaryURLString(size).appending(id))
+    }
+    private func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
+        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
+        
+        if let imageSize = imageSize {
+            result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
+                "\(Int(imageSize.width))" +
+                "\(SPImageRequestConstants.cloudinaryHeightPrefix)" +
+                "\(Int(imageSize.height))"
+            )
+        }
+        
+        return result.appending("/")
+    }
 }
