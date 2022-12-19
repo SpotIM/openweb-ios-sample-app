@@ -410,6 +410,7 @@ fileprivate extension BetaNewAPIVC {
     
     func showPresetPicker(_ isShown: Bool) {
         if isShown {
+            // Dismiss keyboard
             self.view.endEditing(true)
         }
         UIView.animate(withDuration: Metrics.animatePickerDuration,
