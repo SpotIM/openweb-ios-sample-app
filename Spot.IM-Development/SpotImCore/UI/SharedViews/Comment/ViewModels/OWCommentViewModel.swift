@@ -16,12 +16,12 @@ protocol OWCommentViewModelingInputs {
 
 protocol OWCommentViewModelingOutputs {
     var commentUserVM: OWCommentUserViewModeling { get }
-    var contentVM: OWCommentContentViewModeling { get }
     var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
     
     var commentHeaderVM: OWCommentHeaderViewModeling? { get }
     var commentLabelVM: OWCommentLabelViewModeling? { get }
+    var contentVM: OWCommentContentViewModeling? { get }
 }
 
 protocol OWCommentViewModeling {
@@ -40,10 +40,6 @@ class OWCommentViewModel: OWCommentViewModeling,
 //        return OWCommentUserViewModel(user: nil, imageProvider: nil)
 //    }
     
-    var contentVM: OWCommentContentViewModeling {
-        return OWCommentContentViewModel()
-    }
-    
     var statusIndicationVM: OWCommentStatusIndicationViewModeling {
         return OWCommentStatusIndicationViewModel()
     }
@@ -54,11 +50,13 @@ class OWCommentViewModel: OWCommentViewModeling,
     
     var commentHeaderVM: OWCommentHeaderViewModeling? = nil // TODO!!! should not be optional
     var commentLabelVM: OWCommentLabelViewModeling? = nil
+    var contentVM: OWCommentContentViewModeling? = nil
     
     init(comment: SPComment, user: SPUser, replyTo: SPUser?) {
         commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel(user: user, replyTo: replyTo, model: comment)
         commentLabelVM = OWCommentLabelViewModel(comment: comment)
+        contentVM = OWCommentContentViewModel(comment: comment)
     }
     
     // TODO: DELETE ?
