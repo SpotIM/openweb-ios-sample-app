@@ -525,7 +525,7 @@
 		73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */; };
 		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
 		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
-        9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
+		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
 		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
 		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
@@ -2067,6 +2067,26 @@
 			path = InternalLayers;
 			sourceTree = "<group>";
 		};
+		3DA263FB2950CAD500688FFF /* Network API - Before the refactor */ = {
+			isa = PBXGroup;
+			children = (
+				6D22A46423BBA23F00DCE08A /* Extension */,
+				4454182D23685153001D0ED0 /* DataProviders */,
+				4454183723685153001D0ED0 /* Requests */,
+				4454183E23685153001D0ED0 /* NetworkCommon */,
+				4454184423685153001D0ED0 /* RequestModels */,
+				441165A02375BBC100B781F3 /* OWApiManager.swift */,
+			);
+			path = "Network API - Before the refactor";
+			sourceTree = "<group>";
+		};
+		3DA263FC2950CB0B00688FFF /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
 		3DB3D176281FC0C6008654CF /* SPPublicModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -2143,7 +2163,7 @@
 			path = Style;
 			sourceTree = "<group>";
 		};
-		3DD72C63280EF03E00117946 /* Infra - Currently not in used */ = {
+		3DD72C63280EF03E00117946 /* New Network API - After the refactor */ = {
 			isa = PBXGroup;
 			children = (
 				3DD72C7B280F052600117946 /* Session */,
@@ -2153,7 +2173,7 @@
 				3DD72C6D280EF81000117946 /* Middleware */,
 				3DD72C79280EFA0200117946 /* OWNetworkAPI.swift */,
 			);
-			path = "Infra - Currently not in used";
+			path = "New Network API - After the refactor";
 			sourceTree = "<group>";
 		};
 		3DD72C64280EF05100117946 /* Environment */ = {
@@ -2711,13 +2731,9 @@
 		4454182C23685153001D0ED0 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				3DD72C63280EF03E00117946 /* Infra - Currently not in used */,
-				6D22A46423BBA23F00DCE08A /* Extension */,
-				4454182D23685153001D0ED0 /* DataProviders */,
-				4454183723685153001D0ED0 /* Requests */,
-				4454183E23685153001D0ED0 /* NetworkCommon */,
-				4454184423685153001D0ED0 /* RequestModels */,
-				441165A02375BBC100B781F3 /* OWApiManager.swift */,
+				3DA263FC2950CB0B00688FFF /* Infrastructure */,
+				3DD72C63280EF03E00117946 /* New Network API - After the refactor */,
+				3DA263FB2950CAD500688FFF /* Network API - Before the refactor */,
 			);
 			path = Network;
 			sourceTree = "<group>";
