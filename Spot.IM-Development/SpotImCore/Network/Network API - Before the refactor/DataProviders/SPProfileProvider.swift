@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 import RxSwift
 
 internal final class SPProfileProvider: NetworkDataProvider {

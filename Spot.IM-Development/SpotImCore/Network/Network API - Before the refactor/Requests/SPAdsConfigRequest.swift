@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 internal enum SPAdsConfigRequest: SPRequest {
     case adsConfig

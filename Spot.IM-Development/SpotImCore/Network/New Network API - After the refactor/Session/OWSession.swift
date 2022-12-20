@@ -7,11 +7,10 @@
 //
 
 import Foundation
-import Alamofire
 
 /*
  OWSessionProtocol - Defining our own session protocol so we can do more complex stuff in the future
- Also we will be independent of Alamofire in the future if we will choose so
+ Also we will be independent of network infrastructure in the future if we will choose so
  */
 protocol OWSessionProtocol {
     var afSession: Session { get }

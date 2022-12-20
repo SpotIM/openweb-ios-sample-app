@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 struct RawReportModel {
     let url: String

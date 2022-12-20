@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 enum OWFailureReportEndpoints: OWEndpoints {
     case error(error: SPError)

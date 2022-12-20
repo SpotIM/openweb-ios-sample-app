@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 enum OWConversationEndpoints: OWEndpoints {
     case conversationAsync(articleUrl: String)

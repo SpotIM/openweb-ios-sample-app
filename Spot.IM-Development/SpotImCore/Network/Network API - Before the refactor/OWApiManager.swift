@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 protocol OWResponseParser {
     
@@ -101,7 +100,7 @@ final class OWApiManager {
     
     var requestDidSucceed: ((SPRequest) -> Void)?
     
-    let session: Alamofire.Session
+    let session: Session
     fileprivate let networkInterceptor: OWNetworkInterceptor
     
     init(networkInterceptor: OWNetworkInterceptor = OWNetworkInterceptor()) {
