@@ -9,12 +9,12 @@
 import Foundation
 
 /// Responsible for managing the mapping of `ServerTrustEvaluating` values to given hosts.
-class ServerTrustManager {
+class OWNetworkServerTrustManager {
     /// Determines whether all hosts for this `ServerTrustManager` must be evaluated. `true` by default.
     let allHostsMustBeEvaluated: Bool
 
     /// The dictionary of policies mapped to a particular host.
-    let evaluators: [String: ServerTrustEvaluating]
+    let evaluators: [String: OWNetworkServerTrustEvaluating]
 
     /// Initializes the `ServerTrustManager` instance with the given evaluators.
     ///
@@ -27,7 +27,7 @@ class ServerTrustManager {
     ///   - allHostsMustBeEvaluated: The value determining whether all hosts for this instance must be evaluated. `true`
     ///                              by default.
     ///   - evaluators:              A dictionary of evaluators mapped to hosts.
-    init(allHostsMustBeEvaluated: Bool = true, evaluators: [String: ServerTrustEvaluating]) {
+    init(allHostsMustBeEvaluated: Bool = true, evaluators: [String: OWNetworkServerTrustEvaluating]) {
         self.allHostsMustBeEvaluated = allHostsMustBeEvaluated
         self.evaluators = evaluators
     }
@@ -42,10 +42,10 @@ class ServerTrustManager {
     /// - Returns:        The `ServerTrustEvaluating` value for the given host if found, `nil` otherwise.
     /// - Throws:         `AFError.serverTrustEvaluationFailed` if `allHostsMustBeEvaluated` is `true` and no matching
     ///                   evaluators are found.
-    func serverTrustEvaluator(forHost host: String) throws -> ServerTrustEvaluating? {
+    func serverTrustEvaluator(forHost host: String) throws -> OWNetworkServerTrustEvaluating? {
         guard let evaluator = evaluators[host] else {
             if allHostsMustBeEvaluated {
-                throw AFError.serverTrustEvaluationFailed(reason: .noRequiredEvaluator(host: host))
+                throw OWNetworkError.serverTrustEvaluationFailed(reason: .noRequiredEvaluator(host: host))
             }
 
             return nil
@@ -56,7 +56,7 @@ class ServerTrustManager {
 }
 
 /// A protocol describing the API used to evaluate server trusts.
-protocol ServerTrustEvaluating {
+protocol OWNetworkServerTrustEvaluating {
     /// Evaluates the given `SecTrust` value for the given `host`.
     ///
     /// - Parameters:
@@ -72,7 +72,7 @@ protocol ServerTrustEvaluating {
 /// An evaluator which uses the default server trust evaluation while allowing you to control whether to validate the
 /// host provided by the challenge. Applications are encouraged to always validate the host in production environments
 /// to guarantee the validity of the server's certificate chain.
-final class DefaultTrustEvaluator: ServerTrustEvaluating {
+class OWNetworkDefaultTrustEvaluator: OWNetworkServerTrustEvaluating {
     private let validateHost: Bool
 
     /// Creates a `DefaultTrustEvaluator`.
@@ -84,10 +84,10 @@ final class DefaultTrustEvaluator: ServerTrustEvaluating {
 
     func evaluate(_ trust: SecTrust, forHost host: String) throws {
         if validateHost {
-            try trust.af.performValidation(forHost: host)
+            try trust.owNetwork.performValidation(forHost: host)
         }
 
-        try trust.af.performDefaultValidation(forHost: host)
+        try trust.owNetwork.performDefaultValidation(forHost: host)
     }
 }
 
@@ -96,7 +96,7 @@ final class DefaultTrustEvaluator: ServerTrustEvaluating {
 /// Apple platforms did not start testing for revoked certificates automatically until iOS 10.1, macOS 10.12 and tvOS
 /// 10.1 which is demonstrated in our TLS tests. Applications are encouraged to always validate the host in production
 /// environments to guarantee the validity of the server's certificate chain.
-final class RevocationTrustEvaluator: ServerTrustEvaluating {
+class OWNetworkRevocationTrustEvaluator: OWNetworkServerTrustEvaluating {
     /// Represents the options to be use when evaluating the status of a certificate.
     /// Only Revocation Policy Constants are valid, and can be found in [Apple's documentation](https://developer.apple.com/documentation/security/certificate_key_and_trust_services/policies/1563600-revocation_policy_constants).
     struct Options: OptionSet {
@@ -151,26 +151,26 @@ final class RevocationTrustEvaluator: ServerTrustEvaluating {
 
     func evaluate(_ trust: SecTrust, forHost host: String) throws {
         if performDefaultValidation {
-            try trust.af.performDefaultValidation(forHost: host)
+            try trust.owNetwork.performDefaultValidation(forHost: host)
         }
 
         if validateHost {
-            try trust.af.performValidation(forHost: host)
+            try trust.owNetwork.performValidation(forHost: host)
         }
 
         if #available(iOS 12, macOS 10.14, tvOS 12, watchOS 5, *) {
-            try trust.af.evaluate(afterApplying: SecPolicy.af.revocation(options: options))
+            try trust.owNetwork.evaluate(afterApplying: SecPolicy.owNetwork.revocation(options: options))
         } else {
-            try trust.af.validate(policy: SecPolicy.af.revocation(options: options)) { status, result in
-                AFError.serverTrustEvaluationFailed(reason: .revocationCheckFailed(output: .init(host, trust, status, result), options: options))
+            try trust.owNetwork.validate(policy: SecPolicy.owNetwork.revocation(options: options)) { status, result in
+                OWNetworkError.serverTrustEvaluationFailed(reason: .revocationCheckFailed(output: .init(host, trust, status, result), options: options))
             }
         }
     }
 }
 
-extension ServerTrustEvaluating where Self == RevocationTrustEvaluator {
+extension OWNetworkServerTrustEvaluating where Self == OWNetworkRevocationTrustEvaluator {
     /// Provides a default `RevocationTrustEvaluator` instance.
-    static var revocationChecking: RevocationTrustEvaluator { RevocationTrustEvaluator() }
+    static var revocationChecking: OWNetworkRevocationTrustEvaluator { OWNetworkRevocationTrustEvaluator() }
 
     /// Creates a `RevocationTrustEvaluator` using the provided parameters.
     ///
@@ -188,8 +188,8 @@ extension ServerTrustEvaluating where Self == RevocationTrustEvaluator {
     /// - Returns:                    The `RevocationTrustEvaluator`.
     static func revocationChecking(performDefaultValidation: Bool = true,
                                           validateHost: Bool = true,
-                                          options: RevocationTrustEvaluator.Options = .any) -> RevocationTrustEvaluator {
-        RevocationTrustEvaluator(performDefaultValidation: performDefaultValidation,
+                                          options: OWNetworkRevocationTrustEvaluator.Options = .any) -> OWNetworkRevocationTrustEvaluator {
+        OWNetworkRevocationTrustEvaluator(performDefaultValidation: performDefaultValidation,
                                  validateHost: validateHost,
                                  options: options)
     }
@@ -200,7 +200,7 @@ extension ServerTrustEvaluating where Self == RevocationTrustEvaluator {
 /// pinning provides a very secure form of server trust validation mitigating most, if not all, MITM attacks.
 /// Applications are encouraged to always validate the host and require a valid certificate chain in production
 /// environments.
-final class PinnedCertificatesTrustEvaluator: ServerTrustEvaluating {
+class OWNetworkPinnedCertificatesTrustEvaluator: OWNetworkServerTrustEvaluating {
     private let certificates: [SecCertificate]
     private let acceptSelfSignedCertificates: Bool
     private let performDefaultValidation: Bool
@@ -219,7 +219,7 @@ final class PinnedCertificatesTrustEvaluator: ServerTrustEvaluating {
     ///   - validateHost:                 Determines whether or not the evaluator should validate the host, in addition
     ///                                   to performing the default evaluation, even if `performDefaultValidation` is
     ///                                   `false`. `true` by default.
-    init(certificates: [SecCertificate] = Bundle.main.af.certificates,
+    init(certificates: [SecCertificate] = Bundle.main.owNetwork.certificates,
                 acceptSelfSignedCertificates: Bool = false,
                 performDefaultValidation: Bool = true,
                 validateHost: Bool = true) {
@@ -231,36 +231,36 @@ final class PinnedCertificatesTrustEvaluator: ServerTrustEvaluating {
 
     func evaluate(_ trust: SecTrust, forHost host: String) throws {
         guard !certificates.isEmpty else {
-            throw AFError.serverTrustEvaluationFailed(reason: .noCertificatesFound)
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .noCertificatesFound)
         }
 
         if acceptSelfSignedCertificates {
-            try trust.af.setAnchorCertificates(certificates)
+            try trust.owNetwork.setAnchorCertificates(certificates)
         }
 
         if performDefaultValidation {
-            try trust.af.performDefaultValidation(forHost: host)
+            try trust.owNetwork.performDefaultValidation(forHost: host)
         }
 
         if validateHost {
-            try trust.af.performValidation(forHost: host)
+            try trust.owNetwork.performValidation(forHost: host)
         }
 
-        let serverCertificatesData = Set(trust.af.certificateData)
-        let pinnedCertificatesData = Set(certificates.af.data)
+        let serverCertificatesData = Set(trust.owNetwork.certificateData)
+        let pinnedCertificatesData = Set(certificates.owNetwork.data)
         let pinnedCertificatesInServerData = !serverCertificatesData.isDisjoint(with: pinnedCertificatesData)
         if !pinnedCertificatesInServerData {
-            throw AFError.serverTrustEvaluationFailed(reason: .certificatePinningFailed(host: host,
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .certificatePinningFailed(host: host,
                                                                                         trust: trust,
                                                                                         pinnedCertificates: certificates,
-                                                                                        serverCertificates: trust.af.certificates))
+                                                                                        serverCertificates: trust.owNetwork.certificates))
         }
     }
 }
 
-extension ServerTrustEvaluating where Self == PinnedCertificatesTrustEvaluator {
+extension OWNetworkServerTrustEvaluating where Self == OWNetworkPinnedCertificatesTrustEvaluator {
     /// Provides a default `PinnedCertificatesTrustEvaluator` instance.
-    static var pinnedCertificates: PinnedCertificatesTrustEvaluator { PinnedCertificatesTrustEvaluator() }
+    static var pinnedCertificates: OWNetworkPinnedCertificatesTrustEvaluator { OWNetworkPinnedCertificatesTrustEvaluator() }
 
     /// Creates a `PinnedCertificatesTrustEvaluator` using the provided parameters.
     ///
@@ -275,11 +275,11 @@ extension ServerTrustEvaluating where Self == PinnedCertificatesTrustEvaluator {
     ///   - validateHost:                 Determines whether or not the evaluator should validate the host, in addition
     ///                                   to performing the default evaluation, even if `performDefaultValidation` is
     ///                                   `false`. `true` by default.
-    static func pinnedCertificates(certificates: [SecCertificate] = Bundle.main.af.certificates,
+    static func pinnedCertificates(certificates: [SecCertificate] = Bundle.main.owNetwork.certificates,
                                           acceptSelfSignedCertificates: Bool = false,
                                           performDefaultValidation: Bool = true,
-                                          validateHost: Bool = true) -> PinnedCertificatesTrustEvaluator {
-        PinnedCertificatesTrustEvaluator(certificates: certificates,
+                                          validateHost: Bool = true) -> OWNetworkPinnedCertificatesTrustEvaluator {
+        OWNetworkPinnedCertificatesTrustEvaluator(certificates: certificates,
                                          acceptSelfSignedCertificates: acceptSelfSignedCertificates,
                                          performDefaultValidation: performDefaultValidation,
                                          validateHost: validateHost)
@@ -291,7 +291,7 @@ extension ServerTrustEvaluating where Self == PinnedCertificatesTrustEvaluator {
 /// key pinning provides a very secure form of server trust validation mitigating most, if not all, MITM attacks.
 /// Applications are encouraged to always validate the host and require a valid certificate chain in production
 /// environments.
-final class PublicKeysTrustEvaluator: ServerTrustEvaluating {
+class OWNetworkPublicKeysTrustEvaluator: OWNetworkServerTrustEvaluating {
     private let keys: [SecKey]
     private let performDefaultValidation: Bool
     private let validateHost: Bool
@@ -309,7 +309,7 @@ final class PublicKeysTrustEvaluator: ServerTrustEvaluating {
     ///   - validateHost:             Determines whether or not the evaluator should validate the host, in addition to
     ///                               performing the default evaluation, even if `performDefaultValidation` is `false`.
     ///                               `true` by default.
-    init(keys: [SecKey] = Bundle.main.af.publicKeys,
+    init(keys: [SecKey] = Bundle.main.owNetwork.publicKeys,
                 performDefaultValidation: Bool = true,
                 validateHost: Bool = true) {
         self.keys = keys
@@ -319,19 +319,19 @@ final class PublicKeysTrustEvaluator: ServerTrustEvaluating {
 
     func evaluate(_ trust: SecTrust, forHost host: String) throws {
         guard !keys.isEmpty else {
-            throw AFError.serverTrustEvaluationFailed(reason: .noPublicKeysFound)
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .noPublicKeysFound)
         }
 
         if performDefaultValidation {
-            try trust.af.performDefaultValidation(forHost: host)
+            try trust.owNetwork.performDefaultValidation(forHost: host)
         }
 
         if validateHost {
-            try trust.af.performValidation(forHost: host)
+            try trust.owNetwork.performValidation(forHost: host)
         }
 
         let pinnedKeysInServerKeys: Bool = {
-            for serverPublicKey in trust.af.publicKeys {
+            for serverPublicKey in trust.owNetwork.publicKeys {
                 for pinnedPublicKey in keys {
                     if serverPublicKey == pinnedPublicKey {
                         return true
@@ -342,17 +342,17 @@ final class PublicKeysTrustEvaluator: ServerTrustEvaluating {
         }()
 
         if !pinnedKeysInServerKeys {
-            throw AFError.serverTrustEvaluationFailed(reason: .publicKeyPinningFailed(host: host,
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .publicKeyPinningFailed(host: host,
                                                                                       trust: trust,
                                                                                       pinnedKeys: keys,
-                                                                                      serverKeys: trust.af.publicKeys))
+                                                                                      serverKeys: trust.owNetwork.publicKeys))
         }
     }
 }
 
-extension ServerTrustEvaluating where Self == PublicKeysTrustEvaluator {
+extension OWNetworkServerTrustEvaluating where Self == OWNetworkPublicKeysTrustEvaluator {
     /// Provides a default `PublicKeysTrustEvaluator` instance.
-    static var publicKeys: PublicKeysTrustEvaluator { PublicKeysTrustEvaluator() }
+    static var publicKeys: OWNetworkPublicKeysTrustEvaluator { OWNetworkPublicKeysTrustEvaluator() }
 
     /// Creates a `PublicKeysTrustEvaluator` from the provided parameters.
     ///
@@ -367,22 +367,22 @@ extension ServerTrustEvaluating where Self == PublicKeysTrustEvaluator {
     ///   - validateHost:             Determines whether or not the evaluator should validate the host, in addition to
     ///                               performing the default evaluation, even if `performDefaultValidation` is `false`.
     ///                               `true` by default.
-    static func publicKeys(keys: [SecKey] = Bundle.main.af.publicKeys,
+    static func publicKeys(keys: [SecKey] = Bundle.main.owNetwork.publicKeys,
                                   performDefaultValidation: Bool = true,
-                                  validateHost: Bool = true) -> PublicKeysTrustEvaluator {
-        PublicKeysTrustEvaluator(keys: keys, performDefaultValidation: performDefaultValidation, validateHost: validateHost)
+                                  validateHost: Bool = true) -> OWNetworkPublicKeysTrustEvaluator {
+        OWNetworkPublicKeysTrustEvaluator(keys: keys, performDefaultValidation: performDefaultValidation, validateHost: validateHost)
     }
 }
 
 /// Uses the provided evaluators to validate the server trust. The trust is only considered valid if all of the
 /// evaluators consider it valid.
-final class CompositeTrustEvaluator: ServerTrustEvaluating {
-    private let evaluators: [ServerTrustEvaluating]
+class OWNetworkCompositeTrustEvaluator: OWNetworkServerTrustEvaluating {
+    private let evaluators: [OWNetworkServerTrustEvaluating]
 
     /// Creates a `CompositeTrustEvaluator` from the provided evaluators.
     ///
     /// - Parameter evaluators: The `ServerTrustEvaluating` values used to evaluate the server trust.
-    init(evaluators: [ServerTrustEvaluating]) {
+    init(evaluators: [OWNetworkServerTrustEvaluating]) {
         self.evaluators = evaluators
     }
 
@@ -391,12 +391,12 @@ final class CompositeTrustEvaluator: ServerTrustEvaluating {
     }
 }
 
-extension ServerTrustEvaluating where Self == CompositeTrustEvaluator {
+extension OWNetworkServerTrustEvaluating where Self == OWNetworkCompositeTrustEvaluator {
     /// Creates a `CompositeTrustEvaluator` from the provided evaluators.
     ///
     /// - Parameter evaluators: The `ServerTrustEvaluating` values used to evaluate the server trust.
-    static func composite(evaluators: [ServerTrustEvaluating]) -> CompositeTrustEvaluator {
-        CompositeTrustEvaluator(evaluators: evaluators)
+    static func composite(evaluators: [OWNetworkServerTrustEvaluating]) -> OWNetworkCompositeTrustEvaluator {
+        OWNetworkCompositeTrustEvaluator(evaluators: evaluators)
     }
 }
 
@@ -407,7 +407,7 @@ extension ServerTrustEvaluating where Self == CompositeTrustEvaluator {
 ///
 /// **THIS EVALUATOR SHOULD NEVER BE USED IN PRODUCTION!**
 @available(*, deprecated, renamed: "DisabledTrustEvaluator", message: "DisabledEvaluator has been renamed DisabledTrustEvaluator.")
-typealias DisabledEvaluator = DisabledTrustEvaluator
+typealias OWNetworkDisabledEvaluator = OWNetworkDisabledTrustEvaluator
 
 /// Disables all evaluation which in turn will always consider any server trust as valid.
 ///
@@ -416,7 +416,7 @@ typealias DisabledEvaluator = DisabledTrustEvaluator
 ///         certificates, as outlined in [this Apple tech note](https://developer.apple.com/library/archive/qa/qa1948/_index.html).
 ///
 /// **THIS EVALUATOR SHOULD NEVER BE USED IN PRODUCTION!**
-final class DisabledTrustEvaluator: ServerTrustEvaluating {
+class OWNetworkDisabledTrustEvaluator: OWNetworkServerTrustEvaluating {
     /// Creates an instance.
     init() {}
 
@@ -425,7 +425,7 @@ final class DisabledTrustEvaluator: ServerTrustEvaluating {
 
 // MARK: - Extensions
 
-extension Array where Element == ServerTrustEvaluating {
+extension Array where Element == OWNetworkServerTrustEvaluating {
     /// Evaluates the given `SecTrust` value for the given `host`.
     ///
     /// - Parameters:
@@ -440,8 +440,8 @@ extension Array where Element == ServerTrustEvaluating {
     }
 }
 
-extension Bundle: AlamofireExtended {}
-extension AlamofireExtension where ExtendedType: Bundle {
+extension Bundle: OWNetworkExtended {}
+extension OWNetworkExtension where ExtendedType: Bundle {
     /// Returns all valid `cer`, `crt`, and `der` certificates in the bundle.
     var certificates: [SecCertificate] {
         paths(forResourcesOfTypes: [".cer", ".CER", ".crt", ".CRT", ".der", ".DER"]).compactMap { path in
@@ -455,7 +455,7 @@ extension AlamofireExtension where ExtendedType: Bundle {
 
     /// Returns all keys for the valid certificates in the bundle.
     var publicKeys: [SecKey] {
-        certificates.af.publicKeys
+        certificates.owNetwork.publicKeys
     }
 
     /// Returns all pathnames for the resources identified by the provided file extensions.
@@ -468,8 +468,8 @@ extension AlamofireExtension where ExtendedType: Bundle {
     }
 }
 
-extension SecTrust: AlamofireExtended {}
-extension AlamofireExtension where ExtendedType == SecTrust {
+extension SecTrust: OWNetworkExtended {}
+extension OWNetworkExtension where ExtendedType == SecTrust {
     /// Evaluates `self` after applying the `SecPolicy` value provided.
     ///
     /// - Parameter policy: The `SecPolicy` to apply to `self` before evaluation.
@@ -477,7 +477,7 @@ extension AlamofireExtension where ExtendedType == SecTrust {
     /// - Throws:           Any `Error` from applying the `SecPolicy` or from evaluation.
     @available(iOS 12, *)
     func evaluate(afterApplying policy: SecPolicy) throws {
-        try apply(policy: policy).af.evaluate()
+        try apply(policy: policy).owNetwork.evaluate()
     }
 
     /// Attempts to validate `self` using the `SecPolicy` provided and transforming any error produced using the closure passed.
@@ -488,7 +488,7 @@ extension AlamofireExtension where ExtendedType == SecTrust {
     /// - Throws:          Any `Error` from applying the `policy`, or the result of `errorProducer` if validation fails.
     @available(iOS, introduced: 10, deprecated: 12, renamed: "evaluate(afterApplying:)")
     func validate(policy: SecPolicy, errorProducer: (_ status: OSStatus, _ result: SecTrustResultType) -> Error) throws {
-        try apply(policy: policy).af.validate(errorProducer: errorProducer)
+        try apply(policy: policy).owNetwork.validate(errorProducer: errorProducer)
     }
 
     /// Applies a `SecPolicy` to `self`, throwing if it fails.
@@ -500,8 +500,8 @@ extension AlamofireExtension where ExtendedType == SecTrust {
     func apply(policy: SecPolicy) throws -> SecTrust {
         let status = SecTrustSetPolicies(type, policy)
 
-        guard status.af.isSuccess else {
-            throw AFError.serverTrustEvaluationFailed(reason: .policyApplicationFailed(trust: type,
+        guard status.owNetwork.isSuccess else {
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .policyApplicationFailed(trust: type,
                                                                                        policy: policy,
                                                                                        status: status))
         }
@@ -519,7 +519,7 @@ extension AlamofireExtension where ExtendedType == SecTrust {
         let evaluationSucceeded = SecTrustEvaluateWithError(type, &error)
 
         if !evaluationSucceeded {
-            throw AFError.serverTrustEvaluationFailed(reason: .trustEvaluationFailed(error: error))
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .trustEvaluationFailed(error: error))
         }
     }
 
@@ -533,7 +533,7 @@ extension AlamofireExtension where ExtendedType == SecTrust {
         var result = SecTrustResultType.invalid
         let status = SecTrustEvaluate(type, &result)
 
-        guard status.af.isSuccess && result.af.isSuccess else {
+        guard status.owNetwork.isSuccess && result.owNetwork.isSuccess else {
             throw errorProducer(status, result)
         }
     }
@@ -545,22 +545,22 @@ extension AlamofireExtension where ExtendedType == SecTrust {
     func setAnchorCertificates(_ certificates: [SecCertificate]) throws {
         // Add additional anchor certificates.
         let status = SecTrustSetAnchorCertificates(type, certificates as CFArray)
-        guard status.af.isSuccess else {
-            throw AFError.serverTrustEvaluationFailed(reason: .settingAnchorCertificatesFailed(status: status,
+        guard status.owNetwork.isSuccess else {
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .settingAnchorCertificatesFailed(status: status,
                                                                                                certificates: certificates))
         }
 
         // Trust only the set anchor certs.
         let onlyStatus = SecTrustSetAnchorCertificatesOnly(type, true)
-        guard onlyStatus.af.isSuccess else {
-            throw AFError.serverTrustEvaluationFailed(reason: .settingAnchorCertificatesFailed(status: onlyStatus,
+        guard onlyStatus.owNetwork.isSuccess else {
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .settingAnchorCertificatesFailed(status: onlyStatus,
                                                                                                certificates: certificates))
         }
     }
 
     /// The keys contained in `self`.
     var publicKeys: [SecKey] {
-        certificates.af.publicKeys
+        certificates.owNetwork.publicKeys
     }
 
     #if swift(>=5.5.1) // Xcode 13.1 / 2021 SDKs.
@@ -585,7 +585,7 @@ extension AlamofireExtension where ExtendedType == SecTrust {
 
     /// The `Data` values for all certificates contained in `self`.
     var certificateData: [Data] {
-        certificates.af.data
+        certificates.owNetwork.data
     }
 
     /// Validates `self` after applying `SecPolicy.af.default`. This evaluation does not validate the hostname.
@@ -594,10 +594,10 @@ extension AlamofireExtension where ExtendedType == SecTrust {
     /// - Throws: An `AFError.serverTrustEvaluationFailed` instance with a `.defaultEvaluationFailed` reason.
     func performDefaultValidation(forHost host: String) throws {
         if #available(iOS 12, *) {
-            try evaluate(afterApplying: SecPolicy.af.default)
+            try evaluate(afterApplying: SecPolicy.owNetwork.default)
         } else {
-            try validate(policy: SecPolicy.af.default) { status, result in
-                AFError.serverTrustEvaluationFailed(reason: .defaultEvaluationFailed(output: .init(host, type, status, result)))
+            try validate(policy: SecPolicy.owNetwork.default) { status, result in
+                OWNetworkError.serverTrustEvaluationFailed(reason: .defaultEvaluationFailed(output: .init(host, type, status, result)))
             }
         }
     }
@@ -609,17 +609,17 @@ extension AlamofireExtension where ExtendedType == SecTrust {
     /// - Throws:         An `AFError.serverTrustEvaluationFailed` instance with a `.defaultEvaluationFailed` reason.
     func performValidation(forHost host: String) throws {
         if #available(iOS 12, *) {
-            try evaluate(afterApplying: SecPolicy.af.hostname(host))
+            try evaluate(afterApplying: SecPolicy.owNetwork.hostname(host))
         } else {
-            try validate(policy: SecPolicy.af.hostname(host)) { status, result in
-                AFError.serverTrustEvaluationFailed(reason: .hostValidationFailed(output: .init(host, type, status, result)))
+            try validate(policy: SecPolicy.owNetwork.hostname(host)) { status, result in
+                OWNetworkError.serverTrustEvaluationFailed(reason: .hostValidationFailed(output: .init(host, type, status, result)))
             }
         }
     }
 }
 
-extension SecPolicy: AlamofireExtended {}
-extension AlamofireExtension where ExtendedType == SecPolicy {
+extension SecPolicy: OWNetworkExtended {}
+extension OWNetworkExtension where ExtendedType == SecPolicy {
     /// Creates a `SecPolicy` instance which will validate server certificates but not require a host name match.
     static let `default` = SecPolicyCreateSSL(true, nil)
 
@@ -639,17 +639,17 @@ extension AlamofireExtension where ExtendedType == SecPolicy {
     /// - Returns:           The `SecPolicy`.
     /// - Throws:            An `AFError.serverTrustEvaluationFailed` error with reason `.revocationPolicyCreationFailed`
     ///                      if the policy cannot be created.
-    static func revocation(options: RevocationTrustEvaluator.Options) throws -> SecPolicy {
+    static func revocation(options: OWNetworkRevocationTrustEvaluator.Options) throws -> SecPolicy {
         guard let policy = SecPolicyCreateRevocation(options.rawValue) else {
-            throw AFError.serverTrustEvaluationFailed(reason: .revocationPolicyCreationFailed)
+            throw OWNetworkError.serverTrustEvaluationFailed(reason: .revocationPolicyCreationFailed)
         }
 
         return policy
     }
 }
 
-extension Array: AlamofireExtended {}
-extension AlamofireExtension where ExtendedType == [SecCertificate] {
+extension Array: OWNetworkExtended {}
+extension OWNetworkExtension where ExtendedType == [SecCertificate] {
     /// All `Data` values for the contained `SecCertificate`s.
     var data: [Data] {
         type.map { SecCertificateCopyData($0) as Data }
@@ -657,12 +657,12 @@ extension AlamofireExtension where ExtendedType == [SecCertificate] {
 
     /// All `SecKey` values for the contained `SecCertificate`s.
     var publicKeys: [SecKey] {
-        type.compactMap(\.af.publicKey)
+        type.compactMap(\.owNetwork.publicKey)
     }
 }
 
-extension SecCertificate: AlamofireExtended {}
-extension AlamofireExtension where ExtendedType == SecCertificate {
+extension SecCertificate: OWNetworkExtended {}
+extension OWNetworkExtension where ExtendedType == SecCertificate {
     /// The key for `self`, if it can be extracted.
     ///
     /// - Note: On 2020 OSes and newer, only RSA and ECDSA keys are supported.
@@ -682,14 +682,14 @@ extension AlamofireExtension where ExtendedType == SecCertificate {
     }
 }
 
-extension OSStatus: AlamofireExtended {}
-extension AlamofireExtension where ExtendedType == OSStatus {
+extension OSStatus: OWNetworkExtended {}
+extension OWNetworkExtension where ExtendedType == OSStatus {
     /// Returns whether `self` is `errSecSuccess`.
     var isSuccess: Bool { type == errSecSuccess }
 }
 
-extension SecTrustResultType: AlamofireExtended {}
-extension AlamofireExtension where ExtendedType == SecTrustResultType {
+extension SecTrustResultType: OWNetworkExtended {}
+extension OWNetworkExtension where ExtendedType == SecTrustResultType {
     /// Returns whether `self is `.unspecified` or `.proceed`.
     var isSuccess: Bool {
         type == .unspecified || type == .proceed

@@ -17,7 +17,7 @@ extension URLRequest {
 
     func validate() throws {
         if method == .get, let bodyData = httpBody {
-            throw AFError.urlRequestValidationFailed(reason: .bodyDataInGETRequest(bodyData))
+            throw OWNetworkError.urlRequestValidationFailed(reason: .bodyDataInGETRequest(bodyData))
         }
     }
 }

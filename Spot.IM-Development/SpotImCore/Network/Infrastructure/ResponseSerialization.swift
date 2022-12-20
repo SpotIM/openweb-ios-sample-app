@@ -141,14 +141,14 @@ extension DownloadResponseSerializerProtocol where Self: DataResponseSerializerP
         guard error == nil else { throw error! }
 
         guard let fileURL = fileURL else {
-            throw AFError.responseSerializationFailed(reason: .inputFileNil)
+            throw OWNetworkError.responseSerializationFailed(reason: .inputFileNil)
         }
 
         let data: Data
         do {
             data = try Data(contentsOf: fileURL)
         } catch {
-            throw AFError.responseSerializationFailed(reason: .inputFileReadFailed(at: fileURL))
+            throw OWNetworkError.responseSerializationFailed(reason: .inputFileReadFailed(at: fileURL))
         }
 
         do {
@@ -161,7 +161,7 @@ extension DownloadResponseSerializerProtocol where Self: DataResponseSerializerP
 
 // MARK: - Default
 
-extension DataRequest {
+extension OWNetworkDataRequest {
     /// Adds a handler to be called once the request has finished.
     ///
     /// - Parameters:
@@ -173,7 +173,7 @@ extension DataRequest {
     func response(queue: DispatchQueue = .main, completionHandler: @escaping (AFDataResponse<Data?>) -> Void) -> Self {
         appendResponseSerializer {
             // Start work that should be on the serialization queue.
-            let result = AFResult<Data?>(value: self.data, error: self.error)
+            let result = OWNetworkResult<Data?>(value: self.data, error: self.error)
             // End work that should be on the serialization queue.
 
             self.underlyingQueue.async {
@@ -200,13 +200,13 @@ extension DataRequest {
         appendResponseSerializer {
             // Start work that should be on the serialization queue.
             let start = ProcessInfo.processInfo.systemUptime
-            let result: AFResult<Serializer.SerializedObject> = Result {
+            let result: OWNetworkResult<Serializer.SerializedObject> = Result {
                 try responseSerializer.serialize(request: self.request,
                                                  response: self.response,
                                                  data: self.data,
                                                  error: self.error)
             }.mapError { error in
-                error.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
+                error.asOWNetworkError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
             }
 
             let end = ProcessInfo.processInfo.systemUptime
@@ -241,7 +241,7 @@ extension DataRequest {
                         didComplete = { completionHandler(response) }
 
                     case let .doNotRetryWithError(retryError):
-                        let result: AFResult<Serializer.SerializedObject> = .failure(retryError.asAFError(orFailWith: "Received retryError was not already OWNetworkError"))
+                        let result: OWNetworkResult<Serializer.SerializedObject> = .failure(retryError.asOWNetworkError(orFailWith: "Received retryError was not already OWNetworkError"))
 
                         let response = DataResponse(request: self.request,
                                                     response: self.response,
@@ -295,7 +295,7 @@ extension DataRequest {
     }
 }
 
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// Adds a handler to be called once the request has finished.
     ///
     /// - Parameters:
@@ -309,7 +309,7 @@ extension DownloadRequest {
         -> Self {
         appendResponseSerializer {
             // Start work that should be on the serialization queue.
-            let result = AFResult<URL?>(value: self.fileURL, error: self.error)
+            let result = OWNetworkResult<URL?>(value: self.fileURL, error: self.error)
             // End work that should be on the serialization queue.
 
             self.underlyingQueue.async {
@@ -337,13 +337,13 @@ extension DownloadRequest {
         appendResponseSerializer {
             // Start work that should be on the serialization queue.
             let start = ProcessInfo.processInfo.systemUptime
-            let result: AFResult<Serializer.SerializedObject> = Result {
+            let result: OWNetworkResult<Serializer.SerializedObject> = Result {
                 try responseSerializer.serializeDownload(request: self.request,
                                                          response: self.response,
                                                          fileURL: self.fileURL,
                                                          error: self.error)
             }.mapError { error in
-                error.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
+                error.asOWNetworkError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
             }
             let end = ProcessInfo.processInfo.systemUptime
             // End work that should be on the serialization queue.
@@ -378,7 +378,7 @@ extension DownloadRequest {
                         didComplete = { completionHandler(response) }
 
                     case let .doNotRetryWithError(retryError):
-                        let result: AFResult<Serializer.SerializedObject> = .failure(retryError.asAFError(orFailWith: "Received retryError was not already AFError"))
+                        let result: OWNetworkResult<Serializer.SerializedObject> = .failure(retryError.asOWNetworkError(orFailWith: "Received retryError was not already AFError"))
 
                         let response = DownloadResponse(request: self.request,
                                                         response: self.response,
@@ -450,7 +450,7 @@ struct URLResponseSerializer: DownloadResponseSerializerProtocol {
         guard error == nil else { throw error! }
 
         guard let url = fileURL else {
-            throw AFError.responseSerializationFailed(reason: .inputFileNil)
+            throw OWNetworkError.responseSerializationFailed(reason: .inputFileNil)
         }
 
         return url
@@ -462,7 +462,7 @@ extension DownloadResponseSerializerProtocol where Self == URLResponseSerializer
     static var url: URLResponseSerializer { URLResponseSerializer() }
 }
 
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// Adds a handler using a `URLResponseSerializer` to be called once the request is finished.
     ///
     /// - Parameters:
@@ -506,7 +506,7 @@ final class DataResponseSerializer: ResponseSerializer {
 
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
-                throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
+                throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
 
             return Data()
@@ -539,7 +539,7 @@ extension ResponseSerializer where Self == DataResponseSerializer {
     }
 }
 
-extension DataRequest {
+extension OWNetworkDataRequest {
     /// Adds a handler using a `DataResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -565,7 +565,7 @@ extension DataRequest {
     }
 }
 
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// Adds a handler using a `DataResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -626,7 +626,7 @@ final class StringResponseSerializer: ResponseSerializer {
 
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
-                throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
+                throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
 
             return ""
@@ -643,7 +643,7 @@ final class StringResponseSerializer: ResponseSerializer {
         let actualEncoding = convertedEncoding ?? .isoLatin1
 
         guard let string = String(data: data, encoding: actualEncoding) else {
-            throw AFError.responseSerializationFailed(reason: .stringSerializationFailed(encoding: actualEncoding))
+            throw OWNetworkError.responseSerializationFailed(reason: .stringSerializationFailed(encoding: actualEncoding))
         }
 
         return string
@@ -675,7 +675,7 @@ extension ResponseSerializer where Self == StringResponseSerializer {
     }
 }
 
-extension DataRequest {
+extension OWNetworkDataRequest {
     /// Adds a handler using a `StringResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -705,7 +705,7 @@ extension DataRequest {
     }
 }
 
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// Adds a handler using a `StringResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -770,7 +770,7 @@ final class JSONResponseSerializer: ResponseSerializer {
 
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
-                throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
+                throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
 
             return NSNull()
@@ -781,12 +781,12 @@ final class JSONResponseSerializer: ResponseSerializer {
         do {
             return try JSONSerialization.jsonObject(with: data, options: options)
         } catch {
-            throw AFError.responseSerializationFailed(reason: .jsonSerializationFailed(error: error))
+            throw OWNetworkError.responseSerializationFailed(reason: .jsonSerializationFailed(error: error))
         }
     }
 }
 
-extension DataRequest {
+extension OWNetworkDataRequest {
     /// Adds a handler using a `JSONResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -817,7 +817,7 @@ extension DataRequest {
     }
 }
 
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// Adds a handler using a `JSONResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -927,11 +927,11 @@ final class DecodableResponseSerializer<T: Decodable>: ResponseSerializer {
 
         guard var data = data, !data.isEmpty else {
             guard emptyResponseAllowed(forRequest: request, response: response) else {
-                throw AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
+                throw OWNetworkError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)
             }
 
             guard let emptyResponseType = T.self as? EmptyResponse.Type, let emptyValue = emptyResponseType.emptyValue() as? T else {
-                throw AFError.responseSerializationFailed(reason: .invalidEmptyResponse(type: "\(T.self)"))
+                throw OWNetworkError.responseSerializationFailed(reason: .invalidEmptyResponse(type: "\(T.self)"))
             }
 
             return emptyValue
@@ -942,7 +942,7 @@ final class DecodableResponseSerializer<T: Decodable>: ResponseSerializer {
         do {
             return try decoder.decode(T.self, from: data)
         } catch {
-            throw AFError.responseSerializationFailed(reason: .decodingFailed(error: error))
+            throw OWNetworkError.responseSerializationFailed(reason: .decodingFailed(error: error))
         }
     }
 }
@@ -970,7 +970,7 @@ extension ResponseSerializer {
     }
 }
 
-extension DataRequest {
+extension OWNetworkDataRequest {
     /// Adds a handler using a `DecodableResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -1001,7 +1001,7 @@ extension DataRequest {
     }
 }
 
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// Adds a handler using a `DecodableResponseSerializer` to be called once the request has finished.
     ///
     /// - Parameters:
@@ -1069,7 +1069,7 @@ struct DecodableStreamSerializer<T: Decodable>: DataStreamSerializer {
         do {
             return try decoder.decode(T.self, from: processedData)
         } catch {
-            throw AFError.responseSerializationFailed(reason: .decodingFailed(error: error))
+            throw OWNetworkError.responseSerializationFailed(reason: .decodingFailed(error: error))
         }
     }
 }
@@ -1117,7 +1117,7 @@ extension DataStreamSerializer where Self == StringStreamSerializer {
     static var string: StringStreamSerializer { StringStreamSerializer() }
 }
 
-extension DataStreamRequest {
+extension OWNetworkDataStreamRequest {
     /// Adds a `StreamHandler` which performs no parsing on incoming `Data`.
     ///
     /// - Parameters:
@@ -1154,12 +1154,12 @@ extension DataStreamRequest {
     @discardableResult
     func responseStream<Serializer: DataStreamSerializer>(using serializer: Serializer,
                                                                  on queue: DispatchQueue = .main,
-                                                                 stream: @escaping Handler<Serializer.SerializedObject, AFError>) -> Self {
+                                                                 stream: @escaping Handler<Serializer.SerializedObject, OWNetworkError>) -> Self {
         let parser = { [unowned self] (data: Data) in
             self.serializationQueue.async {
                 // Start work on serialization queue.
                 let result = Result { try serializer.serialize(data) }
-                    .mapError { $0.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: $0))) }
+                    .mapError { $0.asOWNetworkError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: $0))) }
                 // End work on serialization queue.
                 self.underlyingQueue.async {
                     self.eventMonitor?.request(self, didParseStream: result)
@@ -1247,7 +1247,7 @@ extension DataStreamRequest {
                                                       on queue: DispatchQueue = .main,
                                                       using decoder: DataDecoder = JSONDecoder(),
                                                       preprocessor: DataPreprocessor = PassthroughPreprocessor(),
-                                                      stream: @escaping Handler<T, AFError>) -> Self {
+                                                      stream: @escaping Handler<T, OWNetworkError>) -> Self {
         responseStream(using: DecodableStreamSerializer<T>(decoder: decoder, dataPreprocessor: preprocessor),
                        stream: stream)
     }

@@ -81,71 +81,71 @@ protocol EventMonitor {
 
     /// Event called when a `URLRequest` is first created for a `Request`. If a `RequestAdapter` is active, the
     /// `URLRequest` will be adapted before being issued.
-    func request(_ request: Request, didCreateInitialURLRequest urlRequest: URLRequest)
+    func request(_ request: OWNetworkRequest, didCreateInitialURLRequest urlRequest: URLRequest)
 
     /// Event called when the attempt to create a `URLRequest` from a `Request`'s original `URLRequestConvertible` value fails.
-    func request(_ request: Request, didFailToCreateURLRequestWithError error: AFError)
+    func request(_ request: OWNetworkRequest, didFailToCreateURLRequestWithError error: OWNetworkError)
 
     /// Event called when a `RequestAdapter` adapts the `Request`'s initial `URLRequest`.
-    func request(_ request: Request, didAdaptInitialRequest initialRequest: URLRequest, to adaptedRequest: URLRequest)
+    func request(_ request: OWNetworkRequest, didAdaptInitialRequest initialRequest: URLRequest, to adaptedRequest: URLRequest)
 
     /// Event called when a `RequestAdapter` fails to adapt the `Request`'s initial `URLRequest`.
-    func request(_ request: Request, didFailToAdaptURLRequest initialRequest: URLRequest, withError error: AFError)
+    func request(_ request: OWNetworkRequest, didFailToAdaptURLRequest initialRequest: URLRequest, withError error: OWNetworkError)
 
     /// Event called when a final `URLRequest` is created for a `Request`.
-    func request(_ request: Request, didCreateURLRequest urlRequest: URLRequest)
+    func request(_ request: OWNetworkRequest, didCreateURLRequest urlRequest: URLRequest)
 
     /// Event called when a `URLSessionTask` subclass instance is created for a `Request`.
-    func request(_ request: Request, didCreateTask task: URLSessionTask)
+    func request(_ request: OWNetworkRequest, didCreateTask task: URLSessionTask)
 
     /// Event called when a `Request` receives a `URLSessionTaskMetrics` value.
-    func request(_ request: Request, didGatherMetrics metrics: URLSessionTaskMetrics)
+    func request(_ request: OWNetworkRequest, didGatherMetrics metrics: URLSessionTaskMetrics)
 
     /// Event called when a `Request` fails due to an error created by Alamofire. e.g. When certificate pinning fails.
-    func request(_ request: Request, didFailTask task: URLSessionTask, earlyWithError error: AFError)
+    func request(_ request: OWNetworkRequest, didFailTask task: URLSessionTask, earlyWithError error: OWNetworkError)
 
     /// Event called when a `Request`'s task completes, possibly with an error. A `Request` may receive this event
     /// multiple times if it is retried.
-    func request(_ request: Request, didCompleteTask task: URLSessionTask, with error: AFError?)
+    func request(_ request: OWNetworkRequest, didCompleteTask task: URLSessionTask, with error: OWNetworkError?)
 
     /// Event called when a `Request` is about to be retried.
-    func requestIsRetrying(_ request: Request)
+    func requestIsRetrying(_ request: OWNetworkRequest)
 
     /// Event called when a `Request` finishes and response serializers are being called.
-    func requestDidFinish(_ request: Request)
+    func requestDidFinish(_ request: OWNetworkRequest)
 
     /// Event called when a `Request` receives a `resume` call.
-    func requestDidResume(_ request: Request)
+    func requestDidResume(_ request: OWNetworkRequest)
 
     /// Event called when a `Request`'s associated `URLSessionTask` is resumed.
-    func request(_ request: Request, didResumeTask task: URLSessionTask)
+    func request(_ request: OWNetworkRequest, didResumeTask task: URLSessionTask)
 
     /// Event called when a `Request` receives a `suspend` call.
-    func requestDidSuspend(_ request: Request)
+    func requestDidSuspend(_ request: OWNetworkRequest)
 
     /// Event called when a `Request`'s associated `URLSessionTask` is suspended.
-    func request(_ request: Request, didSuspendTask task: URLSessionTask)
+    func request(_ request: OWNetworkRequest, didSuspendTask task: URLSessionTask)
 
     /// Event called when a `Request` receives a `cancel` call.
-    func requestDidCancel(_ request: Request)
+    func requestDidCancel(_ request: OWNetworkRequest)
 
     /// Event called when a `Request`'s associated `URLSessionTask` is cancelled.
-    func request(_ request: Request, didCancelTask task: URLSessionTask)
+    func request(_ request: OWNetworkRequest, didCancelTask task: URLSessionTask)
 
     // MARK: DataRequest Events
 
     /// Event called when a `DataRequest` calls a `Validation`.
-    func request(_ request: DataRequest,
+    func request(_ request: OWNetworkDataRequest,
                  didValidateRequest urlRequest: URLRequest?,
                  response: HTTPURLResponse,
                  data: Data?,
-                 withResult result: Request.ValidationResult)
+                 withResult result: OWNetworkRequest.ValidationResult)
 
     /// Event called when a `DataRequest` creates a `DataResponse<Data?>` value without calling a `ResponseSerializer`.
-    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>)
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>)
 
     /// Event called when a `DataRequest` calls a `ResponseSerializer` and creates a generic `DataResponse<Value, AFError>`.
-    func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>)
+    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Value, OWNetworkError>)
 
     // MARK: DataStreamRequest Events
 
@@ -156,51 +156,51 @@ protocol EventMonitor {
     ///   - urlRequest: `URLRequest` of the request being validated.
     ///   - response:   `HTTPURLResponse` of the request being validated.
     ///   - result:      Produced `ValidationResult`.
-    func request(_ request: DataStreamRequest,
+    func request(_ request: OWNetworkDataStreamRequest,
                  didValidateRequest urlRequest: URLRequest?,
                  response: HTTPURLResponse,
-                 withResult result: Request.ValidationResult)
+                 withResult result: OWNetworkRequest.ValidationResult)
 
     /// Event called when a `DataStreamSerializer` produces a value from streamed `Data`.
     ///
     /// - Parameters:
     ///   - request: `DataStreamRequest` for which the value was serialized.
     ///   - result:  `Result` of the serialization attempt.
-    func request<Value>(_ request: DataStreamRequest, didParseStream result: Result<Value, AFError>)
+    func request<Value>(_ request: OWNetworkDataStreamRequest, didParseStream result: Result<Value, OWNetworkError>)
 
     // MARK: UploadRequest Events
 
     /// Event called when an `UploadRequest` creates its `Uploadable` value, indicating the type of upload it represents.
-    func request(_ request: UploadRequest, didCreateUploadable uploadable: UploadRequest.Uploadable)
+    func request(_ request: OWNetworkUploadRequest, didCreateUploadable uploadable: OWNetworkUploadRequest.Uploadable)
 
     /// Event called when an `UploadRequest` failed to create its `Uploadable` value due to an error.
-    func request(_ request: UploadRequest, didFailToCreateUploadableWithError error: AFError)
+    func request(_ request: OWNetworkUploadRequest, didFailToCreateUploadableWithError error: OWNetworkError)
 
     /// Event called when an `UploadRequest` provides the `InputStream` from its `Uploadable` value. This only occurs if
     /// the `InputStream` does not wrap a `Data` value or file `URL`.
-    func request(_ request: UploadRequest, didProvideInputStream stream: InputStream)
+    func request(_ request: OWNetworkUploadRequest, didProvideInputStream stream: InputStream)
 
     // MARK: DownloadRequest Events
 
     /// Event called when a `DownloadRequest`'s `URLSessionDownloadTask` finishes and the temporary file has been moved.
-    func request(_ request: DownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, AFError>)
+    func request(_ request: OWNetworkDownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, OWNetworkError>)
 
     /// Event called when a `DownloadRequest`'s `Destination` closure is called and creates the destination URL the
     /// downloaded file will be moved to.
-    func request(_ request: DownloadRequest, didCreateDestinationURL url: URL)
+    func request(_ request: OWNetworkDownloadRequest, didCreateDestinationURL url: URL)
 
     /// Event called when a `DownloadRequest` calls a `Validation`.
-    func request(_ request: DownloadRequest,
+    func request(_ request: OWNetworkDownloadRequest,
                  didValidateRequest urlRequest: URLRequest?,
                  response: HTTPURLResponse,
                  fileURL: URL?,
-                 withResult result: Request.ValidationResult)
+                 withResult result: OWNetworkRequest.ValidationResult)
 
     /// Event called when a `DownloadRequest` creates a `DownloadResponse<URL?, AFError>` without calling a `ResponseSerializer`.
-    func request(_ request: DownloadRequest, didParseResponse response: DownloadResponse<URL?, AFError>)
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>)
 
     /// Event called when a `DownloadRequest` calls a `DownloadResponseSerializer` and creates a generic `DownloadResponse<Value, AFError>`
-    func request<Value>(_ request: DownloadRequest, didParseResponse response: DownloadResponse<Value, AFError>)
+    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<Value, OWNetworkError>)
 }
 
 extension EventMonitor {
@@ -244,51 +244,51 @@ extension EventMonitor {
     func urlSession(_ session: URLSession,
                            downloadTask: URLSessionDownloadTask,
                            didFinishDownloadingTo location: URL) {}
-    func request(_ request: Request, didCreateInitialURLRequest urlRequest: URLRequest) {}
-    func request(_ request: Request, didFailToCreateURLRequestWithError error: AFError) {}
-    func request(_ request: Request,
+    func request(_ request: OWNetworkRequest, didCreateInitialURLRequest urlRequest: URLRequest) {}
+    func request(_ request: OWNetworkRequest, didFailToCreateURLRequestWithError error: OWNetworkError) {}
+    func request(_ request: OWNetworkRequest,
                         didAdaptInitialRequest initialRequest: URLRequest,
                         to adaptedRequest: URLRequest) {}
-    func request(_ request: Request,
+    func request(_ request: OWNetworkRequest,
                         didFailToAdaptURLRequest initialRequest: URLRequest,
-                        withError error: AFError) {}
-    func request(_ request: Request, didCreateURLRequest urlRequest: URLRequest) {}
-    func request(_ request: Request, didCreateTask task: URLSessionTask) {}
-    func request(_ request: Request, didGatherMetrics metrics: URLSessionTaskMetrics) {}
-    func request(_ request: Request, didFailTask task: URLSessionTask, earlyWithError error: AFError) {}
-    func request(_ request: Request, didCompleteTask task: URLSessionTask, with error: AFError?) {}
-    func requestIsRetrying(_ request: Request) {}
-    func requestDidFinish(_ request: Request) {}
-    func requestDidResume(_ request: Request) {}
-    func request(_ request: Request, didResumeTask task: URLSessionTask) {}
-    func requestDidSuspend(_ request: Request) {}
-    func request(_ request: Request, didSuspendTask task: URLSessionTask) {}
-    func requestDidCancel(_ request: Request) {}
-    func request(_ request: Request, didCancelTask task: URLSessionTask) {}
-    func request(_ request: DataRequest,
+                        withError error: OWNetworkError) {}
+    func request(_ request: OWNetworkRequest, didCreateURLRequest urlRequest: URLRequest) {}
+    func request(_ request: OWNetworkRequest, didCreateTask task: URLSessionTask) {}
+    func request(_ request: OWNetworkRequest, didGatherMetrics metrics: URLSessionTaskMetrics) {}
+    func request(_ request: OWNetworkRequest, didFailTask task: URLSessionTask, earlyWithError error: OWNetworkError) {}
+    func request(_ request: OWNetworkRequest, didCompleteTask task: URLSessionTask, with error: OWNetworkError?) {}
+    func requestIsRetrying(_ request: OWNetworkRequest) {}
+    func requestDidFinish(_ request: OWNetworkRequest) {}
+    func requestDidResume(_ request: OWNetworkRequest) {}
+    func request(_ request: OWNetworkRequest, didResumeTask task: URLSessionTask) {}
+    func requestDidSuspend(_ request: OWNetworkRequest) {}
+    func request(_ request: OWNetworkRequest, didSuspendTask task: URLSessionTask) {}
+    func requestDidCancel(_ request: OWNetworkRequest) {}
+    func request(_ request: OWNetworkRequest, didCancelTask task: URLSessionTask) {}
+    func request(_ request: OWNetworkDataRequest,
                         didValidateRequest urlRequest: URLRequest?,
                         response: HTTPURLResponse,
                         data: Data?,
-                        withResult result: Request.ValidationResult) {}
-    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {}
-    func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {}
-    func request(_ request: DataStreamRequest,
+                        withResult result: OWNetworkRequest.ValidationResult) {}
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>) {}
+    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Value, OWNetworkError>) {}
+    func request(_ request: OWNetworkDataStreamRequest,
                         didValidateRequest urlRequest: URLRequest?,
                         response: HTTPURLResponse,
-                        withResult result: Request.ValidationResult) {}
-    func request<Value>(_ request: DataStreamRequest, didParseStream result: Result<Value, AFError>) {}
-    func request(_ request: UploadRequest, didCreateUploadable uploadable: UploadRequest.Uploadable) {}
-    func request(_ request: UploadRequest, didFailToCreateUploadableWithError error: AFError) {}
-    func request(_ request: UploadRequest, didProvideInputStream stream: InputStream) {}
-    func request(_ request: DownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, AFError>) {}
-    func request(_ request: DownloadRequest, didCreateDestinationURL url: URL) {}
-    func request(_ request: DownloadRequest,
+                        withResult result: OWNetworkRequest.ValidationResult) {}
+    func request<Value>(_ request: OWNetworkDataStreamRequest, didParseStream result: Result<Value, OWNetworkError>) {}
+    func request(_ request: OWNetworkUploadRequest, didCreateUploadable uploadable: OWNetworkUploadRequest.Uploadable) {}
+    func request(_ request: OWNetworkUploadRequest, didFailToCreateUploadableWithError error: OWNetworkError) {}
+    func request(_ request: OWNetworkUploadRequest, didProvideInputStream stream: InputStream) {}
+    func request(_ request: OWNetworkDownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, OWNetworkError>) {}
+    func request(_ request: OWNetworkDownloadRequest, didCreateDestinationURL url: URL) {}
+    func request(_ request: OWNetworkDownloadRequest,
                         didValidateRequest urlRequest: URLRequest?,
                         response: HTTPURLResponse,
                         fileURL: URL?,
-                        withResult result: Request.ValidationResult) {}
-    func request(_ request: DownloadRequest, didParseResponse response: DownloadResponse<URL?, AFError>) {}
-    func request<Value>(_ request: DownloadRequest, didParseResponse response: DownloadResponse<Value, AFError>) {}
+                        withResult result: OWNetworkRequest.ValidationResult) {}
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>) {}
+    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<Value, OWNetworkError>) {}
 }
 
 /// An `EventMonitor` which can contain multiple `EventMonitor`s and calls their methods on their queues.
@@ -405,79 +405,79 @@ final class CompositeEventMonitor: EventMonitor {
         performEvent { $0.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location) }
     }
 
-    func request(_ request: Request, didCreateInitialURLRequest urlRequest: URLRequest) {
+    func request(_ request: OWNetworkRequest, didCreateInitialURLRequest urlRequest: URLRequest) {
         performEvent { $0.request(request, didCreateInitialURLRequest: urlRequest) }
     }
 
-    func request(_ request: Request, didFailToCreateURLRequestWithError error: AFError) {
+    func request(_ request: OWNetworkRequest, didFailToCreateURLRequestWithError error: OWNetworkError) {
         performEvent { $0.request(request, didFailToCreateURLRequestWithError: error) }
     }
 
-    func request(_ request: Request, didAdaptInitialRequest initialRequest: URLRequest, to adaptedRequest: URLRequest) {
+    func request(_ request: OWNetworkRequest, didAdaptInitialRequest initialRequest: URLRequest, to adaptedRequest: URLRequest) {
         performEvent { $0.request(request, didAdaptInitialRequest: initialRequest, to: adaptedRequest) }
     }
 
-    func request(_ request: Request, didFailToAdaptURLRequest initialRequest: URLRequest, withError error: AFError) {
+    func request(_ request: OWNetworkRequest, didFailToAdaptURLRequest initialRequest: URLRequest, withError error: OWNetworkError) {
         performEvent { $0.request(request, didFailToAdaptURLRequest: initialRequest, withError: error) }
     }
 
-    func request(_ request: Request, didCreateURLRequest urlRequest: URLRequest) {
+    func request(_ request: OWNetworkRequest, didCreateURLRequest urlRequest: URLRequest) {
         performEvent { $0.request(request, didCreateURLRequest: urlRequest) }
     }
 
-    func request(_ request: Request, didCreateTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didCreateTask task: URLSessionTask) {
         performEvent { $0.request(request, didCreateTask: task) }
     }
 
-    func request(_ request: Request, didGatherMetrics metrics: URLSessionTaskMetrics) {
+    func request(_ request: OWNetworkRequest, didGatherMetrics metrics: URLSessionTaskMetrics) {
         performEvent { $0.request(request, didGatherMetrics: metrics) }
     }
 
-    func request(_ request: Request, didFailTask task: URLSessionTask, earlyWithError error: AFError) {
+    func request(_ request: OWNetworkRequest, didFailTask task: URLSessionTask, earlyWithError error: OWNetworkError) {
         performEvent { $0.request(request, didFailTask: task, earlyWithError: error) }
     }
 
-    func request(_ request: Request, didCompleteTask task: URLSessionTask, with error: AFError?) {
+    func request(_ request: OWNetworkRequest, didCompleteTask task: URLSessionTask, with error: OWNetworkError?) {
         performEvent { $0.request(request, didCompleteTask: task, with: error) }
     }
 
-    func requestIsRetrying(_ request: Request) {
+    func requestIsRetrying(_ request: OWNetworkRequest) {
         performEvent { $0.requestIsRetrying(request) }
     }
 
-    func requestDidFinish(_ request: Request) {
+    func requestDidFinish(_ request: OWNetworkRequest) {
         performEvent { $0.requestDidFinish(request) }
     }
 
-    func requestDidResume(_ request: Request) {
+    func requestDidResume(_ request: OWNetworkRequest) {
         performEvent { $0.requestDidResume(request) }
     }
 
-    func request(_ request: Request, didResumeTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didResumeTask task: URLSessionTask) {
         performEvent { $0.request(request, didResumeTask: task) }
     }
 
-    func requestDidSuspend(_ request: Request) {
+    func requestDidSuspend(_ request: OWNetworkRequest) {
         performEvent { $0.requestDidSuspend(request) }
     }
 
-    func request(_ request: Request, didSuspendTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didSuspendTask task: URLSessionTask) {
         performEvent { $0.request(request, didSuspendTask: task) }
     }
 
-    func requestDidCancel(_ request: Request) {
+    func requestDidCancel(_ request: OWNetworkRequest) {
         performEvent { $0.requestDidCancel(request) }
     }
 
-    func request(_ request: Request, didCancelTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didCancelTask task: URLSessionTask) {
         performEvent { $0.request(request, didCancelTask: task) }
     }
 
-    func request(_ request: DataRequest,
+    func request(_ request: OWNetworkDataRequest,
                         didValidateRequest urlRequest: URLRequest?,
                         response: HTTPURLResponse,
                         data: Data?,
-                        withResult result: Request.ValidationResult) {
+                        withResult result: OWNetworkRequest.ValidationResult) {
         performEvent { $0.request(request,
                                   didValidateRequest: urlRequest,
                                   response: response,
@@ -486,18 +486,18 @@ final class CompositeEventMonitor: EventMonitor {
         }
     }
 
-    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 
-    func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
+    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Value, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 
-    func request(_ request: DataStreamRequest,
+    func request(_ request: OWNetworkDataStreamRequest,
                         didValidateRequest urlRequest: URLRequest?,
                         response: HTTPURLResponse,
-                        withResult result: Request.ValidationResult) {
+                        withResult result: OWNetworkRequest.ValidationResult) {
         performEvent { $0.request(request,
                                   didValidateRequest: urlRequest,
                                   response: response,
@@ -505,35 +505,35 @@ final class CompositeEventMonitor: EventMonitor {
         }
     }
 
-    func request<Value>(_ request: DataStreamRequest, didParseStream result: Result<Value, AFError>) {
+    func request<Value>(_ request: OWNetworkDataStreamRequest, didParseStream result: Result<Value, OWNetworkError>) {
         performEvent { $0.request(request, didParseStream: result) }
     }
 
-    func request(_ request: UploadRequest, didCreateUploadable uploadable: UploadRequest.Uploadable) {
+    func request(_ request: OWNetworkUploadRequest, didCreateUploadable uploadable: OWNetworkUploadRequest.Uploadable) {
         performEvent { $0.request(request, didCreateUploadable: uploadable) }
     }
 
-    func request(_ request: UploadRequest, didFailToCreateUploadableWithError error: AFError) {
+    func request(_ request: OWNetworkUploadRequest, didFailToCreateUploadableWithError error: OWNetworkError) {
         performEvent { $0.request(request, didFailToCreateUploadableWithError: error) }
     }
 
-    func request(_ request: UploadRequest, didProvideInputStream stream: InputStream) {
+    func request(_ request: OWNetworkUploadRequest, didProvideInputStream stream: InputStream) {
         performEvent { $0.request(request, didProvideInputStream: stream) }
     }
 
-    func request(_ request: DownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, AFError>) {
+    func request(_ request: OWNetworkDownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, OWNetworkError>) {
         performEvent { $0.request(request, didFinishDownloadingUsing: task, with: result) }
     }
 
-    func request(_ request: DownloadRequest, didCreateDestinationURL url: URL) {
+    func request(_ request: OWNetworkDownloadRequest, didCreateDestinationURL url: URL) {
         performEvent { $0.request(request, didCreateDestinationURL: url) }
     }
 
-    func request(_ request: DownloadRequest,
+    func request(_ request: OWNetworkDownloadRequest,
                         didValidateRequest urlRequest: URLRequest?,
                         response: HTTPURLResponse,
                         fileURL: URL?,
-                        withResult result: Request.ValidationResult) {
+                        withResult result: OWNetworkRequest.ValidationResult) {
         performEvent { $0.request(request,
                                   didValidateRequest: urlRequest,
                                   response: response,
@@ -541,11 +541,11 @@ final class CompositeEventMonitor: EventMonitor {
                                   withResult: result) }
     }
 
-    func request(_ request: DownloadRequest, didParseResponse response: DownloadResponse<URL?, AFError>) {
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 
-    func request<Value>(_ request: DownloadRequest, didParseResponse response: DownloadResponse<Value, AFError>) {
+    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<Value, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 }
@@ -595,85 +595,85 @@ class ClosureEventMonitor: EventMonitor {
     // MARK: - Request Events
 
     /// Closure called on the `request(_:didCreateInitialURLRequest:)` event.
-    var requestDidCreateInitialURLRequest: ((Request, URLRequest) -> Void)?
+    var requestDidCreateInitialURLRequest: ((OWNetworkRequest, URLRequest) -> Void)?
 
     /// Closure called on the `request(_:didFailToCreateURLRequestWithError:)` event.
-    var requestDidFailToCreateURLRequestWithError: ((Request, AFError) -> Void)?
+    var requestDidFailToCreateURLRequestWithError: ((OWNetworkRequest, OWNetworkError) -> Void)?
 
     /// Closure called on the `request(_:didAdaptInitialRequest:to:)` event.
-    var requestDidAdaptInitialRequestToAdaptedRequest: ((Request, URLRequest, URLRequest) -> Void)?
+    var requestDidAdaptInitialRequestToAdaptedRequest: ((OWNetworkRequest, URLRequest, URLRequest) -> Void)?
 
     /// Closure called on the `request(_:didFailToAdaptURLRequest:withError:)` event.
-    var requestDidFailToAdaptURLRequestWithError: ((Request, URLRequest, AFError) -> Void)?
+    var requestDidFailToAdaptURLRequestWithError: ((OWNetworkRequest, URLRequest, OWNetworkError) -> Void)?
 
     /// Closure called on the `request(_:didCreateURLRequest:)` event.
-    var requestDidCreateURLRequest: ((Request, URLRequest) -> Void)?
+    var requestDidCreateURLRequest: ((OWNetworkRequest, URLRequest) -> Void)?
 
     /// Closure called on the `request(_:didCreateTask:)` event.
-    var requestDidCreateTask: ((Request, URLSessionTask) -> Void)?
+    var requestDidCreateTask: ((OWNetworkRequest, URLSessionTask) -> Void)?
 
     /// Closure called on the `request(_:didGatherMetrics:)` event.
-    var requestDidGatherMetrics: ((Request, URLSessionTaskMetrics) -> Void)?
+    var requestDidGatherMetrics: ((OWNetworkRequest, URLSessionTaskMetrics) -> Void)?
 
     /// Closure called on the `request(_:didFailTask:earlyWithError:)` event.
-    var requestDidFailTaskEarlyWithError: ((Request, URLSessionTask, AFError) -> Void)?
+    var requestDidFailTaskEarlyWithError: ((OWNetworkRequest, URLSessionTask, OWNetworkError) -> Void)?
 
     /// Closure called on the `request(_:didCompleteTask:with:)` event.
-    var requestDidCompleteTaskWithError: ((Request, URLSessionTask, AFError?) -> Void)?
+    var requestDidCompleteTaskWithError: ((OWNetworkRequest, URLSessionTask, OWNetworkError?) -> Void)?
 
     /// Closure called on the `requestIsRetrying(_:)` event.
-    var requestIsRetrying: ((Request) -> Void)?
+    var requestIsRetrying: ((OWNetworkRequest) -> Void)?
 
     /// Closure called on the `requestDidFinish(_:)` event.
-    var requestDidFinish: ((Request) -> Void)?
+    var requestDidFinish: ((OWNetworkRequest) -> Void)?
 
     /// Closure called on the `requestDidResume(_:)` event.
-    var requestDidResume: ((Request) -> Void)?
+    var requestDidResume: ((OWNetworkRequest) -> Void)?
 
     /// Closure called on the `request(_:didResumeTask:)` event.
-    var requestDidResumeTask: ((Request, URLSessionTask) -> Void)?
+    var requestDidResumeTask: ((OWNetworkRequest, URLSessionTask) -> Void)?
 
     /// Closure called on the `requestDidSuspend(_:)` event.
-    var requestDidSuspend: ((Request) -> Void)?
+    var requestDidSuspend: ((OWNetworkRequest) -> Void)?
 
     /// Closure called on the `request(_:didSuspendTask:)` event.
-    var requestDidSuspendTask: ((Request, URLSessionTask) -> Void)?
+    var requestDidSuspendTask: ((OWNetworkRequest, URLSessionTask) -> Void)?
 
     /// Closure called on the `requestDidCancel(_:)` event.
-    var requestDidCancel: ((Request) -> Void)?
+    var requestDidCancel: ((OWNetworkRequest) -> Void)?
 
     /// Closure called on the `request(_:didCancelTask:)` event.
-    var requestDidCancelTask: ((Request, URLSessionTask) -> Void)?
+    var requestDidCancelTask: ((OWNetworkRequest, URLSessionTask) -> Void)?
 
     /// Closure called on the `request(_:didValidateRequest:response:data:withResult:)` event.
-    var requestDidValidateRequestResponseDataWithResult: ((DataRequest, URLRequest?, HTTPURLResponse, Data?, Request.ValidationResult) -> Void)?
+    var requestDidValidateRequestResponseDataWithResult: ((OWNetworkDataRequest, URLRequest?, HTTPURLResponse, Data?, OWNetworkRequest.ValidationResult) -> Void)?
 
     /// Closure called on the `request(_:didParseResponse:)` event.
-    var requestDidParseResponse: ((DataRequest, DataResponse<Data?, AFError>) -> Void)?
+    var requestDidParseResponse: ((OWNetworkDataRequest, DataResponse<Data?, OWNetworkError>) -> Void)?
 
     /// Closure called on the `request(_:didValidateRequest:response:withResult:)` event.
-    var requestDidValidateRequestResponseWithResult: ((DataStreamRequest, URLRequest?, HTTPURLResponse, Request.ValidationResult) -> Void)?
+    var requestDidValidateRequestResponseWithResult: ((OWNetworkDataStreamRequest, URLRequest?, HTTPURLResponse, OWNetworkRequest.ValidationResult) -> Void)?
 
     /// Closure called on the `request(_:didCreateUploadable:)` event.
-    var requestDidCreateUploadable: ((UploadRequest, UploadRequest.Uploadable) -> Void)?
+    var requestDidCreateUploadable: ((OWNetworkUploadRequest, OWNetworkUploadRequest.Uploadable) -> Void)?
 
     /// Closure called on the `request(_:didFailToCreateUploadableWithError:)` event.
-    var requestDidFailToCreateUploadableWithError: ((UploadRequest, AFError) -> Void)?
+    var requestDidFailToCreateUploadableWithError: ((OWNetworkUploadRequest, OWNetworkError) -> Void)?
 
     /// Closure called on the `request(_:didProvideInputStream:)` event.
-    var requestDidProvideInputStream: ((UploadRequest, InputStream) -> Void)?
+    var requestDidProvideInputStream: ((OWNetworkUploadRequest, InputStream) -> Void)?
 
     /// Closure called on the `request(_:didFinishDownloadingUsing:with:)` event.
-    var requestDidFinishDownloadingUsingTaskWithResult: ((DownloadRequest, URLSessionTask, Result<URL, AFError>) -> Void)?
+    var requestDidFinishDownloadingUsingTaskWithResult: ((OWNetworkDownloadRequest, URLSessionTask, Result<URL, OWNetworkError>) -> Void)?
 
     /// Closure called on the `request(_:didCreateDestinationURL:)` event.
-    var requestDidCreateDestinationURL: ((DownloadRequest, URL) -> Void)?
+    var requestDidCreateDestinationURL: ((OWNetworkDownloadRequest, URL) -> Void)?
 
     /// Closure called on the `request(_:didValidateRequest:response:temporaryURL:destinationURL:withResult:)` event.
-    var requestDidValidateRequestResponseFileURLWithResult: ((DownloadRequest, URLRequest?, HTTPURLResponse, URL?, Request.ValidationResult) -> Void)?
+    var requestDidValidateRequestResponseFileURLWithResult: ((OWNetworkDownloadRequest, URLRequest?, HTTPURLResponse, URL?, OWNetworkRequest.ValidationResult) -> Void)?
 
     /// Closure called on the `request(_:didParseResponse:)` event.
-    var requestDidParseDownloadResponse: ((DownloadRequest, DownloadResponse<URL?, AFError>) -> Void)?
+    var requestDidParseDownloadResponse: ((OWNetworkDownloadRequest, DownloadResponse<URL?, OWNetworkError>) -> Void)?
 
     let queue: DispatchQueue
 
@@ -752,115 +752,115 @@ class ClosureEventMonitor: EventMonitor {
 
     // MARK: Request Events
 
-    func request(_ request: Request, didCreateInitialURLRequest urlRequest: URLRequest) {
+    func request(_ request: OWNetworkRequest, didCreateInitialURLRequest urlRequest: URLRequest) {
         requestDidCreateInitialURLRequest?(request, urlRequest)
     }
 
-    func request(_ request: Request, didFailToCreateURLRequestWithError error: AFError) {
+    func request(_ request: OWNetworkRequest, didFailToCreateURLRequestWithError error: OWNetworkError) {
         requestDidFailToCreateURLRequestWithError?(request, error)
     }
 
-    func request(_ request: Request, didAdaptInitialRequest initialRequest: URLRequest, to adaptedRequest: URLRequest) {
+    func request(_ request: OWNetworkRequest, didAdaptInitialRequest initialRequest: URLRequest, to adaptedRequest: URLRequest) {
         requestDidAdaptInitialRequestToAdaptedRequest?(request, initialRequest, adaptedRequest)
     }
 
-    func request(_ request: Request, didFailToAdaptURLRequest initialRequest: URLRequest, withError error: AFError) {
+    func request(_ request: OWNetworkRequest, didFailToAdaptURLRequest initialRequest: URLRequest, withError error: OWNetworkError) {
         requestDidFailToAdaptURLRequestWithError?(request, initialRequest, error)
     }
 
-    func request(_ request: Request, didCreateURLRequest urlRequest: URLRequest) {
+    func request(_ request: OWNetworkRequest, didCreateURLRequest urlRequest: URLRequest) {
         requestDidCreateURLRequest?(request, urlRequest)
     }
 
-    func request(_ request: Request, didCreateTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didCreateTask task: URLSessionTask) {
         requestDidCreateTask?(request, task)
     }
 
-    func request(_ request: Request, didGatherMetrics metrics: URLSessionTaskMetrics) {
+    func request(_ request: OWNetworkRequest, didGatherMetrics metrics: URLSessionTaskMetrics) {
         requestDidGatherMetrics?(request, metrics)
     }
 
-    func request(_ request: Request, didFailTask task: URLSessionTask, earlyWithError error: AFError) {
+    func request(_ request: OWNetworkRequest, didFailTask task: URLSessionTask, earlyWithError error: OWNetworkError) {
         requestDidFailTaskEarlyWithError?(request, task, error)
     }
 
-    func request(_ request: Request, didCompleteTask task: URLSessionTask, with error: AFError?) {
+    func request(_ request: OWNetworkRequest, didCompleteTask task: URLSessionTask, with error: OWNetworkError?) {
         requestDidCompleteTaskWithError?(request, task, error)
     }
 
-    func requestIsRetrying(_ request: Request) {
+    func requestIsRetrying(_ request: OWNetworkRequest) {
         requestIsRetrying?(request)
     }
 
-    func requestDidFinish(_ request: Request) {
+    func requestDidFinish(_ request: OWNetworkRequest) {
         requestDidFinish?(request)
     }
 
-    func requestDidResume(_ request: Request) {
+    func requestDidResume(_ request: OWNetworkRequest) {
         requestDidResume?(request)
     }
 
-    func request(_ request: Request, didResumeTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didResumeTask task: URLSessionTask) {
         requestDidResumeTask?(request, task)
     }
 
-    func requestDidSuspend(_ request: Request) {
+    func requestDidSuspend(_ request: OWNetworkRequest) {
         requestDidSuspend?(request)
     }
 
-    func request(_ request: Request, didSuspendTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didSuspendTask task: URLSessionTask) {
         requestDidSuspendTask?(request, task)
     }
 
-    func requestDidCancel(_ request: Request) {
+    func requestDidCancel(_ request: OWNetworkRequest) {
         requestDidCancel?(request)
     }
 
-    func request(_ request: Request, didCancelTask task: URLSessionTask) {
+    func request(_ request: OWNetworkRequest, didCancelTask task: URLSessionTask) {
         requestDidCancelTask?(request, task)
     }
 
-    func request(_ request: DataRequest,
+    func request(_ request: OWNetworkDataRequest,
                       didValidateRequest urlRequest: URLRequest?,
                       response: HTTPURLResponse,
                       data: Data?,
-                      withResult result: Request.ValidationResult) {
+                      withResult result: OWNetworkRequest.ValidationResult) {
         requestDidValidateRequestResponseDataWithResult?(request, urlRequest, response, data, result)
     }
 
-    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>) {
         requestDidParseResponse?(request, response)
     }
 
-    func request(_ request: DataStreamRequest, didValidateRequest urlRequest: URLRequest?, response: HTTPURLResponse, withResult result: Request.ValidationResult) {
+    func request(_ request: OWNetworkDataStreamRequest, didValidateRequest urlRequest: URLRequest?, response: HTTPURLResponse, withResult result: OWNetworkRequest.ValidationResult) {
         requestDidValidateRequestResponseWithResult?(request, urlRequest, response, result)
     }
 
-    func request(_ request: UploadRequest, didCreateUploadable uploadable: UploadRequest.Uploadable) {
+    func request(_ request: OWNetworkUploadRequest, didCreateUploadable uploadable: OWNetworkUploadRequest.Uploadable) {
         requestDidCreateUploadable?(request, uploadable)
     }
 
-    func request(_ request: UploadRequest, didFailToCreateUploadableWithError error: AFError) {
+    func request(_ request: OWNetworkUploadRequest, didFailToCreateUploadableWithError error: OWNetworkError) {
         requestDidFailToCreateUploadableWithError?(request, error)
     }
 
-    func request(_ request: UploadRequest, didProvideInputStream stream: InputStream) {
+    func request(_ request: OWNetworkUploadRequest, didProvideInputStream stream: InputStream) {
         requestDidProvideInputStream?(request, stream)
     }
 
-    func request(_ request: DownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, AFError>) {
+    func request(_ request: OWNetworkDownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, OWNetworkError>) {
         requestDidFinishDownloadingUsingTaskWithResult?(request, task, result)
     }
 
-    func request(_ request: DownloadRequest, didCreateDestinationURL url: URL) {
+    func request(_ request: OWNetworkDownloadRequest, didCreateDestinationURL url: URL) {
         requestDidCreateDestinationURL?(request, url)
     }
 
-    func request(_ request: DownloadRequest,
+    func request(_ request: OWNetworkDownloadRequest,
                       didValidateRequest urlRequest: URLRequest?,
                       response: HTTPURLResponse,
                       fileURL: URL?,
-                      withResult result: Request.ValidationResult) {
+                      withResult result: OWNetworkRequest.ValidationResult) {
         requestDidValidateRequestResponseFileURLWithResult?(request,
                                                             urlRequest,
                                                             response,
@@ -868,7 +868,7 @@ class ClosureEventMonitor: EventMonitor {
                                                             result)
     }
 
-    func request(_ request: DownloadRequest, didParseResponse response: DownloadResponse<URL?, AFError>) {
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>) {
         requestDidParseDownloadResponse?(request, response)
     }
 }

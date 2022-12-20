@@ -9,7 +9,7 @@
 import Foundation
 
 /// A type that handles whether the data task should store the HTTP response in the cache.
-protocol CachedResponseHandler {
+protocol OWNetworkCachedResponseHandler {
     /// Determines whether the HTTP response should be stored in the cache.
     ///
     /// The `completion` closure should be passed one of three possible options:
@@ -31,7 +31,7 @@ protocol CachedResponseHandler {
 
 /// `ResponseCacher` is a convenience `CachedResponseHandler` making it easy to cache, not cache, or modify a cached
 /// response.
-struct ResponseCacher {
+struct OWNetworkResponseCacher {
     /// Defines the behavior of the `ResponseCacher` type.
     enum Behavior {
         /// Stores the cached response in the cache.
@@ -43,9 +43,9 @@ struct ResponseCacher {
     }
 
     /// Returns a `ResponseCacher` with a `.cache` `Behavior`.
-    static let cache = ResponseCacher(behavior: .cache)
+    static let cache = OWNetworkResponseCacher(behavior: .cache)
     /// Returns a `ResponseCacher` with a `.doNotCache` `Behavior`.
-    static let doNotCache = ResponseCacher(behavior: .doNotCache)
+    static let doNotCache = OWNetworkResponseCacher(behavior: .doNotCache)
 
     /// The `Behavior` of the `ResponseCacher`.
     let behavior: Behavior
@@ -58,7 +58,7 @@ struct ResponseCacher {
     }
 }
 
-extension ResponseCacher: CachedResponseHandler {
+extension OWNetworkResponseCacher: OWNetworkCachedResponseHandler {
     func dataTask(_ task: URLSessionDataTask,
                          willCacheResponse response: CachedURLResponse,
                          completion: @escaping (CachedURLResponse?) -> Void) {
@@ -74,18 +74,18 @@ extension ResponseCacher: CachedResponseHandler {
     }
 }
 
-extension CachedResponseHandler where Self == ResponseCacher {
+extension OWNetworkCachedResponseHandler where Self == OWNetworkResponseCacher {
     /// Provides a `ResponseCacher` which caches the response, if allowed. Equivalent to `ResponseCacher.cache`.
-    static var cache: ResponseCacher { .cache }
+    static var cache: OWNetworkResponseCacher { .cache }
 
     /// Provides a `ResponseCacher` which does not cache the response. Equivalent to `ResponseCacher.doNotCache`.
-    static var doNotCache: ResponseCacher { .doNotCache }
+    static var doNotCache: OWNetworkResponseCacher { .doNotCache }
 
     /// Creates a `ResponseCacher` which modifies the proposed `CachedURLResponse` using the provided closure.
     ///
     /// - Parameter closure: Closure used to modify the `CachedURLResponse`.
     /// - Returns:           The `ResponseCacher`.
-    static func modify(using closure: @escaping ((URLSessionDataTask, CachedURLResponse) -> CachedURLResponse?)) -> ResponseCacher {
-        ResponseCacher(behavior: .modify(closure))
+    static func modify(using closure: @escaping ((URLSessionDataTask, CachedURLResponse) -> CachedURLResponse?)) -> OWNetworkResponseCacher {
+        OWNetworkResponseCacher(behavior: .modify(closure))
     }
 }

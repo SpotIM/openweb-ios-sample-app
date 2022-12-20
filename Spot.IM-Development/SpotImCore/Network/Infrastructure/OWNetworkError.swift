@@ -11,7 +11,7 @@ import Foundation
 /* `AFError` is the error type returned by this network infrastructure. It encompasses a few different types of errors, each with
  their own associated reasons.
  */
-enum AFError: Error {
+enum OWNetworkError: Error {
     // The underlying reason the `.multipartEncodingFailed` error occurred.
     enum MultipartEncodingFailureReason {
         // The `fileURL` provided for reading an encodable body part isn't a file `URL`.
@@ -155,7 +155,7 @@ enum AFError: Error {
         // Host validation failed with the associated `Output`.
         case hostValidationFailed(output: Output)
         // Revocation check failed with the associated `Output` and options.
-        case revocationCheckFailed(output: Output, options: RevocationTrustEvaluator.Options)
+        case revocationCheckFailed(output: Output, options: OWNetworkRevocationTrustEvaluator.Options)
         // Certificate pinning failed.
         case certificatePinningFailed(host: String, trust: SecTrust, pinnedCertificates: [SecCertificate], serverCertificates: [SecCertificate])
         // key pinning failed.
@@ -179,7 +179,7 @@ enum AFError: Error {
     // `Request` was explicitly cancelled.
     case explicitlyCancelled
     // `URLConvertible` type failed to create a valid `URL`.
-    case invalidURL(url: URLConvertible)
+    case invalidURL(url: OWNetworkURLConvertible)
     // Multipart form encoding failed.
     case multipartEncodingFailed(reason: MultipartEncodingFailureReason)
     // `ParameterEncoding` threw an error during the encoding process.
@@ -208,27 +208,27 @@ enum AFError: Error {
 
 extension Error {
     // Returns the instance cast as an `AFError`.
-    var asAFError: AFError? {
-        self as? AFError
+    var asOWNetworkError: OWNetworkError? {
+        self as? OWNetworkError
     }
 
     // Returns the instance cast as an `AFError`. If casting fails, a `fatalError` with the specified `message` is thrown.
-    func asAFError(orFailWith message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line) -> AFError {
-        guard let afError = self as? AFError else {
+    func asOWNetworkError(orFailWith message: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line) -> OWNetworkError {
+        guard let afError = self as? OWNetworkError else {
             fatalError(message(), file: file, line: line)
         }
         return afError
     }
 
     // Casts the instance as `AFError` or returns `defaultAFError`
-    func asAFError(or defaultAFError: @autoclosure () -> AFError) -> AFError {
-        self as? AFError ?? defaultAFError()
+    func asOWNetworkError(or defaultAFError: @autoclosure () -> OWNetworkError) -> OWNetworkError {
+        self as? OWNetworkError ?? defaultAFError()
     }
 }
 
 // MARK: - Error Booleans
 
-extension AFError {
+extension OWNetworkError {
     // Returns whether the instance is `.sessionDeinitialized`.
     var isSessionDeinitializedError: Bool {
         if case .sessionDeinitialized = self { return true }
@@ -340,9 +340,9 @@ extension AFError {
 
 // MARK: - Convenience Properties
 
-extension AFError {
+extension OWNetworkError {
     // The `URLConvertible` associated with the error.
-    var urlConvertible: URLConvertible? {
+    var urlConvertible: OWNetworkURLConvertible? {
         guard case let .invalidURL(url) = self else { return nil }
         return url
     }
@@ -434,7 +434,7 @@ extension AFError {
     }
 }
 
-extension AFError.ParameterEncodingFailureReason {
+extension OWNetworkError.ParameterEncodingFailureReason {
     var underlyingError: Error? {
         switch self {
         case let .jsonEncodingFailed(error),
@@ -446,7 +446,7 @@ extension AFError.ParameterEncodingFailureReason {
     }
 }
 
-extension AFError.ParameterEncoderFailureReason {
+extension OWNetworkError.ParameterEncoderFailureReason {
     var underlyingError: Error? {
         switch self {
         case let .encoderFailed(error):
@@ -457,7 +457,7 @@ extension AFError.ParameterEncoderFailureReason {
     }
 }
 
-extension AFError.MultipartEncodingFailureReason {
+extension OWNetworkError.MultipartEncodingFailureReason {
     var url: URL? {
         switch self {
         case let .bodyPartURLInvalid(url),
@@ -499,7 +499,7 @@ extension AFError.MultipartEncodingFailureReason {
     }
 }
 
-extension AFError.ResponseValidationFailureReason {
+extension OWNetworkError.ResponseValidationFailureReason {
     var acceptableContentTypes: [String]? {
         switch self {
         case let .missingContentType(types),
@@ -553,7 +553,7 @@ extension AFError.ResponseValidationFailureReason {
     }
 }
 
-extension AFError.ResponseSerializationFailureReason {
+extension OWNetworkError.ResponseSerializationFailureReason {
     var failedStringEncoding: String.Encoding? {
         switch self {
         case let .stringSerializationFailed(encoding):
@@ -585,8 +585,8 @@ extension AFError.ResponseSerializationFailureReason {
     }
 }
 
-extension AFError.ServerTrustFailureReason {
-    var output: AFError.ServerTrustFailureReason.Output? {
+extension OWNetworkError.ServerTrustFailureReason {
+    var output: OWNetworkError.ServerTrustFailureReason.Output? {
         switch self {
         case let .defaultEvaluationFailed(output),
              let .hostValidationFailed(output),
@@ -630,7 +630,7 @@ extension AFError.ServerTrustFailureReason {
 
 // MARK: - Error Descriptions
 
-extension AFError: LocalizedError {
+extension OWNetworkError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .explicitlyCancelled:
@@ -677,7 +677,7 @@ extension AFError: LocalizedError {
     }
 }
 
-extension AFError.ParameterEncodingFailureReason {
+extension OWNetworkError.ParameterEncodingFailureReason {
     var localizedDescription: String {
         switch self {
         case .missingURL:
@@ -690,7 +690,7 @@ extension AFError.ParameterEncodingFailureReason {
     }
 }
 
-extension AFError.ParameterEncoderFailureReason {
+extension OWNetworkError.ParameterEncoderFailureReason {
     var localizedDescription: String {
         switch self {
         case let .missingRequiredComponent(component):
@@ -701,7 +701,7 @@ extension AFError.ParameterEncoderFailureReason {
     }
 }
 
-extension AFError.MultipartEncodingFailureReason {
+extension OWNetworkError.MultipartEncodingFailureReason {
     var localizedDescription: String {
         switch self {
         case let .bodyPartURLInvalid(url):
@@ -742,7 +742,7 @@ extension AFError.MultipartEncodingFailureReason {
     }
 }
 
-extension AFError.ResponseSerializationFailureReason {
+extension OWNetworkError.ResponseSerializationFailureReason {
     var localizedDescription: String {
         switch self {
         case .inputDataNilOrZeroLength:
@@ -768,7 +768,7 @@ extension AFError.ResponseSerializationFailureReason {
     }
 }
 
-extension AFError.ResponseValidationFailureReason {
+extension OWNetworkError.ResponseValidationFailureReason {
     var localizedDescription: String {
         switch self {
         case .dataFileNil:
@@ -793,7 +793,7 @@ extension AFError.ResponseValidationFailureReason {
     }
 }
 
-extension AFError.ServerTrustFailureReason {
+extension OWNetworkError.ServerTrustFailureReason {
     var localizedDescription: String {
         switch self {
         case let .noRequiredEvaluator(host):
@@ -826,7 +826,7 @@ extension AFError.ServerTrustFailureReason {
     }
 }
 
-extension AFError.URLRequestValidationFailureReason {
+extension OWNetworkError.URLRequestValidationFailureReason {
     var localizedDescription: String {
         switch self {
         case let .bodyDataInGETRequest(data):

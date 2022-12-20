@@ -108,13 +108,13 @@ class Protected<T> {
     }
 }
 
-extension Protected where T == Request.MutableState {
+extension Protected where T == OWNetworkRequest.MutableState {
     /// Attempts to transition to the passed `State`.
     ///
     /// - Parameter state: The `State` to attempt transition to.
     ///
     /// - Returns:         Whether the transition occurred.
-    func attemptToTransitionTo(_ state: Request.State) -> Bool {
+    func attemptToTransitionTo(_ state: OWNetworkRequest.State) -> Bool {
         lock.around {
             guard value.state.canTransitionTo(state) else { return false }
 
@@ -127,7 +127,7 @@ extension Protected where T == Request.MutableState {
     /// Perform a closure while locked with the provided `Request.State`.
     ///
     /// - Parameter perform: The closure to perform while locked.
-    func withState(perform: (Request.State) -> Void) {
+    func withState(perform: (OWNetworkRequest.State) -> Void) {
         lock.around { perform(value.state) }
     }
 }

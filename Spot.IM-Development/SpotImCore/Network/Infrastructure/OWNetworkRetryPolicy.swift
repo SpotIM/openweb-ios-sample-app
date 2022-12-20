@@ -10,7 +10,7 @@ import Foundation
 
 /// A retry policy that retries requests using an exponential backoff for allowed HTTP methods and HTTP status codes
 /// as well as certain types of networking errors.
-class RetryPolicy: RequestInterceptor {
+class OWNetworkRetryPolicy: RequestInterceptor {
     /// The default retry limit for retry policies.
     static let defaultRetryLimit: UInt = 2
 
@@ -273,12 +273,12 @@ class RetryPolicy: RequestInterceptor {
     ///                               `RetryPolicy.defaultRetryableHTTPStatusCodes` by default.
     ///   - retryableURLErrorCodes:   The URL error codes that are automatically retried by the policy.
     ///                               `RetryPolicy.defaultRetryableURLErrorCodes` by default.
-    init(retryLimit: UInt = RetryPolicy.defaultRetryLimit,
-                exponentialBackoffBase: UInt = RetryPolicy.defaultExponentialBackoffBase,
-                exponentialBackoffScale: Double = RetryPolicy.defaultExponentialBackoffScale,
-                retryableHTTPMethods: Set<HTTPMethod> = RetryPolicy.defaultRetryableHTTPMethods,
-                retryableHTTPStatusCodes: Set<Int> = RetryPolicy.defaultRetryableHTTPStatusCodes,
-                retryableURLErrorCodes: Set<URLError.Code> = RetryPolicy.defaultRetryableURLErrorCodes) {
+    init(retryLimit: UInt = OWNetworkRetryPolicy.defaultRetryLimit,
+                exponentialBackoffBase: UInt = OWNetworkRetryPolicy.defaultExponentialBackoffBase,
+                exponentialBackoffScale: Double = OWNetworkRetryPolicy.defaultExponentialBackoffScale,
+                retryableHTTPMethods: Set<HTTPMethod> = OWNetworkRetryPolicy.defaultRetryableHTTPMethods,
+                retryableHTTPStatusCodes: Set<Int> = OWNetworkRetryPolicy.defaultRetryableHTTPStatusCodes,
+                retryableURLErrorCodes: Set<URLError.Code> = OWNetworkRetryPolicy.defaultRetryableURLErrorCodes) {
         precondition(exponentialBackoffBase >= 2, "The `exponentialBackoffBase` must be a minimum of 2.")
 
         self.retryLimit = retryLimit
@@ -289,8 +289,8 @@ class RetryPolicy: RequestInterceptor {
         self.retryableURLErrorCodes = retryableURLErrorCodes
     }
 
-    func retry(_ request: Request,
-                    for session: Session,
+    func retry(_ request: OWNetworkRequest,
+                    for session: OWNetworkSession,
                     dueTo error: Error,
                     completion: @escaping (RetryResult) -> Void) {
         if request.retryCount < retryLimit, shouldRetry(request: request, dueTo: error) {
@@ -307,14 +307,14 @@ class RetryPolicy: RequestInterceptor {
     ///     - error:   `Error` encountered while executing the `Request`.
     ///
     /// - Returns:     `Bool` determining whether or not to retry the `Request`.
-    func shouldRetry(request: Request, dueTo error: Error) -> Bool {
+    func shouldRetry(request: OWNetworkRequest, dueTo error: Error) -> Bool {
         guard let httpMethod = request.request?.method, retryableHTTPMethods.contains(httpMethod) else { return false }
 
         if let statusCode = request.response?.statusCode, retryableHTTPStatusCodes.contains(statusCode) {
             return true
         } else {
             let errorCode = (error as? URLError)?.code
-            let afErrorCode = (error.asAFError?.underlyingError as? URLError)?.code
+            let afErrorCode = (error.asOWNetworkError?.underlyingError as? URLError)?.code
 
             guard let code = errorCode ?? afErrorCode else { return false }
 
@@ -323,9 +323,9 @@ class RetryPolicy: RequestInterceptor {
     }
 }
 
-extension RequestInterceptor where Self == RetryPolicy {
+extension RequestInterceptor where Self == OWNetworkRetryPolicy {
     /// Provides a default `RetryPolicy` instance.
-    static var retryPolicy: RetryPolicy { RetryPolicy() }
+    static var retryPolicy: OWNetworkRetryPolicy { OWNetworkRetryPolicy() }
 
     /// Creates an `RetryPolicy` from the specified parameters.
     ///
@@ -341,13 +341,13 @@ extension RequestInterceptor where Self == RetryPolicy {
     ///                               `RetryPolicy.defaultRetryableURLErrorCodes` by default.
     ///
     /// - Returns:                    The `RetryPolicy`
-    static func retryPolicy(retryLimit: UInt = RetryPolicy.defaultRetryLimit,
-                                   exponentialBackoffBase: UInt = RetryPolicy.defaultExponentialBackoffBase,
-                                   exponentialBackoffScale: Double = RetryPolicy.defaultExponentialBackoffScale,
-                                   retryableHTTPMethods: Set<HTTPMethod> = RetryPolicy.defaultRetryableHTTPMethods,
-                                   retryableHTTPStatusCodes: Set<Int> = RetryPolicy.defaultRetryableHTTPStatusCodes,
-                                   retryableURLErrorCodes: Set<URLError.Code> = RetryPolicy.defaultRetryableURLErrorCodes) -> RetryPolicy {
-        RetryPolicy(retryLimit: retryLimit,
+    static func retryPolicy(retryLimit: UInt = OWNetworkRetryPolicy.defaultRetryLimit,
+                                   exponentialBackoffBase: UInt = OWNetworkRetryPolicy.defaultExponentialBackoffBase,
+                                   exponentialBackoffScale: Double = OWNetworkRetryPolicy.defaultExponentialBackoffScale,
+                                   retryableHTTPMethods: Set<HTTPMethod> = OWNetworkRetryPolicy.defaultRetryableHTTPMethods,
+                                   retryableHTTPStatusCodes: Set<Int> = OWNetworkRetryPolicy.defaultRetryableHTTPStatusCodes,
+                                   retryableURLErrorCodes: Set<URLError.Code> = OWNetworkRetryPolicy.defaultRetryableURLErrorCodes) -> OWNetworkRetryPolicy {
+        OWNetworkRetryPolicy(retryLimit: retryLimit,
                     exponentialBackoffBase: exponentialBackoffBase,
                     exponentialBackoffScale: exponentialBackoffScale,
                     retryableHTTPMethods: retryableHTTPMethods,
@@ -361,7 +361,7 @@ extension RequestInterceptor where Self == RetryPolicy {
 /// A retry policy that automatically retries idempotent requests for network connection lost errors. For more
 /// information about retrying network connection lost errors, please refer to Apple's
 /// [technical document](https://developer.apple.com/library/content/qa/qa1941/_index.html).
-class ConnectionLostRetryPolicy: RetryPolicy {
+class OWNetworkConnectionLostRetryPolicy: OWNetworkRetryPolicy {
     /// Creates a `ConnectionLostRetryPolicy` instance from the specified parameters.
     ///
     /// - Parameters:
@@ -373,10 +373,10 @@ class ConnectionLostRetryPolicy: RetryPolicy {
     ///                              `RetryPolicy.defaultExponentialBackoffScale` by default.
     ///   - retryableHTTPMethods:    The idempotent http methods to retry.
     ///                              `RetryPolicy.defaultRetryableHTTPMethods` by default.
-    init(retryLimit: UInt = RetryPolicy.defaultRetryLimit,
-                exponentialBackoffBase: UInt = RetryPolicy.defaultExponentialBackoffBase,
-                exponentialBackoffScale: Double = RetryPolicy.defaultExponentialBackoffScale,
-                retryableHTTPMethods: Set<HTTPMethod> = RetryPolicy.defaultRetryableHTTPMethods) {
+    init(retryLimit: UInt = OWNetworkRetryPolicy.defaultRetryLimit,
+                exponentialBackoffBase: UInt = OWNetworkRetryPolicy.defaultExponentialBackoffBase,
+                exponentialBackoffScale: Double = OWNetworkRetryPolicy.defaultExponentialBackoffScale,
+                retryableHTTPMethods: Set<HTTPMethod> = OWNetworkRetryPolicy.defaultRetryableHTTPMethods) {
         super.init(retryLimit: retryLimit,
                    exponentialBackoffBase: exponentialBackoffBase,
                    exponentialBackoffScale: exponentialBackoffScale,
@@ -386,9 +386,9 @@ class ConnectionLostRetryPolicy: RetryPolicy {
     }
 }
 
-extension RequestInterceptor where Self == ConnectionLostRetryPolicy {
+extension RequestInterceptor where Self == OWNetworkConnectionLostRetryPolicy {
     /// Provides a default `ConnectionLostRetryPolicy` instance.
-    static var connectionLostRetryPolicy: ConnectionLostRetryPolicy { ConnectionLostRetryPolicy() }
+    static var connectionLostRetryPolicy: OWNetworkConnectionLostRetryPolicy { OWNetworkConnectionLostRetryPolicy() }
 
     /// Creates a `ConnectionLostRetryPolicy` instance from the specified parameters.
     ///
@@ -402,11 +402,11 @@ extension RequestInterceptor where Self == ConnectionLostRetryPolicy {
     ///   - retryableHTTPMethods:    The idempotent http methods to retry.
     ///
     /// - Returns:                   The `ConnectionLostRetryPolicy`.
-    static func connectionLostRetryPolicy(retryLimit: UInt = RetryPolicy.defaultRetryLimit,
-                                                 exponentialBackoffBase: UInt = RetryPolicy.defaultExponentialBackoffBase,
-                                                 exponentialBackoffScale: Double = RetryPolicy.defaultExponentialBackoffScale,
-                                                 retryableHTTPMethods: Set<HTTPMethod> = RetryPolicy.defaultRetryableHTTPMethods) -> ConnectionLostRetryPolicy {
-        ConnectionLostRetryPolicy(retryLimit: retryLimit,
+    static func connectionLostRetryPolicy(retryLimit: UInt = OWNetworkRetryPolicy.defaultRetryLimit,
+                                                 exponentialBackoffBase: UInt = OWNetworkRetryPolicy.defaultExponentialBackoffBase,
+                                                 exponentialBackoffScale: Double = OWNetworkRetryPolicy.defaultExponentialBackoffScale,
+                                                 retryableHTTPMethods: Set<HTTPMethod> = OWNetworkRetryPolicy.defaultRetryableHTTPMethods) -> OWNetworkConnectionLostRetryPolicy {
+        OWNetworkConnectionLostRetryPolicy(retryLimit: retryLimit,
                                   exponentialBackoffBase: exponentialBackoffBase,
                                   exponentialBackoffScale: exponentialBackoffScale,
                                   retryableHTTPMethods: retryableHTTPMethods)

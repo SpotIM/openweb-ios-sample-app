@@ -9,9 +9,9 @@
 import Foundation
 
 /// Default type of `DataResponse` returned by Alamofire, with an `AFError` `Failure` type.
-typealias AFDataResponse<Success> = DataResponse<Success, AFError>
+typealias AFDataResponse<Success> = DataResponse<Success, OWNetworkError>
 /// Default type of `DownloadResponse` returned by Alamofire, with an `AFError` `Failure` type.
-typealias AFDownloadResponse<Success> = DownloadResponse<Success, AFError>
+typealias AFDownloadResponse<Success> = DownloadResponse<Success, OWNetworkError>
 
 /// Type used to store all values associated with a serialized response of a `DataRequest` or `UploadRequest`.
 struct DataResponse<Success, Failure: Error> {

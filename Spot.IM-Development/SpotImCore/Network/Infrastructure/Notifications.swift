@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Request {
+extension OWNetworkRequest {
     /// Posted when a `Request` is resumed. The `Notification` contains the resumed `Request`.
     static let didResumeNotification = Notification.Name(rawValue: "org.OpenWebSDKNetwork.notification.name.request.didResume")
     /// Posted when a `Request` is suspended. The `Notification` contains the suspended `Request`.
@@ -32,8 +32,8 @@ extension Request {
 
 extension Notification {
     /// The `Request` contained by the instance's `userInfo`, `nil` otherwise.
-    var request: Request? {
-        userInfo?[String.requestKey] as? Request
+    var request: OWNetworkRequest? {
+        userInfo?[String.requestKey] as? OWNetworkRequest
     }
 
     /// Convenience initializer for a `Notification` containing a `Request` payload.
@@ -41,7 +41,7 @@ extension Notification {
     /// - Parameters:
     ///   - name:    The name of the notification.
     ///   - request: The `Request` payload.
-    init(name: Notification.Name, request: Request) {
+    init(name: Notification.Name, request: OWNetworkRequest) {
         self.init(name: name, object: nil, userInfo: [String.requestKey: request])
     }
 }
@@ -52,7 +52,7 @@ extension NotificationCenter {
     /// - Parameters:
     ///   - name:    The name of the notification.
     ///   - request: The `Request` payload.
-    func postNotification(named name: Notification.Name, with request: Request) {
+    func postNotification(named name: Notification.Name, with request: OWNetworkRequest) {
         let notification = Notification(name: name, request: request)
         post(notification)
     }
@@ -65,35 +65,35 @@ extension String {
 
 /// `EventMonitor` that provides Alamofire's notifications.
 final class AlamofireNotifications: EventMonitor {
-    func requestDidResume(_ request: Request) {
-        NotificationCenter.default.postNotification(named: Request.didResumeNotification, with: request)
+    func requestDidResume(_ request: OWNetworkRequest) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didResumeNotification, with: request)
     }
 
-    func requestDidSuspend(_ request: Request) {
-        NotificationCenter.default.postNotification(named: Request.didSuspendNotification, with: request)
+    func requestDidSuspend(_ request: OWNetworkRequest) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didSuspendNotification, with: request)
     }
 
-    func requestDidCancel(_ request: Request) {
-        NotificationCenter.default.postNotification(named: Request.didCancelNotification, with: request)
+    func requestDidCancel(_ request: OWNetworkRequest) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didCancelNotification, with: request)
     }
 
-    func requestDidFinish(_ request: Request) {
-        NotificationCenter.default.postNotification(named: Request.didFinishNotification, with: request)
+    func requestDidFinish(_ request: OWNetworkRequest) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didFinishNotification, with: request)
     }
 
-    func request(_ request: Request, didResumeTask task: URLSessionTask) {
-        NotificationCenter.default.postNotification(named: Request.didResumeTaskNotification, with: request)
+    func request(_ request: OWNetworkRequest, didResumeTask task: URLSessionTask) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didResumeTaskNotification, with: request)
     }
 
-    func request(_ request: Request, didSuspendTask task: URLSessionTask) {
-        NotificationCenter.default.postNotification(named: Request.didSuspendTaskNotification, with: request)
+    func request(_ request: OWNetworkRequest, didSuspendTask task: URLSessionTask) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didSuspendTaskNotification, with: request)
     }
 
-    func request(_ request: Request, didCancelTask task: URLSessionTask) {
-        NotificationCenter.default.postNotification(named: Request.didCancelTaskNotification, with: request)
+    func request(_ request: OWNetworkRequest, didCancelTask task: URLSessionTask) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didCancelTaskNotification, with: request)
     }
 
-    func request(_ request: Request, didCompleteTask task: URLSessionTask, with error: AFError?) {
-        NotificationCenter.default.postNotification(named: Request.didCompleteTaskNotification, with: request)
+    func request(_ request: OWNetworkRequest, didCompleteTask task: URLSessionTask, with error: OWNetworkError?) {
+        NotificationCenter.default.postNotification(named: OWNetworkRequest.didCompleteTaskNotification, with: request)
     }
 }

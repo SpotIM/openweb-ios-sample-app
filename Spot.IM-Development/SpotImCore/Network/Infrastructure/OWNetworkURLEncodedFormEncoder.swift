@@ -25,7 +25,7 @@ import Foundation
 /// while older encodings may expect spaces to be replaced with `+`.
 ///
 /// This type is largely based on Vapor's [`url-encoded-form`](https://github.com/vapor/url-encoded-form) project.
-final class URLEncodedFormEncoder {
+class OWNetworkURLEncodedFormEncoder {
     /// Encoding to use for `Array` values.
     enum ArrayEncoding {
         /// An empty set of square brackets ("[]") are appended to the key for every value. This is the default encoding.
@@ -341,9 +341,9 @@ final class URLEncodedFormEncoder {
         self.allowedCharacters = allowedCharacters
     }
 
-    func encode(_ value: Encodable) throws -> URLEncodedFormComponent {
-        let context = URLEncodedFormContext(.object([]))
-        let encoder = _URLEncodedFormEncoder(context: context,
+    func encode(_ value: Encodable) throws -> OWNetworkURLEncodedFormComponent {
+        let context = OWNetworkURLEncodedFormContext(.object([]))
+        let encoder = _OWNetworkURLEncodedFormEncoder(context: context,
                                              boolEncoding: boolEncoding,
                                              dataEncoding: dataEncoding,
                                              dateEncoding: dateEncoding)
@@ -359,13 +359,13 @@ final class URLEncodedFormEncoder {
     /// - Returns:         The encoded `String`.
     /// - Throws:          An `Error` or `EncodingError` instance if encoding fails.
     func encode(_ value: Encodable) throws -> String {
-        let component: URLEncodedFormComponent = try encode(value)
+        let component: OWNetworkURLEncodedFormComponent = try encode(value)
 
         guard case let .object(object) = component else {
             throw Error.invalidRootObject("\(component)")
         }
 
-        let serializer = URLEncodedFormSerializer(alphabetizeKeyValuePairs: alphabetizeKeyValuePairs,
+        let serializer = OWNetworkURLEncodedFormSerializer(alphabetizeKeyValuePairs: alphabetizeKeyValuePairs,
                                                   arrayEncoding: arrayEncoding,
                                                   keyEncoding: keyEncoding,
                                                   spaceEncoding: spaceEncoding,
@@ -390,22 +390,22 @@ final class URLEncodedFormEncoder {
     }
 }
 
-final class _URLEncodedFormEncoder {
+class _OWNetworkURLEncodedFormEncoder {
     var codingPath: [CodingKey]
     // Returns an empty dictionary, as this encoder doesn't support userInfo.
     var userInfo: [CodingUserInfoKey: Any] { [:] }
 
-    let context: URLEncodedFormContext
+    let context: OWNetworkURLEncodedFormContext
 
-    private let boolEncoding: URLEncodedFormEncoder.BoolEncoding
-    private let dataEncoding: URLEncodedFormEncoder.DataEncoding
-    private let dateEncoding: URLEncodedFormEncoder.DateEncoding
+    private let boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding
+    private let dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding
+    private let dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding
 
-    init(context: URLEncodedFormContext,
+    init(context: OWNetworkURLEncodedFormContext,
          codingPath: [CodingKey] = [],
-         boolEncoding: URLEncodedFormEncoder.BoolEncoding,
-         dataEncoding: URLEncodedFormEncoder.DataEncoding,
-         dateEncoding: URLEncodedFormEncoder.DateEncoding) {
+         boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding,
+         dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding,
+         dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding) {
         self.context = context
         self.codingPath = codingPath
         self.boolEncoding = boolEncoding
@@ -414,9 +414,9 @@ final class _URLEncodedFormEncoder {
     }
 }
 
-extension _URLEncodedFormEncoder: Encoder {
+extension _OWNetworkURLEncodedFormEncoder: Encoder {
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
-        let container = _URLEncodedFormEncoder.KeyedContainer<Key>(context: context,
+        let container = _OWNetworkURLEncodedFormEncoder.KeyedContainer<Key>(context: context,
                                                                    codingPath: codingPath,
                                                                    boolEncoding: boolEncoding,
                                                                    dataEncoding: dataEncoding,
@@ -425,7 +425,7 @@ extension _URLEncodedFormEncoder: Encoder {
     }
 
     func unkeyedContainer() -> UnkeyedEncodingContainer {
-        _URLEncodedFormEncoder.UnkeyedContainer(context: context,
+        _OWNetworkURLEncodedFormEncoder.UnkeyedContainer(context: context,
                                                 codingPath: codingPath,
                                                 boolEncoding: boolEncoding,
                                                 dataEncoding: dataEncoding,
@@ -433,7 +433,7 @@ extension _URLEncodedFormEncoder: Encoder {
     }
 
     func singleValueContainer() -> SingleValueEncodingContainer {
-        _URLEncodedFormEncoder.SingleValueContainer(context: context,
+        _OWNetworkURLEncodedFormEncoder.SingleValueContainer(context: context,
                                                     codingPath: codingPath,
                                                     boolEncoding: boolEncoding,
                                                     dataEncoding: dataEncoding,
@@ -441,23 +441,23 @@ extension _URLEncodedFormEncoder: Encoder {
     }
 }
 
-final class URLEncodedFormContext {
-    var component: URLEncodedFormComponent
+class OWNetworkURLEncodedFormContext {
+    var component: OWNetworkURLEncodedFormComponent
 
-    init(_ component: URLEncodedFormComponent) {
+    init(_ component: OWNetworkURLEncodedFormComponent) {
         self.component = component
     }
 }
 
-enum URLEncodedFormComponent {
-    typealias Object = [(key: String, value: URLEncodedFormComponent)]
+enum OWNetworkURLEncodedFormComponent {
+    typealias Object = [(key: String, value: OWNetworkURLEncodedFormComponent)]
 
     case string(String)
-    case array([URLEncodedFormComponent])
+    case array([OWNetworkURLEncodedFormComponent])
     case object(Object)
 
     /// Converts self to an `[URLEncodedFormData]` or returns `nil` if not convertible.
-    var array: [URLEncodedFormComponent]? {
+    var array: [OWNetworkURLEncodedFormComponent]? {
         switch self {
         case let .array(array): return array
         default: return nil
@@ -479,19 +479,19 @@ enum URLEncodedFormComponent {
     /// - parameters:
     ///     - value: Value of `Self` to set at the supplied path.
     ///     - path: `CodingKey` path to update with the supplied value.
-    mutating func set(to value: URLEncodedFormComponent, at path: [CodingKey]) {
+    mutating func set(to value: OWNetworkURLEncodedFormComponent, at path: [CodingKey]) {
         set(&self, to: value, at: path)
     }
 
     /// Recursive backing method to `set(to:at:)`.
-    private func set(_ context: inout URLEncodedFormComponent, to value: URLEncodedFormComponent, at path: [CodingKey]) {
+    private func set(_ context: inout OWNetworkURLEncodedFormComponent, to value: OWNetworkURLEncodedFormComponent, at path: [CodingKey]) {
         guard !path.isEmpty else {
             context = value
             return
         }
 
         let end = path[0]
-        var child: URLEncodedFormComponent
+        var child: OWNetworkURLEncodedFormComponent
         switch path.count {
         case 1:
             child = value
@@ -537,7 +537,7 @@ enum URLEncodedFormComponent {
     }
 }
 
-struct AnyCodingKey: CodingKey, Hashable {
+struct OWNetworkAnyCodingKey: CodingKey, Hashable {
     let stringValue: String
     let intValue: Int?
 
@@ -560,20 +560,20 @@ struct AnyCodingKey: CodingKey, Hashable {
     }
 }
 
-extension _URLEncodedFormEncoder {
-    final class KeyedContainer<Key> where Key: CodingKey {
+extension _OWNetworkURLEncodedFormEncoder {
+    class KeyedContainer<Key> where Key: CodingKey {
         var codingPath: [CodingKey]
 
-        private let context: URLEncodedFormContext
-        private let boolEncoding: URLEncodedFormEncoder.BoolEncoding
-        private let dataEncoding: URLEncodedFormEncoder.DataEncoding
-        private let dateEncoding: URLEncodedFormEncoder.DateEncoding
+        private let context: OWNetworkURLEncodedFormContext
+        private let boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding
+        private let dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding
+        private let dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding
 
-        init(context: URLEncodedFormContext,
+        init(context: OWNetworkURLEncodedFormContext,
              codingPath: [CodingKey],
-             boolEncoding: URLEncodedFormEncoder.BoolEncoding,
-             dataEncoding: URLEncodedFormEncoder.DataEncoding,
-             dateEncoding: URLEncodedFormEncoder.DateEncoding) {
+             boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding,
+             dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding,
+             dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding) {
             self.context = context
             self.codingPath = codingPath
             self.boolEncoding = boolEncoding
@@ -587,7 +587,7 @@ extension _URLEncodedFormEncoder {
     }
 }
 
-extension _URLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol {
+extension _OWNetworkURLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol {
     func encodeNil(forKey key: Key) throws {
         let context = EncodingError.Context(codingPath: codingPath,
                                             debugDescription: "URLEncodedFormEncoder cannot encode nil values.")
@@ -600,7 +600,7 @@ extension _URLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol 
     }
 
     func nestedSingleValueEncoder(for key: Key) -> SingleValueEncodingContainer {
-        let container = _URLEncodedFormEncoder.SingleValueContainer(context: context,
+        let container = _OWNetworkURLEncodedFormEncoder.SingleValueContainer(context: context,
                                                                     codingPath: nestedCodingPath(for: key),
                                                                     boolEncoding: boolEncoding,
                                                                     dataEncoding: dataEncoding,
@@ -610,7 +610,7 @@ extension _URLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol 
     }
 
     func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
-        let container = _URLEncodedFormEncoder.UnkeyedContainer(context: context,
+        let container = _OWNetworkURLEncodedFormEncoder.UnkeyedContainer(context: context,
                                                                 codingPath: nestedCodingPath(for: key),
                                                                 boolEncoding: boolEncoding,
                                                                 dataEncoding: dataEncoding,
@@ -620,7 +620,7 @@ extension _URLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol 
     }
 
     func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: Key) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
-        let container = _URLEncodedFormEncoder.KeyedContainer<NestedKey>(context: context,
+        let container = _OWNetworkURLEncodedFormEncoder.KeyedContainer<NestedKey>(context: context,
                                                                          codingPath: nestedCodingPath(for: key),
                                                                          boolEncoding: boolEncoding,
                                                                          dataEncoding: dataEncoding,
@@ -630,7 +630,7 @@ extension _URLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol 
     }
 
     func superEncoder() -> Encoder {
-        _URLEncodedFormEncoder(context: context,
+        _OWNetworkURLEncodedFormEncoder(context: context,
                                codingPath: codingPath,
                                boolEncoding: boolEncoding,
                                dataEncoding: dataEncoding,
@@ -638,7 +638,7 @@ extension _URLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol 
     }
 
     func superEncoder(forKey key: Key) -> Encoder {
-        _URLEncodedFormEncoder(context: context,
+        _OWNetworkURLEncodedFormEncoder(context: context,
                                codingPath: nestedCodingPath(for: key),
                                boolEncoding: boolEncoding,
                                dataEncoding: dataEncoding,
@@ -646,22 +646,22 @@ extension _URLEncodedFormEncoder.KeyedContainer: KeyedEncodingContainerProtocol 
     }
 }
 
-extension _URLEncodedFormEncoder {
-    final class SingleValueContainer {
+extension _OWNetworkURLEncodedFormEncoder {
+    class SingleValueContainer {
         var codingPath: [CodingKey]
 
         private var canEncodeNewValue = true
 
-        private let context: URLEncodedFormContext
-        private let boolEncoding: URLEncodedFormEncoder.BoolEncoding
-        private let dataEncoding: URLEncodedFormEncoder.DataEncoding
-        private let dateEncoding: URLEncodedFormEncoder.DateEncoding
+        private let context: OWNetworkURLEncodedFormContext
+        private let boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding
+        private let dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding
+        private let dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding
 
-        init(context: URLEncodedFormContext,
+        init(context: OWNetworkURLEncodedFormContext,
              codingPath: [CodingKey],
-             boolEncoding: URLEncodedFormEncoder.BoolEncoding,
-             dataEncoding: URLEncodedFormEncoder.DataEncoding,
-             dateEncoding: URLEncodedFormEncoder.DateEncoding) {
+             boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding,
+             dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding,
+             dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding) {
             self.context = context
             self.codingPath = codingPath
             self.boolEncoding = boolEncoding
@@ -679,7 +679,7 @@ extension _URLEncodedFormEncoder {
     }
 }
 
-extension _URLEncodedFormEncoder.SingleValueContainer: SingleValueEncodingContainer {
+extension _OWNetworkURLEncodedFormEncoder.SingleValueContainer: SingleValueEncodingContainer {
     func encodeNil() throws {
         try checkCanEncode(value: nil)
         defer { canEncodeNewValue = false }
@@ -780,7 +780,7 @@ extension _URLEncodedFormEncoder.SingleValueContainer: SingleValueEncodingContai
         try checkCanEncode(value: value)
         defer { canEncodeNewValue = false }
 
-        let encoder = _URLEncodedFormEncoder(context: context,
+        let encoder = _OWNetworkURLEncodedFormEncoder(context: context,
                                              codingPath: codingPath,
                                              boolEncoding: boolEncoding,
                                              dataEncoding: dataEncoding,
@@ -789,25 +789,25 @@ extension _URLEncodedFormEncoder.SingleValueContainer: SingleValueEncodingContai
     }
 }
 
-extension _URLEncodedFormEncoder {
-    final class UnkeyedContainer {
+extension _OWNetworkURLEncodedFormEncoder {
+    class UnkeyedContainer {
         var codingPath: [CodingKey]
 
         var count = 0
         var nestedCodingPath: [CodingKey] {
-            codingPath + [AnyCodingKey(intValue: count)!]
+            codingPath + [OWNetworkAnyCodingKey(intValue: count)!]
         }
 
-        private let context: URLEncodedFormContext
-        private let boolEncoding: URLEncodedFormEncoder.BoolEncoding
-        private let dataEncoding: URLEncodedFormEncoder.DataEncoding
-        private let dateEncoding: URLEncodedFormEncoder.DateEncoding
+        private let context: OWNetworkURLEncodedFormContext
+        private let boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding
+        private let dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding
+        private let dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding
 
-        init(context: URLEncodedFormContext,
+        init(context: OWNetworkURLEncodedFormContext,
              codingPath: [CodingKey],
-             boolEncoding: URLEncodedFormEncoder.BoolEncoding,
-             dataEncoding: URLEncodedFormEncoder.DataEncoding,
-             dateEncoding: URLEncodedFormEncoder.DateEncoding) {
+             boolEncoding: OWNetworkURLEncodedFormEncoder.BoolEncoding,
+             dataEncoding: OWNetworkURLEncodedFormEncoder.DataEncoding,
+             dateEncoding: OWNetworkURLEncodedFormEncoder.DateEncoding) {
             self.context = context
             self.codingPath = codingPath
             self.boolEncoding = boolEncoding
@@ -817,7 +817,7 @@ extension _URLEncodedFormEncoder {
     }
 }
 
-extension _URLEncodedFormEncoder.UnkeyedContainer: UnkeyedEncodingContainer {
+extension _OWNetworkURLEncodedFormEncoder.UnkeyedContainer: UnkeyedEncodingContainer {
     func encodeNil() throws {
         let context = EncodingError.Context(codingPath: codingPath,
                                             debugDescription: "URLEncodedFormEncoder cannot encode nil values.")
@@ -832,7 +832,7 @@ extension _URLEncodedFormEncoder.UnkeyedContainer: UnkeyedEncodingContainer {
     func nestedSingleValueContainer() -> SingleValueEncodingContainer {
         defer { count += 1 }
 
-        return _URLEncodedFormEncoder.SingleValueContainer(context: context,
+        return _OWNetworkURLEncodedFormEncoder.SingleValueContainer(context: context,
                                                            codingPath: nestedCodingPath,
                                                            boolEncoding: boolEncoding,
                                                            dataEncoding: dataEncoding,
@@ -841,7 +841,7 @@ extension _URLEncodedFormEncoder.UnkeyedContainer: UnkeyedEncodingContainer {
 
     func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
         defer { count += 1 }
-        let container = _URLEncodedFormEncoder.KeyedContainer<NestedKey>(context: context,
+        let container = _OWNetworkURLEncodedFormEncoder.KeyedContainer<NestedKey>(context: context,
                                                                          codingPath: nestedCodingPath,
                                                                          boolEncoding: boolEncoding,
                                                                          dataEncoding: dataEncoding,
@@ -853,7 +853,7 @@ extension _URLEncodedFormEncoder.UnkeyedContainer: UnkeyedEncodingContainer {
     func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
         defer { count += 1 }
 
-        return _URLEncodedFormEncoder.UnkeyedContainer(context: context,
+        return _OWNetworkURLEncodedFormEncoder.UnkeyedContainer(context: context,
                                                        codingPath: nestedCodingPath,
                                                        boolEncoding: boolEncoding,
                                                        dataEncoding: dataEncoding,
@@ -863,7 +863,7 @@ extension _URLEncodedFormEncoder.UnkeyedContainer: UnkeyedEncodingContainer {
     func superEncoder() -> Encoder {
         defer { count += 1 }
 
-        return _URLEncodedFormEncoder(context: context,
+        return _OWNetworkURLEncodedFormEncoder(context: context,
                                       codingPath: codingPath,
                                       boolEncoding: boolEncoding,
                                       dataEncoding: dataEncoding,
@@ -871,17 +871,17 @@ extension _URLEncodedFormEncoder.UnkeyedContainer: UnkeyedEncodingContainer {
     }
 }
 
-final class URLEncodedFormSerializer {
+class OWNetworkURLEncodedFormSerializer {
     private let alphabetizeKeyValuePairs: Bool
-    private let arrayEncoding: URLEncodedFormEncoder.ArrayEncoding
-    private let keyEncoding: URLEncodedFormEncoder.KeyEncoding
-    private let spaceEncoding: URLEncodedFormEncoder.SpaceEncoding
+    private let arrayEncoding: OWNetworkURLEncodedFormEncoder.ArrayEncoding
+    private let keyEncoding: OWNetworkURLEncodedFormEncoder.KeyEncoding
+    private let spaceEncoding: OWNetworkURLEncodedFormEncoder.SpaceEncoding
     private let allowedCharacters: CharacterSet
 
     init(alphabetizeKeyValuePairs: Bool,
-         arrayEncoding: URLEncodedFormEncoder.ArrayEncoding,
-         keyEncoding: URLEncodedFormEncoder.KeyEncoding,
-         spaceEncoding: URLEncodedFormEncoder.SpaceEncoding,
+         arrayEncoding: OWNetworkURLEncodedFormEncoder.ArrayEncoding,
+         keyEncoding: OWNetworkURLEncodedFormEncoder.KeyEncoding,
+         spaceEncoding: OWNetworkURLEncodedFormEncoder.SpaceEncoding,
          allowedCharacters: CharacterSet) {
         self.alphabetizeKeyValuePairs = alphabetizeKeyValuePairs
         self.arrayEncoding = arrayEncoding
@@ -890,7 +890,7 @@ final class URLEncodedFormSerializer {
         self.allowedCharacters = allowedCharacters
     }
 
-    func serialize(_ object: URLEncodedFormComponent.Object) -> String {
+    func serialize(_ object: OWNetworkURLEncodedFormComponent.Object) -> String {
         var output: [String] = []
         for (key, component) in object {
             let value = serialize(component, forKey: key)
@@ -901,7 +901,7 @@ final class URLEncodedFormSerializer {
         return output.joinedWithAmpersands()
     }
 
-    func serialize(_ component: URLEncodedFormComponent, forKey key: String) -> String {
+    func serialize(_ component: OWNetworkURLEncodedFormComponent, forKey key: String) -> String {
         switch component {
         case let .string(string): return "\(escape(keyEncoding.encode(key)))=\(escape(string))"
         case let .array(array): return serialize(array, forKey: key)
@@ -909,7 +909,7 @@ final class URLEncodedFormSerializer {
         }
     }
 
-    func serialize(_ object: URLEncodedFormComponent.Object, forKey key: String) -> String {
+    func serialize(_ object: OWNetworkURLEncodedFormComponent.Object, forKey key: String) -> String {
         var segments: [String] = object.map { subKey, value in
             let keyPath = "[\(subKey)]"
             return serialize(value, forKey: key + keyPath)
@@ -919,7 +919,7 @@ final class URLEncodedFormSerializer {
         return segments.joinedWithAmpersands()
     }
 
-    func serialize(_ array: [URLEncodedFormComponent], forKey key: String) -> String {
+    func serialize(_ array: [OWNetworkURLEncodedFormComponent], forKey key: String) -> String {
         var segments: [String] = array.enumerated().map { index, component in
             let keyPath = arrayEncoding.encode(key, atIndex: index)
             return serialize(component, forKey: keyPath)

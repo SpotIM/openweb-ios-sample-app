@@ -10,7 +10,7 @@ import Foundation
 
 internal extension JSONDecoder {
     
-    func decodeResponse<T: Decodable>(from response: DataResponse<Data, AFError>) -> OWResult<T> {
+    func decodeResponse<T: Decodable>(from response: DataResponse<Data, OWNetworkError>) -> OWResult<T> {
         guard response.error == nil else {
             return .failure(response.error!)
         }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal extension DataRequest {
+internal extension OWNetworkDataRequest {
 
     @discardableResult
     func log(level: OWLogLevel = .medium) -> Self {

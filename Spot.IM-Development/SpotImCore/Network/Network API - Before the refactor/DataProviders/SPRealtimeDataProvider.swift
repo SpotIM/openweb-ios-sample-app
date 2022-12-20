@@ -20,7 +20,7 @@ internal protocol SPRealtimeDataProvider {
 final class DefaultRealtimeDataProvider: NetworkDataProvider, SPRealtimeDataProvider {
     
     private(set) var isFetching: Bool = false
-    private var currentRequest: DataRequest?
+    private var currentRequest: OWNetworkDataRequest?
     
     func fetchRealtimeData(
         conversationId: String,

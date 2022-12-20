@@ -13,7 +13,7 @@ import Foundation
 /// One common example of an `AuthenticationCredential` is an OAuth2 credential containing an access token used to
 /// authenticate all requests on behalf of a user. The access token generally has an expiration window of 60 minutes
 /// which will then require a refresh of the credential using the refresh token to generate a new access token.
-protocol AuthenticationCredential {
+protocol OWNetworkAuthenticationCredential {
     /// Whether the credential requires a refresh. This property should always return `true` when the credential is
     /// expired. It is also wise to consider returning `true` when the credential will expire in several seconds or
     /// minutes depending on the expiration window of the credential.
@@ -28,9 +28,9 @@ protocol AuthenticationCredential {
 
 /// Types adopting the `Authenticator` protocol can be used to authenticate `URLRequest`s with an
 /// `AuthenticationCredential` as well as refresh the `AuthenticationCredential` when required.
-protocol Authenticator: AnyObject {
+protocol OWNetworkAuthenticator: AnyObject {
     /// The type of credential associated with the `Authenticator` instance.
-    associatedtype Credential: AuthenticationCredential
+    associatedtype Credential: OWNetworkAuthenticationCredential
 
     /// Applies the `Credential` to the `URLRequest`.
     ///
@@ -65,7 +65,7 @@ protocol Authenticator: AnyObject {
     ///   - credential: The `Credential` to refresh.
     ///   - session:    The `Session` requiring the refresh.
     ///   - completion: The closure to be executed once the refresh is complete.
-    func refresh(_ credential: Credential, for session: Session, completion: @escaping (Result<Credential, Error>) -> Void)
+    func refresh(_ credential: Credential, for session: OWNetworkSession, completion: @escaping (Result<Credential, Error>) -> Void)
 
     /// Determines whether the `URLRequest` failed due to an authentication error based on the `HTTPURLResponse`.
     ///
@@ -130,7 +130,7 @@ protocol Authenticator: AnyObject {
 /// Represents various authentication failures that occur when using the `AuthenticationInterceptor`. All errors are
 /// still vended from this infrastructure as `AFError` types. The `AuthenticationError` instances will be embedded within
 /// `AFError` `.requestAdaptationFailed` or `.requestRetryFailed` cases.
-enum AuthenticationError: Error {
+enum OWNetworkAuthenticationError: Error {
     /// The credential was missing so the request could not be authenticated.
     case missingCredential
     /// The credential was refreshed too many times within the `RefreshWindow`.
@@ -141,7 +141,7 @@ enum AuthenticationError: Error {
 
 /// The `AuthenticationInterceptor` class manages the queuing and threading complexity of authenticating requests.
 /// It relies on an `Authenticator` type to handle the actual `URLRequest` authentication and `Credential` refresh.
-class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where AuthenticatorType: Authenticator {
+class OWNetworkAuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where AuthenticatorType: OWNetworkAuthenticator {
     // MARK: Typealiases
 
     /// Type of credential used to authenticate requests.
@@ -176,13 +176,13 @@ class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where Aut
 
     private struct AdaptOperation {
         let urlRequest: URLRequest
-        let session: Session
+        let session: OWNetworkSession
         let completion: (Result<URLRequest, Error>) -> Void
     }
 
     private enum AdaptResult {
         case adapt(Credential)
-        case doNotAdapt(AuthenticationError)
+        case doNotAdapt(OWNetworkAuthenticationError)
         case adaptDeferred
     }
 
@@ -231,7 +231,7 @@ class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where Aut
 
     // MARK: Adapt
 
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         let adaptResult: AdaptResult = $mutableState.write { mutableState in
             // Queue the adapt operation if a refresh is already in place.
             guard !mutableState.isRefreshing else {
@@ -242,7 +242,7 @@ class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where Aut
 
             // Throw missing credential error is the credential is missing.
             guard let credential = mutableState.credential else {
-                let error = AuthenticationError.missingCredential
+                let error = OWNetworkAuthenticationError.missingCredential
                 return .doNotAdapt(error)
             }
 
@@ -274,7 +274,7 @@ class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where Aut
 
     // MARK: Retry
 
-    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
         // Do not attempt retry if there was not an original request and response from the server.
         guard let urlRequest = request.request, let response = request.response else {
             completion(.doNotRetry)
@@ -289,7 +289,7 @@ class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where Aut
 
         // Do not attempt retry if there is no credential.
         guard let credential = credential else {
-            let error = AuthenticationError.missingCredential
+            let error = OWNetworkAuthenticationError.missingCredential
             completion(.doNotRetryWithError(error))
             return
         }
@@ -311,9 +311,9 @@ class AuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where Aut
 
     // MARK: Refresh
 
-    private func refresh(_ credential: Credential, for session: Session, insideLock mutableState: inout MutableState) {
+    private func refresh(_ credential: Credential, for session: OWNetworkSession, insideLock mutableState: inout MutableState) {
         guard !isRefreshExcessive(insideLock: &mutableState) else {
-            let error = AuthenticationError.excessiveRefresh
+            let error = OWNetworkAuthenticationError.excessiveRefresh
             handleRefreshFailure(error, insideLock: &mutableState)
             return
         }

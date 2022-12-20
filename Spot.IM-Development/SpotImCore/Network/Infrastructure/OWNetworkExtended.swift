@@ -9,7 +9,7 @@
 import Foundation
 
 /// Type that acts as a generic extension point for all `AlamofireExtended` types.
-struct AlamofireExtension<ExtendedType> {
+struct OWNetworkExtension<ExtendedType> {
     /// Stores the type or meta-type of any extended type.
     private(set) var type: ExtendedType
 
@@ -22,26 +22,26 @@ struct AlamofireExtension<ExtendedType> {
 }
 
 /// Protocol describing the `af` extension points for Alamofire extended types.
-protocol AlamofireExtended {
+protocol OWNetworkExtended {
     /// Type being extended.
     associatedtype ExtendedType
 
     /// Static Alamofire extension point.
-    static var af: AlamofireExtension<ExtendedType>.Type { get set }
+    static var owNetwork: OWNetworkExtension<ExtendedType>.Type { get set }
     /// Instance Alamofire extension point.
-    var af: AlamofireExtension<ExtendedType> { get set }
+    var owNetwork: OWNetworkExtension<ExtendedType> { get set }
 }
 
-extension AlamofireExtended {
+extension OWNetworkExtended {
     /// Static Alamofire extension point.
-    static var af: AlamofireExtension<Self>.Type {
-        get { AlamofireExtension<Self>.self }
+    static var owNetwork: OWNetworkExtension<Self>.Type {
+        get { OWNetworkExtension<Self>.self }
         set {}
     }
 
     /// Instance Alamofire extension point.
-    var af: AlamofireExtension<Self> {
-        get { AlamofireExtension(self) }
+    var owNetwork: OWNetworkExtension<Self> {
+        get { OWNetworkExtension(self) }
         set {}
     }
 }
