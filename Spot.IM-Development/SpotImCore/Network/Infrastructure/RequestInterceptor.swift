@@ -14,7 +14,7 @@ struct RequestAdapterState {
     let requestID: UUID
 
     /// The `Session` associated with the `URLRequest` to adapt.
-    let session: Session
+    let session: OWNetworkSession
 }
 
 // MARK: -
@@ -27,7 +27,7 @@ protocol RequestAdapter {
     ///   - urlRequest: The `URLRequest` to adapt.
     ///   - session:    The `Session` that will execute the `URLRequest`.
     ///   - completion: The completion handler that must be called when adaptation is complete.
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void)
+    func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void)
 
     /// Inspects and adapts the specified `URLRequest` in some manner and calls the completion handler with the Result.
     ///
@@ -93,7 +93,7 @@ protocol RequestRetrier {
     ///   - session:    `Session` that produced the `Request`.
     ///   - error:      `Error` encountered while executing the `Request`.
     ///   - completion: Completion closure to be executed when a retry decision has been determined.
-    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void)
+    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (RetryResult) -> Void)
 }
 
 // MARK: -
@@ -102,12 +102,12 @@ protocol RequestRetrier {
 protocol RequestInterceptor: RequestAdapter, RequestRetrier {}
 
 extension RequestInterceptor {
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         completion(.success(urlRequest))
     }
 
-    func retry(_ request: Request,
-                      for session: Session,
+    func retry(_ request: OWNetworkRequest,
+                      for session: OWNetworkSession,
                       dueTo error: Error,
                       completion: @escaping (RetryResult) -> Void) {
         completion(.doNotRetry)
@@ -115,9 +115,9 @@ extension RequestInterceptor {
 }
 
 /// `RequestAdapter` closure definition.
-typealias AdaptHandler = (URLRequest, Session, _ completion: @escaping (Result<URLRequest, Error>) -> Void) -> Void
+typealias AdaptHandler = (URLRequest, OWNetworkSession, _ completion: @escaping (Result<URLRequest, Error>) -> Void) -> Void
 /// `RequestRetrier` closure definition.
-typealias RetryHandler = (Request, Session, Error, _ completion: @escaping (RetryResult) -> Void) -> Void
+typealias RetryHandler = (OWNetworkRequest, OWNetworkSession, Error, _ completion: @escaping (RetryResult) -> Void) -> Void
 
 // MARK: -
 
@@ -132,7 +132,7 @@ class Adapter: RequestInterceptor {
         self.adaptHandler = adaptHandler
     }
 
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         adaptHandler(urlRequest, session, completion)
     }
 
@@ -164,8 +164,8 @@ class Retrier: RequestInterceptor {
         self.retryHandler = retryHandler
     }
 
-    func retry(_ request: Request,
-                    for session: Session,
+    func retry(_ request: OWNetworkRequest,
+                    for session: OWNetworkSession,
                     dueTo error: Error,
                     completion: @escaping (RetryResult) -> Void) {
         retryHandler(request, session, error, completion)
@@ -222,12 +222,12 @@ class Interceptor: RequestInterceptor {
         self.retriers = retriers + interceptors
     }
 
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         adapt(urlRequest, for: session, using: adapters, completion: completion)
     }
 
     private func adapt(_ urlRequest: URLRequest,
-                       for session: Session,
+                       for session: OWNetworkSession,
                        using adapters: [RequestAdapter],
                        completion: @escaping (Result<URLRequest, Error>) -> Void) {
         var pendingAdapters = adapters
@@ -270,15 +270,15 @@ class Interceptor: RequestInterceptor {
         }
     }
 
-    func retry(_ request: Request,
-                    for session: Session,
+    func retry(_ request: OWNetworkRequest,
+                    for session: OWNetworkSession,
                     dueTo error: Error,
                     completion: @escaping (RetryResult) -> Void) {
         retry(request, for: session, dueTo: error, using: retriers, completion: completion)
     }
 
-    private func retry(_ request: Request,
-                       for session: Session,
+    private func retry(_ request: OWNetworkRequest,
+                       for session: OWNetworkSession,
                        dueTo error: Error,
                        using retriers: [RequestRetrier],
                        completion: @escaping (RetryResult) -> Void) {

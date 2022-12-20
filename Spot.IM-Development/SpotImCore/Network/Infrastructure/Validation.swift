@@ -8,10 +8,10 @@
 
 import Foundation
 
-extension Request {
+extension OWNetworkRequest {
     // MARK: Helper Types
 
-    fileprivate typealias ErrorReason = AFError.ResponseValidationFailureReason
+    fileprivate typealias ErrorReason = OWNetworkError.ResponseValidationFailureReason
 
     /// Used to represent whether a validation succeeded or failed.
     typealias ValidationResult = Result<Void, Error>
@@ -70,7 +70,7 @@ extension Request {
             return .success(())
         } else {
             let reason: ErrorReason = .unacceptableStatusCode(code: response.statusCode)
-            return .failure(AFError.responseValidationFailed(reason: reason))
+            return .failure(OWNetworkError.responseValidationFailed(reason: reason))
         }
     }
 
@@ -100,9 +100,9 @@ extension Request {
                 }
             }
 
-            let error: AFError = {
+            let error: OWNetworkError = {
                 let reason: ErrorReason = .missingContentType(acceptableContentTypes: acceptableContentTypes.sorted())
-                return AFError.responseValidationFailed(reason: reason)
+                return OWNetworkError.responseValidationFailed(reason: reason)
             }()
 
             return .failure(error)
@@ -114,11 +114,11 @@ extension Request {
             }
         }
 
-        let error: AFError = {
+        let error: OWNetworkError = {
             let reason: ErrorReason = .unacceptableContentType(acceptableContentTypes: acceptableContentTypes.sorted(),
                                                                responseContentType: responseContentType)
 
-            return AFError.responseValidationFailed(reason: reason)
+            return OWNetworkError.responseValidationFailed(reason: reason)
         }()
 
         return .failure(error)
@@ -127,7 +127,7 @@ extension Request {
 
 // MARK: -
 
-extension DataRequest {
+extension OWNetworkDataRequest {
     /// A closure used to validate a request that takes a URL request, a URL response and data, and returns whether the
     /// request was valid.
     typealias Validation = (URLRequest?, HTTPURLResponse, Data?) -> ValidationResult
@@ -175,7 +175,7 @@ extension DataRequest {
     }
 }
 
-extension DataStreamRequest {
+extension OWNetworkDataStreamRequest {
     /// A closure used to validate a request that takes a `URLRequest` and `HTTPURLResponse` and returns whether the
     /// request was valid.
     typealias Validation = (_ request: URLRequest?, _ response: HTTPURLResponse) -> ValidationResult
@@ -225,7 +225,7 @@ extension DataStreamRequest {
 
 // MARK: -
 
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// A closure used to validate a request that takes a URL request, a URL response, a temporary URL and a
     /// destination URL, and returns whether the request was valid.
     typealias Validation = (_ request: URLRequest?,
@@ -258,14 +258,14 @@ extension DownloadRequest {
     func validate<S: Sequence>(contentType acceptableContentTypes: @escaping @autoclosure () -> S) -> Self where S.Iterator.Element == String {
         validate { [unowned self] _, response, fileURL in
             guard let validFileURL = fileURL else {
-                return .failure(AFError.responseValidationFailed(reason: .dataFileNil))
+                return .failure(OWNetworkError.responseValidationFailed(reason: .dataFileNil))
             }
 
             do {
                 let data = try Data(contentsOf: validFileURL)
                 return self.validate(contentType: acceptableContentTypes(), response: response, data: data)
             } catch {
-                return .failure(AFError.responseValidationFailed(reason: .dataFileReadFailed(at: validFileURL)))
+                return .failure(OWNetworkError.responseValidationFailed(reason: .dataFileReadFailed(at: validFileURL)))
             }
         }
     }

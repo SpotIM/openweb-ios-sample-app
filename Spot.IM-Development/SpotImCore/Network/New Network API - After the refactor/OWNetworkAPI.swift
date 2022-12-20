@@ -71,7 +71,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
         return newRequest
     }
 
-    private func responseAfterPerformingMiddlewares<T: Decodable>(with response: DataResponse<T, AFError>) -> DataResponse<T, AFError> {
+    private func responseAfterPerformingMiddlewares<T: Decodable>(with response: DataResponse<T, OWNetworkError>) -> DataResponse<T, OWNetworkError> {
         var newResponse = response
         for middleware in responseMiddlewares {
             newResponse = middleware.process(response: newResponse)
@@ -95,7 +95,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
                 .downloadProgress(closure: { prog in
                     progress.onNext(prog)
                 })
-                .responseDecodable(of: T.self, queue: self.queue, dataPreprocessor: DecodableResponseSerializer<T>.defaultDataPreprocessor, decoder: decoder, emptyResponseCodes: DecodableResponseSerializer<T>.defaultEmptyResponseCodes, emptyRequestMethods: DecodableResponseSerializer<T>.defaultEmptyRequestMethods, completionHandler: { [weak self] (response: DataResponse<T, AFError>) in
+                .responseDecodable(of: T.self, queue: self.queue, dataPreprocessor: DecodableResponseSerializer<T>.defaultDataPreprocessor, decoder: decoder, emptyResponseCodes: DecodableResponseSerializer<T>.defaultEmptyResponseCodes, emptyRequestMethods: DecodableResponseSerializer<T>.defaultEmptyRequestMethods, completionHandler: { [weak self] (response: DataResponse<T, OWNetworkError>) in
                     
                     guard let `self` = self else { return }
                     

@@ -13,7 +13,7 @@ typealias ImageLoadingCompletion = (_ image: UIImage?, _ error: Error?) -> Void
 
 internal extension UIImageView {
     @discardableResult
-    func setImage(with url: URL?, completion: ImageLoadingCompletion? = nil) -> DataRequest? {
+    func setImage(with url: URL?, completion: ImageLoadingCompletion? = nil) -> OWNetworkDataRequest? {
         return UIImage.load(with: url) { image, error in
             if let completion = completion {
                 completion(image, error)
@@ -28,7 +28,7 @@ internal extension UIImageView {
 
 internal extension UIImage {
     @discardableResult
-    static func load(with url: URL?, completion: ImageLoadingCompletion? = nil) -> DataRequest? {
+    static func load(with url: URL?, completion: ImageLoadingCompletion? = nil) -> OWNetworkDataRequest? {
         guard let url = url else {
             completion?(nil, SPNetworkError.custom("No image URL"))
             return nil
@@ -40,7 +40,7 @@ internal extension UIImage {
             
             return nil
         } else {
-            return Session.default.request(url)
+            return OWNetworkSession.default.request(url)
                 .validate()
                 .responseData { response in
                     switch response.result {

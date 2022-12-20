@@ -15,11 +15,11 @@ class MultipartUpload {
     @Protected
     private(set) var multipartFormData: MultipartFormData
     let encodingMemoryThreshold: UInt64
-    let request: URLRequestConvertible
+    let request: OWNetworkURLRequestConvertible
     let fileManager: FileManager
 
     init(encodingMemoryThreshold: UInt64,
-         request: URLRequestConvertible,
+         request: OWNetworkURLRequestConvertible,
          multipartFormData: MultipartFormData) {
         self.encodingMemoryThreshold = encodingMemoryThreshold
         self.request = request
@@ -27,8 +27,8 @@ class MultipartUpload {
         self.multipartFormData = multipartFormData
     }
 
-    func build() throws -> UploadRequest.Uploadable {
-        let uploadable: UploadRequest.Uploadable
+    func build() throws -> OWNetworkUploadRequest.Uploadable {
+        let uploadable: OWNetworkUploadRequest.Uploadable
         if $multipartFormData.contentLength < encodingMemoryThreshold {
             let data = try $multipartFormData.read { try $0.encode() }
 
@@ -56,7 +56,7 @@ class MultipartUpload {
     }
 }
 
-extension MultipartUpload: UploadConvertible {
+extension MultipartUpload: OWNetworkUploadConvertible {
     func asURLRequest() throws -> URLRequest {
         var urlRequest = try request.asURLRequest()
 
@@ -67,7 +67,7 @@ extension MultipartUpload: UploadConvertible {
         return urlRequest
     }
 
-    func createUploadable() throws -> UploadRequest.Uploadable {
+    func createUploadable() throws -> OWNetworkUploadRequest.Uploadable {
         try result.get()
     }
 }

@@ -15,13 +15,13 @@ import Foundation
 // MARK: - Request Event Streams
 
 @available(iOS 13, *)
-extension Request {
+extension OWNetworkRequest {
     /// Creates a `StreamOf<Progress>` for the instance's upload progress.
     ///
     /// - Parameter bufferingPolicy: `BufferingPolicy` that determines the stream's buffering behavior.`.unbounded` by default.
     ///
     /// - Returns:                   The `StreamOf<Progress>`.
-    func uploadProgress(bufferingPolicy: StreamOf<Progress>.BufferingPolicy = .unbounded) -> StreamOf<Progress> {
+    func uploadProgress(bufferingPolicy: OWNetworkStreamOf<Progress>.BufferingPolicy = .unbounded) -> OWNetworkStreamOf<Progress> {
         stream(bufferingPolicy: bufferingPolicy) { [unowned self] continuation in
             uploadProgress(queue: .singleEventQueue) { progress in
                 continuation.yield(progress)
@@ -34,7 +34,7 @@ extension Request {
     /// - Parameter bufferingPolicy: `BufferingPolicy` that determines the stream's buffering behavior.`.unbounded` by default.
     ///
     /// - Returns:                   The `StreamOf<Progress>`.
-    func downloadProgress(bufferingPolicy: StreamOf<Progress>.BufferingPolicy = .unbounded) -> StreamOf<Progress> {
+    func downloadProgress(bufferingPolicy: OWNetworkStreamOf<Progress>.BufferingPolicy = .unbounded) -> OWNetworkStreamOf<Progress> {
         stream(bufferingPolicy: bufferingPolicy) { [unowned self] continuation in
             downloadProgress(queue: .singleEventQueue) { progress in
                 continuation.yield(progress)
@@ -47,7 +47,7 @@ extension Request {
     /// - Parameter bufferingPolicy: `BufferingPolicy` that determines the stream's buffering behavior.`.unbounded` by default.
     ///
     /// - Returns:                   The `StreamOf<URLRequest>`.
-    func urlRequests(bufferingPolicy: StreamOf<URLRequest>.BufferingPolicy = .unbounded) -> StreamOf<URLRequest> {
+    func urlRequests(bufferingPolicy: OWNetworkStreamOf<URLRequest>.BufferingPolicy = .unbounded) -> OWNetworkStreamOf<URLRequest> {
         stream(bufferingPolicy: bufferingPolicy) { [unowned self] continuation in
             onURLRequestCreation(on: .singleEventQueue) { request in
                 continuation.yield(request)
@@ -60,7 +60,7 @@ extension Request {
     /// - Parameter bufferingPolicy: `BufferingPolicy` that determines the stream's buffering behavior.`.unbounded` by default.
     ///
     /// - Returns:                   The `StreamOf<URLSessionTask>`.
-    func urlSessionTasks(bufferingPolicy: StreamOf<URLSessionTask>.BufferingPolicy = .unbounded) -> StreamOf<URLSessionTask> {
+    func urlSessionTasks(bufferingPolicy: OWNetworkStreamOf<URLSessionTask>.BufferingPolicy = .unbounded) -> OWNetworkStreamOf<URLSessionTask> {
         stream(bufferingPolicy: bufferingPolicy) { [unowned self] continuation in
             onURLSessionTaskCreation(on: .singleEventQueue) { task in
                 continuation.yield(task)
@@ -73,7 +73,7 @@ extension Request {
     /// - Parameter bufferingPolicy: `BufferingPolicy` that determines the stream's buffering behavior.`.unbounded` by default.
     ///
     /// - Returns:                   The `StreamOf<String>`.
-    func cURLDescriptions(bufferingPolicy: StreamOf<String>.BufferingPolicy = .unbounded) -> StreamOf<String> {
+    func cURLDescriptions(bufferingPolicy: OWNetworkStreamOf<String>.BufferingPolicy = .unbounded) -> OWNetworkStreamOf<String> {
         stream(bufferingPolicy: bufferingPolicy) { [unowned self] continuation in
             cURLDescription(on: .singleEventQueue) { description in
                 continuation.yield(description)
@@ -82,9 +82,9 @@ extension Request {
     }
 
     private func stream<T>(of type: T.Type = T.self,
-                           bufferingPolicy: StreamOf<T>.BufferingPolicy = .unbounded,
-                           yielder: @escaping (StreamOf<T>.Continuation) -> Void) -> StreamOf<T> {
-        StreamOf<T>(bufferingPolicy: bufferingPolicy) { [unowned self] continuation in
+                           bufferingPolicy: OWNetworkStreamOf<T>.BufferingPolicy = .unbounded,
+                           yielder: @escaping (OWNetworkStreamOf<T>.Continuation) -> Void) -> OWNetworkStreamOf<T> {
+        OWNetworkStreamOf<T>(bufferingPolicy: bufferingPolicy) { [unowned self] continuation in
             yielder(continuation)
             // Must come after serializers run in order to catch retry progress.
             onFinish {
@@ -98,9 +98,9 @@ extension Request {
 
 /// Value used to `await` a `DataResponse` and associated values.
 @available(iOS 13, *)
-struct DataTask<Value> {
+struct OWNetworkDataTask<Value> {
     /// `DataResponse` produced by the `DataRequest` and its response handler.
-    var response: DataResponse<Value, AFError> {
+    var response: DataResponse<Value, OWNetworkError> {
         get async {
             if shouldAutomaticallyCancel {
                 return await withTaskCancellationHandler {
@@ -115,7 +115,7 @@ struct DataTask<Value> {
     }
 
     /// `Result` of any response serialization performed for the `response`.
-    var result: Result<Value, AFError> {
+    var result: Result<Value, OWNetworkError> {
         get async { await response.result }
     }
 
@@ -126,11 +126,11 @@ struct DataTask<Value> {
         }
     }
 
-    private let request: DataRequest
-    private let task: Task<DataResponse<Value, AFError>, Never>
+    private let request: OWNetworkDataRequest
+    private let task: Task<DataResponse<Value, OWNetworkError>, Never>
     private let shouldAutomaticallyCancel: Bool
 
-    fileprivate init(request: DataRequest, task: Task<DataResponse<Value, AFError>, Never>, shouldAutomaticallyCancel: Bool) {
+    fileprivate init(request: OWNetworkDataRequest, task: Task<DataResponse<Value, OWNetworkError>, Never>, shouldAutomaticallyCancel: Bool) {
         self.request = request
         self.task = task
         self.shouldAutomaticallyCancel = shouldAutomaticallyCancel
@@ -153,7 +153,7 @@ struct DataTask<Value> {
 }
 
 @available(iOS 13, *)
-extension DataRequest {
+extension OWNetworkDataRequest {
     /// Creates a `DataTask` to `await` a `Data` value.
     ///
     /// - Parameters:
@@ -168,7 +168,7 @@ extension DataRequest {
     func serializingData(automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
                                 dataPreprocessor: DataPreprocessor = DataResponseSerializer.defaultDataPreprocessor,
                                 emptyResponseCodes: Set<Int> = DataResponseSerializer.defaultEmptyResponseCodes,
-                                emptyRequestMethods: Set<HTTPMethod> = DataResponseSerializer.defaultEmptyRequestMethods) -> DataTask<Data> {
+                                emptyRequestMethods: Set<HTTPMethod> = DataResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataTask<Data> {
         serializingResponse(using: DataResponseSerializer(dataPreprocessor: dataPreprocessor,
                                                           emptyResponseCodes: emptyResponseCodes,
                                                           emptyRequestMethods: emptyRequestMethods),
@@ -194,7 +194,7 @@ extension DataRequest {
                                                        dataPreprocessor: DataPreprocessor = DecodableResponseSerializer<Value>.defaultDataPreprocessor,
                                                        decoder: DataDecoder = JSONDecoder(),
                                                        emptyResponseCodes: Set<Int> = DecodableResponseSerializer<Value>.defaultEmptyResponseCodes,
-                                                       emptyRequestMethods: Set<HTTPMethod> = DecodableResponseSerializer<Value>.defaultEmptyRequestMethods) -> DataTask<Value> {
+                                                       emptyRequestMethods: Set<HTTPMethod> = DecodableResponseSerializer<Value>.defaultEmptyRequestMethods) -> OWNetworkDataTask<Value> {
         serializingResponse(using: DecodableResponseSerializer<Value>(dataPreprocessor: dataPreprocessor,
                                                                       decoder: decoder,
                                                                       emptyResponseCodes: emptyResponseCodes,
@@ -221,7 +221,7 @@ extension DataRequest {
                                   dataPreprocessor: DataPreprocessor = StringResponseSerializer.defaultDataPreprocessor,
                                   encoding: String.Encoding? = nil,
                                   emptyResponseCodes: Set<Int> = StringResponseSerializer.defaultEmptyResponseCodes,
-                                  emptyRequestMethods: Set<HTTPMethod> = StringResponseSerializer.defaultEmptyRequestMethods) -> DataTask<String> {
+                                  emptyRequestMethods: Set<HTTPMethod> = StringResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataTask<String> {
         serializingResponse(using: StringResponseSerializer(dataPreprocessor: dataPreprocessor,
                                                             encoding: encoding,
                                                             emptyResponseCodes: emptyResponseCodes,
@@ -240,7 +240,7 @@ extension DataRequest {
     /// - Returns: The `DataTask`.
     func serializingResponse<Serializer: ResponseSerializer>(using serializer: Serializer,
                                                                     automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> DataTask<Serializer.SerializedObject> {
+        -> OWNetworkDataTask<Serializer.SerializedObject> {
         dataTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -260,7 +260,7 @@ extension DataRequest {
     /// - Returns: The `DataTask`.
     func serializingResponse<Serializer: DataResponseSerializerProtocol>(using serializer: Serializer,
                                                                                 automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> DataTask<Serializer.SerializedObject> {
+        -> OWNetworkDataTask<Serializer.SerializedObject> {
         dataTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -269,8 +269,8 @@ extension DataRequest {
     }
 
     private func dataTask<Value>(automaticallyCancelling shouldAutomaticallyCancel: Bool,
-                                 forResponse onResponse: @escaping (@escaping (DataResponse<Value, AFError>) -> Void) -> Void)
-        -> DataTask<Value> {
+                                 forResponse onResponse: @escaping (@escaping (DataResponse<Value, OWNetworkError>) -> Void) -> Void)
+        -> OWNetworkDataTask<Value> {
         let task = Task {
             await withTaskCancellationHandler {
                 self.cancel()
@@ -283,7 +283,7 @@ extension DataRequest {
             }
         }
 
-        return DataTask<Value>(request: self, task: task, shouldAutomaticallyCancel: shouldAutomaticallyCancel)
+        return OWNetworkDataTask<Value>(request: self, task: task, shouldAutomaticallyCancel: shouldAutomaticallyCancel)
     }
 }
 
@@ -291,9 +291,9 @@ extension DataRequest {
 
 /// Value used to `await` a `DownloadResponse` and associated values.
 @available(iOS 13, *)
-struct DownloadTask<Value> {
+struct OWNetworkDownloadTask<Value> {
     /// `DownloadResponse` produced by the `DownloadRequest` and its response handler.
-    var response: DownloadResponse<Value, AFError> {
+    var response: DownloadResponse<Value, OWNetworkError> {
         get async {
             if shouldAutomaticallyCancel {
                 return await withTaskCancellationHandler {
@@ -308,7 +308,7 @@ struct DownloadTask<Value> {
     }
 
     /// `Result` of any response serialization performed for the `response`.
-    var result: Result<Value, AFError> {
+    var result: Result<Value, OWNetworkError> {
         get async { await response.result }
     }
 
@@ -320,10 +320,10 @@ struct DownloadTask<Value> {
     }
 
     private let task: Task<AFDownloadResponse<Value>, Never>
-    private let request: DownloadRequest
+    private let request: OWNetworkDownloadRequest
     private let shouldAutomaticallyCancel: Bool
 
-    fileprivate init(request: DownloadRequest, task: Task<AFDownloadResponse<Value>, Never>, shouldAutomaticallyCancel: Bool) {
+    fileprivate init(request: OWNetworkDownloadRequest, task: Task<AFDownloadResponse<Value>, Never>, shouldAutomaticallyCancel: Bool) {
         self.request = request
         self.task = task
         self.shouldAutomaticallyCancel = shouldAutomaticallyCancel
@@ -346,7 +346,7 @@ struct DownloadTask<Value> {
 }
 
 @available(iOS 13, *)
-extension DownloadRequest {
+extension OWNetworkDownloadRequest {
     /// Creates a `DownloadTask` to `await` a `Data` value.
     ///
     /// - Parameters:
@@ -361,7 +361,7 @@ extension DownloadRequest {
     func serializingData(automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
                                 dataPreprocessor: DataPreprocessor = DataResponseSerializer.defaultDataPreprocessor,
                                 emptyResponseCodes: Set<Int> = DataResponseSerializer.defaultEmptyResponseCodes,
-                                emptyRequestMethods: Set<HTTPMethod> = DataResponseSerializer.defaultEmptyRequestMethods) -> DownloadTask<Data> {
+                                emptyRequestMethods: Set<HTTPMethod> = DataResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDownloadTask<Data> {
         serializingDownload(using: DataResponseSerializer(dataPreprocessor: dataPreprocessor,
                                                           emptyResponseCodes: emptyResponseCodes,
                                                           emptyRequestMethods: emptyRequestMethods),
@@ -389,7 +389,7 @@ extension DownloadRequest {
                                                        dataPreprocessor: DataPreprocessor = DecodableResponseSerializer<Value>.defaultDataPreprocessor,
                                                        decoder: DataDecoder = JSONDecoder(),
                                                        emptyResponseCodes: Set<Int> = DecodableResponseSerializer<Value>.defaultEmptyResponseCodes,
-                                                       emptyRequestMethods: Set<HTTPMethod> = DecodableResponseSerializer<Value>.defaultEmptyRequestMethods) -> DownloadTask<Value> {
+                                                       emptyRequestMethods: Set<HTTPMethod> = DecodableResponseSerializer<Value>.defaultEmptyRequestMethods) -> OWNetworkDownloadTask<Value> {
         serializingDownload(using: DecodableResponseSerializer<Value>(dataPreprocessor: dataPreprocessor,
                                                                       decoder: decoder,
                                                                       emptyResponseCodes: emptyResponseCodes,
@@ -405,7 +405,7 @@ extension DownloadRequest {
     ///                                properties. `false` by default.
     ///
     /// - Returns: The `DownloadTask`.
-    func serializingDownloadedFileURL(automaticallyCancelling shouldAutomaticallyCancel: Bool = false) -> DownloadTask<URL> {
+    func serializingDownloadedFileURL(automaticallyCancelling shouldAutomaticallyCancel: Bool = false) -> OWNetworkDownloadTask<URL> {
         serializingDownload(using: URLResponseSerializer(),
                             automaticallyCancelling: shouldAutomaticallyCancel)
     }
@@ -429,7 +429,7 @@ extension DownloadRequest {
                                   dataPreprocessor: DataPreprocessor = StringResponseSerializer.defaultDataPreprocessor,
                                   encoding: String.Encoding? = nil,
                                   emptyResponseCodes: Set<Int> = StringResponseSerializer.defaultEmptyResponseCodes,
-                                  emptyRequestMethods: Set<HTTPMethod> = StringResponseSerializer.defaultEmptyRequestMethods) -> DownloadTask<String> {
+                                  emptyRequestMethods: Set<HTTPMethod> = StringResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDownloadTask<String> {
         serializingDownload(using: StringResponseSerializer(dataPreprocessor: dataPreprocessor,
                                                             encoding: encoding,
                                                             emptyResponseCodes: emptyResponseCodes,
@@ -448,7 +448,7 @@ extension DownloadRequest {
     /// - Returns: The `DownloadTask`.
     func serializingDownload<Serializer: ResponseSerializer>(using serializer: Serializer,
                                                                     automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> DownloadTask<Serializer.SerializedObject> {
+        -> OWNetworkDownloadTask<Serializer.SerializedObject> {
         downloadTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -469,7 +469,7 @@ extension DownloadRequest {
     /// - Returns: The `DownloadTask`.
     func serializingDownload<Serializer: DownloadResponseSerializerProtocol>(using serializer: Serializer,
                                                                                     automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> DownloadTask<Serializer.SerializedObject> {
+        -> OWNetworkDownloadTask<Serializer.SerializedObject> {
         downloadTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -478,8 +478,8 @@ extension DownloadRequest {
     }
 
     private func downloadTask<Value>(automaticallyCancelling shouldAutomaticallyCancel: Bool,
-                                     forResponse onResponse: @escaping (@escaping (DownloadResponse<Value, AFError>) -> Void) -> Void)
-        -> DownloadTask<Value> {
+                                     forResponse onResponse: @escaping (@escaping (DownloadResponse<Value, OWNetworkError>) -> Void) -> Void)
+        -> OWNetworkDownloadTask<Value> {
         let task = Task {
             await withTaskCancellationHandler {
                 self.cancel()
@@ -492,20 +492,20 @@ extension DownloadRequest {
             }
         }
 
-        return DownloadTask<Value>(request: self, task: task, shouldAutomaticallyCancel: shouldAutomaticallyCancel)
+        return OWNetworkDownloadTask<Value>(request: self, task: task, shouldAutomaticallyCancel: shouldAutomaticallyCancel)
     }
 }
 
 // MARK: - DataStreamTask
 
 @available(iOS 13, *)
-struct DataStreamTask {
+struct OWNetworkDataStreamTask {
     // Type of created streams.
-    typealias Stream<Success, Failure: Error> = StreamOf<DataStreamRequest.Stream<Success, Failure>>
+    typealias Stream<Success, Failure: Error> = OWNetworkStreamOf<OWNetworkDataStreamRequest.Stream<Success, Failure>>
 
-    private let request: DataStreamRequest
+    private let request: OWNetworkDataStreamRequest
 
-    fileprivate init(request: DataStreamRequest) {
+    fileprivate init(request: OWNetworkDataStreamRequest) {
         self.request = request
     }
 
@@ -547,8 +547,8 @@ struct DataStreamTask {
     /// - Returns:            The `Stream`.
     func streamingDecodables<T>(_ type: T.Type = T.self,
                                        automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
-                                       bufferingPolicy: Stream<T, AFError>.BufferingPolicy = .unbounded)
-        -> Stream<T, AFError> where T: Decodable {
+                                       bufferingPolicy: Stream<T, OWNetworkError>.BufferingPolicy = .unbounded)
+        -> Stream<T, OWNetworkError> where T: Decodable {
         streamingResponses(serializedUsing: DecodableStreamSerializer<T>(),
                            automaticallyCancelling: shouldAutomaticallyCancel,
                            bufferingPolicy: bufferingPolicy)
@@ -565,8 +565,8 @@ struct DataStreamTask {
     /// - Returns:           The `Stream`.
     func streamingResponses<Serializer: DataStreamSerializer>(serializedUsing serializer: Serializer,
                                                                      automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
-                                                                     bufferingPolicy: Stream<Serializer.SerializedObject, AFError>.BufferingPolicy = .unbounded)
-        -> Stream<Serializer.SerializedObject, AFError> {
+                                                                     bufferingPolicy: Stream<Serializer.SerializedObject, OWNetworkError>.BufferingPolicy = .unbounded)
+        -> Stream<Serializer.SerializedObject, OWNetworkError> {
         createStream(automaticallyCancelling: shouldAutomaticallyCancel, bufferingPolicy: bufferingPolicy) { onStream in
             self.request.responseStream(using: serializer,
                                         on: .streamCompletionQueue(forRequestID: request.id),
@@ -576,9 +576,9 @@ struct DataStreamTask {
 
     private func createStream<Success, Failure: Error>(automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
                                                        bufferingPolicy: Stream<Success, Failure>.BufferingPolicy = .unbounded,
-                                                       forResponse onResponse: @escaping (@escaping (DataStreamRequest.Stream<Success, Failure>) -> Void) -> Void)
+                                                       forResponse onResponse: @escaping (@escaping (OWNetworkDataStreamRequest.Stream<Success, Failure>) -> Void) -> Void)
         -> Stream<Success, Failure> {
-        StreamOf(bufferingPolicy: bufferingPolicy) {
+        OWNetworkStreamOf(bufferingPolicy: bufferingPolicy) {
             guard shouldAutomaticallyCancel,
                   request.isInitialized || request.isResumed || request.isSuspended else { return }
 
@@ -610,12 +610,12 @@ struct DataStreamTask {
 }
 
 @available(iOS 13, *)
-extension DataStreamRequest {
+extension OWNetworkDataStreamRequest {
     /// Creates a `DataStreamTask` used to `await` streams of serialized values.
     ///
     /// - Returns: The `DataStreamTask`.
-    func streamTask() -> DataStreamTask {
-        DataStreamTask(request: self)
+    func streamTask() -> OWNetworkDataStreamTask {
+        OWNetworkDataStreamTask(request: self)
     }
 }
 
@@ -630,7 +630,7 @@ extension DispatchQueue {
 
 /// An asynchronous sequence generated from an underlying `AsyncStream`. Only produced by Alamofire.
 @available(iOS 13, *)
-struct StreamOf<Element>: AsyncSequence {
+struct OWNetworkStreamOf<Element>: AsyncSequence {
     typealias AsyncIterator = Iterator
     typealias BufferingPolicy = AsyncStream<Element>.Continuation.BufferingPolicy
     fileprivate typealias Continuation = AsyncStream<Element>.Continuation

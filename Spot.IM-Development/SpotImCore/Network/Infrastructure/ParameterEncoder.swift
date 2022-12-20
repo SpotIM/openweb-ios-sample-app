@@ -68,7 +68,7 @@ class JSONParameterEncoder: ParameterEncoder {
                 request.headers.update(.contentType("application/json"))
             }
         } catch {
-            throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
+            throw OWNetworkError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
         }
 
         return request
@@ -124,7 +124,7 @@ class URLEncodedFormParameterEncoder: ParameterEncoder {
     static var `default`: URLEncodedFormParameterEncoder { URLEncodedFormParameterEncoder() }
 
     /// The `URLEncodedFormEncoder` to use.
-    let encoder: URLEncodedFormEncoder
+    let encoder: OWNetworkURLEncodedFormEncoder
 
     /// The `Destination` for the URL-encoded string.
     let destination: Destination
@@ -134,7 +134,7 @@ class URLEncodedFormParameterEncoder: ParameterEncoder {
     /// - Parameters:
     ///   - encoder:     The `URLEncodedFormEncoder`. `URLEncodedFormEncoder()` by default.
     ///   - destination: The `Destination`. `.methodDependent` by default.
-    init(encoder: URLEncodedFormEncoder = URLEncodedFormEncoder(), destination: Destination = .methodDependent) {
+    init(encoder: OWNetworkURLEncodedFormEncoder = OWNetworkURLEncodedFormEncoder(), destination: Destination = .methodDependent) {
         self.encoder = encoder
         self.destination = destination
     }
@@ -146,23 +146,23 @@ class URLEncodedFormParameterEncoder: ParameterEncoder {
         var request = request
 
         guard let url = request.url else {
-            throw AFError.parameterEncoderFailed(reason: .missingRequiredComponent(.url))
+            throw OWNetworkError.parameterEncoderFailed(reason: .missingRequiredComponent(.url))
         }
 
         guard let method = request.method else {
             let rawValue = request.method?.rawValue ?? "nil"
-            throw AFError.parameterEncoderFailed(reason: .missingRequiredComponent(.httpMethod(rawValue: rawValue)))
+            throw OWNetworkError.parameterEncoderFailed(reason: .missingRequiredComponent(.httpMethod(rawValue: rawValue)))
         }
 
         if destination.encodesParametersInURL(for: method),
            var components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
             let query: String = try Result<String, Error> { try encoder.encode(parameters) }
-                .mapError { AFError.parameterEncoderFailed(reason: .encoderFailed(error: $0)) }.get()
+                .mapError { OWNetworkError.parameterEncoderFailed(reason: .encoderFailed(error: $0)) }.get()
             let newQueryString = [components.percentEncodedQuery, query].compactMap { $0 }.joinedWithAmpersands()
             components.percentEncodedQuery = newQueryString.isEmpty ? nil : newQueryString
 
             guard let newURL = components.url else {
-                throw AFError.parameterEncoderFailed(reason: .missingRequiredComponent(.url))
+                throw OWNetworkError.parameterEncoderFailed(reason: .missingRequiredComponent(.url))
             }
 
             request.url = newURL
@@ -172,7 +172,7 @@ class URLEncodedFormParameterEncoder: ParameterEncoder {
             }
 
             request.httpBody = try Result<Data, Error> { try encoder.encode(parameters) }
-                .mapError { AFError.parameterEncoderFailed(reason: .encoderFailed(error: $0)) }.get()
+                .mapError { OWNetworkError.parameterEncoderFailed(reason: .encoderFailed(error: $0)) }.get()
         }
 
         return request
@@ -189,7 +189,7 @@ extension ParameterEncoder where Self == URLEncodedFormParameterEncoder {
     ///   - encoder:     `URLEncodedFormEncoder` used to encode the parameters. `URLEncodedFormEncoder()` by default.
     ///   - destination: `Destination` to which to encode the parameters. `.methodDependent` by default.
     /// - Returns:       The `URLEncodedFormParameterEncoder`.
-    static func urlEncodedForm(encoder: URLEncodedFormEncoder = URLEncodedFormEncoder(),
+    static func urlEncodedForm(encoder: OWNetworkURLEncodedFormEncoder = OWNetworkURLEncodedFormEncoder(),
                                       destination: URLEncodedFormParameterEncoder.Destination = .methodDependent) -> URLEncodedFormParameterEncoder {
         URLEncodedFormParameterEncoder(encoder: encoder, destination: destination)
     }

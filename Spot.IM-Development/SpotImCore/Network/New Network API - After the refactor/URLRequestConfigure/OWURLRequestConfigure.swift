@@ -12,7 +12,7 @@ import RxSwift
 /*
  OWURLRequestConfiguration - configuration protocol which is used for building the HTTP request
  */
-protocol OWURLRequestConfiguration: URLRequestConvertible {
+protocol OWURLRequestConfiguration: OWNetworkURLRequestConvertible {
     var environment: OWEnvironmentProtocol { get }
     var endpoint: OWEndpoints { get }
     func asURLRequest() throws -> URLRequest
@@ -34,7 +34,7 @@ extension OWURLRequestConfiguration {
             do {
                 urlRequest.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: [])
             } catch {
-                throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
+                throw OWNetworkError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
             }
         }
 
