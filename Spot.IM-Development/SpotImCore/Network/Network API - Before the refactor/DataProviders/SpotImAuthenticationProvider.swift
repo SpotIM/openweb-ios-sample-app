@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 import RxSwift
 
 public typealias AuthCompletionHandler = (Swift.Result<String, Error>) -> Void

@@ -8,7 +8,6 @@
 
 import Foundation
 import RxSwift
-import Alamofire
 
 protocol OWNetworkAPIProtocol {
     func request(for endpoint: OWEndpoints) -> OWURLRequestConfiguration

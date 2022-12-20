@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 internal protocol SPAnalyticsSender {
     func sendEvent(with info: SPEventInfo, postId: String?)

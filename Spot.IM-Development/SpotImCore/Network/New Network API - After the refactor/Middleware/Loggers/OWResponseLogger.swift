@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 class OWResponseLogger: OWNetworkLogging, OWResponseMiddleware {
     func process<T: Any>(response: DataResponse<T, AFError>) -> DataResponse<T, AFError> {

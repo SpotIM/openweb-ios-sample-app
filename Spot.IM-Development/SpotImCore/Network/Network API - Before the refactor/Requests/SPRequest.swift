@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 internal protocol SPRequest {
     var method: HTTPMethod { get }

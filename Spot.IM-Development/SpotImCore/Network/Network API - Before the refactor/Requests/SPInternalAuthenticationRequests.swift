@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 internal enum SPInternalAuthRequests: SPRequest {
     case guest

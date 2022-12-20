@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 enum OWProfileEndpoints: OWEndpoints {
     case createSingleUseToken
