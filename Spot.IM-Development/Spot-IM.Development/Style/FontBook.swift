@@ -17,7 +17,7 @@ class FontBook {
     static let primaryHeadingMedium = font(with: .medium, size: 30)
     static let primaryHeadingLight = font(with: .light, size: 30)
     
-    static let mainHeading = font(with: .regular, size: 24)
+    static let mainHeading = font(with: .regular, size: 20)
     static let mainHeadingBold = font(with: .bold, size: 24)
     static let mainHeadingMedium = font(with: .medium, size: 24)
     static let mainHeadingLight = font(with: .light, size: 24)
