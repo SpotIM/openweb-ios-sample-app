@@ -47,8 +47,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate let disposeBag = DisposeBag()
     
     fileprivate let _model = BehaviorSubject<SPComment?>(value: nil)
+    fileprivate var _unwrappedModel: Observable<SPComment>  {
+        _model.unwrap()
+    }
 
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    fileprivate var _unwrappedUser: Observable<SPUser>  {
+        _user.unwrap()
+    }
     
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
     
@@ -85,8 +91,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
     
     var dateText: Observable<String> {
-        _model
-            .unwrap()
+        _unwrappedModel
             .map({ model in
                 guard let writtenAt = model.writtenAt else { return ""}
                 let timestamp = Date(timeIntervalSince1970: writtenAt).timeAgo()
@@ -104,30 +109,26 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .unwrap()
     }
     var badgeTitle: Observable<String> {
-        Observable.combineLatest(_user, conversationConfig) { [weak self] user, conversationConfig in
-                guard let self = self,
-                      let user = user else { return "" }
+        Observable.combineLatest(_unwrappedUser, conversationConfig) { [weak self] user, conversationConfig in
+                guard let self = self else { return "" }
             return self.getUserBadgeUsingConfig(user: user, conversationConfig: conversationConfig)?.uppercased() ?? ""
         }
     }
     
     var nameText: Observable<String> {
-        _user
-            .unwrap()
+        _unwrappedUser
             .map({ user -> String in
                 return user.displayName ?? ""
             })
     }
     
     var nameTextStyle: Observable<SPFontStyle> {
-        _model
-            .unwrap()
+        _unwrappedModel
             .map { $0.isReply ? .medium : .bold}
     }
     
     var isUsernameOneRow: Observable<Bool> {
-        _model
-            .unwrap()
+        _unwrappedModel
             .map { _ in
 //                $0.isUsernameOneRow()
                 false // TODO
@@ -135,9 +136,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     }
     
     var hiddenCommentReasonText: Observable<String> {
-        Observable.combineLatest(_model, _user) { model, user in
-                guard let model = model,
-                      let user = user else { return "" }
+        Observable.combineLatest(_unwrappedModel, _unwrappedUser) { model, user in
             let localizationKey: String
             if user.isMuted {
                 localizationKey = "This user is muted."
