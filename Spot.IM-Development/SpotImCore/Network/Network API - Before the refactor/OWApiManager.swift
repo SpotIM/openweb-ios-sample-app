@@ -67,7 +67,7 @@ public struct OWJSONParser: OWResponseParser {
 
 
 struct OWJsonWithoutEscapingSlashesEncoding: ParameterEncoding {
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
         guard var urlRequest = urlRequest.urlRequest, let params = parameters else { throw Errors.emptyURLRequest }
         guard let jsonData = try? JSONSerialization.data(withJSONObject: params), let jsonString = String(data: jsonData, encoding: .utf8) else { throw Errors.encodingProblem }
         
@@ -100,14 +100,14 @@ final class OWApiManager {
     
     var requestDidSucceed: ((SPRequest) -> Void)?
     
-    let session: Session
+    let session: OWNetworkSession
     fileprivate let networkInterceptor: OWNetworkInterceptor
     
     init(networkInterceptor: OWNetworkInterceptor = OWNetworkInterceptor()) {
         self.networkInterceptor = networkInterceptor
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        session = Session(configuration: configuration, interceptor: networkInterceptor)
+        session = OWNetworkSession(configuration: configuration, interceptor: networkInterceptor)
     }
     
     @discardableResult
@@ -116,7 +116,7 @@ final class OWApiManager {
                     encoding: ParameterEncoding = JSONEncoding.default,
                     parser: T,
                     headers: HTTPHeaders? = nil,
-                    completion: @escaping (_ result: OWResult<T.Representation>, _ response: APIResponse) -> Void) -> DataRequest where T: OWResponseParser {
+                    completion: @escaping (_ result: OWResult<T.Representation>, _ response: APIResponse) -> Void) -> OWNetworkDataRequest where T: OWResponseParser {
         
         return session.request(request.url,
                                  method: request.method,

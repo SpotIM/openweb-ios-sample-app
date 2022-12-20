@@ -10,7 +10,7 @@
 import Foundation
 
 /// Default type of `Result` returned by Alamofire, with an `AFError` `Failure` type.
-typealias AFResult<Success> = Result<Success, AFError>
+typealias OWNetworkResult<Success> = Result<Success, OWNetworkError>
 
 // MARK: - Internal APIs
 

@@ -18,7 +18,7 @@ class OWNetworkInterceptor: RequestInterceptor {
         self.servicesProvider = servicesProvider
     }
     
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         var request = urlRequest
         
         // Update token - required because retry requests with old token will need to be updated with new token when called for a retry
@@ -29,7 +29,7 @@ class OWNetworkInterceptor: RequestInterceptor {
         completion(.success(request))
     }
     
-    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
         let requestURL = request.request?.url?.description ?? ""
         
         guard request.retryCount < retryLimit else {
@@ -39,7 +39,7 @@ class OWNetworkInterceptor: RequestInterceptor {
             return
         }
         
-        if let errorCode = error.asAFError?.responseCode,
+        if let errorCode = error.asOWNetworkError?.responseCode,
             errorCode == APIErrorCodes.authorizationErrorCode  {
             // Authorization error (i.e code 403)
               

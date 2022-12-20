@@ -21,7 +21,7 @@ protocol ParameterEncoding {
     ///
     /// - Returns:      The encoded `URLRequest`.
     /// - Throws:       Any `Error` produced during parameter encoding.
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
 }
 
 // MARK: -
@@ -140,14 +140,14 @@ struct URLEncoding: ParameterEncoding {
 
     // MARK: Encoding
 
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()
 
         guard let parameters = parameters else { return urlRequest }
 
         if let method = urlRequest.method, destination.encodesParametersInURL(for: method) {
             guard let url = urlRequest.url else {
-                throw AFError.parameterEncodingFailed(reason: .missingURL)
+                throw OWNetworkError.parameterEncodingFailed(reason: .missingURL)
             }
 
             if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
@@ -249,13 +249,13 @@ struct JSONEncoding: ParameterEncoding {
 
     // MARK: Encoding
 
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()
 
         guard let parameters = parameters else { return urlRequest }
 
         guard JSONSerialization.isValidJSONObject(parameters) else {
-            throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: Error.invalidJSONObject))
+            throw OWNetworkError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: Error.invalidJSONObject))
         }
 
         do {
@@ -267,7 +267,7 @@ struct JSONEncoding: ParameterEncoding {
 
             urlRequest.httpBody = data
         } catch {
-            throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
+            throw OWNetworkError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
         }
 
         return urlRequest
@@ -281,13 +281,13 @@ struct JSONEncoding: ParameterEncoding {
     ///
     /// - Returns:      The encoded `URLRequest`.
     /// - Throws:       Any `Error` produced during encoding.
-    func encode(_ urlRequest: URLRequestConvertible, withJSONObject jsonObject: Any? = nil) throws -> URLRequest {
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, withJSONObject jsonObject: Any? = nil) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()
 
         guard let jsonObject = jsonObject else { return urlRequest }
 
         guard JSONSerialization.isValidJSONObject(jsonObject) else {
-            throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: Error.invalidJSONObject))
+            throw OWNetworkError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: Error.invalidJSONObject))
         }
 
         do {
@@ -299,7 +299,7 @@ struct JSONEncoding: ParameterEncoding {
 
             urlRequest.httpBody = data
         } catch {
-            throw AFError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
+            throw OWNetworkError.parameterEncodingFailed(reason: .jsonEncodingFailed(error: error))
         }
 
         return urlRequest

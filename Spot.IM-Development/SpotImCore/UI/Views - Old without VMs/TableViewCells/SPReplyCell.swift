@@ -34,7 +34,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private var statusIndicatorViewHeighConstraint: OWConstraint?
     private var statusIndicatorViewTopConstraint: OWConstraint?
     
-    private var imageRequest: DataRequest?
+    private var imageRequest: OWNetworkDataRequest?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

@@ -88,7 +88,7 @@ class MultipartFormData {
     let fileManager: FileManager
 
     private var bodyParts: [BodyPart]
-    private var bodyPartError: AFError?
+    private var bodyPartError: OWNetworkError?
     private let streamBufferSize: Int
 
     // MARK: - Lifecycle
@@ -328,13 +328,13 @@ class MultipartFormData {
         }
 
         if fileManager.fileExists(atPath: fileURL.path) {
-            throw AFError.multipartEncodingFailed(reason: .outputStreamFileAlreadyExists(at: fileURL))
+            throw OWNetworkError.multipartEncodingFailed(reason: .outputStreamFileAlreadyExists(at: fileURL))
         } else if !fileURL.isFileURL {
-            throw AFError.multipartEncodingFailed(reason: .outputStreamURLInvalid(url: fileURL))
+            throw OWNetworkError.multipartEncodingFailed(reason: .outputStreamURLInvalid(url: fileURL))
         }
 
         guard let outputStream = OutputStream(url: fileURL, append: false) else {
-            throw AFError.multipartEncodingFailed(reason: .outputStreamCreationFailed(for: fileURL))
+            throw OWNetworkError.multipartEncodingFailed(reason: .outputStreamCreationFailed(for: fileURL))
         }
 
         outputStream.open()
@@ -389,7 +389,7 @@ class MultipartFormData {
             let bytesRead = inputStream.read(&buffer, maxLength: streamBufferSize)
 
             if let error = inputStream.streamError {
-                throw AFError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: error))
+                throw OWNetworkError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: error))
             }
 
             if bytesRead > 0 {
@@ -400,9 +400,9 @@ class MultipartFormData {
         }
 
         guard UInt64(encoded.count) == bodyPart.bodyContentLength else {
-            let error = AFError.UnexpectedInputStreamLength(bytesExpected: bodyPart.bodyContentLength,
+            let error = OWNetworkError.UnexpectedInputStreamLength(bytesExpected: bodyPart.bodyContentLength,
                                                             bytesRead: UInt64(encoded.count))
-            throw AFError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: error))
+            throw OWNetworkError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: error))
         }
 
         return encoded
@@ -438,7 +438,7 @@ class MultipartFormData {
             let bytesRead = inputStream.read(&buffer, maxLength: streamBufferSize)
 
             if let streamError = inputStream.streamError {
-                throw AFError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: streamError))
+                throw OWNetworkError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: streamError))
             }
 
             if bytesRead > 0 {
@@ -475,7 +475,7 @@ class MultipartFormData {
             let bytesWritten = outputStream.write(buffer, maxLength: bytesToWrite)
 
             if let error = outputStream.streamError {
-                throw AFError.multipartEncodingFailed(reason: .outputStreamWriteFailed(error: error))
+                throw OWNetworkError.multipartEncodingFailed(reason: .outputStreamWriteFailed(error: error))
             }
 
             bytesToWrite -= bytesWritten
@@ -514,9 +514,9 @@ class MultipartFormData {
 
     // MARK: - Private - Errors
 
-    private func setBodyPartError(withReason reason: AFError.MultipartEncodingFailureReason) {
+    private func setBodyPartError(withReason reason: OWNetworkError.MultipartEncodingFailureReason) {
         guard bodyPartError == nil else { return }
-        bodyPartError = AFError.multipartEncodingFailed(reason: reason)
+        bodyPartError = OWNetworkError.multipartEncodingFailed(reason: reason)
     }
 }
 

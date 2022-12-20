@@ -9,10 +9,10 @@
 import Foundation
 
 /// Class which implements the various `URLSessionDelegate` methods to connect various OpenWebSDKNetwork features.
-class SessionDelegate: NSObject {
+class OWNetworkSessionDelegate: NSObject {
     private let fileManager: FileManager
 
-    weak var stateProvider: SessionStateProvider?
+    weak var stateProvider: OWNetworkSessionStateProvider?
     var eventMonitor: EventMonitor?
 
     /// Creates an instance from the given `FileManager`.
@@ -28,7 +28,7 @@ class SessionDelegate: NSObject {
     /// - Parameters:
     ///   - task: The `URLSessionTask` for which to find the associated `Request`.
     ///   - type: The `Request` subclass type to cast any `Request` associate with `task`.
-    func request<R: Request>(for task: URLSessionTask, as type: R.Type) -> R? {
+    func request<R: OWNetworkRequest>(for task: URLSessionTask, as type: R.Type) -> R? {
         guard let provider = stateProvider else {
             assertionFailure("StateProvider is nil.")
             return nil
@@ -39,12 +39,12 @@ class SessionDelegate: NSObject {
 }
 
 /// Type which provides various `Session` state values.
-protocol SessionStateProvider: AnyObject {
-    var serverTrustManager: ServerTrustManager? { get }
+protocol OWNetworkSessionStateProvider: AnyObject {
+    var serverTrustManager: OWNetworkServerTrustManager? { get }
     var redirectHandler: RedirectHandler? { get }
-    var cachedResponseHandler: CachedResponseHandler? { get }
+    var cachedResponseHandler: OWNetworkCachedResponseHandler? { get }
 
-    func request(for task: URLSessionTask) -> Request?
+    func request(for task: URLSessionTask) -> OWNetworkRequest?
     func didGatherMetricsForTask(_ task: URLSessionTask)
     func didCompleteTask(_ task: URLSessionTask, completion: @escaping () -> Void)
     func credential(for task: URLSessionTask, in protectionSpace: URLProtectionSpace) -> URLCredential?
@@ -53,7 +53,7 @@ protocol SessionStateProvider: AnyObject {
 
 // MARK: URLSessionDelegate
 
-extension SessionDelegate: URLSessionDelegate {
+extension OWNetworkSessionDelegate: URLSessionDelegate {
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         eventMonitor?.urlSession(session, didBecomeInvalidWithError: error)
 
@@ -63,9 +63,9 @@ extension SessionDelegate: URLSessionDelegate {
 
 // MARK: URLSessionTaskDelegate
 
-extension SessionDelegate: URLSessionTaskDelegate {
+extension OWNetworkSessionDelegate: URLSessionTaskDelegate {
     /// Result of a `URLAuthenticationChallenge` evaluation.
-    typealias ChallengeEvaluation = (disposition: URLSession.AuthChallengeDisposition, credential: URLCredential?, error: AFError?)
+    typealias ChallengeEvaluation = (disposition: URLSession.AuthChallengeDisposition, credential: URLCredential?, error: OWNetworkError?)
 
     func urlSession(_ session: URLSession,
                          task: URLSessionTask,
@@ -116,7 +116,7 @@ extension SessionDelegate: URLSessionTaskDelegate {
 
             return (.useCredential, URLCredential(trust: trust), nil)
         } catch {
-            return (.cancelAuthenticationChallenge, nil, error.asAFError(or: .serverTrustEvaluationFailed(reason: .customEvaluationFailed(error: error))))
+            return (.cancelAuthenticationChallenge, nil, error.asOWNetworkError(or: .serverTrustEvaluationFailed(reason: .customEvaluationFailed(error: error))))
         }
     }
 
@@ -160,7 +160,7 @@ extension SessionDelegate: URLSessionTaskDelegate {
                          needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
         eventMonitor?.urlSession(session, taskNeedsNewBodyStream: task)
 
-        guard let request = request(for: task, as: UploadRequest.self) else {
+        guard let request = request(for: task, as: OWNetworkUploadRequest.self) else {
             assertionFailure("needNewBodyStream did not find UploadRequest.")
             completionHandler(nil)
             return
@@ -197,7 +197,7 @@ extension SessionDelegate: URLSessionTaskDelegate {
         let request = stateProvider?.request(for: task)
 
         stateProvider?.didCompleteTask(task) {
-            request?.didCompleteTask(task, with: error.map { $0.asAFError(or: .sessionTaskFailed(error: $0)) })
+            request?.didCompleteTask(task, with: error.map { $0.asOWNetworkError(or: .sessionTaskFailed(error: $0)) })
         }
     }
 
@@ -208,13 +208,13 @@ extension SessionDelegate: URLSessionTaskDelegate {
 
 // MARK: URLSessionDataDelegate
 
-extension SessionDelegate: URLSessionDataDelegate {
+extension OWNetworkSessionDelegate: URLSessionDataDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         eventMonitor?.urlSession(session, dataTask: dataTask, didReceive: data)
 
-        if let request = request(for: dataTask, as: DataRequest.self) {
+        if let request = request(for: dataTask, as: OWNetworkDataRequest.self) {
             request.didReceive(data: data)
-        } else if let request = request(for: dataTask, as: DataStreamRequest.self) {
+        } else if let request = request(for: dataTask, as: OWNetworkDataStreamRequest.self) {
             request.didReceive(data: data)
         } else {
             assertionFailure("dataTask did not find DataRequest or DataStreamRequest in didReceive")
@@ -238,7 +238,7 @@ extension SessionDelegate: URLSessionDataDelegate {
 
 // MARK: URLSessionDownloadDelegate
 
-extension SessionDelegate: URLSessionDownloadDelegate {
+extension OWNetworkSessionDelegate: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession,
                          downloadTask: URLSessionDownloadTask,
                          didResumeAtOffset fileOffset: Int64,
@@ -247,7 +247,7 @@ extension SessionDelegate: URLSessionDownloadDelegate {
                                  downloadTask: downloadTask,
                                  didResumeAtOffset: fileOffset,
                                  expectedTotalBytes: expectedTotalBytes)
-        guard let downloadRequest = request(for: downloadTask, as: DownloadRequest.self) else {
+        guard let downloadRequest = request(for: downloadTask, as: OWNetworkDownloadRequest.self) else {
             assertionFailure("downloadTask did not find DownloadRequest.")
             return
         }
@@ -266,7 +266,7 @@ extension SessionDelegate: URLSessionDownloadDelegate {
                                  didWriteData: bytesWritten,
                                  totalBytesWritten: totalBytesWritten,
                                  totalBytesExpectedToWrite: totalBytesExpectedToWrite)
-        guard let downloadRequest = request(for: downloadTask, as: DownloadRequest.self) else {
+        guard let downloadRequest = request(for: downloadTask, as: OWNetworkDownloadRequest.self) else {
             assertionFailure("downloadTask did not find DownloadRequest.")
             return
         }
@@ -278,17 +278,17 @@ extension SessionDelegate: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         eventMonitor?.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location)
 
-        guard let request = request(for: downloadTask, as: DownloadRequest.self) else {
+        guard let request = request(for: downloadTask, as: OWNetworkDownloadRequest.self) else {
             assertionFailure("downloadTask did not find DownloadRequest.")
             return
         }
 
-        let (destination, options): (URL, DownloadRequest.Options)
+        let (destination, options): (URL, OWNetworkDownloadRequest.Options)
         if let response = request.response {
             (destination, options) = request.destination(location, response)
         } else {
             // If there's no response this is likely a local file download, so generate the temporary URL directly.
-            (destination, options) = (DownloadRequest.defaultDestinationURL(location), [])
+            (destination, options) = (OWNetworkDownloadRequest.defaultDestinationURL(location), [])
         }
 
         eventMonitor?.request(request, didCreateDestinationURL: destination)

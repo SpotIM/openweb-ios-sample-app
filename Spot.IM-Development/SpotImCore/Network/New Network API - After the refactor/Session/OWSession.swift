@@ -13,7 +13,7 @@ import Foundation
  Also we will be independent of network infrastructure in the future if we will choose so
  */
 protocol OWSessionProtocol {
-    var afSession: Session { get }
+    var afSession: OWNetworkSession { get }
 }
 
 class OWSession: OWSessionProtocol {
@@ -24,7 +24,7 @@ class OWSession: OWSessionProtocol {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
         let retryableHttpMethods: Set<HTTPMethod> = [.delete, .get, .head, .options, .put, .trace, .post]
-        let retryPolicy = RetryPolicy(retryLimit: 3, retryableHTTPMethods: retryableHttpMethods)
+        let retryPolicy = OWNetworkRetryPolicy(retryLimit: 3, retryableHTTPMethods: retryableHttpMethods)
         return OWSession(configuration: configuration, interceptor: retryPolicy)
     }()
 
@@ -33,7 +33,7 @@ class OWSession: OWSessionProtocol {
         self.interceptor = interceptor
     }
 
-    lazy var afSession: Session = {
-        Session(configuration: configuration, interceptor: interceptor)
+    lazy var afSession: OWNetworkSession = {
+        OWNetworkSession(configuration: configuration, interceptor: interceptor)
     }()
 }

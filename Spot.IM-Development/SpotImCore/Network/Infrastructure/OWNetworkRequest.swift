@@ -10,7 +10,7 @@ import Foundation
 
 /// `Request` is the common superclass of all Alamofire request types and provides common state, delegate, and callback
 /// handling.
-class Request {
+class OWNetworkRequest {
     /// State of the `Request`, with managed transitions between states set when calling `resume()`, `suspend()`, or
     /// `cancel()` on the `Request`.
     enum State {
@@ -60,7 +60,7 @@ class Request {
     /// The `Request`'s interceptor.
     let interceptor: RequestInterceptor?
     /// The `Request`'s delegate.
-    private(set) weak var delegate: RequestDelegate?
+    private(set) weak var delegate: OWNetworkRequestDelegate?
 
     // MARK: - Mutable State
 
@@ -75,7 +75,7 @@ class Request {
         /// `RedirectHandler` provided for to handle request redirection.
         var redirectHandler: RedirectHandler?
         /// `CachedResponseHandler` provided to handle response caching.
-        var cachedResponseHandler: CachedResponseHandler?
+        var cachedResponseHandler: OWNetworkCachedResponseHandler?
         /// Queue and closure called when the `Request` is able to create a cURL description of itself.
         var cURLHandler: (queue: DispatchQueue, handler: (String) -> Void)?
         /// Queue and closure called when the `Request` creates a `URLRequest`.
@@ -100,7 +100,7 @@ class Request {
         /// Number of times any retriers provided retried the `Request`.
         var retryCount = 0
         /// Final `AFError` for the `Request`, whether from various internal Alamofire calls or as a result of a `task`.
-        var error: AFError?
+        var error: OWNetworkError?
         /// Whether the instance has had `finish()` called and is running the serializers. Should be replaced with a
         /// representation in the state machine in the future.
         var isFinishing = false
@@ -157,7 +157,7 @@ class Request {
     // MARK: Cached Response Handling
 
     /// `CachedResponseHandler` set on the instance.
-    private(set) var cachedResponseHandler: CachedResponseHandler? {
+    private(set) var cachedResponseHandler: OWNetworkCachedResponseHandler? {
         get { $mutableState.cachedResponseHandler }
         set { $mutableState.cachedResponseHandler = newValue }
     }
@@ -227,7 +227,7 @@ class Request {
     // MARK: Error
 
     /// `Error` returned from Alamofire internally, from the network request directly, or any validators executed.
-    fileprivate(set) var error: AFError? {
+    fileprivate(set) var error: OWNetworkError? {
         get { $mutableState.error }
         set { $mutableState.error = newValue }
     }
@@ -247,7 +247,7 @@ class Request {
          serializationQueue: DispatchQueue,
          eventMonitor: EventMonitor?,
          interceptor: RequestInterceptor?,
-         delegate: RequestDelegate) {
+         delegate: OWNetworkRequestDelegate) {
         self.id = id
         self.underlyingQueue = underlyingQueue
         self.serializationQueue = serializationQueue
@@ -277,7 +277,7 @@ class Request {
     /// - Note: Triggers retry.
     ///
     /// - Parameter error: `AFError` thrown from the failed creation.
-    func didFailToCreateURLRequest(with error: AFError) {
+    func didFailToCreateURLRequest(with error: OWNetworkError) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
         self.error = error
@@ -309,7 +309,7 @@ class Request {
     /// - Parameters:
     ///   - request: The `URLRequest` the adapter was called with.
     ///   - error:   The `AFError` returned by the `RequestAdapter`.
-    func didFailToAdaptURLRequest(_ request: URLRequest, withError error: AFError) {
+    func didFailToAdaptURLRequest(_ request: URLRequest, withError error: OWNetworkError) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
         self.error = error
@@ -400,7 +400,7 @@ class Request {
     func didCancel() {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
-        error = error ?? AFError.explicitlyCancelled
+        error = error ?? OWNetworkError.explicitlyCancelled
 
         eventMonitor?.requestDidCancel(self)
     }
@@ -430,7 +430,7 @@ class Request {
     /// - Parameters:
     ///   - task:  The `URLSessionTask` which failed.
     ///   - error: The early failure `AFError`.
-    func didFailTask(_ task: URLSessionTask, earlyWithError error: AFError) {
+    func didFailTask(_ task: URLSessionTask, earlyWithError error: OWNetworkError) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
         self.error = error
@@ -447,7 +447,7 @@ class Request {
     ///   - task:  The `URLSessionTask` which completed.
     ///   - error: The `AFError` `task` may have completed with. If `error` has already been set on the instance, this
     ///            value is ignored.
-    func didCompleteTask(_ task: URLSessionTask, with error: AFError?) {
+    func didCompleteTask(_ task: URLSessionTask, with error: OWNetworkError?) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
         self.error = self.error ?? error
@@ -474,7 +474,7 @@ class Request {
     /// call `finish()`.
     ///
     /// - Parameter error: The possible `AFError` which may trigger retry.
-    func retryOrFinish(error: AFError?) {
+    func retryOrFinish(error: OWNetworkError?) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
         guard let error = error, let delegate = delegate else { finish(); return }
@@ -484,7 +484,7 @@ class Request {
             case .doNotRetry:
                 self.finish()
             case let .doNotRetryWithError(retryError):
-                self.finish(error: retryError.asAFError(orFailWith: "Received retryError was not already OWNetworkError"))
+                self.finish(error: retryError.asOWNetworkError(orFailWith: "Received retryError was not already OWNetworkError"))
             case .retry, .retryWithDelay:
                 delegate.retryRequest(self, withDelay: retryResult.delay)
             }
@@ -494,7 +494,7 @@ class Request {
     /// Finishes this `Request` and starts the response serializers.
     ///
     /// - Parameter error: The possible `Error` with which the instance will finish.
-    func finish(error: AFError? = nil) {
+    func finish(error: OWNetworkError? = nil) {
         dispatchPrecondition(condition: .onQueue(underlyingQueue))
 
         guard !$mutableState.isFinishing else { return }
@@ -804,7 +804,7 @@ class Request {
     ///
     /// - Returns:           The instance.
     @discardableResult
-    func cacheResponse(using handler: CachedResponseHandler) -> Self {
+    func cacheResponse(using handler: OWNetworkCachedResponseHandler) -> Self {
         $mutableState.write { mutableState in
             precondition(mutableState.cachedResponseHandler == nil, "Cached response handler has already been set.")
             mutableState.cachedResponseHandler = handler
@@ -930,19 +930,19 @@ class Request {
 
 // MARK: - Protocol Conformances
 
-extension Request: Equatable {
-    static func ==(lhs: Request, rhs: Request) -> Bool {
+extension OWNetworkRequest: Equatable {
+    static func ==(lhs: OWNetworkRequest, rhs: OWNetworkRequest) -> Bool {
         lhs.id == rhs.id
     }
 }
 
-extension Request: Hashable {
+extension OWNetworkRequest: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }
 
-extension Request: CustomStringConvertible {
+extension OWNetworkRequest: CustomStringConvertible {
     /// A textual representation of this instance, including the `HTTPMethod` and `URL` if the `URLRequest` has been
     /// created, as well as the response status code, if a response has been received.
     var description: String {
@@ -956,7 +956,7 @@ extension Request: CustomStringConvertible {
     }
 }
 
-extension Request {
+extension OWNetworkRequest {
     /// cURL representation of the instance.
     ///
     /// - Returns: The cURL equivalent of the instance.
@@ -1032,7 +1032,7 @@ extension Request {
 }
 
 /// Protocol abstraction for `Request`'s communication back to the `SessionDelegate`.
-protocol RequestDelegate: AnyObject {
+protocol OWNetworkRequestDelegate: AnyObject {
     /// `URLSessionConfiguration` used to create the underlying `URLSessionTask`s.
     var sessionConfiguration: URLSessionConfiguration { get }
 
@@ -1042,7 +1042,7 @@ protocol RequestDelegate: AnyObject {
     /// Notifies the delegate the `Request` has reached a point where it needs cleanup.
     ///
     /// - Parameter request: The `Request` to cleanup after.
-    func cleanup(after request: Request)
+    func cleanup(after request: OWNetworkRequest)
 
     /// Asynchronously ask the delegate whether a `Request` will be retried.
     ///
@@ -1050,14 +1050,14 @@ protocol RequestDelegate: AnyObject {
     ///   - request:    `Request` which failed.
     ///   - error:      `Error` which produced the failure.
     ///   - completion: Closure taking the `RetryResult` for evaluation.
-    func retryResult(for request: Request, dueTo error: AFError, completion: @escaping (RetryResult) -> Void)
+    func retryResult(for request: OWNetworkRequest, dueTo error: OWNetworkError, completion: @escaping (RetryResult) -> Void)
 
     /// Asynchronously retry the `Request`.
     ///
     /// - Parameters:
     ///   - request:   `Request` which will be retried.
     ///   - timeDelay: `TimeInterval` after which the retry will be triggered.
-    func retryRequest(_ request: Request, withDelay timeDelay: TimeInterval?)
+    func retryRequest(_ request: OWNetworkRequest, withDelay timeDelay: TimeInterval?)
 }
 
 // MARK: - Subclasses
@@ -1065,9 +1065,9 @@ protocol RequestDelegate: AnyObject {
 // MARK: - DataRequest
 
 /// `Request` subclass which handles in-memory `Data` download using `URLSessionDataTask`.
-class DataRequest: Request {
+class OWNetworkDataRequest: OWNetworkRequest {
     /// `URLRequestConvertible` value used to create `URLRequest`s for this instance.
-    let convertible: URLRequestConvertible
+    let convertible: OWNetworkURLRequestConvertible
     /// `Data` read from the server so far.
     var data: Data? { mutableData }
 
@@ -1087,12 +1087,12 @@ class DataRequest: Request {
     ///   - interceptor:        `RequestInterceptor` used throughout the request lifecycle.
     ///   - delegate:           `RequestDelegate` that provides an interface to actions not performed by the `Request`.
     init(id: UUID = UUID(),
-         convertible: URLRequestConvertible,
+         convertible: OWNetworkURLRequestConvertible,
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
          eventMonitor: EventMonitor?,
          interceptor: RequestInterceptor?,
-         delegate: RequestDelegate) {
+         delegate: OWNetworkRequestDelegate) {
         self.convertible = convertible
 
         super.init(id: id,
@@ -1154,7 +1154,7 @@ class DataRequest: Request {
 
             let result = validation(self.request, response, self.data)
 
-            if case let .failure(error) = result { self.error = error.asAFError(or: .responseValidationFailed(reason: .customValidationFailed(error: error))) }
+            if case let .failure(error) = result { self.error = error.asOWNetworkError(or: .responseValidationFailed(reason: .customValidationFailed(error: error))) }
 
             self.eventMonitor?.request(self,
                                        didValidateRequest: self.request,
@@ -1172,7 +1172,7 @@ class DataRequest: Request {
 // MARK: - DataStreamRequest
 
 /// `Request` subclass which streams HTTP response `Data` through a `Handler` closure.
-final class DataStreamRequest: Request {
+final class OWNetworkDataStreamRequest: OWNetworkRequest {
     /// Closure type handling `DataStreamRequest.Stream` values.
     typealias Handler<Success, Failure: Error> = (Stream<Success, Failure>) throws -> Void
 
@@ -1210,14 +1210,14 @@ final class DataStreamRequest: Request {
         /// Last `URLSessionTaskMetrics` produced for the instance.
         let metrics: URLSessionTaskMetrics?
         /// `AFError` produced for the instance, if any.
-        let error: AFError?
+        let error: OWNetworkError?
     }
 
     /// Type used to cancel an ongoing stream.
     struct CancellationToken {
-        weak var request: DataStreamRequest?
+        weak var request: OWNetworkDataStreamRequest?
 
-        init(_ request: DataStreamRequest) {
+        init(_ request: OWNetworkDataStreamRequest) {
             self.request = request
         }
 
@@ -1228,7 +1228,7 @@ final class DataStreamRequest: Request {
     }
 
     /// `URLRequestConvertible` value used to create `URLRequest`s for this instance.
-    let convertible: URLRequestConvertible
+    let convertible: OWNetworkURLRequestConvertible
     /// Whether or not the instance will be cancelled if stream parsing encounters an error.
     let automaticallyCancelOnStreamError: Bool
 
@@ -1266,13 +1266,13 @@ final class DataStreamRequest: Request {
     ///   - delegate:                         `RequestDelegate` that provides an interface to actions not performed by
     ///                                       the `Request`.
     init(id: UUID = UUID(),
-         convertible: URLRequestConvertible,
+         convertible: OWNetworkURLRequestConvertible,
          automaticallyCancelOnStreamError: Bool,
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
          eventMonitor: EventMonitor?,
          interceptor: RequestInterceptor?,
-         delegate: RequestDelegate) {
+         delegate: OWNetworkRequestDelegate) {
         self.convertible = convertible
         self.automaticallyCancelOnStreamError = automaticallyCancelOnStreamError
 
@@ -1289,7 +1289,7 @@ final class DataStreamRequest: Request {
         return session.dataTask(with: copiedRequest)
     }
 
-    override func finish(error: AFError? = nil) {
+    override func finish(error: OWNetworkError? = nil) {
         $streamMutableState.write { state in
             state.outputStream?.close()
         }
@@ -1326,7 +1326,7 @@ final class DataStreamRequest: Request {
             let result = validation(self.request, response)
 
             if case let .failure(error) = result {
-                self.error = error.asAFError(or: .responseValidationFailed(reason: .customValidationFailed(error: error)))
+                self.error = error.asOWNetworkError(or: .responseValidationFailed(reason: .customValidationFailed(error: error)))
             }
 
             self.eventMonitor?.request(self,
@@ -1367,7 +1367,7 @@ final class DataStreamRequest: Request {
         do {
             try closure()
         } catch {
-            self.error = error.asAFError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
+            self.error = error.asOWNetworkError(or: .responseSerializationFailed(reason: .customSerializationFailed(error: error)))
             cancel()
         }
     }
@@ -1409,7 +1409,7 @@ final class DataStreamRequest: Request {
     }
 }
 
-extension DataStreamRequest.Stream {
+extension OWNetworkDataStreamRequest.Stream {
     /// Incoming `Result` values from `Event.stream`.
     var result: Result<Success, Failure>? {
         guard case let .stream(result) = event else { return nil }
@@ -1432,7 +1432,7 @@ extension DataStreamRequest.Stream {
     }
 
     /// `Completion` value of the instance, if any.
-    var completion: DataStreamRequest.Completion? {
+    var completion: OWNetworkDataStreamRequest.Completion? {
         guard case let .complete(completion) = event else { return nil }
 
         return completion
@@ -1442,7 +1442,7 @@ extension DataStreamRequest.Stream {
 // MARK: - DownloadRequest
 
 /// `Request` subclass which downloads `Data` to a file on disk using `URLSessionDownloadTask`.
-class DownloadRequest: Request {
+class OWNetworkDownloadRequest: OWNetworkRequest {
     /// A set of options to be executed prior to moving a downloaded file from the temporary `URL` to the destination
     /// `URL`.
     struct Options: OptionSet {
@@ -1512,7 +1512,7 @@ class DownloadRequest: Request {
     /// Type describing the source used to create the underlying `URLSessionDownloadTask`.
     enum Downloadable {
         /// Download should be started from the `URLRequest` produced by the associated `URLRequestConvertible` value.
-        case request(URLRequestConvertible)
+        case request(OWNetworkURLRequestConvertible)
         /// Download should be started from the associated resume `Data` value.
         case resumeData(Data)
     }
@@ -1567,7 +1567,7 @@ class DownloadRequest: Request {
          serializationQueue: DispatchQueue,
          eventMonitor: EventMonitor?,
          interceptor: RequestInterceptor?,
-         delegate: RequestDelegate,
+         delegate: OWNetworkRequestDelegate,
          destination: @escaping Destination) {
         self.downloadable = downloadable
         self.destination = destination
@@ -1594,7 +1594,7 @@ class DownloadRequest: Request {
     /// - Parameters:
     ///   - task:   `URLSessionTask` that finished the download.
     ///   - result: `Result` of the automatic move to `destination`.
-    func didFinishDownloading(using task: URLSessionTask, with result: Result<URL, AFError>) {
+    func didFinishDownloading(using task: URLSessionTask, with result: Result<URL, OWNetworkError>) {
         eventMonitor?.request(self, didFinishDownloadingUsing: task, with: result)
 
         switch result {
@@ -1722,7 +1722,7 @@ class DownloadRequest: Request {
             let result = validation(self.request, response, self.fileURL)
 
             if case let .failure(error) = result {
-                self.error = error.asAFError(or: .responseValidationFailed(reason: .customValidationFailed(error: error)))
+                self.error = error.asOWNetworkError(or: .responseValidationFailed(reason: .customValidationFailed(error: error)))
             }
 
             self.eventMonitor?.request(self,
@@ -1741,7 +1741,7 @@ class DownloadRequest: Request {
 // MARK: - UploadRequest
 
 /// `DataRequest` subclass which handles `Data` upload from memory, file, or stream using `URLSessionUploadTask`.
-class UploadRequest: DataRequest {
+class OWNetworkUploadRequest: OWNetworkDataRequest {
     /// Type describing the origin of the upload, whether `Data`, file, or stream.
     enum Uploadable {
         /// Upload from the provided `Data` value.
@@ -1756,7 +1756,7 @@ class UploadRequest: DataRequest {
     // MARK: Initial State
 
     /// The `UploadableConvertible` value used to produce the `Uploadable` value for this instance.
-    let upload: UploadableConvertible
+    let upload: OWNetworkUploadableConvertible
 
     /// `FileManager` used to perform cleanup tasks, including the removal of multipart form encoded payloads written
     /// to disk.
@@ -1781,13 +1781,13 @@ class UploadRequest: DataRequest {
     ///                         encoded payloads written to disk.
     ///   - delegate:           `RequestDelegate` that provides an interface to actions not performed by the `Request`.
     init(id: UUID = UUID(),
-         convertible: UploadConvertible,
+         convertible: OWNetworkUploadConvertible,
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
          eventMonitor: EventMonitor?,
          interceptor: RequestInterceptor?,
          fileManager: FileManager,
-         delegate: RequestDelegate) {
+         delegate: OWNetworkRequestDelegate) {
         upload = convertible
         self.fileManager = fileManager
 
@@ -1812,7 +1812,7 @@ class UploadRequest: DataRequest {
     /// Called when the `Uploadable` value could not be created.
     ///
     /// - Parameter error: `AFError` produced by the failure.
-    func didFailToCreateUploadable(with error: AFError) {
+    func didFailToCreateUploadable(with error: OWNetworkError) {
         self.error = error
 
         eventMonitor?.request(self, didFailToCreateUploadableWithError: error)
@@ -1872,19 +1872,19 @@ class UploadRequest: DataRequest {
 }
 
 /// A type that can produce an `UploadRequest.Uploadable` value.
-protocol UploadableConvertible {
+protocol OWNetworkUploadableConvertible {
     /// Produces an `UploadRequest.Uploadable` value from the instance.
     ///
     /// - Returns: The `UploadRequest.Uploadable`.
     /// - Throws:  Any `Error` produced during creation.
-    func createUploadable() throws -> UploadRequest.Uploadable
+    func createUploadable() throws -> OWNetworkUploadRequest.Uploadable
 }
 
-extension UploadRequest.Uploadable: UploadableConvertible {
-    func createUploadable() throws -> UploadRequest.Uploadable {
+extension OWNetworkUploadRequest.Uploadable: OWNetworkUploadableConvertible {
+    func createUploadable() throws -> OWNetworkUploadRequest.Uploadable {
         self
     }
 }
 
 /// A type that can be converted to an upload, whether from an `UploadRequest.Uploadable` or `URLRequestConvertible`.
-protocol UploadConvertible: UploadableConvertible & URLRequestConvertible {}
+protocol OWNetworkUploadConvertible: OWNetworkUploadableConvertible & OWNetworkURLRequestConvertible {}

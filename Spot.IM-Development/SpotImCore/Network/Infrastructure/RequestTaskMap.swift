@@ -12,23 +12,23 @@ import Foundation
 struct RequestTaskMap {
     private typealias Events = (completed: Bool, metricsGathered: Bool)
 
-    private var tasksToRequests: [URLSessionTask: Request]
-    private var requestsToTasks: [Request: URLSessionTask]
+    private var tasksToRequests: [URLSessionTask: OWNetworkRequest]
+    private var requestsToTasks: [OWNetworkRequest: URLSessionTask]
     private var taskEvents: [URLSessionTask: Events]
 
-    var requests: [Request] {
+    var requests: [OWNetworkRequest] {
         Array(tasksToRequests.values)
     }
 
-    init(tasksToRequests: [URLSessionTask: Request] = [:],
-         requestsToTasks: [Request: URLSessionTask] = [:],
+    init(tasksToRequests: [URLSessionTask: OWNetworkRequest] = [:],
+         requestsToTasks: [OWNetworkRequest: URLSessionTask] = [:],
          taskEvents: [URLSessionTask: (completed: Bool, metricsGathered: Bool)] = [:]) {
         self.tasksToRequests = tasksToRequests
         self.requestsToTasks = requestsToTasks
         self.taskEvents = taskEvents
     }
 
-    subscript(_ request: Request) -> URLSessionTask? {
+    subscript(_ request: OWNetworkRequest) -> URLSessionTask? {
         get { requestsToTasks[request] }
         set {
             guard let newValue = newValue else {
@@ -49,7 +49,7 @@ struct RequestTaskMap {
         }
     }
 
-    subscript(_ task: URLSessionTask) -> Request? {
+    subscript(_ task: URLSessionTask) -> OWNetworkRequest? {
         get { tasksToRequests[task] }
         set {
             guard let newValue = newValue else {
