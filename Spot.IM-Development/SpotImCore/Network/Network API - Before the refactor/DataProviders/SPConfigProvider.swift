@@ -56,7 +56,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
             }
             
             let spRequest = SPConfigRequests.config(spotId: spotId)
-            let headers = HTTPHeaders.basic(with: spotId)
+            let headers = OWNetworkHTTPHeaders.basic(with: spotId)
             
             let task = self.manager.execute(
                 request: spRequest,
@@ -96,7 +96,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
             let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
             let hour = Int(Date.hourFormatter.string(from: Date()))!
             let params: [String: Any] = ["day": dayName, "hour": hour]
-            let headers = HTTPHeaders.basic(with: spotId)
+            let headers = OWNetworkHTTPHeaders.basic(with: spotId)
             
             let task = self.manager.execute(
                 request: spRequest,

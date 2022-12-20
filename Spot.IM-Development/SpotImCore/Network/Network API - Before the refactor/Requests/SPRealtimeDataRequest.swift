@@ -12,7 +12,7 @@ internal enum SPRealtimeDataRequest: SPRequest {
     
     case read
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .read: return .post
         }

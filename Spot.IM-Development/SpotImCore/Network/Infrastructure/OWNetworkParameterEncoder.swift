@@ -9,7 +9,7 @@
 import Foundation
 
 /// A type that can encode any `Encodable` type into a `URLRequest`.
-protocol ParameterEncoder {
+protocol OWNetworkParameterEncoder {
     /// Encode the provided `Encodable` parameters into `request`.
     ///
     /// - Parameters:
@@ -25,24 +25,24 @@ protocol ParameterEncoder {
 /// A `ParameterEncoder` that encodes types as JSON body data.
 ///
 /// If no `Content-Type` header is already set on the provided `URLRequest`s, it's set to `application/json`.
-class JSONParameterEncoder: ParameterEncoder {
+class OWNetworkJSONParameterEncoder: OWNetworkParameterEncoder {
     /// Returns an encoder with default parameters.
-    static var `default`: JSONParameterEncoder { JSONParameterEncoder() }
+    static var `default`: OWNetworkJSONParameterEncoder { OWNetworkJSONParameterEncoder() }
 
     /// Returns an encoder with `JSONEncoder.outputFormatting` set to `.prettyPrinted`.
-    static var prettyPrinted: JSONParameterEncoder {
+    static var prettyPrinted: OWNetworkJSONParameterEncoder {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
 
-        return JSONParameterEncoder(encoder: encoder)
+        return OWNetworkJSONParameterEncoder(encoder: encoder)
     }
 
     /// Returns an encoder with `JSONEncoder.outputFormatting` set to `.sortedKeys`.
-    static var sortedKeys: JSONParameterEncoder {
+    static var sortedKeys: OWNetworkJSONParameterEncoder {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
 
-        return JSONParameterEncoder(encoder: encoder)
+        return OWNetworkJSONParameterEncoder(encoder: encoder)
     }
 
     /// `JSONEncoder` used to encode parameters.
@@ -75,16 +75,16 @@ class JSONParameterEncoder: ParameterEncoder {
     }
 }
 
-extension ParameterEncoder where Self == JSONParameterEncoder {
+extension OWNetworkParameterEncoder where Self == OWNetworkJSONParameterEncoder {
     /// Provides a default `JSONParameterEncoder` instance.
-    static var json: JSONParameterEncoder { JSONParameterEncoder() }
+    static var json: OWNetworkJSONParameterEncoder { OWNetworkJSONParameterEncoder() }
 
     /// Creates a `JSONParameterEncoder` using the provided `JSONEncoder`.
     ///
     /// - Parameter encoder: `JSONEncoder` used to encode parameters. `JSONEncoder()` by default.
     /// - Returns:           The `JSONParameterEncoder`.
-    static func json(encoder: JSONEncoder = JSONEncoder()) -> JSONParameterEncoder {
-        JSONParameterEncoder(encoder: encoder)
+    static func json(encoder: JSONEncoder = JSONEncoder()) -> OWNetworkJSONParameterEncoder {
+        OWNetworkJSONParameterEncoder(encoder: encoder)
     }
 }
 
@@ -95,7 +95,7 @@ extension ParameterEncoder where Self == JSONParameterEncoder {
 /// `application/x-www-form-urlencoded; charset=utf-8`.
 ///
 /// Encoding behavior can be customized by passing an instance of `URLEncodedFormEncoder` to the initializer.
-class URLEncodedFormParameterEncoder: ParameterEncoder {
+class OWNetworkURLEncodedFormParameterEncoder: OWNetworkParameterEncoder {
     /// Defines where the URL-encoded string should be set for each `URLRequest`.
     enum Destination {
         /// Applies the encoded query string to any existing query string for `.get`, `.head`, and `.delete` request.
@@ -111,7 +111,7 @@ class URLEncodedFormParameterEncoder: ParameterEncoder {
         /// - Parameter method: The `HTTPMethod`.
         ///
         /// - Returns:          Whether the URL-encoded string should be applied to a `URL`.
-        func encodesParametersInURL(for method: HTTPMethod) -> Bool {
+        func encodesParametersInURL(for method: OWNetworkHTTPMethod) -> Bool {
             switch self {
             case .methodDependent: return [.get, .head, .delete].contains(method)
             case .queryString: return true
@@ -121,7 +121,7 @@ class URLEncodedFormParameterEncoder: ParameterEncoder {
     }
 
     /// Returns an encoder with default parameters.
-    static var `default`: URLEncodedFormParameterEncoder { URLEncodedFormParameterEncoder() }
+    static var `default`: OWNetworkURLEncodedFormParameterEncoder { OWNetworkURLEncodedFormParameterEncoder() }
 
     /// The `URLEncodedFormEncoder` to use.
     let encoder: OWNetworkURLEncodedFormEncoder
@@ -179,9 +179,9 @@ class URLEncodedFormParameterEncoder: ParameterEncoder {
     }
 }
 
-extension ParameterEncoder where Self == URLEncodedFormParameterEncoder {
+extension OWNetworkParameterEncoder where Self == OWNetworkURLEncodedFormParameterEncoder {
     /// Provides a default `URLEncodedFormParameterEncoder` instance.
-    static var urlEncodedForm: URLEncodedFormParameterEncoder { URLEncodedFormParameterEncoder() }
+    static var urlEncodedForm: OWNetworkURLEncodedFormParameterEncoder { OWNetworkURLEncodedFormParameterEncoder() }
 
     /// Creates a `URLEncodedFormParameterEncoder` with the provided encoder and destination.
     ///
@@ -190,7 +190,7 @@ extension ParameterEncoder where Self == URLEncodedFormParameterEncoder {
     ///   - destination: `Destination` to which to encode the parameters. `.methodDependent` by default.
     /// - Returns:       The `URLEncodedFormParameterEncoder`.
     static func urlEncodedForm(encoder: OWNetworkURLEncodedFormEncoder = OWNetworkURLEncodedFormEncoder(),
-                                      destination: URLEncodedFormParameterEncoder.Destination = .methodDependent) -> URLEncodedFormParameterEncoder {
-        URLEncodedFormParameterEncoder(encoder: encoder, destination: destination)
+                                      destination: OWNetworkURLEncodedFormParameterEncoder.Destination = .methodDependent) -> OWNetworkURLEncodedFormParameterEncoder {
+        OWNetworkURLEncodedFormParameterEncoder(encoder: encoder, destination: destination)
     }
 }

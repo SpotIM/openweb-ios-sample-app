@@ -10,7 +10,7 @@ import Foundation
 
 /// Protocol outlining the lifetime events inside Alamofire. It includes both events received from the various
 /// `URLSession` delegate protocols as well as various events from the lifetime of `Request` and its subclasses.
-protocol EventMonitor {
+protocol OWNetworkEventMonitor {
     /// The `DispatchQueue` onto which Alamofire's root `CompositeEventMonitor` will dispatch events. `.main` by default.
     var queue: DispatchQueue { get }
 
@@ -142,10 +142,10 @@ protocol EventMonitor {
                  withResult result: OWNetworkRequest.ValidationResult)
 
     /// Event called when a `DataRequest` creates a `DataResponse<Data?>` value without calling a `ResponseSerializer`.
-    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>)
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Data?, OWNetworkError>)
 
     /// Event called when a `DataRequest` calls a `ResponseSerializer` and creates a generic `DataResponse<Value, AFError>`.
-    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Value, OWNetworkError>)
+    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Value, OWNetworkError>)
 
     // MARK: DataStreamRequest Events
 
@@ -197,13 +197,13 @@ protocol EventMonitor {
                  withResult result: OWNetworkRequest.ValidationResult)
 
     /// Event called when a `DownloadRequest` creates a `DownloadResponse<URL?, AFError>` without calling a `ResponseSerializer`.
-    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>)
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<URL?, OWNetworkError>)
 
     /// Event called when a `DownloadRequest` calls a `DownloadResponseSerializer` and creates a generic `DownloadResponse<Value, AFError>`
-    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<Value, OWNetworkError>)
+    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<Value, OWNetworkError>)
 }
 
-extension EventMonitor {
+extension OWNetworkEventMonitor {
     /// The default queue on which `CompositeEventMonitor`s will call the `EventMonitor` methods. `.main` by default.
     var queue: DispatchQueue { .main }
 
@@ -270,8 +270,8 @@ extension EventMonitor {
                         response: HTTPURLResponse,
                         data: Data?,
                         withResult result: OWNetworkRequest.ValidationResult) {}
-    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>) {}
-    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Value, OWNetworkError>) {}
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Data?, OWNetworkError>) {}
+    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Value, OWNetworkError>) {}
     func request(_ request: OWNetworkDataStreamRequest,
                         didValidateRequest urlRequest: URLRequest?,
                         response: HTTPURLResponse,
@@ -287,21 +287,21 @@ extension EventMonitor {
                         response: HTTPURLResponse,
                         fileURL: URL?,
                         withResult result: OWNetworkRequest.ValidationResult) {}
-    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>) {}
-    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<Value, OWNetworkError>) {}
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<URL?, OWNetworkError>) {}
+    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<Value, OWNetworkError>) {}
 }
 
 /// An `EventMonitor` which can contain multiple `EventMonitor`s and calls their methods on their queues.
-final class CompositeEventMonitor: EventMonitor {
+class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     let queue = DispatchQueue(label: "OpenWebSDKNetworkCompositeEventMonitor", qos: .utility)
 
-    let monitors: [EventMonitor]
+    let monitors: [OWNetworkEventMonitor]
 
-    init(monitors: [EventMonitor]) {
+    init(monitors: [OWNetworkEventMonitor]) {
         self.monitors = monitors
     }
 
-    func performEvent(_ event: @escaping (EventMonitor) -> Void) {
+    func performEvent(_ event: @escaping (OWNetworkEventMonitor) -> Void) {
         queue.async {
             for monitor in self.monitors {
                 monitor.queue.async { event(monitor) }
@@ -486,11 +486,11 @@ final class CompositeEventMonitor: EventMonitor {
         }
     }
 
-    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>) {
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Data?, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 
-    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Value, OWNetworkError>) {
+    func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Value, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 
@@ -541,17 +541,17 @@ final class CompositeEventMonitor: EventMonitor {
                                   withResult: result) }
     }
 
-    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>) {
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<URL?, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 
-    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<Value, OWNetworkError>) {
+    func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<Value, OWNetworkError>) {
         performEvent { $0.request(request, didParseResponse: response) }
     }
 }
 
 /// `EventMonitor` that allows optional closures to be set to receive events.
-class ClosureEventMonitor: EventMonitor {
+class OWNetworkClosureEventMonitor: OWNetworkEventMonitor {
     /// Closure called on the `urlSession(_:didBecomeInvalidWithError:)` event.
     var sessionDidBecomeInvalidWithError: ((URLSession, Error?) -> Void)?
 
@@ -649,7 +649,7 @@ class ClosureEventMonitor: EventMonitor {
     var requestDidValidateRequestResponseDataWithResult: ((OWNetworkDataRequest, URLRequest?, HTTPURLResponse, Data?, OWNetworkRequest.ValidationResult) -> Void)?
 
     /// Closure called on the `request(_:didParseResponse:)` event.
-    var requestDidParseResponse: ((OWNetworkDataRequest, DataResponse<Data?, OWNetworkError>) -> Void)?
+    var requestDidParseResponse: ((OWNetworkDataRequest, OWNetworkDataResponse<Data?, OWNetworkError>) -> Void)?
 
     /// Closure called on the `request(_:didValidateRequest:response:withResult:)` event.
     var requestDidValidateRequestResponseWithResult: ((OWNetworkDataStreamRequest, URLRequest?, HTTPURLResponse, OWNetworkRequest.ValidationResult) -> Void)?
@@ -673,7 +673,7 @@ class ClosureEventMonitor: EventMonitor {
     var requestDidValidateRequestResponseFileURLWithResult: ((OWNetworkDownloadRequest, URLRequest?, HTTPURLResponse, URL?, OWNetworkRequest.ValidationResult) -> Void)?
 
     /// Closure called on the `request(_:didParseResponse:)` event.
-    var requestDidParseDownloadResponse: ((OWNetworkDownloadRequest, DownloadResponse<URL?, OWNetworkError>) -> Void)?
+    var requestDidParseDownloadResponse: ((OWNetworkDownloadRequest, OWNetworkDownloadResponse<URL?, OWNetworkError>) -> Void)?
 
     let queue: DispatchQueue
 
@@ -828,7 +828,7 @@ class ClosureEventMonitor: EventMonitor {
         requestDidValidateRequestResponseDataWithResult?(request, urlRequest, response, data, result)
     }
 
-    func request(_ request: OWNetworkDataRequest, didParseResponse response: DataResponse<Data?, OWNetworkError>) {
+    func request(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Data?, OWNetworkError>) {
         requestDidParseResponse?(request, response)
     }
 
@@ -868,7 +868,7 @@ class ClosureEventMonitor: EventMonitor {
                                                             result)
     }
 
-    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: DownloadResponse<URL?, OWNetworkError>) {
+    func request(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<URL?, OWNetworkError>) {
         requestDidParseDownloadResponse?(request, response)
     }
 }

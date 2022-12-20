@@ -14,7 +14,7 @@ internal enum SPConfigRequests: SPRequest {
     case adsConfig
     case abTestData
     
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .config: return .get
         case .adsConfig: return .post

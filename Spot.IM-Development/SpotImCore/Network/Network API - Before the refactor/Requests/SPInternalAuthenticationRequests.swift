@@ -15,7 +15,7 @@ internal enum SPInternalAuthRequests: SPRequest {
     case logout
     case user
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         return .post
     }
 

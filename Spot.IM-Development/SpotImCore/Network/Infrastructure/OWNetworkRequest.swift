@@ -56,9 +56,9 @@ class OWNetworkRequest {
     /// The queue used for all serialization actions. By default it's a serial queue that targets `underlyingQueue`.
     let serializationQueue: DispatchQueue
     /// `EventMonitor` used for event callbacks.
-    let eventMonitor: EventMonitor?
+    let eventMonitor: OWNetworkEventMonitor?
     /// The `Request`'s interceptor.
-    let interceptor: RequestInterceptor?
+    let interceptor: OWNetworkRequestInterceptor?
     /// The `Request`'s delegate.
     private(set) weak var delegate: OWNetworkRequestDelegate?
 
@@ -73,7 +73,7 @@ class OWNetworkRequest {
         /// `ProgressHandler` and `DispatchQueue` provided for download progress callbacks.
         var downloadProgressHandler: (handler: ProgressHandler, queue: DispatchQueue)?
         /// `RedirectHandler` provided for to handle request redirection.
-        var redirectHandler: RedirectHandler?
+        var redirectHandler: OWNetworkRedirectHandler?
         /// `CachedResponseHandler` provided to handle response caching.
         var cachedResponseHandler: OWNetworkCachedResponseHandler?
         /// Queue and closure called when the `Request` is able to create a cURL description of itself.
@@ -109,7 +109,7 @@ class OWNetworkRequest {
     }
 
     /// Protected `MutableState` value that provides thread-safe access to state values.
-    @Protected
+    @OWProtected
     fileprivate var mutableState = MutableState()
 
     /// `State` of the `Request`.
@@ -149,7 +149,7 @@ class OWNetworkRequest {
     // MARK: Redirect Handling
 
     /// `RedirectHandler` set on the instance.
-    private(set) var redirectHandler: RedirectHandler? {
+    private(set) var redirectHandler: OWNetworkRedirectHandler? {
         get { $mutableState.redirectHandler }
         set { $mutableState.redirectHandler = newValue }
     }
@@ -173,7 +173,7 @@ class OWNetworkRequest {
     // MARK: Validators
 
     /// `Validator` callback closures that store the validation calls enqueued.
-    @Protected
+    @OWProtected
     fileprivate var validators: [() -> Void] = []
 
     // MARK: URLRequests
@@ -245,8 +245,8 @@ class OWNetworkRequest {
     init(id: UUID = UUID(),
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
-         eventMonitor: EventMonitor?,
-         interceptor: RequestInterceptor?,
+         eventMonitor: OWNetworkEventMonitor?,
+         interceptor: OWNetworkRequestInterceptor?,
          delegate: OWNetworkRequestDelegate) {
         self.id = id
         self.underlyingQueue = underlyingQueue
@@ -785,7 +785,7 @@ class OWNetworkRequest {
     ///
     /// - Returns:           The instance.
     @discardableResult
-    func redirect(using handler: RedirectHandler) -> Self {
+    func redirect(using handler: OWNetworkRedirectHandler) -> Self {
         $mutableState.write { mutableState in
             precondition(mutableState.redirectHandler == nil, "Redirect handler has already been set.")
             mutableState.redirectHandler = handler
@@ -1000,7 +1000,7 @@ extension OWNetworkRequest {
             }
         }
 
-        var headers = HTTPHeaders()
+        var headers = OWNetworkHTTPHeaders()
 
         if let sessionHeaders = delegate?.sessionConfiguration.headers {
             for header in sessionHeaders where header.name != "Cookie" {
@@ -1050,7 +1050,7 @@ protocol OWNetworkRequestDelegate: AnyObject {
     ///   - request:    `Request` which failed.
     ///   - error:      `Error` which produced the failure.
     ///   - completion: Closure taking the `RetryResult` for evaluation.
-    func retryResult(for request: OWNetworkRequest, dueTo error: OWNetworkError, completion: @escaping (RetryResult) -> Void)
+    func retryResult(for request: OWNetworkRequest, dueTo error: OWNetworkError, completion: @escaping (OWNetworkRetryResult) -> Void)
 
     /// Asynchronously retry the `Request`.
     ///
@@ -1072,7 +1072,7 @@ class OWNetworkDataRequest: OWNetworkRequest {
     var data: Data? { mutableData }
 
     /// Protected storage for the `Data` read by the instance.
-    @Protected
+    @OWProtected
     private var mutableData: Data? = nil
 
     /// Creates a `DataRequest` using the provided parameters.
@@ -1090,8 +1090,8 @@ class OWNetworkDataRequest: OWNetworkRequest {
          convertible: OWNetworkURLRequestConvertible,
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
-         eventMonitor: EventMonitor?,
-         interceptor: RequestInterceptor?,
+         eventMonitor: OWNetworkEventMonitor?,
+         interceptor: OWNetworkRequestInterceptor?,
          delegate: OWNetworkRequestDelegate) {
         self.convertible = convertible
 
@@ -1245,7 +1245,7 @@ final class OWNetworkDataStreamRequest: OWNetworkRequest {
         var enqueuedCompletionEvents: [() -> Void] = []
     }
 
-    @Protected
+    @OWProtected
     var streamMutableState = StreamMutableState()
 
     /// Creates a `DataStreamRequest` using the provided parameters.
@@ -1270,8 +1270,8 @@ final class OWNetworkDataStreamRequest: OWNetworkRequest {
          automaticallyCancelOnStreamError: Bool,
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
-         eventMonitor: EventMonitor?,
-         interceptor: RequestInterceptor?,
+         eventMonitor: OWNetworkEventMonitor?,
+         interceptor: OWNetworkRequestInterceptor?,
          delegate: OWNetworkRequestDelegate) {
         self.convertible = convertible
         self.automaticallyCancelOnStreamError = automaticallyCancelOnStreamError
@@ -1528,7 +1528,7 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
     }
 
     /// Protected mutable state specific to `DownloadRequest`.
-    @Protected
+    @OWProtected
     private var mutableDownloadState = DownloadRequestMutableState()
 
     /// If the download is resumable and is eventually cancelled or fails, this value may be used to resume the download
@@ -1565,8 +1565,8 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
          downloadable: Downloadable,
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
-         eventMonitor: EventMonitor?,
-         interceptor: RequestInterceptor?,
+         eventMonitor: OWNetworkEventMonitor?,
+         interceptor: OWNetworkRequestInterceptor?,
          delegate: OWNetworkRequestDelegate,
          destination: @escaping Destination) {
         self.downloadable = downloadable
@@ -1784,8 +1784,8 @@ class OWNetworkUploadRequest: OWNetworkDataRequest {
          convertible: OWNetworkUploadConvertible,
          underlyingQueue: DispatchQueue,
          serializationQueue: DispatchQueue,
-         eventMonitor: EventMonitor?,
-         interceptor: RequestInterceptor?,
+         eventMonitor: OWNetworkEventMonitor?,
+         interceptor: OWNetworkRequestInterceptor?,
          fileManager: FileManager,
          delegate: OWNetworkRequestDelegate) {
         upload = convertible

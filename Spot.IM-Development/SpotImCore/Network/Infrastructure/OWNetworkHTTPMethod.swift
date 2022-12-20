@@ -10,27 +10,27 @@
 /// `HTTPMethod.get != HTTPMethod(rawValue: "get")`.
 ///
 /// See https://tools.ietf.org/html/rfc7231#section-4.3
-struct HTTPMethod: RawRepresentable, Equatable, Hashable {
+struct OWNetworkHTTPMethod: RawRepresentable, Equatable, Hashable {
     /// `CONNECT` method.
-    static let connect = HTTPMethod(rawValue: "CONNECT")
+    static let connect = OWNetworkHTTPMethod(rawValue: "CONNECT")
     /// `DELETE` method.
-    static let delete = HTTPMethod(rawValue: "DELETE")
+    static let delete = OWNetworkHTTPMethod(rawValue: "DELETE")
     /// `GET` method.
-    static let get = HTTPMethod(rawValue: "GET")
+    static let get = OWNetworkHTTPMethod(rawValue: "GET")
     /// `HEAD` method.
-    static let head = HTTPMethod(rawValue: "HEAD")
+    static let head = OWNetworkHTTPMethod(rawValue: "HEAD")
     /// `OPTIONS` method.
-    static let options = HTTPMethod(rawValue: "OPTIONS")
+    static let options = OWNetworkHTTPMethod(rawValue: "OPTIONS")
     /// `PATCH` method.
-    static let patch = HTTPMethod(rawValue: "PATCH")
+    static let patch = OWNetworkHTTPMethod(rawValue: "PATCH")
     /// `POST` method.
-    static let post = HTTPMethod(rawValue: "POST")
+    static let post = OWNetworkHTTPMethod(rawValue: "POST")
     /// `PUT` method.
-    static let put = HTTPMethod(rawValue: "PUT")
+    static let put = OWNetworkHTTPMethod(rawValue: "PUT")
     /// `QUERY` method.
-    static let query = HTTPMethod(rawValue: "QUERY")
+    static let query = OWNetworkHTTPMethod(rawValue: "QUERY")
     /// `TRACE` method.
-    static let trace = HTTPMethod(rawValue: "TRACE")
+    static let trace = OWNetworkHTTPMethod(rawValue: "TRACE")
 
     let rawValue: String
 

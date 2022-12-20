@@ -13,7 +13,7 @@ enum OWAnalyticsEndpoints: OWEndpoints {
     case sendEvent(info: SPEventInfo)
     
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .sendEvent:
             return .post
@@ -29,11 +29,11 @@ enum OWAnalyticsEndpoints: OWEndpoints {
     }
     
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .sendEvent(let info):
             // TODO: Decide if we want to send an empty string in case of a nil or to not send the field as all
-            let params: Parameters = [
+            let params: OWNetworkParameters = [
                 "type": info.eventType,
                 "source": info.source,
                 "item_type": info.itemType ?? "",

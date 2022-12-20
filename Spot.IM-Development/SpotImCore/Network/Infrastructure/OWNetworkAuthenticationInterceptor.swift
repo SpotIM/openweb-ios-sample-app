@@ -141,7 +141,7 @@ enum OWNetworkAuthenticationError: Error {
 
 /// The `AuthenticationInterceptor` class manages the queuing and threading complexity of authenticating requests.
 /// It relies on an `Authenticator` type to handle the actual `URLRequest` authentication and `Credential` refresh.
-class OWNetworkAuthenticationInterceptor<AuthenticatorType>: RequestInterceptor where AuthenticatorType: OWNetworkAuthenticator {
+class OWNetworkAuthenticationInterceptor<AuthenticatorType>: OWNetworkRequestInterceptor where AuthenticatorType: OWNetworkAuthenticator {
     // MARK: Typealiases
 
     /// Type of credential used to authenticate requests.
@@ -194,7 +194,7 @@ class OWNetworkAuthenticationInterceptor<AuthenticatorType>: RequestInterceptor 
         var refreshWindow: RefreshWindow?
 
         var adaptOperations: [AdaptOperation] = []
-        var requestsToRetry: [(RetryResult) -> Void] = []
+        var requestsToRetry: [(OWNetworkRetryResult) -> Void] = []
     }
 
     // MARK: Properties
@@ -208,7 +208,7 @@ class OWNetworkAuthenticationInterceptor<AuthenticatorType>: RequestInterceptor 
     let authenticator: AuthenticatorType
     let queue = DispatchQueue(label: "OpenWebSDKNetworkAuthenticationInspector")
 
-    @Protected
+    @OWProtected
     private var mutableState: MutableState
 
     // MARK: Initialization
@@ -274,7 +274,7 @@ class OWNetworkAuthenticationInterceptor<AuthenticatorType>: RequestInterceptor 
 
     // MARK: Retry
 
-    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (OWNetworkRetryResult) -> Void) {
         // Do not attempt retry if there was not an original request and response from the server.
         guard let urlRequest = request.request, let response = request.response else {
             completion(.doNotRetry)

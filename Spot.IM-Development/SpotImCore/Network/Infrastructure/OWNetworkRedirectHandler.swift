@@ -9,7 +9,7 @@
 import Foundation
 
 /// A type that handles how an HTTP redirect response from a remote server should be redirected to the new request.
-protocol RedirectHandler {
+protocol OWNetworkRedirectHandler {
     /// Determines how the HTTP redirect response should be redirected to the new request.
     ///
     /// The `completion` closure should be passed one of three possible options:
@@ -32,7 +32,7 @@ protocol RedirectHandler {
 // MARK: -
 
 /// `Redirector` is a convenience `RedirectHandler` making it easy to follow, not follow, or modify a redirect.
-struct Redirector {
+struct OWNetworkRedirector {
     /// Defines the behavior of the `Redirector` type.
     enum Behavior {
         /// Follow the redirect as defined in the response.
@@ -44,9 +44,9 @@ struct Redirector {
     }
 
     /// Returns a `Redirector` with a `.follow` `Behavior`.
-    static let follow = Redirector(behavior: .follow)
+    static let follow = OWNetworkRedirector(behavior: .follow)
     /// Returns a `Redirector` with a `.doNotFollow` `Behavior`.
-    static let doNotFollow = Redirector(behavior: .doNotFollow)
+    static let doNotFollow = OWNetworkRedirector(behavior: .doNotFollow)
 
     /// The `Behavior` of the `Redirector`.
     let behavior: Behavior
@@ -61,7 +61,7 @@ struct Redirector {
 
 // MARK: -
 
-extension Redirector: RedirectHandler {
+extension OWNetworkRedirector: OWNetworkRedirectHandler {
     func task(_ task: URLSessionTask,
                      willBeRedirectedTo request: URLRequest,
                      for response: HTTPURLResponse,
@@ -78,18 +78,18 @@ extension Redirector: RedirectHandler {
     }
 }
 
-extension RedirectHandler where Self == Redirector {
+extension OWNetworkRedirectHandler where Self == OWNetworkRedirector {
     /// Provides a `Redirector` which follows redirects. Equivalent to `Redirector.follow`.
-    static var follow: Redirector { .follow }
+    static var follow: OWNetworkRedirector { .follow }
 
     /// Provides a `Redirector` which does not follow redirects. Equivalent to `Redirector.doNotFollow`.
-    static var doNotFollow: Redirector { .doNotFollow }
+    static var doNotFollow: OWNetworkRedirector { .doNotFollow }
 
     /// Creates a `Redirector` which modifies the redirected `URLRequest` using the provided closure.
     ///
     /// - Parameter closure: Closure used to modify the redirect.
     /// - Returns:           The `Redirector`.
-    static func modify(using closure: @escaping (URLSessionTask, URLRequest, HTTPURLResponse) -> URLRequest?) -> Redirector {
-        Redirector(behavior: .modify(closure))
+    static func modify(using closure: @escaping (URLSessionTask, URLRequest, HTTPURLResponse) -> URLRequest?) -> OWNetworkRedirector {
+        OWNetworkRedirector(behavior: .modify(closure))
     }
 }

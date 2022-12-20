@@ -103,7 +103,7 @@ internal final class SPDefaultFailureReporter: NetworkDataProvider {
     func report(error: SPError, postId: String = "default") {
         guard let spotKey = SPClientSettings.main.spotKey else { return }
         
-        let headers = HTTPHeaders.basic(with: spotKey, postId: postId)
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: postId)
         
         manager.execute(
             request: SPFailureReportRequest.error,

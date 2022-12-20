@@ -16,7 +16,7 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
     case user
     
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .guest, .ssoStart, .ssoComplete, .logout, .user:
             return .post
@@ -35,7 +35,7 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
     }
     
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .guest:
             return nil

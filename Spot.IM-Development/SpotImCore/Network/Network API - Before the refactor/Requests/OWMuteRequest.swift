@@ -12,7 +12,7 @@ internal enum OWMuteRequest: SPRequest {
     
     case mute
     
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
             case .mute: return .post
         }
