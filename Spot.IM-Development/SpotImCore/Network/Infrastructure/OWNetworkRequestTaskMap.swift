@@ -9,7 +9,7 @@
 import Foundation
 
 /// A type that maintains a two way, one to one map of `URLSessionTask`s to `Request`s.
-struct RequestTaskMap {
+struct OWNetworkRequestTaskMap {
     private typealias Events = (completed: Bool, metricsGathered: Bool)
 
     private var tasksToRequests: [URLSessionTask: OWNetworkRequest]

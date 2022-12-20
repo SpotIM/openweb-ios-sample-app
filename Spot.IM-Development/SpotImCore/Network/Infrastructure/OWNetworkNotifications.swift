@@ -64,7 +64,7 @@ extension String {
 }
 
 /// `EventMonitor` that provides Alamofire's notifications.
-final class AlamofireNotifications: EventMonitor {
+class OWNetworkNotifications: OWNetworkEventMonitor {
     func requestDidResume(_ request: OWNetworkRequest) {
         NotificationCenter.default.postNotification(named: OWNetworkRequest.didResumeNotification, with: request)
     }

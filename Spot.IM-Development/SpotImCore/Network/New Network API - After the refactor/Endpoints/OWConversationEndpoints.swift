@@ -12,16 +12,16 @@ enum OWConversationEndpoints: OWEndpoints {
     case conversationAsync(articleUrl: String)
     case conversationRead(id: String, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String, offset: Int)
     case commentReport(id: String, parentId: String?)
-    case commentPost(parameters: Parameters)
+    case commentPost(parameters: OWNetworkParameters)
     case commentShare(id: String, parentId: String?)
-    case commentUpdate(parameters: Parameters)
+    case commentUpdate(parameters: OWNetworkParameters)
     case commentDelete(id: String, parentId: String?)
     case commentRankChange(conversationId: String, operation: String, commentId: String)
     case commentsCounters(conversationIds: [String])
     case commentStatus(commentId: String)
     
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .conversationAsync: return .post
         case .conversationRead: return .post
@@ -51,7 +51,7 @@ enum OWConversationEndpoints: OWEndpoints {
     }
     
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .conversationAsync(let articleUrl):
             return ["host_url": articleUrl]
@@ -111,9 +111,9 @@ protocol OWConversationAPI {
     func fetchConversation(articleUrl: String) -> OWNetworkResponse<EmptyDecodable>
     func conversationRead(postId: OWPostId, mode: SPCommentSortMode, page: SPPaginationPage, parentId: String, offset: Int) -> OWNetworkResponse<SPConversationReadRM>
     func commentReport(id: String, parentId: String?) -> OWNetworkResponse<EmptyDecodable>
-    func commentPost(parameters: Parameters) -> OWNetworkResponse<SPComment>
+    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment>
     func commentShare(id: String, parentId: String?) -> OWNetworkResponse<SPShareLink>
-    func commentUpdate(parameters: Parameters) -> OWNetworkResponse<SPComment>
+    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment>
     func commentDelete(id: String, parentId: String?) -> OWNetworkResponse<SPCommentDelete>
     func commentRankChange(conversationId: String, operation: String, commentId: String) -> OWNetworkResponse<Bool>
     func commentsCounters(conversationIds: [String]) -> OWNetworkResponse<OWConversationCountersResponse>
@@ -142,7 +142,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
     
-    func commentPost(parameters: Parameters) -> OWNetworkResponse<SPComment> {
+    func commentPost(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment> {
         let endpoint = OWConversationEndpoints.commentPost(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
@@ -154,7 +154,7 @@ extension OWNetworkAPI: OWConversationAPI {
         return performRequest(route: requestConfigure)
     }
     
-    func commentUpdate(parameters: Parameters) -> OWNetworkResponse<SPComment> {
+    func commentUpdate(parameters: OWNetworkParameters) -> OWNetworkResponse<SPComment> {
         let endpoint = OWConversationEndpoints.commentUpdate(parameters: parameters)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)

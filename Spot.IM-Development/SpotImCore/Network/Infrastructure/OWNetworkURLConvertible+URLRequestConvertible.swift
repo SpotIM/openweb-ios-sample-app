@@ -77,7 +77,7 @@ extension URLRequest {
     ///   - method:  The `HTTPMethod`.
     ///   - headers: The `HTTPHeaders`, `nil` by default.
     /// - Throws:    Any error thrown while converting the `URLConvertible` to a `URL`.
-    init(url: OWNetworkURLConvertible, method: HTTPMethod, headers: HTTPHeaders? = nil) throws {
+    init(url: OWNetworkURLConvertible, method: OWNetworkHTTPMethod, headers: OWNetworkHTTPHeaders? = nil) throws {
         let url = try url.asURL()
 
         self.init(url: url)

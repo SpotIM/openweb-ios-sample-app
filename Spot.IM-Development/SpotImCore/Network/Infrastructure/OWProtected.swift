@@ -8,12 +8,12 @@
 
 import Foundation
 
-private protocol Lock {
+private protocol OWLock {
     func lock()
     func unlock()
 }
 
-extension Lock {
+extension OWLock {
     /// Executes a closure returning a value while acquiring the lock.
     ///
     /// - Parameter closure: The closure to run.
@@ -34,7 +34,7 @@ extension Lock {
 }
 
 /// An `os_unfair_lock` wrapper.
-class UnfairLock: Lock {
+class OWUnfairLock: OWLock {
     private let unfairLock: os_unfair_lock_t
 
     init() {
@@ -59,8 +59,8 @@ class UnfairLock: Lock {
 /// A thread-safe wrapper around a value.
 @propertyWrapper
 @dynamicMemberLookup
-class Protected<T> {
-    private let lock = UnfairLock()
+class OWProtected<T> {
+    private let lock = OWUnfairLock()
     private var value: T
 
     init(_ value: T) {
@@ -73,7 +73,7 @@ class Protected<T> {
         set { lock.around { value = newValue } }
     }
 
-    var projectedValue: Protected<T> { self }
+    var projectedValue: OWProtected<T> { self }
 
     init(wrappedValue: T) {
         value = wrappedValue
@@ -108,7 +108,7 @@ class Protected<T> {
     }
 }
 
-extension Protected where T == OWNetworkRequest.MutableState {
+extension OWProtected where T == OWNetworkRequest.MutableState {
     /// Attempts to transition to the passed `State`.
     ///
     /// - Parameter state: The `State` to attempt transition to.

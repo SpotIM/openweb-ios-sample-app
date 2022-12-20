@@ -66,8 +66,8 @@ public struct OWJSONParser: OWResponseParser {
 }
 
 
-struct OWJsonWithoutEscapingSlashesEncoding: ParameterEncoding {
-    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+struct OWJsonWithoutEscapingSlashesEncoding: OWNetworkParameterEncoding {
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: OWNetworkParameters?) throws -> URLRequest {
         guard var urlRequest = urlRequest.urlRequest, let params = parameters else { throw Errors.emptyURLRequest }
         guard let jsonData = try? JSONSerialization.data(withJSONObject: params), let jsonString = String(data: jsonData, encoding: .utf8) else { throw Errors.encodingProblem }
         
@@ -101,9 +101,9 @@ final class OWApiManager {
     var requestDidSucceed: ((SPRequest) -> Void)?
     
     let session: OWNetworkSession
-    fileprivate let networkInterceptor: OWNetworkInterceptor
+    fileprivate let networkInterceptor: OWNetworkInterceptorLayer
     
-    init(networkInterceptor: OWNetworkInterceptor = OWNetworkInterceptor()) {
+    init(networkInterceptor: OWNetworkInterceptorLayer = OWNetworkInterceptorLayer()) {
         self.networkInterceptor = networkInterceptor
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
@@ -113,9 +113,9 @@ final class OWApiManager {
     @discardableResult
     func execute<T>(request: SPRequest,
                     parameters: [String: Any]? = nil,
-                    encoding: ParameterEncoding = JSONEncoding.default,
+                    encoding: OWNetworkParameterEncoding = OWNetworkJSONEncoding.default,
                     parser: T,
-                    headers: HTTPHeaders? = nil,
+                    headers: OWNetworkHTTPHeaders? = nil,
                     completion: @escaping (_ result: OWResult<T.Representation>, _ response: APIResponse) -> Void) -> OWNetworkDataRequest where T: OWResponseParser {
         
         return session.request(request.url,

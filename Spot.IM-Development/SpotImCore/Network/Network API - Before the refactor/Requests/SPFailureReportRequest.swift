@@ -11,7 +11,7 @@ import UIKit
 internal enum SPFailureReportRequest: SPRequest {
     case error
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .error: return .post
         }

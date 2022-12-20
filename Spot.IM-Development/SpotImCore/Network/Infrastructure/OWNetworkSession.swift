@@ -38,20 +38,20 @@ class OWNetworkSession {
      let serializationQueue: DispatchQueue
     /// `RequestInterceptor` used for all `Request` created by the instance. `RequestInterceptor`s can also be set on a
     /// per-`Request` basis, in which case the `Request`'s interceptor takes precedence over this value.
-     let interceptor: RequestInterceptor?
+     let interceptor: OWNetworkRequestInterceptor?
     /// `ServerTrustManager` instance used to evaluate all trust challenges and provide certificate and key pinning.
      let serverTrustManager: OWNetworkServerTrustManager?
     /// `RedirectHandler` instance used to provide customization for request redirection.
-     let redirectHandler: RedirectHandler?
+     let redirectHandler: OWNetworkRedirectHandler?
     /// `CachedResponseHandler` instance used to provide customization of cached response handling.
      let cachedResponseHandler: OWNetworkCachedResponseHandler?
     /// `CompositeEventMonitor` used to compose Alamofire's `defaultEventMonitors` and any passed `EventMonitor`s.
-     let eventMonitor: CompositeEventMonitor
+     let eventMonitor: OWNetworkCompositeEventMonitor
     /// `EventMonitor`s included in all instances. `[AlamofireNotifications()]` by default.
-     let defaultEventMonitors: [EventMonitor] = [AlamofireNotifications()]
+     let defaultEventMonitors: [OWNetworkEventMonitor] = [OWNetworkNotifications()]
 
     /// Internal map between `Request`s and any `URLSessionTasks` that may be in flight for them.
-    var requestTaskMap = RequestTaskMap()
+    var requestTaskMap = OWNetworkRequestTaskMap()
     /// `Set` of currently active `Request`s.
     var activeRequests: Set<OWNetworkRequest> = []
     /// Completion events awaiting `URLSessionTaskMetrics`.
@@ -95,11 +95,11 @@ class OWNetworkSession {
                 startRequestsImmediately: Bool = true,
                 requestQueue: DispatchQueue? = nil,
                 serializationQueue: DispatchQueue? = nil,
-                interceptor: RequestInterceptor? = nil,
+                interceptor: OWNetworkRequestInterceptor? = nil,
                 serverTrustManager: OWNetworkServerTrustManager? = nil,
-                redirectHandler: RedirectHandler? = nil,
+                redirectHandler: OWNetworkRedirectHandler? = nil,
                 cachedResponseHandler: OWNetworkCachedResponseHandler? = nil,
-                eventMonitors: [EventMonitor] = []) {
+                eventMonitors: [OWNetworkEventMonitor] = []) {
         precondition(session.configuration.identifier == nil,
                      "OpenWebSDKNetwork does not support background URLSessionConfigurations.")
         precondition(session.delegateQueue.underlyingQueue === rootQueue,
@@ -115,7 +115,7 @@ class OWNetworkSession {
         self.serverTrustManager = serverTrustManager
         self.redirectHandler = redirectHandler
         self.cachedResponseHandler = cachedResponseHandler
-        eventMonitor = CompositeEventMonitor(monitors: defaultEventMonitors + eventMonitors)
+        eventMonitor = OWNetworkCompositeEventMonitor(monitors: defaultEventMonitors + eventMonitors)
         delegate.eventMonitor = eventMonitor
         delegate.stateProvider = self
     }
@@ -160,11 +160,11 @@ class OWNetworkSession {
                             startRequestsImmediately: Bool = true,
                             requestQueue: DispatchQueue? = nil,
                             serializationQueue: DispatchQueue? = nil,
-                            interceptor: RequestInterceptor? = nil,
+                            interceptor: OWNetworkRequestInterceptor? = nil,
                             serverTrustManager: OWNetworkServerTrustManager? = nil,
-                            redirectHandler: RedirectHandler? = nil,
+                            redirectHandler: OWNetworkRedirectHandler? = nil,
                             cachedResponseHandler: OWNetworkCachedResponseHandler? = nil,
-                            eventMonitors: [EventMonitor] = []) {
+                            eventMonitors: [OWNetworkEventMonitor] = []) {
         precondition(configuration.identifier == nil, "OpenWebSDKNetwork does not support background URLSessionConfigurations.")
 
         // Retarget the incoming rootQueue for safety, unless it's the main queue, which we know is safe.
@@ -233,10 +233,10 @@ class OWNetworkSession {
 
     struct RequestConvertible: OWNetworkURLRequestConvertible {
         let url: OWNetworkURLConvertible
-        let method: HTTPMethod
-        let parameters: Parameters?
-        let encoding: ParameterEncoding
-        let headers: HTTPHeaders?
+        let method: OWNetworkHTTPMethod
+        let parameters: OWNetworkParameters?
+        let encoding: OWNetworkParameterEncoding
+        let headers: OWNetworkHTTPHeaders?
         let requestModifier: RequestModifier?
 
         func asURLRequest() throws -> URLRequest {
@@ -263,11 +263,11 @@ class OWNetworkSession {
     ///
     /// - Returns:       The created `DataRequest`.
     func request(_ convertible: OWNetworkURLConvertible,
-                      method: HTTPMethod = .get,
-                      parameters: Parameters? = nil,
-                      encoding: ParameterEncoding = URLEncoding.default,
-                      headers: HTTPHeaders? = nil,
-                      interceptor: RequestInterceptor? = nil,
+                      method: OWNetworkHTTPMethod = .get,
+                      parameters: OWNetworkParameters? = nil,
+                      encoding: OWNetworkParameterEncoding = OWNetworkURLEncoding.default,
+                      headers: OWNetworkHTTPHeaders? = nil,
+                      interceptor: OWNetworkRequestInterceptor? = nil,
                       requestModifier: RequestModifier? = nil) -> OWNetworkDataRequest {
         let convertible = RequestConvertible(url: convertible,
                                              method: method,
@@ -281,10 +281,10 @@ class OWNetworkSession {
 
     struct RequestEncodableConvertible<Parameters: Encodable>: OWNetworkURLRequestConvertible {
         let url: OWNetworkURLConvertible
-        let method: HTTPMethod
+        let method: OWNetworkHTTPMethod
         let parameters: Parameters?
-        let encoder: ParameterEncoder
-        let headers: HTTPHeaders?
+        let encoder: OWNetworkParameterEncoder
+        let headers: OWNetworkHTTPHeaders?
         let requestModifier: RequestModifier?
 
         func asURLRequest() throws -> URLRequest {
@@ -311,11 +311,11 @@ class OWNetworkSession {
     ///
     /// - Returns:           The created `DataRequest`.
     func request<Parameters: Encodable>(_ convertible: OWNetworkURLConvertible,
-                                             method: HTTPMethod = .get,
+                                             method: OWNetworkHTTPMethod = .get,
                                              parameters: Parameters? = nil,
-                                             encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
-                                             headers: HTTPHeaders? = nil,
-                                             interceptor: RequestInterceptor? = nil,
+                                             encoder: OWNetworkParameterEncoder = OWNetworkURLEncodedFormParameterEncoder.default,
+                                             headers: OWNetworkHTTPHeaders? = nil,
+                                             interceptor: OWNetworkRequestInterceptor? = nil,
                                              requestModifier: RequestModifier? = nil) -> OWNetworkDataRequest {
         let convertible = RequestEncodableConvertible(url: convertible,
                                                       method: method,
@@ -334,7 +334,7 @@ class OWNetworkSession {
     ///   - interceptor: `RequestInterceptor` value to be used by the returned `DataRequest`. `nil` by default.
     ///
     /// - Returns:       The created `DataRequest`.
-    func request(_ convertible: OWNetworkURLRequestConvertible, interceptor: RequestInterceptor? = nil) -> OWNetworkDataRequest {
+    func request(_ convertible: OWNetworkURLRequestConvertible, interceptor: OWNetworkRequestInterceptor? = nil) -> OWNetworkDataRequest {
         let request = OWNetworkDataRequest(convertible: convertible,
                                   underlyingQueue: rootQueue,
                                   serializationQueue: serializationQueue,
@@ -368,12 +368,12 @@ class OWNetworkSession {
     ///
     /// - Returns:       The created `DataStream` request.
     func streamRequest<Parameters: Encodable>(_ convertible: OWNetworkURLConvertible,
-                                                   method: HTTPMethod = .get,
+                                                   method: OWNetworkHTTPMethod = .get,
                                                    parameters: Parameters? = nil,
-                                                   encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
-                                                   headers: HTTPHeaders? = nil,
+                                                   encoder: OWNetworkParameterEncoder = OWNetworkURLEncodedFormParameterEncoder.default,
+                                                   headers: OWNetworkHTTPHeaders? = nil,
                                                    automaticallyCancelOnStreamError: Bool = false,
-                                                   interceptor: RequestInterceptor? = nil,
+                                                   interceptor: OWNetworkRequestInterceptor? = nil,
                                                    requestModifier: RequestModifier? = nil) -> OWNetworkDataStreamRequest {
         let convertible = RequestEncodableConvertible(url: convertible,
                                                       method: method,
@@ -402,15 +402,15 @@ class OWNetworkSession {
     ///
     /// - Returns:       The created `DataStream` request.
     func streamRequest(_ convertible: OWNetworkURLConvertible,
-                            method: HTTPMethod = .get,
-                            headers: HTTPHeaders? = nil,
+                            method: OWNetworkHTTPMethod = .get,
+                            headers: OWNetworkHTTPHeaders? = nil,
                             automaticallyCancelOnStreamError: Bool = false,
-                            interceptor: RequestInterceptor? = nil,
+                            interceptor: OWNetworkRequestInterceptor? = nil,
                             requestModifier: RequestModifier? = nil) -> OWNetworkDataStreamRequest {
         let convertible = RequestEncodableConvertible(url: convertible,
                                                       method: method,
-                                                      parameters: Empty?.none,
-                                                      encoder: URLEncodedFormParameterEncoder.default,
+                                                      parameters: OWNetworkEmpty?.none,
+                                                      encoder: OWNetworkURLEncodedFormParameterEncoder.default,
                                                       headers: headers,
                                                       requestModifier: requestModifier)
 
@@ -431,7 +431,7 @@ class OWNetworkSession {
     /// - Returns:       The created `DataStreamRequest`.
     func streamRequest(_ convertible: OWNetworkURLRequestConvertible,
                             automaticallyCancelOnStreamError: Bool = false,
-                            interceptor: RequestInterceptor? = nil) -> OWNetworkDataStreamRequest {
+                            interceptor: OWNetworkRequestInterceptor? = nil) -> OWNetworkDataStreamRequest {
         let request = OWNetworkDataStreamRequest(convertible: convertible,
                                         automaticallyCancelOnStreamError: automaticallyCancelOnStreamError,
                                         underlyingQueue: rootQueue,
@@ -466,11 +466,11 @@ class OWNetworkSession {
     ///
     /// - Returns:           The created `DownloadRequest`.
     func download(_ convertible: OWNetworkURLConvertible,
-                       method: HTTPMethod = .get,
-                       parameters: Parameters? = nil,
-                       encoding: ParameterEncoding = URLEncoding.default,
-                       headers: HTTPHeaders? = nil,
-                       interceptor: RequestInterceptor? = nil,
+                       method: OWNetworkHTTPMethod = .get,
+                       parameters: OWNetworkParameters? = nil,
+                       encoding: OWNetworkParameterEncoding = OWNetworkURLEncoding.default,
+                       headers: OWNetworkHTTPHeaders? = nil,
+                       interceptor: OWNetworkRequestInterceptor? = nil,
                        requestModifier: RequestModifier? = nil,
                        to destination: OWNetworkDownloadRequest.Destination? = nil) -> OWNetworkDownloadRequest {
         let convertible = RequestConvertible(url: convertible,
@@ -501,11 +501,11 @@ class OWNetworkSession {
     ///
     /// - Returns:           The created `DownloadRequest`.
     func download<Parameters: Encodable>(_ convertible: OWNetworkURLConvertible,
-                                              method: HTTPMethod = .get,
+                                              method: OWNetworkHTTPMethod = .get,
                                               parameters: Parameters? = nil,
-                                              encoder: ParameterEncoder = URLEncodedFormParameterEncoder.default,
-                                              headers: HTTPHeaders? = nil,
-                                              interceptor: RequestInterceptor? = nil,
+                                              encoder: OWNetworkParameterEncoder = OWNetworkURLEncodedFormParameterEncoder.default,
+                                              headers: OWNetworkHTTPHeaders? = nil,
+                                              interceptor: OWNetworkRequestInterceptor? = nil,
                                               requestModifier: RequestModifier? = nil,
                                               to destination: OWNetworkDownloadRequest.Destination? = nil) -> OWNetworkDownloadRequest {
         let convertible = RequestEncodableConvertible(url: convertible,
@@ -528,7 +528,7 @@ class OWNetworkSession {
     ///
     /// - Returns:       The created `DownloadRequest`.
     func download(_ convertible: OWNetworkURLRequestConvertible,
-                       interceptor: RequestInterceptor? = nil,
+                       interceptor: OWNetworkRequestInterceptor? = nil,
                        to destination: OWNetworkDownloadRequest.Destination? = nil) -> OWNetworkDownloadRequest {
         let request = OWNetworkDownloadRequest(downloadable: .request(convertible),
                                       underlyingQueue: rootQueue,
@@ -562,7 +562,7 @@ class OWNetworkSession {
     ///
     /// - Returns:       The created `DownloadRequest`.
     func download(resumingWith data: Data,
-                       interceptor: RequestInterceptor? = nil,
+                       interceptor: OWNetworkRequestInterceptor? = nil,
                        to destination: OWNetworkDownloadRequest.Destination? = nil) -> OWNetworkDownloadRequest {
         let request = OWNetworkDownloadRequest(downloadable: .resumeData(data),
                                       underlyingQueue: rootQueue,
@@ -581,8 +581,8 @@ class OWNetworkSession {
 
     struct ParameterlessRequestConvertible: OWNetworkURLRequestConvertible {
         let url: OWNetworkURLConvertible
-        let method: HTTPMethod
-        let headers: HTTPHeaders?
+        let method: OWNetworkHTTPMethod
+        let headers: OWNetworkHTTPHeaders?
         let requestModifier: RequestModifier?
 
         func asURLRequest() throws -> URLRequest {
@@ -624,9 +624,9 @@ class OWNetworkSession {
     /// - Returns:           The created `UploadRequest`.
     func upload(_ data: Data,
                      to convertible: OWNetworkURLConvertible,
-                     method: HTTPMethod = .post,
-                     headers: HTTPHeaders? = nil,
-                     interceptor: RequestInterceptor? = nil,
+                     method: OWNetworkHTTPMethod = .post,
+                     headers: OWNetworkHTTPHeaders? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default,
                      requestModifier: RequestModifier? = nil) -> OWNetworkUploadRequest {
         let convertible = ParameterlessRequestConvertible(url: convertible,
@@ -649,7 +649,7 @@ class OWNetworkSession {
     /// - Returns:       The created `UploadRequest`.
     func upload(_ data: Data,
                      with convertible: OWNetworkURLRequestConvertible,
-                     interceptor: RequestInterceptor? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default) -> OWNetworkUploadRequest {
         upload(.data(data), with: convertible, interceptor: interceptor, fileManager: fileManager)
     }
@@ -673,9 +673,9 @@ class OWNetworkSession {
     /// - Returns:           The created `UploadRequest`.
     func upload(_ fileURL: URL,
                      to convertible: OWNetworkURLConvertible,
-                     method: HTTPMethod = .post,
-                     headers: HTTPHeaders? = nil,
-                     interceptor: RequestInterceptor? = nil,
+                     method: OWNetworkHTTPMethod = .post,
+                     headers: OWNetworkHTTPHeaders? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default,
                      requestModifier: RequestModifier? = nil) -> OWNetworkUploadRequest {
         let convertible = ParameterlessRequestConvertible(url: convertible,
@@ -699,7 +699,7 @@ class OWNetworkSession {
     /// - Returns:       The created `UploadRequest`.
     func upload(_ fileURL: URL,
                      with convertible: OWNetworkURLRequestConvertible,
-                     interceptor: RequestInterceptor? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default) -> OWNetworkUploadRequest {
         upload(.file(fileURL, shouldRemove: false), with: convertible, interceptor: interceptor, fileManager: fileManager)
     }
@@ -723,9 +723,9 @@ class OWNetworkSession {
     /// - Returns:           The created `UploadRequest`.
     func upload(_ stream: InputStream,
                      to convertible: OWNetworkURLConvertible,
-                     method: HTTPMethod = .post,
-                     headers: HTTPHeaders? = nil,
-                     interceptor: RequestInterceptor? = nil,
+                     method: OWNetworkHTTPMethod = .post,
+                     headers: OWNetworkHTTPHeaders? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default,
                      requestModifier: RequestModifier? = nil) -> OWNetworkUploadRequest {
         let convertible = ParameterlessRequestConvertible(url: convertible,
@@ -749,7 +749,7 @@ class OWNetworkSession {
     /// - Returns:       The created `UploadRequest`.
     func upload(_ stream: InputStream,
                      with convertible: OWNetworkURLRequestConvertible,
-                     interceptor: RequestInterceptor? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default) -> OWNetworkUploadRequest {
         upload(.stream(stream), with: convertible, interceptor: interceptor, fileManager: fileManager)
     }
@@ -787,12 +787,12 @@ class OWNetworkSession {
     ///                              provided parameters. `nil` by default.
     ///
     /// - Returns:                   The created `UploadRequest`.
-    func upload(multipartFormData: @escaping (MultipartFormData) -> Void,
+    func upload(multipartFormData: @escaping (OWNetworkMultipartFormData) -> Void,
                      to url: OWNetworkURLConvertible,
-                     usingThreshold encodingMemoryThreshold: UInt64 = MultipartFormData.encodingMemoryThreshold,
-                     method: HTTPMethod = .post,
-                     headers: HTTPHeaders? = nil,
-                     interceptor: RequestInterceptor? = nil,
+                     usingThreshold encodingMemoryThreshold: UInt64 = OWNetworkMultipartFormData.encodingMemoryThreshold,
+                     method: OWNetworkHTTPMethod = .post,
+                     headers: OWNetworkHTTPHeaders? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default,
                      requestModifier: RequestModifier? = nil) -> OWNetworkUploadRequest {
         let convertible = ParameterlessRequestConvertible(url: url,
@@ -800,7 +800,7 @@ class OWNetworkSession {
                                                           headers: headers,
                                                           requestModifier: requestModifier)
 
-        let formData = MultipartFormData(fileManager: fileManager)
+        let formData = OWNetworkMultipartFormData(fileManager: fileManager)
         multipartFormData(formData)
 
         return upload(multipartFormData: formData,
@@ -837,12 +837,12 @@ class OWNetworkSession {
     ///                              written to disk before being uploaded. `.default` instance by default.
     ///
     /// - Returns:                   The created `UploadRequest`.
-    func upload(multipartFormData: @escaping (MultipartFormData) -> Void,
+    func upload(multipartFormData: @escaping (OWNetworkMultipartFormData) -> Void,
                      with request: OWNetworkURLRequestConvertible,
-                     usingThreshold encodingMemoryThreshold: UInt64 = MultipartFormData.encodingMemoryThreshold,
-                     interceptor: RequestInterceptor? = nil,
+                     usingThreshold encodingMemoryThreshold: UInt64 = OWNetworkMultipartFormData.encodingMemoryThreshold,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default) -> OWNetworkUploadRequest {
-        let formData = MultipartFormData(fileManager: fileManager)
+        let formData = OWNetworkMultipartFormData(fileManager: fileManager)
         multipartFormData(formData)
 
         return upload(multipartFormData: formData,
@@ -883,12 +883,12 @@ class OWNetworkSession {
     ///                              provided parameters. `nil` by default.
     ///
     /// - Returns:                   The created `UploadRequest`.
-    func upload(multipartFormData: MultipartFormData,
+    func upload(multipartFormData: OWNetworkMultipartFormData,
                      to url: OWNetworkURLConvertible,
-                     usingThreshold encodingMemoryThreshold: UInt64 = MultipartFormData.encodingMemoryThreshold,
-                     method: HTTPMethod = .post,
-                     headers: HTTPHeaders? = nil,
-                     interceptor: RequestInterceptor? = nil,
+                     usingThreshold encodingMemoryThreshold: UInt64 = OWNetworkMultipartFormData.encodingMemoryThreshold,
+                     method: OWNetworkHTTPMethod = .post,
+                     headers: OWNetworkHTTPHeaders? = nil,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default,
                      requestModifier: RequestModifier? = nil) -> OWNetworkUploadRequest {
         let convertible = ParameterlessRequestConvertible(url: url,
@@ -896,7 +896,7 @@ class OWNetworkSession {
                                                           headers: headers,
                                                           requestModifier: requestModifier)
 
-        let multipartUpload = MultipartUpload(encodingMemoryThreshold: encodingMemoryThreshold,
+        let multipartUpload = OWNetworkMultipartUpload(encodingMemoryThreshold: encodingMemoryThreshold,
                                               request: convertible,
                                               multipartFormData: multipartFormData)
 
@@ -930,12 +930,12 @@ class OWNetworkSession {
     ///                              default.
     ///
     /// - Returns:                   The created `UploadRequest`.
-    func upload(multipartFormData: MultipartFormData,
+    func upload(multipartFormData: OWNetworkMultipartFormData,
                      with request: OWNetworkURLRequestConvertible,
-                     usingThreshold encodingMemoryThreshold: UInt64 = MultipartFormData.encodingMemoryThreshold,
-                     interceptor: RequestInterceptor? = nil,
+                     usingThreshold encodingMemoryThreshold: UInt64 = OWNetworkMultipartFormData.encodingMemoryThreshold,
+                     interceptor: OWNetworkRequestInterceptor? = nil,
                      fileManager: FileManager = .default) -> OWNetworkUploadRequest {
-        let multipartUpload = MultipartUpload(encodingMemoryThreshold: encodingMemoryThreshold,
+        let multipartUpload = OWNetworkMultipartUpload(encodingMemoryThreshold: encodingMemoryThreshold,
                                               request: request,
                                               multipartFormData: multipartFormData)
 
@@ -948,14 +948,14 @@ class OWNetworkSession {
 
     func upload(_ uploadable: OWNetworkUploadRequest.Uploadable,
                 with convertible: OWNetworkURLRequestConvertible,
-                interceptor: RequestInterceptor?,
+                interceptor: OWNetworkRequestInterceptor?,
                 fileManager: FileManager) -> OWNetworkUploadRequest {
         let uploadable = Upload(request: convertible, uploadable: uploadable)
 
         return upload(uploadable, interceptor: interceptor, fileManager: fileManager)
     }
 
-    func upload(_ upload: OWNetworkUploadConvertible, interceptor: RequestInterceptor?, fileManager: FileManager) -> OWNetworkUploadRequest {
+    func upload(_ upload: OWNetworkUploadConvertible, interceptor: OWNetworkRequestInterceptor?, fileManager: FileManager) -> OWNetworkUploadRequest {
         let request = OWNetworkUploadRequest(convertible: upload,
                                     underlyingQueue: rootQueue,
                                     serializationQueue: serializationQueue,
@@ -1056,7 +1056,7 @@ class OWNetworkSession {
             return
         }
 
-        let adapterState = RequestAdapterState(requestID: request.id, session: self)
+        let adapterState = OWNetworkRequestAdapterState(requestID: request.id, session: self)
 
         adapter.adapt(initialRequest, using: adapterState) { result in
             do {
@@ -1127,17 +1127,17 @@ class OWNetworkSession {
 
     // MARK: - Adapters and Retriers
 
-    func adapter(for request: OWNetworkRequest) -> RequestAdapter? {
+    func adapter(for request: OWNetworkRequest) -> OWNetworkRequestAdapter? {
         if let requestInterceptor = request.interceptor, let sessionInterceptor = interceptor {
-            return Interceptor(adapters: [requestInterceptor, sessionInterceptor])
+            return OWNetworkInterceptor(adapters: [requestInterceptor, sessionInterceptor])
         } else {
             return request.interceptor ?? interceptor
         }
     }
 
-    func retrier(for request: OWNetworkRequest) -> RequestRetrier? {
+    func retrier(for request: OWNetworkRequest) -> OWNetworkRequestRetrier? {
         if let requestInterceptor = request.interceptor, let sessionInterceptor = interceptor {
-            return Interceptor(retriers: [requestInterceptor, sessionInterceptor])
+            return OWNetworkInterceptor(retriers: [requestInterceptor, sessionInterceptor])
         } else {
             return request.interceptor ?? interceptor
         }
@@ -1167,7 +1167,7 @@ extension OWNetworkSession: OWNetworkRequestDelegate {
         activeRequests.remove(request)
     }
 
-     func retryResult(for request: OWNetworkRequest, dueTo error: OWNetworkError, completion: @escaping (RetryResult) -> Void) {
+     func retryResult(for request: OWNetworkRequest, dueTo error: OWNetworkError, completion: @escaping (OWNetworkRetryResult) -> Void) {
         guard let retrier = retrier(for: request) else {
             rootQueue.async { completion(.doNotRetry) }
             return

@@ -18,5 +18,5 @@ protocol OWRequestMiddleware: OWMiddleware {
 }
 
 protocol OWResponseMiddleware: OWMiddleware {
-    func process<T: Any>(response: DataResponse<T, OWNetworkError>) -> DataResponse<T, OWNetworkError>
+    func process<T: Any>(response: OWNetworkDataResponse<T, OWNetworkError>) -> OWNetworkDataResponse<T, OWNetworkError>
 }

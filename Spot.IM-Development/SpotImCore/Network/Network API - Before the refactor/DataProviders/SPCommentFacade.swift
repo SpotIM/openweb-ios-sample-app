@@ -83,7 +83,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
             ChangeRankAPIKeys.messageId: commentId
         ]
 
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: conversationId)
 
         apiManager.execute(request: spRequest,
@@ -110,7 +110,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         }
         
         let request = SPConversationRequest.commentDelete
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
         apiManager.execute(request: request,
@@ -143,7 +143,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         }
         
         let request = SPConversationRequest.commentPost
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
         apiManager.execute(request: request,
@@ -178,7 +178,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         }
         
         let request = SPConversationRequest.commentReport
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
         apiManager.execute(request: request,
@@ -203,7 +203,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         }
         
         let request = OWMuteRequest.mute
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
         apiManager.execute(request: request,
@@ -230,7 +230,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         }
         
         let request = SPConversationRequest.commentShare
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         apiManager.execute(request: request,
                            parameters: parameters,
@@ -255,7 +255,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
         }
         
         let request = SPConversationRequest.commentUpdate
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
         
         apiManager.execute(request: request,
@@ -280,7 +280,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 return
         }
             
-        let headers = HTTPHeaders.basic(with: spotKey, postId: conversationId)
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: conversationId)
 
         apiManager.execute(
             request: spRequest,

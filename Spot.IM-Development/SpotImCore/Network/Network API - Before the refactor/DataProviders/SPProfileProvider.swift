@@ -20,7 +20,7 @@ internal final class SPProfileProvider: NetworkDataProvider {
             }
             
             let spRequest = SPProfileRequest.createSingleUseToken
-            let headers = HTTPHeaders.basic(with: spotKey)
+            let headers = OWNetworkHTTPHeaders.basic(with: spotKey)
             var requestParams: [String: Any] = ["access_token": SPUserSessionHolder.session.token?.replacingOccurrences(of: "Bearer ", with: "")]
             if let openwebToken = SPUserSessionHolder.session.openwebToken {
                 requestParams["open_web_token"] = openwebToken

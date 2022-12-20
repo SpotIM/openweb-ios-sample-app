@@ -11,7 +11,7 @@ import Foundation
 internal enum SPAdsConfigRequest: SPRequest {
     case adsConfig
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .adsConfig: return .post
         }

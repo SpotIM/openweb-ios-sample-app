@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-class OWNetworkInterceptor: RequestInterceptor {
+class OWNetworkInterceptorLayer: OWNetworkRequestInterceptor {
     fileprivate let retryLimit: Int
     fileprivate let servicesProvider: OWSharedServicesProviding
     
@@ -29,7 +29,7 @@ class OWNetworkInterceptor: RequestInterceptor {
         completion(.success(request))
     }
     
-    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (OWNetworkRetryResult) -> Void) {
         let requestURL = request.request?.url?.description ?? ""
         
         guard request.retryCount < retryLimit else {

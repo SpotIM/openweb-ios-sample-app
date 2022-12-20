@@ -23,7 +23,7 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
 
         let spRequest = SPAnalyticsRequest.analytics
 
-        var parameters: Parameters = [
+        var parameters: OWNetworkParameters = [
             AnalyticsAPIKeys.type: info.eventType,
             AnalyticsAPIKeys.source: info.source
         ]
@@ -44,9 +44,9 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.splitName] = info.splitName
         parameters[AnalyticsAPIKeys.publisherCustomData] = info.publisherCustomData
         
-        var headers = HTTPHeaders.basic(with: spotKey)
+        var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
         if let postId = postId {
-            headers = HTTPHeaders.basic(with: spotKey, postId: postId)
+            headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: postId)
         }
         
         manager.execute(

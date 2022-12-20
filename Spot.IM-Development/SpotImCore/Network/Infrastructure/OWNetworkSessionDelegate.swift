@@ -13,7 +13,7 @@ class OWNetworkSessionDelegate: NSObject {
     private let fileManager: FileManager
 
     weak var stateProvider: OWNetworkSessionStateProvider?
-    var eventMonitor: EventMonitor?
+    var eventMonitor: OWNetworkEventMonitor?
 
     /// Creates an instance from the given `FileManager`.
     ///
@@ -41,7 +41,7 @@ class OWNetworkSessionDelegate: NSObject {
 /// Type which provides various `Session` state values.
 protocol OWNetworkSessionStateProvider: AnyObject {
     var serverTrustManager: OWNetworkServerTrustManager? { get }
-    var redirectHandler: RedirectHandler? { get }
+    var redirectHandler: OWNetworkRedirectHandler? { get }
     var cachedResponseHandler: OWNetworkCachedResponseHandler? { get }
 
     func request(for task: URLSessionTask) -> OWNetworkRequest?

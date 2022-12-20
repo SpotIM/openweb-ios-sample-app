@@ -9,18 +9,18 @@
 import Foundation
 
 /// Internal type which encapsulates a `MultipartFormData` upload.
-class MultipartUpload {
+class OWNetworkMultipartUpload {
     lazy var result = Result { try build() }
 
-    @Protected
-    private(set) var multipartFormData: MultipartFormData
+    @OWProtected
+    private(set) var multipartFormData: OWNetworkMultipartFormData
     let encodingMemoryThreshold: UInt64
     let request: OWNetworkURLRequestConvertible
     let fileManager: FileManager
 
     init(encodingMemoryThreshold: UInt64,
          request: OWNetworkURLRequestConvertible,
-         multipartFormData: MultipartFormData) {
+         multipartFormData: OWNetworkMultipartFormData) {
         self.encodingMemoryThreshold = encodingMemoryThreshold
         self.request = request
         fileManager = multipartFormData.fileManager
@@ -56,7 +56,7 @@ class MultipartUpload {
     }
 }
 
-extension MultipartUpload: OWNetworkUploadConvertible {
+extension OWNetworkMultipartUpload: OWNetworkUploadConvertible {
     func asURLRequest() throws -> URLRequest {
         var urlRequest = try request.asURLRequest()
 

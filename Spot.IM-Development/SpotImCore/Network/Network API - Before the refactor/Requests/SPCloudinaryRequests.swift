@@ -13,7 +13,7 @@ internal enum SPCloudinaryRequests: SPRequest {
     case login
     case upload
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .fetchImage: return .get
         case .login: return .post

@@ -35,7 +35,7 @@ final class DefaultRealtimeDataProvider: NetworkDataProvider, SPRealtimeDataProv
         
         let spRequest = SPRealtimeDataRequest.read
         let parameters = realTimeParameters(conversationId: "\(spotKey)_\(conversationId)", date: Date())
-        let headers = HTTPHeaders.basic(with: spotKey,
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: conversationId)
         currentRequest = manager.execute(
             request: spRequest,
