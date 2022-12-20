@@ -628,7 +628,7 @@ extension DispatchQueue {
     }
 }
 
-/// An asynchronous sequence generated from an underlying `AsyncStream`. Only produced by Alamofire.
+/// An asynchronous sequence generated from an underlying `AsyncStream`. Only produced by OWNetwork.
 @available(iOS 13, *)
 struct OWNetworkStreamOf<Element>: AsyncSequence {
     typealias AsyncIterator = Iterator
