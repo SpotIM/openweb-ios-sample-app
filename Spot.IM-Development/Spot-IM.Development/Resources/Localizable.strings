@@ -26,6 +26,7 @@
 "ConversationCounterMultiplePostIdsDescription" = "You can enter multiple post ids by using a delimiter ', '\nExample: \'postId1, postId2, postId3'";
 "BetaNewAPI" = "Beta - New API";
 "NewAPI" = "New API";
+"SelectPreset" = "Select Preset";
 "SpotId" = "Spot Id";
 "PostId" = "Post Id";
 "PreConversationPushMode" = "Pre Conversation - Push Mode";
@@ -35,5 +36,14 @@
 "CommentCreationPushMode" = "Comment Creation - Push Mode";
 "CommentCreationPresentMode" = "Comment Creation - Present Mode";
 "ConversationCounter" = "Conversation Counter";
+"UIFlows" = "UI Flows";
+"UIViews" = "UI Views";
+"Miscellaneous" = "Miscellaneous";
 "MockArticle" = "Mock Article";
 "MockArticleDescription" = "This is a very interesting article 🥱\n\nScroll to the bottom of this article to test OpenWeb SDK.";
+"PreConversation" = "Pre Conversation";
+"FullConversation" = "Full Conversation";
+"CommentCreation" = "Comment Creation";
+"IndependentAdUnit" = "IAU - Independent Ad Unit";
+"Done" = "Done";
+"PresetSelection" = "Preset Selection";
