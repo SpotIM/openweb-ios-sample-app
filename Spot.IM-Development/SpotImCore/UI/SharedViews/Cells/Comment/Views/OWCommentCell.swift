@@ -41,9 +41,9 @@ class OWCommentCell: UITableViewCell {
         guard let vm = viewModel as? OWCommentCellViewModeling else { return }
         
         self.viewModel = vm
-        self.commentHeaderView.configure(with: self.viewModel.outputs.commentVM.outputs.commentHeaderVM!)
-        self.commentLabelView.configure(viewModel: self.viewModel.outputs.commentVM.outputs.commentLabelVM!)
-        self.commentContentView.configure(with: self.viewModel.outputs.commentVM.outputs.contentVM!)
+        self.commentHeaderView.configure(with: self.viewModel.outputs.commentVM.outputs.commentHeaderVM)
+        self.commentLabelView.configure(viewModel: self.viewModel.outputs.commentVM.outputs.commentLabelVM)
+        self.commentContentView.configure(with: self.viewModel.outputs.commentVM.outputs.contentVM)
         
         setupUI()
         setupObservers()
