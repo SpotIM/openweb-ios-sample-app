@@ -38,6 +38,7 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
     init(comment: SPComment) {
         _comment.onNext(comment)
     }
+    init() {}
     
     fileprivate var _commentLabelsSectionsConfig: Observable<CommentLabelsSectionsConfig> {
         OWSharedServicesProvider.shared.spotConfigurationService()

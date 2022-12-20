@@ -19,9 +19,9 @@ protocol OWCommentViewModelingOutputs {
     var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
     
-    var commentHeaderVM: OWCommentHeaderViewModeling? { get }
-    var commentLabelVM: OWCommentLabelViewModeling? { get }
-    var contentVM: OWCommentContentViewModeling? { get }
+    var commentHeaderVM: OWCommentHeaderViewModeling { get }
+    var commentLabelVM: OWCommentLabelViewModeling { get }
+    var contentVM: OWCommentContentViewModeling { get }
 }
 
 protocol OWCommentViewModeling {
@@ -36,9 +36,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
     
-    var commentUserVM: OWCommentUserViewModeling// {
-//        return OWCommentUserViewModel(user: nil, imageProvider: nil)
-//    }
+    var commentUserVM: OWCommentUserViewModeling
     
     var statusIndicationVM: OWCommentStatusIndicationViewModeling {
         return OWCommentStatusIndicationViewModel()
@@ -48,9 +46,9 @@ class OWCommentViewModel: OWCommentViewModeling,
         return OWCommentActionsViewModel()
     }
     
-    var commentHeaderVM: OWCommentHeaderViewModeling? = nil // TODO!!! should not be optional
-    var commentLabelVM: OWCommentLabelViewModeling? = nil
-    var contentVM: OWCommentContentViewModeling? = nil
+    var commentHeaderVM: OWCommentHeaderViewModeling
+    var commentLabelVM: OWCommentLabelViewModeling
+    var contentVM: OWCommentContentViewModeling
     
     init(comment: SPComment, user: SPUser, replyTo: SPUser?) {
         commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
@@ -62,5 +60,8 @@ class OWCommentViewModel: OWCommentViewModeling,
     // TODO: DELETE ?
     init() {
         commentUserVM = OWCommentUserViewModel(user: nil, imageProvider: nil)
+        commentHeaderVM = OWCommentHeaderViewModel()
+        commentLabelVM = OWCommentLabelViewModel()
+        contentVM = OWCommentContentViewModel()
     }
 }

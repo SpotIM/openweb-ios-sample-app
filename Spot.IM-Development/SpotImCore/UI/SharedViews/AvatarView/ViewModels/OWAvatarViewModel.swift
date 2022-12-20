@@ -42,8 +42,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     
     var tapAvatar = PublishSubject<Void>()
     
-    init (user: SPUser? = nil,
-          imageURLProvider: SPImageProvider?) {
+    init (user: SPUser? = nil, imageURLProvider: SPImageProvider? = nil) {
         self.imageURLProvider = imageURLProvider
         
         if let user = user {
