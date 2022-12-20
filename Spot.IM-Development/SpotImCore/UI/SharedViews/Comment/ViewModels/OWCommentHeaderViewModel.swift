@@ -61,7 +61,11 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _replyToUser.onNext(replyTo)
     }
     
-    let avatarVM: OWAvatarViewModeling
+    init() {}
+    
+    var avatarVM: OWAvatarViewModeling = {
+       return OWAvatarViewModel()
+    }()
     
     var tapUserName = PublishSubject<Void>()
     var tapMore = PublishSubject<OWUISource>()

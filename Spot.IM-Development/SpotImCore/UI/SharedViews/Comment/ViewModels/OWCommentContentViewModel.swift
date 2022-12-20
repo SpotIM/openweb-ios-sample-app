@@ -43,6 +43,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     init(comment: SPComment) {
         _comment.onNext(comment)
     }
+    init() {}
     
     var text: Observable<String?> {
         _comment
