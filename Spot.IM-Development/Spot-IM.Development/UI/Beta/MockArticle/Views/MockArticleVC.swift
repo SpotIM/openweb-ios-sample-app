@@ -15,7 +15,7 @@ import SnapKit
 
 class MockArticleVC: UIViewController {
     fileprivate struct Metrics {
-        static let verticalMargin: CGFloat = 20
+        static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 20
         // 1.5 * screen height, defualt to 1200
         static let articleHeight: CGFloat = 1.5 * (UIApplication.shared.delegate?.window??.screen.bounds.height ?? 800)
