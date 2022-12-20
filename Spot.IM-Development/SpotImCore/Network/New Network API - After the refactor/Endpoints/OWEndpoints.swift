@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 /*
  OWEndpoint - protocol which represent the necessary stuff related to an endpoint

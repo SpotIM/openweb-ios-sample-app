@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 
 internal enum SPFailureReportRequest: SPRequest {
     case error

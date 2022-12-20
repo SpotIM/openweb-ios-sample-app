@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 import RxSwift
 
 typealias ImageLoadingCompletion = (_ image: UIImage?, _ error: Error?) -> Void
@@ -41,7 +40,7 @@ internal extension UIImage {
             
             return nil
         } else {
-            return AF.request(url)
+            return Session.default.request(url)
                 .validate()
                 .responseData { response in
                     switch response.result {

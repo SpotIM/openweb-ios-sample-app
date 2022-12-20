@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 /*
  Middleware usages is to perform data manipulation and other utility stuff on requests and responses

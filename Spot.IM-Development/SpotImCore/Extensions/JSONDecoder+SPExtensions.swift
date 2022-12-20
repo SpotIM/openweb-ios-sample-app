@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 internal extension JSONDecoder {
     

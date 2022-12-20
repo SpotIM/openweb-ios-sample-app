@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 internal enum SPCloudinaryRequests: SPRequest {
     case fetchImage(url: URL)

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 struct APIConstants {
     static let baseURLString: String = "https://mobile-gw.spot.im"

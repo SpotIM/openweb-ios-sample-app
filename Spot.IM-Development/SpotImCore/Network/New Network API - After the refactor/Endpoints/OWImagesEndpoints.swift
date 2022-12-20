@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Alamofire
 
 enum OWImagesEndpoints: OWEndpoints {
     case fetchImage(url: URL)

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Alamofire
+import UIKit
 
 struct OWHTTPHeaderName {
     static let contentType = "Content-Type"
