@@ -8,10 +8,10 @@
 
 import Foundation
 
-/// Protocol outlining the lifetime events inside Alamofire. It includes both events received from the various
+/// Protocol outlining the lifetime events inside OWNetwork. It includes both events received from the various
 /// `URLSession` delegate protocols as well as various events from the lifetime of `Request` and its subclasses.
 protocol OWNetworkEventMonitor {
-    /// The `DispatchQueue` onto which Alamofire's root `CompositeEventMonitor` will dispatch events. `.main` by default.
+    /// The `DispatchQueue` onto which OWNetwork's root `CompositeEventMonitor` will dispatch events. `.main` by default.
     var queue: DispatchQueue { get }
 
     // MARK: - URLSession Events
@@ -101,7 +101,7 @@ protocol OWNetworkEventMonitor {
     /// Event called when a `Request` receives a `URLSessionTaskMetrics` value.
     func request(_ request: OWNetworkRequest, didGatherMetrics metrics: URLSessionTaskMetrics)
 
-    /// Event called when a `Request` fails due to an error created by Alamofire. e.g. When certificate pinning fails.
+    /// Event called when a `Request` fails due to an error created by OWNetwork. e.g. When certificate pinning fails.
     func request(_ request: OWNetworkRequest, didFailTask task: URLSessionTask, earlyWithError error: OWNetworkError)
 
     /// Event called when a `Request`'s task completes, possibly with an error. A `Request` may receive this event

@@ -21,7 +21,7 @@ protocol OWNetworkDataResponseSerializerProtocol {
     ///   - request:  `URLRequest` which was used to perform the request, if any.
     ///   - response: `HTTPURLResponse` received from the server, if any.
     ///   - data:     `Data` returned from the server, if any.
-    ///   - error:    `Error` produced by Alamofire or the underlying `URLSession` during the request.
+    ///   - error:    `Error` produced by OWNetwork or the underlying `URLSession` during the request.
     ///
     /// - Returns:    The `SerializedObject`.
     /// - Throws:     Any `Error` produced during serialization.
@@ -39,7 +39,7 @@ protocol OWNetworkDownloadResponseSerializerProtocol {
     ///   - request:  `URLRequest` which was used to perform the request, if any.
     ///   - response: `HTTPURLResponse` received from the server, if any.
     ///   - fileURL:  File `URL` to which the response data was downloaded.
-    ///   - error:    `Error` produced by Alamofire or the underlying `URLSession` during the request.
+    ///   - error:    `Error` produced by OWNetwork or the underlying `URLSession` during the request.
     ///
     /// - Returns:    The `SerializedObject`.
     /// - Throws:     Any `Error` produced during serialization.
@@ -740,7 +740,7 @@ extension OWNetworkDownloadRequest {
 /// A `ResponseSerializer` that decodes the response data using `JSONSerialization`. By default, a request returning
 /// `nil` or no data is considered an error. However, if the request has an `HTTPMethod` or the response has an
 /// HTTP status code valid for empty responses, then an `NSNull` value is returned.
-@available(*, deprecated, message: "JSONResponseSerializer deprecated and will be removed in Alamofire 6. Use DecodableResponseSerializer instead.")
+@available(*, deprecated, message: "JSONResponseSerializer deprecated and will be removed in version 6. Use DecodableResponseSerializer instead.")
  class JSONResponseSerializer: OWNetworkResponseSerializer {
     let dataPreprocessor: OWNetworkDataPreprocessor
     let emptyResponseCodes: Set<Int>
@@ -800,7 +800,7 @@ extension OWNetworkDataRequest {
     ///   - completionHandler:   A closure to be executed once the request has finished.
     ///
     /// - Returns:               The request.
-    @available(*, deprecated, message: "responseJSON deprecated and will be removed in Alamofire 6. Use responseDecodable instead.")
+    @available(*, deprecated, message: "responseJSON deprecated and will be removed in version 6. Use responseDecodable instead.")
     @discardableResult
     func responseJSON(queue: DispatchQueue = .main,
                              dataPreprocessor: OWNetworkDataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
@@ -831,7 +831,7 @@ extension OWNetworkDownloadRequest {
     ///   - completionHandler:   A closure to be executed once the request has finished.
     ///
     /// - Returns:               The request.
-    @available(*, deprecated, message: "responseJSON deprecated and will be removed in Alamofire 6. Use responseDecodable instead.")
+    @available(*, deprecated, message: "responseJSON deprecated and will be removed in version 6. Use responseDecodable instead.")
     @discardableResult
     func responseJSON(queue: DispatchQueue = .main,
                              dataPreprocessor: OWNetworkDataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,

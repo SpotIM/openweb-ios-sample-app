@@ -17,7 +17,7 @@ protocol OWNetworkParameterEncoder {
     ///   - request:    The `URLRequest` into which to encode the parameters.
     ///
     /// - Returns:      A `URLRequest` with the result of the encoding.
-    /// - Throws:       An `Error` when encoding fails. For Alamofire provided encoders, this will be an instance of
+    /// - Throws:       An `Error` when encoding fails. For OWNetwork provided encoders, this will be an instance of
     ///                 `AFError.parameterEncoderFailed` with an associated `ParameterEncoderFailureReason`.
     func encode<Parameters: Encodable>(_ parameters: Parameters?, into request: URLRequest) throws -> URLRequest
 }

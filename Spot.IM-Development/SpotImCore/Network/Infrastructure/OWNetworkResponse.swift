@@ -8,9 +8,9 @@
 
 import Foundation
 
-/// Default type of `DataResponse` returned by Alamofire, with an `AFError` `Failure` type.
+/// Default type of `DataResponse` returned by OWNetwork, with an `AFError` `Failure` type.
 typealias OWNetworkDataResponseTypealias<Success> = OWNetworkDataResponse<Success, OWNetworkError>
-/// Default type of `DownloadResponse` returned by Alamofire, with an `AFError` `Failure` type.
+/// Default type of `DownloadResponse` returned by OWNetwork, with an `AFError` `Failure` type.
 typealias OWNetworkDownloadResponseTypealias<Success> = OWNetworkDownloadResponse<Success, OWNetworkError>
 
 /// Type used to store all values associated with a serialized response of a `DataRequest` or `UploadRequest`.

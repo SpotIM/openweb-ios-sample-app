@@ -63,7 +63,7 @@ extension String {
     fileprivate static let requestKey = "org.OpenWebSDKNetwork.notification.key.request"
 }
 
-/// `EventMonitor` that provides Alamofire's notifications.
+/// `EventMonitor` that provides OWNetwork's notifications.
 class OWNetworkNotifications: OWNetworkEventMonitor {
     func requestDidResume(_ request: OWNetworkRequest) {
         NotificationCenter.default.postNotification(named: OWNetworkRequest.didResumeNotification, with: request)

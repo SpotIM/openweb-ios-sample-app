@@ -1,5 +1,5 @@
 //
-//  URLSessionConfiguration+Alamofire.swift
+//  URLSessionConfiguration+Network.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 20/12/2022.
@@ -10,7 +10,7 @@ import Foundation
 
 extension URLSessionConfiguration: OWNetworkExtended {}
 extension OWNetworkExtension where ExtendedType: URLSessionConfiguration {
-    /// Alamofire's default configuration. Same as `URLSessionConfiguration.default` but adds Alamofire default
+    /// OWNetwork's default configuration. Same as `URLSessionConfiguration.default` but adds OWNetwork default
     /// `Accept-Language`, `Accept-Encoding`, and `User-Agent` headers.
     static var `default`: URLSessionConfiguration {
         let configuration = URLSessionConfiguration.default
@@ -19,7 +19,7 @@ extension OWNetworkExtension where ExtendedType: URLSessionConfiguration {
         return configuration
     }
 
-    /// `.ephemeral` configuration with Alamofire's default `Accept-Language`, `Accept-Encoding`, and `User-Agent`
+    /// `.ephemeral` configuration with OWNetwork's default `Accept-Language`, `Accept-Encoding`, and `User-Agent`
     /// headers.
     static var ephemeral: URLSessionConfiguration {
         let configuration = URLSessionConfiguration.ephemeral
