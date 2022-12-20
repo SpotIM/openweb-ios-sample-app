@@ -1,5 +1,5 @@
 //
-//  StringEncoding+Alamofire.swift
+//  StringEncoding+Network.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 20/12/2022.

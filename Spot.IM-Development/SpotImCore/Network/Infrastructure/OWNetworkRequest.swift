@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// `Request` is the common superclass of all Alamofire request types and provides common state, delegate, and callback
+/// `Request` is the common superclass of all OWNetwork request types and provides common state, delegate, and callback
 /// handling.
 class OWNetworkRequest {
     /// State of the `Request`, with managed transitions between states set when calling `resume()`, `suspend()`, or
@@ -90,16 +90,16 @@ class OWNetworkRequest {
         var responseSerializerProcessingFinished = false
         /// `URLCredential` used for authentication challenges.
         var credential: URLCredential?
-        /// All `URLRequest`s created by Alamofire on behalf of the `Request`.
+        /// All `URLRequest`s created by OWNetwork on behalf of the `Request`.
         var requests: [URLRequest] = []
-        /// All `URLSessionTask`s created by Alamofire on behalf of the `Request`.
+        /// All `URLSessionTask`s created by OWNetwork on behalf of the `Request`.
         var tasks: [URLSessionTask] = []
-        /// All `URLSessionTaskMetrics` values gathered by Alamofire on behalf of the `Request`. Should correspond
+        /// All `URLSessionTaskMetrics` values gathered by OWNetwork on behalf of the `Request`. Should correspond
         /// exactly the the `tasks` created.
         var metrics: [URLSessionTaskMetrics] = []
         /// Number of times any retriers provided retried the `Request`.
         var retryCount = 0
-        /// Final `AFError` for the `Request`, whether from various internal Alamofire calls or as a result of a `task`.
+        /// Final `AFError` for the `Request`, whether from various internal OWNetwork calls or as a result of a `task`.
         var error: OWNetworkError?
         /// Whether the instance has had `finish()` called and is running the serializers. Should be replaced with a
         /// representation in the state machine in the future.
@@ -226,7 +226,7 @@ class OWNetworkRequest {
 
     // MARK: Error
 
-    /// `Error` returned from Alamofire internally, from the network request directly, or any validators executed.
+    /// `Error` returned from OWNetwork internally, from the network request directly, or any validators executed.
     fileprivate(set) var error: OWNetworkError? {
         get { $mutableState.error }
         set { $mutableState.error = newValue }
@@ -858,7 +858,7 @@ class OWNetworkRequest {
         return self
     }
 
-    /// Sets a closure to called whenever Alamofire creates a `URLRequest` for this instance.
+    /// Sets a closure to called whenever OWNetwork creates a `URLRequest` for this instance.
     ///
     /// - Note: This closure will be called multiple times if the instance adapts incoming `URLRequest`s or is retried.
     ///
@@ -883,7 +883,7 @@ class OWNetworkRequest {
     /// Sets a closure to be called whenever the instance creates a `URLSessionTask`.
     ///
     /// - Note: This API should only be used to provide `URLSessionTask`s to existing API, like `NSFileProvider`. It
-    ///         **SHOULD NOT** be used to interact with tasks directly, as that may be break Alamofire features.
+    ///         **SHOULD NOT** be used to interact with tasks directly, as that may be break OWNetwork features.
     ///         Additionally, this closure may be called multiple times if the instance is retried.
     ///
     /// - Parameters:
@@ -1490,15 +1490,15 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
         }
     }
 
-    /// Default `Destination` used by Alamofire to ensure all downloads persist. This `Destination` prepends
-    /// `Alamofire_` to the automatically generated download name and moves it within the temporary directory. Files
+    /// Default `Destination` used by OWNetwork to ensure all downloads persist. This `Destination` prepends
+    /// `AOWNetwork_` to the automatically generated download name and moves it within the temporary directory. Files
     /// with this destination must be additionally moved if they should survive the system reclamation of temporary
     /// space.
     static let defaultDestination: Destination = { url, _ in
         (defaultDestinationURL(url), [])
     }
 
-    /// Default `URL` creation closure. Creates a `URL` in the temporary directory with `Alamofire_` prepended to the
+    /// Default `URL` creation closure. Creates a `URL` in the temporary directory with `OWNetwork_` prepended to the
     /// provided file name.
     static let defaultDestinationURL: (URL) -> URL = { url in
         let filename = "OpenWebSDK_\(url.lastPathComponent)"

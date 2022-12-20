@@ -1,5 +1,5 @@
 //
-//  AlamofireExtended.swift
+//  OWNetworkExtended.swift
 //  SpotImCore
 //
 //  Created by Alon Haiut on 20/12/2022.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Type that acts as a generic extension point for all `AlamofireExtended` types.
+/// Type that acts as a generic extension point for all `OWNetworkExtended` types.
 struct OWNetworkExtension<ExtendedType> {
     /// Stores the type or meta-type of any extended type.
     private(set) var type: ExtendedType
@@ -21,25 +21,25 @@ struct OWNetworkExtension<ExtendedType> {
     }
 }
 
-/// Protocol describing the `af` extension points for Alamofire extended types.
+/// Protocol describing the `af` extension points for OWNetwork extended types.
 protocol OWNetworkExtended {
     /// Type being extended.
     associatedtype ExtendedType
 
-    /// Static Alamofire extension point.
+    /// Static OWNetwork extension point.
     static var owNetwork: OWNetworkExtension<ExtendedType>.Type { get set }
-    /// Instance Alamofire extension point.
+    /// Instance OWNetwork extension point.
     var owNetwork: OWNetworkExtension<ExtendedType> { get set }
 }
 
 extension OWNetworkExtended {
-    /// Static Alamofire extension point.
+    /// Static OWNetwork extension point.
     static var owNetwork: OWNetworkExtension<Self>.Type {
         get { OWNetworkExtension<Self>.self }
         set {}
     }
 
-    /// Instance Alamofire extension point.
+    /// Instance OWNetwork extension point.
     var owNetwork: OWNetworkExtension<Self> {
         get { OWNetworkExtension(self) }
         set {}

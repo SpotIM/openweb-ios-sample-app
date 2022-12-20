@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// `Session` creates and manages Alamofire's `Request` types during their lifetimes. It also provides common
+/// `Session` creates and manages OWNetwork's `Request` types during their lifetimes. It also provides common
 /// functionality for all `Request`s, including queuing, interception, trust management, redirect handling, and response
 /// cache handling.
 class OWNetworkSession {
@@ -19,7 +19,7 @@ class OWNetworkSession {
     /// `delegate` handles `URLSessionDelegate` callbacks.
     ///
     /// - Note: This instance should **NOT** be used to interact with the underlying `URLSessionTask`s. Doing so will
-    ///         break internal Alamofire logic that tracks those tasks.
+    ///         break internal OWNetwork logic that tracks those tasks.
     ///
      let session: URLSession
     /// Instance's `SessionDelegate`, which handles the `URLSessionDelegate` methods and `Request` interaction.
@@ -45,9 +45,9 @@ class OWNetworkSession {
      let redirectHandler: OWNetworkRedirectHandler?
     /// `CachedResponseHandler` instance used to provide customization of cached response handling.
      let cachedResponseHandler: OWNetworkCachedResponseHandler?
-    /// `CompositeEventMonitor` used to compose Alamofire's `defaultEventMonitors` and any passed `EventMonitor`s.
+    /// `CompositeEventMonitor` used to compose OWNetwork's `defaultEventMonitors` and any passed `EventMonitor`s.
      let eventMonitor: OWNetworkCompositeEventMonitor
-    /// `EventMonitor`s included in all instances. `[AlamofireNotifications()]` by default.
+    /// `EventMonitor`s included in all instances. `[OWNetworkNotifications()]` by default.
      let defaultEventMonitors: [OWNetworkEventMonitor] = [OWNetworkNotifications()]
 
     /// Internal map between `Request`s and any `URLSessionTasks` that may be in flight for them.
@@ -87,8 +87,8 @@ class OWNetworkSession {
     ///                               default.
     ///   - cachedResponseHandler:    `CachedResponseHandler` to be used by all `Request`s created by this instance.
     ///                               `nil` by default.
-    ///   - eventMonitors:            Additional `EventMonitor`s used by the instance. Alamofire always adds a
-    ///                               `AlamofireNotifications` `EventMonitor` to the array passed here. `[]` by default.
+    ///   - eventMonitors:            Additional `EventMonitor`s used by the instance. OWNetwork always adds a
+    ///                               `OWNetworkNotifications` `EventMonitor` to the array passed here. `[]` by default.
      init(session: URLSession,
                 delegate: OWNetworkSessionDelegate,
                 rootQueue: DispatchQueue,
@@ -122,7 +122,7 @@ class OWNetworkSession {
 
     /// Creates a `Session` from a `URLSessionConfiguration`.
     ///
-    /// - Note: This initializer lets Alamofire handle the creation of the underlying `URLSession` and its
+    /// - Note: This initializer lets OWNetwork handle the creation of the underlying `URLSession` and its
     ///         `delegateQueue`, and is the recommended initializer for most uses.
     ///
     /// - Parameters:
@@ -132,7 +132,7 @@ class OWNetworkSession {
     ///   - delegate:                 `SessionDelegate` that handles `session`'s delegate callbacks as well as `Request`
     ///                               interaction. `SessionDelegate()` by default.
     ///   - rootQueue:                Root `DispatchQueue` for all internal callbacks and state updates. **MUST** be a
-    ///                               serial queue. `DispatchQueue(label: "org.alamofire.session.rootQueue")` by default.
+    ///                               serial queue. `DispatchQueue(label: "org.OpenWebSDKNetwork.session.rootQueue")` by default.
     ///   - startRequestsImmediately: Determines whether this instance will automatically start all `Request`s. `true`
     ///                               by default. If set to `false`, all `Request`s created must have `.resume()` called.
     ///                               on them for them to start.
@@ -152,8 +152,8 @@ class OWNetworkSession {
     ///                               default.
     ///   - cachedResponseHandler:    `CachedResponseHandler` to be used by all `Request`s created by this instance.
     ///                               `nil` by default.
-    ///   - eventMonitors:            Additional `EventMonitor`s used by the instance. Alamofire always adds a
-    ///                               `AlamofireNotifications` `EventMonitor` to the array passed here. `[]` by default.
+    ///   - eventMonitors:            Additional `EventMonitor`s used by the instance. OWNetwork always adds a
+    ///                               `OWNetworkNotifications` `EventMonitor` to the array passed here. `[]` by default.
      convenience init(configuration: URLSessionConfiguration = URLSessionConfiguration.owNetwork.default,
                             delegate: OWNetworkSessionDelegate = OWNetworkSessionDelegate(),
                             rootQueue: DispatchQueue = DispatchQueue(label: "org.OpenWebSDKNetwork.session.rootQueue"),
@@ -547,7 +547,7 @@ class OWNetworkSession {
     /// well as a `RequestInterceptor`, and a `Destination`.
     ///
     /// - Note: If `destination` is not specified, the download will be moved to a temporary location determined by
-    ///         Alamofire. The file will not be deleted until the system purges the temporary files.
+    ///         OWNetwork. The file will not be deleted until the system purges the temporary files.
     ///
     /// - Note: On some versions of all Apple platforms (iOS 10 - 10.2, macOS 10.12 - 10.12.2, tvOS 10 - 10.1, watchOS 3 - 3.1.1),
     /// `resumeData` is broken on background URL session configurations. There's an underlying bug in the `resumeData`
@@ -766,7 +766,7 @@ class OWNetworkSession {
     /// footprint low, then the data can be uploaded as a stream from the resulting file. Streaming from disk MUST be
     /// used for larger payloads such as video content.
     ///
-    /// The `encodingMemoryThreshold` parameter allows Alamofire to automatically determine whether to encode in-memory
+    /// The `encodingMemoryThreshold` parameter allows OWNetwork to automatically determine whether to encode in-memory
     /// or stream from disk. If the content length of the `MultipartFormData` is below the `encodingMemoryThreshold`,
     /// encoding takes place in-memory. If the content length exceeds the threshold, the data is streamed to disk
     /// during the encoding process. Then the result is uploaded as data or as a stream depending on which encoding
@@ -820,7 +820,7 @@ class OWNetworkSession {
     /// footprint low, then the data can be uploaded as a stream from the resulting file. Streaming from disk MUST be
     /// used for larger payloads such as video content.
     ///
-    /// The `encodingMemoryThreshold` parameter allows Alamofire to automatically determine whether to encode in-memory
+    /// The `encodingMemoryThreshold` parameter allows OWNetwork to automatically determine whether to encode in-memory
     /// or stream from disk. If the content length of the `MultipartFormData` is below the `encodingMemoryThreshold`,
     /// encoding takes place in-memory. If the content length exceeds the threshold, the data is streamed to disk
     /// during the encoding process. Then the result is uploaded as data or as a stream depending on which encoding
@@ -862,7 +862,7 @@ class OWNetworkSession {
     /// footprint low, then the data can be uploaded as a stream from the resulting file. Streaming from disk MUST be
     /// used for larger payloads such as video content.
     ///
-    /// The `encodingMemoryThreshold` parameter allows Alamofire to automatically determine whether to encode in-memory
+    /// The `encodingMemoryThreshold` parameter allows OWNetwork to automatically determine whether to encode in-memory
     /// or stream from disk. If the content length of the `MultipartFormData` is below the `encodingMemoryThreshold`,
     /// encoding takes place in-memory. If the content length exceeds the threshold, the data is streamed to disk
     /// during the encoding process. Then the result is uploaded as data or as a stream depending on which encoding
@@ -913,7 +913,7 @@ class OWNetworkSession {
     /// footprint low, then the data can be uploaded as a stream from the resulting file. Streaming from disk MUST be
     /// used for larger payloads such as video content.
     ///
-    /// The `encodingMemoryThreshold` parameter allows Alamofire to automatically determine whether to encode in-memory
+    /// The `encodingMemoryThreshold` parameter allows OWNetwork to automatically determine whether to encode in-memory
     /// or stream from disk. If the content length of the `MultipartFormData` is below the `encodingMemoryThreshold`,
     /// encoding takes place in-memory. If the content length exceeds the threshold, the data is streamed to disk
     /// during the encoding process. Then the result is uploaded as data or as a stream depending on which encoding
