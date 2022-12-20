@@ -15,7 +15,7 @@ import SystemConfiguration
 /// Reachability can be used to determine background information about why a network operation failed, or to retry
 /// network requests when a connection is established. It should not be used to prevent a user from initiating a network
 /// request, as it's possible that an initial request may be required to establish reachability.
-class NetworkReachabilityManager {
+class OWNetworkReachabilityManager {
     /// Defines the various states of network reachability.
     enum NetworkReachabilityStatus {
         /// It is unknown whether the network is reachable.
@@ -49,7 +49,7 @@ class NetworkReachabilityManager {
     typealias Listener = (NetworkReachabilityStatus) -> Void
 
     /// Default `NetworkReachabilityManager` for the zero address and a `listenerQueue` of `.main`.
-    static let `default` = NetworkReachabilityManager()
+    static let `default` = OWNetworkReachabilityManager()
 
     // MARK: - Properties
 
@@ -95,7 +95,7 @@ class NetworkReachabilityManager {
     private let reachability: SCNetworkReachability
 
     /// Protected storage for mutable state.
-    @Protected
+    @OWProtected
     private var mutableState = MutableState()
 
     // MARK: - Initialization
@@ -163,7 +163,7 @@ class NetworkReachabilityManager {
         let callback: SCNetworkReachabilityCallBack = { _, flags, info in
             guard let info = info else { return }
 
-            let instance = Unmanaged<NetworkReachabilityManager>.fromOpaque(info).takeUnretainedValue()
+            let instance = Unmanaged<OWNetworkReachabilityManager>.fromOpaque(info).takeUnretainedValue()
             instance.notifyListener(flags)
         }
 
@@ -214,7 +214,7 @@ class NetworkReachabilityManager {
 
 // MARK: -
 
-extension NetworkReachabilityManager.NetworkReachabilityStatus: Equatable {}
+extension OWNetworkReachabilityManager.NetworkReachabilityStatus: Equatable {}
 
 extension SCNetworkReachabilityFlags {
     var isReachable: Bool { contains(.reachable) }

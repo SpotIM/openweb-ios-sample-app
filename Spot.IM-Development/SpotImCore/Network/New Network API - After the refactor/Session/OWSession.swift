@@ -18,17 +18,17 @@ protocol OWSessionProtocol {
 
 class OWSession: OWSessionProtocol {
     let configuration: URLSessionConfiguration
-    let interceptor: RequestInterceptor
+    let interceptor: OWNetworkRequestInterceptor
 
     static var `default`: OWSession = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
-        let retryableHttpMethods: Set<HTTPMethod> = [.delete, .get, .head, .options, .put, .trace, .post]
+        let retryableHttpMethods: Set<OWNetworkHTTPMethod> = [.delete, .get, .head, .options, .put, .trace, .post]
         let retryPolicy = OWNetworkRetryPolicy(retryLimit: 3, retryableHTTPMethods: retryableHttpMethods)
         return OWSession(configuration: configuration, interceptor: retryPolicy)
     }()
 
-    init(configuration: URLSessionConfiguration, interceptor: RequestInterceptor) {
+    init(configuration: URLSessionConfiguration, interceptor: OWNetworkRequestInterceptor) {
         self.configuration = configuration
         self.interceptor = interceptor
     }

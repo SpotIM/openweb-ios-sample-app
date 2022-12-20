@@ -15,7 +15,7 @@ enum OWConfigurationEndpoints: OWEndpoints {
     case fetchAbTestData
     
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .fetchConfig:
             return .get
@@ -39,7 +39,7 @@ enum OWConfigurationEndpoints: OWEndpoints {
     }
     
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .fetchConfig:
             return nil

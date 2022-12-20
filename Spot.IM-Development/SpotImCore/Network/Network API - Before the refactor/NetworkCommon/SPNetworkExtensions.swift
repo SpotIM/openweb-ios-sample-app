@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-internal extension HTTPHeaders {
+internal extension OWNetworkHTTPHeaders {
     
     
-    static func basic(with spotId: String, postId: String = "default") -> HTTPHeaders {
+    static func basic(with spotId: String, postId: String = "default") -> OWNetworkHTTPHeaders {
         let iosVersion = UIDevice.current.systemVersion
         let frameworkVersion = OWSettingsWrapper.sdkVersion() ?? "na"
         let hostVerion = Bundle.main.shortVersion ?? "na"
@@ -21,7 +21,7 @@ internal extension HTTPHeaders {
 
         let pageViewId = SPAnalyticsHolder.default.pageViewId
         
-        var headers: HTTPHeaders = ["Content-Type": "application/json",
+        var headers: OWNetworkHTTPHeaders = ["Content-Type": "application/json",
                                     "x-spot-id": spotId,
                                     "x-post-id": postId,
                                     "x-platform": UIDevice.current.deviceTypeXPlatformHeader(),
@@ -49,7 +49,7 @@ internal extension HTTPHeaders {
     }
 
     private static func extendedAgent() -> String {
-        var agent = HTTPHeaders.default.dictionary["User-Agent"] ?? "na"
+        var agent = OWNetworkHTTPHeaders.default.dictionary["User-Agent"] ?? "na"
         let device = UIDevice.modelIdentifier()
         agent.insert(contentsOf: device.appending(" "), at: agent.startIndex)
         return agent

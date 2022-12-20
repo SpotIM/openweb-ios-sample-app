@@ -14,7 +14,7 @@ enum OWImagesEndpoints: OWEndpoints {
     case upload(signature: String, publicId: String, timestamp: String, imageData: String)
 
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .fetchImage:
             return .get
@@ -35,7 +35,7 @@ enum OWImagesEndpoints: OWEndpoints {
     }
 
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .fetchImage:
             return nil

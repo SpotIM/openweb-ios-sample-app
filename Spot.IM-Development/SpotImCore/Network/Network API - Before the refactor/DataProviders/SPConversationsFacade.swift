@@ -111,7 +111,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             "extract_data": needExtraData,
             "depth": depth
         ]
-        let headers = HTTPHeaders.basic(
+        let headers = OWNetworkHTTPHeaders.basic(
             with: spotKey,
             postId: id)
         isLoading = true
@@ -162,7 +162,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             let parameters: [String: Any] = [
                 "conversation_ids": conversationIds,
             ]
-            let headers = HTTPHeaders.basic(
+            let headers = OWNetworkHTTPHeaders.basic(
                 with: spotKey)
             
             let task = self.manager.execute(
@@ -206,7 +206,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         let parameters: [String: Any] = [
             "host_url": articleUrl
         ]
-        let headers = HTTPHeaders.basic(with: spotKey, postId: postId)
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: postId)
         
         manager.execute(
             request: spRequest,

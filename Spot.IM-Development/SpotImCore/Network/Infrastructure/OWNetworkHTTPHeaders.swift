@@ -9,15 +9,15 @@
 import Foundation
 
 /// An order-preserving and case-insensitive representation of HTTP headers.
-struct HTTPHeaders {
-    private var headers: [HTTPHeader] = []
+struct OWNetworkHTTPHeaders {
+    private var headers: [OWNetworkHTTPHeader] = []
 
     /// Creates an empty instance.
     init() {}
 
     /// Creates an instance from an array of `HTTPHeader`s. Duplicate case-insensitive names are collapsed into the last
     /// name and value encountered.
-    init(_ headers: [HTTPHeader]) {
+    init(_ headers: [OWNetworkHTTPHeader]) {
         self.init()
 
         headers.forEach { update($0) }
@@ -28,7 +28,7 @@ struct HTTPHeaders {
     init(_ dictionary: [String: String]) {
         self.init()
 
-        dictionary.forEach { update(HTTPHeader(name: $0.key, value: $0.value)) }
+        dictionary.forEach { update(OWNetworkHTTPHeader(name: $0.key, value: $0.value)) }
     }
 
     /// Case-insensitively updates or appends an `HTTPHeader` into the instance using the provided `name` and `value`.
@@ -37,13 +37,13 @@ struct HTTPHeaders {
     ///   - name:  The `HTTPHeader` name.
     ///   - value: The `HTTPHeader value.
     mutating func add(name: String, value: String) {
-        update(HTTPHeader(name: name, value: value))
+        update(OWNetworkHTTPHeader(name: name, value: value))
     }
 
     /// Case-insensitively updates or appends the provided `HTTPHeader` into the instance.
     ///
     /// - Parameter header: The `HTTPHeader` to update or append.
-    mutating func add(_ header: HTTPHeader) {
+    mutating func add(_ header: OWNetworkHTTPHeader) {
         update(header)
     }
 
@@ -53,13 +53,13 @@ struct HTTPHeaders {
     ///   - name:  The `HTTPHeader` name.
     ///   - value: The `HTTPHeader value.
     mutating func update(name: String, value: String) {
-        update(HTTPHeader(name: name, value: value))
+        update(OWNetworkHTTPHeader(name: name, value: value))
     }
 
     /// Case-insensitively updates or appends the provided `HTTPHeader` into the instance.
     ///
     /// - Parameter header: The `HTTPHeader` to update or append.
-    mutating func update(_ header: HTTPHeader) {
+    mutating func update(_ header: OWNetworkHTTPHeader) {
         guard let index = headers.index(of: header.name) else {
             headers.append(header)
             return
@@ -85,7 +85,7 @@ struct HTTPHeaders {
     /// Returns an instance sorted by header name.
     ///
     /// - Returns: A copy of the current instance sorted by name.
-    func sorted() -> HTTPHeaders {
+    func sorted() -> OWNetworkHTTPHeaders {
         var headers = self
         headers.sort()
 
@@ -127,7 +127,7 @@ struct HTTPHeaders {
     }
 }
 
-extension HTTPHeaders: ExpressibleByDictionaryLiteral {
+extension OWNetworkHTTPHeaders: ExpressibleByDictionaryLiteral {
     init(dictionaryLiteral elements: (String, String)...) {
         self.init()
 
@@ -135,19 +135,19 @@ extension HTTPHeaders: ExpressibleByDictionaryLiteral {
     }
 }
 
-extension HTTPHeaders: ExpressibleByArrayLiteral {
-    init(arrayLiteral elements: HTTPHeader...) {
+extension OWNetworkHTTPHeaders: ExpressibleByArrayLiteral {
+    init(arrayLiteral elements: OWNetworkHTTPHeader...) {
         self.init(elements)
     }
 }
 
-extension HTTPHeaders: Sequence {
-    func makeIterator() -> IndexingIterator<[HTTPHeader]> {
+extension OWNetworkHTTPHeaders: Sequence {
+    func makeIterator() -> IndexingIterator<[OWNetworkHTTPHeader]> {
         headers.makeIterator()
     }
 }
 
-extension HTTPHeaders: Collection {
+extension OWNetworkHTTPHeaders: Collection {
     var startIndex: Int {
         headers.startIndex
     }
@@ -156,7 +156,7 @@ extension HTTPHeaders: Collection {
         headers.endIndex
     }
 
-    subscript(position: Int) -> HTTPHeader {
+    subscript(position: Int) -> OWNetworkHTTPHeader {
         headers[position]
     }
 
@@ -165,7 +165,7 @@ extension HTTPHeaders: Collection {
     }
 }
 
-extension HTTPHeaders: CustomStringConvertible {
+extension OWNetworkHTTPHeaders: CustomStringConvertible {
     var description: String {
         headers.map(\.description)
             .joined(separator: "\n")
@@ -175,7 +175,7 @@ extension HTTPHeaders: CustomStringConvertible {
 // MARK: - HTTPHeader
 
 /// A representation of a single HTTP header's name / value pair.
-struct HTTPHeader: Hashable {
+struct OWNetworkHTTPHeader: Hashable {
     /// Name of the header.
     let name: String
 
@@ -193,27 +193,27 @@ struct HTTPHeader: Hashable {
     }
 }
 
-extension HTTPHeader: CustomStringConvertible {
+extension OWNetworkHTTPHeader: CustomStringConvertible {
     var description: String {
         "\(name): \(value)"
     }
 }
 
-extension HTTPHeader {
+extension OWNetworkHTTPHeader {
     /// Returns an `Accept` header.
     ///
     /// - Parameter value: The `Accept` value.
     /// - Returns:         The header.
-    static func accept(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "Accept", value: value)
+    static func accept(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "Accept", value: value)
     }
 
     /// Returns an `Accept-Charset` header.
     ///
     /// - Parameter value: The `Accept-Charset` value.
     /// - Returns:         The header.
-    static func acceptCharset(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "Accept-Charset", value: value)
+    static func acceptCharset(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "Accept-Charset", value: value)
     }
 
     /// Returns an `Accept-Language` header.
@@ -224,8 +224,8 @@ extension HTTPHeader {
     /// - Parameter value: The `Accept-Language` value.
     ///
     /// - Returns:         The header.
-    static func acceptLanguage(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "Accept-Language", value: value)
+    static func acceptLanguage(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "Accept-Language", value: value)
     }
 
     /// Returns an `Accept-Encoding` header.
@@ -236,8 +236,8 @@ extension HTTPHeader {
     /// - Parameter value: The `Accept-Encoding` value.
     ///
     /// - Returns:         The header
-    static func acceptEncoding(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "Accept-Encoding", value: value)
+    static func acceptEncoding(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "Accept-Encoding", value: value)
     }
 
     /// Returns a `Basic` `Authorization` header using the `username` and `password` provided.
@@ -247,7 +247,7 @@ extension HTTPHeader {
     ///   - password: The password of the header.
     ///
     /// - Returns:    The header.
-    static func authorization(username: String, password: String) -> HTTPHeader {
+    static func authorization(username: String, password: String) -> OWNetworkHTTPHeader {
         let credential = Data("\(username):\(password)".utf8).base64EncodedString()
 
         return authorization("Basic \(credential)")
@@ -258,7 +258,7 @@ extension HTTPHeader {
     /// - Parameter bearerToken: The bearer token.
     ///
     /// - Returns:               The header.
-    static func authorization(bearerToken: String) -> HTTPHeader {
+    static func authorization(bearerToken: String) -> OWNetworkHTTPHeader {
         authorization("Bearer \(bearerToken)")
     }
 
@@ -271,8 +271,8 @@ extension HTTPHeader {
     /// - Parameter value: The `Authorization` value.
     ///
     /// - Returns:         The header.
-    static func authorization(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "Authorization", value: value)
+    static func authorization(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "Authorization", value: value)
     }
 
     /// Returns a `Content-Disposition` header.
@@ -280,8 +280,8 @@ extension HTTPHeader {
     /// - Parameter value: The `Content-Disposition` value.
     ///
     /// - Returns:         The header.
-    static func contentDisposition(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "Content-Disposition", value: value)
+    static func contentDisposition(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "Content-Disposition", value: value)
     }
 
     /// Returns a `Content-Type` header.
@@ -292,8 +292,8 @@ extension HTTPHeader {
     /// - Parameter value: The `Content-Type` value.
     ///
     /// - Returns:         The header.
-    static func contentType(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "Content-Type", value: value)
+    static func contentType(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "Content-Type", value: value)
     }
 
     /// Returns a `User-Agent` header.
@@ -301,12 +301,12 @@ extension HTTPHeader {
     /// - Parameter value: The `User-Agent` value.
     ///
     /// - Returns:         The header.
-    static func userAgent(_ value: String) -> HTTPHeader {
-        HTTPHeader(name: "User-Agent", value: value)
+    static func userAgent(_ value: String) -> OWNetworkHTTPHeader {
+        OWNetworkHTTPHeader(name: "User-Agent", value: value)
     }
 }
 
-extension Array where Element == HTTPHeader {
+extension Array where Element == OWNetworkHTTPHeader {
     /// Case-insensitively finds the index of an `HTTPHeader` with the provided name, if it exists.
     func index(of name: String) -> Int? {
         let lowercasedName = name.lowercased()
@@ -316,20 +316,20 @@ extension Array where Element == HTTPHeader {
 
 // MARK: - Defaults
 
-extension HTTPHeaders {
+extension OWNetworkHTTPHeaders {
     /// The default set of `HTTPHeaders` used by Alamofire. Includes `Accept-Encoding`, `Accept-Language`, and
     /// `User-Agent`.
-    static let `default`: HTTPHeaders = [.defaultAcceptEncoding,
+    static let `default`: OWNetworkHTTPHeaders = [.defaultAcceptEncoding,
                                                 .defaultAcceptLanguage,
                                                 .defaultUserAgent]
 }
 
-extension HTTPHeader {
+extension OWNetworkHTTPHeader {
     /// Returns Alamofire's default `Accept-Encoding` header, appropriate for the encodings supported by particular OS
     /// versions.
     ///
     /// See the [Accept-Encoding HTTP header documentation](https://tools.ietf.org/html/rfc7230#section-4.2.3) .
-    static let defaultAcceptEncoding: HTTPHeader = {
+    static let defaultAcceptEncoding: OWNetworkHTTPHeader = {
         let encodings: [String]
         if #available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *) {
             encodings = ["br", "gzip", "deflate"]
@@ -344,14 +344,14 @@ extension HTTPHeader {
     /// `preferredLanguages`.
     ///
     /// See the [Accept-Language HTTP header documentation](https://tools.ietf.org/html/rfc7231#section-5.3.5).
-    static let defaultAcceptLanguage: HTTPHeader = .acceptLanguage(Locale.preferredLanguages.prefix(6).qualityEncoded())
+    static let defaultAcceptLanguage: OWNetworkHTTPHeader = .acceptLanguage(Locale.preferredLanguages.prefix(6).qualityEncoded())
 
     /// Returns Alamofire's default `User-Agent` header.
     ///
     /// See the [User-Agent header documentation](https://tools.ietf.org/html/rfc7231#section-5.5.3).
     ///
     /// Example: `iOS Example/1.0 (org.alamofire.iOS-Example; build:1; iOS 13.0.0) Alamofire/5.0.0`
-    static let defaultUserAgent: HTTPHeader = {
+    static let defaultUserAgent: OWNetworkHTTPHeader = {
         let info = Bundle.main.infoDictionary
         let executable = (info?["CFBundleExecutable"] as? String) ??
             (ProcessInfo.processInfo.arguments.first?.split(separator: "/").last.map(String.init)) ??
@@ -390,23 +390,23 @@ extension Collection where Element == String {
 
 extension URLRequest {
     /// Returns `allHTTPHeaderFields` as `HTTPHeaders`.
-    var headers: HTTPHeaders {
-        get { allHTTPHeaderFields.map(HTTPHeaders.init) ?? HTTPHeaders() }
+    var headers: OWNetworkHTTPHeaders {
+        get { allHTTPHeaderFields.map(OWNetworkHTTPHeaders.init) ?? OWNetworkHTTPHeaders() }
         set { allHTTPHeaderFields = newValue.dictionary }
     }
 }
 
 extension HTTPURLResponse {
     /// Returns `allHeaderFields` as `HTTPHeaders`.
-    var headers: HTTPHeaders {
-        (allHeaderFields as? [String: String]).map(HTTPHeaders.init) ?? HTTPHeaders()
+    var headers: OWNetworkHTTPHeaders {
+        (allHeaderFields as? [String: String]).map(OWNetworkHTTPHeaders.init) ?? OWNetworkHTTPHeaders()
     }
 }
 
 extension URLSessionConfiguration {
     /// Returns `httpAdditionalHeaders` as `HTTPHeaders`.
-    var headers: HTTPHeaders {
-        get { (httpAdditionalHeaders as? [String: String]).map(HTTPHeaders.init) ?? HTTPHeaders() }
+    var headers: OWNetworkHTTPHeaders {
+        get { (httpAdditionalHeaders as? [String: String]).map(OWNetworkHTTPHeaders.init) ?? OWNetworkHTTPHeaders() }
         set { httpAdditionalHeaders = newValue.dictionary }
     }
 }

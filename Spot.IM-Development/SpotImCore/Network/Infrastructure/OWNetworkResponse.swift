@@ -9,12 +9,12 @@
 import Foundation
 
 /// Default type of `DataResponse` returned by Alamofire, with an `AFError` `Failure` type.
-typealias AFDataResponse<Success> = DataResponse<Success, OWNetworkError>
+typealias OWNetworkDataResponseTypealias<Success> = OWNetworkDataResponse<Success, OWNetworkError>
 /// Default type of `DownloadResponse` returned by Alamofire, with an `AFError` `Failure` type.
-typealias AFDownloadResponse<Success> = DownloadResponse<Success, OWNetworkError>
+typealias OWNetworkDownloadResponseTypealias<Success> = OWNetworkDownloadResponse<Success, OWNetworkError>
 
 /// Type used to store all values associated with a serialized response of a `DataRequest` or `UploadRequest`.
-struct DataResponse<Success, Failure: Error> {
+struct OWNetworkDataResponse<Success, Failure: Error> {
     /// The URL request sent to the server.
     let request: URLRequest?
 
@@ -68,7 +68,7 @@ struct DataResponse<Success, Failure: Error> {
 
 // MARK: -
 
-extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
+extension OWNetworkDataResponse: CustomStringConvertible, CustomDebugStringConvertible {
     /// The textual representation used when written to an output stream, which includes whether the result was a
     /// success or failure.
     var description: String {
@@ -82,13 +82,13 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
     var debugDescription: String {
         guard let urlRequest = request else { return "[Request]: None\n[Result]: \(result)" }
 
-        let requestDescription = DebugDescription.description(of: urlRequest)
+        let requestDescription = OWNetworkDebugDescription.description(of: urlRequest)
 
         let responseDescription = response.map { response in
-            let responseBodyDescription = DebugDescription.description(for: data, headers: response.headers)
+            let responseBodyDescription = OWNetworkDebugDescription.description(for: data, headers: response.headers)
 
             return """
-            \(DebugDescription.description(of: response))
+            \(OWNetworkDebugDescription.description(of: response))
                 \(responseBodyDescription.indentingNewlines())
             """
         } ?? "[Response]: None"
@@ -107,7 +107,7 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
 
 // MARK: -
 
-extension DataResponse {
+extension OWNetworkDataResponse {
     /// Evaluates the specified closure when the result of this `DataResponse` is a success, passing the unwrapped
     /// result value as a parameter.
     ///
@@ -120,8 +120,8 @@ extension DataResponse {
     ///
     /// - returns: A `DataResponse` whose result wraps the value returned by the given closure. If this instance's
     ///            result is a failure, returns a response wrapping the same failure.
-    func map<NewSuccess>(_ transform: (Success) -> NewSuccess) -> DataResponse<NewSuccess, Failure> {
-        DataResponse<NewSuccess, Failure>(request: request,
+    func map<NewSuccess>(_ transform: (Success) -> NewSuccess) -> OWNetworkDataResponse<NewSuccess, Failure> {
+        OWNetworkDataResponse<NewSuccess, Failure>(request: request,
                                           response: response,
                                           data: data,
                                           metrics: metrics,
@@ -143,8 +143,8 @@ extension DataResponse {
     ///
     /// - returns: A success or failure `DataResponse` depending on the result of the given closure. If this instance's
     ///            result is a failure, returns the same failure.
-    func tryMap<NewSuccess>(_ transform: (Success) throws -> NewSuccess) -> DataResponse<NewSuccess, Error> {
-        DataResponse<NewSuccess, Error>(request: request,
+    func tryMap<NewSuccess>(_ transform: (Success) throws -> NewSuccess) -> OWNetworkDataResponse<NewSuccess, Error> {
+        OWNetworkDataResponse<NewSuccess, Error>(request: request,
                                         response: response,
                                         data: data,
                                         metrics: metrics,
@@ -162,8 +162,8 @@ extension DataResponse {
     /// - Parameter transform: A closure that takes the error of the instance.
     ///
     /// - Returns: A `DataResponse` instance containing the result of the transform.
-    func mapError<NewFailure: Error>(_ transform: (Failure) -> NewFailure) -> DataResponse<Success, NewFailure> {
-        DataResponse<Success, NewFailure>(request: request,
+    func mapError<NewFailure: Error>(_ transform: (Failure) -> NewFailure) -> OWNetworkDataResponse<Success, NewFailure> {
+        OWNetworkDataResponse<Success, NewFailure>(request: request,
                                           response: response,
                                           data: data,
                                           metrics: metrics,
@@ -183,8 +183,8 @@ extension DataResponse {
     /// - Parameter transform: A throwing closure that takes the error of the instance.
     ///
     /// - Returns: A `DataResponse` instance containing the result of the transform.
-    func tryMapError<NewFailure: Error>(_ transform: (Failure) throws -> NewFailure) -> DataResponse<Success, Error> {
-        DataResponse<Success, Error>(request: request,
+    func tryMapError<NewFailure: Error>(_ transform: (Failure) throws -> NewFailure) -> OWNetworkDataResponse<Success, Error> {
+        OWNetworkDataResponse<Success, Error>(request: request,
                                      response: response,
                                      data: data,
                                      metrics: metrics,
@@ -196,7 +196,7 @@ extension DataResponse {
 // MARK: -
 
 /// Used to store all data associated with a serialized response of a download request.
-struct DownloadResponse<Success, Failure: Error> {
+struct OWNetworkDownloadResponse<Success, Failure: Error> {
     /// The URL request sent to the server.
     let request: URLRequest?
 
@@ -256,7 +256,7 @@ struct DownloadResponse<Success, Failure: Error> {
 
 // MARK: -
 
-extension DownloadResponse: CustomStringConvertible, CustomDebugStringConvertible {
+extension OWNetworkDownloadResponse: CustomStringConvertible, CustomDebugStringConvertible {
     /// The textual representation used when written to an output stream, which includes whether the result was a
     /// success or failure.
     var description: String {
@@ -269,8 +269,8 @@ extension DownloadResponse: CustomStringConvertible, CustomDebugStringConvertibl
     var debugDescription: String {
         guard let urlRequest = request else { return "[Request]: None\n[Result]: \(result)" }
 
-        let requestDescription = DebugDescription.description(of: urlRequest)
-        let responseDescription = response.map(DebugDescription.description(of:)) ?? "[Response]: None"
+        let requestDescription = OWNetworkDebugDescription.description(of: urlRequest)
+        let responseDescription = response.map(OWNetworkDebugDescription.description(of:)) ?? "[Response]: None"
         let networkDuration = metrics.map { "\($0.taskInterval.duration)s" } ?? "None"
         let resumeDataDescription = resumeData.map { "\($0)" } ?? "None"
 
@@ -288,7 +288,7 @@ extension DownloadResponse: CustomStringConvertible, CustomDebugStringConvertibl
 
 // MARK: -
 
-extension DownloadResponse {
+extension OWNetworkDownloadResponse {
     /// Evaluates the given closure when the result of this `DownloadResponse` is a success, passing the unwrapped
     /// result value as a parameter.
     ///
@@ -301,8 +301,8 @@ extension DownloadResponse {
     ///
     /// - returns: A `DownloadResponse` whose result wraps the value returned by the given closure. If this instance's
     ///            result is a failure, returns a response wrapping the same failure.
-    func map<NewSuccess>(_ transform: (Success) -> NewSuccess) -> DownloadResponse<NewSuccess, Failure> {
-        DownloadResponse<NewSuccess, Failure>(request: request,
+    func map<NewSuccess>(_ transform: (Success) -> NewSuccess) -> OWNetworkDownloadResponse<NewSuccess, Failure> {
+        OWNetworkDownloadResponse<NewSuccess, Failure>(request: request,
                                               response: response,
                                               fileURL: fileURL,
                                               resumeData: resumeData,
@@ -325,8 +325,8 @@ extension DownloadResponse {
     ///
     /// - returns: A success or failure `DownloadResponse` depending on the result of the given closure. If this
     /// instance's result is a failure, returns the same failure.
-    func tryMap<NewSuccess>(_ transform: (Success) throws -> NewSuccess) -> DownloadResponse<NewSuccess, Error> {
-        DownloadResponse<NewSuccess, Error>(request: request,
+    func tryMap<NewSuccess>(_ transform: (Success) throws -> NewSuccess) -> OWNetworkDownloadResponse<NewSuccess, Error> {
+        OWNetworkDownloadResponse<NewSuccess, Error>(request: request,
                                             response: response,
                                             fileURL: fileURL,
                                             resumeData: resumeData,
@@ -345,8 +345,8 @@ extension DownloadResponse {
     /// - Parameter transform: A closure that takes the error of the instance.
     ///
     /// - Returns: A `DownloadResponse` instance containing the result of the transform.
-    func mapError<NewFailure: Error>(_ transform: (Failure) -> NewFailure) -> DownloadResponse<Success, NewFailure> {
-        DownloadResponse<Success, NewFailure>(request: request,
+    func mapError<NewFailure: Error>(_ transform: (Failure) -> NewFailure) -> OWNetworkDownloadResponse<Success, NewFailure> {
+        OWNetworkDownloadResponse<Success, NewFailure>(request: request,
                                               response: response,
                                               fileURL: fileURL,
                                               resumeData: resumeData,
@@ -367,8 +367,8 @@ extension DownloadResponse {
     /// - Parameter transform: A throwing closure that takes the error of the instance.
     ///
     /// - Returns: A `DownloadResponse` instance containing the result of the transform.
-    func tryMapError<NewFailure: Error>(_ transform: (Failure) throws -> NewFailure) -> DownloadResponse<Success, Error> {
-        DownloadResponse<Success, Error>(request: request,
+    func tryMapError<NewFailure: Error>(_ transform: (Failure) throws -> NewFailure) -> OWNetworkDownloadResponse<Success, Error> {
+        OWNetworkDownloadResponse<Success, Error>(request: request,
                                          response: response,
                                          fileURL: fileURL,
                                          resumeData: resumeData,
@@ -378,11 +378,11 @@ extension DownloadResponse {
     }
 }
 
-private enum DebugDescription {
+private enum OWNetworkDebugDescription {
     static func description(of request: URLRequest) -> String {
         let requestSummary = "\(request.httpMethod!) \(request)"
-        let requestHeadersDescription = DebugDescription.description(for: request.headers)
-        let requestBodyDescription = DebugDescription.description(for: request.httpBody, headers: request.headers)
+        let requestHeadersDescription = OWNetworkDebugDescription.description(for: request.headers)
+        let requestBodyDescription = OWNetworkDebugDescription.description(for: request.httpBody, headers: request.headers)
 
         return """
         [Request]: \(requestSummary)
@@ -395,11 +395,11 @@ private enum DebugDescription {
         """
         [Response]:
             [Status Code]: \(response.statusCode)
-            \(DebugDescription.description(for: response.headers).indentingNewlines())
+            \(OWNetworkDebugDescription.description(for: response.headers).indentingNewlines())
         """
     }
 
-    static func description(for headers: HTTPHeaders) -> String {
+    static func description(for headers: OWNetworkHTTPHeaders) -> String {
         guard !headers.isEmpty else { return "[Headers]: None" }
 
         let headerDescription = "\(headers.sorted())".indentingNewlines()
@@ -410,7 +410,7 @@ private enum DebugDescription {
     }
 
     static func description(for data: Data?,
-                            headers: HTTPHeaders,
+                            headers: OWNetworkHTTPHeaders,
                             allowingPrintableTypes printableTypes: [String] = ["json", "xml", "text"],
                             maximumLength: Int = 100_000) -> String {
         guard let data = data, !data.isEmpty else { return "[Body]: None" }

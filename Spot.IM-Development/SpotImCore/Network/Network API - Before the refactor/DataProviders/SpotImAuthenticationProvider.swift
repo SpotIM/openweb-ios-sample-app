@@ -132,7 +132,7 @@ class SpotImAuthenticationProvider {
             requestParams[APIParamKeysContants.SECRET] = secret
         }
         
-        var headers = HTTPHeaders.basic(with: spotKey)
+        var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
         headers[APIHeadersConstants.authorization] = ssoParams?.token ?? SPUserSessionHolder.session.token
         manager.execute(
             request: spRequest,
@@ -189,7 +189,7 @@ class SpotImAuthenticationProvider {
         }
         let spRequest = SPInternalAuthRequests.ssoComplete
         let params = [APIParamKeysContants.CODE_B: codeB]
-        var headers = HTTPHeaders.basic(with: spotKey)
+        var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
         if let token = SPUserSessionHolder.session.token {
             headers[APIHeadersConstants.authorization] = token
         }

@@ -21,7 +21,7 @@ internal enum SPConversationRequest: SPRequest {
     case commentsCounters
     case commentStatus(commentId: String)
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .conversationAsync: return .post
         case .conversationRead: return .post

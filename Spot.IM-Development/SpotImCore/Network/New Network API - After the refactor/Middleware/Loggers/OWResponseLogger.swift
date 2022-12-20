@@ -9,7 +9,7 @@
 import Foundation
 
 class OWResponseLogger: OWNetworkLogging, OWResponseMiddleware {
-    func process<T: Any>(response: DataResponse<T, OWNetworkError>) -> DataResponse<T, OWNetworkError> {
+    func process<T: Any>(response: OWNetworkDataResponse<T, OWNetworkError>) -> OWNetworkDataResponse<T, OWNetworkError> {
         if let error = response.error {
             log(output: "Network error: \(error.localizedDescription)")
         } else if let url = response.request?.url{

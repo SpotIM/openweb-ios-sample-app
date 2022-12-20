@@ -9,7 +9,7 @@
 import Foundation
 
 /// Stores all state associated with a `URLRequest` being adapted.
-struct RequestAdapterState {
+struct OWNetworkRequestAdapterState {
     /// The `UUID` of the `Request` associated with the `URLRequest` to adapt.
     let requestID: UUID
 
@@ -20,7 +20,7 @@ struct RequestAdapterState {
 // MARK: -
 
 /// A type that can inspect and optionally adapt a `URLRequest` in some manner if necessary.
-protocol RequestAdapter {
+protocol OWNetworkRequestAdapter {
     /// Inspects and adapts the specified `URLRequest` in some manner and calls the completion handler with the Result.
     ///
     /// - Parameters:
@@ -35,11 +35,11 @@ protocol RequestAdapter {
     ///   - urlRequest: The `URLRequest` to adapt.
     ///   - state:      The `RequestAdapterState` associated with the `URLRequest`.
     ///   - completion: The completion handler that must be called when adaptation is complete.
-    func adapt(_ urlRequest: URLRequest, using state: RequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void)
+    func adapt(_ urlRequest: URLRequest, using state: OWNetworkRequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void)
 }
 
-extension RequestAdapter {
-    func adapt(_ urlRequest: URLRequest, using state: RequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+extension OWNetworkRequestAdapter {
+    func adapt(_ urlRequest: URLRequest, using state: OWNetworkRequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         adapt(urlRequest, for: state.session, completion: completion)
     }
 }
@@ -47,7 +47,7 @@ extension RequestAdapter {
 // MARK: -
 
 /// Outcome of determination whether retry is necessary.
-enum RetryResult {
+enum OWNetworkRetryResult {
     /// Retry should be attempted immediately.
     case retry
     /// Retry should be attempted after the associated `TimeInterval`.
@@ -58,7 +58,7 @@ enum RetryResult {
     case doNotRetryWithError(Error)
 }
 
-extension RetryResult {
+extension OWNetworkRetryResult {
     var retryRequired: Bool {
         switch self {
         case .retry, .retryWithDelay: return true
@@ -81,7 +81,7 @@ extension RetryResult {
 
 /// A type that determines whether a request should be retried after being executed by the specified session manager
 /// and encountering an error.
-protocol RequestRetrier {
+protocol OWNetworkRequestRetrier {
     /// Determines whether the `Request` should be retried by calling the `completion` closure.
     ///
     /// This operation is fully asynchronous. Any amount of time can be taken to determine whether the request needs
@@ -93,15 +93,15 @@ protocol RequestRetrier {
     ///   - session:    `Session` that produced the `Request`.
     ///   - error:      `Error` encountered while executing the `Request`.
     ///   - completion: Completion closure to be executed when a retry decision has been determined.
-    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (RetryResult) -> Void)
+    func retry(_ request: OWNetworkRequest, for session: OWNetworkSession, dueTo error: Error, completion: @escaping (OWNetworkRetryResult) -> Void)
 }
 
 // MARK: -
 
 /// Type that provides both `RequestAdapter` and `RequestRetrier` functionality.
-protocol RequestInterceptor: RequestAdapter, RequestRetrier {}
+protocol OWNetworkRequestInterceptor: OWNetworkRequestAdapter, OWNetworkRequestRetrier {}
 
-extension RequestInterceptor {
+extension OWNetworkRequestInterceptor {
     func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         completion(.success(urlRequest))
     }
@@ -109,26 +109,26 @@ extension RequestInterceptor {
     func retry(_ request: OWNetworkRequest,
                       for session: OWNetworkSession,
                       dueTo error: Error,
-                      completion: @escaping (RetryResult) -> Void) {
+                      completion: @escaping (OWNetworkRetryResult) -> Void) {
         completion(.doNotRetry)
     }
 }
 
 /// `RequestAdapter` closure definition.
-typealias AdaptHandler = (URLRequest, OWNetworkSession, _ completion: @escaping (Result<URLRequest, Error>) -> Void) -> Void
+typealias OWNetworkAdaptHandler = (URLRequest, OWNetworkSession, _ completion: @escaping (Result<URLRequest, Error>) -> Void) -> Void
 /// `RequestRetrier` closure definition.
-typealias RetryHandler = (OWNetworkRequest, OWNetworkSession, Error, _ completion: @escaping (RetryResult) -> Void) -> Void
+typealias OWNetworkRetryHandler = (OWNetworkRequest, OWNetworkSession, Error, _ completion: @escaping (OWNetworkRetryResult) -> Void) -> Void
 
 // MARK: -
 
 /// Closure-based `RequestAdapter`.
-class Adapter: RequestInterceptor {
-    private let adaptHandler: AdaptHandler
+class OWNetworkAdapter: OWNetworkRequestInterceptor {
+    private let adaptHandler: OWNetworkAdaptHandler
 
     /// Creates an instance using the provided closure.
     ///
     /// - Parameter adaptHandler: `AdaptHandler` closure to be executed when handling request adaptation.
-    init(_ adaptHandler: @escaping AdaptHandler) {
+    init(_ adaptHandler: @escaping OWNetworkAdaptHandler) {
         self.adaptHandler = adaptHandler
     }
 
@@ -136,69 +136,69 @@ class Adapter: RequestInterceptor {
         adaptHandler(urlRequest, session, completion)
     }
 
-    func adapt(_ urlRequest: URLRequest, using state: RequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(_ urlRequest: URLRequest, using state: OWNetworkRequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         adaptHandler(urlRequest, state.session, completion)
     }
 }
 
-extension RequestAdapter where Self == Adapter {
+extension OWNetworkRequestAdapter where Self == OWNetworkAdapter {
     /// Creates an `Adapter` using the provided `AdaptHandler` closure.
     ///
     /// - Parameter closure: `AdaptHandler` to use to adapt the request.
     /// - Returns:           The `Adapter`.
-    static func adapter(using closure: @escaping AdaptHandler) -> Adapter {
-        Adapter(closure)
+    static func adapter(using closure: @escaping OWNetworkAdaptHandler) -> OWNetworkAdapter {
+        OWNetworkAdapter(closure)
     }
 }
 
 // MARK: -
 
 /// Closure-based `RequestRetrier`.
-class Retrier: RequestInterceptor {
-    private let retryHandler: RetryHandler
+class OWNetworkRetrier: OWNetworkRequestInterceptor {
+    private let retryHandler: OWNetworkRetryHandler
 
     /// Creates an instance using the provided closure.
     ///
     /// - Parameter retryHandler: `RetryHandler` closure to be executed when handling request retry.
-    init(_ retryHandler: @escaping RetryHandler) {
+    init(_ retryHandler: @escaping OWNetworkRetryHandler) {
         self.retryHandler = retryHandler
     }
 
     func retry(_ request: OWNetworkRequest,
                     for session: OWNetworkSession,
                     dueTo error: Error,
-                    completion: @escaping (RetryResult) -> Void) {
+                    completion: @escaping (OWNetworkRetryResult) -> Void) {
         retryHandler(request, session, error, completion)
     }
 }
 
-extension RequestRetrier where Self == Retrier {
+extension OWNetworkRequestRetrier where Self == OWNetworkRetrier {
     /// Creates a `Retrier` using the provided `RetryHandler` closure.
     ///
     /// - Parameter closure: `RetryHandler` to use to retry the request.
     /// - Returns:           The `Retrier`.
-    static func retrier(using closure: @escaping RetryHandler) -> Retrier {
-        Retrier(closure)
+    static func retrier(using closure: @escaping OWNetworkRetryHandler) -> OWNetworkRetrier {
+        OWNetworkRetrier(closure)
     }
 }
 
 // MARK: -
 
 /// `RequestInterceptor` which can use multiple `RequestAdapter` and `RequestRetrier` values.
-class Interceptor: RequestInterceptor {
+class OWNetworkInterceptor: OWNetworkRequestInterceptor {
     /// All `RequestAdapter`s associated with the instance. These adapters will be run until one fails.
-    let adapters: [RequestAdapter]
+    let adapters: [OWNetworkRequestAdapter]
     /// All `RequestRetrier`s associated with the instance. These retriers will be run one at a time until one triggers retry.
-    let retriers: [RequestRetrier]
+    let retriers: [OWNetworkRequestRetrier]
 
     /// Creates an instance from `AdaptHandler` and `RetryHandler` closures.
     ///
     /// - Parameters:
     ///   - adaptHandler: `AdaptHandler` closure to be used.
     ///   - retryHandler: `RetryHandler` closure to be used.
-    init(adaptHandler: @escaping AdaptHandler, retryHandler: @escaping RetryHandler) {
-        adapters = [Adapter(adaptHandler)]
-        retriers = [Retrier(retryHandler)]
+    init(adaptHandler: @escaping OWNetworkAdaptHandler, retryHandler: @escaping OWNetworkRetryHandler) {
+        adapters = [OWNetworkAdapter(adaptHandler)]
+        retriers = [OWNetworkRetrier(retryHandler)]
     }
 
     /// Creates an instance from `RequestAdapter` and `RequestRetrier` values.
@@ -206,7 +206,7 @@ class Interceptor: RequestInterceptor {
     /// - Parameters:
     ///   - adapter: `RequestAdapter` value to be used.
     ///   - retrier: `RequestRetrier` value to be used.
-    init(adapter: RequestAdapter, retrier: RequestRetrier) {
+    init(adapter: OWNetworkRequestAdapter, retrier: OWNetworkRequestRetrier) {
         adapters = [adapter]
         retriers = [retrier]
     }
@@ -217,7 +217,7 @@ class Interceptor: RequestInterceptor {
     ///   - adapters:     `RequestAdapter` values to be used.
     ///   - retriers:     `RequestRetrier` values to be used.
     ///   - interceptors: `RequestInterceptor`s to be used.
-    init(adapters: [RequestAdapter] = [], retriers: [RequestRetrier] = [], interceptors: [RequestInterceptor] = []) {
+    init(adapters: [OWNetworkRequestAdapter] = [], retriers: [OWNetworkRequestRetrier] = [], interceptors: [OWNetworkRequestInterceptor] = []) {
         self.adapters = adapters + interceptors
         self.retriers = retriers + interceptors
     }
@@ -228,7 +228,7 @@ class Interceptor: RequestInterceptor {
 
     private func adapt(_ urlRequest: URLRequest,
                        for session: OWNetworkSession,
-                       using adapters: [RequestAdapter],
+                       using adapters: [OWNetworkRequestAdapter],
                        completion: @escaping (Result<URLRequest, Error>) -> Void) {
         var pendingAdapters = adapters
 
@@ -246,13 +246,13 @@ class Interceptor: RequestInterceptor {
         }
     }
 
-    func adapt(_ urlRequest: URLRequest, using state: RequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(_ urlRequest: URLRequest, using state: OWNetworkRequestAdapterState, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         adapt(urlRequest, using: state, adapters: adapters, completion: completion)
     }
 
     private func adapt(_ urlRequest: URLRequest,
-                       using state: RequestAdapterState,
-                       adapters: [RequestAdapter],
+                       using state: OWNetworkRequestAdapterState,
+                       adapters: [OWNetworkRequestAdapter],
                        completion: @escaping (Result<URLRequest, Error>) -> Void) {
         var pendingAdapters = adapters
 
@@ -273,15 +273,15 @@ class Interceptor: RequestInterceptor {
     func retry(_ request: OWNetworkRequest,
                     for session: OWNetworkSession,
                     dueTo error: Error,
-                    completion: @escaping (RetryResult) -> Void) {
+                    completion: @escaping (OWNetworkRetryResult) -> Void) {
         retry(request, for: session, dueTo: error, using: retriers, completion: completion)
     }
 
     private func retry(_ request: OWNetworkRequest,
                        for session: OWNetworkSession,
                        dueTo error: Error,
-                       using retriers: [RequestRetrier],
-                       completion: @escaping (RetryResult) -> Void) {
+                       using retriers: [OWNetworkRequestRetrier],
+                       completion: @escaping (OWNetworkRetryResult) -> Void) {
         var pendingRetriers = retriers
 
         guard !pendingRetriers.isEmpty else { completion(.doNotRetry); return }
@@ -300,15 +300,15 @@ class Interceptor: RequestInterceptor {
     }
 }
 
-extension RequestInterceptor where Self == Interceptor {
+extension OWNetworkRequestInterceptor where Self == OWNetworkInterceptor {
     /// Creates an `Interceptor` using the provided `AdaptHandler` and `RetryHandler` closures.
     ///
     /// - Parameters:
     ///   - adapter: `AdapterHandler`to use to adapt the request.
     ///   - retrier: `RetryHandler` to use to retry the request.
     /// - Returns:   The `Interceptor`.
-    static func interceptor(adapter: @escaping AdaptHandler, retrier: @escaping RetryHandler) -> Interceptor {
-        Interceptor(adaptHandler: adapter, retryHandler: retrier)
+    static func interceptor(adapter: @escaping OWNetworkAdaptHandler, retrier: @escaping OWNetworkRetryHandler) -> OWNetworkInterceptor {
+        OWNetworkInterceptor(adaptHandler: adapter, retryHandler: retrier)
     }
 
     /// Creates an `Interceptor` using the provided `RequestAdapter` and `RequestRetrier` instances.
@@ -316,8 +316,8 @@ extension RequestInterceptor where Self == Interceptor {
     ///   - adapter: `RequestAdapter` to use to adapt the request
     ///   - retrier: `RequestRetrier` to use to retry the request.
     /// - Returns:   The `Interceptor`.
-    static func interceptor(adapter: RequestAdapter, retrier: RequestRetrier) -> Interceptor {
-        Interceptor(adapter: adapter, retrier: retrier)
+    static func interceptor(adapter: OWNetworkRequestAdapter, retrier: OWNetworkRequestRetrier) -> OWNetworkInterceptor {
+        OWNetworkInterceptor(adapter: adapter, retrier: retrier)
     }
 
     /// Creates an `Interceptor` using the provided `RequestAdapter`s, `RequestRetrier`s, and `RequestInterceptor`s.
@@ -327,9 +327,9 @@ extension RequestInterceptor where Self == Interceptor {
     ///                   a retry is triggered.
     ///   - interceptors: `RequestInterceptor`s to use to intercept the request.
     /// - Returns:        The `Interceptor`.
-    static func interceptor(adapters: [RequestAdapter] = [],
-                                   retriers: [RequestRetrier] = [],
-                                   interceptors: [RequestInterceptor] = []) -> Interceptor {
-        Interceptor(adapters: adapters, retriers: retriers, interceptors: interceptors)
+    static func interceptor(adapters: [OWNetworkRequestAdapter] = [],
+                                   retriers: [OWNetworkRequestRetrier] = [],
+                                   interceptors: [OWNetworkRequestInterceptor] = []) -> OWNetworkInterceptor {
+        OWNetworkInterceptor(adapters: adapters, retriers: retriers, interceptors: interceptors)
     }
 }

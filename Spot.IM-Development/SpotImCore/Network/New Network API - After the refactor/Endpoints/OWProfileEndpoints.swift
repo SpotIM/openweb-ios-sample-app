@@ -12,7 +12,7 @@ enum OWProfileEndpoints: OWEndpoints {
     case createSingleUseToken
     
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .createSingleUseToken:
             return .post
@@ -28,10 +28,10 @@ enum OWProfileEndpoints: OWEndpoints {
     }
     
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .createSingleUseToken:
-            var requestParams: Parameters = ["access_token": SPUserSessionHolder.session.token?.replacingOccurrences(of: "Bearer ", with: "")]
+            var requestParams: OWNetworkParameters = ["access_token": SPUserSessionHolder.session.token?.replacingOccurrences(of: "Bearer ", with: "")]
             if let openwebToken = SPUserSessionHolder.session.openwebToken {
                 requestParams["open_web_token"] = openwebToken
             }

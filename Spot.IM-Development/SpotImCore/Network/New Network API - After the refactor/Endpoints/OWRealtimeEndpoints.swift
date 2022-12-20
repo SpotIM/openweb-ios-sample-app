@@ -13,7 +13,7 @@ enum OWRealtimeEndpoints: OWEndpoints {
     case fetchData(fullConversationId: String)
     
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .fetchData:
             return .post
@@ -29,7 +29,7 @@ enum OWRealtimeEndpoints: OWEndpoints {
     }
     
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .fetchData(let fullConversationId):
             return fetchDataParameters(fullConversationId: fullConversationId)

@@ -11,7 +11,7 @@ import Foundation
 internal enum SPAnalyticsRequest: SPRequest {
     case analytics
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .analytics: return .post
         }

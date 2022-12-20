@@ -33,7 +33,7 @@ struct OWHTTPHeaderContent {
 class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
     func process(request: URLRequest) -> URLRequest {
         
-        var headers: HTTPHeaders = [
+        var headers: OWNetworkHTTPHeaders = [
             OWHTTPHeaderName.contentType: OWHTTPHeaderContent.json,
             OWHTTPHeaderName.spotId: OWManager.manager.spotId,
             OWHTTPHeaderName.postId: OWManager.manager.postId ?? "default",
@@ -71,7 +71,7 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
 
 fileprivate extension OWHTTPHeaderRequestMiddleware {
     func extendedAgent() -> String {
-        var agent = HTTPHeaders.default.dictionary["User-Agent"] ?? "na"
+        var agent = OWNetworkHTTPHeaders.default.dictionary["User-Agent"] ?? "na"
         let device = UIDevice.modelIdentifier()
         agent.insert(contentsOf: device.appending(" "), at: agent.startIndex)
         return agent

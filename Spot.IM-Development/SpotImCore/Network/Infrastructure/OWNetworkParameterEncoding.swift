@@ -9,10 +9,10 @@
 import Foundation
 
 /// A dictionary of parameters to apply to a `URLRequest`.
-typealias Parameters = [String: Any]
+typealias OWNetworkParameters = [String: Any]
 
 /// A type used to define how a set of parameters are applied to a `URLRequest`.
-protocol ParameterEncoding {
+protocol OWNetworkParameterEncoding {
     /// Creates a `URLRequest` by encoding parameters and applying them on the passed request.
     ///
     /// - Parameters:
@@ -21,7 +21,7 @@ protocol ParameterEncoding {
     ///
     /// - Returns:      The encoded `URLRequest`.
     /// - Throws:       Any `Error` produced during parameter encoding.
-    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: OWNetworkParameters?) throws -> URLRequest
 }
 
 // MARK: -
@@ -40,7 +40,7 @@ protocol ParameterEncoding {
 ///
 /// `BoolEncoding` can be used to configure how boolean values are encoded. The default behavior is to encode
 /// `true` as 1 and `false` as 0.
-struct URLEncoding: ParameterEncoding {
+struct OWNetworkURLEncoding: OWNetworkParameterEncoding {
     // MARK: Helper Types
 
     /// Defines whether the url-encoded query string is applied to the existing query string or HTTP body of the
@@ -54,7 +54,7 @@ struct URLEncoding: ParameterEncoding {
         /// Sets encoded query string result as the HTTP body of the URL request.
         case httpBody
 
-        func encodesParametersInURL(for method: HTTPMethod) -> Bool {
+        func encodesParametersInURL(for method: OWNetworkHTTPMethod) -> Bool {
             switch self {
             case .methodDependent: return [.get, .head, .delete].contains(method)
             case .queryString: return true
@@ -104,13 +104,13 @@ struct URLEncoding: ParameterEncoding {
     // MARK: Properties
 
     /// Returns a default `URLEncoding` instance with a `.methodDependent` destination.
-    static var `default`: URLEncoding { URLEncoding() }
+    static var `default`: OWNetworkURLEncoding { OWNetworkURLEncoding() }
 
     /// Returns a `URLEncoding` instance with a `.queryString` destination.
-    static var queryString: URLEncoding { URLEncoding(destination: .queryString) }
+    static var queryString: OWNetworkURLEncoding { OWNetworkURLEncoding(destination: .queryString) }
 
     /// Returns a `URLEncoding` instance with an `.httpBody` destination.
-    static var httpBody: URLEncoding { URLEncoding(destination: .httpBody) }
+    static var httpBody: OWNetworkURLEncoding { OWNetworkURLEncoding(destination: .httpBody) }
 
     /// The destination defining where the encoded query string is to be applied to the URL request.
     let destination: Destination
@@ -140,7 +140,7 @@ struct URLEncoding: ParameterEncoding {
 
     // MARK: Encoding
 
-    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: OWNetworkParameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()
 
         guard let parameters = parameters else { return urlRequest }
@@ -222,7 +222,7 @@ struct URLEncoding: ParameterEncoding {
 
 /// Uses `JSONSerialization` to create a JSON representation of the parameters object, which is set as the body of the
 /// request. The `Content-Type` HTTP header field of an encoded request is set to `application/json`.
-struct JSONEncoding: ParameterEncoding {
+struct OWNetworkJSONEncoding: OWNetworkParameterEncoding {
     enum Error: Swift.Error {
         case invalidJSONObject
     }
@@ -230,10 +230,10 @@ struct JSONEncoding: ParameterEncoding {
     // MARK: Properties
 
     /// Returns a `JSONEncoding` instance with default writing options.
-    static var `default`: JSONEncoding { JSONEncoding() }
+    static var `default`: OWNetworkJSONEncoding { OWNetworkJSONEncoding() }
 
     /// Returns a `JSONEncoding` instance with `.prettyPrinted` writing options.
-    static var prettyPrinted: JSONEncoding { JSONEncoding(options: .prettyPrinted) }
+    static var prettyPrinted: OWNetworkJSONEncoding { OWNetworkJSONEncoding(options: .prettyPrinted) }
 
     /// The options for writing the parameters as JSON data.
     let options: JSONSerialization.WritingOptions
@@ -249,7 +249,7 @@ struct JSONEncoding: ParameterEncoding {
 
     // MARK: Encoding
 
-    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: Parameters?) throws -> URLRequest {
+    func encode(_ urlRequest: OWNetworkURLRequestConvertible, with parameters: OWNetworkParameters?) throws -> URLRequest {
         var urlRequest = try urlRequest.asURLRequest()
 
         guard let parameters = parameters else { return urlRequest }
@@ -306,7 +306,7 @@ struct JSONEncoding: ParameterEncoding {
     }
 }
 
-extension JSONEncoding.Error {
+extension OWNetworkJSONEncoding.Error {
     var localizedDescription: String {
         """
         Invalid JSON object provided for parameter or object encoding. \

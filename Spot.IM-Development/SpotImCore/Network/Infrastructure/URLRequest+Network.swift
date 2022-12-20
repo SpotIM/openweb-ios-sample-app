@@ -10,8 +10,8 @@ import Foundation
 
 extension URLRequest {
     /// Returns the `httpMethod` as Alamofire's `HTTPMethod` type.
-    var method: HTTPMethod? {
-        get { httpMethod.flatMap(HTTPMethod.init) }
+    var method: OWNetworkHTTPMethod? {
+        get { httpMethod.flatMap(OWNetworkHTTPMethod.init) }
         set { httpMethod = newValue?.rawValue }
     }
 

@@ -27,7 +27,7 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
             
             let spRequest = SPInternalAuthRequests.guest
             
-            var headers = HTTPHeaders.basic(with: spotKey)
+            var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
             if let token = SPUserSessionHolder.session.token {
                 headers[APIHeadersConstants.authorization] = token
             }
@@ -83,7 +83,7 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
             
             let spRequest = SPInternalAuthRequests.logout
             
-            var headers = HTTPHeaders.basic(with: spotKey)
+            var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
             if let token = SPUserSessionHolder.session.token {
                 headers[APIHeadersConstants.authorization] = token
             }
@@ -126,7 +126,7 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
             }
             
             let spRequest = SPInternalAuthRequests.user
-            let headers = HTTPHeaders.basic(with: spotKey)
+            let headers = OWNetworkHTTPHeaders.basic(with: spotKey)
             
             let task = self.manager.execute(
                 request: spRequest,

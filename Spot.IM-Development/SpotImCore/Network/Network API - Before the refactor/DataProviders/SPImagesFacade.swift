@@ -51,7 +51,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             
             return manager.execute(
                 request: request,
-                encoding: URLEncoding.default,
+                encoding: OWNetworkURLEncoding.default,
                 parser: OWDecodableParser<Data>()) { (result, _) in
                     switch result {
                     case .success(let data):
@@ -125,7 +125,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             servicesProvider.logger().log(level: .error, "No spot key for signing")
             return
         }
-        let headers = HTTPHeaders.basic(with: spotKey)
+        let headers = OWNetworkHTTPHeaders.basic(with: spotKey)
         let parameters: [String: Any] = [
             "query": "public_id=\(publicId)&timestamp=\(timestamp)"
         ]

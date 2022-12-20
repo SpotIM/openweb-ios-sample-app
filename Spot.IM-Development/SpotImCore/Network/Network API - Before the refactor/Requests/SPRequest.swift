@@ -9,7 +9,7 @@
 import Foundation
 
 internal protocol SPRequest {
-    var method: HTTPMethod { get }
+    var method: OWNetworkHTTPMethod { get }
     var pathString: String { get }
     var url: URL! { get }
 }

@@ -12,7 +12,7 @@ enum OWFailureReportEndpoints: OWEndpoints {
     case error(error: SPError)
     
     // MARK: - HTTPMethod
-    var method: HTTPMethod {
+    var method: OWNetworkHTTPMethod {
         switch self {
         case .error:
             return .post
@@ -28,7 +28,7 @@ enum OWFailureReportEndpoints: OWEndpoints {
     }
     
     // MARK: - Parameters
-    var parameters: Parameters? {
+    var parameters: OWNetworkParameters? {
         switch self {
         case .error(let error):
             return error.parameters()

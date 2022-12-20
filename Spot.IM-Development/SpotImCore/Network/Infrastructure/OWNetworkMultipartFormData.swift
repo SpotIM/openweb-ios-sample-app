@@ -22,7 +22,7 @@ import MobileCoreServices
 /// - https://www.ietf.org/rfc/rfc2388.txt
 /// - https://www.ietf.org/rfc/rfc2045.txt
 /// - https://www.w3.org/TR/html401/interact/forms.html#h-17.13
-class MultipartFormData {
+class OWNetworkMultipartFormData {
     // MARK: - Helper Types
 
     enum EncodingCharacters {
@@ -58,13 +58,13 @@ class MultipartFormData {
     }
 
     class BodyPart {
-        let headers: HTTPHeaders
+        let headers: OWNetworkHTTPHeaders
         let bodyStream: InputStream
         let bodyContentLength: UInt64
         var hasInitialBoundary = false
         var hasFinalBoundary = false
 
-        init(headers: HTTPHeaders, bodyStream: InputStream, bodyContentLength: UInt64) {
+        init(headers: OWNetworkHTTPHeaders, bodyStream: InputStream, bodyContentLength: UInt64) {
             self.headers = headers
             self.bodyStream = bodyStream
             self.bodyContentLength = bodyContentLength
@@ -282,7 +282,7 @@ class MultipartFormData {
     ///   - stream:  `InputStream` to encode into the instance.
     ///   - length:  Length, in bytes, of the stream.
     ///   - headers: `HTTPHeaders` for the body part.
-    func append(_ stream: InputStream, withLength length: UInt64, headers: HTTPHeaders) {
+    func append(_ stream: InputStream, withLength length: UInt64, headers: OWNetworkHTTPHeaders) {
         let bodyPart = BodyPart(headers: headers, bodyStream: stream, bodyContentLength: length)
         bodyParts.append(bodyPart)
     }
@@ -488,11 +488,11 @@ class MultipartFormData {
 
     // MARK: - Private - Content Headers
 
-    private func contentHeaders(withName name: String, fileName: String? = nil, mimeType: String? = nil) -> HTTPHeaders {
+    private func contentHeaders(withName name: String, fileName: String? = nil, mimeType: String? = nil) -> OWNetworkHTTPHeaders {
         var disposition = "form-data; name=\"\(name)\""
         if let fileName = fileName { disposition += "; filename=\"\(fileName)\"" }
 
-        var headers: HTTPHeaders = [.contentDisposition(disposition)]
+        var headers: OWNetworkHTTPHeaders = [.contentDisposition(disposition)]
         if let mimeType = mimeType { headers.add(.contentType(mimeType)) }
 
         return headers
@@ -523,7 +523,7 @@ class MultipartFormData {
 #if canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers
 
-extension MultipartFormData {
+extension OWNetworkMultipartFormData {
     // MARK: - Private - Mime Type
 
     private func mimeType(forPathExtension pathExtension: String) -> String {
@@ -543,7 +543,7 @@ extension MultipartFormData {
 
 #else
 
-extension MultipartFormData {
+extension OWNetworkMultipartFormData {
     // MARK: - Private - Mime Type
 
     private func mimeType(forPathExtension pathExtension: String) -> String {

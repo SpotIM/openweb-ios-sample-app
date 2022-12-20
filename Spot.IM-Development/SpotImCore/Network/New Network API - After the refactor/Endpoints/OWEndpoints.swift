@@ -13,9 +13,9 @@ import Foundation
  All endpoints will conform to it
  */
 protocol OWEndpoints {
-    var method: HTTPMethod { get }
+    var method: OWNetworkHTTPMethod { get }
     var path: String { get }
-    var parameters: Parameters? { get }
+    var parameters: OWNetworkParameters? { get }
     var overrideBaseURL: URL? { get }
     var additionalMiddlewares: [OWRequestMiddleware]? { get }
 }

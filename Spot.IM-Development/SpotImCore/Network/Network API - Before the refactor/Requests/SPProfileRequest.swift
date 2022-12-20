@@ -11,7 +11,7 @@ import Foundation
 internal enum SPProfileRequest: SPRequest {
     case createSingleUseToken
 
-    internal var method: HTTPMethod {
+    internal var method: OWNetworkHTTPMethod {
         switch self {
         case .createSingleUseToken: return .post
         }
