@@ -53,6 +53,10 @@ extension UIView {
         self.tintColor = color
         return self
     }
+    
+    var barButtonItem: UIBarButtonItem {
+        return UIBarButtonItem(customView: self)
+    }
 }
 
 extension UILabel {
