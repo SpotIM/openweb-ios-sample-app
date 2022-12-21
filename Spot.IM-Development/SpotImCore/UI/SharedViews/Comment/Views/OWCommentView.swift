@@ -12,72 +12,65 @@ import RxCocoa
 
 class OWCommentView: UIView {
     fileprivate struct Metrics {
-        
+        static let leadingOffset: CGFloat = 16.0
+        static let commentLabelTopPadding: CGFloat = 10.0
+        static let messageContainerTopOffset: CGFloat = 5.0
     }
     
-    fileprivate lazy var headerView: OWCommentUserView = {
-        let vm = viewModel.outputs.commentUserVM
-        return OWCommentUserView() // TODO - Pass the VM
+    fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
+        return OWCommentHeaderView()
     }()
-    
-    fileprivate lazy var statusView: OWCommentStatusIndicationView = {
-        let vm = viewModel.outputs.statusIndicationVM
-        return OWCommentStatusIndicationView() // TODO - Pass the VM
+    fileprivate lazy var commentLabelView: OWCommentLabelView = {
+        return OWCommentLabelView()
     }()
-    
-    fileprivate lazy var contentView: OWCommentContentView = {
-        let vm = viewModel.outputs.contentVM
+    fileprivate lazy var commentContentView: OWCommentContentView = {
         return OWCommentContentView()
     }()
     
-    fileprivate lazy var actionsView: OWCommentActionsView = {
-        let vm = viewModel.outputs.commentActionsVM
-        return OWCommentActionsView() // TODO - Pass the VM
-    }()
+    fileprivate var viewModel: OWCommentViewModeling!
     
-    fileprivate let viewModel: OWCommentViewModeling
-    fileprivate let disposeBag = DisposeBag()
-    
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    init(viewModel: OWCommentViewModeling) {
-        self.viewModel = viewModel
+    init() {
         super.init(frame: .zero)
-        setupViews()
+        setupUI()
+        // setupObservers?
+    }
+    
+    func configure(with viewModel: OWCommentViewModeling) {
+        self.viewModel = viewModel
+        self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
+        self.commentLabelView.configure(viewModel: viewModel.outputs.commentLabelVM)
+        self.commentContentView.configure(with: viewModel.outputs.contentVM)
+        
+        setupUI()
         setupObservers()
     }
 }
 
 fileprivate extension OWCommentView {
-    func setupViews() {
-        addSubview(headerView)
-        headerView.OWSnp.makeConstraints { make in
-            make.top.trailing.leading.equalToSuperview()
+    func setupUI() {
+        self.backgroundColor = .clear
+        self.addSubviews(commentHeaderView, commentLabelView, commentContentView)
+        
+        commentHeaderView.OWSnp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(50) // TODO: remove
         }
         
-        addSubview(statusView)
-        statusView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(headerView.OWSnp.bottom)
+        commentLabelView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
+            make.leading.equalToSuperview()
         }
         
-        addSubview(contentView)
-        contentView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-            make.top.equalTo(statusView.OWSnp.bottom)
-            make.bottom.equalTo(actionsView.OWSnp.top)
+        commentContentView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset) // TODO!
+            make.leading.trailing.bottom.equalToSuperview()
         }
-
-        addSubview(actionsView)
-        actionsView.OWSnp.makeConstraints { make in
-            make.bottom.leading.trailing.equalToSuperview()
-        }
-
     }
     
     func setupObservers() {
-
+        
     }
 }
