@@ -44,14 +44,14 @@ class OWCommentHeaderView: UIView {
             .userInteractionEnabled(false)
             .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
     }()
-    fileprivate lazy var badgeTagLabel: UILabel = {
-        let label: OWBaseLabel = OWBaseLabel()
+    fileprivate lazy var badgeTagLabel: OWPaddedLabelView = {
+        let label: OWPaddedLabelView =
+            OWPaddedLabelView(insets: UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset))
             .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
             .border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .corner(radius: 3)
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .isHidden(true)
-        label.insets = UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset)
         return label
     }()
     private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
@@ -178,7 +178,9 @@ fileprivate extension OWCommentHeaderView {
             }).disposed(by: disposeBag)
         
         viewModel.outputs.badgeTitle
-            .bind(to: badgeTagLabel.rx.text)
+            .bind(onNext: { [weak self] title in
+                self?.badgeTagLabel.setText(title)
+            })
             .disposed(by: disposeBag)
         
         viewModel.outputs.badgeTitle
