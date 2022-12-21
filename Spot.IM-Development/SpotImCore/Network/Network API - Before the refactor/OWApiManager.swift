@@ -21,10 +21,6 @@ protocol OWResponseParser {
 
 public struct OWEmptyParser: OWResponseParser {
     
-    struct Settings {
-        static let emptyResponseSucceededStatusCodes = [204, 205]
-    }
-    
     init() {}
     
     func parse(object: Any) -> OWResult<Bool> {
@@ -137,7 +133,7 @@ final class OWApiManager {
                     return
                 }
                 
-                let isEmptyResponseStatusCode = OWEmptyParser.Settings.emptyResponseSucceededStatusCodes.contains(statusCode)
+                let isEmptyResponseStatusCode = OWNetworkStatusCode.emptyResponseSucceededStatusCodes.contains(statusCode)
                 let isResponseDataExist = response.data != nil
                 
                 guard isEmptyResponseStatusCode || isResponseDataExist else {
