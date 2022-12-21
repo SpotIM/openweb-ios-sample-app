@@ -42,42 +42,34 @@ class OWNetworkInterceptorLayer: OWNetworkRequestInterceptor {
         if let errorCode = error.asOWNetworkError?.responseCode,
            errorCode == OWNetworkStatusCode.authorizationErrorCode  {
             // Authorization error (i.e code 403)
-              
-            // Get new user session and reset the old one
-            // Also check if we should renew SSO after the process
-            let isUserRegistered = SPUserSessionHolder.isRegister()
-            let isSSO = SPConfigsDataSource.appConfig?.initialization?.ssoEnabled ?? false
-            let shouldRenewSSO = isUserRegistered && isSSO
-            let userId = SPUserSessionHolder.session.user?.userId ?? ""
-            SPUserSessionHolder.resetUserSession()
+            recoverFromAuthorizationError(completion: completion, requestURLPath: requestURL)
             
-            // Due to bad architecture it is not possible to dependency injection the authProvider in the class initializer
-            _ = SpotIm.authProvider
-                .getUser()
-                .take(1) // No need to dispose
-                .subscribe(onNext: { [weak self] _ in
-                    let log = "Request: \(requestURL) going to retry after generating a new authorization token after network 403 error code"
-                    self?.servicesProvider.logger().log(level: .verbose, log)
-                    
-                    if shouldRenewSSO {
-                        // Will renew SSO with publishers API if a user was logged in before
-                        self?.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
-                        SpotIm.authProvider.renewSSOPublish.onNext(userId)
-                    }
-                    
-                    // Will succeed because we re-generate a new guest user session regardless of the silent SSO
-                    // 'adapt' function will inject the new auth token
-                    completion(.retry)
-                }, onError: { [weak self] _ in
-                    let log = "Failed to get `user/data` after clearing authorization header for recovering from 403 error code.\nRequest: \(requestURL) failed because of that"
-                    self?.servicesProvider.logger().log(level: .error, log)
-                    completion(.doNotRetry)
-                })
         } else {
             // General error, just retry
             let log = "Reuest: \(requestURL) going to retry"
             servicesProvider.logger().log(level: .verbose, log)
             completion(.retry)
         }
+    }
+}
+    
+fileprivate extension OWNetworkInterceptorLayer {
+    func recoverFromAuthorizationError(completion: @escaping (OWNetworkRetryResult) -> Void, requestURLPath: String) {
+        let userId = SPUserSessionHolder.session.user?.userId ?? ""
+        let authorizationRecoveryService = servicesProvider.authorizationRecoveryService()
+        
+        _ = authorizationRecoveryService.recoverFromAuthorizationError(userId: userId)
+            .take(1) // No need to dispose
+            .subscribe(onNext: { [weak self] _ in
+                let log = "Request: \(requestURLPath) going to retry after generating a new authorization token after network 403 error code"
+                self?.servicesProvider.logger().log(level: .verbose, log)
+                // Will succeed because we re-generate a new guest user session regardless of the silent SSO
+                // 'adapt' function will inject the new auth token
+                completion(.retry)
+            }, onError: { [weak self] _ in
+                let log = "Failed to get `user/data` after clearing authorization header for recovering from 403 error code.\nRequest: \(requestURLPath) failed because of that"
+                self?.servicesProvider.logger().log(level: .error, log)
+                completion(.doNotRetry)
+            })
     }
 }
