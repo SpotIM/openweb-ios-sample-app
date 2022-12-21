@@ -55,20 +55,21 @@ fileprivate extension OWAuthorizationRecoveryService {
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag
         
-        // Due to bad architecture it is not possible to dependency injection those classes
-        // Get new user session and reset the old one
-        // Also check if we should renew SSO after the process
-        let isUserRegistered = SPUserSessionHolder.isRegister()
-        let isSSO = SPConfigsDataSource.appConfig?.initialization?.ssoEnabled ?? false
-        let shouldRenewSSO = isUserRegistered && isSSO
-        SPUserSessionHolder.resetUserSession()
-        
         // Due to bad architecture it is not possible to dependency injection the authProvider in the class initializer
         _ = Observable.just(())
-            .do(onNext: { [weak self] _ in
+            .flatMap { [weak self] _ -> Observable<Bool> in
                 self?.isCurrentlyRecovering.onNext(true)
-            })
-            .flatMap {
+                
+                // Due to bad architecture it is not possible to dependency injection those classes
+                // Get new user session and reset the old one
+                // Also check if we should renew SSO after the process
+                let isUserRegistered = SPUserSessionHolder.isRegister()
+                let isSSO = SPConfigsDataSource.appConfig?.initialization?.ssoEnabled ?? false
+                let shouldRenewSSO = isUserRegistered && isSSO
+                SPUserSessionHolder.resetUserSession()
+                return .just(shouldRenewSSO)
+            }
+            .flatMap { shouldRenewSSO -> Observable<SPUser> in
                 return SpotIm.authProvider
                     .getUser()
                     .take(1) // No need to dispose
