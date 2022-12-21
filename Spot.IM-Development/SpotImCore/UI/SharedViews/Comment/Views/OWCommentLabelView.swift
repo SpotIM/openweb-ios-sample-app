@@ -109,14 +109,13 @@ fileprivate extension OWCommentLabelView {
             .bind(to: self.label.rx.text)
             .disposed(by: disposeBag)
         
+        let _labelSettings = Observable.combineLatest(viewModel.outputs.state, viewModel.outputs.commentLabelSettings)
+        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .withLatestFrom(viewModel.outputs.state) { style, state -> (OWThemeStyle, LabelState) in
-                return (style, state)
-            }
-            .withLatestFrom(viewModel.outputs.commentLabelSettings) { data, label -> (OWThemeStyle, LabelState, UIColor)? in
-                guard let color = label?.color else { return nil }
-                return (data.0, data.1, color)
+            .withLatestFrom(_labelSettings) { style, settings -> (OWThemeStyle, LabelState, UIColor)? in
+                guard let color = settings.1?.color else { return nil }
+                return (style, settings.0, color)
             }
             .unwrap()
             .subscribe { [weak self] (style, state, color) in
