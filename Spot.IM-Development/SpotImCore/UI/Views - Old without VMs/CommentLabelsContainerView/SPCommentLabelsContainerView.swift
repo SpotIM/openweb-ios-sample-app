@@ -28,7 +28,7 @@ internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecogniz
         setupUI()
     }
     
-    func setLabelsContainer(labels: [CommentLabel],
+    func setLabelsContainer(labels: [OWCommentLabelSettings],
                             guidelineText: String,
                             maxLabels: Int) {
         cleanExistingLabels()
@@ -81,7 +81,7 @@ internal final class SPCommentLabelsContainerView: OWBaseView, UIGestureRecogniz
         }
     }
     
-    private func setLabels(labels: [CommentLabel]) {
+    private func setLabels(labels: [OWCommentLabelSettings]) {
         labels.forEach { label in
             let labelView = CommentLabelView()
             labelView.setLabel(commentLabelIconUrl: label.iconUrl, labelColor: label.color, labelText: label.text, labelId: label.id, state: .notSelected)

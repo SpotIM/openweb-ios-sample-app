@@ -17,7 +17,7 @@ protocol OWCommentLabelViewModelingInputs {
 }
 
 protocol OWCommentLabelViewModelingOutputs {
-    var commentLabel: Observable<CommentLabel?> { get }
+    var commentLabel: Observable<OWCommentLabelSettings?> { get }
     var state: Observable<LabelState> { get }
 }
 
@@ -53,7 +53,7 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
             .unwrap()
     }
     
-    var commentLabel: Observable<CommentLabel?> {
+    var commentLabel: Observable<OWCommentLabelSettings?> {
         Observable.combineLatest(_comment, _commentLabelsSectionsConfig) { [weak self] comment, commentLabelsSectionsConfig in
             guard let self = self,
                   let comment = comment
@@ -71,13 +71,13 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
 }
 
 fileprivate extension OWCommentLabelViewModel {
-    func getCommentLabel(comment: SPComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> CommentLabel? {
+    func getCommentLabel(comment: SPComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> OWCommentLabelSettings? {
         guard let commentLabelConfig = getCommentLabelFromConfig(comment: comment, commentLabelsSectionsConfig: commentLabelsSectionsConfig),
               let color = UIColor.color(rgb: commentLabelConfig.color),
               let iconUrl = commentLabelConfig.getIconUrl()
         else { return nil }
         
-        return CommentLabel(
+        return OWCommentLabelSettings(
             id: commentLabelConfig.id,
             text: commentLabelConfig.text,
             iconUrl: iconUrl,
