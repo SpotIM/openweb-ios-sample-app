@@ -92,7 +92,7 @@ fileprivate extension OWCommentLabelView {
     }
     
     func setupObservers() {
-        viewModel.outputs.commentLabel
+        viewModel.outputs.commentLabelSettings
             .unwrap()
             .map {$0.iconUrl}
             .subscribe(onNext: { [weak self] url in
@@ -103,7 +103,7 @@ fileprivate extension OWCommentLabelView {
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.commentLabel
+        viewModel.outputs.commentLabelSettings
             .unwrap()
             .map {$0.text}
             .bind(to: self.label.rx.text)
@@ -114,7 +114,7 @@ fileprivate extension OWCommentLabelView {
             .withLatestFrom(viewModel.outputs.state) { style, state -> (OWThemeStyle, LabelState) in
                 return (style, state)
             }
-            .withLatestFrom(viewModel.outputs.commentLabel) { data, label -> (OWThemeStyle, LabelState, UIColor)? in
+            .withLatestFrom(viewModel.outputs.commentLabelSettings) { data, label -> (OWThemeStyle, LabelState, UIColor)? in
                 guard let color = label?.color else { return nil }
                 return (data.0, data.1, color)
             }
@@ -125,7 +125,7 @@ fileprivate extension OWCommentLabelView {
             }
             .disposed(by: disposeBag)
         
-        viewModel.outputs.commentLabel
+        viewModel.outputs.commentLabelSettings
             .subscribe(onNext: { [weak self] label in
                 guard let self = self else { return }
                 self.heightConstraint?.update(offset: label == nil ? 0 : Metrics.commentLabelViewHeight)

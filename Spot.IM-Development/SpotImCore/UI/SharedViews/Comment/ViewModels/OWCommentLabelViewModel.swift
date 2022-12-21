@@ -17,7 +17,7 @@ protocol OWCommentLabelViewModelingInputs {
 }
 
 protocol OWCommentLabelViewModelingOutputs {
-    var commentLabel: Observable<OWCommentLabelSettings?> { get }
+    var commentLabelSettings: Observable<OWCommentLabelSettings?> { get }
     var state: Observable<LabelState> { get }
 }
 
@@ -53,7 +53,7 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
             .unwrap()
     }
     
-    var commentLabel: Observable<OWCommentLabelSettings?> {
+    var commentLabelSettings: Observable<OWCommentLabelSettings?> {
         Observable.combineLatest(_comment, _commentLabelsSectionsConfig) { [weak self] comment, commentLabelsSectionsConfig in
             guard let self = self,
                   let comment = comment
