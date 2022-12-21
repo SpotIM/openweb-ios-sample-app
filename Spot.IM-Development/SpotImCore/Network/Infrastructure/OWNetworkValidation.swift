@@ -50,7 +50,7 @@ extension OWNetworkRequest {
 
     // MARK: Properties
 
-    fileprivate var acceptableStatusCodes: Range<Int> { 200..<300 }
+    fileprivate var acceptableStatusCodes: Range<Int> { OWNetworkStatusCode.acceptableStatusCodes }
 
     fileprivate var acceptableContentTypes: [String] {
         if let accept = request?.value(forHTTPHeaderField: "Accept") {

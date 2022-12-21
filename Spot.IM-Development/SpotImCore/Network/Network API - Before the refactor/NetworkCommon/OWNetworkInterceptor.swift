@@ -40,7 +40,7 @@ class OWNetworkInterceptorLayer: OWNetworkRequestInterceptor {
         }
         
         if let errorCode = error.asOWNetworkError?.responseCode,
-            errorCode == APIErrorCodes.authorizationErrorCode  {
+           errorCode == OWNetworkStatusCode.authorizationErrorCode  {
             // Authorization error (i.e code 403)
               
             // Get new user session and reset the old one
