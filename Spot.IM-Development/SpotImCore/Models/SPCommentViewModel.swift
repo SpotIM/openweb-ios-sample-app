@@ -27,7 +27,7 @@ internal struct CommentViewModel {
     var repliesRawCount: Int?
     var repliesCount: String?
     var depth: Int = 0
-    var commentLabels: [CommentLabel]?
+    var commentLabels: [OWCommentLabelSettings]?
     var commentGifUrl: String?
     var commentImage: CommentImage?
     private var commentMediaOriginalHeight: Int?
@@ -94,7 +94,7 @@ internal struct CommentViewModel {
                    let commentLabelIconUrl = config.getIconUrl()
                 {
                     commentLabels?.append(
-                        CommentLabel(id: config.id,
+                        OWCommentLabelSettings(id: config.id,
                                      text: config.text,
                                      iconUrl: commentLabelIconUrl,
                                      color: commentLabelColor
@@ -416,7 +416,7 @@ enum BadgesOverrideKeys: String {
     case communityModerator = "user.badges.community-moderator"
 }
 
-struct CommentLabel {
+struct OWCommentLabelSettings {
     var id: String
     var text: String
     var iconUrl: URL
