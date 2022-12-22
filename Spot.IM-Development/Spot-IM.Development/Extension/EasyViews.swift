@@ -90,6 +90,11 @@ extension UILabel {
         return self
     }
     
+    @discardableResult func lineBreakMode(_ mode: NSLineBreakMode) -> UILabel {
+        self.lineBreakMode = mode
+        return self
+    }
+    
     @discardableResult func lineSpacing(_ spacing: CGFloat) -> UILabel {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = spacing

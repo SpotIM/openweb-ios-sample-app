@@ -524,6 +524,8 @@
 		73C0750427A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750327A16D61000FD80D /* OWSubscriberBadgeConfiguration.swift */; };
 		73C0750627A27419000FD80D /* OWUserSubscriberBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C0750527A27419000FD80D /* OWUserSubscriberBadgeView.swift */; };
 		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
+		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
+		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
 		8DCBE866293DEFC600C8677C /* MiscellaneousVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE865293DEFC600C8677C /* MiscellaneousVC.swift */; };
@@ -532,8 +534,10 @@
 		8DCBE8702940D98B00C8677C /* UIViewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */; };
 		8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE8712940D99E00C8677C /* UIViewsViewModel.swift */; };
 		8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE87729478ECD00C8677C /* ConversationPreset.swift */; };
-        8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
-        9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
+		8DCBE87D2950594A00C8677C /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE87C2950594A00C8677C /* SettingsVC.swift */; };
+		8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE87E2950597100C8677C /* SettingsViewModel.swift */; };
+		8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE882295069B400C8677C /* SwitchSetting.swift */; };
+		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
 		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
 		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
@@ -1110,7 +1114,9 @@
 		7EF1ECFBF7BD810E83B39F98 /* Pods_Shared_DemoApps_YentSpot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_YentSpot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8402D264041AC683FDDBC35B /* Pods_Shared_DemoApps_DailyCaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_DailyCaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD06A753856558311FC9849 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D50BEF955866E10D93D3985 /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
 		8DCBE865293DEFC600C8677C /* MiscellaneousVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscellaneousVC.swift; sourceTree = "<group>"; };
@@ -1119,7 +1125,9 @@
 		8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsVC.swift; sourceTree = "<group>"; };
 		8DCBE8712940D99E00C8677C /* UIViewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewsViewModel.swift; sourceTree = "<group>"; };
 		8DCBE87729478ECD00C8677C /* ConversationPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationPreset.swift; sourceTree = "<group>"; };
-        8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
+		8DCBE87C2950594A00C8677C /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		8DCBE87E2950597100C8677C /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		8DCBE882295069B400C8677C /* SwitchSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSetting.swift; sourceTree = "<group>"; };
 		9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
@@ -1947,6 +1955,7 @@
 			children = (
 				3D611B7528BFA8B1003960CE /* BetaNewAPI */,
 				3D611B8028C4D88F003960CE /* MockArticle */,
+				8DCBE879294F470F00C8677C /* Settings */,
 				8DCBE85A293CEF7D00C8677C /* UIFlows */,
 				8DCBE86C2940D93300C8677C /* UIViews */,
 				8DCBE862293DEF7700C8677C /* Miscellaneous */,
@@ -3056,7 +3065,7 @@
 		5D697A3D22B65106001AD556 /* Spot-IM.Development */ = {
 			isa = PBXGroup;
 			children = (
-				8DCBE86B2940C13600C8677C /* Shared Models */,
+				8DCBE8812950687600C8677C /* Shared */,
 				3DB3D18C282A5B3A008654CF /* Lifecycle */,
 				3D29A2DA283BA421002BE318 /* Services */,
 				5D4943B72302CA8C00AA7541 /* UI */,
@@ -3239,6 +3248,49 @@
 				8DCBE86F2940D98B00C8677C /* UIViewsVC.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		8DCBE879294F470F00C8677C /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE87B294F473A00C8677C /* Views */,
+				8DCBE87A294F473000C8677C /* ViewModels */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		8DCBE87A294F473000C8677C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE87E2950597100C8677C /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8DCBE87B294F473A00C8677C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE87C2950594A00C8677C /* SettingsVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8DCBE8802950686B00C8677C /* Shared Views */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE882295069B400C8677C /* SwitchSetting.swift */,
+				8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */,
+			);
+			path = "Shared Views";
+			sourceTree = "<group>";
+		};
+		8DCBE8812950687600C8677C /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				8DCBE86B2940C13600C8677C /* Shared Models */,
+				8DCBE8802950686B00C8677C /* Shared Views */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
@@ -4030,8 +4082,11 @@
 				3D3E3ACA28B50CF9003B4F05 /* Reusable+IndentifierName.swift in Sources */,
 				3DB3D19D282C0433008654CF /* AuthenticationError.swift in Sources */,
 				443B328D236997F00000BB60 /* SettingsViewController.swift in Sources */,
+				8DCBE87D2950594A00C8677C /* SettingsVC.swift in Sources */,
+				8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */,
 				3D611B7B28BFA91A003960CE /* BetaNewAPIViewModel.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
+				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
 				3DB3D182282A4B94008654CF /* GenericSSOAuthentication.swift in Sources */,
 				3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */,
@@ -4060,6 +4115,7 @@
 				3D3E3AC128B4EB61003B4F05 /* ConversationCounterCellViewModel.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
 				3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */,
+				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
