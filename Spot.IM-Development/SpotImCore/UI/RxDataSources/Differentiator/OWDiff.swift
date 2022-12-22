@@ -392,11 +392,11 @@ enum OWDiff {
                         }
                             // original section can't be inserted
                         else if initialSectionData[originalIndex.sectionIndex].event == .inserted {
-                            try precondition(false, "New section in initial sections, that is wrong")
+                            try differentiatorPrecondition(false, "New section in initial sections, that is wrong")
                         }
 
                         let initialSectionEvent = initialSectionData[originalIndex.sectionIndex].event
-                        try precondition(initialSectionEvent == .moved || initialSectionEvent == .movedAutomatically, "Section not moved")
+                        try differentiatorPrecondition(initialSectionEvent == .moved || initialSectionEvent == .movedAutomatically, "Section not moved")
 
                         let eventType = originalIndex == OWItemPath(sectionIndex: originalSectionIndex, itemIndex: untouchedIndex ?? -1)
                             ? OWEditEvent.movedAutomatically : OWEditEvent.moved
@@ -527,7 +527,7 @@ enum OWDiff {
                             afterDeleteItems.append(initialSections[i].items[j])
                         }
                     default:
-                        try precondition(false, "Unhandled case")
+                        try differentiatorPrecondition(false, "Unhandled case")
                     }
                 }
 
@@ -560,7 +560,7 @@ enum OWDiff {
                 case .movedAutomatically:
                     break
                 default:
-                    try precondition(false, "Unhandled case in initial sections")
+                    try differentiatorPrecondition(false, "Unhandled case in initial sections")
                 }
             }
             
@@ -600,7 +600,7 @@ enum OWDiff {
                         }
                         
                         guard let finalIndex = initialData.moveIndex else {
-                            try precondition(false, "Item was moved, but no final location.")
+                            try differentiatorPrecondition(false, "Item was moved, but no final location.")
                             continue
                         }
                         
@@ -612,7 +612,7 @@ enum OWDiff {
                     return modifiedSection
                 }
                 else {
-                    try precondition(false, "This is weird, this shouldn't happen")
+                    try differentiatorPrecondition(false, "This is weird, this shouldn't happen")
                     return s
                 }
             }
@@ -642,7 +642,7 @@ enum OWDiff {
                 for j in 0 ..< finalSection.items.count {
                     let currentItemEvent = finalItemData[i][j].event
                     
-                    try precondition(currentItemEvent != .untouched, "Current event is not untouched")
+                    try differentiatorPrecondition(currentItemEvent != .untouched, "Current event is not untouched")
                     
                     let event = finalItemData[i][j].event
                     
