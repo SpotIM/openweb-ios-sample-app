@@ -88,6 +88,37 @@ platform :ios do
   end
   
   # Excpect parameter `version`
+  desc "Release Sample App (beta preset)"
+  lane :release_beta_demo_app do |options|
+    # Set a build in the following range
+    beta_sample_app_build_low_threshold = 200
+    beta_sample_app_build_high_threshold = 250
+    increment_build_in_range(build_low:beta_sample_app_build_low_threshold, build_high:beta_sample_app_build_high_threshold)
+    # Set a specific version number
+    set_version(version:options[:version])
+    match(
+        type: "appstore",
+        readonly: true,
+        api_key_path: "apple_api_key.json"
+    )
+    match(type: "development", readonly: true)
+    cocoapods(use_bundle_exec: false)
+    gym(
+        scheme: "Spot-IM.BetaDevelopment",
+        workspace: "Spot-IM.Development.xcworkspace",
+        export_method: "app-store",
+        export_options: {
+            signingStyle: "manual",
+            provisioningProfiles: {
+                "im.spot.demo" => "match AppStore im.spot.demo"
+            }
+        },
+        xcargs: "-allowProvisioningUpdates"
+    )
+    upload_to_testflight(api_key_path: "apple_api_key.json")
+  end
+  
+  # Excpect parameter `version`
   desc "Release Sample App (public preset)"
   lane :release_public_demo_app do |options|
     # Set a build in the following range
