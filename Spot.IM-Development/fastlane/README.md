@@ -44,6 +44,14 @@ Build a release version of the SDK
 
 Release Sample App (internal preset)
 
+### ios release_beta_demo_app
+
+```sh
+[bundle exec] fastlane ios release_beta_demo_app
+```
+
+Release Sample App (beta preset)
+
 ### ios release_public_demo_app
 
 ```sh
