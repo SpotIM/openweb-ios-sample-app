@@ -3340,13 +3340,13 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		8DCBE86B2940C13600C8677C /* Shared Models */ = {
+		8DCBE86B2940C13600C8677C /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				8DCBE8692940B14B00C8677C /* SDKConversationDataModel.swift */,
 				8DCBE87729478ECD00C8677C /* ConversationPreset.swift */,
 			);
-			path = "Shared Models";
+			path = Models;
 			sourceTree = "<group>";
 		};
 		8DCBE86C2940D93300C8677C /* UIViews */ = {
@@ -3399,20 +3399,20 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		8DCBE8802950686B00C8677C /* Shared Views */ = {
+		8DCBE8802950686B00C8677C /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				8DCBE882295069B400C8677C /* SwitchSetting.swift */,
 				8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */,
 			);
-			path = "Shared Views";
+			path = Views;
 			sourceTree = "<group>";
 		};
 		8DCBE8812950687600C8677C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				8DCBE86B2940C13600C8677C /* Shared Models */,
-				8DCBE8802950686B00C8677C /* Shared Views */,
+				8DCBE86B2940C13600C8677C /* Models */,
+				8DCBE8802950686B00C8677C /* Views */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

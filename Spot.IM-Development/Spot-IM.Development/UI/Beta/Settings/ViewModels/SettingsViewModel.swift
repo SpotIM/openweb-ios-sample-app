@@ -27,6 +27,11 @@ protocol SettingsViewModelingOutputs {
     var themeModeSettings: [String] { get }
     var modalStyleTitle: String { get }
     var modalStyleSettings: [String] { get }
+    var shouldHideArticleHeader: Observable<Bool> { get }
+    var shouldCommentCreationNewDesign: Observable<Bool> { get }
+    var readOnlyModeIndex: Observable<Int> { get }
+    var themeModeIndex: Observable<Int> { get }
+    var modalStyleIndex: Observable<Int> { get }
 }
 
 protocol SettingsViewModeling {
@@ -38,20 +43,41 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     var inputs: SettingsViewModelingInputs { return self }
     var outputs: SettingsViewModelingOutputs { return self }
     
-    fileprivate let shouldHideArticleHeader = BehaviorSubject(value: false)
     var hideArticleHeaderToggled = PublishSubject<Bool>()
-    
-    fileprivate let shouldCommentCreationNewDesign = BehaviorSubject(value: false)
     var commentCreationNewDesignToggled = PublishSubject<Bool>()
-    
-    fileprivate let _readOnlyModeSelectedIndex = BehaviorSubject(value: 0)
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
-    
-    fileprivate let _themeModeSelectedIndex = BehaviorSubject(value: 0)
     var themeModeSelectedIndex = PublishSubject<Int>()
-    
-    fileprivate let _modalStyleSelectedIndex = BehaviorSubject(value: 0)
     var modalStyleSelectedIndex = PublishSubject<Int>()
+    
+    fileprivate let _shouldHideArticleHeader = BehaviorSubject<Bool>(value: false)
+    var shouldHideArticleHeader: Observable<Bool> {
+        return _shouldHideArticleHeader
+            .asObservable()
+    }
+    
+    fileprivate let _shouldCommentCreationNewDesign = BehaviorSubject<Bool>(value: false)
+    var shouldCommentCreationNewDesign: Observable<Bool> {
+        return _shouldCommentCreationNewDesign
+            .asObservable()
+    }
+    
+    fileprivate let _readOnlyModeIndex = BehaviorSubject(value: 0)
+    var readOnlyModeIndex: Observable<Int> {
+        return _readOnlyModeIndex
+            .asObservable()
+    }
+    
+    fileprivate let _themeModeIndex = BehaviorSubject(value: 0)
+    var themeModeIndex: Observable<Int> {
+        return _themeModeIndex
+            .asObservable()
+    }
+    
+    fileprivate let _modalStyleIndex = BehaviorSubject(value: 0)
+    var modalStyleIndex: Observable<Int> {
+        return _modalStyleIndex
+            .asObservable()
+    }
     
     fileprivate let disposeBag = DisposeBag()
     
@@ -115,7 +141,7 @@ extension SettingsViewModel {
             .do(onNext: { _ in
                 // TODO: should be done
             })
-            .bind(to: shouldHideArticleHeader)
+            .bind(to: _shouldHideArticleHeader)
             .disposed(by: disposeBag)
                 
         // Bind comment creation new design toggle
@@ -123,22 +149,22 @@ extension SettingsViewModel {
             .do(onNext: { _ in
                 // TODO: should be done
             })
-            .bind(to: shouldCommentCreationNewDesign)
+            .bind(to: _shouldCommentCreationNewDesign)
             .disposed(by: disposeBag)
                 
         // Different read only mode selected
         readOnlyModeSelectedIndex
-            .bind(to: _readOnlyModeSelectedIndex)
+            .bind(to: _readOnlyModeIndex)
             .disposed(by: disposeBag)
                 
         // Different theme mode selected
         themeModeSelectedIndex
-            .bind(to: _themeModeSelectedIndex)
+            .bind(to: _themeModeIndex)
             .disposed(by: disposeBag)
                 
         // Different modal style selected
         modalStyleSelectedIndex
-            .bind(to: _modalStyleSelectedIndex)
+            .bind(to: _modalStyleIndex)
             .disposed(by: disposeBag)
     }
 }

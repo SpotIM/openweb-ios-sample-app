@@ -372,7 +372,7 @@ fileprivate extension BetaNewAPIVC {
                 guard let self = self else { return }
                 let settingsVM = SettingsViewModel()
                 let settingsVC = SettingsVC(viewModel: settingsVM)
-                self.navigationController?.present(settingsVC, animated: true)
+                self.navigationController?.pushViewController(settingsVC, animated: true)
             })
             .disposed(by: disposeBag)
         
