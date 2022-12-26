@@ -15,14 +15,7 @@ class SettingsVC: UIViewController {
         static let verticalOffset: CGFloat = 50
         static let horizontalOffset: CGFloat = 10
     }
-    
-    fileprivate lazy var titleLbl: UILabel = {
-        let lbl = UILabel()
-            .font(FontBook.mainHeadingBold)
         
-        return lbl
-    }()
-    
     fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
         return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle)
     }()
@@ -80,51 +73,60 @@ fileprivate extension SettingsVC {
     func setupViews() {
         view.backgroundColor = .white
         
-        titleLbl.text = viewModel.outputs.title
-        
-        view.addSubview(titleLbl)
-        titleLbl.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalOffset)
-        }
+        title = viewModel.outputs.title
         
         view.addSubview(switchHideArticleHeader)
         switchHideArticleHeader.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(titleLbl.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalOffset)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
         view.addSubview(switchCommentCreationNewDesign)
         switchCommentCreationNewDesign.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
             make.top.equalTo(switchHideArticleHeader.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
         view.addSubview(segmentedReadOnlyMode)
         segmentedReadOnlyMode.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
             make.top.equalTo(switchCommentCreationNewDesign.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
         view.addSubview(segmentedThemeMode)
         segmentedThemeMode.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
             make.top.equalTo(segmentedReadOnlyMode.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
         view.addSubview(segmentedModalStyle)
         segmentedModalStyle.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
             make.top.equalTo(segmentedThemeMode.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalOffset)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
     }
     
     func setupObservers() {
+        
+        viewModel.outputs.shouldHideArticleHeader
+            .bind(to: switchHideArticleHeader.rx.isOn)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldCommentCreationNewDesign
+            .bind(to: switchCommentCreationNewDesign.rx.isOn)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.readOnlyModeIndex
+            .bind(to: segmentedReadOnlyMode.rx.value)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.themeModeIndex
+            .bind(to: segmentedThemeMode.rx.value)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.modalStyleIndex
+            .bind(to: segmentedModalStyle.rx.value)
+            .disposed(by: disposeBag)
         
         switchHideArticleHeader.rx.value
             .bind(to: viewModel.inputs.hideArticleHeaderToggled)
