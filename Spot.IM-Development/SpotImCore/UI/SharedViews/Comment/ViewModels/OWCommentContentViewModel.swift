@@ -78,12 +78,10 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     }
     
     var mediaSize: Observable<CGSize?> {
-        _commentMediaOriginalSize
-            .withLatestFrom(_commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize? in
-                guard let self = self else { return .zero }
-                return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)
-            }
-            .asObservable()
+        Observable.combineLatest(_commentMediaOriginalSize, _commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize in
+            guard let self = self else { return .zero }
+            return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)
+        }.asObservable()
     }
 }
 

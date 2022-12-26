@@ -59,7 +59,6 @@ class OWCommentLabelView: UIView {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
-        // TODO: prepareForReuse()?
     }
     
     required init?(coder: NSCoder) {
@@ -92,8 +91,9 @@ fileprivate extension OWCommentLabelView {
     }
     
     func setupObservers() {
-        viewModel.outputs.commentLabelSettings
-            .unwrap()
+        let _commentLabelSettings = viewModel.outputs.commentLabelSettings.unwrap()
+        
+        _commentLabelSettings
             .map {$0.iconUrl}
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
@@ -103,21 +103,18 @@ fileprivate extension OWCommentLabelView {
             })
             .disposed(by: disposeBag)
         
-        viewModel.outputs.commentLabelSettings
-            .unwrap()
+        _commentLabelSettings
             .map {$0.text}
             .bind(to: self.label.rx.text)
             .disposed(by: disposeBag)
         
-        let _labelSettings = Observable.combineLatest(viewModel.outputs.state, viewModel.outputs.commentLabelSettings)
+        let _labelData = Observable.combineLatest(viewModel.outputs.state, _commentLabelSettings)
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .withLatestFrom(_labelSettings) { style, settings -> (OWThemeStyle, LabelState, UIColor)? in
-                guard let color = settings.1?.color else { return nil }
-                return (style, settings.0, color)
+            .withLatestFrom(_labelData) { style, data -> (OWThemeStyle, LabelState, UIColor) in
+                return (style, data.0, data.1.color)
             }
-            .unwrap()
             .subscribe { [weak self] (style, state, color) in
                 guard let self = self else { return }
                 self.setUIColors(state: state, labelColor: color, currentStyle: style)
@@ -139,12 +136,12 @@ fileprivate extension OWCommentLabelView {
             case .notSelected:
                 labelContainer.backgroundColor = .clear
                 labelContainer.layer.borderWidth = 1
-            labelContainer.layer.borderColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.borderOpacityDarkMode : Metrics.borderOpacityLightMode).cgColor
+                labelContainer.layer.borderColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.borderOpacityDarkMode : Metrics.borderOpacityLightMode).cgColor
                 iconImageView.tintColor = labelColor
                 label.textColor = labelColor
                 break
             case .selected:
-                self.labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.selectedOpacityDarkMode : Metrics.selectedOpacityLightMode)
+                labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.selectedOpacityDarkMode : Metrics.selectedOpacityLightMode)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = .white
                 label.textColor = .white

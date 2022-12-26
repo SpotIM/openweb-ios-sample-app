@@ -56,7 +56,6 @@ fileprivate extension OWCommentView {
         
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(50) // TODO: remove
         }
         
         commentLabelView.OWSnp.makeConstraints { make in
@@ -65,7 +64,7 @@ fileprivate extension OWCommentView {
         }
         
         commentContentView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset) // TODO!
+            make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }

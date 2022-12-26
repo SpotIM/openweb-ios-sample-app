@@ -14,7 +14,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let bannerViewMargin: CGFloat = 40
         static let whatYouThinkHeight: CGFloat = 64
-        static let commentCreationTopPadding: CGFloat = 16
+        static let commentCreationVerticalPadding: CGFloat = 16
+        static let horizontalOffset: CGFloat = 16.0
         
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
         // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
@@ -25,7 +26,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let changedHeight: CGFloat = 700
         
         static let separatorHeight: CGFloat = 1.0
-        static let horizontalOffset: CGFloat = 16.0
     }
     
     // TODO: Testing - remove later (hard coded cause only for testing)
@@ -153,14 +153,14 @@ fileprivate extension OWPreConversationView {
                 make.height.equalTo(Metrics.separatorHeight)
             }
             commentCreationEntryView.OWSnp.makeConstraints { make in
-                make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationTopPadding)
+                make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
                 make.trailing.equalToSuperview()
             }
             tableView.OWSnp.makeConstraints { make in
-                make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(16) // TODO
-                make.leading.equalToSuperview().offset(16)
-                make.trailing.equalToSuperview().offset(-16)
+                make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
+                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+                make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
                 make.bottom.equalToSuperview() // TODO: bottom constraint
             }
         }

@@ -17,7 +17,7 @@ class OWCommentCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        self.setupUI()
+        self.setupUI()
     }
     
     required init?(coder: NSCoder) {
@@ -29,9 +29,6 @@ class OWCommentCell: UITableViewCell {
         
         self.viewModel = vm
         self.commentView.configure(with: self.viewModel.outputs.commentVM)
-        
-        setupUI()
-        setupObservers()
     }
 }
 
@@ -43,9 +40,5 @@ fileprivate extension OWCommentCell {
         commentView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-    }
-    
-    func setupObservers() {
-        
     }
 }
