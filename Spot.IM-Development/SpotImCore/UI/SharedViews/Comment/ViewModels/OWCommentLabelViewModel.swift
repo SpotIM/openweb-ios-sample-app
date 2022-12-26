@@ -64,7 +64,7 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
     
     var state: Observable<LabelState> {
         _comment
-            // TODO: for now only implement read only mode for displaying label. When creat comment is developed should ass selected & not selected by clicks
+            // TODO: for now only implement read only mode for displaying label. When create comment is developed should add selected & not selected by clicks
             .map { _ in return .readOnly }
             .asObservable()
     }

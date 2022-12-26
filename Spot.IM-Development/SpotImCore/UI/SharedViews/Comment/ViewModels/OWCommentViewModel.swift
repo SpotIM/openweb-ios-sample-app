@@ -57,7 +57,6 @@ class OWCommentViewModel: OWCommentViewModeling,
         contentVM = OWCommentContentViewModel(comment: comment)
     }
     
-    // TODO: DELETE ?
     init() {
         commentUserVM = OWCommentUserViewModel(user: nil, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel()

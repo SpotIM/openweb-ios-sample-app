@@ -27,7 +27,7 @@ class OWCommentContentView: UIView {
         return CommentMediaView()
     }()
     
-    fileprivate var viewModel: OWCommentContentViewModeling!
+    fileprivate var viewModel: OWCommentContentViewModeling = OWCommentContentViewModel()
     fileprivate let disposeBag = DisposeBag()
     
     required init?(coder aDecoder: NSCoder) {
@@ -55,8 +55,8 @@ fileprivate extension OWCommentContentView {
         
         mediaView.OWSnp.makeConstraints { make in
             make.top.equalTo(textLabel.OWSnp.bottom).offset(Metrics.emptyCommentMediaTopPadding)
-            make.leading.bottom.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
+            make.leading.bottom.equalToSuperview()
             make.size.equalTo(0)
         }
     }

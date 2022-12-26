@@ -132,10 +132,11 @@ fileprivate extension OWCommentHeaderView {
         subtitleLabel.OWSnp.makeConstraints { make in
             make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
             make.leading.equalTo(userNameLabel)
+            make.bottom.equalToSuperview()
         }
         
         dateLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(subtitleLabel)
+            make.top.bottom.equalTo(subtitleLabel)
             make.leading.equalTo(subtitleLabel.OWSnp.trailing)
             make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
         }
@@ -147,7 +148,7 @@ fileprivate extension OWCommentHeaderView {
         }
         
         hiddenCommentReasonLabel.OWSnp.makeConstraints { make in
-            make.trailing.equalToSuperview()
+            make.trailing.bottom.equalToSuperview()
             make.centerY.equalTo(avatarImageView.OWSnp.centerY)
             make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(Metrics.avatarImageViewTrailingOffset)
         }
@@ -170,7 +171,7 @@ fileprivate extension OWCommentHeaderView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.nameTextStyle
-            .subscribe(onNext: { [weak self] style in
+            .bind(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self.userNameLabel.font(
                     .preferred(style: style, of: Metrics.fontSize)
