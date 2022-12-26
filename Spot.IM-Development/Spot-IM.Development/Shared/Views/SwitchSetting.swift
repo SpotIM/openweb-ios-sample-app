@@ -16,10 +16,11 @@ class SwitchSetting: UIView {
         static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
+        static let switchMinWidth: CGFloat = 50
     }
     
     fileprivate let title: String
-    fileprivate let isOn: Bool
+    fileprivate let initialIsOn: Bool
     
     fileprivate lazy var settingTitleLbl: UILabel = {
         return title
@@ -31,14 +32,14 @@ class SwitchSetting: UIView {
     
     fileprivate lazy var switchSetting: UISwitch = {
         let aSwitch = UISwitch()
-        aSwitch.setOn(isOn, animated: false)
+        aSwitch.setOn(initialIsOn, animated: false)
         
         return aSwitch
     }()
     
     init(title: String, isOn: Bool = false) {
         self.title = title
-        self.isOn = isOn
+        self.initialIsOn = isOn
         super.init(frame: .zero)
         
         setupViews()
@@ -62,8 +63,9 @@ fileprivate extension SwitchSetting {
         self.addSubview(switchSetting)
         switchSetting.snp.makeConstraints { make in
             make.centerY.equalTo(settingTitleLbl)
-            make.leading.equalTo(settingTitleLbl.snp.trailing).offset(Metrics.horizontalOffset)
+            make.leading.greaterThanOrEqualTo(settingTitleLbl.snp.trailing).offset(Metrics.verticalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.verticalOffset)
+            make.width.greaterThanOrEqualTo(Metrics.switchMinWidth)
         }
     }
 }
