@@ -204,3 +204,18 @@ struct SPClippedTextSettings {
         self.isEdited = edited
     }
 }
+
+extension NSAttributedString {
+
+    func getLines(with width: CGFloat) -> [CTLine] {
+
+        let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: width, height: CGFloat(MAXFLOAT)))
+        let frameSetterRef : CTFramesetter = CTFramesetterCreateWithAttributedString(self as CFAttributedString)
+        let frameRef: CTFrame = CTFramesetterCreateFrame(frameSetterRef, CFRangeMake(0, 0), path.cgPath, nil)
+
+        let linesNS: NSArray  = CTFrameGetLines(frameRef)
+
+        guard let lines = linesNS as? [CTLine] else { return [] }
+        return lines
+    }
+}
