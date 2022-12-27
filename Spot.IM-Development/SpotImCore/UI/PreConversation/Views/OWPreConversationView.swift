@@ -22,7 +22,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 800
+        static let initialHeight: CGFloat = 1000
         static let changedHeight: CGFloat = 700
         
         static let separatorHeight: CGFloat = 1.0

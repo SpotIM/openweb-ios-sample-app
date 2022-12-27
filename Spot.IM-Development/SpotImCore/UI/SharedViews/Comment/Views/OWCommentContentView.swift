@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWCommentContentView: UIView {
-    fileprivate struct Metrics {
+    struct Metrics {
         static let fontSize: CGFloat = 16.0
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
@@ -62,6 +62,8 @@ fileprivate extension OWCommentContentView {
     }
     
     func setupObservers() {
+//        viewModel.inputs.commentTextLabelWidth.onNext(textLabel.frame.width) // TODO via rx on the label width?
+        
         viewModel.outputs.attributedString
             .bind(onNext: { [weak self] attributedString in
                 self?.textLabel.attributedText = attributedString
