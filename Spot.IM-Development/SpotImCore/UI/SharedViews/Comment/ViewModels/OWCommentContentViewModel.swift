@@ -16,6 +16,7 @@ fileprivate struct Metrics {
 }
 
 protocol OWCommentContentViewModelingInputs {
+//    var commentTextLabelWidth: PublishSubject<CGFloat> { get }
 }
 
 protocol OWCommentContentViewModelingOutputs {
@@ -39,11 +40,23 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var outputs: OWCommentContentViewModelingOutputs { return self }
     
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
+    fileprivate let lineLimit: Int
     
-    init(comment: SPComment) {
+    init(comment: SPComment, lineLimit: Int = 4) { // TODO: pass line limit
+        self.lineLimit = lineLimit
         _comment.onNext(comment)
     }
-    init() {}
+    init() {
+        lineLimit = 0
+    }
+    
+//    var commentTextLabelWidth = PublishSubject<CGFloat>()
+//    var _commentTextLabelWidth: Observable<CGFloat> {
+//        commentTextLabelWidth
+//            .map {$0}
+//            .asObservable()
+//    }
+
     
     var text: Observable<String?> {
         _comment
@@ -51,14 +64,23 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             .asObservable()
     }
     
+    fileprivate var textState: TextState = .notInitialized // TODO: ?
     var attributedString: Observable<NSMutableAttributedString?> {
-        _comment
-            .map { $0?.text?.text }
-            .unwrap()
-            .map {
-                NSMutableAttributedString(string: $0, attributes: [
-                    :
-                ]) // TODO: build with read more/less, links, edited etc
+        text
+            .map { [weak self] messageText in
+                let width = 200.0 // TODO: get real width
+                guard let self = self, let messageText = messageText else { return nil }
+                var messageAttributedString: NSMutableAttributedString = NSMutableAttributedString(
+                    string: messageText,
+                    attributes: self.messageStringAttributes()
+                )
+                let lines = messageAttributedString.getLines(with: width)
+                self.setTextState(lines: lines.count)
+                self.appendActionStringIfNeeded(messageAttributedString, lines: lines)
+                return messageAttributedString
+//                return NSMutableAttributedString(string: messageText, attributes: [
+//                    :
+//                ]) // TODO: build with read more/less, links, edited etc
             }
             .asObservable()
     }
@@ -160,4 +182,105 @@ fileprivate extension OWCommentContentViewModel {
         
         return result.appending("/")
     }
+    
+    func messageStringAttributes() -> [NSAttributedString.Key: Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.firstLineHeadIndent = 0
+        paragraphStyle.lineSpacing = 3.5
+
+        var attributes: [NSAttributedString.Key: Any]
+        // TODO: color
+        attributes = [
+            .font: UIFont.preferred(style: .regular, of: OWCommentContentView.Metrics.fontSize),
+            .paragraphStyle: paragraphStyle
+        ]
+
+        return attributes
+    }
+    func actionStringAttributes() -> [NSAttributedString.Key: Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.firstLineHeadIndent = 0
+        paragraphStyle.lineSpacing = 3.5
+
+        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes()
+        attributes[.foregroundColor] = UIColor.clearBlue // TODO: color
+
+        return attributes
+    }
+    
+    func setTextState(lines: Int) {
+        // this function is only for the first init
+        guard self.textState == .notInitialized else { return }
+        
+        textState = lines > self.lineLimit ? .collapsed : .fullyShown
+    }
+    
+    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine]) {
+        switch self.textState {
+        case .collapsed:
+            let visibleLines = lines[0...lineLimit - 1]
+            let ellipsis = NSAttributedString(
+                string: " ... ",
+                attributes: messageStringAttributes())
+            let readMore = NSMutableAttributedString(
+                string: LocalizationManager.localizedString(key: "Read More"),
+                attributes: actionStringAttributes())
+            attString.append(ellipsis)
+            attString.append(readMore)
+            break
+        case .expanded:
+            break
+        default:
+            break
+        }
+    }
+    
+//    private func readMoreAppended(with index: Int, _ lines: [CTLine], _ width: CGFloat) -> NSAttributedString {
+//
+//        let slice = lines[0...index - 1]
+//        var lastLineLength = 0
+//        var totalLength = slice.reduce(into: 0) { (tempCount, line) in
+//            lastLineLength = CTLineGetGlyphCount(line)
+//            tempCount += lastLineLength
+//        }
+//
+//        var attribs = self.attributes(at: totalLength - 1, effectiveRange: nil)
+//
+//        let ellipsis = NSAttributedString(
+//            string: " ... ",
+//            attributes: attribs)
+//
+//        attribs[.foregroundColor] = UIColor.clearBlue
+//
+//        let readMore = NSMutableAttributedString(
+//            string: LocalizationManager.localizedString(key: "Read More"),
+//            attributes: attribs)
+//
+//        readMore.insert(ellipsis, at: 0)
+//
+//        let readMoreWidth = readMore.width(withConstrainedHeight: .greatestFiniteMagnitude)
+//
+//        // check wether additional last line clipping is needed
+//        let lastLineRange = NSRange(location: totalLength - lastLineLength, length: lastLineLength)
+//        let lastLine = attributedSubstring(from: lastLineRange)
+//        let lastLineWidth = lastLine.width(withConstrainedHeight: .greatestFiniteMagnitude)
+//
+//        if lastLineWidth + readMoreWidth > width {
+//            totalLength -= lastLineLength / 2
+//        }
+//
+//        let clippedSelf = attributedSubstring(from: NSRange(location: 0, length: totalLength))
+//        let trimmedSelf = clippedSelf.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
+//        let mutableSelf = trimmedSelf.mutableCopy() as? NSMutableAttributedString
+//        mutableSelf?.append(readMore)
+//
+//        return mutableSelf ?? self
+//    }
+}
+
+fileprivate enum TextState {
+    case notInitialized
+    case fullyShown
+    case collapsed
+    case expanded
 }
