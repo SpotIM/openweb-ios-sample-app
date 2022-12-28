@@ -236,7 +236,9 @@ fileprivate extension OWPreConversationView {
         
         btnCommentCreation.rx.tap
                 .voidify()
-                .bind(to: viewModel.inputs.commentCreationTap)
+                .bind(onNext: { [weak self] in
+                    self?.viewModel.inputs.commentCreationTap.onNext(nil)
+                })
                 .disposed(by: disposeBag)
                 
         OWSharedServicesProvider.shared.themeStyleService()

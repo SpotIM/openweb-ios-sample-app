@@ -118,7 +118,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings?.conversationSettings)
-        let commentCreationData = OWCommentCreationRequiredData(article: article)
+        let commentCreationData = OWCommentCreationRequiredData(article: article, replyToComment: nil)
         
         _ = sdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
