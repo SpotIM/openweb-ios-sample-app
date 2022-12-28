@@ -16,7 +16,7 @@ protocol OWCommentEngagementViewModelingInputs {
 }
 
 protocol OWCommentEngagementViewModelingOutputs {
-    var votingVM: OWCommentVotingViewModeling { get }
+    var votingVM: OWCommentRatingViewModeling { get }
     var repliesText: Observable<String> { get }
 }
 
@@ -32,7 +32,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var inputs: OWCommentEngagementViewModelingInputs { return self }
     var outputs: OWCommentEngagementViewModelingOutputs { return self }
     
-    let votingVM: OWCommentVotingViewModeling = OWCommentVotingViewModel()
+    var votingVM: OWCommentRatingViewModeling = OWCommentRatingViewModel()
     fileprivate let disposeBag = DisposeBag()
     
     // TODO: handle disabled (disable button, change text, disable voting?) - on read only + comment deleted/reported etc
@@ -55,7 +55,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
         guard let rank = rank else { return } // TODO: should not be optional
         _replies.onNext(replies)
         // TODO: use rx without configure
-        votingVM.inputs.configure(with: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0, rankDownCount: rank.ranksDown ?? 0, rankedByUserValue: rank.rankedByCurrentUser ?? 0))
+        votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0, rankDownCount: rank.ranksDown ?? 0, rankedByUserValue: rank.rankedByCurrentUser ?? 0))
     }
 
     init() {}
