@@ -184,6 +184,21 @@ extension UIButton {
         self.imageEdgeInsets = imageEdgeInsets
         return self
     }
+    
+    @discardableResult func setTitle(_ title: String?, state: UIControl.State) -> Self {
+        self.setTitle(title, for: state)
+        return self
+    }
+    
+    @discardableResult func setTitleColor(_ color: UIColor?, state: UIControl.State) -> Self {
+        self.setTitleColor(color, for: state)
+        return self
+    }
+    
+    @discardableResult func setTitleFont(_ font: UIFont?) -> Self {
+        self.titleLabel?.font = font
+        return self
+    }
 }
 
 extension UIImageView {
