@@ -36,9 +36,6 @@ protocol OWCommentRatingViewModeling {
 class OWCommentRatingViewModel: OWCommentRatingViewModeling,
                                 OWCommentRatingViewModelingInputs,
                                 OWCommentRatingViewModelingOutputs {
-    
-    // TODO - use RX
-    fileprivate var delegate: CommentActionsDelegate?
 
     var inputs: OWCommentRatingViewModelingInputs { return self }
     var outputs: OWCommentRatingViewModelingOutputs { return self }
@@ -52,24 +49,16 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     fileprivate let _rankDown = BehaviorSubject<Int?>(value: nil)
     fileprivate let _rankedByUser = BehaviorSubject<Int?>(value: nil)
     
-    fileprivate let _rankUpSelected = BehaviorSubject<Bool?>(value: nil)
-    fileprivate let _rankDownSelected = BehaviorSubject<Bool?>(value: nil)
-    
-    fileprivate var _votesType : Observable<OWVotesType> {
+    fileprivate var _voteSymbolType: Observable<OWVotesType> {
         OWSharedServicesProvider.shared.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> OWVotesType in
-                guard let sharedConfig = config.shared,
-                      [OWVotesType.heart, OWVotesType.recommend].contains( sharedConfig.votesType)
+                guard let sharedConfig = config.shared
                 else { return .like }
-                
                 return sharedConfig.votesType
             }
             .asObservable()
     }
-    
-    fileprivate let _votingUpImages = BehaviorSubject<VotingImages>(value: (nil, nil))
-    fileprivate let _votingDownImages = BehaviorSubject<VotingImages>(value: (nil, nil))
     
     init () { }
     
@@ -84,7 +73,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     var rankUpText: Observable<String> {
         _rankUp
             .unwrap()
-            .withLatestFrom(_votesType) { rankUpCount, votesType in
+            .withLatestFrom(_voteSymbolType) { rankUpCount, votesType in
                 let formattedRankCount = rankUpCount.kmFormatted
                 if (votesType == .recommend) {
                     let recommendText = LocalizationManager.localizedString(key: "Recommend")
@@ -117,6 +106,12 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
                 }
                 return voteTypesToShow
             }
+            .withLatestFrom(_voteSymbolType) { voteTypes, availableTypes -> [VoteType] in
+                if([OWVotesType.heart, OWVotesType.recommend].contains(availableTypes)) {
+                    return voteTypes.filter { $0 == .voteDown }
+                }
+                return voteTypes
+            }
             .asObservable()
     }
     
@@ -135,7 +130,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     }
     
     var votingUpImages: Observable<VotingImages> {
-        _votesType
+        _voteSymbolType
             .map { votesType in
                 switch votesType {
                 case .like:
@@ -163,7 +158,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     }
     
     var votingDownImages: Observable<VotingImages> {
-        _votesType
+        _voteSymbolType
             .map { votesType in
                 switch votesType {
                 case .like:
