@@ -288,4 +288,14 @@ extension UITextView {
     }
 }
 
-
+extension UIStackView {
+    @discardableResult func axis(_ axis: NSLayoutConstraint.Axis) -> Self {
+        self.axis = axis
+        return self
+    }
+    
+    @discardableResult func alignment(_ alignment: UIStackView.Alignment) -> Self {
+        self.alignment = alignment
+        return self
+    }
+}

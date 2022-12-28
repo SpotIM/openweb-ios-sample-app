@@ -28,8 +28,8 @@ class OWCommentEngagementView: UIView {
             .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
     }()
     
-    fileprivate lazy var votingView: OWCommentVotingView = {
-        return OWCommentVotingView()
+    fileprivate lazy var votingView: OWCommentRatingView = {
+        return OWCommentRatingView()
     }()
     
     override init(frame: CGRect) {
@@ -50,12 +50,8 @@ class OWCommentEngagementView: UIView {
     func configure(with viewModel: OWCommentEngagementViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
-//        votingView.configure(with: viewModel.outputs.votingVM, delegate: delegate)
+        votingView.configure(with: viewModel.outputs.votingVM)
         setupObservers()
-    }
-        
-    func prepareForReuse() {
-        votingView.prepareForReuse()
     }
 }
 
@@ -69,7 +65,7 @@ fileprivate extension OWCommentEngagementView {
         
         votingView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.leading.equalTo(replyButton.OWSnp.trailing)
+            make.leading.equalTo(replyButton.OWSnp.trailing).offset(Metrics.baseOffset)
         }
     }
     
