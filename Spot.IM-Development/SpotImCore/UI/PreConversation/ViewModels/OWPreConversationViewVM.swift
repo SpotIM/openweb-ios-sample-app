@@ -163,10 +163,13 @@ fileprivate extension OWPreConversationViewViewModel {
                     .map { response -> SPConversationReadRM? in
                         guard let comments = response.conversation?.comments else { return nil }
                         var viewModels = [OWPreConversationCellOption]()
-                        for comment in comments.prefix(self.numberOfMessagesToShow) {
+                        for (index, comment) in comments.prefix(self.numberOfMessagesToShow).enumerated() {
                             // TODO: replies
                             let vm = OWCommentCellViewModel(comment: comment, user: response.conversation?.users?[comment.userId ?? ""], replyTo: nil)
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+                            if (index < self.numberOfMessagesToShow - 1) {
+                                viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                            }
                         }
                         self._cellsViewModels.removeAll()
                         self._cellsViewModels.append(contentsOf: viewModels)
