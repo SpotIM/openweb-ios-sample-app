@@ -166,6 +166,8 @@ fileprivate extension OWPreConversationViewViewModel {
                         for (index, comment) in comments.prefix(self.numberOfMessagesToShow).enumerated() {
                             // TODO: replies
                             let vm = OWCommentCellViewModel(comment: comment, user: response.conversation?.users?[comment.userId ?? ""], replyTo: nil)
+                            self.setupObservers(for: vm)
+                            
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                             if (index < self.numberOfMessagesToShow - 1) {
                                 viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
@@ -199,5 +201,14 @@ fileprivate extension OWPreConversationViewViewModel {
             .tapped
             .bind(to: commentCreationTap)
             .disposed(by: disposeBag)
+    }
+    
+    func setupObservers(for viewModel: OWCommentCellViewModel) {
+        viewModel.commentVM.outputs.commentEngagementVM.outputs
+            .replyClickedOutput
+            .bind(onNext: { [weak self] in
+                self?.commentCreationTap.onNext()
+            })
+            .disposed(by: self.disposeBag)
     }
 }

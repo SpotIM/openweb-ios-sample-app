@@ -18,6 +18,7 @@ protocol OWCommentEngagementViewModelingInputs {
 protocol OWCommentEngagementViewModelingOutputs {
     var votingVM: OWCommentRatingViewModeling { get }
     var repliesText: Observable<String> { get }
+    var replyClickedOutput: Observable<Void> { get }
 }
 
 protocol OWCommentEngagementViewModeling {
@@ -48,6 +49,10 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     }
     
     var replyClicked = PublishSubject<Void>() // TODO: handle click
+    var replyClickedOutput: Observable<Void> {
+        replyClicked
+            .asObservable()
+    }
     
     fileprivate var _replies = BehaviorSubject<Int>(value: 0)
    
