@@ -54,7 +54,6 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     init(replies: Int, rank: SPComment.Rank?) {
         guard let rank = rank else { return } // TODO: should not be optional
         _replies.onNext(replies)
-        // TODO: use rx without configure
         votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0, rankDownCount: rank.ranksDown ?? 0, rankedByUserValue: rank.rankedByCurrentUser ?? 0))
     }
 
