@@ -31,13 +31,7 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
     fileprivate var user: SPUser? = nil
     fileprivate var replyTo: SPUser? = nil
     
-    var commentVM: OWCommentViewModeling {
-        if let comment = comment, let user = user {
-            return OWCommentViewModel(comment: comment, user: user, replyTo: replyTo)
-        } else {
-            return OWCommentViewModel()
-        }
-    }
+    var commentVM: OWCommentViewModeling = OWCommentViewModel()
     
     var id: String = ""
     
@@ -46,6 +40,9 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
         self.user = user
         self.replyTo = replyTo
         self.id = comment.id ?? ""
+        
+        guard let user = user else { return }
+        self.commentVM = OWCommentViewModel(comment: comment, user: user, replyTo: replyTo)
     }
     
     init() {}
