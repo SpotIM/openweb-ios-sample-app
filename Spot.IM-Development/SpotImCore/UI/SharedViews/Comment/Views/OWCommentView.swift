@@ -26,6 +26,9 @@ class OWCommentView: UIView {
     fileprivate lazy var commentContentView: OWCommentContentView = {
         return OWCommentContentView()
     }()
+    fileprivate lazy var commentEngagementView: OWCommentEngagementView = {
+        return OWCommentEngagementView()
+    }()
     
     fileprivate var viewModel: OWCommentViewModeling!
     
@@ -43,6 +46,7 @@ class OWCommentView: UIView {
         self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
         self.commentLabelView.configure(viewModel: viewModel.outputs.commentLabelVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
+        self.commentEngagementView.configure(with: viewModel.outputs.commentEngagementVM)
         
         setupUI()
         setupObservers()
@@ -52,7 +56,7 @@ class OWCommentView: UIView {
 fileprivate extension OWCommentView {
     func setupUI() {
         self.backgroundColor = .clear
-        self.addSubviews(commentHeaderView, commentLabelView, commentContentView)
+        self.addSubviews(commentHeaderView, commentLabelView, commentContentView, commentEngagementView)
         
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
@@ -65,7 +69,12 @@ fileprivate extension OWCommentView {
         
         commentContentView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        commentEngagementView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(commentContentView.OWSnp.bottom).offset(10) // TODO: check real value!
         }
     }
     
