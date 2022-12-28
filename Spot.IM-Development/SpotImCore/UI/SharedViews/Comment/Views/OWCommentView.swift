@@ -13,6 +13,8 @@ import RxCocoa
 class OWCommentView: UIView {
     fileprivate struct Metrics {
         static let leadingOffset: CGFloat = 16.0
+        static let bottomOffset: CGFloat = 16.0
+        static let topOffset: CGFloat = 38.0
         static let commentLabelTopPadding: CGFloat = 10.0
         static let messageContainerTopOffset: CGFloat = 5.0
     }
@@ -59,7 +61,8 @@ fileprivate extension OWCommentView {
         self.addSubviews(commentHeaderView, commentLabelView, commentContentView, commentEngagementView)
         
         commentHeaderView.OWSnp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.topOffset)
         }
         
         commentLabelView.OWSnp.makeConstraints { make in
@@ -73,8 +76,9 @@ fileprivate extension OWCommentView {
         }
         
         commentEngagementView.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
             make.top.equalTo(commentContentView.OWSnp.bottom)
+            make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
         }
     }
     
