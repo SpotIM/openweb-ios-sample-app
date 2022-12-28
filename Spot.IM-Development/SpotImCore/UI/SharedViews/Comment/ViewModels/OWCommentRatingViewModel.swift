@@ -185,8 +185,7 @@ fileprivate extension OWCommentRatingViewModel {
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == -1) ? .up : .unrank
-                
-//                self.delegate?.rankUp(SPRankChange(from: from, to: to)) // TODO: call new api rank
+                 // TODO: call new api rank + update local
             })
             .disposed(by: disposeBag)
         
@@ -196,7 +195,7 @@ fileprivate extension OWCommentRatingViewModel {
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
                 
-//                self.delegate?.rankUp(SPRankChange(from: from, to: to)) // TODO: call new api rank
+                // TODO: call new api rank + update local
             })
             .disposed(by: disposeBag)
     }

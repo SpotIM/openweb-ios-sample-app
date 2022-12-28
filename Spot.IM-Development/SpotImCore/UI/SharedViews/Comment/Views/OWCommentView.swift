@@ -74,7 +74,7 @@ fileprivate extension OWCommentView {
         
         commentEngagementView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(commentContentView.OWSnp.bottom).offset(10) // TODO: check real value!
+            make.top.equalTo(commentContentView.OWSnp.bottom)
         }
     }
     
