@@ -369,8 +369,10 @@ fileprivate extension BetaNewAPIVC {
         
         viewModel.outputs.openSettings
             .subscribe(onNext: { [weak self] in
-                
-                // TODO: Open settings screen
+                guard let self = self else { return }
+                let settingsVM = SettingsViewModel()
+                let settingsVC = SettingsVC(viewModel: settingsVM)
+                self.navigationController?.pushViewController(settingsVC, animated: true)
             })
             .disposed(by: disposeBag)
         
