@@ -23,8 +23,8 @@ class OWCommentRatingView: UIView {
         static let rankDownLabelIdentifier = "comment_voting_view_rank_down_label_id"
     }
     
-    fileprivate var viewModel: OWCommentRatingViewModeling!
-    fileprivate var disposeBag: DisposeBag!
+    fileprivate var viewModel: OWCommentRatingViewModeling = OWCommentRatingViewModel()
+    fileprivate var disposeBag: DisposeBag = DisposeBag()
     
     fileprivate lazy var stackView: UIStackView = {
         return UIStackView()
