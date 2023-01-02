@@ -311,11 +311,13 @@ fileprivate extension BetaNewAPIVC {
         // Bind text fields
         txtFieldSpotId.rx.text
             .unwrap()
+            .distinctUntilChanged()
             .bind(to: viewModel.inputs.enteredSpotId)
             .disposed(by: disposeBag)
         
         txtFieldPostId.rx.text
             .unwrap()
+            .distinctUntilChanged()
             .bind(to: viewModel.inputs.enteredPostId)
             .disposed(by: disposeBag)
         
