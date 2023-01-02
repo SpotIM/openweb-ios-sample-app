@@ -15,9 +15,9 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
         static let identifier = "comment_creation_view_id"
     }
     
-    fileprivate lazy var label: UILabel = {
+    // TODO: this label is only to show the origin comment user when creating a reply. Should be removed
+    fileprivate lazy var replyToLabel: UILabel = {
         return UILabel()
-            .text("AAA")
             .textColor(.black)
     }()
     
@@ -47,20 +47,19 @@ fileprivate extension OWCommentCreationView {
         
         // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
         self.backgroundColor = .blue
-        self.addSubviews(label)
-        label.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        self.addSubviews(replyToLabel)
+        replyToLabel.OWSnp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
     }
     
     func setupObservers() {
         viewModel.outputs.replyToComment
-            .map { comment in
-                print("NOGAH: userID \(comment?.userId)")
-                return comment?.userId
-            }
             .unwrap()
-            .bind(to: label.rx.text)
+            .map { comment in
+                return "Reply To: \(comment.userId)"
+            }
+            .bind(to: replyToLabel.rx.text)
             .disposed(by: disposeBag)
     }
 }
