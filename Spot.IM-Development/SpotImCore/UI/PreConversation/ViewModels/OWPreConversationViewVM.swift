@@ -15,7 +15,7 @@ typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPr
 protocol OWPreConversationViewViewModelingInputs {
     // TODO: Testing - remove later and connect the actual views/actions
     var fullConversationTap: PublishSubject<Void> { get }
-    var commentCreationTap: PublishSubject<Void> { get }
+    var commentCreationTap: PublishSubject<SPComment?> { get }
     var preConversationChangedSize: PublishSubject<CGSize> { get }
     
     var viewInitialized: PublishSubject<Void> { get }
@@ -30,7 +30,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var isButtonOnlyModeEnabled: Bool { get }
     var openFullConversation: Observable<Void> { get }
-    var openCommentConversation: Observable<Void> { get }
+    var openCommentConversation: Observable<SPComment?> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
 }
 
@@ -101,8 +101,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
     
-    var commentCreationTap = PublishSubject<Void>()
-    var openCommentConversation: Observable<Void> {
+    var commentCreationTap = PublishSubject<SPComment?>()
+    var openCommentConversation: Observable<SPComment?> {
         return commentCreationTap
             .asObservable()
     }
@@ -158,15 +158,20 @@ fileprivate extension OWPreConversationViewViewModel {
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
-                    .conversationRead(postId: postId, mode: SPCommentSortMode.newest, page: SPPaginationPage.first, parentId: "", offset: 0)
+                    .conversationRead(postId: postId, mode: SPCommentSortMode.best, page: SPPaginationPage.first, parentId: "", offset: 0)
                     .response
                     .map { response -> SPConversationReadRM? in
                         guard let comments = response.conversation?.comments else { return nil }
                         var viewModels = [OWPreConversationCellOption]()
-                        for comment in comments.prefix(self.numberOfMessagesToShow) {
+                        for (index, comment) in comments.prefix(self.numberOfMessagesToShow).enumerated() {
                             // TODO: replies
                             let vm = OWCommentCellViewModel(comment: comment, user: response.conversation?.users?[comment.userId ?? ""], replyTo: nil)
+                            self.setupObservers(for: vm, comment: comment)
+                            
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+                            if (index < self.numberOfMessagesToShow - 1) {
+                                viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                            }
                         }
                         self._cellsViewModels.removeAll()
                         self._cellsViewModels.append(contentsOf: viewModels)
@@ -194,7 +199,19 @@ fileprivate extension OWPreConversationViewViewModel {
         
         _ = commentCreationEntryViewModel.outputs
             .tapped
-            .bind(to: commentCreationTap)
+            .bind(onNext: { [weak self] in
+                self?.commentCreationTap.onNext(nil)
+            })
             .disposed(by: disposeBag)
+    }
+    
+    // TODO: is this the propper way to handle comment actions?
+    func setupObservers(for viewModel: OWCommentCellViewModel, comment: SPComment) {
+        viewModel.commentVM.outputs.commentEngagementVM.outputs
+            .replyClickedOutput
+            .bind(onNext: { [weak self] in
+                self?.commentCreationTap.onNext(comment)
+            })
+            .disposed(by: self.disposeBag)
     }
 }

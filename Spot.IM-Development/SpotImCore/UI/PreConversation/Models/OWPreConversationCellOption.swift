@@ -41,7 +41,7 @@ extension OWPreConversationCellOption {
         case .commentSkeletonShimmering:
             return OWCommentSkeletonShimmeringCell.self
         case .spacer:
-            return UITableViewCell.self
+            return OWSpacerCell.self
         }
     }
 }
