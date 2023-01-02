@@ -57,7 +57,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentHeaderVM = OWCommentHeaderViewModel(user: user, replyTo: replyTo, model: comment)
         commentLabelVM = OWCommentLabelViewModel(comment: comment)
         contentVM = OWCommentContentViewModel(comment: comment)
-        commentEngagementVM = OWCommentEngagementViewModel(replies: comment.repliesCount ?? 0, rank: comment.rank)
+        commentEngagementVM = OWCommentEngagementViewModel(replies: comment.repliesCount ?? 0, rank: comment.rank ?? SPComment.Rank())
     }
     
     init() {

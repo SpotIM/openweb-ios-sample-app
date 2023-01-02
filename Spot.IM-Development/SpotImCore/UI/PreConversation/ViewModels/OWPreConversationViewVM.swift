@@ -205,6 +205,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
     }
     
+    // TODO: is this the propper way to handle comment actions?
     func setupObservers(for viewModel: OWCommentCellViewModel, comment: SPComment) {
         viewModel.commentVM.outputs.commentEngagementVM.outputs
             .replyClickedOutput
