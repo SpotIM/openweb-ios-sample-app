@@ -35,7 +35,7 @@ class OWCommentCell: UITableViewCell {
 fileprivate extension OWCommentCell {
     func setupUI() {
         self.backgroundColor = .clear
-        self.addSubviews(commentView)
+        self.contentView.addSubviews(commentView)
         
         commentView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()

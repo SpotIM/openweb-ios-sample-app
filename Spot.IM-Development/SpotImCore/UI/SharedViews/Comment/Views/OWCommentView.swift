@@ -13,6 +13,8 @@ import RxCocoa
 class OWCommentView: UIView {
     fileprivate struct Metrics {
         static let leadingOffset: CGFloat = 16.0
+        static let bottomOffset: CGFloat = 16.0
+        static let topOffset: CGFloat = 38.0
         static let commentLabelTopPadding: CGFloat = 10.0
         static let messageContainerTopOffset: CGFloat = 5.0
     }
@@ -25,6 +27,9 @@ class OWCommentView: UIView {
     }()
     fileprivate lazy var commentContentView: OWCommentContentView = {
         return OWCommentContentView()
+    }()
+    fileprivate lazy var commentEngagementView: OWCommentEngagementView = {
+        return OWCommentEngagementView()
     }()
     
     fileprivate var viewModel: OWCommentViewModeling!
@@ -43,6 +48,7 @@ class OWCommentView: UIView {
         self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
         self.commentLabelView.configure(viewModel: viewModel.outputs.commentLabelVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
+        self.commentEngagementView.configure(with: viewModel.outputs.commentEngagementVM)
         
         setupUI()
         setupObservers()
@@ -52,10 +58,11 @@ class OWCommentView: UIView {
 fileprivate extension OWCommentView {
     func setupUI() {
         self.backgroundColor = .clear
-        self.addSubviews(commentHeaderView, commentLabelView, commentContentView)
+        self.addSubviews(commentHeaderView, commentLabelView, commentContentView, commentEngagementView)
         
         commentHeaderView.OWSnp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.topOffset)
         }
         
         commentLabelView.OWSnp.makeConstraints { make in
@@ -65,7 +72,13 @@ fileprivate extension OWCommentView {
         
         commentContentView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        commentEngagementView.OWSnp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(commentContentView.OWSnp.bottom)
+            make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
         }
     }
     
