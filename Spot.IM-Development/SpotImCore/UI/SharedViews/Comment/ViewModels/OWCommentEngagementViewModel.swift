@@ -48,7 +48,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
             .asObservable()
     }
     
-    var replyClicked = PublishSubject<Void>() // TODO: handle click
+    var replyClicked = PublishSubject<Void>()
     var replyClickedOutput: Observable<Void> {
         replyClicked
             .asObservable()
@@ -56,8 +56,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     
     fileprivate var _replies = BehaviorSubject<Int>(value: 0)
    
-    init(replies: Int, rank: SPComment.Rank?) {
-        guard let rank = rank else { return } // TODO: should not be optional
+    init(replies: Int, rank: SPComment.Rank) {
         _replies.onNext(replies)
         votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0, rankDownCount: rank.ranksDown ?? 0, rankedByUserValue: rank.rankedByCurrentUser ?? 0))
     }
