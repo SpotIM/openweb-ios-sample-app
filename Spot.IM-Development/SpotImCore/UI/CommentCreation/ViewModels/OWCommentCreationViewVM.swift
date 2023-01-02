@@ -27,10 +27,11 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let _commentCreationData = PublishSubject<OWCommentCreationRequiredData>()
+    fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
     
     var replyToComment: Observable<SPComment?> {
         _commentCreationData
+            .unwrap()
             .map { $0.replyToComment }
             .asObservable()
     }
