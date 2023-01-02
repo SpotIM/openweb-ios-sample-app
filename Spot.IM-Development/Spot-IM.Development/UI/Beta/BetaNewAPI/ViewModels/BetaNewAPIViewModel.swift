@@ -132,7 +132,7 @@ fileprivate extension BetaNewAPIViewModel {
         let conversationDataModelObservable = spotId
                     .withLatestFrom(postId) { [weak self] spotId, postId -> SDKConversationDataModel in
                         return SDKConversationDataModel(spotId: spotId, postId: postId)
-                    }
+                    }.asObservable()
         
         uiFlowsTapped
             .withLatestFrom(conversationDataModelObservable)
