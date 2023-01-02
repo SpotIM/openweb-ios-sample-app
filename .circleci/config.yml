@@ -77,6 +77,62 @@ commands:
              git status
 
 jobs:
+  validate_spm_job:
+    <<: *ios_config_xcode
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_core_version
+      
+      - run:
+          name: Clone SPM integration repo
+          command: |
+            mkdir spm-integration
+            cd spm-integration
+            git clone https://github.com/SpotIM/iOS-SDK-Test-SPM-Integration.git
+            ls -l
+
+      - run:
+          name: Change xcode project SpotIM SPM version to the branch validate version requested and commit
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            ls -l
+            git branch validate/spm/sdk/$CORE_VERSION
+            git checkout validate/spm/sdk/$CORE_VERSION
+            git status
+            sed -i '' "s/\branch = .*/branch = $CORE_VERSION;/" OpenWeb-iOS-SDK-Demo.xcodeproj/project.pbxproj
+            git add .
+            git commit -m "validate spm with version '$CORE_VERSION'"
+
+      - run:
+          name: Bundle Install
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - run:
+          name: Build app
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            bundle exec fastlane build
+
+      - run:
+          name: Create a pull request on Github for validating cocoapods integration
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            git push origin validate/spm/sdk/$CORE_VERSION
+
+      # Collect XML test results data to show in the UI, and save the same XML
+      # files under test-results folder in the Artifacts tab
+      - store_test_results:
+          path: fastlane
+      - store_artifacts:
+          path: fastlane
+          destination: scan-output
+          
   validate_cocoapods_job:
     <<: *ios_config_xcode
     steps:
@@ -475,4 +531,10 @@ workflows:
             branches:
               only:
                 - /^validate/cocoapods/sdk/.*/
+          xcode: "14.0.0"
+      - validate_spm_job:
+          filters:
+            branches:
+              only:
+                - /^validate/spm/sdk/.*/
           xcode: "14.0.0"
