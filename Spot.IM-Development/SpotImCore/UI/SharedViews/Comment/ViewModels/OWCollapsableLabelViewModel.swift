@@ -22,6 +22,7 @@ protocol OWCollapsableLabelViewModelingOutputs {
 //    var imageUrl: Observable<URL?> { get }
 //    var mediaSize: Observable<CGSize?> { get }
     var collapsedNumberOfLines: Observable<Int> { get }
+    var text: Observable<NSMutableAttributedString> { get }
 }
 
 protocol OWCollapsableLabelViewModeling {
@@ -37,9 +38,15 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
     var outputs: OWCollapsableLabelViewModelingOutputs { return self }
     
     fileprivate let _lineLimit = BehaviorSubject<Int>(value: 0)
-    
     var collapsedNumberOfLines: Observable<Int> {
         _lineLimit
+            .map {$0}
+    }
+    
+    fileprivate let _fullText = BehaviorSubject<NSMutableAttributedString?>(value: nil)
+    var text: Observable<NSMutableAttributedString> {
+        _fullText
+            .unwrap()
             .map {$0}
     }
     
@@ -47,6 +54,7 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
     
     init(text: NSMutableAttributedString, lineLimit: Int) {
         _lineLimit.onNext(lineLimit)
+        _fullText.onNext(text)
     }
 }
     

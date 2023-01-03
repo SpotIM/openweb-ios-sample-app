@@ -25,6 +25,8 @@ protocol OWCommentContentViewModelingOutputs {
     var gifUrl: Observable<String?> { get }
     var imageUrl: Observable<URL?> { get }
     var mediaSize: Observable<CGSize?> { get }
+    
+    var collapsableLabelViewModel: OWCollapsableLabelViewModeling { get }
 }
 
 protocol OWCommentContentViewModeling {
@@ -42,12 +44,16 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     fileprivate let lineLimit: Int
     
+    var collapsableLabelViewModel: OWCollapsableLabelViewModeling
+    
     init(comment: SPComment, lineLimit: Int = 4) { // TODO: pass line limit
         self.lineLimit = lineLimit
+        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: NSMutableAttributedString(string: comment.text?.text ?? ""), lineLimit: lineLimit)
         _comment.onNext(comment)
     }
     init() {
         lineLimit = 0
+        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: NSMutableAttributedString(string: ""), lineLimit: 0)
     }
     
 //    var commentTextLabelWidth = PublishSubject<CGFloat>()
