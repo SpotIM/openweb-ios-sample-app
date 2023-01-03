@@ -93,7 +93,7 @@ fileprivate extension OWCommentLabelView {
     func setupObservers() {
         let commentLabelSettingsObservable = viewModel.outputs.commentLabelSettings
             .unwrap()
-            .share(replay: 0)
+            .share(replay: 1)
         
         commentLabelSettingsObservable
             .map {$0.iconUrl}
