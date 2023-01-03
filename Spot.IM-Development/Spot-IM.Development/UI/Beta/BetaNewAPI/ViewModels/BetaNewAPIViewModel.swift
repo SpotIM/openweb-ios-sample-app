@@ -129,7 +129,7 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _postId)
             .disposed(by: disposeBag)
         
-        let conversationDataModelObservable = Observable.combineLatest(spotId, postId) { [weak self] spotId, postId -> SDKConversationDataModel in
+        let conversationDataModelObservable = Observable.combineLatest(spotId, postId) { spotId, postId -> SDKConversationDataModel in
             return SDKConversationDataModel(spotId: spotId, postId: postId)
         }.asObservable()
         
