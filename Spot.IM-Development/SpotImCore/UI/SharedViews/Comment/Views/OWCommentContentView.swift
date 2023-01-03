@@ -65,11 +65,11 @@ fileprivate extension OWCommentContentView {
     func setupObservers() {
 //        viewModel.inputs.commentTextLabelWidth.onNext(textLabel.frame.width) // TODO via rx on the label width?
         
-        viewModel.outputs.attributedString
-            .bind(onNext: { [weak self] attributedString in
-                self?.textLabel.attributedText = attributedString
-            })
-            .disposed(by: disposeBag)
+//        viewModel.outputs.attributedString
+//            .bind(onNext: { [weak self] attributedString in
+//                self?.textLabel.attributedText = attributedString
+//            })
+//            .disposed(by: disposeBag)
         
         viewModel.outputs.imageUrl
             .unwrap()
