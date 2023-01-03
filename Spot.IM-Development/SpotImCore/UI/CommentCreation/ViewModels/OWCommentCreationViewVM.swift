@@ -32,7 +32,14 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var replyToComment: Observable<SPComment?> {
         _commentCreationData
             .unwrap()
-            .map { $0.replyToComment }
+            .map {
+                switch $0.commentCreationType {
+                case .comment:
+                    return nil
+                case .replyToComment(let originComment):
+                    return originComment
+                }
+            }
             .asObservable()
     }
 
