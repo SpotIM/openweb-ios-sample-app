@@ -36,6 +36,7 @@ class UIFlowsVC: UIViewController {
 
         return txt
             .button
+            .adjustsFontSizeToFitWidth
             .backgroundColor(ColorPalette.blue)
             .textColor(ColorPalette.extraLightGrey)
             .corner(radius: Metrics.buttonCorners)
@@ -48,6 +49,7 @@ class UIFlowsVC: UIViewController {
 
         return txt
             .button
+            .adjustsFontSizeToFitWidth
             .backgroundColor(ColorPalette.blue)
             .textColor(ColorPalette.extraLightGrey)
             .corner(radius: Metrics.buttonCorners)
@@ -60,6 +62,7 @@ class UIFlowsVC: UIViewController {
 
         return txt
             .button
+            .adjustsFontSizeToFitWidth
             .backgroundColor(ColorPalette.blue)
             .textColor(ColorPalette.extraLightGrey)
             .corner(radius: Metrics.buttonCorners)
@@ -72,6 +75,7 @@ class UIFlowsVC: UIViewController {
 
         return txt
             .button
+            .adjustsFontSizeToFitWidth
             .backgroundColor(ColorPalette.blue)
             .textColor(ColorPalette.extraLightGrey)
             .corner(radius: Metrics.buttonCorners)
@@ -84,6 +88,7 @@ class UIFlowsVC: UIViewController {
 
         return txt
             .button
+            .adjustsFontSizeToFitWidth
             .backgroundColor(ColorPalette.blue)
             .textColor(ColorPalette.extraLightGrey)
             .corner(radius: Metrics.buttonCorners)
@@ -96,6 +101,7 @@ class UIFlowsVC: UIViewController {
 
         return txt
             .button
+            .adjustsFontSizeToFitWidth
             .backgroundColor(ColorPalette.blue)
             .textColor(ColorPalette.extraLightGrey)
             .corner(radius: Metrics.buttonCorners)
