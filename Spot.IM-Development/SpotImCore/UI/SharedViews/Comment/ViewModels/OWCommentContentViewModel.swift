@@ -21,7 +21,7 @@ protocol OWCommentContentViewModelingInputs {
 
 protocol OWCommentContentViewModelingOutputs {
     var text: Observable<String?> { get }
-    var attributedString: Observable<NSMutableAttributedString?> { get }
+//    var attributedString: Observable<NSMutableAttributedString?> { get }
     var gifUrl: Observable<String?> { get }
     var imageUrl: Observable<URL?> { get }
     var mediaSize: Observable<CGSize?> { get }
@@ -48,12 +48,12 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     
     init(comment: SPComment, lineLimit: Int = 4) { // TODO: pass line limit
         self.lineLimit = lineLimit
-        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: NSMutableAttributedString(string: comment.text?.text ?? ""), lineLimit: lineLimit)
+        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: comment.text?.text ?? "", lineLimit: lineLimit)
         _comment.onNext(comment)
     }
     init() {
         lineLimit = 0
-        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: NSMutableAttributedString(string: ""), lineLimit: 0)
+        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: "", lineLimit: 0)
     }
     
 //    var commentTextLabelWidth = PublishSubject<CGFloat>()
@@ -67,27 +67,6 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var text: Observable<String?> {
         _comment
             .map {$0?.text?.text}
-            .asObservable()
-    }
-    
-    fileprivate var textState: TextState = .notInitialized // TODO: ?
-    var attributedString: Observable<NSMutableAttributedString?> {
-        text
-            .map { [weak self] messageText in
-                let width = 200.0 // TODO: get real width
-                guard let self = self, let messageText = messageText else { return nil }
-                var messageAttributedString: NSMutableAttributedString = NSMutableAttributedString(
-                    string: messageText,
-                    attributes: self.messageStringAttributes()
-                )
-                let lines = messageAttributedString.getLines(with: width)
-                self.setTextState(lines: lines.count)
-                self.appendActionStringIfNeeded(messageAttributedString, lines: lines)
-                return messageAttributedString
-//                return NSMutableAttributedString(string: messageText, attributes: [
-//                    :
-//                ]) // TODO: build with read more/less, links, edited etc
-            }
             .asObservable()
     }
     
@@ -189,58 +168,6 @@ fileprivate extension OWCommentContentViewModel {
         return result.appending("/")
     }
     
-    func messageStringAttributes() -> [NSAttributedString.Key: Any] {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = 0
-        paragraphStyle.lineSpacing = 3.5
-
-        var attributes: [NSAttributedString.Key: Any]
-        // TODO: color
-        attributes = [
-            .font: UIFont.preferred(style: .regular, of: OWCommentContentView.Metrics.fontSize),
-            .paragraphStyle: paragraphStyle
-        ]
-
-        return attributes
-    }
-    func actionStringAttributes() -> [NSAttributedString.Key: Any] {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = 0
-        paragraphStyle.lineSpacing = 3.5
-
-        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes()
-        attributes[.foregroundColor] = UIColor.clearBlue // TODO: color
-
-        return attributes
-    }
-    
-    func setTextState(lines: Int) {
-        // this function is only for the first init
-        guard self.textState == .notInitialized else { return }
-        
-        textState = lines > self.lineLimit ? .collapsed : .fullyShown
-    }
-    
-    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine]) {
-        switch self.textState {
-        case .collapsed:
-            let visibleLines = lines[0...lineLimit - 1]
-            let ellipsis = NSAttributedString(
-                string: " ... ",
-                attributes: messageStringAttributes())
-            let readMore = NSMutableAttributedString(
-                string: LocalizationManager.localizedString(key: "Read More"),
-                attributes: actionStringAttributes())
-            attString.append(ellipsis)
-            attString.append(readMore)
-            break
-        case .expanded:
-            break
-        default:
-            break
-        }
-    }
-    
 //    private func readMoreAppended(with index: Int, _ lines: [CTLine], _ width: CGFloat) -> NSAttributedString {
 //
 //        let slice = lines[0...index - 1]
@@ -282,11 +209,4 @@ fileprivate extension OWCommentContentViewModel {
 //
 //        return mutableSelf ?? self
 //    }
-}
-
-fileprivate enum TextState {
-    case notInitialized
-    case fullyShown
-    case collapsed
-    case expanded
 }
