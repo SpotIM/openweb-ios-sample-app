@@ -65,10 +65,11 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
                     string: messageText,
                     attributes: self.messageStringAttributes()
                 )
+                let range = messageText.lineRange(for: ..<messageText.startIndex)
                 let lines = messageAttributedString.getLines(with: width)
                 self.setTextState(lines: lines.count)
-                self.appendActionStringIfNeeded(messageAttributedString, lines: lines)
-                return messageAttributedString
+                return self.appendActionStringIfNeeded(messageAttributedString, lines: lines)
+//                return messageAttributedString
 //                return NSMutableAttributedString(string: messageText, attributes: [
 //                    :
 //                ]) // TODO: build with read more/less, links, edited etc
@@ -111,24 +112,33 @@ fileprivate extension OWCollapsableLabelViewModel {
         textState = lines > self.lineLimit ? .collapsed : .fullyShown
     }
     
-    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine]) {
+    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine]) -> NSMutableAttributedString {
         switch self.textState {
         case .collapsed:
             let visibleLines = lines[0...lineLimit - 1]
             let ellipsis = NSAttributedString(
                 string: " ... ",
                 attributes: messageStringAttributes())
+            var visibleString = ""
+            for line in visibleLines {
+                let lineRange = CTLineGetStringRange(line)
+                let range = NSRange(location: lineRange.location, length: lineRange.length)
+                let lineString = (attString.string as NSString).substring(with: range)
+                visibleString.append(lineString)
+            }
+            let attString2 = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes())
             let readMore = NSMutableAttributedString(
                 string: LocalizationManager.localizedString(key: "Read More"),
                 attributes: actionStringAttributes())
-            attString.append(ellipsis)
-            attString.append(readMore)
-            break
+            attString2.append(ellipsis)
+            attString2.append(readMore)
+            return attString2
         case .expanded:
             break
         default:
             break
         }
+        return attString
     }
 }
     
