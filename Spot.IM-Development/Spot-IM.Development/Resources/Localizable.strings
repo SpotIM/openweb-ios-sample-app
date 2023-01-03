@@ -47,3 +47,14 @@
 "IndependentAdUnit" = "IAU - Independent Ad Unit";
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
+"Settings" = "Settings";
+"HideArticleHeader" = "Hide article header";
+"CommentCreationNewDesign" = "Comment creation new design";
+"ReadOnlyMode" = "Read only mode";
+"Default" = "Default";
+"Enabled" = "Enabled";
+"Disabled" = "Disabled";
+"ThemeMode" = "Theme mode";
+"ModalStyle" = "Modal style";
+"FullScreen" = "Full Screen";
+"PageSheet" = "Page Sheet";
