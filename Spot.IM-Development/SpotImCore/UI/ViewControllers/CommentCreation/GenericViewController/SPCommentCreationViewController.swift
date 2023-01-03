@@ -26,6 +26,10 @@ class SPCommentCreationViewController: SPBaseViewController,
         static let activityIndicatorIdentifier = "comment_reply_view_activity_indicator_id"
         static let closeButtonIdentifier = "comment_reply_view_close_button_id"
         static let commentingOnLabelIdentifier = "comment_reply_view_commenting_on_label_id"
+        static let replyCounterFontSize = 13.0
+        static let replyCounterTopBottomOffset = -10.0
+        static let replyCounterTrailingOffset = -16.0
+        static let replyCounterHeight = 24.0
     }
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     weak var delegate: CommentReplyViewControllerDelegate?
@@ -46,11 +50,22 @@ class SPCommentCreationViewController: SPBaseViewController,
     
     private let footerView: SPCommentFooterView = .init()
     
+    private let replyCounter: Int
+    private lazy var commentReplyCounterLabel: UILabel = {
+        let txt = "0/\(replyCounter)"
+        
+        return txt
+            .label
+            .font(UIFont.preferred(style: .regular, of: Metrics.replyCounterFontSize))
+            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+    }()
+    
     private let scrollView: OWBaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
     private var commentLabelsSection: String?
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
     
+    private var commentReplyCounterBottomConstraint: OWConstraint?
     private var commentLabelsContainerBottomConstraint: OWConstraint?
     private var commentContentScrollViewBottomConstraint: OWConstraint?
     private var mainContainerBottomConstraint: OWConstraint?
@@ -92,9 +107,11 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel,
-         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         replyCounter: Int) {
         self.model = model
         self.servicesProvider = servicesProvider
+        self.replyCounter = replyCounter
         textInputViewContainer.configureAvatarViewModel(with: model.avatarViewVM)
         super.init(customUIDelegate: customUIDelegate)
         self.updateModelData()
@@ -159,6 +176,21 @@ class SPCommentCreationViewController: SPBaseViewController,
         return commentLabels
     }
     
+    private func setupCommentReplyCounter() {
+        if let shouldShow = SPConfigsDataSource.appConfig?.mobileSdk.shouldShowCommentCounter, !shouldShow {
+            hideCommentReplyCounter()
+        }
+    }
+    
+    private func hideCommentReplyCounter() {
+        commentReplyCounterLabel.isHidden = true
+        commentReplyCounterBottomConstraint?.update(offset: 0)
+        commentReplyCounterLabel.OWSnp.updateConstraints { make in
+            make.height.equalTo(0)
+        }
+        
+    }
+    
     private func hideCommentLabelsContainer() {
         commentLabelsContainer.isHidden = true
         commentLabelsContainerBottomConstraint?.update(offset: 0)
@@ -173,6 +205,7 @@ class SPCommentCreationViewController: SPBaseViewController,
         
         navigationController?.setNavigationBarHidden(true, animated: animated)
         updatePostButton()
+        setupCommentReplyCounter()
         setupCommentLabelsContainer()
         setFooterViewContentButtons()
     }
@@ -650,7 +683,7 @@ extension SPCommentCreationViewController {
             }
         }
         scrollView.addSubview(mainContainerView)
-        mainContainerView.addSubviews(topContainerView, commentContentScrollView, commentLabelsContainer, footerView)
+        mainContainerView.addSubviews(topContainerView, commentContentScrollView, commentReplyCounterLabel, commentLabelsContainer, footerView)
         topContainerView.addSubview(topContainerStack)
         
         configureMainContainer()
@@ -660,6 +693,7 @@ extension SPCommentCreationViewController {
         configureContentScrollView()
         configureFooterView()
         configureCommentLabelsContainer()
+        configureCommentReplyCounter()
         updateColorsAccordingToStyle()
     }
     
@@ -691,7 +725,7 @@ extension SPCommentCreationViewController {
             make.top.equalTo(topContainerView.OWSnp.bottom)
             make.leading.equalToSuperview().offset(Theme.inputViewHorizontalOffset)
             make.trailing.equalToSuperview().offset(-Theme.inputViewHorizontalOffset)
-            commentContentScrollViewBottomConstraint = make.bottom.equalTo(commentLabelsContainer.OWSnp.top).offset(-15).constraint
+            commentContentScrollViewBottomConstraint = make.bottom.equalTo(commentReplyCounterLabel.OWSnp.top).offset(Metrics.replyCounterTopBottomOffset).constraint
             make.height.greaterThanOrEqualTo(40.0)
 
         }
@@ -758,6 +792,15 @@ extension SPCommentCreationViewController {
             mainContainerBottomConstraint = make.bottom.equalTo(scrollView).constraint
             make.trailing.leading.equalToSuperview()
             make.height.equalTo(Theme.footerViewHeight)
+        }
+    }
+    
+    private func configureCommentReplyCounter() {
+        commentReplyCounterLabel.OWSnp.makeConstraints { make in
+            commentReplyCounterBottomConstraint = make.bottom.equalTo(commentLabelsContainer.OWSnp.top).offset(Metrics.replyCounterTopBottomOffset).constraint
+            make.trailing.equalTo(topContainerView).offset(Metrics.replyCounterTrailingOffset)
+            make.leading.greaterThanOrEqualToSuperview().offset(-Metrics.replyCounterTrailingOffset)
+            make.height.equalTo(Metrics.replyCounterHeight)
         }
     }
     
@@ -890,13 +933,14 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
 }
 
 extension SPCommentCreationViewController: SPTextInputViewDelegate {
-
-    func tooLongTextWasPassed() {
-        // handle too long text passing
+    
+    func validateInputLenght(_ lenght: Int) -> Bool {
+        return lenght <= replyCounter
     }
     
     func input(_ view: SPTextInputView, didChange text: String) {
         if view === textInputViewContainer {
+            commentReplyCounterLabel.text = "\(text.count)/\(replyCounter)"
             model.updateCommentText(text)
         } else if showsUsernameInput, view === usernameView {
             SPUserSessionHolder.update(displayName: text)

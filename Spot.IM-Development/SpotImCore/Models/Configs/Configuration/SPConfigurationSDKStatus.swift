@@ -23,4 +23,6 @@ struct SPConfigurationSDKStatus: Decodable {
     let profileEnabled: Bool?
     let imageUploadBaseUrl: String
     let fetchImageBaseUrl: String
+    let shouldShowCommentCounter: Bool
+    let commentCounterCharactersLimit: Int
 }
