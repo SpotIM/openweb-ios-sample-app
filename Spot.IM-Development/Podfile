@@ -4,7 +4,6 @@ inhibit_all_warnings!
 abstract_target 'Shared' do
   use_frameworks! :linkage => :static
 
-  pod 'Alamofire', '~> 5.6.2'
   pod 'RxSwift', '~> 6.5'
   pod 'RxCocoa', '~> 6.5'
   
@@ -14,7 +13,8 @@ abstract_target 'Shared' do
   abstract_target 'DemoApps' do
     pod 'SnapKit', '~> 5.6.0'
     pod 'Google-Mobile-Ads-SDK', '= 8.0'
-
+    pod 'Alamofire', '~> 5.6.2'
+    
     target 'Spot-IM.Development'
   end
 

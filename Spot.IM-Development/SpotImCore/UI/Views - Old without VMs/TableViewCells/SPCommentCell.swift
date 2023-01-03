@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Alamofire
 
 protocol MessageItemContainable: AnyObject {
     var messageView: MessageContainerView { get }
@@ -60,7 +59,7 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     private var statusIndicatorViewHeighConstraint: OWConstraint?
     private var statusIndicatorViewTopConstraint: OWConstraint?
     
-    private var imageRequest: DataRequest?
+    private var imageRequest: OWNetworkDataRequest?
 
     // MARK: - Init
 

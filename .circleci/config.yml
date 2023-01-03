@@ -19,6 +19,13 @@ references:
       command: |
         echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $RELEASE_VERSION
+  
+  define_var_core_version: &define_var_core_version
+    run:
+      name: Export core version number to environment variable
+      command: |
+        echo "export CORE_VERSION=$(cut -d '/' -f4 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
+        echo $CORE_VERSION
 
 commands:
   release_tag:
@@ -70,6 +77,124 @@ commands:
              git status
 
 jobs:
+  validate_spm_job:
+    <<: *ios_config_xcode
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_core_version
+      
+      - run:
+          name: Clone SPM integration repo
+          command: |
+            mkdir spm-integration
+            cd spm-integration
+            git clone https://github.com/SpotIM/iOS-SDK-Test-SPM-Integration.git
+            ls -l
+
+      - run:
+          name: Change xcode project SpotIM SPM version to the branch validate version requested and commit
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            ls -l
+            git branch validate/spm/sdk/$CORE_VERSION
+            git checkout validate/spm/sdk/$CORE_VERSION
+            git status
+            sed -i '' "s/\branch = .*/branch = $CORE_VERSION;/" OpenWeb-iOS-SDK-Demo.xcodeproj/project.pbxproj
+            git add .
+            git commit -m "validate spm with version '$CORE_VERSION'"
+
+      - run:
+          name: Bundle Install
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - run:
+          name: Build app
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            bundle exec fastlane build
+
+      - run:
+          name: Create a pull request on Github for validating cocoapods integration
+          command: |
+            cd spm-integration/iOS-SDK-Test-SPM-Integration
+            git push origin validate/spm/sdk/$CORE_VERSION
+
+      # Collect XML test results data to show in the UI, and save the same XML
+      # files under test-results folder in the Artifacts tab
+      - store_test_results:
+          path: fastlane
+      - store_artifacts:
+          path: fastlane
+          destination: scan-output
+          
+  validate_cocoapods_job:
+    <<: *ios_config_xcode
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_core_version
+      
+      - run:
+          name: Clone cocoapods integration repo
+          command: |
+            mkdir cocoapods-integration
+            cd cocoapods-integration
+            git clone https://github.com/SpotIM/iOS-SDK-Test-Cocoapods-Integration.git
+            ls -l
+
+      - run:
+          name: Change podfile SpotIM version to the branch validate version requested and commit
+          command: |
+            cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            ls -l
+            git branch validate/cocoapods/sdk/$CORE_VERSION
+            git checkout validate/cocoapods/sdk/$CORE_VERSION
+            git status
+            sed -i '' "s/\pod 'SpotIMCore'.*/pod 'SpotIMCore', '$CORE_VERSION'/" Podfile
+            git add .
+            git commit -m "validate cocoapods with version '$CORE_VERSION'"
+
+      - run:
+          name: Pod install
+          command: |
+            cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            pod install
+
+      - run:
+          name: Bundle Install
+          command: |
+            cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - run:
+          name: Build app
+          command: |
+            cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            bundle exec fastlane build
+
+      - run:
+          name: Create a pull request on Github for validating cocoapods integration
+          command: |
+            cd cocoapods-integration/iOS-SDK-Test-Cocoapods-Integration
+            git push origin validate/cocoapods/sdk/$CORE_VERSION
+
+      # Collect XML test results data to show in the UI, and save the same XML
+      # files under test-results folder in the Artifacts tab
+      - store_test_results:
+          path: fastlane
+      - store_artifacts:
+          path: fastlane
+          destination: scan-output
+          
   default_job:
     <<: *ios_config_xcode
     steps:
@@ -240,6 +365,49 @@ jobs:
           command: |
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
             
+  release_beta_app_job:
+    <<: *ios_config_xcode
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_release_version
+
+      - run:
+          name: start release app
+          command: |
+            echo "Start release app with beta preset version: $RELEASE_VERSION"
+            pwd
+            ls -l
+
+      - run:
+          name: Configure Apple Key
+          command: |
+            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - 'vendor/bundle'
+
+      - run:
+          name: Run Fastlane Release Sample App
+          command: |
+            bundle exec fastlane release_beta_demo_app version:$RELEASE_VERSION
+            
   release_public_app_job:
     <<: *ios_config_xcode
     steps:
@@ -290,7 +458,9 @@ workflows:
       - default_job:
           filters:
             branches:
-              ignore: /^release/.*/
+              ignore:
+                - /^release/.*/
+                - /^validate/.*/
           xcode: "14.0.0"
 
       - release_sdk_job:
@@ -321,6 +491,13 @@ workflows:
                 - /^release/app/.*/
           xcode: "14.0.0"
                 
+      - release_beta_app_job:
+          filters:
+            branches:
+              only:
+                - /^release/beta_app/.*/
+          xcode: "14.0.0"
+          
       - release_public_app_job:
           filters:
             branches:
@@ -346,3 +523,18 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.1.0"
+  
+  validate_workflow:
+    jobs:
+      - validate_cocoapods_job:
+          filters:
+            branches:
+              only:
+                - /^validate/cocoapods/sdk/.*/
+          xcode: "14.0.0"
+      - validate_spm_job:
+          filters:
+            branches:
+              only:
+                - /^validate/spm/sdk/.*/
+          xcode: "14.0.0"
