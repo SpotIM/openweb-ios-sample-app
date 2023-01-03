@@ -14,7 +14,7 @@ protocol OWCommentCreationViewViewModelingInputs {
 }
 
 protocol OWCommentCreationViewViewModelingOutputs {
-    var replyToComment: Observable<SPComment?> { get }
+    var commentType: OWCommentCreationType { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -29,24 +29,13 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
     
-    var replyToComment: Observable<SPComment?> {
-        _commentCreationData
-            .unwrap()
-            .map {
-                switch $0.commentCreationType {
-                case .comment:
-                    return nil
-                case .replyToComment(let originComment):
-                    return originComment
-                }
-            }
-            .asObservable()
-    }
+    var commentType: OWCommentCreationType
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self._commentCreationData.onNext(commentCreationData)
+        commentType = commentCreationData.commentCreationType
         setupObservers()
     }
 }
