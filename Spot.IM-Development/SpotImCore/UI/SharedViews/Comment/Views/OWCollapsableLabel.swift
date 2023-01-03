@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWCollapsableLabel: UILabel {
-    fileprivate var viewModel: OWCollapsableLabelViewModeling = OWCollapsableLabelViewModel(text: NSMutableAttributedString(string: ""), lineLimit: 0)
+    fileprivate var viewModel: OWCollapsableLabelViewModeling = OWCollapsableLabelViewModel(text: "", lineLimit: 0)
     fileprivate var disposeBag = DisposeBag()
     
     init() {
@@ -31,7 +31,7 @@ class OWCollapsableLabel: UILabel {
 
 fileprivate extension OWCollapsableLabel {
     func setupObservers() {
-        viewModel.outputs.text
+        viewModel.outputs.attributedString
             .bind(onNext: { [weak self] text in
                 self?.attributedText = text
             })
