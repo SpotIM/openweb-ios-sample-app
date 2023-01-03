@@ -15,7 +15,7 @@ typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPr
 protocol OWPreConversationViewViewModelingInputs {
     // TODO: Testing - remove later and connect the actual views/actions
     var fullConversationTap: PublishSubject<Void> { get }
-    var commentCreationTap: PublishSubject<SPComment?> { get }
+    var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var preConversationChangedSize: PublishSubject<CGSize> { get }
     
     var viewInitialized: PublishSubject<Void> { get }
@@ -30,7 +30,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var isButtonOnlyModeEnabled: Bool { get }
     var openFullConversation: Observable<Void> { get }
-    var openCommentConversation: Observable<SPComment?> { get }
+    var openCommentConversation: Observable<OWCommentCreationType> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
 }
 
@@ -39,7 +39,7 @@ protocol OWPreConversationViewViewModeling: AnyObject {
     var outputs: OWPreConversationViewViewModelingOutputs { get }
 }
 
-class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {    
+class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
     
@@ -101,8 +101,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
     
-    var commentCreationTap = PublishSubject<SPComment?>()
-    var openCommentConversation: Observable<SPComment?> {
+    var commentCreationTap = PublishSubject<OWCommentCreationType>()
+    var openCommentConversation: Observable<OWCommentCreationType> {
         return commentCreationTap
             .asObservable()
     }
@@ -200,7 +200,7 @@ fileprivate extension OWPreConversationViewViewModel {
         _ = commentCreationEntryViewModel.outputs
             .tapped
             .bind(onNext: { [weak self] in
-                self?.commentCreationTap.onNext(nil)
+                self?.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
     }
@@ -210,7 +210,7 @@ fileprivate extension OWPreConversationViewViewModel {
         viewModel.commentVM.outputs.commentEngagementVM.outputs
             .replyClickedOutput
             .bind(onNext: { [weak self] in
-                self?.commentCreationTap.onNext(comment)
+                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: self.disposeBag)
     }
