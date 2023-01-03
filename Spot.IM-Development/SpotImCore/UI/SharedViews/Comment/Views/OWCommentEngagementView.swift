@@ -19,7 +19,7 @@ class OWCommentEngagementView: UIView {
         static let replyButtonIdentifier = "comment_actions_view_reply_button_id"
     }
     
-    fileprivate var viewModel: OWCommentEngagementViewModeling = OWCommentEngagementViewModel()
+    fileprivate var viewModel: OWCommentEngagementViewModeling!
     fileprivate var disposeBag: DisposeBag = DisposeBag()
     
     fileprivate lazy var replyButton: UIButton = {
