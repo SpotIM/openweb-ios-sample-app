@@ -27,7 +27,7 @@ class OWCommentContentView: UIView {
         return CommentMediaView()
     }()
     
-    fileprivate var viewModel: OWCommentContentViewModeling = OWCommentContentViewModel()
+    fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate let disposeBag = DisposeBag()
     
     required init?(coder aDecoder: NSCoder) {

@@ -33,7 +33,7 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
     var inputs: OWCommentEngagementViewModelingInputs { return self }
     var outputs: OWCommentEngagementViewModelingOutputs { return self }
     
-    var votingVM: OWCommentRatingViewModeling = OWCommentRatingViewModel()
+    let votingVM: OWCommentRatingViewModeling
     fileprivate let disposeBag = DisposeBag()
     
     // TODO: handle disabled (disable button, change text, disable voting?) - on read only + comment deleted/reported etc
@@ -61,6 +61,8 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
         votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0, rankDownCount: rank.ranksDown ?? 0, rankedByUserValue: rank.rankedByCurrentUser ?? 0))
     }
 
-    init() {}
+    init() {
+        self.votingVM = OWCommentRatingViewModel()
+    }
 
 }
