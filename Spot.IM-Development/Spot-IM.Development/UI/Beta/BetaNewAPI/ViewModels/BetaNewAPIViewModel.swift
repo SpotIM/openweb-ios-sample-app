@@ -162,8 +162,8 @@ fileprivate extension BetaNewAPIViewModel {
                          uiViewsTapped.voidify(),
                          miscellaneousTapped.voidify(),
                          settingsTapped.voidify(),
-                         enteredSpotId.voidify(),
-                         enteredPostId.voidify(),
+                         enteredSpotId.voidify().skip(1),
+                         enteredPostId.voidify().skip(1),
                          doneSelectPresetTapped)
             .subscribe(onNext: { [weak self] _ in
                 
