@@ -698,6 +698,7 @@
 			}
 		},
 		"blitz_enabled": true,
+        "comment_counter_characters_limit": 1500,
 		"config_validation_time_seconds": 360,
 		"disable_ads_for_subscribers": true,
 		"disable_interstitial_on_login": true,
@@ -719,6 +720,7 @@
 			"pub_id": "156276"
 		},
 		"realtime_enabled": true,
+        "should_show_comment_counter": false,
 		"typing_enabled": true,
 		"web_ads_enabled": true,
         "fetch_image_base_url": "https://images.spot.im/image/upload",
