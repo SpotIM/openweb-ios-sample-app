@@ -17,8 +17,8 @@ class OWCommentContentView: UIView {
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
     
-    fileprivate lazy var textLabel: UILabel = {
-       return UILabel()
+    fileprivate lazy var textLabel: OWCollapsableLabel = {
+       return OWCollapsableLabel()
             .numberOfLines(0)
             .font(.preferred(style: .regular, of: Metrics.fontSize))
     }()
@@ -41,6 +41,7 @@ class OWCommentContentView: UIView {
     
     func configure(with viewModel: OWCommentContentViewModeling) {
         self.viewModel = viewModel
+        textLabel.configure(with: viewModel.outputs.collapsableLabelViewModel)
         setupObservers()
     }
 }

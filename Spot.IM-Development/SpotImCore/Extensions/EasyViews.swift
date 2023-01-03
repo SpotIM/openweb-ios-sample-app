@@ -101,7 +101,7 @@ extension UILabel {
         return self
     }
     
-    @discardableResult func numberOfLines(_ number: Int) -> UILabel {
+    @discardableResult func numberOfLines(_ number: Int) -> Self {
         self.numberOfLines = number
         return self
     }
