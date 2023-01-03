@@ -52,12 +52,12 @@ class OWCommentViewModel: OWCommentViewModeling,
     var contentVM: OWCommentContentViewModeling
     var commentEngagementVM: OWCommentEngagementViewModeling
     
-    init(comment: SPComment, user: SPUser, replyTo: SPUser?) {
-        commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
-        commentHeaderVM = OWCommentHeaderViewModel(user: user, replyTo: replyTo, model: comment)
-        commentLabelVM = OWCommentLabelViewModel(comment: comment)
-        contentVM = OWCommentContentViewModel(comment: comment)
-        commentEngagementVM = OWCommentEngagementViewModel(replies: comment.repliesCount ?? 0, rank: comment.rank ?? SPComment.Rank())
+    init(data: OWCommentRequiredData) {
+        commentUserVM = OWCommentUserViewModel(user: data.user, imageProvider: nil)
+        commentHeaderVM = OWCommentHeaderViewModel(user: data.user, replyTo: data.replyToUser, model: data.comment)
+        commentLabelVM = OWCommentLabelViewModel(comment: data.comment)
+        contentVM = OWCommentContentViewModel(comment: data.comment)
+        commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? SPComment.Rank())
     }
     
     init() {
