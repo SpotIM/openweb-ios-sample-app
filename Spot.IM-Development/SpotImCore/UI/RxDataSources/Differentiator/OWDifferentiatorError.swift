@@ -17,7 +17,7 @@ enum OWDifferentiatorError: Error {
     case preconditionFailed(message: String)
 }
 
-func precondition(_ condition: Bool, _ message: @autoclosure() -> String) throws {
+func differentiatorPrecondition(_ condition: Bool, _ message: @autoclosure() -> String) throws {
     if condition {
         return
     }
