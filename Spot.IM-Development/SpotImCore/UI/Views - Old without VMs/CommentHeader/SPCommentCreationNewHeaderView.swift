@@ -187,7 +187,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
             commentLabelTopConstraint = make.top.equalTo(replyingLabel.OWSnp.bottom).offset(Theme.commentTopOffset).constraint
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
             make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
-            make.bottom.greaterThanOrEqualToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
 }
