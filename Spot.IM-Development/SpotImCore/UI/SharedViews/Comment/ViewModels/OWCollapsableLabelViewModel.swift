@@ -13,12 +13,14 @@ import UIKit
 
 protocol OWCollapsableLabelViewModelingInputs {
     var width: PublishSubject<CGFloat> { get }
+    var readMoreTap: PublishSubject<Void> { get }
+    var readLessTap: PublishSubject<Void> { get }
 }
 
 protocol OWCollapsableLabelViewModelingOutputs {
-//    var collapsedNumberOfLines: Observable<Int> { get }
     var attributedString: Observable<NSMutableAttributedString?> { get }
-    var text: Observable<String> { get }
+    var readMoreText: String { get }
+    var readLessText: String { get }
 }
 
 protocol OWCollapsableLabelViewModeling {
@@ -33,48 +35,68 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
     var inputs: OWCollapsableLabelViewModelingInputs { return self }
     var outputs: OWCollapsableLabelViewModelingOutputs { return self }
     
-    fileprivate let _lineLimit = BehaviorSubject<Int>(value: 0)
-    var collapsedNumberOfLines: Observable<Int> {
-        _lineLimit
-            .map {$0}
-    }
     fileprivate var lineLimit: Int = 0
+    fileprivate var disposeBag = DisposeBag()
     
-    fileprivate let _fullText = BehaviorSubject<String?>(value: nil)
-    var text: Observable<String> {
-        _fullText
-            .unwrap()
-            .map {$0}
-    }
+    var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
+    var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
     
-    var width = PublishSubject<CGFloat>()
+    var width = PublishSubject<CGFloat>() // TODO: should get it in constructor ?
+    var readMoreTap = PublishSubject<Void>()
+    var readLessTap = PublishSubject<Void>()
     
     init(text: String, lineLimit: Int) {
-//        _lineLimit.onNext(lineLimit)
         self.lineLimit = lineLimit
         _fullText.onNext(text)
+        setupObservers()
     }
     
-    fileprivate var textState: TextState = .notInitialized // TODO: ?
-    var attributedString: Observable<NSMutableAttributedString?> {
-        text
+    fileprivate let _fullText = BehaviorSubject<String?>(value: nil)
+    fileprivate var fullAttributedString: Observable<NSMutableAttributedString> {
+        _fullText
+            .unwrap()
             .map { [weak self] messageText in
-                let width = 200.0 // TODO: get real width
                 guard let self = self else { return nil }
-                var messageAttributedString: NSMutableAttributedString = NSMutableAttributedString(
+                return NSMutableAttributedString(
                     string: messageText,
                     attributes: self.messageStringAttributes()
                 )
-                let range = messageText.lineRange(for: ..<messageText.startIndex)
-                let lines = messageAttributedString.getLines(with: width)
-                self.setTextState(lines: lines.count)
-                return self.appendActionStringIfNeeded(messageAttributedString, lines: lines)
-//                return messageAttributedString
-//                return NSMutableAttributedString(string: messageText, attributes: [
-//                    :
-//                ]) // TODO: build with read more/less, links, edited etc
+            }
+            .unwrap()
+    }
+    
+    fileprivate var _lines: Observable<[CTLine]> {
+        fullAttributedString.map { messageAttributedString in
+            let width = 200.0 // TODO: get real width
+            return messageAttributedString.getLines(with: width)
+        }
+        .unwrap()
+        .asObservable()
+    }
+    
+    fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
+    var attributedString: Observable<NSMutableAttributedString?> {
+        Observable.combineLatest(_lines, _textState, fullAttributedString)
+            .map { lines, currentState, fullAttributedString in
+                return self.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState)
             }
             .asObservable()
+    }
+}
+
+fileprivate extension OWCollapsableLabelViewModel {
+    func setupObservers() {
+        readMoreTap
+            .bind(onNext: { [weak self] in
+                self?._textState.onNext(.expanded)
+            })
+            .disposed(by: disposeBag)
+        
+        readLessTap
+            .bind(onNext: { [weak self] in
+                self?._textState.onNext(.collapsed)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -94,26 +116,18 @@ fileprivate extension OWCollapsableLabelViewModel {
 
         return attributes
     }
+    
     func actionStringAttributes() -> [NSAttributedString.Key: Any] {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = 0
-        paragraphStyle.lineSpacing = 3.5
-
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes()
         attributes[.foregroundColor] = UIColor.clearBlue // TODO: color
 
         return attributes
     }
     
-    func setTextState(lines: Int) {
-        // this function is only for the first init
-        guard self.textState == .notInitialized else { return }
-        
-        textState = lines > self.lineLimit ? .collapsed : .fullyShown
-    }
-    
-    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine]) -> NSMutableAttributedString {
-        switch self.textState {
+    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine], currentState: TextState) -> NSMutableAttributedString {
+        // In case short message - add nothing here
+        guard lines.count > self.lineLimit else { return attString }
+        switch currentState {
         case .collapsed:
             let visibleLines = lines[0...lineLimit - 1]
             let ellipsis = NSAttributedString(
@@ -128,23 +142,23 @@ fileprivate extension OWCollapsableLabelViewModel {
             }
             let attString2 = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes())
             let readMore = NSMutableAttributedString(
-                string: LocalizationManager.localizedString(key: "Read More"),
+                string: self.readMoreText,
                 attributes: actionStringAttributes())
             attString2.append(ellipsis)
             attString2.append(readMore)
             return attString2
         case .expanded:
-            break
-        default:
-            break
+            let readLess = NSMutableAttributedString(
+                string: self.readLessText,
+                attributes: actionStringAttributes())
+            let aa = NSMutableAttributedString(attributedString: attString)
+            aa.append(readLess)
+            return aa
         }
-        return attString
     }
 }
     
 fileprivate enum TextState {
-    case notInitialized
-    case fullyShown
     case collapsed
     case expanded
 }

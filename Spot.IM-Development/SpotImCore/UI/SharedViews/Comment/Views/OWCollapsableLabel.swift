@@ -16,6 +16,7 @@ class OWCollapsableLabel: UILabel {
     
     init() {
         super.init(frame: .zero)
+        setupGestureRecognizer()
     }
     
     func configure(with viewModel: OWCollapsableLabelViewModeling) {
@@ -27,13 +28,45 @@ class OWCollapsableLabel: UILabel {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+
+}
+
+extension OWCollapsableLabel: UIGestureRecognizerDelegate {
+    fileprivate func setupGestureRecognizer() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        tap.delegate = self
+        self.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
+    }
+    
+    @objc
+    func handleTap(gesture: UITapGestureRecognizer) {
+        if isTarget(substring: viewModel.outputs.readMoreText, destinationOf: gesture) {
+            viewModel.inputs.readMoreTap.onNext()
+        } else if isTarget(substring: viewModel.outputs.readLessText, destinationOf: gesture) {
+            viewModel.inputs.readLessTap.onNext()
+        } else {
+//            checkURLTap(in: gesture.location(in: mainTextLabel))
+        }
+    }
+    
+    fileprivate func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
+        guard let string = self.attributedText?.string else { return false }
+        
+        guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
+        let tapLocation = gesture.location(in: self)
+        let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
+        
+        return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
+    }
 }
 
 fileprivate extension OWCollapsableLabel {
     func setupObservers() {
         viewModel.outputs.attributedString
-            .bind(onNext: { [weak self] text in
-                self?.attributedText = text
+            .bind(onNext: { [weak self] attString in
+                self?.attributedText = attString
             })
             .disposed(by: disposeBag)
     }
