@@ -167,8 +167,6 @@ fileprivate extension OWPreConversationViewViewModel {
                             // TODO: replies
                             guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
                             let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
-                            self.setupObservers(for: vm, comment: comment)
-                            
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                             if (index < self.numberOfMessagesToShow - 1) {
                                 viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
@@ -204,15 +202,27 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
-    }
-    
-    // TODO: is this the propper way to handle comment actions?
-    func setupObservers(for viewModel: OWCommentCellViewModel, comment: SPComment) {
-        viewModel.commentVM.outputs.commentEngagementVM.outputs
-            .replyClickedOutput
-            .bind(onNext: { [weak self] in
-                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
+        
+        cellsViewModels
+            .flatMapLatest { viewModels -> Observable<Void> in
+                let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
+                    if case.comment(let commentCellViewModel) = vm {
+                        return commentCellViewModel
+                    } else {
+                        return nil
+                    }
+                }.compactMap { $0 }
+
+                let replyClickOutputObservable: [Observable<Void>] = commentCellsVms.map { commentCellVm in
+                    return commentCellVm.outputs.commentVM.outputs.commentEngagementVM.outputs.replyClickedOutput
+                    // TODO: Map the observables to the comment in some way
+                    let comment = commentCellVm.outputs.commentVM.outputs.comment
+                }
+                return Observable.merge(replyClickOutputObservable)
+            }
+            .subscribe(onNext: { [weak self] in
+                self?.commentCreationTap.onNext(.comment) // TODO -> reply
             })
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
     }
 }
