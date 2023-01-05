@@ -508,13 +508,9 @@ class SPCommentCreationViewController: SPBaseViewController,
             headerView = commentHeaderView
         }
         topContainerStack.insertArrangedSubview(headerView, at: 0)
-        
-        let heightWithCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 150 : 111
-        let heightWithoutCommentText: CGFloat = SpotIm.enableCreateCommentNewDesign ? 115 : 68
 
         headerView.OWSnp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.height.equalTo(shouldHideCommentText ? heightWithoutCommentText : heightWithCommentText)
             make.width.equalToSuperview()
         }
 
