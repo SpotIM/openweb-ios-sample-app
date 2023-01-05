@@ -28,6 +28,14 @@ The setup_circle_ci fastlane action will perform the following actions:
 
 Run unit tests
 
+### ios build_development_ipa
+
+```sh
+[bundle exec] fastlane ios build_development_ipa
+```
+
+Build development ipa
+
 ### ios build_release_sdk
 
 ```sh

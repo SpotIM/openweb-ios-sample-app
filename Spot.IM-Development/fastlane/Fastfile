@@ -40,6 +40,16 @@ platform :ios do
       device: "iPhone 12 Pro",
     )
   end
+
+  desc "Build development ipa"
+  lane :build_development_ipa do
+    cocoapods(use_bundle_exec: false)
+    gym(
+        scheme: "Spot-IM.Development",
+        workspace: "Spot-IM.Development.xcworkspace",
+        export_method: "development"
+    )
+  end
   
   # Excpect parameter `version`
   desc "Build a release version of the SDK"
