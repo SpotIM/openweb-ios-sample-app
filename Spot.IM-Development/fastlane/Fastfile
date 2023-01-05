@@ -47,7 +47,8 @@ platform :ios do
     gym(
         scheme: "Spot-IM.Development",
         workspace: "Spot-IM.Development.xcworkspace",
-        export_method: "development"
+        export_method: "development",
+        export_options: { compileBitcode: false} 
     )
   end
   
