@@ -467,7 +467,7 @@ jobs:
       - run:
           name: Run Fastline build ipa
           command: |
-            fastlane build_development_ipa
+            bundle exec fastlane build_development_ipa
 
       - run:
           name: Verify ipa file exists
