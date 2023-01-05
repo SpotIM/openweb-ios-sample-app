@@ -8,7 +8,7 @@ references:
   ios_config_xcode: &ios_config_xcode
     parameters:
       xcode:
-       type: string
+        type: string
     macos:
       xcode: << parameters.xcode >>
     working_directory: ~/project/Spot.IM-Development
@@ -19,7 +19,7 @@ references:
       command: |
         echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $RELEASE_VERSION
-  
+
   define_var_core_version: &define_var_core_version
     run:
       name: Export core version number to environment variable
@@ -58,12 +58,12 @@ commands:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
-         name: Before Running Fastlane Build Release
-         command: |
-             git status
+          name: Before Running Fastlane Build Release
+          command: |
+            git status
 
       - run:
           name: Run Fastlane Build Release
@@ -71,10 +71,10 @@ commands:
             bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
 
       - run:
-         name: After Running Fastlane Release
-         command: |
-             ls -l Release
-             git status
+          name: After Running Fastlane Release
+          command: |
+            ls -l Release
+            git status
 
 jobs:
   validate_spm_job:
@@ -84,7 +84,7 @@ jobs:
           path: ~/project
 
       - *define_var_core_version
-      
+
       - run:
           name: Clone SPM integration repo
           command: |
@@ -132,7 +132,7 @@ jobs:
       - store_artifacts:
           path: fastlane
           destination: scan-output
-          
+
   validate_cocoapods_job:
     <<: *ios_config_xcode
     steps:
@@ -140,7 +140,7 @@ jobs:
           path: ~/project
 
       - *define_var_core_version
-      
+
       - run:
           name: Clone cocoapods integration repo
           command: |
@@ -194,7 +194,7 @@ jobs:
       - store_artifacts:
           path: fastlane
           destination: scan-output
-          
+
   default_job:
     <<: *ios_config_xcode
     steps:
@@ -228,7 +228,7 @@ jobs:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
           name: Build app and run unit-tests
@@ -242,7 +242,7 @@ jobs:
       - store_artifacts:
           path: test_output
           destination: scan-output
-    
+
   release_sdk_job:
     <<: *ios_config_xcode
     steps:
@@ -274,12 +274,12 @@ jobs:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
-         name: Before Running Fastlane Release
-         command: |
-             git status
+          name: Before Running Fastlane Release
+          command: |
+            git status
 
       - run:
           name: Run Fastlane Release
@@ -287,10 +287,10 @@ jobs:
             bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
 
       - run:
-         name: After Running Fastlane Release
-         command: |
-             ls -l Release
-             git status
+          name: After Running Fastlane Release
+          command: |
+            ls -l Release
+            git status
 
       - run:
           name: Update Github repo with new SDK version
@@ -311,7 +311,7 @@ jobs:
           name: Create a "Github Release" on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
             bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
-            
+
   release_tag:
     <<: *ios_config_xcode
     steps:
@@ -358,13 +358,13 @@ jobs:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
-            
+
   release_beta_app_job:
     <<: *ios_config_xcode
     steps:
@@ -401,13 +401,13 @@ jobs:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_beta_demo_app version:$RELEASE_VERSION
-            
+
   release_public_app_job:
     <<: *ios_config_xcode
     steps:
@@ -444,17 +444,43 @@ jobs:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_public_demo_app version:$RELEASE_VERSION
 
+  upload_build_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - checkout:
+          path: ~/project
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - run:
+          name: Run Fastline build ipa
+          command: |
+            fastlane build_development_ipa
+
+      - run:
+          name: Verify ipa file exists
+          command: |
+            test -f Spot-IM.Development.ipa && echo "Spot-IM.Development.ipa file exists"
+
 workflows:
   version: 2
   independent_job_workflow:
     jobs:
+      - upload_build_to_s3_job:
+          xcode: "14.0.0"
+
       - default_job:
           filters:
             branches:
@@ -469,14 +495,14 @@ workflows:
               only:
                 - /^release/sdk/.*/
           xcode: "14.0.0"
-                
+
       - release_tag:
           filters:
             branches:
               only:
                 - /^release/tag13.4/.*/
           xcode: "13.4.0"
-                
+
       - release_tag:
           filters:
             branches:
@@ -490,21 +516,21 @@ workflows:
               only:
                 - /^release/app/.*/
           xcode: "14.0.0"
-                
+
       - release_beta_app_job:
           filters:
             branches:
               only:
                 - /^release/beta_app/.*/
           xcode: "14.0.0"
-          
+
       - release_public_app_job:
           filters:
             branches:
               only:
                 - /^release/public_app/.*/
           xcode: "14.0.0"
-                
+
   release_multi_workflow:
     jobs:
       - release_sdk_job:
@@ -523,7 +549,7 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.1.0"
-  
+
   validate_workflow:
     jobs:
       - validate_cocoapods_job:
