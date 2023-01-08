@@ -168,6 +168,11 @@ extension UIButton {
         self.contentHorizontalAlignment = align
         return self
     }
+    
+    var adjustsFontSizeToFitWidth: UIButton {
+        self.titleLabel?.adjustsFontSizeToFitWidth = true
+        return self
+    }
 }
 
 extension UIImageView {
