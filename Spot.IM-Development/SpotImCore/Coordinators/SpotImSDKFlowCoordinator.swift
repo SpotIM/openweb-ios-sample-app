@@ -600,9 +600,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func setupAndPresentCommentCreation(with model: SPCommentCreationModel,
                                                  dataModel: SPMainConversationModel) {
-        
-        guard let replyCounter = SPConfigsDataSource.appConfig?.mobileSdk.commentCounterCharactersLimit else { return }
-        let controller = SPCommentCreationViewController(customUIDelegate: self, model: model, replyCounter: replyCounter)
+        let controller = SPCommentCreationViewController(customUIDelegate: self, model: model)
         controller.delegate = self
         controller.userAuthFlowDelegate = self
         dataModel.dataSource.showReplies = true
@@ -614,6 +612,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
             commentCreationDTO: dto,
             updater: conversationUpdater,
             imageProvider: imageProvider,
+            spotCongif: spotConfig,
             articleMetadate: articleMetadata
         )
         self.setupObservers(for: model)
