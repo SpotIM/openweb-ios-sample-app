@@ -17,7 +17,7 @@ internal protocol SPTextInputView: AnyObject {
 internal protocol SPTextInputViewDelegate: AnyObject {
     
     func input(_ view: SPTextInputView, didChange text: String)
-    func validateInputLenght(_ lenght: Int) -> Bool
+    func validateInput(lenght: Int) -> Bool
 }
 
 final class SPCommentTextInputView: OWBaseView, SPTextInputView {
@@ -167,7 +167,7 @@ extension SPCommentTextInputView: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         
-        return delegate?.validateInputLenght(newText.count) ?? true
+        return delegate?.validateInput(lenght: newText.count) ?? true
     }
 }
 
