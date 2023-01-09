@@ -57,7 +57,7 @@ extension OWPreConversationCellOption: Equatable {
         case .commentSkeletonShimmering(let viewModel):
             return viewModel.outputs.id
         case .spacer(let viewModel):
-            return ""
+            return viewModel.outputs.id
         }
     }
    
