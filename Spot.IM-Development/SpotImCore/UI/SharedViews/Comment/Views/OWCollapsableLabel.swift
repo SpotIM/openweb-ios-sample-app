@@ -22,7 +22,6 @@ class OWCollapsableLabel: UILabel {
     func configure(with viewModel: OWCollapsableLabelViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
-        setupUI()
         setupObservers()
     }
     
@@ -34,11 +33,6 @@ class OWCollapsableLabel: UILabel {
 }
 
 extension OWCollapsableLabel: UIGestureRecognizerDelegate {
-    func setupUI() {
-        self.OWSnp.makeConstraints { make in
-            make.height.equalTo(0)
-        }
-    }
     
     fileprivate func setupGestureRecognizer() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -74,16 +68,6 @@ fileprivate extension OWCollapsableLabel {
         viewModel.outputs.attributedString
             .bind(onNext: { [weak self] attString in
                 self?.attributedText = attString
-            })
-            .disposed(by: disposeBag)
-        
-        viewModel.outputs.height
-            .subscribe(onNext: { [weak self] height in
-                print("NOGAH: new height \(height)")
-                guard let self = self else { return }
-                self.OWSnp.updateConstraints { make in
-                    make.height.equalTo(height)
-                }
             })
             .disposed(by: disposeBag)
     }
