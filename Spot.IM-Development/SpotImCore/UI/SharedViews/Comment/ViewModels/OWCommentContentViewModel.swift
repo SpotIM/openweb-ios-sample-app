@@ -11,10 +11,6 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-fileprivate struct Metrics {
-    static let commentMediaMaxHeight: Float = 226.0
-}
-
 protocol OWCommentContentViewModelingInputs {
 }
 
@@ -34,6 +30,13 @@ protocol OWCommentContentViewModeling {
 class OWCommentContentViewModel: OWCommentContentViewModeling,
                                  OWCommentContentViewModelingInputs,
                                  OWCommentContentViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let commentMediaMaxHeight: Float = 226.0
+        static let depth0Offset: CGFloat = 0.0
+        static let depth1Offset: CGFloat = 25.0
+        static let depth2Offset: CGFloat = 40.0
+        static let maxDepthOffset: CGFloat = 55.0
+    }
     
     var inputs: OWCommentContentViewModelingInputs { return self }
     var outputs: OWCommentContentViewModelingOutputs { return self }
@@ -105,17 +108,17 @@ fileprivate extension OWCommentContentViewModel {
             .unwrap()
             .map { [weak self] comment in
                 guard let self = self else { return 0 }
-                return self.depthOffset(depth: comment.depth ?? 0)
+                return self.leadingOffset(perCommentDepth: comment.depth ?? 0)
             }
             .asObservable()
     }
     
-    func depthOffset(depth: Int) -> CGFloat {
+    func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
-        case 0: return 0
-        case 1: return 25.0
-        case 2: return 40.0
-        default: return 55.0
+        case 0: return Metrics.depth0Offset
+        case 1: return Metrics.depth1Offset
+        case 2: return Metrics.depth2Offset
+        default: return Metrics.maxDepthOffset
         }
     }
     
@@ -147,7 +150,8 @@ fileprivate extension OWCommentContentViewModel {
         }
         return URL(string: cloudinaryURLString(size).appending(id))
     }
-    private func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
+    
+    func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
         var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
         
         if let imageSize = imageSize {
