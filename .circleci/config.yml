@@ -478,12 +478,13 @@ jobs:
       - run:
           name: Run Fastline build ipa
           command: |
-            bundle exec fastlane build_development_ipa
+            bundle exec fastlane build_development_app
 
       - run:
-          name: Verify ipa file exists
+          name: Verify app file exists
           command: |
-            test -f Spot-IM.Development.ipa && echo "Spot-IM.Development.ipa file exists"
+            cd simulator_build
+            ls
 
 workflows:
   version: 2

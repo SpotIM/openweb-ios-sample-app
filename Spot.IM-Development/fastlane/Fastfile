@@ -41,18 +41,20 @@ platform :ios do
     )
   end
 
-  desc "Build development ipa"
-  lane :build_development_ipa do
-    match(type: "development", readonly: true)
+  desc "Build development app"
+  lane :build_development_app do
+    # match(type: "development", readonly: true)
     cocoapods(use_bundle_exec: false)
     gym(
+        skip_package_ipa: true,
         scheme: "Spot-IM.Development",
         workspace: "Spot-IM.Development.xcworkspace",
-        export_method: "development",
-        export_options: { compileBitcode: false} 
+        destination: "generic/platform=iOS Simulator",
+        configuration: "Debug",
+        build_path: "simulator_build"
     )
   end
-  
+
   # Excpect parameter `version`
   desc "Build a release version of the SDK"
   lane :build_release_sdk do |options|
@@ -67,7 +69,7 @@ platform :ios do
       build: true
     )
   end
-  
+
   # Excpect parameter `version`
   desc "Release Sample App (internal preset)"
   lane :release_demo_app do |options|
@@ -98,7 +100,7 @@ platform :ios do
     )
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
-  
+
   # Excpect parameter `version`
   desc "Release Sample App (beta preset)"
   lane :release_beta_demo_app do |options|
@@ -129,7 +131,7 @@ platform :ios do
     )
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
-  
+
   # Excpect parameter `version`
   desc "Release Sample App (public preset)"
   lane :release_public_demo_app do |options|
@@ -160,7 +162,7 @@ platform :ios do
     )
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
-  
+
   # Excpect parameter `version`
   desc "Set version in xcode target and project plists"
   lane :set_version do |options|
@@ -174,7 +176,7 @@ platform :ios do
         end
     )
   end
-  
+
   # Excpect parameters `build_low` and `build_high`
   desc "Increment build if it is in range, or set build to lower end"
   lane :increment_build_in_range do |options|
@@ -190,7 +192,7 @@ platform :ios do
       increment_build_number(build_number: new_build_number)
     end
   end
-  
+
   # This method used for internal testing. Decided to keep it here for convenient. Excpect parameter `build`.
   desc "Set build to specific number"
   lane :set_build do |options|
