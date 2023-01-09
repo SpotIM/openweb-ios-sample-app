@@ -45,6 +45,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
     
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let userBadgeService: OWUserBadgeServicing
     
     fileprivate let _model = BehaviorSubject<SPComment?>(value: nil)
     fileprivate var _unwrappedModel: Observable<SPComment>  {
@@ -59,7 +61,13 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
     
     // TODO: image provider
-    init(data: OWCommentRequiredData, imageProvider: SPImageProvider? = nil) {
+    init(data: OWCommentRequiredData,
+         imageProvider: SPImageProvider? = nil,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
+    ) {
+        self.servicesProvider = servicesProvider
+        self.userBadgeService = userBadgeService
         avatarVM = OWAvatarViewModel(user: data.user, imageURLProvider: imageProvider)
         subscriberBadgeVM.inputs.configureUser(user: data.user)
         _model.onNext(data.comment)
@@ -67,7 +75,10 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _replyToUser.onNext(data.replyToUser)
     }
     
-    init() {}
+    init() {
+        servicesProvider = OWSharedServicesProvider.shared
+        userBadgeService = OWUserBadgeService()
+    }
     
     var avatarVM: OWAvatarViewModeling = {
        return OWAvatarViewModel()
@@ -93,7 +104,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var dateText: Observable<String> {
         _unwrappedModel
             .map({ model in
-                guard let writtenAt = model.writtenAt else { return ""}
+                guard let writtenAt = model.writtenAt else { return "" }
                 let timestamp = Date(timeIntervalSince1970: writtenAt).timeAgo()
                 return model.isReply ? " · ".appending(timestamp) : timestamp
             })
@@ -101,7 +112,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     
     fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
+        servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationConversation? in
                 return config.conversation
@@ -111,7 +122,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var badgeTitle: Observable<String> {
         Observable.combineLatest(_unwrappedUser, conversationConfig) { [weak self] user, conversationConfig in
                 guard let self = self else { return "" }
-            return self.getUserBadgeUsingConfig(user: user, conversationConfig: conversationConfig)?.uppercased() ?? ""
+            return self.userBadgeService.userBadgeText(user: user, conversationConfig: conversationConfig)?.uppercased() ?? ""
         }
     }
     
@@ -124,7 +135,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     var nameTextStyle: Observable<SPFontStyle> {
         _unwrappedModel
-            .map { $0.isReply ? .medium : .bold}
+            .map { $0.isReply ? .medium : .bold }
     }
     
     var isUsernameOneRow: Observable<Bool> {
@@ -165,26 +176,5 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var moreTapped: Observable<OWUISource> {
         tapMore
             .asObservable()
-    }
-}
-
-fileprivate extension OWCommentHeaderViewModel {
-    func getUserBadgeUsingConfig(user: SPUser, conversationConfig: SPConfigurationConversation) -> String? {
-        guard user.isStaff else { return nil }
-        
-        if let translations = conversationConfig.translationTextOverrides,
-           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
-        {
-            if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
-                return adminBadge
-            } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {
-                return jurnalistBadge
-            } else if user.isModerator, let moderatorBadge = currentTranslation[BadgesOverrideKeys.moderator.rawValue] {
-                return moderatorBadge
-            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue]  {
-                return communityModeratorBadge
-            }
-        }
-        return user.authorityTitle
     }
 }

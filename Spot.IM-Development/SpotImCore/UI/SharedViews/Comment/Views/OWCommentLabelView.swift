@@ -47,7 +47,7 @@ class OWCommentLabelView: UIView {
     }()
     
     fileprivate var viewModel: OWCommentLabelViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    fileprivate var disposeBag: DisposeBag!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,13 +69,18 @@ class OWCommentLabelView: UIView {
 fileprivate extension OWCommentLabelView {
     func setupUI() {
         addSubviews(labelContainer)
-        labelContainer.addSubviews(iconImageView, label)
-        
         labelContainer.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
             heightConstraint = make.height.equalTo(0).constraint
         }
         
+        labelContainer.addSubview(label)
+        label.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalMargin)
+        }
+        
+        labelContainer.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.width.equalTo(Metrics.iconImageWidth)
             make.height.equalTo(Metrics.iconImageHeight)
@@ -83,16 +88,10 @@ fileprivate extension OWCommentLabelView {
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
             make.trailing.equalTo(label.OWSnp.leading).offset(-Metrics.iconTrailingOffset)
         }
-        
-        label.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalMargin)
-        }
     }
     
     func setupObservers() {
         let commentLabelSettingsObservable = viewModel.outputs.commentLabelSettings
-            .unwrap()
             .share(replay: 1)
         
         commentLabelSettingsObservable
