@@ -10,5 +10,5 @@ import Foundation
 
 struct OWCommentCreationRequiredData {
     let article: OWArticleProtocol
-    let replyToComment: SPComment?
+    let commentCreationType: OWCommentCreationType
 }

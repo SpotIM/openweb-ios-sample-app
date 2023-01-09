@@ -73,9 +73,9 @@ fileprivate extension OWPreConversationCoordinator {
             }
         
         let openCommentConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentConversation
-            .map { [weak self] comment -> OWDeepLinkOptions? in
+            .map { [weak self] type -> OWDeepLinkOptions? in
                 guard let self = self else { return nil }
-                let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, replyToComment: comment)
+                let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, commentCreationType: type)
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
             }
         

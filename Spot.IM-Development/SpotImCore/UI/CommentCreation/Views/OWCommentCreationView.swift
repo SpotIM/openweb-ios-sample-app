@@ -17,8 +17,17 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
     
     // TODO: this label is only to show the origin comment user when creating a reply. Should be removed
     fileprivate lazy var replyToLabel: UILabel = {
+        let text: String? = {
+            switch viewModel.outputs.commentType {
+            case .comment:
+                return nil
+            case .replyToComment(let originComment):
+                return "Reply to: \(originComment.userId)"
+            }
+        }()
         return UILabel()
             .textColor(.black)
+            .text(text)
     }()
     
     fileprivate let viewModel: OWCommentCreationViewViewModeling
@@ -54,12 +63,6 @@ fileprivate extension OWCommentCreationView {
     }
     
     func setupObservers() {
-        viewModel.outputs.replyToComment
-            .unwrap()
-            .map { comment in
-                return "Reply To: \(comment.userId)"
-            }
-            .bind(to: replyToLabel.rx.text)
-            .disposed(by: disposeBag)
+
     }
 }

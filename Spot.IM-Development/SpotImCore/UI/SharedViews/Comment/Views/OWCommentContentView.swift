@@ -27,8 +27,9 @@ class OWCommentContentView: UIView {
         return CommentMediaView()
     }()
     
-    fileprivate var viewModel: OWCommentContentViewModeling = OWCommentContentViewModel()
-    fileprivate let disposeBag = DisposeBag()
+    fileprivate var viewModel: OWCommentContentViewModeling!
+    fileprivate var disposeBag: DisposeBag!
+
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -42,6 +43,7 @@ class OWCommentContentView: UIView {
     func configure(with viewModel: OWCommentContentViewModeling) {
         self.viewModel = viewModel
         textLabel.configure(with: viewModel.outputs.collapsableLabelViewModel)
+        self.disposeBag = DisposeBag()
         setupObservers()
     }
 }
@@ -88,7 +90,7 @@ fileprivate extension OWCommentContentView {
             .disposed(by: disposeBag)
         
         viewModel.outputs.mediaSize
-            .bind(onNext: { [weak self] size in
+            .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.mediaView.OWSnp.updateConstraints { make in
                     make.size.equalTo(size ?? 0)

@@ -29,7 +29,7 @@ fileprivate struct DefaultMetrics {
 // Expiration options
 enum OWCacheExpirationStrategy {
     case none
-    case time(lifetime: TimeInterval)
+    case time(lifetime: TimeInterval) // `lifetime` parameter in seconds
 }
 
 class OWCacheService<Key: Hashable, Value: Any> {
