@@ -40,7 +40,6 @@ class OWCommentView: UIView {
     init() {
         super.init(frame: .zero)
         setupUI()
-        // setupObservers?
     }
     
     func configure(with viewModel: OWCommentViewModeling) {
@@ -51,38 +50,41 @@ class OWCommentView: UIView {
         self.commentEngagementView.configure(with: viewModel.outputs.commentEngagementVM)
         
         setupUI()
-        setupObservers()
+    }
+    
+    func prepareForReuse() {
+        commentHeaderView.prepareForReuse()
     }
 }
 
 fileprivate extension OWCommentView {
     func setupUI() {
         self.backgroundColor = .clear
-        self.addSubviews(commentHeaderView, commentLabelView, commentContentView, commentEngagementView)
         
+        self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalToSuperview().offset(Metrics.topOffset)
         }
         
+        self.addSubview(commentLabelView)
         commentLabelView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
             make.leading.equalToSuperview()
+            make.trailing.lessThanOrEqualToSuperview()
         }
         
+        self.addSubview(commentContentView)
         commentContentView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
             make.leading.trailing.equalToSuperview()
         }
         
+        self.addSubview(commentEngagementView)
         commentEngagementView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(commentContentView.OWSnp.bottom)
             make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
         }
-    }
-    
-    func setupObservers() {
-        
     }
 }

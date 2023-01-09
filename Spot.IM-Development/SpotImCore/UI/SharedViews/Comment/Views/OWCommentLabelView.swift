@@ -47,7 +47,7 @@ class OWCommentLabelView: UIView {
     }()
     
     fileprivate var viewModel: OWCommentLabelViewModeling!
-    fileprivate var disposeBag = DisposeBag()
+    fileprivate var disposeBag: DisposeBag!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,13 +69,18 @@ class OWCommentLabelView: UIView {
 fileprivate extension OWCommentLabelView {
     func setupUI() {
         addSubviews(labelContainer)
-        labelContainer.addSubviews(iconImageView, label)
-        
         labelContainer.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
             heightConstraint = make.height.equalTo(0).constraint
         }
         
+        labelContainer.addSubview(label)
+        label.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalMargin)
+        }
+        
+        labelContainer.addSubview(iconImageView)
         iconImageView.OWSnp.makeConstraints { make in
             make.width.equalTo(Metrics.iconImageWidth)
             make.height.equalTo(Metrics.iconImageHeight)
@@ -83,17 +88,13 @@ fileprivate extension OWCommentLabelView {
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
             make.trailing.equalTo(label.OWSnp.leading).offset(-Metrics.iconTrailingOffset)
         }
-        
-        label.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalMargin)
-        }
     }
     
     func setupObservers() {
-        let _commentLabelSettings = viewModel.outputs.commentLabelSettings.unwrap()
+        let commentLabelSettingsObservable = viewModel.outputs.commentLabelSettings
+            .share(replay: 1)
         
-        _commentLabelSettings
+        commentLabelSettingsObservable
             .map {$0.iconUrl}
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
@@ -103,16 +104,16 @@ fileprivate extension OWCommentLabelView {
             })
             .disposed(by: disposeBag)
         
-        _commentLabelSettings
+        commentLabelSettingsObservable
             .map {$0.text}
             .bind(to: self.label.rx.text)
             .disposed(by: disposeBag)
         
-        let _labelData = Observable.combineLatest(viewModel.outputs.state, _commentLabelSettings)
+        let labelDataObservable = Observable.combineLatest(viewModel.outputs.state, commentLabelSettingsObservable)
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .withLatestFrom(_labelData) { style, data -> (OWThemeStyle, LabelState, UIColor) in
+            .withLatestFrom(labelDataObservable) { style, data -> (OWThemeStyle, LabelState, UIColor) in
                 return (style, data.0, data.1.color)
             }
             .subscribe { [weak self] (style, state, color) in

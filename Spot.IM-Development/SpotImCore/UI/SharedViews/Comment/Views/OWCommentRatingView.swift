@@ -23,7 +23,7 @@ class OWCommentRatingView: UIView {
         static let rankDownLabelIdentifier = "comment_voting_view_rank_down_label_id"
     }
     
-    fileprivate var viewModel: OWCommentRatingViewModeling = OWCommentRatingViewModel()
+    fileprivate var viewModel: OWCommentRatingViewModeling!
     fileprivate var disposeBag: DisposeBag = DisposeBag()
     
     fileprivate lazy var stackView: UIStackView = {
@@ -159,7 +159,8 @@ fileprivate extension OWCommentRatingView {
             })
             .disposed(by: disposeBag)
         
-        let rankDownSelectedObservable = viewModel.outputs.rankDownSelected.share(replay: 1)
+        let rankDownSelectedObservable = viewModel.outputs.rankDownSelected
+            .share(replay: 1)
         
         rankDownSelectedObservable
             .take(1)

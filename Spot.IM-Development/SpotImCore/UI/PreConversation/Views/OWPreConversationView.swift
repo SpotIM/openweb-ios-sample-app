@@ -136,26 +136,34 @@ fileprivate extension OWPreConversationView {
         }
         
         if !viewModel.outputs.isButtonOnlyModeEnabled {
-            self.addSubviews(communityGuidelinesView, communityQuestionView, separatorView, commentCreationEntryView, tableView)
+            self.addSubview(communityGuidelinesView)
             communityGuidelinesView.OWSnp.makeConstraints { make in
                 make.top.equalTo(header.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
             }
+            
+            self.addSubview(communityQuestionView)
             communityQuestionView.OWSnp.makeConstraints { make in
                 make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
                 make.leading.trailing.equalToSuperview()
             }
+            
+            self.addSubview(separatorView)
             separatorView.OWSnp.makeConstraints { make in
                 make.top.equalTo(communityQuestionView.OWSnp.bottom)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
                 make.height.equalTo(Metrics.separatorHeight)
             }
+            
+            self.addSubview(commentCreationEntryView)
             commentCreationEntryView.OWSnp.makeConstraints { make in
                 make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
                 make.trailing.equalToSuperview()
             }
+            
+            self.addSubview(tableView)
             tableView.OWSnp.makeConstraints { make in
                 make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
@@ -244,7 +252,7 @@ fileprivate extension OWPreConversationView {
         btnCommentCreation.rx.tap
                 .voidify()
                 .bind(onNext: { [weak self] in
-                    self?.viewModel.inputs.commentCreationTap.onNext(nil)
+                    self?.viewModel.inputs.commentCreationTap.onNext(.comment)
                 })
                 .disposed(by: disposeBag)
         

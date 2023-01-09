@@ -39,11 +39,13 @@ class OWCommentHeaderView: UIView {
         return SPAvatarView()
             .backgroundColor(.clear)
     }()
+    
     fileprivate lazy var userNameLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)
             .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
     }()
+    
     fileprivate lazy var badgeTagLabel: OWPaddedLabelView = {
         let label: OWPaddedLabelView =
             OWPaddedLabelView(insets: UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset))
@@ -54,28 +56,33 @@ class OWCommentHeaderView: UIView {
             .isHidden(true)
         return label
     }()
-    private lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
+    
+    fileprivate lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
         return OWUserSubscriberBadgeView()
     }()
+    
     fileprivate lazy var subtitleLabel: UILabel = {
         return UILabel()
             .font(.preferred(style: .medium, of: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
+    
     fileprivate lazy var dateLabel: UILabel = {
         return UILabel()
             .font(.preferred(style: .medium, of: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
+    
     fileprivate lazy var optionButton: UIButton = {
         let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
         return UIButton()
             .image(image, state: .normal)
             .imageEdgeInsets(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8))
     }()
-    private lazy var hiddenCommentReasonLabel: UILabel = {
+    
+    fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
         return UILabel()
             .isHidden(true)
             .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
@@ -94,14 +101,24 @@ class OWCommentHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with model: OWCommentHeaderViewModeling) {
-        self.viewModel = model
+    func configure(with viewModel: OWCommentHeaderViewModeling) {
+        self.viewModel = viewModel
         avatarImageView.configure(with: viewModel.outputs.avatarVM)
         subscriberBadgeView.configure(with: viewModel.outputs.subscriberBadgeVM)
         
         disposeBag = DisposeBag()
-        prepareForReuse()
         setupObservers()
+    }
+    
+    func prepareForReuse() {
+        self.dateLabel.isHidden = false
+        self.optionButton.isHidden = false
+        self.userNameLabel.isHidden = false
+        self.subtitleLabel.isHidden = false
+        self.subscriberBadgeView.isHidden = false
+        
+        self.badgeTagLabel.isHidden = true
+        self.hiddenCommentReasonLabel.isHidden = true
     }
 }
 
@@ -154,24 +171,13 @@ fileprivate extension OWCommentHeaderView {
         }
     }
     
-    func prepareForReuse() {
-        self.dateLabel.isHidden = false
-        self.optionButton.isHidden = false
-        self.userNameLabel.isHidden = false
-        self.subtitleLabel.isHidden = false
-        self.subscriberBadgeView.isHidden = false
-        
-        self.badgeTagLabel.isHidden = true
-        self.hiddenCommentReasonLabel.isHidden = true
-    }
-    
     func setupObservers() {
         viewModel.outputs.nameText
             .bind(to: userNameLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.outputs.nameTextStyle
-            .bind(onNext: { [weak self] style in
+            .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
                 self.userNameLabel.font(
                     .preferred(style: style, of: Metrics.fontSize)
@@ -179,7 +185,7 @@ fileprivate extension OWCommentHeaderView {
             }).disposed(by: disposeBag)
         
         viewModel.outputs.badgeTitle
-            .bind(onNext: { [weak self] title in
+            .subscribe(onNext: { [weak self] title in
                 self?.badgeTagLabel.setText(title)
             })
             .disposed(by: disposeBag)
@@ -237,7 +243,7 @@ fileprivate extension OWCommentHeaderView {
 
 // MARK: Accessibility
 
-extension OWCommentHeaderView {
+fileprivate extension OWCommentHeaderView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier

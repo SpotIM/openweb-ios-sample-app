@@ -41,6 +41,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     var outputs: OWCommentRatingViewModelingOutputs { return self }
     
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let sharedServiceProvider: OWSharedServicesProviding
     
     var tapRankUp = PublishSubject<Void>()
     var tapRankDown = PublishSubject<Void>()
@@ -50,7 +51,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     fileprivate let _rankedByUser = BehaviorSubject<Int?>(value: nil)
     
     fileprivate var _voteSymbolType: Observable<OWVotesType> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
+        self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> OWVotesType in
                 guard let sharedConfig = config.shared
@@ -60,9 +61,12 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .asObservable()
     }
     
-    init () { }
+    init () {
+        self.sharedServiceProvider = OWSharedServicesProvider.shared
+    }
     
-    init(model: OWCommentVotingModel) {
+    init(model: OWCommentVotingModel, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServiceProvider = sharedServiceProvider
         _rankUp.onNext(model.rankUpCount)
         _rankDown.onNext(model.rankDownCount)
         _rankedByUser.onNext(model.rankedByUserValue)
@@ -91,7 +95,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
     }
     
     var voteTypes : Observable<[VoteType]> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
+        self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> [VoteType] in
                 var voteTypesToShow: [VoteType] = [.voteUp, .voteDown]
