@@ -82,10 +82,7 @@ fileprivate extension OWSpotConfigurationService {
                         self.isCurrentlyFetching.onNext(false)
                         self._configWhichJustFetched.onNext(config)
                         self.cacheConfigService[spotId] = config
-                        if let color = UIColor.color(with: config.initialization?.brandColor) {
-                            OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .light)
-                            OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .dark)
-                        }
+                        self.setAdditionalStuff(forConfig: config)
                     }, onError: {[weak self] error in
                         guard let self = self else { return  }
                         self.isCurrentlyFetching.onNext(false)
@@ -94,5 +91,12 @@ fileprivate extension OWSpotConfigurationService {
             }
             .subscribe()
             .disposed(by: disposeBag)
+    }
+    
+    func setAdditionalStuff(forConfig config: SPSpotConfiguration) {
+        if let color = UIColor.color(with: config.initialization?.brandColor) {
+            OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .light)
+            OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .dark)
+        }
     }
 }
