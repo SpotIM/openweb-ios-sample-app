@@ -45,6 +45,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
     
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let servicesProvider: OWSharedServicesProviding
     
     fileprivate let _model = BehaviorSubject<SPComment?>(value: nil)
     fileprivate var _unwrappedModel: Observable<SPComment>  {
@@ -59,7 +60,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
     
     // TODO: image provider
-    init(user: SPUser, replyTo: SPUser?, model: SPComment, imageProvider: SPImageProvider? = nil) {
+    init(user: SPUser, replyTo: SPUser?, model: SPComment, imageProvider: SPImageProvider? = nil, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
         avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         subscriberBadgeVM.inputs.configureUser(user: user)
         _model.onNext(model)
@@ -67,7 +69,9 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _replyToUser.onNext(replyTo)
     }
     
-    init() {}
+    init() {
+        servicesProvider = OWSharedServicesProvider.shared
+    }
     
     var avatarVM: OWAvatarViewModeling = {
        return OWAvatarViewModel()
@@ -101,7 +105,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     
     fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
+        servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationConversation? in
                 return config.conversation
