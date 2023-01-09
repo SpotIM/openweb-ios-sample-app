@@ -18,9 +18,11 @@ protocol OWCollapsableLabelViewModelingInputs {
 }
 
 protocol OWCollapsableLabelViewModelingOutputs {
+    var textHeightChange: Observable<Void> { get }
     var attributedString: Observable<NSMutableAttributedString?> { get }
     var readMoreText: String { get }
     var readLessText: String { get }
+    var height: Observable<Double> { get }
 }
 
 protocol OWCollapsableLabelViewModeling {
@@ -67,7 +69,7 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
     
     fileprivate var _lines: Observable<[CTLine]> {
         fullAttributedString.map { messageAttributedString in
-            let width = 200.0 // TODO: get real width
+            let width = 358.0 // TODO: get real width
             return messageAttributedString.getLines(with: width)
         }
         .unwrap()
@@ -79,6 +81,19 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
         Observable.combineLatest(_lines, _textState, fullAttributedString)
             .map { lines, currentState, fullAttributedString in
                 return self.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState)
+            }
+            .asObservable()
+    }
+    
+    var textHeightChange: Observable<Void> {
+        Observable.merge(self.readMoreTap, self.readMoreTap)
+    }
+    
+    var height: Observable<Double> {
+        attributedString
+            .unwrap()
+            .map { string in
+                return string.height(withConstrainedWidth: 358) // TODO: real width
             }
             .asObservable()
     }
