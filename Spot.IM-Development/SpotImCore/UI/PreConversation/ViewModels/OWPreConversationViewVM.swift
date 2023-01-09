@@ -203,25 +203,33 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
-        cellsViewModels
-            .flatMapLatest { viewModels -> Observable<Void> in
-                let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
-                    if case.comment(let commentCellViewModel) = vm {
-                        return commentCellViewModel
-                    } else {
-                        return nil
-                    }
-                }.compactMap { $0 }
+        let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
+                    .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
+                        let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
+                            if case.comment(let commentCellViewModel) = vm {
+                                return commentCellViewModel
+                            } else {
+                                return nil
+                            }
+                        }
+                        .unwrap()
 
-                let replyClickOutputObservable: [Observable<Void>] = commentCellsVms.map { commentCellVm in
-                    return commentCellVm.outputs.commentVM.outputs.commentEngagementVM.outputs.replyClickedOutput
-                    // TODO: Map the observables to the comment in some way
-                    let comment = commentCellVm.outputs.commentVM.outputs.comment
+                         return Observable.just(commentCellsVms)
+                    }
+                    .share()
+        
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<SPComment> in
+                let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.replyClickedOutput
+                        .map { commentVM.outputs.comment }
                 }
                 return Observable.merge(replyClickOutputObservable)
             }
-            .subscribe(onNext: { [weak self] in
-                self?.commentCreationTap.onNext(.comment) // TODO -> reply
+            .subscribe(onNext: { [weak self] comment in
+                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
     }
