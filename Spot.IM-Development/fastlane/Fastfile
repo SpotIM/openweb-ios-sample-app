@@ -43,7 +43,6 @@ platform :ios do
 
   desc "Build development app"
   lane :build_development_app do
-    # match(type: "development", readonly: true)
     cocoapods(use_bundle_exec: false)
     gym(
         skip_package_ipa: true,

@@ -483,7 +483,7 @@ jobs:
       - run:
           name: Verify app file exists
           command: |
-            cd simulator_build
+            cd simulator_build/*/Products/Applications
             ls
 
 workflows:
