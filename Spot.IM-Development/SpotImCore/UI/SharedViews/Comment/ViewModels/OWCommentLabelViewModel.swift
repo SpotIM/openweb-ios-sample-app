@@ -85,7 +85,7 @@ fileprivate extension OWCommentLabelViewModel {
 
     }
     
-    private func getCommentLabelFromConfig(comment: SPComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> SPLabelConfiguration? {
+    func getCommentLabelFromConfig(comment: SPComment, commentLabelsSectionsConfig: CommentLabelsSectionsConfig) -> SPLabelConfiguration? {
         // cross given commentLabels to appConfig labels
         if let commentLabels = comment.additionalData?.labels,
            let labelIds = commentLabels.ids, labelIds.count > 0,

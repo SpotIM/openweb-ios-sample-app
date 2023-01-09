@@ -93,7 +93,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var dateText: Observable<String> {
         _unwrappedModel
             .map({ model in
-                guard let writtenAt = model.writtenAt else { return ""}
+                guard let writtenAt = model.writtenAt else { return "" }
                 let timestamp = Date(timeIntervalSince1970: writtenAt).timeAgo()
                 return model.isReply ? " · ".appending(timestamp) : timestamp
             })
@@ -124,7 +124,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     var nameTextStyle: Observable<SPFontStyle> {
         _unwrappedModel
-            .map { $0.isReply ? .medium : .bold}
+            .map { $0.isReply ? .medium : .bold }
     }
     
     var isUsernameOneRow: Observable<Bool> {
