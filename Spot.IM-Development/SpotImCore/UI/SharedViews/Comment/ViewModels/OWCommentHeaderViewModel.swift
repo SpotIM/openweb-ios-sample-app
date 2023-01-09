@@ -46,6 +46,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let userBadgeService: OWUserBadgeServicing
     
     fileprivate let _model = BehaviorSubject<SPComment?>(value: nil)
     fileprivate var _unwrappedModel: Observable<SPComment>  {
@@ -60,8 +61,12 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
     
     // TODO: image provider
-    init(user: SPUser, replyTo: SPUser?, model: SPComment, imageProvider: SPImageProvider? = nil, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+    init(user: SPUser, replyTo: SPUser?, model: SPComment, imageProvider: SPImageProvider? = nil,
+         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
+         userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
+    ) {
         self.servicesProvider = servicesProvider
+        self.userBadgeService = userBadgeService
         avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         subscriberBadgeVM.inputs.configureUser(user: user)
         _model.onNext(model)
@@ -71,6 +76,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     init() {
         servicesProvider = OWSharedServicesProvider.shared
+        userBadgeService = OWUserBadgeService()
     }
     
     var avatarVM: OWAvatarViewModeling = {
@@ -115,7 +121,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var badgeTitle: Observable<String> {
         Observable.combineLatest(_unwrappedUser, conversationConfig) { [weak self] user, conversationConfig in
                 guard let self = self else { return "" }
-            return self.getUserBadgeUsingConfig(user: user, conversationConfig: conversationConfig)?.uppercased() ?? ""
+            return self.userBadgeService.userBadgeText(user: user, conversationConfig: conversationConfig)?.uppercased() ?? ""
         }
     }
     
@@ -169,26 +175,5 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var moreTapped: Observable<OWUISource> {
         tapMore
             .asObservable()
-    }
-}
-
-fileprivate extension OWCommentHeaderViewModel {
-    func getUserBadgeUsingConfig(user: SPUser, conversationConfig: SPConfigurationConversation) -> String? {
-        guard user.isStaff else { return nil }
-        
-        if let translations = conversationConfig.translationTextOverrides,
-           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
-        {
-            if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
-                return adminBadge
-            } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {
-                return jurnalistBadge
-            } else if user.isModerator, let moderatorBadge = currentTranslation[BadgesOverrideKeys.moderator.rawValue] {
-                return moderatorBadge
-            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue]  {
-                return communityModeratorBadge
-            }
-        }
-        return user.authorityTitle
     }
 }
