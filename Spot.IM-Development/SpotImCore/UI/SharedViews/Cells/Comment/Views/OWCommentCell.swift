@@ -30,6 +30,11 @@ class OWCommentCell: UITableViewCell {
         self.viewModel = vm
         self.commentView.configure(with: self.viewModel.outputs.commentVM)
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        commentView.prepareForReuse()
+    }
 }
 
 fileprivate extension OWCommentCell {

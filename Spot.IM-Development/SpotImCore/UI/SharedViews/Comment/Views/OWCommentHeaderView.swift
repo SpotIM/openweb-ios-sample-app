@@ -107,8 +107,18 @@ class OWCommentHeaderView: UIView {
         subscriberBadgeView.configure(with: viewModel.outputs.subscriberBadgeVM)
         
         disposeBag = DisposeBag()
-        prepareForReuse()
         setupObservers()
+    }
+    
+    func prepareForReuse() {
+        self.dateLabel.isHidden = false
+        self.optionButton.isHidden = false
+        self.userNameLabel.isHidden = false
+        self.subtitleLabel.isHidden = false
+        self.subscriberBadgeView.isHidden = false
+        
+        self.badgeTagLabel.isHidden = true
+        self.hiddenCommentReasonLabel.isHidden = true
     }
 }
 
@@ -159,17 +169,6 @@ fileprivate extension OWCommentHeaderView {
             make.centerY.equalTo(avatarImageView.OWSnp.centerY)
             make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(Metrics.avatarImageViewTrailingOffset)
         }
-    }
-    
-    func prepareForReuse() {
-        self.dateLabel.isHidden = false
-        self.optionButton.isHidden = false
-        self.userNameLabel.isHidden = false
-        self.subtitleLabel.isHidden = false
-        self.subscriberBadgeView.isHidden = false
-        
-        self.badgeTagLabel.isHidden = true
-        self.hiddenCommentReasonLabel.isHidden = true
     }
     
     func setupObservers() {

@@ -43,6 +43,10 @@ class OWCommentView: UIView {
         self.commentLabelView.configure(viewModel: viewModel.outputs.commentLabelVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
     }
+    
+    func prepareForReuse() {
+        commentHeaderView.prepareForReuse()
+    }
 }
 
 fileprivate extension OWCommentView {
