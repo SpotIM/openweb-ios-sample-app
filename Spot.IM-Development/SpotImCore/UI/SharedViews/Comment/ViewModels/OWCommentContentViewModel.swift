@@ -46,7 +46,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     
     var collapsableLabelViewModel: OWCollapsableLabelViewModeling
     
-    init(comment: SPComment, lineLimit: Int = 4) { // TODO: pass line limit
+    init(comment: SPComment, lineLimit: Int = 3) { // TODO: pass line limit
         self.lineLimit = lineLimit
         self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: comment.text?.text ?? "", lineLimit: lineLimit)
         _comment.onNext(comment)

@@ -32,6 +32,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<SPComment?> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
+    var changeSize: Observable<Void> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -113,6 +114,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var preConversationPreferredSize: Observable<CGSize> {
         return _preConversationChangedSize
             .unwrap()
+            .asObservable()
+    }
+    
+    fileprivate var _changeSize = PublishSubject<Void>()
+    var changeSize: Observable<Void> {
+        return _changeSize
             .asObservable()
     }
     
@@ -202,6 +209,24 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(onNext: { [weak self] in
                 self?.commentCreationTap.onNext(nil)
             })
+            .disposed(by: disposeBag)
+        
+        cellsViewModels
+            .flatMapLatest { viewModels -> Observable<Void> in
+                let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
+                    if case.comment(let commentCellViewModel) = vm {
+                        return commentCellViewModel
+                    } else {
+                        return nil
+                    }
+                }.compactMap { $0 }
+
+                let textSizeChange: [Observable<Void>] = commentCellsVms.map { commentCellVm in
+                    return commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel.outputs.textHeightChange
+                }
+                return Observable.merge(textSizeChange)
+            }
+            .bind(to: _changeSize)
             .disposed(by: disposeBag)
     }
     

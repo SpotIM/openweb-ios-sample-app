@@ -228,6 +228,13 @@ fileprivate extension OWPreConversationView {
             })
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
+                
+        viewModel.outputs.changeSize
+                .subscribe(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    self.tableView.reloadData() // TODO: update only relevant cells?
+                })
+                .disposed(by: disposeBag)
         
         btnFullConversation.rx.tap
             .voidify()
@@ -240,6 +247,7 @@ fileprivate extension OWPreConversationView {
                     self?.viewModel.inputs.commentCreationTap.onNext(nil)
                 })
                 .disposed(by: disposeBag)
+        
                 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
