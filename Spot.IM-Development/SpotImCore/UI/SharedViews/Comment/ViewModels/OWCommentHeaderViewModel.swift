@@ -25,7 +25,6 @@ protocol OWCommentHeaderViewModelingOutputs {
     var subtitleText: Observable<String> { get }
     var dateText: Observable<String> { get }
     var badgeTitle: Observable<String> { get }
-    var isUsernameOneRow: Observable<Bool> { get }
     var hiddenCommentReasonText: Observable<String> { get }
     
     var userNameTapped: Observable<Void> { get }
@@ -135,14 +134,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var nameTextStyle: Observable<SPFontStyle> {
         _unwrappedModel
             .map { $0.isReply ? .medium : .bold }
-    }
-    
-    var isUsernameOneRow: Observable<Bool> {
-        _unwrappedModel
-            .map { _ in
-//                $0.isUsernameOneRow()
-                false // TODO
-            }
     }
     
     var hiddenCommentReasonText: Observable<String> {
