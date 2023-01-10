@@ -124,7 +124,7 @@ fileprivate extension OWCommentLabelView {
         viewModel.outputs.commentLabelSettings
             .subscribe(onNext: { [weak self] label in
                 guard let self = self else { return }
-                self.heightConstraint?.update(offset: label == nil ? 0 : Metrics.commentLabelViewHeight)
+                self.heightConstraint?.update(offset: Metrics.commentLabelViewHeight)
             })
             .disposed(by: disposeBag)
     }

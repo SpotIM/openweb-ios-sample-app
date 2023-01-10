@@ -20,8 +20,8 @@ class OWCommentView: UIView {
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
-    fileprivate lazy var commentLabelView: OWCommentLabelView = {
-        return OWCommentLabelView()
+    fileprivate lazy var commentLabelsContainerView: OWCommentLabelsContainerView = {
+        return OWCommentLabelsContainerView()
     }()
     fileprivate lazy var commentContentView: OWCommentContentView = {
         return OWCommentContentView()
@@ -40,7 +40,7 @@ class OWCommentView: UIView {
     func configure(with viewModel: OWCommentViewModeling) {
         self.viewModel = viewModel
         self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
-        self.commentLabelView.configure(viewModel: viewModel.outputs.commentLabelVM)
+        self.commentLabelsContainerView.configure(viewModel: viewModel.outputs.commentLabelsContainerVM)
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
     }
     
@@ -58,8 +58,8 @@ fileprivate extension OWCommentView {
             make.leading.trailing.top.equalToSuperview()
         }
         
-        self.addSubview(commentLabelView)
-        commentLabelView.OWSnp.makeConstraints { make in
+        self.addSubview(commentLabelsContainerView)
+        commentLabelsContainerView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
             make.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
@@ -67,7 +67,7 @@ fileprivate extension OWCommentView {
         
         self.addSubview(commentContentView)
         commentContentView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
+            make.top.equalTo(commentLabelsContainerView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }

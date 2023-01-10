@@ -20,7 +20,7 @@ protocol OWCommentViewModelingOutputs {
     var commentActionsVM: OWCommentActionsViewModeling { get }
     
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
-    var commentLabelVM: OWCommentLabelViewModeling { get }
+    var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var contentVM: OWCommentContentViewModeling { get }
 }
 
@@ -47,20 +47,20 @@ class OWCommentViewModel: OWCommentViewModeling,
     }
     
     var commentHeaderVM: OWCommentHeaderViewModeling
-    var commentLabelVM: OWCommentLabelViewModeling
+    var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
     var contentVM: OWCommentContentViewModeling
     
     init(comment: SPComment, user: SPUser, replyTo: SPUser?) {
         commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel(user: user, replyTo: replyTo, model: comment)
-        commentLabelVM = OWCommentLabelViewModel(comment: comment)
+        commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: comment)
         contentVM = OWCommentContentViewModel(comment: comment)
     }
     
     init() {
         commentUserVM = OWCommentUserViewModel(user: nil, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel()
-        commentLabelVM = OWCommentLabelViewModel()
+        commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
     }
 }
