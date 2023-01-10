@@ -25,7 +25,6 @@ protocol OWCommentHeaderViewModelingOutputs {
     var subtitleText: Observable<String> { get }
     var dateText: Observable<String> { get }
     var badgeTitle: Observable<String> { get }
-    var isUsernameOneRow: Observable<Bool> { get }
     var hiddenCommentReasonText: Observable<String> { get }
     
     var userNameTapped: Observable<Void> { get }
@@ -60,15 +59,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
     
-    // TODO: image provider
     init(data: OWCommentRequiredData,
-         imageProvider: SPImageProvider? = nil,
+         imageProvider: OWImageProvider = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
     ) {
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
-        avatarVM = OWAvatarViewModel(user: data.user, imageURLProvider: imageProvider)
+        avatarVM = OWAvatarViewModelV2(user: data.user, imageURLProvider: imageProvider)
         subscriberBadgeVM.inputs.configureUser(user: data.user)
         _model.onNext(data.comment)
         _user.onNext(data.user)
@@ -136,14 +134,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var nameTextStyle: Observable<SPFontStyle> {
         _unwrappedModel
             .map { $0.isReply ? .medium : .bold }
-    }
-    
-    var isUsernameOneRow: Observable<Bool> {
-        _unwrappedModel
-            .map { _ in
-//                $0.isUsernameOneRow()
-                false // TODO
-            }
     }
     
     var hiddenCommentReasonText: Observable<String> {
