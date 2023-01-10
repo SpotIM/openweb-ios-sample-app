@@ -124,46 +124,54 @@ class OWCommentHeaderView: UIView {
 
 fileprivate extension OWCommentHeaderView {
     func setupViews() {
-        addSubviews(avatarImageView, userNameLabel, badgeTagLabel, subscriberBadgeView, subtitleLabel, dateLabel, optionButton, hiddenCommentReasonLabel)
+        addSubview(userNameLabel)
+        userNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        userNameLabel.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview()
+        }
         
+        addSubview(avatarImageView)
         avatarImageView.OWSnp.makeConstraints { make in
             make.leading.top.equalToSuperview()
             make.trailing.equalTo(userNameLabel.OWSnp.leading).offset(-Metrics.avatarImageViewTrailingOffset)
             make.size.equalTo(Metrics.avatarSideSize)
         }
         
-        userNameLabel.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview()
-        }
-        
+        addSubview(badgeTagLabel)
         badgeTagLabel.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
             make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.badgeLeadingPadding)
         }
         
-        subscriberBadgeView.OWSnp.makeConstraints { make in
-            make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(badgeTagLabel.OWSnp.trailing).offset(5.0)
-        }
-        
-        subtitleLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
-            make.leading.equalTo(userNameLabel)
-            make.bottom.equalToSuperview()
-        }
-        
-        dateLabel.OWSnp.makeConstraints { make in
-            make.top.bottom.equalTo(subtitleLabel)
-            make.leading.equalTo(subtitleLabel.OWSnp.trailing)
-            make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
-        }
-        
+        addSubview(optionButton)
         optionButton.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.optionButtonSize)
             make.centerY.equalTo(userNameLabel)
             make.trailing.equalToSuperview()
         }
         
+        addSubview(subscriberBadgeView)
+        subscriberBadgeView.OWSnp.makeConstraints { make in
+            make.centerY.equalTo(userNameLabel.OWSnp.centerY)
+            make.leading.equalTo(badgeTagLabel.OWSnp.trailing).offset(5.0)
+            make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
+        }
+        
+        addSubview(subtitleLabel)
+        subtitleLabel.OWSnp.makeConstraints { make in
+            make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
+            make.leading.equalTo(userNameLabel)
+            make.bottom.equalToSuperview()
+        }
+        
+        addSubview(dateLabel)
+        dateLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.equalTo(subtitleLabel)
+            make.leading.equalTo(subtitleLabel.OWSnp.trailing)
+            make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
+        }
+        
+        addSubview(hiddenCommentReasonLabel)
         hiddenCommentReasonLabel.OWSnp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview()
             make.centerY.equalTo(avatarImageView.OWSnp.centerY)
