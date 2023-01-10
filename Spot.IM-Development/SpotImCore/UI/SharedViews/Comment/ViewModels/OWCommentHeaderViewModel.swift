@@ -59,14 +59,14 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
     
-    // TODO: image provider
-    init(user: SPUser, replyTo: SPUser?, model: SPComment, imageProvider: SPImageProvider? = nil,
+    init(user: SPUser, replyTo: SPUser?, model: SPComment,
+         imageProvider: OWImageProvider = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
     ) {
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
-        avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
+        avatarVM = OWAvatarViewModelV2(user: user, imageURLProvider: imageProvider)
         subscriberBadgeVM.inputs.configureUser(user: user)
         _model.onNext(model)
         _user.onNext(user)
