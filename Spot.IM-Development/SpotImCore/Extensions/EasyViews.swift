@@ -273,4 +273,11 @@ extension UITextView {
     }
 }
 
+extension UIStackView {
+    @discardableResult func spacing(_ spacing: CGFloat) -> Self {
+        self.spacing = spacing
+        return self
+    }
+}
+
 
