@@ -45,7 +45,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let imageProvider: SPImageProvider
+    fileprivate let imageProvider: OWImageProvider
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
     
@@ -127,7 +127,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-        imageProvider: SPImageProvider = SPCloudinaryImageProvider(apiManager: OWApiManager()),
+        imageProvider: OWImageProvider = OWCloudinaryImageProvider(),
         preConversationData: OWPreConversationRequiredData) {
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
