@@ -298,4 +298,9 @@ extension UIStackView {
         self.alignment = alignment
         return self
     }
+    
+    @discardableResult func spacing(_ spacing: CGFloat) -> Self {
+        self.spacing = spacing
+        return self
+    }
 }
