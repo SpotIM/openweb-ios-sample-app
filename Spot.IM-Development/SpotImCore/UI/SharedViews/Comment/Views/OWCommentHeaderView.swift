@@ -46,15 +46,17 @@ class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
     }()
     
-    fileprivate lazy var badgeTagLabel: OWPaddedLabelView = {
-        let label: OWPaddedLabelView =
-            OWPaddedLabelView(insets: UIEdgeInsets(top: Metrics.badgeVerticalInset, left: Metrics.badgeHorizontalInset, bottom: Metrics.badgeVerticalInset, right: Metrics.badgeHorizontalInset))
-            .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
+    fileprivate lazy var badgeTagContainer: UIView = {
+        return UIView()
             .border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .corner(radius: 3)
-            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .isHidden(true)
-        return label
+    }()
+    
+    fileprivate lazy var badgeTagLabel: UILabel = {
+        return UILabel()
+            .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
+            .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
     
     fileprivate lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
@@ -117,7 +119,7 @@ class OWCommentHeaderView: UIView {
         self.subtitleLabel.isHidden = false
         self.subscriberBadgeView.isHidden = false
         
-        self.badgeTagLabel.isHidden = true
+        self.badgeTagContainer.isHidden = true
         self.hiddenCommentReasonLabel.isHidden = true
     }
 }
@@ -137,10 +139,18 @@ fileprivate extension OWCommentHeaderView {
             make.size.equalTo(Metrics.avatarSideSize)
         }
         
-        addSubview(badgeTagLabel)
-        badgeTagLabel.OWSnp.makeConstraints { make in
+        addSubview(badgeTagContainer)
+        badgeTagContainer.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
             make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.badgeLeadingPadding)
+        }
+        
+        badgeTagContainer.addSubview(badgeTagLabel)
+        badgeTagLabel.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.badgeVerticalInset)
+            make.bottom.equalToSuperview().offset(-Metrics.badgeVerticalInset)
+            make.left.equalToSuperview().offset(Metrics.badgeHorizontalInset)
+            make.right.equalToSuperview().offset(-Metrics.badgeHorizontalInset)
         }
         
         addSubview(optionButton)
@@ -153,7 +163,7 @@ fileprivate extension OWCommentHeaderView {
         addSubview(subscriberBadgeView)
         subscriberBadgeView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(badgeTagLabel.OWSnp.trailing).offset(5.0)
+            make.leading.equalTo(badgeTagContainer.OWSnp.trailing).offset(5.0)
             make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
         }
         
@@ -193,14 +203,12 @@ fileprivate extension OWCommentHeaderView {
             }).disposed(by: disposeBag)
         
         viewModel.outputs.badgeTitle
-            .subscribe(onNext: { [weak self] title in
-                self?.badgeTagLabel.setText(title)
-            })
+            .bind(to: badgeTagLabel.rx.text)
             .disposed(by: disposeBag)
         
         viewModel.outputs.badgeTitle
             .map { $0.isEmpty }
-            .bind(to: badgeTagLabel.rx.isHidden)
+            .bind(to: badgeTagContainer.rx.isHidden)
             .disposed(by: disposeBag)
         
         viewModel.outputs.subtitleText
@@ -231,7 +239,7 @@ fileprivate extension OWCommentHeaderView {
                 self.optionButton.isHidden = isHiddenMessage
                 self.subscriberBadgeView.isHidden = isHiddenMessage
                 self.userNameLabel.isHidden = isHiddenMessage
-                self.badgeTagLabel.isHidden = isHiddenMessage
+                self.badgeTagContainer.isHidden = isHiddenMessage
                 self.subtitleLabel.isHidden = isHiddenMessage
                 
                 self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
@@ -245,6 +253,8 @@ fileprivate extension OWCommentHeaderView {
                 self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
                 self.dateLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
+                self.badgeTagLabel.textColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.badgeTagContainer.border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle))
             }).disposed(by: disposeBag)
     }
 }
@@ -255,7 +265,7 @@ fileprivate extension OWCommentHeaderView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         userNameLabel.accessibilityIdentifier = Metrics.userNameLabelIdentifier
-        badgeTagLabel.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
+        badgeTagContainer.accessibilityIdentifier = Metrics.badgeTagLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         optionButton.accessibilityIdentifier = Metrics.optionButtonIdentifier
