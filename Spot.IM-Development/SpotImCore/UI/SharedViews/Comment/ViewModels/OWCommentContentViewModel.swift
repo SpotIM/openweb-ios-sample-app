@@ -56,17 +56,13 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     
     init(comment: SPComment, lineLimit: Int = 3, imageProvider: OWImageProvider = OWCloudinaryImageProvider()) { // TODO: pass line limit
         self.lineLimit = lineLimit
-        self.collapsableLabelViewModel = OWCommentTextViewModel(
-            text: comment.text?.text ?? "",
-            lineLimit: lineLimit,
-            suffix: comment.edited ? editedSuffix : NSAttributedString()
-        )
+        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, lineLimit: lineLimit)
         self.imageProvider = imageProvider
         _comment.onNext(comment)
     }
     init() {
         lineLimit = 0
-        self.collapsableLabelViewModel = OWCommentTextViewModel(text: "", lineLimit: 0, suffix: NSAttributedString())
+        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), lineLimit: lineLimit)
         self.imageProvider = OWCloudinaryImageProvider()
     }
     

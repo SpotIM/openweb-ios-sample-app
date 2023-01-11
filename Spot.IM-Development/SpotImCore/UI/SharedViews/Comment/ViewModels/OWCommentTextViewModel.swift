@@ -38,26 +38,33 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var outputs: OWCommentTextViewModelingOutputs { return self }
     
     fileprivate var lineLimit: Int = 0
-    fileprivate let suffix: NSAttributedString
     fileprivate var disposeBag = DisposeBag()
     
     var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
     var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
+    var editedText: String = LocalizationManager.localizedString(key: "Edited")
     
     var width = PublishSubject<CGFloat>() // TODO: should get it in constructor ?
     var readMoreTap = PublishSubject<Void>()
     var readLessTap = PublishSubject<Void>()
     
-    init(text: String, lineLimit: Int, suffix: NSAttributedString) {
+    init(comment: SPComment, lineLimit: Int) {
         self.lineLimit = lineLimit
-        self.suffix = suffix
-        _fullText.onNext(text)
+        _comment.onNext(comment)
         setupObservers()
+    }
+    
+    fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
+    fileprivate var _commentUnwraped: Observable<SPComment> {
+        _comment.unwrap()
     }
     
     fileprivate let _fullText = BehaviorSubject<String?>(value: nil)
     fileprivate var fullAttributedString: Observable<NSMutableAttributedString> {
-        _fullText
+        _commentUnwraped
+            .map { comment in
+                return comment.text?.text
+            }
             .unwrap()
             .map { [weak self] messageText in
                 guard let self = self else { return nil }
@@ -81,12 +88,16 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
     var attributedString: Observable<NSMutableAttributedString?> {
         Observable.combineLatest(_lines, _textState, fullAttributedString)
-            .map { lines, currentState, fullAttributedString in
-                return self.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState)
+            .map { [weak self] lines, currentState, fullAttributedString in
+                return self?.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState)
             }
-            .map { [weak self] attString in
-                guard let self = self else { return attString }
-                attString.append(self.suffix)
+            .unwrap()
+            .withLatestFrom(_commentUnwraped) { [weak self] attString, comment in
+                guard let self = self,
+                      comment.edited == true
+                else { return attString }
+                
+                attString.append(NSAttributedString(string: self.editedText, attributes: self.editedStringAttributes()))
                 return attString
             }
             .asObservable()
@@ -142,6 +153,14 @@ fileprivate extension OWCommentTextViewModel {
     func actionStringAttributes() -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes()
         attributes[.foregroundColor] = UIColor.clearBlue // TODO: color
+
+        return attributes
+    }
+    
+    func editedStringAttributes() -> [NSAttributedString.Key: Any] {
+        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes()
+        attributes[.foregroundColor] = UIColor.gray // TODO: color
+        attributes[.font] = UIFont.preferred(style: .italic, of: OWCommentContentView.Metrics.fontSize)
 
         return attributes
     }
