@@ -15,6 +15,7 @@ protocol OWCommentTextViewModelingInputs {
     var width: PublishSubject<CGFloat> { get }
     var readMoreTap: PublishSubject<Void> { get }
     var readLessTap: PublishSubject<Void> { get }
+    var urlTap: PublishSubject<URL> { get }
 }
 
 protocol OWCommentTextViewModelingOutputs {
@@ -23,6 +24,8 @@ protocol OWCommentTextViewModelingOutputs {
     var readMoreText: String { get }
     var readLessText: String { get }
     var height: Observable<Double> { get }
+    var activeURLs: [NSRange: URL] { get }
+    var urlClickedOutput: Observable<URL> { get }
 }
 
 protocol OWCommentTextViewModeling {
@@ -47,9 +50,11 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var width = PublishSubject<CGFloat>() // TODO: should get it in constructor ?
     var readMoreTap = PublishSubject<Void>()
     var readLessTap = PublishSubject<Void>()
+    var activeURLs: [NSRange: URL]
     
     init(comment: SPComment, lineLimit: Int) {
         self.lineLimit = lineLimit
+        self.activeURLs = [:]
         _comment.onNext(comment)
         setupObservers()
     }
@@ -96,14 +101,19 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return (attString, style)
             }
             .unwrap()
-            .withLatestFrom(_commentUnwraped) { [weak self] res, comment in
+            .withLatestFrom(_commentUnwraped) { [weak self] res, comment -> (NSMutableAttributedString, OWThemeStyle) in
                 let (attString, style) = res
                 guard let self = self,
                       comment.edited == true
-                else { return attString }
+                else { return (attString, style) }
                 
                 attString.append(NSAttributedString(string: self.editedText, attributes: self.editedStringAttributes(with: style)))
-                return attString
+                return (attString, style)
+            }
+            .map { [weak self] (attString, style) in
+                guard var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
+                self?.locateURLsInText(text: &res, style: style)
+                return res
             }
             .asObservable()
     }
@@ -118,6 +128,12 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .map { string in
                 return string.height(withConstrainedWidth: 358) // TODO: real width
             }
+            .asObservable()
+    }
+    
+    var urlTap = PublishSubject<URL>()
+    var urlClickedOutput: Observable<URL> {
+        urlTap
             .asObservable()
     }
 }
@@ -202,6 +218,31 @@ fileprivate extension OWCommentTextViewModel {
             res.append(readLess)
             return res
         }
+    }
+    
+    func locateURLsInText(text: inout NSMutableAttributedString, style: OWThemeStyle) {
+        let linkType: NSTextCheckingResult.CheckingType = [.link]
+        var activeURLs: [NSRange: URL] = [:]
+        if let detector = try? NSDataDetector(types: linkType.rawValue) {
+            let rawText = text.string
+            let matches = detector.matches(
+                in: rawText,
+                options: [],
+                range: NSRange(location: 0, length: rawText.count)
+            )
+            
+            for match in matches {
+                if let urlMatch = match.url, isUrlSchemeValid(for: urlMatch) {
+                    text.addAttributes([.foregroundColor: OWColorPalette.shared.color(type: .linkColor, themeStyle: style)], range: match.range)
+                        activeURLs[match.range] = urlMatch
+                }
+            }
+        }
+        self.activeURLs = activeURLs
+    }
+    
+    func isUrlSchemeValid(for url: URL) -> Bool {
+        return url.scheme?.lowercased() != "mailto"
     }
 }
     

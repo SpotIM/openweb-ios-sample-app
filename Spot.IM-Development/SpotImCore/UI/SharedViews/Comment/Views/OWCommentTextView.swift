@@ -46,7 +46,7 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
         } else if isTarget(substring: viewModel.outputs.readLessText, destinationOf: gesture) {
             viewModel.inputs.readLessTap.onNext()
         } else {
-//            checkURLTap(in: gesture.location(in: mainTextLabel))
+            checkURLTap(in: gesture.location(in: self))
         }
     }
     
@@ -58,6 +58,14 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
         let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
         
         return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
+    }
+    
+    fileprivate func checkURLTap(in point: CGPoint) {
+        let index = self.indexOfAttributedTextCharacterAtPoint(point: point)
+        let url = viewModel.outputs.activeURLs.first { $0.key.contains(index) }?.value
+
+        guard let activeUrl = url else { return }
+        viewModel.inputs.urlTap.onNext(activeUrl)
     }
 }
 
