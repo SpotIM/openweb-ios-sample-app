@@ -4439,7 +4439,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4467,7 +4467,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4506,7 +4506,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4617,7 +4617,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4645,7 +4645,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4684,7 +4684,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4736,7 +4736,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4777,7 +4777,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4939,7 +4939,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4973,7 +4973,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -5001,7 +5001,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5026,7 +5026,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.0;
+				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
