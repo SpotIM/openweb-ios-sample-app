@@ -16,11 +16,9 @@ protocol OWCommentContentViewModelingInputs {
 }
 
 protocol OWCommentContentViewModelingOutputs {
-    var text: Observable<String?> { get }
-//    var attributedString: Observable<NSMutableAttributedString?> { get }
-    var gifUrl: Observable<String?> { get }
-    var imageUrl: Observable<URL?> { get }
-    var mediaSize: Observable<CGSize?> { get }
+    var gifUrl: Observable<String> { get }
+    var image: Observable<OWImageType> { get }
+    var mediaSize: Observable<CGSize> { get }
     
     var collapsableLabelViewModel: OWCollapsableLabelViewModeling { get }
 }
@@ -65,29 +63,26 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
 //            .map {$0}
 //            .asObservable()
 //    }
-
     
-    var text: Observable<String?> {
-        _comment
-            .map {$0?.text?.text}
-            .asObservable()
-    }
-    
-    var gifUrl: Observable<String?> {
+    var gifUrl: Observable<String> {
         _comment
             .map { $0?.gif?.originalUrl }
+            .unwrap()
             .asObservable()
     }
     
-    var imageUrl: Observable<URL?> {
+    var image: Observable<OWImageType> {
         _comment
             .map { [weak self] comment in
-                return self?.imageURL(with: comment?.image?.imageId, size: nil)
+                guard let self = self,
+                      let url = self.imageURL(with: comment?.image?.imageId, size: nil)
+                else { return .defaultImage }
+                return .custom(url: url)
             }
             .asObservable()
     }
     
-    var mediaSize: Observable<CGSize?> {
+    var mediaSize: Observable<CGSize> {
         Observable.combineLatest(_commentMediaOriginalSize, _commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize in
             guard let self = self else { return .zero }
             return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)

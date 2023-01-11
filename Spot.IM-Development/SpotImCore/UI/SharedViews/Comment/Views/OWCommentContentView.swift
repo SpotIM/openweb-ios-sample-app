@@ -67,22 +67,17 @@ fileprivate extension OWCommentContentView {
     func setupObservers() {
 //        viewModel.inputs.commentTextLabelWidth.onNext(textLabel.frame.width) // TODO via rx on the label width?
         
-//        viewModel.outputs.attributedString
-//            .bind(onNext: { [weak self] attributedString in
-//                self?.textLabel.attributedText = attributedString
-//            })
-//            .disposed(by: disposeBag)
-        
-        viewModel.outputs.imageUrl
-            .unwrap()
-            .subscribe(onNext: { [weak self] url in
-                guard let self = self else { return }
+        viewModel.outputs.image
+            .subscribe(onNext: { [weak self] imageType in
+                guard let self = self,
+                      case .custom(let url) = imageType
+                else { return }
+                
                 self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
             })
             .disposed(by: disposeBag)
                 
         viewModel.outputs.gifUrl
-            .unwrap()
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
@@ -93,9 +88,9 @@ fileprivate extension OWCommentContentView {
             .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.mediaView.OWSnp.updateConstraints { make in
-                    make.size.equalTo(size ?? 0)
+                    make.size.equalTo(size)
                     make.top.equalTo(self.textLabel.OWSnp.bottom).offset(
-                        size != nil && size != CGSize.zero ? Metrics.commentMediaTopPadding : Metrics.emptyCommentMediaTopPadding
+                        size != CGSize.zero ? Metrics.commentMediaTopPadding : Metrics.emptyCommentMediaTopPadding
                     )
                 }
             })
