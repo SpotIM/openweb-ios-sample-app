@@ -32,7 +32,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
-    var changeSize: Observable<Void> { get }
+    var changeSizeAtIndex: Observable<Int> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -117,9 +117,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
     
-    fileprivate var _changeSize = PublishSubject<Void>()
-    var changeSize: Observable<Void> {
-        return _changeSize
+    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
+    var changeSizeAtIndex: Observable<Int> {
+        return _changeSizeAtIndex
             .asObservable()
     }
     
@@ -236,22 +236,20 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
-        cellsViewModels
-            .flatMapLatest { viewModels -> Observable<Void> in
-                let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
-                    if case.comment(let commentCellViewModel) = vm {
-                        return commentCellViewModel
-                    } else {
-                        return nil
-                    }
-                }.compactMap { $0 }
-
-                let textSizeChange: [Observable<Void>] = commentCellsVms.map { commentCellVm in
-                    return commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel.outputs.textHeightChange
+        
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<Int> in
+                let sizeChangeObservable: [Observable<Int>] = commentCellsVms.enumerated().map { (index, commentCellVm) -> Observable<Int> in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.contentVM
+                        .outputs.collapsableLabelViewModel.outputs.textHeightChange
+                        .map { index }
                 }
-                return Observable.merge(textSizeChange)
+                return Observable.merge(sizeChangeObservable)
             }
-            .bind(to: _changeSize)
+            .subscribe(onNext: { [weak self] commentIndex in
+                self?._changeSizeAtIndex.onNext(commentIndex)
+            })
             .disposed(by: disposeBag)
     }
     
