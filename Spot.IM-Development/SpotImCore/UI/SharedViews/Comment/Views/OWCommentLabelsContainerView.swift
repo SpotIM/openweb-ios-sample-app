@@ -39,6 +39,13 @@ class OWCommentLabelsContainerView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func prepareForReuse() {
+        // clean stackview if needed
+        self.labelsContainerStackView.subviews.forEach { view in
+            view.removeFromSuperview()
+        }
+    }
 }
 
 fileprivate extension OWCommentLabelsContainerView {
