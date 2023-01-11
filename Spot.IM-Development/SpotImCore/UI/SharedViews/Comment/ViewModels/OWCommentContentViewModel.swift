@@ -20,7 +20,7 @@ protocol OWCommentContentViewModelingOutputs {
     var image: Observable<OWImageType> { get }
     var mediaSize: Observable<CGSize> { get }
     
-    var collapsableLabelViewModel: OWCollapsableLabelViewModeling { get }
+    var collapsableLabelViewModel: OWCommentTextViewModeling { get }
 }
 
 protocol OWCommentContentViewModeling {
@@ -37,6 +37,10 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         static let depth1Offset: CGFloat = 25.0
         static let depth2Offset: CGFloat = 40.0
         static let maxDepthOffset: CGFloat = 55.0
+        static let editedTextAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.gray,
+            .font: UIFont.preferred(style: .italic, of: OWCommentContentView.Metrics.fontSize),
+]
     }
     
     var inputs: OWCommentContentViewModelingInputs { return self }
@@ -46,17 +50,23 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     fileprivate let lineLimit: Int
     fileprivate let imageProvider: OWImageProvider
     
-    var collapsableLabelViewModel: OWCollapsableLabelViewModeling
+    fileprivate let editedSuffix: NSAttributedString = NSAttributedString(string: LocalizationManager.localizedString(key: "Edited"), attributes: Metrics.editedTextAttributes)
+    
+    var collapsableLabelViewModel: OWCommentTextViewModeling
     
     init(comment: SPComment, lineLimit: Int = 3, imageProvider: OWImageProvider = OWCloudinaryImageProvider()) { // TODO: pass line limit
         self.lineLimit = lineLimit
-        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: comment.text?.text ?? "", lineLimit: lineLimit)
+        self.collapsableLabelViewModel = OWCommentTextViewModel(
+            text: comment.text?.text ?? "",
+            lineLimit: lineLimit,
+            suffix: comment.edited ? editedSuffix : NSAttributedString()
+        )
         self.imageProvider = imageProvider
         _comment.onNext(comment)
     }
     init() {
         lineLimit = 0
-        self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: "", lineLimit: 0)
+        self.collapsableLabelViewModel = OWCommentTextViewModel(text: "", lineLimit: 0, suffix: NSAttributedString())
         self.imageProvider = OWCloudinaryImageProvider()
     }
     
