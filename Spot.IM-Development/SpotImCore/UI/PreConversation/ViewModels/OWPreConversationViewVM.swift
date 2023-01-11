@@ -33,6 +33,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
     var changeSizeAtIndex: Observable<Int> { get }
+    var urlClickedOutput: Observable<URL> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -120,6 +121,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var changeSizeAtIndex: Observable<Int> {
         return _changeSizeAtIndex
+            .asObservable()
+    }
+    
+    fileprivate var _urlClick = PublishSubject<URL>()
+    var urlClickedOutput: Observable<URL> {
+        return _urlClick
             .asObservable()
     }
     
@@ -249,6 +256,20 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .subscribe(onNext: { [weak self] commentIndex in
                 self?._changeSizeAtIndex.onNext(commentIndex)
+            })
+            .disposed(by: disposeBag)
+        
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+                    
+                    return commentTextVm.outputs.urlClickedOutput
+                }
+                return Observable.merge(urlClickObservable)
+            }
+            .subscribe(onNext: { [weak self] url in
+                self?._urlClick.onNext(url)
             })
             .disposed(by: disposeBag)
     }
