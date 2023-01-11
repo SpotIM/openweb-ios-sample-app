@@ -237,10 +237,10 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
                 
-        viewModel.outputs.changeSize
-                .subscribe(onNext: { [weak self] in
+        viewModel.outputs.changeSizeAtIndex
+                .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
-                    self.tableView.reloadData() // TODO: update only relevant cells?
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
                 })
                 .disposed(by: disposeBag)
         
