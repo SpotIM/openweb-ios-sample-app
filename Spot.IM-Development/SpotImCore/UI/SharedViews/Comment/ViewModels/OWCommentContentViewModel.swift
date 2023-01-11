@@ -44,17 +44,20 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     fileprivate let lineLimit: Int
+    fileprivate let imageProvider: OWImageProvider
     
     var collapsableLabelViewModel: OWCollapsableLabelViewModeling
     
-    init(comment: SPComment, lineLimit: Int = 3) { // TODO: pass line limit
+    init(comment: SPComment, lineLimit: Int = 3, imageProvider: OWImageProvider = OWCloudinaryImageProvider()) { // TODO: pass line limit
         self.lineLimit = lineLimit
         self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: comment.text?.text ?? "", lineLimit: lineLimit)
+        self.imageProvider = imageProvider
         _comment.onNext(comment)
     }
     init() {
         lineLimit = 0
         self.collapsableLabelViewModel = OWCollapsableLabelViewModel(text: "", lineLimit: 0)
+        self.imageProvider = OWCloudinaryImageProvider()
     }
     
 //    var commentTextLabelWidth = PublishSubject<CGFloat>()
@@ -71,12 +74,18 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             .asObservable()
     }
     
+    
     var image: Observable<OWImageType> {
         _comment
-            .map { [weak self] comment in
+            .flatMap { [weak self] comment -> Observable<URL?> in
                 guard let self = self,
-                      let url = self.imageURL(with: comment?.image?.imageId, size: nil)
-                else { return .defaultImage }
+                      let imageId = comment?.image?.imageId
+                else { return .empty() }
+                
+                return self.imageProvider.imageURL(with: imageId, size: nil)
+            }
+            .map { url in
+                guard let url = url else { return .defaultImage }
                 return .custom(url: url)
             }
             .asObservable()
@@ -141,71 +150,4 @@ fileprivate extension OWCommentContentViewModel {
 
         return CGSize(width: CGFloat(width), height: CGFloat(height))
     }
-    
-    // TODO: should be in some imageprovider
-    func imageURL(with id: String?, size: CGSize? = nil) -> URL? {
-        guard var id = id else { return nil }
-        
-        if id.hasPrefix(SPImageRequestConstants.placeholderImagePrefix) {
-            id.removeFirst(SPImageRequestConstants.placeholderImagePrefix.count)
-            id = SPImageRequestConstants.avatarPathComponent.appending(id)
-        }
-        return URL(string: cloudinaryURLString(size).appending(id))
-    }
-    
-    func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
-        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
-        
-        if let imageSize = imageSize {
-            result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
-                "\(Int(imageSize.width))" +
-                "\(SPImageRequestConstants.cloudinaryHeightPrefix)" +
-                "\(Int(imageSize.height))"
-            )
-        }
-        
-        return result.appending("/")
-    }
-    
-//    private func readMoreAppended(with index: Int, _ lines: [CTLine], _ width: CGFloat) -> NSAttributedString {
-//
-//        let slice = lines[0...index - 1]
-//        var lastLineLength = 0
-//        var totalLength = slice.reduce(into: 0) { (tempCount, line) in
-//            lastLineLength = CTLineGetGlyphCount(line)
-//            tempCount += lastLineLength
-//        }
-//
-//        var attribs = self.attributes(at: totalLength - 1, effectiveRange: nil)
-//
-//        let ellipsis = NSAttributedString(
-//            string: " ... ",
-//            attributes: attribs)
-//
-//        attribs[.foregroundColor] = UIColor.clearBlue
-//
-//        let readMore = NSMutableAttributedString(
-//            string: LocalizationManager.localizedString(key: "Read More"),
-//            attributes: attribs)
-//
-//        readMore.insert(ellipsis, at: 0)
-//
-//        let readMoreWidth = readMore.width(withConstrainedHeight: .greatestFiniteMagnitude)
-//
-//        // check wether additional last line clipping is needed
-//        let lastLineRange = NSRange(location: totalLength - lastLineLength, length: lastLineLength)
-//        let lastLine = attributedSubstring(from: lastLineRange)
-//        let lastLineWidth = lastLine.width(withConstrainedHeight: .greatestFiniteMagnitude)
-//
-//        if lastLineWidth + readMoreWidth > width {
-//            totalLength -= lastLineLength / 2
-//        }
-//
-//        let clippedSelf = attributedSubstring(from: NSRange(location: 0, length: totalLength))
-//        let trimmedSelf = clippedSelf.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
-//        let mutableSelf = trimmedSelf.mutableCopy() as? NSMutableAttributedString
-//        mutableSelf?.append(readMore)
-//
-//        return mutableSelf ?? self
-//    }
 }
