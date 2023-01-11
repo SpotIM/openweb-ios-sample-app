@@ -133,7 +133,7 @@ fileprivate extension SettingsVC {
             .disposed(by: disposeBag)
         
         switchCommentCreationNewDesign.rx.value
-            .bind(to: viewModel.inputs.hideArticleHeaderToggled)
+            .bind(to: viewModel.inputs.commentCreationNewDesignToggled)
             .disposed(by: disposeBag)
         
         segmentedReadOnlyMode.rx.selectedSegmentIndex
