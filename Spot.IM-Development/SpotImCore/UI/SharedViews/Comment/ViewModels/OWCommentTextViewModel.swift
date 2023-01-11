@@ -1,5 +1,5 @@
 //
-//  OWCollapsableLabelViewModel.swift
+//  OWCommentTextViewModel.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 27/12/2022.
@@ -11,13 +11,13 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-protocol OWCollapsableLabelViewModelingInputs {
+protocol OWCommentTextViewModelingInputs {
     var width: PublishSubject<CGFloat> { get }
     var readMoreTap: PublishSubject<Void> { get }
     var readLessTap: PublishSubject<Void> { get }
 }
 
-protocol OWCollapsableLabelViewModelingOutputs {
+protocol OWCommentTextViewModelingOutputs {
     var textHeightChange: Observable<Void> { get }
     var attributedString: Observable<NSMutableAttributedString?> { get }
     var readMoreText: String { get }
@@ -25,19 +25,20 @@ protocol OWCollapsableLabelViewModelingOutputs {
     var height: Observable<Double> { get }
 }
 
-protocol OWCollapsableLabelViewModeling {
-    var inputs: OWCollapsableLabelViewModelingInputs { get }
-    var outputs: OWCollapsableLabelViewModelingOutputs { get }
+protocol OWCommentTextViewModeling {
+    var inputs: OWCommentTextViewModelingInputs { get }
+    var outputs: OWCommentTextViewModelingOutputs { get }
 }
 
-class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
-                                   OWCollapsableLabelViewModelingInputs,
-                                   OWCollapsableLabelViewModelingOutputs {
+class OWCommentTextViewModel: OWCommentTextViewModeling,
+                                   OWCommentTextViewModelingInputs,
+                                   OWCommentTextViewModelingOutputs {
     
-    var inputs: OWCollapsableLabelViewModelingInputs { return self }
-    var outputs: OWCollapsableLabelViewModelingOutputs { return self }
+    var inputs: OWCommentTextViewModelingInputs { return self }
+    var outputs: OWCommentTextViewModelingOutputs { return self }
     
     fileprivate var lineLimit: Int = 0
+    fileprivate let suffix: NSAttributedString
     fileprivate var disposeBag = DisposeBag()
     
     var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
@@ -47,8 +48,9 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
     var readMoreTap = PublishSubject<Void>()
     var readLessTap = PublishSubject<Void>()
     
-    init(text: String, lineLimit: Int) {
+    init(text: String, lineLimit: Int, suffix: NSAttributedString) {
         self.lineLimit = lineLimit
+        self.suffix = suffix
         _fullText.onNext(text)
         setupObservers()
     }
@@ -82,6 +84,11 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
             .map { lines, currentState, fullAttributedString in
                 return self.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState)
             }
+            .map { [weak self] attString in
+                guard let self = self else { return attString }
+                attString.append(self.suffix)
+                return attString
+            }
             .asObservable()
     }
     
@@ -99,7 +106,7 @@ class OWCollapsableLabelViewModel: OWCollapsableLabelViewModeling,
     }
 }
 
-fileprivate extension OWCollapsableLabelViewModel {
+fileprivate extension OWCommentTextViewModel {
     func setupObservers() {
         readMoreTap
             .bind(onNext: { [weak self] in
@@ -115,7 +122,7 @@ fileprivate extension OWCollapsableLabelViewModel {
     }
 }
 
-fileprivate extension OWCollapsableLabelViewModel {
+fileprivate extension OWCommentTextViewModel {
     
     func messageStringAttributes() -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()

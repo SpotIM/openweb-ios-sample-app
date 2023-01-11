@@ -161,7 +161,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
-                    .conversationRead(postId: postId, mode: OWCommentSortMode.best, page: OWPaginationPage.first, parentId: "", offset: 0)
+                    .conversationRead(postId: postId, mode: OWCommentSortMode.newest, page: OWPaginationPage.first, parentId: "", offset: 0)
                     .response
                     .map { response -> SPConversationReadRM? in
                         guard let comments = response.conversation?.comments else { return nil }

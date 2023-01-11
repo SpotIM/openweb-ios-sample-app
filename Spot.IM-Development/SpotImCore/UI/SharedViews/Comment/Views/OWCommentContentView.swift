@@ -17,8 +17,8 @@ class OWCommentContentView: UIView {
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
     
-    fileprivate lazy var textLabel: OWCollapsableLabel = {
-       return OWCollapsableLabel()
+    fileprivate lazy var textLabel: OWCommentTextView = {
+       return OWCommentTextView()
             .numberOfLines(0)
             .font(.preferred(style: .regular, of: Metrics.fontSize))
     }()

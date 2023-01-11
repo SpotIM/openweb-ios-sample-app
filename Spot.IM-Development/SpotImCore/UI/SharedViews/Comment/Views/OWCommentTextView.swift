@@ -1,5 +1,5 @@
 //
-//  OWCollapsableLabel.swift
+//  OWCommentTextView.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 27/12/2022.
@@ -10,16 +10,16 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWCollapsableLabel: UILabel {
-    fileprivate var viewModel: OWCollapsableLabelViewModeling = OWCollapsableLabelViewModel(text: "", lineLimit: 0)
-    fileprivate var disposeBag = DisposeBag()
+class OWCommentTextView: UILabel {
+    fileprivate var viewModel: OWCommentTextViewModeling!
+    fileprivate var disposeBag: DisposeBag!
     
     init() {
         super.init(frame: .zero)
         setupGestureRecognizer()
     }
     
-    func configure(with viewModel: OWCollapsableLabelViewModeling) {
+    func configure(with viewModel: OWCommentTextViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
@@ -28,11 +28,9 @@ class OWCollapsableLabel: UILabel {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-
 }
 
-extension OWCollapsableLabel: UIGestureRecognizerDelegate {
+extension OWCommentTextView: UIGestureRecognizerDelegate {
     
     fileprivate func setupGestureRecognizer() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -63,7 +61,7 @@ extension OWCollapsableLabel: UIGestureRecognizerDelegate {
     }
 }
 
-fileprivate extension OWCollapsableLabel {
+fileprivate extension OWCommentTextView {
     func setupObservers() {
         viewModel.outputs.attributedString
             .bind(onNext: { [weak self] attString in
