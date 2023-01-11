@@ -77,7 +77,7 @@ internal class DemoUserAuthentication {
                 completion(codeB, nil)
             case .failure(let error):
                 completion(nil, error)
-            }
+            } 
         }
     }
 }
