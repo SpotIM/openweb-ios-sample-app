@@ -54,23 +54,25 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         setupObservers()
     }
     
+    fileprivate var _themeStyleObservable:  Observable<OWThemeStyle> = OWSharedServicesProvider.shared.themeStyleService().style
+    
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     fileprivate var _commentUnwraped: Observable<SPComment> {
         _comment.unwrap()
     }
     
-    fileprivate let _fullText = BehaviorSubject<String?>(value: nil)
     fileprivate var fullAttributedString: Observable<NSMutableAttributedString> {
-        _commentUnwraped
-            .map { comment in
-                return comment.text?.text
+        _themeStyleObservable
+            .withLatestFrom(_commentUnwraped) { style, comment -> (OWThemeStyle, String)? in
+                guard let text = comment.text?.text else { return nil }
+                return (style, text)
             }
             .unwrap()
-            .map { [weak self] messageText in
+            .map { [weak self] (style, messageText) in
                 guard let self = self else { return nil }
                 return NSMutableAttributedString(
                     string: messageText,
-                    attributes: self.messageStringAttributes()
+                    attributes: self.messageStringAttributes(with: style)
                 )
             }
             .unwrap()
@@ -87,17 +89,20 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     
     fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
     var attributedString: Observable<NSMutableAttributedString?> {
-        Observable.combineLatest(_lines, _textState, fullAttributedString)
-            .map { [weak self] lines, currentState, fullAttributedString in
-                return self?.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState)
+        Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
+            .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
+                guard let self = self else { return nil }
+                let attString = self.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState, style: style)
+                return (attString, style)
             }
             .unwrap()
-            .withLatestFrom(_commentUnwraped) { [weak self] attString, comment in
+            .withLatestFrom(_commentUnwraped) { [weak self] res, comment in
+                let (attString, style) = res
                 guard let self = self,
                       comment.edited == true
                 else { return attString }
                 
-                attString.append(NSAttributedString(string: self.editedText, attributes: self.editedStringAttributes()))
+                attString.append(NSAttributedString(string: self.editedText, attributes: self.editedStringAttributes(with: style)))
                 return attString
             }
             .asObservable()
@@ -135,7 +140,7 @@ fileprivate extension OWCommentTextViewModel {
 
 fileprivate extension OWCommentTextViewModel {
     
-    func messageStringAttributes() -> [NSAttributedString.Key: Any] {
+    func messageStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
@@ -144,28 +149,29 @@ fileprivate extension OWCommentTextViewModel {
         // TODO: color
         attributes = [
             .font: UIFont.preferred(style: .regular, of: OWCommentContentView.Metrics.fontSize),
+            .foregroundColor: OWColorPalette.shared.color(type: .foreground1Color, themeStyle: style),
             .paragraphStyle: paragraphStyle
         ]
 
         return attributes
     }
     
-    func actionStringAttributes() -> [NSAttributedString.Key: Any] {
-        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes()
-        attributes[.foregroundColor] = UIColor.clearBlue // TODO: color
+    func actionStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
+        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
+        attributes[.foregroundColor] = OWColorPalette.shared.color(type: .linkColor, themeStyle: style)
 
         return attributes
     }
     
-    func editedStringAttributes() -> [NSAttributedString.Key: Any] {
-        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes()
-        attributes[.foregroundColor] = UIColor.gray // TODO: color
+    func editedStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
+        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
+        attributes[.foregroundColor] = UIColor.gray
         attributes[.font] = UIFont.preferred(style: .italic, of: OWCommentContentView.Metrics.fontSize)
 
         return attributes
     }
     
-    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine], currentState: TextState) -> NSMutableAttributedString {
+    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine], currentState: TextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
         guard lines.count > self.lineLimit else { return attString }
         switch currentState {
@@ -173,7 +179,7 @@ fileprivate extension OWCommentTextViewModel {
             let visibleLines = lines[0...lineLimit - 1]
             let ellipsis = NSAttributedString(
                 string: " ... ",
-                attributes: messageStringAttributes())
+                attributes: messageStringAttributes(with: style))
             var visibleString = ""
             for line in visibleLines {
                 let lineRange = CTLineGetStringRange(line)
@@ -181,20 +187,20 @@ fileprivate extension OWCommentTextViewModel {
                 let lineString = (attString.string as NSString).substring(with: range)
                 visibleString.append(lineString)
             }
-            let attString2 = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes())
+            let res = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes(with: style))
             let readMore = NSMutableAttributedString(
                 string: self.readMoreText,
-                attributes: actionStringAttributes())
-            attString2.append(ellipsis)
-            attString2.append(readMore)
-            return attString2
+                attributes: actionStringAttributes(with: style))
+            res.append(ellipsis)
+            res.append(readMore)
+            return res
         case .expanded:
             let readLess = NSMutableAttributedString(
                 string: self.readLessText,
-                attributes: actionStringAttributes())
-            let aa = NSMutableAttributedString(attributedString: attString)
-            aa.append(readLess)
-            return aa
+                attributes: actionStringAttributes(with: style))
+            let res = NSMutableAttributedString(attributedString: attString)
+            res.append(readLess)
+            return res
         }
     }
 }
