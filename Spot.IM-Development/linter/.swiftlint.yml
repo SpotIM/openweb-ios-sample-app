@@ -1,0 +1,31 @@
+disabled_rules: # rule identifiers to exclude from running
+  - colon
+  - comma
+  - control_statement
+  - force_cast
+  - function_body_length
+  - legacy_constant
+  - legacy_constructor
+  - nesting
+  - operator_usage
+  - return_arrow_whitespace
+  - todo
+  - trailing_semicolon
+  - trailing_whitespace
+  - variable_name
+  - vertical_whitespace
+
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Carthage
+  - Pods
+  - fastlane
+  - Example
+  - ExampleUITests
+  - ExampleTests
+
+included: # paths to include during linting. `excluded` paths are still ignored.
+  - MyApp
+
+opt_in_rules: # some rules are only opt-in
+  - empty_count
+  - unused_declaration
