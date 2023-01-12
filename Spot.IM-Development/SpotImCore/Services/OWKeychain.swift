@@ -7,17 +7,28 @@
 //
 
 import Foundation
+import RxSwift
 
-protocol OWKeychainProtocol {
+protocol OWKeychainProtocol: OWKeychainRxProtocol {
     func save<T>(value: T, forKey key: OWKeychain.OWKey<T>)
     func get<T>(key: OWKeychain.OWKey<T>) -> T?
     func remove<T>(key: OWKeychain.OWKey<T>)
+    var rxProtocol: OWKeychainRxProtocol { get }
 }
 
-class OWKeychain : OWKeychainProtocol {
+protocol OWKeychainRxProtocol {
+    func values<T>(key: OWKeychain.OWKey<T>, defaultValue: T?) -> Observable<T>
+    func values<T>(key: OWKeychain.OWKey<T>) -> Observable<T>
+    func setValues<T>(key: OWKeychain.OWKey<T>) -> Binder<T>
+}
+
+class OWKeychain : ReactiveCompatible, OWKeychainProtocol {
     fileprivate struct Metrics {
         static let kSecAttrService = "com.open-web.sdk"
     }
+    
+    var rxProtocol: OWKeychainRxProtocol { return self }
+    fileprivate var rxHelper: OWPersistenceRxHelperProtocol
     
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let encoder: JSONEncoder
@@ -29,9 +40,10 @@ class OWKeychain : OWKeychainProtocol {
         self.servicesProvider = servicesProvider
         self.encoder = encoder
         self.decoder = decoder
+        self.rxHelper = OWPersistenceRxHelper(decoder: decoder, encoder: encoder)
     }
     
-    enum OWKey<T: Codable>: String {
+    enum OWKey<T: Codable>: String, OWRawableKey {
         case guestSessionUserId = "session.guest.userId"
         case loggedInUserSession = "session.user"
         case authorizationSessionToken = "session.authorization.token"
@@ -45,6 +57,9 @@ class OWKeychain : OWKeychainProtocol {
             servicesProvider.logger().log(level: .error, "Failed to encode data for key: \(key.rawValue) before writing to Keychain")
             return
         }
+        
+        rxHelper.onNext(key: OWRxHelperKey<T>(key: key), data: encodedData)
+        
         _save(data: encodedData, forKey: key)
     }
     
@@ -156,5 +171,31 @@ fileprivate extension OWKeychain {
         if removeStatus != errSecSuccess && removeStatus != errSecItemNotFound {
             servicesProvider.logger().log(level: .error, "Failed to remove data from Keychain using SecItemDelete with key: \(key.rawValue)")
         }
+    }
+}
+
+extension OWKeychain {
+    func values<T>(key: OWKeychain.OWKey<T>) -> Observable<T> {
+        return rx.values(key: key, defaultValue: nil)
+    }
+    
+    func values<T>(key: OWKeychain.OWKey<T>, defaultValue: T? = nil) -> Observable<T> {
+        return rx.values(key: key, defaultValue: defaultValue)
+    }
+    
+    func setValues<T>(key: OWKeychain.OWKey<T>) -> Binder<T> {
+        return rx.setValues(key: key)
+    }
+}
+
+fileprivate extension Reactive where Base: OWKeychain {
+    func setValues<T>(key: OWKeychain.OWKey<T>) -> Binder<T> {
+        return base.rxHelper.binder(key: OWRxHelperKey<T>(key: key)) { (value) in
+            base.save(value: value, forKey: key)
+        }
+    }
+
+    func values<T>(key: OWKeychain.OWKey<T>, defaultValue: T? = nil) -> Observable<T> {
+        return base.rxHelper.observable(key: OWRxHelperKey<T>(key: key), value: base._get(key: key), defaultValue: defaultValue)
     }
 }
