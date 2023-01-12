@@ -33,6 +33,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func spotConfigurationService() -> OWSpotConfigurationServicing
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
+    func timeMeasuringService() -> OWTimeMeasuringServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -108,6 +109,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     fileprivate lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
         return OWAuthorizationRecoveryService(servicesProvider: self)
     }()
+    
+    fileprivate lazy var _timeMeasuringService: OWTimeMeasuringServicing = {
+        return OWTimeMeasuringService()
+    }()
 
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
@@ -163,6 +168,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing {
         return _authorizationRecoveryService
+    }
+    
+    func timeMeasuringService() -> OWTimeMeasuringServicing {
+        return _timeMeasuringService
     }
 }
 
