@@ -14,7 +14,7 @@ protocol OWTimeMeasuringServicing {
 }
 
 enum OWTimeMeasuringResult {
-    case success(time: Int)
+    case time(milliseconds: Int)
     case error(message: String)
 }
 
@@ -36,6 +36,6 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         
         startTimeDictionary.removeValue(forKey: key)
         
-        return .success(time: Int(timeElapsed))
+        return .time(milliseconds: Int(timeElapsed))
     }
 }
