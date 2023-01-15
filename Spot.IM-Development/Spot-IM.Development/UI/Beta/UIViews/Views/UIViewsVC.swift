@@ -27,8 +27,11 @@ class UIViewsVC: UIViewController {
     fileprivate let viewModel: UIViewsViewModeling
     fileprivate let disposeBag = DisposeBag()
     
-    fileprivate lazy var optionsScrollView: UIScrollView = {
-        return UIScrollView()
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
     }()
     
     fileprivate lazy var btnPreConversation: UIButton = {
@@ -104,45 +107,48 @@ fileprivate extension UIViewsVC {
         view.backgroundColor = .white
         
         // Adding scroll view
-        view.addSubview(optionsScrollView)
-        optionsScrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
         
         // Adding pre conversation button
-        optionsScrollView.addSubview(btnPreConversation)
+        scrollView.addSubview(btnPreConversation)
         btnPreConversation.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
         
         // Adding full conversation button
-        optionsScrollView.addSubview(btnFullConversation)
+        scrollView.addSubview(btnFullConversation)
         btnFullConversation.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnPreConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
         // Adding comment creation button
-        optionsScrollView.addSubview(btnCommentCreation)
+        scrollView.addSubview(btnCommentCreation)
         btnCommentCreation.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnFullConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
         // Adding independent ad unit button
-        optionsScrollView.addSubview(btnIndependentAdUnit)
+        scrollView.addSubview(btnIndependentAdUnit)
         btnIndependentAdUnit.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentCreation.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
     

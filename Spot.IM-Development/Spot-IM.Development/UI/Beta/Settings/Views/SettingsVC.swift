@@ -15,6 +15,13 @@ class SettingsVC: UIViewController {
         static let verticalOffset: CGFloat = 50
         static let horizontalOffset: CGFloat = 10
     }
+    
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
         
     fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
         return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle)
@@ -75,34 +82,42 @@ fileprivate extension SettingsVC {
         
         title = viewModel.outputs.title
         
-        view.addSubview(switchHideArticleHeader)
-        switchHideArticleHeader.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+        // Adding scroll view
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
         
-        view.addSubview(switchCommentCreationNewDesign)
+        scrollView.addSubview(switchHideArticleHeader)
+        switchHideArticleHeader.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
+        }
+        
+        scrollView.addSubview(switchCommentCreationNewDesign)
         switchCommentCreationNewDesign.snp.makeConstraints { make in
             make.top.equalTo(switchHideArticleHeader.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
-        view.addSubview(segmentedReadOnlyMode)
+        scrollView.addSubview(segmentedReadOnlyMode)
         segmentedReadOnlyMode.snp.makeConstraints { make in
             make.top.equalTo(switchCommentCreationNewDesign.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
-        view.addSubview(segmentedThemeMode)
+        scrollView.addSubview(segmentedThemeMode)
         segmentedThemeMode.snp.makeConstraints { make in
             make.top.equalTo(segmentedReadOnlyMode.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
-        view.addSubview(segmentedModalStyle)
+        scrollView.addSubview(segmentedModalStyle)
         segmentedModalStyle.snp.makeConstraints { make in
             make.top.equalTo(segmentedThemeMode.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalOffset)
         }
     }
     
