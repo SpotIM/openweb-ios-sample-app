@@ -33,6 +33,13 @@ class BetaNewAPIVC: UIViewController {
     fileprivate let viewModel: BetaNewAPIViewModeling
     fileprivate let disposeBag = DisposeBag()
     
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
     fileprivate lazy var settingsRightBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
@@ -211,22 +218,29 @@ fileprivate extension BetaNewAPIVC {
     func setupViews() {
         view.backgroundColor = .white
         
+        // Adding scroll view
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+        
         // Adding select preset button
-        view.addSubview(btnSelectPreset)
+        scrollView.addSubview(btnSelectPreset)
         btnSelectPreset.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
         
-        view.addSubview(lblSpotId)
+        scrollView.addSubview(lblSpotId)
         lblSpotId.snp.makeConstraints { make in
             make.top.equalTo(btnSelectPreset.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
-        view.addSubview(txtFieldSpotId)
+        scrollView.addSubview(txtFieldSpotId)
         txtFieldSpotId.snp.makeConstraints { make in
             make.centerY.equalTo(lblSpotId)
             make.leading.equalTo(lblSpotId.snp.trailing).offset(0.3*Metrics.horizontalMargin)
@@ -234,13 +248,13 @@ fileprivate extension BetaNewAPIVC {
             make.height.equalTo(Metrics.textFieldHeight)
         }
         
-        view.addSubview(lblPostId)
+        scrollView.addSubview(lblPostId)
         lblPostId.snp.makeConstraints { make in
             make.top.equalTo(lblSpotId.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
         
-        view.addSubview(txtFieldPostId)
+        scrollView.addSubview(txtFieldPostId)
         txtFieldPostId.snp.makeConstraints { make in
             make.centerY.equalTo(lblPostId)
             make.leading.equalTo(lblPostId.snp.trailing).offset(0.3*Metrics.horizontalMargin)
@@ -249,30 +263,31 @@ fileprivate extension BetaNewAPIVC {
         }
         
         // Adding UIFlows button
-        view.addSubview(btnUIFlows)
+        scrollView.addSubview(btnUIFlows)
         btnUIFlows.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
         // Adding UIViews button
-        view.addSubview(btnUIViews)
+        scrollView.addSubview(btnUIViews)
         btnUIViews.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnUIFlows.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
         // Adding miscellaneous button
-        view.addSubview(btnMiscellaneous)
+        scrollView.addSubview(btnMiscellaneous)
         btnMiscellaneous.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnUIViews.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
         
         // Setup preset picker and its container.
