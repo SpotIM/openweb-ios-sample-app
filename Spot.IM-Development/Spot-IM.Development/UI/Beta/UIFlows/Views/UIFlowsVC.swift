@@ -27,8 +27,11 @@ class UIFlowsVC: UIViewController {
     fileprivate let viewModel: UIFlowsViewModeling
     fileprivate let disposeBag = DisposeBag()
     
-    fileprivate lazy var optionsScrollView: UIScrollView = {
-        return UIScrollView()
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
     }()
     
     fileprivate lazy var btnPreConversationPushMode: UIButton = {
@@ -134,60 +137,63 @@ fileprivate extension UIFlowsVC {
         view.backgroundColor = .white
         
         // Adding scroll view
-        view.addSubview(optionsScrollView)
-        optionsScrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
         
         // Adding pre conversation buttons
-        optionsScrollView.addSubview(btnPreConversationPushMode)
+        scrollView.addSubview(btnPreConversationPushMode)
         btnPreConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
         
-        optionsScrollView.addSubview(btnPreConversationPresentMode)
+        scrollView.addSubview(btnPreConversationPresentMode)
         btnPreConversationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
         // Adding full conversation buttons
-        optionsScrollView.addSubview(btnFullConversationPushMode)
+        scrollView.addSubview(btnFullConversationPushMode)
         btnFullConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
-        optionsScrollView.addSubview(btnFullConversationPresentMode)
+        scrollView.addSubview(btnFullConversationPresentMode)
         btnFullConversationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnFullConversationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
         // Adding comment creation buttons
-        optionsScrollView.addSubview(btnCommentCreationPushMode)
+        scrollView.addSubview(btnCommentCreationPushMode)
         btnCommentCreationPushMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
         
-        optionsScrollView.addSubview(btnCommentCreationPresentMode)
+        scrollView.addSubview(btnCommentCreationPresentMode)
         btnCommentCreationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
     
