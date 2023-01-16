@@ -95,7 +95,7 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the current spot id to be tested"
         }
     }
-}
+} 
 
 fileprivate extension UserDefaultsProvider {
     func _save<T>(data: Data, forKey key: UDKey<T>) {
