@@ -72,7 +72,7 @@ class UserDefaultsProvider : UserDefaultsProviderProtocol {
         case isReadOnlyEnabled = "demo.isReadOnlyEnabled"
         case interfaceStyle = "demo.interfaceStyle"
         case spotIdKey = "spotIdKey"
-    }
+    } 
 }
 
 fileprivate extension UserDefaultsProvider.UDKey {
