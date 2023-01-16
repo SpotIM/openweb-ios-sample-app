@@ -20,6 +20,10 @@ enum OWTimeMeasuringResult {
 
 class OWTimeMeasuringService: OWTimeMeasuringServicing {
     
+    enum Keys: String {
+        case conversationUIBuildingTime
+    }
+    
     fileprivate var startTimeDictionary = [String: CFAbsoluteTime]()
     
     func startMeasure(forKey key: String) {
@@ -37,5 +41,15 @@ class OWTimeMeasuringService: OWTimeMeasuringServicing {
         startTimeDictionary.removeValue(forKey: key)
         
         return .time(milliseconds: Int(timeElapsed))
+    }
+}
+
+fileprivate extension OWTimeMeasuringService.Keys {
+    
+    var description: String {
+        switch self {
+        case .conversationUIBuildingTime:
+            return "Time for building initial UI in conversation view"
+        }
     }
 }
