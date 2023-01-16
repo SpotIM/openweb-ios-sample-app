@@ -6,7 +6,7 @@ if [ ! -d "$HOOKS_DIR" ]; then
 fi
 
 # Copy the pre-push hook to the hooks directory
-cp swiftlint/pre-push-swiftlint.sh "$HOOKS_DIR/pre-push-swiftlint"
+cp swiftlint/pre-push-swiftlint.sh "$HOOKS_DIR/pre-push"
 
 # Make the pre-push hook executable
-chmod +x "$HOOKS_DIR/pre-push-swiftlint"
+chmod +x "$HOOKS_DIR/pre-push"
