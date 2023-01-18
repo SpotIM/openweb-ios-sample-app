@@ -76,6 +76,11 @@ commands:
             ls -l Release
             git status
 
+orbs:
+  aws-s3: circleci/aws-s3@3.0.0
+  slack: circleci/slack@3.4.2
+  codecov: codecov/codecov@3.2.2
+
 jobs:
   validate_spm_job:
     <<: *ios_config_xcode
