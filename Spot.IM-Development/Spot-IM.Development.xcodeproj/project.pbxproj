@@ -576,7 +576,12 @@
 		8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE882295069B400C8677C /* SwitchSetting.swift */; };
 		9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */; };
 		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
-		9E9914CE29754A50000EE0F1 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9914CD29754A50000EE0F1 /* PickerSetting.swift */; };
+		9E53758629783E1200C85983 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758529783E1200C85983 /* PickerSetting.swift */; };
+		9E53758829783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758729783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
+		9E53758A29783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758929783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
+		9E9914CE29754A50000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E9914D12975928B000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E9914D5297593A1000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
 		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
 		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
@@ -1208,7 +1213,9 @@
 		9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelper.swift; sourceTree = "<group>"; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
-		9E9914CD29754A50000EE0F1 /* PickerSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
+		9E53758529783E1200C85983 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
+		9E53758729783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
+		9E53758929783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2034,6 +2041,7 @@
 		3D611B7F28C4D85C003960CE /* Beta */ = {
 			isa = PBXGroup;
 			children = (
+				9E9914CF29759239000EE0F1 /* AuthenticationPlaygroundNew */,
 				3D611B7528BFA8B1003960CE /* BetaNewAPI */,
 				3D611B8028C4D88F003960CE /* MockArticle */,
 				8DCBE879294F470F00C8677C /* Settings */,
@@ -3413,9 +3421,9 @@
 		8DCBE8802950686B00C8677C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9E53758529783E1200C85983 /* PickerSetting.swift */,
 				8DCBE882295069B400C8677C /* SwitchSetting.swift */,
 				8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */,
-				9E9914CD29754A50000EE0F1 /* PickerSetting.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3427,6 +3435,31 @@
 				8DCBE8802950686B00C8677C /* Views */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		9E9914CF29759239000EE0F1 /* AuthenticationPlaygroundNew */ = {
+			isa = PBXGroup;
+			children = (
+				9E9914D329759379000EE0F1 /* ViewModels */,
+				9E9914D229759370000EE0F1 /* Views */,
+			);
+			path = AuthenticationPlaygroundNew;
+			sourceTree = "<group>";
+		};
+		9E9914D229759370000EE0F1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9E53758729783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9E9914D329759379000EE0F1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9E53758929783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
@@ -4266,10 +4299,12 @@
 				3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */,
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
+				9E9914D12975928B000EE0F1 /* (null) in Sources */,
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
+				9E53758829783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
 				3DB3D19B282AFEB4008654CF /* ColorPalette.swift in Sources */,
 				3D611B8C28C4EE10003960CE /* MockArticleVC.swift in Sources */,
@@ -4291,13 +4326,16 @@
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
 				3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */,
 				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
+				9E53758A29783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
-				9E9914CE29754A50000EE0F1 /* PickerSetting.swift in Sources */,
+				9E9914CE29754A50000EE0F1 /* (null) in Sources */,
 				3DB3D19F2831A5E8008654CF /* AuthenticationMetrics.swift in Sources */,
+				9E53758629783E1200C85983 /* PickerSetting.swift in Sources */,
 				8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */,
 				3DB3D192282A82B4008654CF /* Array+Unwrap.swift in Sources */,
+				9E9914D5297593A1000EE0F1 /* (null) in Sources */,
 				9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */,
 				5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */,
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
