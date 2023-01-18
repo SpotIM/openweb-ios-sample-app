@@ -476,7 +476,7 @@ jobs:
             - "vendor/bundle"
 
       - run:
-          name: Run Fastline build ipa
+          name: Run Fastline build .app file
           command: |
             bundle exec fastlane build_development_app
 
@@ -490,9 +490,6 @@ workflows:
   version: 2
   independent_job_workflow:
     jobs:
-      - upload_build_to_s3_job:
-          xcode: "14.0.0"
-
       - default_job:
           filters:
             branches:
