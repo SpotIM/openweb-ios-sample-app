@@ -132,22 +132,22 @@ fileprivate extension SettingsVC {
             .disposed(by: disposeBag)
         
         viewModel.outputs.readOnlyModeIndex
-            .bind(to: segmentedReadOnlyMode.rx.value)
+            .bind(to: segmentedReadOnlyMode.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
         
         viewModel.outputs.themeModeIndex
-            .bind(to: segmentedThemeMode.rx.value)
+            .bind(to: segmentedThemeMode.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
         
         viewModel.outputs.modalStyleIndex
-            .bind(to: segmentedModalStyle.rx.value)
+            .bind(to: segmentedModalStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
         
-        switchHideArticleHeader.rx.value
+        switchHideArticleHeader.rx.isOn
             .bind(to: viewModel.inputs.hideArticleHeaderToggled)
             .disposed(by: disposeBag)
         
-        switchCommentCreationNewDesign.rx.value
+        switchCommentCreationNewDesign.rx.isOn
             .bind(to: viewModel.inputs.commentCreationNewDesignToggled)
             .disposed(by: disposeBag)
         
