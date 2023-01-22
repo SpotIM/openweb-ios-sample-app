@@ -129,6 +129,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     
     private func updateUserView(with dataModel: CommentViewModel) {
         dataModel.commentUserVM.inputs.configure(with: dataModel)
+        dataModel.commentUserVM.outputs.avatarVM.inputs.configure(isAvatartVisible: !dataModel.isHiddenComment())
         userView.configure(with: dataModel)
     }
 
