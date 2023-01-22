@@ -122,6 +122,9 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         case .commentReportClicked(let shareMessageId, let relatedMessage):
             messageId = shareMessageId
             relatedMessageId = relatedMessage
+        case .commentMuteClicked(let shareMessageId, let relatedMessage, _):
+            messageId = shareMessageId
+            relatedMessageId = relatedMessage
         case .commentDeleteClicked(let shareMessageId, let relatedMessage):
             messageId = shareMessageId
             relatedMessageId = relatedMessage
