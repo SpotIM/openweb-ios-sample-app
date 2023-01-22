@@ -583,6 +583,7 @@
 		9E9914D12975928B000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E9914D5297593A1000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
+		9EE2CDED29798919000C0E38 /* TextFieldSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE2CDEC29798919000C0E38 /* TextFieldSetting.swift */; };
 		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
 		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
@@ -1217,6 +1218,7 @@
 		9E53758729783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
 		9E53758929783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
+		9EE2CDEC29798919000C0E38 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
 		BD93F797FEABA3B540FA1DF3 /* Pods-Shared-SpotImCore.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
@@ -3421,6 +3423,7 @@
 		8DCBE8802950686B00C8677C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9EE2CDEC29798919000C0E38 /* TextFieldSetting.swift */,
 				9E53758529783E1200C85983 /* PickerSetting.swift */,
 				8DCBE882295069B400C8677C /* SwitchSetting.swift */,
 				8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */,
@@ -4303,6 +4306,7 @@
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
+				9EE2CDED29798919000C0E38 /* TextFieldSetting.swift in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
 				9E53758829783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,

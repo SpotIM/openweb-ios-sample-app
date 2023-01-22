@@ -119,43 +119,13 @@ class BetaNewAPIVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
     
-    fileprivate lazy var lblSpotId: UILabel = {
-        let txt = NSLocalizedString("SpotId", comment: "") + ":"
-
-        return txt
-            .label
-            .hugContent(axis: .horizontal)
-            .font(FontBook.mainHeading)
-            .textColor(ColorPalette.blackish)
-    }()
-    
-    fileprivate lazy var lblPostId: UILabel = {
-        let txt = NSLocalizedString("PostId", comment: "") + ":"
-
-        return txt
-            .label
-            .hugContent(axis: .horizontal)
-            .font(FontBook.mainHeading)
-            .textColor(ColorPalette.blackish)
-    }()
-    
-    fileprivate lazy var txtFieldSpotId: UITextField = {
-        let txtField = UITextField()
-            .corner(radius: Metrics.textFieldCorners)
-            .border(width: 1.0, color: ColorPalette.blackish)
-        
-        txtField.borderStyle = .roundedRect
-        txtField.autocapitalizationType = .none
+    fileprivate lazy var txtFieldSpotId: TextFieldSetting = {
+        let txtField = TextFieldSetting(title: NSLocalizedString("SpotId", comment: "") + ":")
         return txtField
     }()
     
-    fileprivate lazy var txtFieldPostId: UITextField = {
-        let txtField = UITextField()
-            .corner(radius: Metrics.textFieldCorners)
-            .border(width: 1.0, color: ColorPalette.blackish)
-        
-        txtField.borderStyle = .roundedRect
-        txtField.autocapitalizationType = .none
+    fileprivate lazy var txtFieldPostId: TextFieldSetting = {
+        let txtField = TextFieldSetting(title: NSLocalizedString("PostId", comment: "") + ":")
         return txtField
     }()
     
@@ -244,30 +214,18 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
         
-        scrollView.addSubview(lblSpotId)
-        lblSpotId.snp.makeConstraints { make in
-            make.top.equalTo(btnSelectPreset.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
-        }
-        
         scrollView.addSubview(txtFieldSpotId)
         txtFieldSpotId.snp.makeConstraints { make in
-            make.centerY.equalTo(lblSpotId)
-            make.leading.equalTo(lblSpotId.snp.trailing).offset(0.3*Metrics.horizontalMargin)
+            make.top.equalTo(btnSelectPreset.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
-        
-        scrollView.addSubview(lblPostId)
-        lblPostId.snp.makeConstraints { make in
-            make.top.equalTo(lblSpotId.snp.bottom).offset(Metrics.verticalMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
-        }
-        
+                
         scrollView.addSubview(txtFieldPostId)
         txtFieldPostId.snp.makeConstraints { make in
-            make.centerY.equalTo(lblPostId)
-            make.leading.equalTo(lblPostId.snp.trailing).offset(0.3*Metrics.horizontalMargin)
+            make.top.equalTo(txtFieldSpotId.snp.bottom).offset(Metrics.verticalMargin)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
@@ -313,34 +271,21 @@ fileprivate extension BetaNewAPIVC {
         title = viewModel.outputs.title
 
         viewModel.outputs.spotId
-            .bind(to: txtFieldSpotId.rx.text)
+            .bind(to: txtFieldSpotId.rx.textFieldText)
             .disposed(by: disposeBag)
         
         viewModel.outputs.postId
-            .bind(to: txtFieldPostId.rx.text)
-            .disposed(by: disposeBag)
-        
-        // Dismiss keyboard
-        txtFieldSpotId.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
-            .subscribe(onNext: { [weak self] _ in
-                self?.txtFieldSpotId.endEditing(true)
-            })
-            .disposed(by: disposeBag)
-        
-        txtFieldPostId.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
-            .subscribe(onNext: { [weak self] _ in
-                self?.txtFieldPostId.endEditing(true)
-            })
+            .bind(to: txtFieldPostId.rx.textFieldText)
             .disposed(by: disposeBag)
         
         // Bind text fields
-        txtFieldSpotId.rx.text
+        txtFieldSpotId.rx.textFieldText
             .unwrap()
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.enteredSpotId)
             .disposed(by: disposeBag)
         
-        txtFieldPostId.rx.text
+        txtFieldPostId.rx.textFieldText
             .unwrap()
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.enteredPostId)
