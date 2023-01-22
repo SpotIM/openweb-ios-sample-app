@@ -28,6 +28,7 @@ class BetaNewAPIVC: UIViewController {
         static let animatePickerDuration: CGFloat = 0.6
         static let animatePickerDamping: CGFloat = 0.5
         static let animatePickerVelocity: CGFloat = 0.5
+        static let authLeftBarItemMargin: CGFloat = 65
     }
     
     fileprivate let viewModel: BetaNewAPIViewModeling
@@ -45,6 +46,15 @@ class BetaNewAPIVC: UIViewController {
                                style: .plain,
                                target: nil,
                                action: nil)
+    }()
+    
+    fileprivate lazy var authLeftBarItem: UIBarButtonItem = {
+        let authLeftBarItem = UIBarButtonItem(image: UIImage(named: "authenticationIcon"),
+                                   style: .plain,
+                                   target: nil,
+                                   action: nil)
+        authLeftBarItem.imageInsets = UIEdgeInsets(top: 0, left: Metrics.authLeftBarItemMargin, bottom: 0, right: 0)
+        return authLeftBarItem
     }()
     
     fileprivate lazy var conversationPresetSelectionView: UIView = {
@@ -209,7 +219,7 @@ class BetaNewAPIVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.rightBarButtonItem = settingsRightBarItem
+        navigationItem.rightBarButtonItems = [settingsRightBarItem, authLeftBarItem]
         setupObservers()
     }
 }
@@ -384,12 +394,25 @@ fileprivate extension BetaNewAPIVC {
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
         
+        authLeftBarItem.rx.tap
+            .bind(to: viewModel.inputs.authenticationTapped)
+            .disposed(by: disposeBag)
+        
         viewModel.outputs.openSettings
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 let settingsVM = SettingsViewModel()
                 let settingsVC = SettingsVC(viewModel: settingsVM)
                 self.navigationController?.pushViewController(settingsVC, animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.openAuthentication
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                let authenticationVM = AuthenticationPlaygroundNewAPIViewModel()
+                let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
+                self.navigationController?.pushViewController(authenticationVC, animated: true)
             })
             .disposed(by: disposeBag)
         
