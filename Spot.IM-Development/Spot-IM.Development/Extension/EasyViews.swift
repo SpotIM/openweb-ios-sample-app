@@ -59,6 +59,18 @@ extension UIView {
     }
 }
 
+extension UITextField {
+    @discardableResult func borderStyle(_ borderStyle: BorderStyle) -> Self {
+        self.borderStyle = borderStyle
+        return self
+    }
+    
+    @discardableResult func autocapitalizationType(_ autocapitalizationType: UITextAutocapitalizationType) -> Self {
+        self.autocapitalizationType = autocapitalizationType
+        return self
+    }
+}
+
 extension UILabel {
     @discardableResult func font(_ font: UIFont) -> UILabel {
         self.font = font
