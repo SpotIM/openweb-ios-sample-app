@@ -20,7 +20,7 @@ class OWCommentContentView: UIView {
     fileprivate lazy var textLabel: OWCommentTextView = {
        return OWCommentTextView()
             .numberOfLines(0)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
+//            .font(.preferred(style: .regular, of: Metrics.fontSize))
     }()
     
     fileprivate lazy var mediaView: CommentMediaView = {

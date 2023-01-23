@@ -13,20 +13,32 @@ import RxSwift
 class OWCommentTextView: UILabel {
     fileprivate var viewModel: OWCommentTextViewModeling!
     fileprivate var disposeBag: DisposeBag!
+    fileprivate var width: CGFloat = 0
     
     init() {
         super.init(frame: .zero)
+        setupUI()
         setupGestureRecognizer()
     }
     
     func configure(with viewModel: OWCommentTextViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
+        self.width = 0
         setupObservers()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let viewModel = viewModel,
+              self.width != self.frame.width
+        else { return }
+        self.width = self.frame.width
+        viewModel.inputs.width.onNext(self.frame.width)
     }
 }
 
@@ -70,11 +82,27 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
 }
 
 fileprivate extension OWCommentTextView {
+    func setupUI() {
+//        self.OWSnp.makeConstraints { make in
+//            make.height.equalTo(0)
+//        }
+    }
+    
     func setupObservers() {
         viewModel.outputs.attributedString
             .bind(onNext: { [weak self] attString in
                 self?.attributedText = attString
             })
             .disposed(by: disposeBag)
+        
+//        viewModel.outputs.height
+//            .subscribe(onNext: { height in
+//                print("NOGAH - change height: \(height)")
+//
+//                self.OWSnp.updateConstraints { make in
+//                    make.height.equalTo(height)
+//                }
+//            })
+//            .disposed(by: disposeBag)
     }
 }
