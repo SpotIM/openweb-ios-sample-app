@@ -23,7 +23,7 @@ protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString?> { get }
     var readMoreText: String { get }
     var readLessText: String { get }
-    var height: Observable<Double> { get }
+    var height: Observable<CGFloat> { get }
     var activeURLs: [NSRange: URL] { get }
     var urlClickedOutput: Observable<URL> { get }
 }
@@ -47,7 +47,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
     var editedText: String = LocalizationManager.localizedString(key: "Edited")
     
-    var width = PublishSubject<CGFloat>() // TODO: should get it in constructor ?
+    var width = PublishSubject<CGFloat>()
     var readMoreTap = PublishSubject<Void>()
     var readLessTap = PublishSubject<Void>()
     var activeURLs: [NSRange: URL]
@@ -83,12 +83,20 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .unwrap()
     }
     
+    fileprivate var widthObservable: Observable<CGFloat> {
+        width.asObservable()
+    }
+//    fileprivate var _lines: Observable<[CTLine]> {
+//        Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, width in
+//            return messageAttributedString.getLines(with: width)
+//        }
+//        .asObservable()
+//    }
     fileprivate var _lines: Observable<[CTLine]> {
         fullAttributedString.map { messageAttributedString in
             let width = 358.0 // TODO: get real width
             return messageAttributedString.getLines(with: width)
         }
-        .unwrap()
         .asObservable()
     }
     
@@ -122,13 +130,12 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         Observable.merge(self.readMoreTap, self.readMoreTap)
     }
     
-    var height: Observable<Double> {
-        attributedString
-            .unwrap()
-            .map { string in
-                return string.height(withConstrainedWidth: 358) // TODO: real width
-            }
-            .asObservable()
+    var height: Observable<CGFloat> {
+        Observable.combineLatest(attributedString, widthObservable) { attributedString, width in
+            return attributedString?.height(withConstrainedWidth: width)
+        }
+        .unwrap()
+        .asObservable()
     }
     
     var urlTap = PublishSubject<URL>()
