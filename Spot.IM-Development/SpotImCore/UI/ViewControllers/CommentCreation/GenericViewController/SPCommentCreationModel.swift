@@ -18,6 +18,8 @@ class SPCommentCreationModel {
     var commentText: String = ""
     var imageContent: SPComment.Content.Image?
     var articleMetadate: SpotImArticleMetadata
+    var shouldShowCommentCounter: Bool
+    var commentCounter: Int
     var selectedLabels: SelectedLabels?
     var commentLabelsSection: String?
     var sectionCommentLabelsConfig: SPCommentLabelsSectionConfiguration?
@@ -45,8 +47,11 @@ class SPCommentCreationModel {
     init(commentCreationDTO: SPCommentCreationDTO,
          updater: SPCommentUpdater,
          imageProvider: SPImageProvider,
+         spotCongif: SpotConfig,
          articleMetadate: SpotImArticleMetadata,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.shouldShowCommentCounter = spotCongif.appConfig.mobileSdk.shouldShowCommentCounter
+        self.commentCounter = spotCongif.appConfig.mobileSdk.commentCounterCharactersLimit
         self.dataModel = commentCreationDTO
         self.imageProvider = imageProvider
         commentService = updater
