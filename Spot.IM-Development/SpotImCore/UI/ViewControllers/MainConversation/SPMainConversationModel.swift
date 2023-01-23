@@ -306,6 +306,7 @@ final class SPMainConversationModel {
         }
         
         if availability.isMuteable,
+           SPUserSessionHolder.session.user?.registered ?? false,
            let authorId = viewModel?.authorId {
         let muteAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Mute"),
