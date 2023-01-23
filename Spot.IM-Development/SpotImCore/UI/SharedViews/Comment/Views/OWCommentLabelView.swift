@@ -45,6 +45,11 @@ class OWCommentLabelView: UIView {
         return UILabel()
             .font(.preferred(style: .medium, of: Metrics.fontSize))
     }()
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tapGesture = UITapGestureRecognizer()
+        self.addGestureRecognizer(tapGesture)
+        return tapGesture
+    }()
     
     fileprivate var viewModel: OWCommentLabelViewModeling!
     fileprivate var disposeBag: DisposeBag!
@@ -126,6 +131,10 @@ fileprivate extension OWCommentLabelView {
                 guard let self = self else { return }
                 self.heightConstraint?.update(offset: Metrics.commentLabelViewHeight)
             })
+            .disposed(by: disposeBag)
+        
+        tapGesture.rx.event.voidify()
+            .bind(to: viewModel.inputs.labelClicked)
             .disposed(by: disposeBag)
     }
         
