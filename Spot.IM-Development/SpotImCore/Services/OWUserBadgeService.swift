@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 protocol OWUserBadgeServicing {
-    func userBadgeTextObservable(user: SPUser) -> Observable<OWUserBadgeType>
+    func userBadgeText(user: SPUser) -> Observable<OWUserBadgeType>
 }
 
 class OWUserBadgeService: OWUserBadgeServicing {
@@ -31,7 +31,7 @@ class OWUserBadgeService: OWUserBadgeServicing {
             .unwrap()
     }
     
-    func userBadgeTextObservable(user: SPUser) -> Observable<OWUserBadgeType> {
+    func userBadgeText(user: SPUser) -> Observable<OWUserBadgeType> {
         return self.conversationConfig
             .map { conversationConfig in
                 guard user.isStaff else { return .empty }
