@@ -98,9 +98,9 @@ class OWCommentCreationEntryViewModelV2: OWCommentCreationEntryViewModeling, OWC
     
     fileprivate let disposeBag = DisposeBag()
     
-    var imageURLProvider: OWImageProvider
+    var imageURLProvider: OWImageProviding
     
-    init (imageURLProvider: OWImageProvider = OWCloudinaryImageProvider()) {
+    init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageURLProvider = imageURLProvider
         setupObservers()
     }
