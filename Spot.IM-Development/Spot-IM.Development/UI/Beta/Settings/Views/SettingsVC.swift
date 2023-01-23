@@ -78,7 +78,7 @@ class SettingsVC: UIViewController {
 
 fileprivate extension SettingsVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
         
         title = viewModel.outputs.title
         

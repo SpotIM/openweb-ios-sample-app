@@ -90,7 +90,7 @@ class ArticleTableViewCell: UITableViewCell {
     fileprivate lazy var dateLabel: UILabel = {
         let lbl = UILabel()
             .font(FontBook.primaryHeadingMedium)
-            .textColor(ColorPalette.basicGrey)
+            .textColor(ColorPalette.shared.color(type: .basicGrey))
         return lbl
     }()
     

@@ -17,7 +17,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         static let horizontalMargin: CGFloat = 10
         static let horizontalSmallMargin: CGFloat = 6
         static let roundCornerRadius: CGFloat = 10
-        static let btnPadding: CGFloat = 6
+        static let btnPadding: CGFloat = 12
     }
     
     fileprivate let viewModel: AuthenticationPlaygroundNewAPIViewModeling
@@ -38,7 +38,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         return NSLocalizedString("AutomaticallyDismissAfterLoginDescription", comment: "")
             .label
             .font(FontBook.helperLight)
-            .textColor(ColorPalette.darkGrey)
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
     
     fileprivate lazy var pickerGenericSSO: PickerSetting = {
@@ -68,11 +68,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
     
     fileprivate func blueRoundedButton(key: String) -> UIButton {
         NSLocalizedString(key, comment: "")
-            .button
-            .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.extraLightGrey)
-            .backgroundColor(ColorPalette.blue)
-            .corner(radius: Metrics.roundCornerRadius)
+            .blueRoundedButton
             .withPadding(Metrics.btnPadding)
     }
     
@@ -81,7 +77,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
         return text
             .label
             .font(FontBook.paragraph)
-            .textColor(ColorPalette.darkGrey)
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
     }
     
     fileprivate var statusSymbol: UILabel {
@@ -117,7 +113,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
 
 fileprivate extension AuthenticationPlaygroundNewAPIVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
         
         // Adding scroll view
         view.addSubview(scrollView)

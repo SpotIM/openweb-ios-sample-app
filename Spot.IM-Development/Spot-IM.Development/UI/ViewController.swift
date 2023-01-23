@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var customSpotTextField: UITextField!
     @IBOutlet weak var optionsScrollView: UIScrollView!
     
-    
+    @IBOutlet weak var settingsBtn: UIButton!
     @IBOutlet weak var showDemoTableViewBtn: UIButton!
     @IBOutlet weak var showDemoSpotArticlesBtn: UIButton!
     @IBOutlet weak var showFoxNewsBtn: UIButton!
@@ -39,9 +39,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var customSpotBtn: UIButton!
     
     fileprivate lazy var betaNewAPIBtn: UIButton = {
-       let btn = NSLocalizedString("BetaNewAPI", comment: "")
+        let btn = NSLocalizedString("BetaNewAPI", comment: "")
             .button
-            .textColor(.black)
+            .textColor(ColorPalette.shared.color(type: .text))
             .font(FontBook.paragraph)
         
         return btn
@@ -51,7 +51,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         currentSpotId = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.spotIdKey, defaultValue: "")
         setupUI()
         fillVersionAndBuildNumber()
@@ -84,6 +84,23 @@ class ViewController: UIViewController {
         logo.layer.cornerRadius = 8
         customSpotTextField.returnKeyType = .done
         setupAppPreset()
+        setupColors()
+    }
+    
+    private func setupColors() {
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        
+        let textColor = ColorPalette.shared.color(type: .text)
+        settingsBtn.setTitleColor(textColor, for: .normal)
+        showDemoTableViewBtn.setTitleColor(textColor, for: .normal)
+        showDemoSpotArticlesBtn.setTitleColor(textColor, for: .normal)
+        showFoxNewsBtn.setTitleColor(textColor, for: .normal)
+        showMobileSSO.setTitleColor(textColor, for: .normal)
+        showMobileGuest.setTitleColor(textColor, for: .normal)
+        showMobileSocial.setTitleColor(textColor, for: .normal)
+        showMobileSocialGuest.setTitleColor(textColor, for: .normal)
+        autenticationPlaygroundBtn.setTitleColor(textColor, for: .normal)
+        customSpotBtn.setTitleColor(textColor, for: .normal)
     }
     
     private func setupAppPreset() {
@@ -118,29 +135,8 @@ class ViewController: UIViewController {
 
     private func setupNavigationBar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
-
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        navigationController?.navigationBar.isTranslucent = false
-        
-        let navigationBarBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
-            NSAttributedString.Key.foregroundColor: UIColor.black
-        ]
-        
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = navigationBarBackgroundColor
-            appearance.titleTextAttributes = navigationTitleTextAttributes
-
-            navigationController?.navigationBar.standardAppearance = appearance;
-            navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
-        } else {
-            navigationController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-            navigationController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-        }
+        navigationController?.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
+        navigationController?.navigationBar.barTintColor = ColorPalette.shared.color(type: .background)
     }
 
     private func fillVersionAndBuildNumber() {
