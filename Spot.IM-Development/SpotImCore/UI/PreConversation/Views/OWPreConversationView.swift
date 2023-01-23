@@ -22,7 +22,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 800
+        static let initialHeight: CGFloat = 1200
         static let changedHeight: CGFloat = 700
         
         static let separatorHeight: CGFloat = 1.0
@@ -122,8 +122,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWPreConversationView {
     func setupViews() {
-        // TODO: Testing, remove later and use the commented code below
-        // self.backgroundColor = .purple
+        self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
         
         self.useAsThemeStyleInjector()
 
@@ -245,13 +244,16 @@ fileprivate extension OWPreConversationView {
         
         btnCommentCreation.rx.tap
                 .voidify()
-                .bind(to: viewModel.inputs.commentCreationTap)
+                .bind(onNext: { [weak self] in
+                    self?.viewModel.inputs.commentCreationTap.onNext(.comment)
+                })
                 .disposed(by: disposeBag)
                 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
             }).disposed(by: disposeBag)
