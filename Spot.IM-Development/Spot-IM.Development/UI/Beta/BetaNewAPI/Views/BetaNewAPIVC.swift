@@ -20,7 +20,6 @@ class BetaNewAPIVC: UIViewController {
         static let textFieldHeight: CGFloat = 40
         static let textFieldCorners: CGFloat = 12
         static let buttonVerticalMargin: CGFloat = 20
-        static let buttonCorners: CGFloat = 16
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
         static let pickerHeight: CGFloat = 250
@@ -59,7 +58,7 @@ class BetaNewAPIVC: UIViewController {
     
     fileprivate lazy var conversationPresetSelectionView: UIView = {
         let spotPresetSelection = UIView()
-        spotPresetSelection.backgroundColor = ColorPalette.midGrey
+        spotPresetSelection.backgroundColor = ColorPalette.shared.color(type: .background)
         
         spotPresetSelection.addSubview(toolbarPicker)
         toolbarPicker.snp.makeConstraints { (make) in
@@ -82,8 +81,8 @@ class BetaNewAPIVC: UIViewController {
 
     fileprivate lazy var toolbarPicker: UIToolbar = {
         var toolbar = UIToolbar()
-        toolbar.barTintColor = ColorPalette.darkGrey
-        toolbar.tintColor = ColorPalette.blackish
+        toolbar.barTintColor = ColorPalette.shared.color(type: .darkGrey)
+        toolbar.tintColor = ColorPalette.shared.color(type: .blackish)
         
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
@@ -96,27 +95,13 @@ class BetaNewAPIVC: UIViewController {
     }()
     
     fileprivate lazy var btnDone: UIButton = {
-        let txt = NSLocalizedString("Done", comment: "")
-        
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .font(FontBook.paragraphBold)
-            .corner(radius: Metrics.buttonCorners)
-            .withPadding(Metrics.buttonPadding)
+        return NSLocalizedString("Done", comment: "")
+                .blueRoundedButton
+                .withPadding(Metrics.buttonPadding)
     }()
     
     fileprivate lazy var btnSelectPreset: UIButton = {
-        let txt = NSLocalizedString("SelectPreset", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.darkGrey)
-            .textColor(ColorPalette.white)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("SelectPreset", comment: "").darkGrayRoundedButton
     }()
     
     fileprivate lazy var txtFieldSpotId: TextFieldSetting = {
@@ -130,39 +115,15 @@ class BetaNewAPIVC: UIViewController {
     }()
     
     fileprivate lazy var btnUIFlows: UIButton = {
-        let txt = NSLocalizedString("UIFlows", comment: "")
-        
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("UIFlows", comment: "").blueRoundedButton
     }()
     
     fileprivate lazy var btnUIViews: UIButton = {
-        let txt = NSLocalizedString("UIViews", comment: "")
-        
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("UIViews", comment: "").blueRoundedButton
     }()
     
     fileprivate lazy var btnMiscellaneous: UIButton = {
-        let txt = NSLocalizedString("Miscellaneous", comment: "")
-        
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("Miscellaneous", comment: "").blueRoundedButton
     }()
     
     fileprivate var selectedAnswer: ConversationPreset?
@@ -196,7 +157,7 @@ class BetaNewAPIVC: UIViewController {
 
 fileprivate extension BetaNewAPIVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
         
         // Adding scroll view
         view.addSubview(scrollView)
