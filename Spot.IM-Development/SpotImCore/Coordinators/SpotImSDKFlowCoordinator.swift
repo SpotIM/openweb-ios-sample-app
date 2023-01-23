@@ -600,7 +600,6 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
     
     internal func setupAndPresentCommentCreation(with model: SPCommentCreationModel,
                                                  dataModel: SPMainConversationModel) {
-        
         let controller = SPCommentCreationViewController(customUIDelegate: self, model: model)
         controller.delegate = self
         controller.userAuthFlowDelegate = self
@@ -613,6 +612,7 @@ extension SpotImSDKFlowCoordinator: SPCommentsCreationDelegate {
             commentCreationDTO: dto,
             updater: conversationUpdater,
             imageProvider: imageProvider,
+            spotCongif: spotConfig,
             articleMetadate: articleMetadata
         )
         self.setupObservers(for: model)

@@ -26,6 +26,13 @@ class MiscellaneousVC: UIViewController {
     fileprivate let viewModel: MiscellaneousViewModeling
     fileprivate let disposeBag = DisposeBag()
     
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
     fileprivate lazy var btnConversationCounter: UIButton = {
         let txt = NSLocalizedString("ConversationCounter", comment: "")
 
@@ -62,13 +69,23 @@ fileprivate extension MiscellaneousVC {
     func setupViews() {
         view.backgroundColor = .white
         
+        // Adding scroll view
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
+        
         // Adding conversation counter button
-        view.addSubview(btnConversationCounter)
+        scrollView.addSubview(btnConversationCounter)
         btnConversationCounter.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+            
+            //Move to last view in scroll view
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
     
