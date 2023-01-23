@@ -54,15 +54,13 @@ fileprivate extension OWCommentLabelsContainerView {
             .subscribe(onNext: { [weak self] viewModels in
                 guard let self = self else { return }
                 // clean stackview if needed
-                self.labelsContainerStackView.subviews.forEach { view in
-                    view.removeFromSuperview()
-                }
+                self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
             
-                viewModels.forEach { vm in
+                let commentLabelsViews = viewModels.map { vm in
                     let commentLabel = OWCommentLabelView()
                     commentLabel.configure(viewModel: vm)
-                    self.labelsContainerStackView.addArrangedSubview(commentLabel)
                 }
+                commentLabelsViews.forEach { labelsContainerStackView.addArrangedSubview($0) }
             })
             .disposed(by: disposeBag)
     }

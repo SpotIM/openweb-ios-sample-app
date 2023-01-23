@@ -112,7 +112,7 @@ fileprivate extension OWCommentLabelView {
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .withLatestFrom(labelDataObservable) { style, data -> (OWThemeStyle, LabelState, UIColor) in
+            .withLatestFrom(labelDataObservable) { style, data -> (OWThemeStyle, OWLabelState, UIColor) in
                 return (style, data.0, data.1.color)
             }
             .subscribe { [weak self] (style, state, color) in
@@ -129,7 +129,7 @@ fileprivate extension OWCommentLabelView {
             .disposed(by: disposeBag)
     }
         
-    func setUIColors(state: LabelState, labelColor: UIColor, currentStyle: OWThemeStyle) {
+    func setUIColors(state: OWLabelState, labelColor: UIColor, currentStyle: OWThemeStyle) {
         // set background, border, image and text colors according to state
         let isDarkMode = currentStyle == .dark
         switch state {
