@@ -34,7 +34,7 @@ class TextFieldSetting: UIView {
     fileprivate lazy var textFieldControl = {
         let textField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
-            .border(width: 1.0, color: ColorPalette.blackish)
+            .border(width: 1.0, color: ColorPalette.shared.color(type: .blackish))
             .borderStyle(.roundedRect)
             .autocapitalizationType(.none)
         return textField

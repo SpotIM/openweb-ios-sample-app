@@ -28,7 +28,7 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .label
             .font(FontBook.secondaryHeadingBold)
-            .textColor(ColorPalette.blackish)
+            .textColor(ColorPalette.shared.color(type: .text))
     }()
     
     fileprivate lazy var switchInitializeSDK: UISwitch = {
@@ -41,14 +41,14 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .label
             .font(FontBook.secondaryHeadingBold)
-            .textColor(ColorPalette.blackish)
+            .textColor(ColorPalette.shared.color(type: .text))
     }()
     
     fileprivate lazy var lblAutomaticallyDismissDescription: UILabel = {
         return NSLocalizedString("AutomaticallyDismissAfterLoginDescription", comment: "")
             .label
             .font(FontBook.helperLight)
-            .textColor(ColorPalette.darkGrey)
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
     
     fileprivate lazy var switchAutomaticallyDismiss: UISwitch = {
@@ -62,7 +62,7 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .label
             .font(FontBook.secondaryHeadingBold)
-            .textColor(ColorPalette.blackish)
+            .textColor(ColorPalette.shared.color(type: .text))
     }()
     
     fileprivate lazy var lblGenericSSOStatus: UILabel = {
@@ -70,7 +70,7 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .label
             .font(FontBook.paragraph)
-            .textColor(ColorPalette.darkGrey)
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
     
     fileprivate lazy var lblGenericSSOStatusSymbol: UILabel = {
@@ -84,8 +84,8 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .button
             .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.extraLightGrey)
-            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
+            .backgroundColor(ColorPalette.shared.color(type: .blue))
             .corner(radius: Metrics.roundCornerRadius)
             .withPadding(Metrics.btnPadding)
     }()
@@ -96,7 +96,7 @@ class AuthenticationPlaygroundVC: UIViewController {
             .label
             .wrapContent(axis: .horizontal) // Needed to set compression resistance for some reason
             .font(FontBook.secondaryHeadingBold)
-            .textColor(ColorPalette.blackish)
+            .textColor(ColorPalette.shared.color(type: .text))
     }()
     
     fileprivate lazy var lblJWTSSOStatus: UILabel = {
@@ -104,7 +104,7 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .label
             .font(FontBook.paragraph)
-            .textColor(ColorPalette.darkGrey)
+            .textColor(ColorPalette.shared.color(type: .darkGrey))
     }()
     
     fileprivate lazy var lblJWTSSOStatusSymbol: UILabel = {
@@ -118,8 +118,8 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .button
             .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.extraLightGrey)
-            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
+            .backgroundColor(ColorPalette.shared.color(type: .blue))
             .corner(radius: Metrics.roundCornerRadius)
             .withPadding(Metrics.btnPadding)
     }()
@@ -129,8 +129,8 @@ class AuthenticationPlaygroundVC: UIViewController {
         return txt
             .button
             .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.extraLightGrey)
-            .backgroundColor(ColorPalette.blue)
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
+            .backgroundColor(ColorPalette.shared.color(type: .blue))
             .corner(radius: Metrics.roundCornerRadius)
             .withPadding(Metrics.btnPadding)
     }()
@@ -172,7 +172,7 @@ class AuthenticationPlaygroundVC: UIViewController {
 
 fileprivate extension AuthenticationPlaygroundVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
         
         // Initialize SDK section
         view.addSubview(lblInitializeSDK)
