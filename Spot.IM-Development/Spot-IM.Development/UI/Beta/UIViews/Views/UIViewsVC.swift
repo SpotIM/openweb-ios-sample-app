@@ -19,8 +19,6 @@ class UIViewsVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
-        static let buttonCorners: CGFloat = 16
-        static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
     
@@ -35,51 +33,19 @@ class UIViewsVC: UIViewController {
     }()
     
     fileprivate lazy var btnPreConversation: UIButton = {
-        let txt = NSLocalizedString("PreConversation", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("PreConversation", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnFullConversation: UIButton = {
-        let txt = NSLocalizedString("FullConversation", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("FullConversation", comment: "").blueRoundedButton
     }()
     
     fileprivate lazy var btnCommentCreation: UIButton = {
-        let txt = NSLocalizedString("CommentCreation", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("CommentCreation", comment: "").blueRoundedButton
     }()
    
     fileprivate lazy var btnIndependentAdUnit: UIButton = {
-        let txt = NSLocalizedString("IndependentAdUnit", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("IndependentAdUnit", comment: "").blueRoundedButton
     }()
     
     init(viewModel: UIViewsViewModeling) {
@@ -104,7 +70,7 @@ class UIViewsVC: UIViewController {
 
 fileprivate extension UIViewsVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
         
         // Adding scroll view
         view.addSubview(scrollView)
