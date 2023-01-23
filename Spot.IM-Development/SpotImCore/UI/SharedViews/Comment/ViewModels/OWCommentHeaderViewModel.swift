@@ -122,7 +122,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _unwrappedUser
             .flatMap { [weak self] user -> Observable<OWUserBadgeType> in
                 guard let self = self else { return .empty() }
-                return self.userBadgeService.userBadgeTextObservable(user: user)
+                return self.userBadgeService.userBadgeText(user: user)
             }
     }
     
