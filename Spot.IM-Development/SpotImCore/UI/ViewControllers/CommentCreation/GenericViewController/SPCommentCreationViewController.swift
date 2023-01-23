@@ -162,12 +162,12 @@ class SPCommentCreationViewController: SPBaseViewController,
         commentLabelsContainer.setSelectedLabels(selectedLabelIdsInEditedComment: self.model.dataModel.editModel?.commentLabelIds)
     }
     
-    private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [CommentLabel] {
-        var commentLabels: [CommentLabel] = []
+    private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [OWCommentLabelSettings] {
+        var commentLabels: [OWCommentLabelSettings] = []
         sectionConfig.labels.forEach { labelConfig in
             if let url = labelConfig.getIconUrl(),
                let color = UIColor.color(rgb: labelConfig.color) {
-                commentLabels.append(CommentLabel(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
+                commentLabels.append(OWCommentLabelSettings(id: labelConfig.id, text: labelConfig.text, iconUrl: url, color: color))
             }
         }
         return commentLabels
