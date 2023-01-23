@@ -42,8 +42,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     
     var tapAvatar = PublishSubject<Void>()
     
-    init (user: SPUser? = nil,
-          imageURLProvider: SPImageProvider?) {
+    init (user: SPUser? = nil, imageURLProvider: SPImageProvider? = nil) {
         self.imageURLProvider = imageURLProvider
         
         if let user = user {
@@ -86,3 +85,69 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         self._user.onNext(user)
     }
 }
+
+
+// TODO: this VM uses the new ImageProvider, once refactor is done old VM should be deleted
+class OWAvatarViewModelV2: OWAvatarViewModeling,
+                         OWAvatarViewModelingInputs,
+                         OWAvatarViewModelingOutputs {
+    
+    var inputs: OWAvatarViewModelingInputs { return self }
+    var outputs: OWAvatarViewModelingOutputs { return self }
+    
+    fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    
+    fileprivate let imageURLProvider: OWImageProviding
+    
+    var tapAvatar = PublishSubject<Void>()
+    
+    init (user: SPUser? = nil, imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+        self.imageURLProvider = imageURLProvider
+        
+        if let user = user {
+            configureUser(user: user)
+        }
+    }
+    
+    fileprivate lazy var user: Observable<SPUser> = {
+        self._user
+            .unwrap()
+    }()
+    
+    var imageType: Observable<OWImageType> {
+        self.user
+            .flatMap { [weak self] user -> Observable<URL?> in
+                guard let self = self,
+                      let imageId = user.imageId,
+                      !user.isMuted
+                else { return .empty() }
+                
+                return self.imageURLProvider.imageURL(with: imageId, size: nil)
+            }
+            .map { url in
+                guard let url = url else { return .defaultImage }
+                return .custom(url: url)
+            }
+            .asObservable()
+    }
+    
+    var showOnlineIndicator: Observable<Bool> {
+        let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
+        return user
+            .map { user in
+                let isCurrentUser = user.id == SPUserSessionHolder.session.user?.id
+                let isUserOnline = (user.online ?? false) || isCurrentUser
+                return isUserOnline && !shouldDisableOnlineIndicator
+            }
+    }
+    
+    var avatarTapped: Observable<Void> {
+        tapAvatar
+            .asObservable()
+    }
+    
+    func configureUser(user: SPUser) {
+        self._user.onNext(user)
+    }
+}
+

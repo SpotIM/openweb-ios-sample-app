@@ -15,6 +15,7 @@ protocol OWCommentCellViewModelingInputs {
 
 protocol OWCommentCellViewModelingOutputs {
     var commentVM: OWCommentViewModeling { get }
+    var id: String { get }
 }
 
 protocol OWCommentCellViewModeling: OWCellViewModel {
@@ -26,9 +27,28 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
     var inputs: OWCommentCellViewModelingInputs { return self }
     var outputs: OWCommentCellViewModelingOutputs { return self }
     
+    fileprivate var comment: SPComment? = nil
+    fileprivate var user: SPUser? = nil
+    fileprivate var replyTo: SPUser? = nil
+    
     var commentVM: OWCommentViewModeling {
-        return OWCommentViewModel()
+        if let comment = comment, let user = user {
+            return OWCommentViewModel(comment: comment, user: user, replyTo: replyTo)
+        } else {
+            return OWCommentViewModel()
+        }
     }
+    
+    var id: String = ""
+    
+    init(comment: SPComment, user: SPUser?, replyTo: SPUser?) {
+        self.comment = comment
+        self.user = user
+        self.replyTo = replyTo
+        self.id = comment.id ?? ""
+    }
+    
+    init() {}
 }
 
 extension OWCommentCellViewModel {

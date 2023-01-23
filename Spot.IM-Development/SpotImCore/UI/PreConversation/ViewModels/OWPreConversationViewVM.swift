@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 // Our sections is just a string as we will flat all the comments, replies, ads and everything into cells
-typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWConversationCellOption>
+typealias PreConversationDataSourceModel = OWAnimatableSectionModel<String, OWPreConversationCellOption>
 
 protocol OWPreConversationViewViewModelingInputs {
     // TODO: Testing - remove later and connect the actual views/actions
@@ -44,12 +44,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let imageProvider: SPImageProvider
+    fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
     
-    var _cellsViewModels = OWObservableArray<OWConversationCellOption>()
-    fileprivate var cellsViewModels: Observable<[OWConversationCellOption]> {
+    var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
+    fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
         return _cellsViewModels
             .rx_elements()
             .asObservable()
@@ -120,11 +120,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
-        imageProvider: SPImageProvider = SPCloudinaryImageProvider(apiManager: OWApiManager()),
+        imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
         preConversationData: OWPreConversationRequiredData) {
             self.servicesProvider = servicesProvider
             self.imageProvider = imageProvider
             self.preConversationData = preConversationData
+            self.populateInitialUI()
             setupObservers()
     }
 }
@@ -153,9 +154,18 @@ fileprivate extension OWPreConversationViewViewModel {
                 return self.servicesProvider
                     .netwokAPI()
                     .conversation
-                    .conversationRead(postId: postId, mode: SPCommentSortMode.best, page: SPPaginationPage.first, parentId: "", offset: 0)
+                    .conversationRead(postId: postId, mode: SPCommentSortMode.newest, page: SPPaginationPage.first, parentId: "", offset: 0)
                     .response
                     .map { response -> SPConversationReadRM? in
+                        guard let comments = response.conversation?.comments else { return nil }
+                        var viewModels = [OWPreConversationCellOption]()
+                        for comment in comments.prefix(self.numberOfMessagesToShow) {
+                            // TODO: replies
+                            let vm = OWCommentCellViewModel(comment: comment, user: response.conversation?.users?[comment.userId ?? ""], replyTo: nil)
+                            viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+                        }
+                        self._cellsViewModels.removeAll()
+                        self._cellsViewModels.append(contentsOf: viewModels)
                         return response
                     }
             }
@@ -182,5 +192,13 @@ fileprivate extension OWPreConversationViewViewModel {
             .tapped
             .bind(to: commentCreationTap)
             .disposed(by: disposeBag)
+    }
+    
+    func populateInitialUI() {
+        let skeletonCellVMs = (0 ..< numberOfMessagesToShow).map { _ in
+            return OWCommentSkeletonShimmeringCellViewModel()
+        }
+        let skeletonCells = skeletonCellVMs.map { OWPreConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
+        _cellsViewModels.append(contentsOf: skeletonCells)
     }
 }
