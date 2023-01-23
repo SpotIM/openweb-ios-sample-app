@@ -97,11 +97,11 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
     
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     
-    fileprivate let imageURLProvider: OWImageProvider
+    fileprivate let imageURLProvider: OWImageProviding
     
     var tapAvatar = PublishSubject<Void>()
     
-    init (user: SPUser? = nil, imageURLProvider: OWImageProvider = OWCloudinaryImageProvider()) {
+    init (user: SPUser? = nil, imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageURLProvider = imageURLProvider
         
         if let user = user {

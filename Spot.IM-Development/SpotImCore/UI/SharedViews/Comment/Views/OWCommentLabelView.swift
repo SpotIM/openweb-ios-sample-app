@@ -45,6 +45,11 @@ class OWCommentLabelView: UIView {
         return UILabel()
             .font(.preferred(style: .medium, of: Metrics.fontSize))
     }()
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tapGesture = UITapGestureRecognizer()
+        self.addGestureRecognizer(tapGesture)
+        return tapGesture
+    }()
     
     fileprivate var viewModel: OWCommentLabelViewModeling!
     fileprivate var disposeBag: DisposeBag!
@@ -113,7 +118,7 @@ fileprivate extension OWCommentLabelView {
         
         OWSharedServicesProvider.shared.themeStyleService()
             .style
-            .withLatestFrom(labelDataObservable) { style, data -> (OWThemeStyle, LabelState, UIColor) in
+            .withLatestFrom(labelDataObservable) { style, data -> (OWThemeStyle, OWLabelState, UIColor) in
                 return (style, data.0, data.1.color)
             }
             .subscribe { [weak self] (style, state, color) in
@@ -128,9 +133,13 @@ fileprivate extension OWCommentLabelView {
                 self.heightConstraint?.update(offset: Metrics.commentLabelViewHeight)
             })
             .disposed(by: disposeBag)
+        
+        tapGesture.rx.event.voidify()
+            .bind(to: viewModel.inputs.labelClicked)
+            .disposed(by: disposeBag)
     }
         
-    func setUIColors(state: LabelState, labelColor: UIColor, currentStyle: OWThemeStyle) {
+    func setUIColors(state: OWLabelState, labelColor: UIColor, currentStyle: OWThemeStyle) {
         // set background, border, image and text colors according to state
         let isDarkMode = currentStyle == .dark
         switch state {

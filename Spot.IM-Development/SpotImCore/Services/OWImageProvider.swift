@@ -11,11 +11,20 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-internal protocol OWImageProvider {
+internal protocol OWImageProviding {
     func imageURL(with id: String, size: CGSize?) -> Observable<URL?>
 }
 
-class OWCloudinaryImageProvider: OWImageProvider {
+class OWCloudinaryImageProvider: OWImageProviding {
+    
+    fileprivate struct Metrics {
+        static let placeholderImagePrefix = "#"
+        static let avatarPathComponent = "avatars/"
+        static let cloudinaryImageParamString = "dpr_3,c_thumb,g_face"
+        static let cloudinaryWidthPrefix = ",w_"
+        static let cloudinaryHeightPrefix = ",h_"
+        static let defaultBaseUrl = "https://images.spot.im/image/upload/"
+    }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
     
@@ -48,8 +57,10 @@ class OWCloudinaryImageProvider: OWImageProvider {
             }
             .asObservable()
     }
-    
-    fileprivate func cloudinaryURLString(_ imageSize: CGSize? = nil, baseUrl: String) -> String {
+}
+
+fileprivate extension OWCloudinaryImageProvider {
+    func cloudinaryURLString(_ imageSize: CGSize? = nil, baseUrl: String) -> String {
         var result = baseUrl.appending(Metrics.cloudinaryImageParamString)
         
         if let imageSize = imageSize {
@@ -63,17 +74,3 @@ class OWCloudinaryImageProvider: OWImageProvider {
         return result.appending("/")
     }
 }
-
-fileprivate extension OWCloudinaryImageProvider {
-    struct Metrics {
-        static let placeholderImagePrefix = "#"
-        static let avatarPathComponent = "avatars/"
-        static let cloudinaryImageParamString = "dpr_3,c_thumb,g_face"
-        static let cloudinaryWidthPrefix = ",w_"
-        static let cloudinaryHeightPrefix = ",h_"
-        static let defaultBaseUrl = "https://images.spot.im/image/upload/"
-    }
-}
-
-//SPConfigsDataSource.appConfig?.mobileSdk.fetchImageBaseUrl ?? "https://images.spot.im/image/upload/"
-
