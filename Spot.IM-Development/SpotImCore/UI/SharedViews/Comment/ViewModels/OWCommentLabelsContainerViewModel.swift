@@ -34,6 +34,7 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     
     fileprivate let _maxVisibleCommentLabels = 3 // TODO: do we want to keep it that way?
     fileprivate let servicesProvider: OWSharedServicesProviding
+    fileprivate let disposeBag = DisposeBag()
     
     init(comment: SPComment, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicerProvider
@@ -73,6 +74,21 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
                 }
             }
             .asObservable()
+    }
+    
+    func setupObservers() {
+        commentLabelsViewModels
+            .flatMapLatest { viewModels -> Observable<OWCommentLabelViewModeling> in
+                let clickOutputObservers: [Observable<OWCommentLabelViewModeling>] = viewModels
+                    .map { vm in
+                        return vm.outputs.labelClickedOutput.map { vm }
+                    }
+                return Observable.merge(clickOutputObservers)
+            }
+            .subscribe(onNext: { labelVm in
+                // TODO: Handle click on label if needed
+            })
+            .disposed(by: disposeBag)
     }
 }
 

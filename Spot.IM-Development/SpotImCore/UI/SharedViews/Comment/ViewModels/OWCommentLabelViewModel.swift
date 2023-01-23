@@ -13,12 +13,13 @@ import UIKit
 typealias CommentLabelsSectionsConfig = Dictionary<String, SPCommentLabelsSectionConfiguration>
 
 protocol OWCommentLabelViewModelingInputs {
-    // TODO: click ?
+    var labelClicked: PublishSubject<Void> { get }
 }
 
 protocol OWCommentLabelViewModelingOutputs {
     var commentLabelSettings: Observable<OWCommentLabelSettings> { get }
     var state: Observable<OWLabelState> { get }
+    var labelClickedOutput: Observable<Void> { get }
 }
 
 protocol OWCommentLabelViewModeling {
@@ -50,5 +51,10 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
             // TODO: for now only implement read only mode for displaying label. When create comment is developed should add selected & not selected by clicks
             .map { _ in return .readOnly }
             .asObservable()
+    }
+    
+    var labelClicked = PublishSubject<Void>()
+    var labelClickedOutput: Observable<Void> {
+        labelClicked.asObservable()
     }
 }
