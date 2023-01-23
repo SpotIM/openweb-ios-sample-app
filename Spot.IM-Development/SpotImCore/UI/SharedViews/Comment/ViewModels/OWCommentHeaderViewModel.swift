@@ -120,7 +120,11 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var badgeTitle: Observable<String> {
         Observable.combineLatest(_unwrappedUser, conversationConfig) { [weak self] user, conversationConfig in
                 guard let self = self else { return "" }
-            return self.userBadgeService.userBadgeText(user: user, conversationConfig: conversationConfig)?.uppercased() ?? ""
+            
+            if case .badge(let title) = self.userBadgeService.userBadgeText(user: user, conversationConfig: conversationConfig) {
+                return title.uppercased()
+            }
+            return ""
         }
     }
     
