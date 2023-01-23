@@ -27,28 +27,19 @@ class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModeli
     var inputs: OWCommentCellViewModelingInputs { return self }
     var outputs: OWCommentCellViewModelingOutputs { return self }
     
-    fileprivate var comment: SPComment? = nil
-    fileprivate var user: SPUser? = nil
-    fileprivate var replyTo: SPUser? = nil
-    
-    var commentVM: OWCommentViewModeling {
-        if let comment = comment, let user = user {
-            return OWCommentViewModel(comment: comment, user: user, replyTo: replyTo)
-        } else {
-            return OWCommentViewModel()
-        }
-    }
+    let commentVM: OWCommentViewModeling
     
     var id: String = ""
     
-    init(comment: SPComment, user: SPUser?, replyTo: SPUser?) {
-        self.comment = comment
-        self.user = user
-        self.replyTo = replyTo
-        self.id = comment.id ?? ""
+    init(data: OWCommentRequiredData) {
+        self.id = data.comment.id ?? ""
+    
+        self.commentVM = OWCommentViewModel(data: data)
     }
     
-    init() {}
+    init() {
+        self.commentVM = OWCommentViewModel()
+    }
 }
 
 extension OWCommentCellViewModel {

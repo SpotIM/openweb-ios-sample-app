@@ -22,6 +22,9 @@ protocol OWCommentViewModelingOutputs {
     var commentHeaderVM: OWCommentHeaderViewModeling { get }
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
     var contentVM: OWCommentContentViewModeling { get }
+    var commentEngagementVM: OWCommentEngagementViewModeling { get }
+    
+    var comment: SPComment { get }
 }
 
 protocol OWCommentViewModeling {
@@ -49,12 +52,16 @@ class OWCommentViewModel: OWCommentViewModeling,
     var commentHeaderVM: OWCommentHeaderViewModeling
     var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
     var contentVM: OWCommentContentViewModeling
+    var commentEngagementVM: OWCommentEngagementViewModeling
+    var comment: SPComment
     
-    init(comment: SPComment, user: SPUser, replyTo: SPUser?) {
-        commentUserVM = OWCommentUserViewModel(user: user, imageProvider: nil)
-        commentHeaderVM = OWCommentHeaderViewModel(user: user, replyTo: replyTo, model: comment)
-        commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: comment)
-        contentVM = OWCommentContentViewModel(comment: comment)
+    init(data: OWCommentRequiredData) {
+        commentUserVM = OWCommentUserViewModel(user: data.user, imageProvider: nil)
+        commentHeaderVM = OWCommentHeaderViewModel(data: data)
+        commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
+        contentVM = OWCommentContentViewModel(comment: data.comment)
+        commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? SPComment.Rank())
+        comment = data.comment
     }
     
     init() {
@@ -62,5 +69,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentHeaderVM = OWCommentHeaderViewModel()
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
         contentVM = OWCommentContentViewModel()
+        commentEngagementVM = OWCommentEngagementViewModel()
+        comment = SPComment()
     }
 }
