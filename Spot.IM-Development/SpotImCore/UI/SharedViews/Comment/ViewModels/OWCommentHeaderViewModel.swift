@@ -117,15 +117,23 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             }
             .unwrap()
     }
-    var badgeTitle: Observable<String> {
-        Observable.combineLatest(_unwrappedUser, conversationConfig) { [weak self] user, conversationConfig in
-                guard let self = self else { return "" }
-            
-            if case .badge(let title) = self.userBadgeService.userBadgeText(user: user, conversationConfig: conversationConfig) {
-                return title.uppercased()
+    
+    fileprivate var _badgeType: Observable<OWUserBadgeType> {
+        _unwrappedUser
+            .flatMap { [weak self] user -> Observable<OWUserBadgeType> in
+                guard let self = self else { return .empty() }
+                return self.userBadgeService.userBadgeTextObservable(user: user)
             }
-            return ""
-        }
+    }
+    
+    var badgeTitle: Observable<String> {
+        _badgeType
+            .map { badgeType in
+                if case .badge(let title) = badgeType {
+                    return title.uppercased()
+                }
+                return ""
+            }
     }
     
     var nameText: Observable<String> {
