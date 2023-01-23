@@ -18,7 +18,7 @@ protocol OWCommentLabelViewModelingInputs {
 
 protocol OWCommentLabelViewModelingOutputs {
     var commentLabelSettings: Observable<OWCommentLabelSettings> { get }
-    var state: Observable<LabelState> { get }
+    var state: Observable<OWLabelState> { get }
 }
 
 protocol OWCommentLabelViewModeling {
@@ -45,7 +45,7 @@ class OWCommentLabelViewModel: OWCommentLabelViewModeling,
             .asObservable()
     }
     
-    var state: Observable<LabelState> {
+    var state: Observable<OWLabelState> {
         _setting
             // TODO: for now only implement read only mode for displaying label. When create comment is developed should add selected & not selected by clicks
             .map { _ in return .readOnly }

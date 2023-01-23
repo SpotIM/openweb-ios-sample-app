@@ -33,14 +33,18 @@ class OWCommentLabelsContainerViewModel: OWCommentLabelsContainerViewModeling,
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     
     fileprivate let _maxVisibleCommentLabels = 3 // TODO: do we want to keep it that way?
+    fileprivate let servicesProvider: OWSharedServicesProviding
     
-    init(comment: SPComment) {
+    init(comment: SPComment, servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicerProvider
         _comment.onNext(comment)
     }
-    init() {}
+    init(servicerProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicerProvider
+    }
     
     fileprivate var _commentLabelsSectionsConfig: Observable<CommentLabelsSectionsConfig> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
+        self.servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> CommentLabelsSectionsConfig? in
                 guard let sharedConfig = config.shared,

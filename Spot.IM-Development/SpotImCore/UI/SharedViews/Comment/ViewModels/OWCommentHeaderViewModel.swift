@@ -60,7 +60,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
     
     init(user: SPUser, replyTo: SPUser?, model: SPComment,
-         imageProvider: OWImageProvider = OWCloudinaryImageProvider(),
+         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          userBadgeService: OWUserBadgeServicing = OWUserBadgeService()
     ) {

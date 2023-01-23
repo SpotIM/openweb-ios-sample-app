@@ -11,11 +11,11 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-internal protocol OWImageProvider {
+internal protocol OWImageProviding {
     func imageURL(with id: String, size: CGSize?) -> Observable<URL?>
 }
 
-class OWCloudinaryImageProvider: OWImageProvider {
+class OWCloudinaryImageProvider: OWImageProviding {
     
     fileprivate struct Metrics {
         static let placeholderImagePrefix = "#"
