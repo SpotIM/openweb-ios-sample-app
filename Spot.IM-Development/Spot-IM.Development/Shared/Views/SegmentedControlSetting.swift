@@ -78,10 +78,10 @@ extension Reactive where Base: SegmentedControlSetting {
     }
     
     var selectedSegmentIndex: ControlProperty<Int> {
-        value
+        return value
     }
 
-    var value: ControlProperty<Int> {
+    fileprivate var value: ControlProperty<Int> {
         return base.segmentedControl.rx.controlProperty(editingEvents: .valueChanged) { segmentedControl in
             segmentedControl.selectedSegmentIndex
         } setter: { segmentedControl, value in

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.1] - 2023-01-11
+### Features
+- Added an option to mute user straight from the mobile application
+- Comment and reply counter in the comment creation screen
+### Fixed
+- Extra space below the post button in the comment creation screen in case there is a bottom bar controller
+- Overlap in comment creation screen when writing a comment with a long text
+- Extra space under post button when there is a tab bar in that screen
+### Changes
+- Removed Alamofire. One less dependency.
+
 ## [1.18.0] - 2022-12-08
 ### Features
 - Support mute feature.
