@@ -12,7 +12,6 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentRatingViewModelingInputs {
-    // TODO: handle taps!    
     var tapRankUp: PublishSubject<Void> { get }
     var tapRankDown: PublishSubject<Void> { get }
 }
@@ -61,8 +60,8 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             .asObservable()
     }
     
-    init () {
-        self.sharedServiceProvider = OWSharedServicesProvider.shared
+    init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.sharedServiceProvider = sharedServiceProvider
     }
     
     init(model: OWCommentVotingModel, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
