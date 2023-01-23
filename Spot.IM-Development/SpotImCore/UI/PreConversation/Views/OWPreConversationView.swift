@@ -240,7 +240,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.changeSizeAtIndex
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .bottom)
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
                 })
                 .disposed(by: disposeBag)
         
