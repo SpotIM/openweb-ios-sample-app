@@ -107,6 +107,7 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
     var outputs: OWAvatarViewModelingOutputs { return self }
     
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)
     
     fileprivate let imageURLProvider: OWImageProviding
     
@@ -159,6 +160,10 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
     
     func configureUser(user: SPUser) {
         self._user.onNext(user)
+    }
+    
+    func configure(isAvatartVisible isVisible: Bool) {
+        self._isAvatartVisible.onNext(isVisible)
     }
 }
 
