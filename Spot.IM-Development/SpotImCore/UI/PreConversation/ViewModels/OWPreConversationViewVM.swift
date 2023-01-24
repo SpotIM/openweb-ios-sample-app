@@ -176,7 +176,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         for (index, comment) in comments.prefix(self.numberOfMessagesToShow).enumerated() {
                             // TODO: replies
                             guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
-                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
+                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, lineLimit: 4))
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                             if (index < self.numberOfMessagesToShow - 1) {
                                 viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))

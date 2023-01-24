@@ -43,14 +43,6 @@ class OWCommentTextView: UILabel {
 }
 
 extension OWCommentTextView: UIGestureRecognizerDelegate {
-    
-    fileprivate func setupGestureRecognizer() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        tap.delegate = self
-        self.addGestureRecognizer(tap)
-        self.isUserInteractionEnabled = true
-    }
-    
     @objc
     func handleTap(gesture: UITapGestureRecognizer) {
         if isTarget(substring: viewModel.outputs.readMoreText, destinationOf: gesture) {
@@ -61,8 +53,21 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
             checkURLTap(in: gesture.location(in: self))
         }
     }
+}
+
+fileprivate extension OWCommentTextView {
+    func setupUI() {
+    }
     
-    fileprivate func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
+    func setupObservers() {
+        viewModel.outputs.attributedString
+            .subscribe(onNext: { [weak self] attString in
+                self?.attributedText = attString
+            })
+            .disposed(by: disposeBag)        
+    }
+    
+    func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
         guard let string = self.attributedText?.string else { return false }
         
         guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
@@ -72,24 +77,18 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
         return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
     }
     
-    fileprivate func checkURLTap(in point: CGPoint) {
+    func checkURLTap(in point: CGPoint) {
         let index = self.indexOfAttributedTextCharacterAtPoint(point: point)
         let url = viewModel.outputs.activeURLs.first { $0.key.contains(index) }?.value
 
         guard let activeUrl = url else { return }
         viewModel.inputs.urlTap.onNext(activeUrl)
     }
-}
-
-fileprivate extension OWCommentTextView {
-    func setupUI() {
-    }
     
-    func setupObservers() {
-        viewModel.outputs.attributedString
-            .bind(onNext: { [weak self] attString in
-                self?.attributedText = attString
-            })
-            .disposed(by: disposeBag)
+    func setupGestureRecognizer() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        tap.delegate = self
+        self.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
     }
 }
