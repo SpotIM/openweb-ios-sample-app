@@ -23,7 +23,6 @@ protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString?> { get }
     var readMoreText: String { get }
     var readLessText: String { get }
-    var height: Observable<CGFloat> { get }
     var activeURLs: [NSRange: URL] { get }
     var urlClickedOutput: Observable<URL> { get }
 }
@@ -86,15 +85,26 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate var widthObservable: Observable<CGFloat> {
         width.asObservable()
     }
+    
 //    fileprivate var _lines: Observable<[CTLine]> {
-//        Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, width in
-//            return messageAttributedString.getLines(with: width)
+//        widthObservable
+//            .withLatestFrom(fullAttributedString) { currentWidth, messageAttributedString in
+//            print("NOGAH: width \(currentWidth)")
+//            return messageAttributedString.getLines(with: currentWidth)
+//        }
+//        .asObservable()
+//    }
+    
+//    fileprivate var _lines: Observable<[CTLine]> {
+//        Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, currentWidth in
+//            print("NOGAH: width \(currentWidth)")
+//            return messageAttributedString.getLines(with: currentWidth)
 //        }
 //        .asObservable()
 //    }
     fileprivate var _lines: Observable<[CTLine]> {
         fullAttributedString.map { messageAttributedString in
-            let width = 358.0 // TODO: get real width
+            let width = 361.0 // TODO: get real width
             return messageAttributedString.getLines(with: width)
         }
         .asObservable()
@@ -127,7 +137,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
     
     var textHeightChange: Observable<Void> {
-        Observable.merge(self.readMoreTap, self.readMoreTap)
+        Observable.merge(self.heighChange)
     }
     
     var height: Observable<CGFloat> {
@@ -137,6 +147,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .unwrap()
         .asObservable()
     }
+    var heighChange = PublishSubject<Void>()
     
     var urlTap = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
@@ -148,14 +159,20 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 fileprivate extension OWCommentTextViewModel {
     func setupObservers() {
         readMoreTap
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 self?._textState.onNext(.expanded)
             })
             .disposed(by: disposeBag)
         
         readLessTap
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 self?._textState.onNext(.collapsed)
+            })
+            .disposed(by: disposeBag)
+        
+        height
+            .subscribe(onNext: {_ in
+                self.heighChange.onNext()
             })
             .disposed(by: disposeBag)
     }
@@ -169,7 +186,6 @@ fileprivate extension OWCommentTextViewModel {
         paragraphStyle.lineSpacing = 3.5
 
         var attributes: [NSAttributedString.Key: Any]
-        // TODO: color
         attributes = [
             .font: UIFont.preferred(style: .regular, of: OWCommentContentView.Metrics.fontSize),
             .foregroundColor: OWColorPalette.shared.color(type: .foreground1Color, themeStyle: style),
@@ -181,7 +197,7 @@ fileprivate extension OWCommentTextViewModel {
     
     func actionStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
-        attributes[.foregroundColor] = OWColorPalette.shared.color(type: .linkColor, themeStyle: style)
+        attributes[.foregroundColor] = OWColorPalette.shared.color(type: .buttonTextColor, themeStyle: style)
 
         return attributes
     }

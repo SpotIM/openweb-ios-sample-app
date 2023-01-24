@@ -48,13 +48,13 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     fileprivate let lineLimit: Int
-    fileprivate let imageProvider: OWImageProvider
+    fileprivate let imageProvider: OWImageProviding
     
     fileprivate let editedSuffix: NSAttributedString = NSAttributedString(string: LocalizationManager.localizedString(key: "Edited"), attributes: Metrics.editedTextAttributes)
     
     var collapsableLabelViewModel: OWCommentTextViewModeling
     
-    init(comment: SPComment, lineLimit: Int = 3, imageProvider: OWImageProvider = OWCloudinaryImageProvider()) { // TODO: pass line limit
+    init(comment: SPComment, lineLimit: Int = 3, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) { // TODO: pass line limit
         self.lineLimit = lineLimit
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, lineLimit: lineLimit)
         self.imageProvider = imageProvider
