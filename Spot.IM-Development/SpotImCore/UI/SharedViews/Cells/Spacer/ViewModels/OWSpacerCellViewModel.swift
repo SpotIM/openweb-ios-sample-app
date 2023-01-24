@@ -14,7 +14,7 @@ protocol OWSpacerCellViewModelingInputs {
 }
 
 protocol OWSpacerCellViewModelingOutputs {
-    
+    var id: String { get }
 }
 
 protocol OWSpacerCellViewModeling: OWCellViewModel {
@@ -25,6 +25,9 @@ protocol OWSpacerCellViewModeling: OWCellViewModel {
 class OWSpacerCellViewModel: OWSpacerCellViewModeling, OWSpacerCellViewModelingInputs, OWSpacerCellViewModelingOutputs {
     var inputs: OWSpacerCellViewModelingInputs { return self }
     var outputs: OWSpacerCellViewModelingOutputs { return self }
+    
+    // Unique identifier
+    let id: String = UUID().uuidString
 }
 
 extension OWSpacerCellViewModel {

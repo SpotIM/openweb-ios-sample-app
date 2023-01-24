@@ -58,10 +58,25 @@ extension UIView {
         self.isUserInteractionEnabled = isEnabled
         return self
     }
+    
+    @discardableResult func isHidden(_ hidden: Bool) -> Self {
+        self.isHidden = hidden
+        return self
+    }
+    
+    @discardableResult func tintAdjustmentMode(_ tintAdjustmentMode: TintAdjustmentMode) -> Self {
+        self.tintAdjustmentMode = tintAdjustmentMode
+        return self
+    }
+    
+    @discardableResult func clipsToBounds(_ clipsToBounds: Bool) -> Self {
+        self.clipsToBounds = clipsToBounds
+        return self
+    }
 }
 
 extension UILabel {
-    @discardableResult func font(_ font: UIFont) -> UILabel {
+    @discardableResult func font(_ font: UIFont) -> Self {
         self.font = font
         return self
     }
@@ -76,7 +91,7 @@ extension UILabel {
         return self
     }
     
-    @discardableResult func textColor(_ color: UIColor) -> UILabel {
+    @discardableResult func textColor(_ color: UIColor) -> Self {
         self.textColor = color
         return self
     }
@@ -127,11 +142,6 @@ extension UILabel {
         
         return self
     }
-    
-    @discardableResult func isHidden(_ hidden: Bool) -> UILabel {
-        self.isHidden = hidden
-        return self
-    }
 }
 
 extension UIButton {
@@ -162,6 +172,31 @@ extension UIButton {
     
     @discardableResult func horizontalAlignment(_ align: UIControl.ContentHorizontalAlignment) -> Self {
         self.contentHorizontalAlignment = align
+        return self
+    }
+    
+    @discardableResult func image(_ image: UIImage?, state: UIControl.State) -> Self {
+        self.setImage(image, for: state)
+        return self
+    }
+    
+    @discardableResult func imageEdgeInsets(_ imageEdgeInsets: UIEdgeInsets) -> Self {
+        self.imageEdgeInsets = imageEdgeInsets
+        return self
+    }
+    
+    @discardableResult func setTitle(_ title: String?, state: UIControl.State) -> Self {
+        self.setTitle(title, for: state)
+        return self
+    }
+    
+    @discardableResult func setTitleColor(_ color: UIColor?, state: UIControl.State) -> Self {
+        self.setTitleColor(color, for: state)
+        return self
+    }
+    
+    @discardableResult func setTitleFont(_ font: UIFont?) -> Self {
+        self.titleLabel?.font = font
         return self
     }
 }
@@ -253,4 +288,19 @@ extension UITextView {
     }
 }
 
-
+extension UIStackView {
+    @discardableResult func axis(_ axis: NSLayoutConstraint.Axis) -> Self {
+        self.axis = axis
+        return self
+    }
+    
+    @discardableResult func alignment(_ alignment: UIStackView.Alignment) -> Self {
+        self.alignment = alignment
+        return self
+    }
+    
+    @discardableResult func spacing(_ spacing: CGFloat) -> Self {
+        self.spacing = spacing
+        return self
+    }
+}
