@@ -73,7 +73,8 @@ internal final class ArticleWebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .groupTableViewBackground
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        
         title = "Article"
         setup()
         if (spotId == "sp_mobileGuest") {

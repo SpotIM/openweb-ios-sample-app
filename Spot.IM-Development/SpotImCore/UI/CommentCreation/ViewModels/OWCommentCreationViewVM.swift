@@ -14,6 +14,7 @@ protocol OWCommentCreationViewViewModelingInputs {
 }
 
 protocol OWCommentCreationViewViewModelingOutputs {
+    var commentType: OWCommentCreationType { get }
 }
 
 protocol OWCommentCreationViewViewModeling {
@@ -26,12 +27,15 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
     
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate let commentCreationData: OWCommentCreationRequiredData
+    fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
+    
+    var commentType: OWCommentCreationType
 
     init (commentCreationData: OWCommentCreationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
-        self.commentCreationData = commentCreationData
+        self._commentCreationData.onNext(commentCreationData)
+        commentType = commentCreationData.commentCreationType
         setupObservers()
     }
 }
