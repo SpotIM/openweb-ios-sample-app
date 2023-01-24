@@ -98,7 +98,6 @@ class OWCommentRatingView: UIView {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         
-        prepareForReuse()
         setupObservers()
     }
     

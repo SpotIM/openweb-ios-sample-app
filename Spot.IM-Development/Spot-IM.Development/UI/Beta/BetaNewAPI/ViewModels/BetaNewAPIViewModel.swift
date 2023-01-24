@@ -21,6 +21,7 @@ protocol BetaNewAPIViewModelingInputs {
     var selectPresetTapped: PublishSubject<Void> { get }
     var doneSelectPresetTapped: PublishSubject<Void> { get }
     var settingsTapped: PublishSubject<Void> { get }
+    var authenticationTapped: PublishSubject<Void> { get }
     var selectedConversationPresetIndex: PublishSubject<Int> { get }
 }
 
@@ -35,6 +36,7 @@ protocol BetaNewAPIViewModelingOutputs {
     var openUIViews: Observable<SDKConversationDataModel> { get }
     var openMiscellaneous: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
+    var openAuthentication: Observable<Void> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -60,6 +62,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let miscellaneousTapped = PublishSubject<Void>()
     let selectPresetTapped = PublishSubject<Void>()
     let settingsTapped = PublishSubject<Void>()
+    let authenticationTapped = PublishSubject<Void>()
     let doneSelectPresetTapped = PublishSubject<Void>()
     
     fileprivate let _shouldShowSelectPreset = BehaviorSubject<Bool>(value: false)
@@ -99,6 +102,11 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     fileprivate let _openSettings = PublishSubject<Void>()
     var openSettings: Observable<Void> {
         return _openSettings.asObservable()
+    }
+    
+    fileprivate let _openAuthentication = PublishSubject<Void>()
+    var openAuthentication: Observable<Void> {
+        return _openAuthentication.asObservable()
     }
     
     lazy var title: String = {
@@ -157,12 +165,17 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _openSettings)
             .disposed(by: disposeBag)
         
+        authenticationTapped
+            .bind(to: _openAuthentication)
+            .disposed(by: disposeBag)
+        
         Observable.merge(uiFlowsTapped.voidify(),
                          uiViewsTapped.voidify(),
                          miscellaneousTapped.voidify(),
                          settingsTapped.voidify(),
-                         enteredSpotId.voidify(),
-                         enteredPostId.voidify(),
+                         authenticationTapped.voidify(),
+                         enteredSpotId.voidify().skip(1),
+                         enteredPostId.voidify().skip(1),
                          doneSelectPresetTapped)
             .subscribe(onNext: { [weak self] _ in
                 

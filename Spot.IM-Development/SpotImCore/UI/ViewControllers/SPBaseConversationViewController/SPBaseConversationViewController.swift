@@ -916,8 +916,8 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         case .share(let commentId, let replyingToID):
             showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
             break
-        case .mute(let userId):
-            showCommentMuteFlow(userId)
+        case .mute(let commentId, let replyingToID, let userId):
+            showCommentMuteFlow(commentId, replyingToID: replyingToID, userId: userId)
         }
     }
     
@@ -980,7 +980,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
     
-    private func showCommentMuteFlow(_ userId: String) {
+    private func showCommentMuteFlow(_ commentId: String, replyingToID: String?, userId: String) {
         let muteAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Mute"),
             style: .destructive) { [weak self] _ in
@@ -995,6 +995,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                         )
                     }
                 }
+                SPAnalyticsHolder.default.log(event: .commentMuteClicked(messageId: commentId, relatedMessageId: replyingToID, muteUserId: userId), source: .conversation)
         }
         
         let cancelAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
