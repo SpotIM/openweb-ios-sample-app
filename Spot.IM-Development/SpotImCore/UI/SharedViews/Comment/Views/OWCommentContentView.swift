@@ -20,7 +20,6 @@ class OWCommentContentView: UIView {
     fileprivate lazy var textLabel: OWCommentTextView = {
        return OWCommentTextView()
             .numberOfLines(0)
-//            .font(.preferred(style: .regular, of: Metrics.fontSize))
     }()
     
     fileprivate lazy var mediaView: CommentMediaView = {
@@ -64,9 +63,7 @@ fileprivate extension OWCommentContentView {
         }
     }
     
-    func setupObservers() {
-//        viewModel.inputs.commentTextLabelWidth.onNext(textLabel.frame.width) // TODO via rx on the label width?
-        
+    func setupObservers() {        
         viewModel.outputs.image
             .subscribe(onNext: { [weak self] imageType in
                 guard let self = self,
