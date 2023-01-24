@@ -187,7 +187,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
             commentLabelTopConstraint = make.top.equalTo(replyingLabel.OWSnp.bottom).offset(Theme.commentTopOffset).constraint
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
             make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
-            make.bottom.greaterThanOrEqualToSuperview()
+            make.bottom.equalToSuperview().offset(-Theme.commentBottomOffset)
         }
     }
 }
@@ -197,6 +197,7 @@ private enum Theme {
     static let headerTitleHeight: CGFloat = 40.0
     static let topOffset: CGFloat = 22.0
     static let replyingTopOffset: CGFloat = 15.0
+    static let commentBottomOffset: CGFloat = 10.0
     static let commentTopOffset: CGFloat = 16.0
     static let trailingOffset: CGFloat = 24.0
     static let leadingOffset: CGFloat = 15.0

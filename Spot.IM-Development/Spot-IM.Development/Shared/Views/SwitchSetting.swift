@@ -79,10 +79,10 @@ extension Reactive where Base: SwitchSetting {
     }
 
     var isOn: ControlProperty<Bool> {
-        value
+        return value
     }
 
-    var value: ControlProperty<Bool> {
+    fileprivate var value: ControlProperty<Bool> {
         return base.switchSetting.rx.controlProperty(editingEvents: .valueChanged) { switchSetting in
             switchSetting.isOn
         } setter: { switchSetting, value in
