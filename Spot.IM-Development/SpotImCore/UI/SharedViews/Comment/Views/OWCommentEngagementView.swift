@@ -53,6 +53,10 @@ class OWCommentEngagementView: UIView {
         votingView.configure(with: viewModel.outputs.votingVM)
         setupObservers()
     }
+    
+    func prepareForReuse() {
+        votingView.prepareForReuse()
+    }
 }
 
 fileprivate extension OWCommentEngagementView {

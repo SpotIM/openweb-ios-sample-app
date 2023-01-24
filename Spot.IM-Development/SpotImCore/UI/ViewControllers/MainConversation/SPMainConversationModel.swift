@@ -306,11 +306,12 @@ final class SPMainConversationModel {
         }
         
         if availability.isMuteable,
+           SPUserSessionHolder.session.user?.registered ?? false,
            let authorId = viewModel?.authorId {
         let muteAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Mute"),
             style: .default) { [weak self] _ in
-                self?.commentsActionDelegate?.prepareFlowForAction(.mute(userId: authorId), sender: sender)
+                self?.commentsActionDelegate?.prepareFlowForAction(.mute(commentId: commentId, replyingToID: replyingToID, userId: authorId), sender: sender)
             }
             actions.append(muteAction)
         }
@@ -593,7 +594,7 @@ enum ActionType {
     case report(commentId: String, replyingToID: String?)
     case edit(commentId: String, replyingToID: String?)
     case share(commentId: String, replyingToID: String?)
-    case mute(userId: String)
+    case mute(commentId: String, replyingToID: String?, userId: String)
 }
 
 enum RealTimeViewType {

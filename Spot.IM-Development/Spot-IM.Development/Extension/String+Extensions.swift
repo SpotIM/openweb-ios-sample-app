@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension String {
     enum TruncationPosition {
@@ -30,5 +31,24 @@ extension String {
         case .tail:
             return self.prefix(limit) + leader
         }
+    }
+    
+    var blueRoundedButton: UIButton {
+        return self.button(color: ColorPalette.shared.color(type: .blue))
+    }
+    
+    var darkGrayRoundedButton: UIButton {
+        return self.button(color: ColorPalette.shared.color(type: .darkGrey))
+    }
+    
+    func button(color: UIColor) -> UIButton {
+        return self
+            .button
+            .adjustsFontSizeToFitWidth
+            .backgroundColor(color)
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
+            .corner(radius: 16)
+            .withHorizontalPadding(10)
+            .font(FontBook.paragraphBold)
     }
 }
