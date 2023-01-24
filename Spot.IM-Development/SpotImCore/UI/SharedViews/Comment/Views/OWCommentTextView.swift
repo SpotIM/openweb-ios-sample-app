@@ -83,9 +83,6 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
 
 fileprivate extension OWCommentTextView {
     func setupUI() {
-//        self.OWSnp.makeConstraints { make in
-//            make.height.equalTo(0)
-//        }
     }
     
     func setupObservers() {
@@ -94,15 +91,5 @@ fileprivate extension OWCommentTextView {
                 self?.attributedText = attString
             })
             .disposed(by: disposeBag)
-        
-//        viewModel.outputs.height
-//            .subscribe(onNext: { height in
-//                print("NOGAH - change height: \(height)")
-//
-//                self.OWSnp.updateConstraints { make in
-//                    make.height.equalTo(height)
-//                }
-//            })
-//            .disposed(by: disposeBag)
     }
 }
