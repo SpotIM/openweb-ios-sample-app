@@ -74,6 +74,8 @@
 		16D8D4BD28C88D0600895FCB /* OWCommentContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */; };
 		24000A35268AEADD004C2A78 /* CommentMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24000A34268AEADD004C2A78 /* CommentMediaView.swift */; };
 		2414F82D27EC682000722D2B /* OWAvatarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414F82C27EC682000722D2B /* OWAvatarViewModel.swift */; };
+		241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */; };
+		241AF9F5295B382A00A941C1 /* OWCommentEngagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */; };
 		241B07572643CCA000253944 /* image_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 241B07562643CCA000253944 /* image_placeholder.png */; };
 		241B075C2643D99200253944 /* GifWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B075B2643D99200253944 /* GifWebView.swift */; };
 		2421B8FD2670A69200B0C9FF /* SPProfileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421B8FC2670A69200B0C9FF /* SPProfileRequest.swift */; };
@@ -95,6 +97,16 @@
 		24993F8E28CF0CC000452AF8 /* OWAnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */; };
 		249BCDFA27F5962E00703CC9 /* OWArticleHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */; };
 		249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */; };
+		249DF28C295C397000F5D69A /* OWCommentRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF28B295C397000F5D69A /* OWCommentRatingView.swift */; };
+		249DF28E295C398800F5D69A /* OWCommentRatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF28D295C398800F5D69A /* OWCommentRatingViewModel.swift */; };
+		249DF291295C70C900F5D69A /* OWSpacerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF290295C70C900F5D69A /* OWSpacerCell.swift */; };
+		249DF2952964140E00F5D69A /* OWCommentCreationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF2942964140E00F5D69A /* OWCommentCreationType.swift */; };
+		249DF2972964182B00F5D69A /* OWCommentRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF2962964182B00F5D69A /* OWCommentRequiredData.swift */; };
+		249DF29929655C5E00F5D69A /* OWCommentSortMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF29829655C5E00F5D69A /* OWCommentSortMode.swift */; };
+		249DF29D296C1E7F00F5D69A /* OWUserBadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */; };
+		249DF29F296D560E00F5D69A /* OWCommentLabelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF29E296D560E00F5D69A /* OWCommentLabelsContainerView.swift */; };
+		249DF2A1296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF2A0296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift */; };
+		249DF2A3296D95C500F5D69A /* OWImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF2A2296D95C500F5D69A /* OWImageProvider.swift */; };
 		24A24A10291B9D7000D72755 /* OWSafariTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */; };
 		24A24A14291BABB300D72755 /* OWSafariViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A13291BABB300D72755 /* OWSafariViewController.swift */; };
 		24A24A18291BAC7C00D72755 /* OWSafariViewControllerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */; };
@@ -110,12 +122,17 @@
 		24B32BAE28C8697600FB701C /* OWPreConversationFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */; };
 		24B32BB028C86A0700FB701C /* OWPreConversationFooterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BAF28C86A0700FB701C /* OWPreConversationFooterViewModel.swift */; };
 		24B32BB428C8B5A600FB701C /* OWPreConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B32BB328C8B5A600FB701C /* OWPreConversationCoordinator.swift */; };
+		24B516DB294B062A00EBD965 /* OWCommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B516DA294B062A00EBD965 /* OWCommentLabelView.swift */; };
+		24B516DD294B077F00EBD965 /* OWCommentLabelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B516DC294B077F00EBD965 /* OWCommentLabelViewModel.swift */; };
 		24B88435261C922900EB7BCB /* CommentLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88434261C922900EB7BCB /* CommentLabelView.swift */; };
 		24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */; };
 		24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */; };
 		24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */; };
 		24BB7C1A290FD50900F49BAA /* OWPreConversationHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BB7C19290FD50900F49BAA /* OWPreConversationHeaderViewModel.swift */; };
 		24C3423829067133004189EA /* OWPreConversationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3423729067133004189EA /* OWPreConversationHeaderView.swift */; };
+		24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535D293E20BC00A74427 /* OWCommentCell.swift */; };
+		24E753602940A26F00A74427 /* OWCommentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */; };
+		24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */; };
 		3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E0572874955000E6F1AC /* OWConversationCoordinator.swift */; };
 		3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05C287598F800E6F1AC /* OWConversationView.swift */; };
 		3D08E05F2875994300E6F1AC /* OWConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D08E05E2875994300E6F1AC /* OWConversationVC.swift */; };
@@ -576,13 +593,18 @@
 		8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE882295069B400C8677C /* SwitchSetting.swift */; };
 		9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */; };
 		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
-		9E53758629783E1200C85983 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758529783E1200C85983 /* PickerSetting.swift */; };
-		9E53758829783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758729783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
-		9E53758A29783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758929783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
-		9E9914CE29754A50000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9E9914D12975928B000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		9E9914D5297593A1000EE0F1 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
+		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
+		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
+		9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
+		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77C297E84F100814648 /* PickerSetting.swift */; };
+		9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77D297E84F100814648 /* TextFieldSetting.swift */; };
+		9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE780297E851400814648 /* UIColor+Extensions.swift */; };
 		E685ACAC25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */; };
 		E685ACB925CAE6C4008FECDB /* sp_config_response.json in Resources */ = {isa = PBXBuildFile; fileRef = E685ACB825CAE6C3008FECDB /* sp_config_response.json */; };
 		E685ACC025CAE705008FECDB /* SPTestsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E685ACBF25CAE705008FECDB /* SPTestsUtils.swift */; };
@@ -676,6 +698,8 @@
 		16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentContentViewModel.swift; sourceTree = "<group>"; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
 		2414F82C27EC682000722D2B /* OWAvatarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAvatarViewModel.swift; sourceTree = "<group>"; };
+		241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementView.swift; sourceTree = "<group>"; };
+		241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementViewModel.swift; sourceTree = "<group>"; };
 		241B07562643CCA000253944 /* image_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = image_placeholder.png; path = SPAssets.xcassets/image_placeholder.imageset/image_placeholder.png; sourceTree = "<group>"; };
 		241B075B2643D99200253944 /* GifWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifWebView.swift; sourceTree = "<group>"; };
 		2421B8FC2670A69200B0C9FF /* SPProfileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPProfileRequest.swift; sourceTree = "<group>"; };
@@ -697,6 +721,16 @@
 		24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAnalyticsService.swift; sourceTree = "<group>"; };
 		249BCDF927F5962E00703CC9 /* OWArticleHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWArticleHeaderViewModel.swift; sourceTree = "<group>"; };
 		249BCDFD27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSummaryViewModel.swift; sourceTree = "<group>"; };
+		249DF28B295C397000F5D69A /* OWCommentRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentRatingView.swift; sourceTree = "<group>"; };
+		249DF28D295C398800F5D69A /* OWCommentRatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentRatingViewModel.swift; sourceTree = "<group>"; };
+		249DF290295C70C900F5D69A /* OWSpacerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpacerCell.swift; sourceTree = "<group>"; };
+		249DF2942964140E00F5D69A /* OWCommentCreationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationType.swift; sourceTree = "<group>"; };
+		249DF2962964182B00F5D69A /* OWCommentRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentRequiredData.swift; sourceTree = "<group>"; };
+		249DF29829655C5E00F5D69A /* OWCommentSortMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentSortMode.swift; sourceTree = "<group>"; };
+		249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserBadgeService.swift; sourceTree = "<group>"; };
+		249DF29E296D560E00F5D69A /* OWCommentLabelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentLabelsContainerView.swift; sourceTree = "<group>"; };
+		249DF2A0296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentLabelsContainerViewModel.swift; sourceTree = "<group>"; };
+		249DF2A2296D95C500F5D69A /* OWImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWImageProvider.swift; sourceTree = "<group>"; };
 		24A24A0F291B9D6F00D72755 /* OWSafariTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariTabCoordinator.swift; sourceTree = "<group>"; };
 		24A24A13291BABB300D72755 /* OWSafariViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewController.swift; sourceTree = "<group>"; };
 		24A24A17291BAC7C00D72755 /* OWSafariViewControllerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSafariViewControllerOptions.swift; sourceTree = "<group>"; };
@@ -711,14 +745,18 @@
 		24B32BA828C63CFB00FB701C /* OWCommunityQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OWCommunityQuestionView.swift; path = SpotImCore/UI/PreConversation/Models/OWCommunityQuestionView.swift; sourceTree = SOURCE_ROOT; };
 		24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationFooterView.swift; sourceTree = "<group>"; };
 		24B32BAF28C86A0700FB701C /* OWPreConversationFooterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationFooterViewModel.swift; sourceTree = "<group>"; };
-		24B32BB128C8731A00FB701C /* OWPreConversationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationSettings.swift; sourceTree = "<group>"; };
 		24B32BB328C8B5A600FB701C /* OWPreConversationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationCoordinator.swift; sourceTree = "<group>"; };
+		24B516DA294B062A00EBD965 /* OWCommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentLabelView.swift; sourceTree = "<group>"; };
+		24B516DC294B077F00EBD965 /* OWCommentLabelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentLabelViewModel.swift; sourceTree = "<group>"; };
 		24B88434261C922900EB7BCB /* CommentLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentLabelView.swift; sourceTree = "<group>"; };
 		24B88456261DFAC400EB7BCB /* SPConfigurationShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPConfigurationShared.swift; sourceTree = "<group>"; };
 		24B8845B261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCommentLabelsSectionConfiguration.swift; sourceTree = "<group>"; };
 		24B885FA261F194500EB7BCB /* SPLabelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLabelConfiguration.swift; sourceTree = "<group>"; };
 		24BB7C19290FD50900F49BAA /* OWPreConversationHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationHeaderViewModel.swift; sourceTree = "<group>"; };
 		24C3423729067133004189EA /* OWPreConversationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationHeaderView.swift; sourceTree = "<group>"; };
+		24E7535D293E20BC00A74427 /* OWCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCell.swift; sourceTree = "<group>"; };
+		24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderView.swift; sourceTree = "<group>"; };
+		24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentHeaderViewModel.swift; sourceTree = "<group>"; };
 		273AD0379B9842B59C177A71 /* Pods-Shared-SpotImNoAds.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		2C9BF800CBE1B5708054E2BF /* Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig"; sourceTree = "<group>"; };
 		30B6E37C443F3D1D9FABA6D3 /* Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
@@ -1213,10 +1251,14 @@
 		9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelper.swift; sourceTree = "<group>"; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
-		9E53758529783E1200C85983 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
-		9E53758729783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
-		9E53758929783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
+		9E53758F29784D3700C85983 /* ThemeStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
+		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
+		9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
+		9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
+		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
+		9EFFE77D297E84F100814648 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
+		9EFFE780297E851400814648 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
 		BD93F797FEABA3B540FA1DF3 /* Pods-Shared-SpotImCore.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
@@ -1285,6 +1327,7 @@
 		0E1125DC2304BC48006B1489 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				9EFFE780297E851400814648 /* UIColor+Extensions.swift */,
 				0E1125D72304BC29006B1489 /* Date+extensions.swift */,
 				0E1125DD2304C127006B1489 /* String+Extensions.swift */,
 				3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */,
@@ -1339,7 +1382,9 @@
 		1628A74B28EB0D8E0019B5EC /* Comment */ = {
 			isa = PBXGroup;
 			children = (
+				24E7535C293E209600A74427 /* Views */,
 				1628A74C28EB0D8E0019B5EC /* ViewModels */,
+				249DF2962964182B00F5D69A /* OWCommentRequiredData.swift */,
 			);
 			path = Comment;
 			sourceTree = "<group>";
@@ -1355,6 +1400,7 @@
 		1628A74E28EB0D8E0019B5EC /* Spacer */ = {
 			isa = PBXGroup;
 			children = (
+				249DF28F295C709900F5D69A /* Views */,
 				1628A74F28EB0D8E0019B5EC /* ViewModels */,
 			);
 			path = Spacer;
@@ -1536,6 +1582,11 @@
 			children = (
 				16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */,
 				16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */,
+				24E753612940B01100A74427 /* OWCommentHeaderViewModel.swift */,
+				24B516DC294B077F00EBD965 /* OWCommentLabelViewModel.swift */,
+				241AF9F4295B382A00A941C1 /* OWCommentEngagementViewModel.swift */,
+				249DF28D295C398800F5D69A /* OWCommentRatingViewModel.swift */,
+				249DF2A0296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -1543,8 +1594,14 @@
 		16D8D4AE28C643F300895FCB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				24E7535F2940A26F00A74427 /* OWCommentHeaderView.swift */,
 				1628A75828EB0E220019B5EC /* OWCommentContentView.swift */,
 				1628A74428EB08540019B5EC /* OWCommentView.swift */,
+				24B516DA294B062A00EBD965 /* OWCommentLabelView.swift */,
+				24A21761295328BB00DC1CCB /* OWPaddedLabelView.swift */,
+				241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */,
+				249DF28B295C397000F5D69A /* OWCommentRatingView.swift */,
+				249DF29E296D560E00F5D69A /* OWCommentLabelsContainerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1611,6 +1668,14 @@
 			isa = PBXGroup;
 			children = (
 				445417F223685144001D0ED0 /* SPConversationSummaryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		249DF28F295C709900F5D69A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				249DF290295C70C900F5D69A /* OWSpacerCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1682,6 +1747,14 @@
 			isa = PBXGroup;
 			children = (
 				24B32BAD28C8697600FB701C /* OWPreConversationFooterView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		24E7535C293E209600A74427 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				24E7535D293E20BC00A74427 /* OWCommentCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1921,20 +1994,13 @@
 			path = OWSnapKit;
 			sourceTree = "<group>";
 		};
-		3D26B5AC28CA203900A1DAD2 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				24B32BB128C8731A00FB701C /* OWPreConversationSettings.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		3D26B5AD28CA36B100A1DAD2 /* CommentCreation */ = {
 			isa = PBXGroup;
 			children = (
 				3D26B5B028CA37E400A1DAD2 /* OWCommentCreationSettings.swift */,
 				3D26B5B528CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift */,
 				3D26B5AE28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift */,
+				249DF2942964140E00F5D69A /* OWCommentCreationType.swift */,
 			);
 			path = CommentCreation;
 			sourceTree = "<group>";
@@ -2041,7 +2107,7 @@
 		3D611B7F28C4D85C003960CE /* Beta */ = {
 			isa = PBXGroup;
 			children = (
-				9E9914CF29759239000EE0F1 /* AuthenticationPlaygroundNew */,
+				9E53759529784D9100C85983 /* AuthenticationPlayground */,
 				3D611B7528BFA8B1003960CE /* BetaNewAPI */,
 				3D611B8028C4D88F003960CE /* MockArticle */,
 				8DCBE879294F470F00C8677C /* Settings */,
@@ -2311,6 +2377,8 @@
 			children = (
 				3DB3D198282AFDD2008654CF /* FontBook.swift */,
 				3DB3D19A282AFEB4008654CF /* ColorPalette.swift */,
+				9E53758F29784D3700C85983 /* ThemeStyle.swift */,
+				9E53759129784D3E00C85983 /* ColorModel.swift */,
 			);
 			path = Style;
 			sourceTree = "<group>";
@@ -2474,6 +2542,7 @@
 			isa = PBXGroup;
 			children = (
 				3DDA9A83291A59E200FE3B86 /* OWSortingCustomizations.swift */,
+				249DF29829655C5E00F5D69A /* OWCommentSortMode.swift */,
 			);
 			path = Sorting;
 			sourceTree = "<group>";
@@ -3097,6 +3166,8 @@
 				16A12A5F260115BE00A7B3F6 /* SPWebSDKProvider.swift */,
 				73B0DE8027A90EC4008EBCE7 /* OWSubscriberBadgeService.swift */,
 				3D5561AA29532F220097A6D1 /* OWAuthorizationRecoveryService.swift */,
+				249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */,
+				249DF2A2296D95C500F5D69A /* OWImageProvider.swift */,
 				8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */,
 			);
 			path = Services;
@@ -3191,7 +3262,6 @@
 				5D697A3C22B65106001AD556 /* Products */,
 				5D697A6A22B6586C001AD556 /* Frameworks */,
 				F6D45AB80C879EE6B5C01DA4 /* Pods */,
-				3D26B5AC28CA203900A1DAD2 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -3421,7 +3491,8 @@
 		8DCBE8802950686B00C8677C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9E53758529783E1200C85983 /* PickerSetting.swift */,
+				9EFFE77C297E84F100814648 /* PickerSetting.swift */,
+				9EFFE77D297E84F100814648 /* TextFieldSetting.swift */,
 				8DCBE882295069B400C8677C /* SwitchSetting.swift */,
 				8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */,
 			);
@@ -3437,30 +3508,32 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		9E9914CF29759239000EE0F1 /* AuthenticationPlaygroundNew */ = {
+		9E53759529784D9100C85983 /* AuthenticationPlayground */ = {
 			isa = PBXGroup;
 			children = (
-				9E9914D329759379000EE0F1 /* ViewModels */,
-				9E9914D229759370000EE0F1 /* Views */,
+				9E5375B129784DD100C85983 /* ViewModels */,
+				9E5375AF29784DD100C85983 /* Views */,
 			);
-			path = AuthenticationPlaygroundNew;
+			path = AuthenticationPlayground;
 			sourceTree = "<group>";
 		};
-		9E9914D229759370000EE0F1 /* Views */ = {
+		9E5375AF29784DD100C85983 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9E53758729783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift */,
+				9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */,
 			);
-			path = Views;
-			sourceTree = "<group>";
+			name = Views;
+			path = "Spot-IM.Development/UI/Beta/AuthenticationPlaygroundNew/Views";
+			sourceTree = SOURCE_ROOT;
 		};
-		9E9914D329759379000EE0F1 /* ViewModels */ = {
+		9E5375B129784DD100C85983 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				9E53758929783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */,
+				9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */,
 			);
-			path = ViewModels;
-			sourceTree = "<group>";
+			name = ViewModels;
+			path = "Spot-IM.Development/UI/Beta/AuthenticationPlaygroundNew/ViewModels";
+			sourceTree = SOURCE_ROOT;
 		};
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
 			isa = PBXGroup;
@@ -3816,6 +3889,7 @@
 				4454180523685144001D0ED0 /* OWBaseView.swift in Sources */,
 				4454181023685144001D0ED0 /* SPPreConversationViewController.swift in Sources */,
 				16BD5F84270C3FB000066505 /* OWImagePicker.swift in Sources */,
+				24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */,
 				3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */,
 				44689B70237070F30024EFC1 /* InputConfiguration.swift in Sources */,
 				445418A723685154001D0ED0 /* UILabel+SPExtensions.swift in Sources */,
@@ -3865,6 +3939,7 @@
 				3DDA9A712919169400FE3B86 /* OWGoogleAdsProvider.swift in Sources */,
 				4454180F23685144001D0ED0 /* SPBaseConversationViewController.swift in Sources */,
 				4454188C23685154001D0ED0 /* SPConfigRequests.swift in Sources */,
+				249DF2A3296D95C500F5D69A /* OWImageProvider.swift in Sources */,
 				24B087CD288E801700CAA0EB /* OWConversationEndpoints.swift in Sources */,
 				3D08E06C2875BAEC00E6F1AC /* OWUI.swift in Sources */,
 				3D611BB928C8AC3C003960CE /* OWConversationSettingsBuilder.swift in Sources */,
@@ -3877,6 +3952,7 @@
 				3D08E0832876FFC500E6F1AC /* OWAnimationConfiguration.swift in Sources */,
 				4454181223685144001D0ED0 /* SPMainConversationModel.swift in Sources */,
 				3DD72C69280EF13100117946 /* OWURLRequestConfigure.swift in Sources */,
+				249DF28E295C398800F5D69A /* OWCommentRatingViewModel.swift in Sources */,
 				4454189E23685154001D0ED0 /* SPConversationReadRM.swift in Sources */,
 				3DA2646E2951E3B200688FFF /* URLRequest+Network.swift in Sources */,
 				3D08E0872877072F00E6F1AC /* OWSectionModel.swift in Sources */,
@@ -3901,6 +3977,7 @@
 				249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */,
 				4416C65F237B15A800D3F7B9 /* SPRealtimeDataProvider.swift in Sources */,
 				3D20A36D27B0124F003F8513 /* OWConstraint.swift in Sources */,
+				24B516DB294B062A00EBD965 /* OWCommentLabelView.swift in Sources */,
 				4454180323685144001D0ED0 /* SPAnimatedButton.swift in Sources */,
 				3DA264702951E3B200688FFF /* URLSessionConfiguration+Network.swift in Sources */,
 				3D611BA628C745CA003960CE /* OWPreConversationSettings.swift in Sources */,
@@ -3944,6 +4021,7 @@
 				3DA264602951E3B200688FFF /* OWProtected.swift in Sources */,
 				445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */,
 				44689B7D237414850024EFC1 /* SPABData.swift in Sources */,
+				249DF2972964182B00F5D69A /* OWCommentRequiredData.swift in Sources */,
 				3D20A36F27B0147F003F8513 /* OWConstraintAttributes.swift in Sources */,
 				24B32B9D28BCB78000FB701C /* OWPreConversationViewVM.swift in Sources */,
 				24B32BA728C6382D00FB701C /* OWCommunityGuidelinesView.swift in Sources */,
@@ -3970,10 +4048,12 @@
 				3D08E0B8287AF22900E6F1AC /* OWRxCollectionViewSectionedAnimatedDataSource.swift in Sources */,
 				169D58E727D4E4E9009936F3 /* OWCommentActionsViewModel.swift in Sources */,
 				2440DD0826A98DED00001462 /* SPShowCommentsButton.swift in Sources */,
+				24E7535E293E20BC00A74427 /* OWCommentCell.swift in Sources */,
 				16A12A652601188100A7B3F6 /* URL+QueryParams.swift in Sources */,
 				3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */,
 				168DC7D32873243E009A88B6 /* OWTypealiasesInternal.swift in Sources */,
 				3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */,
+				241AF9F3295B381700A941C1 /* OWCommentEngagementView.swift in Sources */,
 				3D08E0B6287AF18E00E6F1AC /* OWCollectionViewSectionedDataSource.swift in Sources */,
 				16D8D4BD28C88D0600895FCB /* OWCommentContentViewModel.swift in Sources */,
 				445418A023685154001D0ED0 /* SPCommentViewModel.swift in Sources */,
@@ -4044,10 +4124,13 @@
 				3DA264662951E3B200688FFF /* OWNetworkConcurrency.swift in Sources */,
 				3DDA9A5E2906D16800FE3B86 /* OWCommentSkeletonShimmeringCell.swift in Sources */,
 				24A24A1A291BEAB300D72755 /* OWSafariViewModel.swift in Sources */,
+				24E753602940A26F00A74427 /* OWCommentHeaderView.swift in Sources */,
 				3D08E0AD2877216B00E6F1AC /* Optional+Extensions.swift in Sources */,
 				3D20A37727B017AF003F8513 /* OWConstraintLayoutGuideDSL.swift in Sources */,
 				3D08E09528770B8700E6F1AC /* IntegerType+OWIdentifiableType.swift in Sources */,
+				249DF28C295C397000F5D69A /* OWCommentRatingView.swift in Sources */,
 				3D08E09328770AC600E6F1AC /* OWIdentifiableValue.swift in Sources */,
+				249DF29D296C1E7F00F5D69A /* OWUserBadgeService.swift in Sources */,
 				441165A72375C5B700B781F3 /* OWKeyPathParser.swift in Sources */,
 				3DA264672951E3B200688FFF /* OWNetworkHTTPHeaders.swift in Sources */,
 				3DDA9A6A2913EA2600FE3B86 /* OWColor.swift in Sources */,
@@ -4062,6 +4145,7 @@
 				3D7E3D6E28884B7000DDBE0B /* OWHelpersLayer.swift in Sources */,
 				169D58E927D4EEC0009936F3 /* OWCommentVotingViewModel.swift in Sources */,
 				3DFBF0D127676D940049CF1C /* OWOnlineViewingUsersCounterViewModel.swift in Sources */,
+				241AF9F5295B382A00A941C1 /* OWCommentEngagementViewModel.swift in Sources */,
 				4454187C23685154001D0ED0 /* SpotImSDKFlowCoordinator.swift in Sources */,
 				3DF95BD727CE55C40008A380 /* OWBaseCoordinator.swift in Sources */,
 				3D08E0582874955000E6F1AC /* OWConversationCoordinator.swift in Sources */,
@@ -4126,6 +4210,7 @@
 				3D20A38F27B02140003F8513 /* OWLayoutConstraint.swift in Sources */,
 				4416C661237B16C800D3F7B9 /* SPRealtimeDataRequest.swift in Sources */,
 				3D5561A9295313FC0097A6D1 /* OWNetworkStatusCode.swift in Sources */,
+				249DF2A1296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift in Sources */,
 				3D611B9C28C64791003960CE /* OWError.swift in Sources */,
 				3DA2647B2951E3B200688FFF /* OWNetworkRequest.swift in Sources */,
 				3D26B5B828CE026000A1DAD2 /* OWCoordinatorResultProtocol.swift in Sources */,
@@ -4134,12 +4219,14 @@
 				3D20A35F27B0087D003F8513 /* OWLayoutSupport+Extensions.swift in Sources */,
 				3D08E061287599C300E6F1AC /* OWConversationViewVM.swift in Sources */,
 				3D26B5B428CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift in Sources */,
+				249DF291295C70C900F5D69A /* OWSpacerCell.swift in Sources */,
 				4454180723685144001D0ED0 /* UserFlowPresentable.swift in Sources */,
 				3D08E09F287712A100E6F1AC /* OWRxDataSourceError.swift in Sources */,
 				3D611BB528C8AAF4003960CE /* OWCommentCreationSettingsProtocol.swift in Sources */,
 				4454188E23685154001D0ED0 /* SPNetworkConstants.swift in Sources */,
 				3DA264652951E3B200688FFF /* OWNetworkURLConvertible+URLRequestConvertible.swift in Sources */,
 				4454181823685144001D0ED0 /* SPBaseTableViewCell.swift in Sources */,
+				24B516DD294B077F00EBD965 /* OWCommentLabelViewModel.swift in Sources */,
 				445418A423685154001D0ED0 /* SPCommentSortMode.swift in Sources */,
 				24B32BA028BCBA4A00FB701C /* OWPreConversationView.swift in Sources */,
 				3DDA9A792919374C00FE3B86 /* OWUIAuthentication.swift in Sources */,
@@ -4212,12 +4299,14 @@
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
 				3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */,
 				3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */,
+				249DF29929655C5E00F5D69A /* OWCommentSortMode.swift in Sources */,
 				16BD5F7F2709F16000066505 /* SPUIWindow.swift in Sources */,
 				445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */,
 				3DFA6BAD29217BC20047E313 /* OWUserAuthenticationStatus.swift in Sources */,
 				445418A523685154001D0ED0 /* SPUser.swift in Sources */,
 				3DD72C72280EF8A100117946 /* OWMiddleware.swift in Sources */,
 				445418A323685154001D0ED0 /* SPAnalyticsEvent.swift in Sources */,
+				249DF29F296D560E00F5D69A /* OWCommentLabelsContainerView.swift in Sources */,
 				3DFA6B9F29216E8D0047E313 /* OWAuthentication.swift in Sources */,
 				4454181923685144001D0ED0 /* SPReplyCell.swift in Sources */,
 				4454180223685144001D0ED0 /* SPAvatarView.swift in Sources */,
@@ -4276,6 +4365,7 @@
 				3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */,
 				445418BA23685154001D0ED0 /* AdsInterface.swift in Sources */,
 				3D08E0A528771B0900E6F1AC /* OWRxTableViewSectionedAnimatedDataSource.swift in Sources */,
+				249DF2952964140E00F5D69A /* OWCommentCreationType.swift in Sources */,
 				3DD72C78280EF99300117946 /* OWResponseLogger.swift in Sources */,
 				3D08E0852877070200E6F1AC /* OWSectionModelType.swift in Sources */,
 			);
@@ -4299,20 +4389,24 @@
 				3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */,
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
-				9E9914D12975928B000EE0F1 /* (null) in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
+				9EE2CDED29798919000C0E38 /* (null) in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
-				9E53758829783E2200C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
+				9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
+				9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */,
 				3DB3D19B282AFEB4008654CF /* ColorPalette.swift in Sources */,
 				3D611B8C28C4EE10003960CE /* MockArticleVC.swift in Sources */,
 				0E1125D82304BC29006B1489 /* Date+extensions.swift in Sources */,
 				8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */,
 				8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */,
 				3DB3D199282AFDD2008654CF /* FontBook.swift in Sources */,
+				9E53758C297841C000C85983 /* (null) in Sources */,
 				3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */,
+				9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
 				3D611B8828C4D94F003960CE /* SDKUIFlowActionType.swift in Sources */,
 				8DCBE866293DEFC600C8677C /* MiscellaneousVC.swift in Sources */,
@@ -4325,17 +4419,15 @@
 				3D3E3AC128B4EB61003B4F05 /* ConversationCounterCellViewModel.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
 				3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */,
+				9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
 				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
-				9E53758A29783E3C00C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
 				0E1125DE2304C127006B1489 /* String+Extensions.swift in Sources */,
+				9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
-				9E9914CE29754A50000EE0F1 /* (null) in Sources */,
 				3DB3D19F2831A5E8008654CF /* AuthenticationMetrics.swift in Sources */,
-				9E53758629783E1200C85983 /* PickerSetting.swift in Sources */,
 				8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */,
 				3DB3D192282A82B4008654CF /* Array+Unwrap.swift in Sources */,
-				9E9914D5297593A1000EE0F1 /* (null) in Sources */,
 				9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */,
 				5D4943BC2302CAA800AA7541 /* ArticleViewController.swift in Sources */,
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
@@ -4343,10 +4435,12 @@
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
 				3D3E3AC628B4F712003B4F05 /* Shadowable.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
+				9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */,
 				3D29A2DC283BA544002BE318 /* SilentSSOAuthentication.swift in Sources */,
 				3DB3D194282A82D8008654CF /* RxSwift+Helpers.swift in Sources */,
 				0E1125E423054335006B1489 /* ArticleWebViewController.swift in Sources */,
 				3DB3D180282A4A70008654CF /* UserAuthentication.swift in Sources */,
+				9E53759229784D3E00C85983 /* ColorModel.swift in Sources */,
 				3DB3D196282AFBCB008654CF /* EasyViews.swift in Sources */,
 				8DCBE8702940D98B00C8677C /* UIViewsVC.swift in Sources */,
 				3DB3D186282A5029008654CF /* AuthenticationPlaygroundVC.swift in Sources */,
@@ -4354,6 +4448,7 @@
 				3D3E3ABA28B3A28A003B4F05 /* ConversationCounterVC.swift in Sources */,
 				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 				3D611B8E28C4EE68003960CE /* MockArticleViewModel.swift in Sources */,
+				9E53758E2978476900C85983 /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

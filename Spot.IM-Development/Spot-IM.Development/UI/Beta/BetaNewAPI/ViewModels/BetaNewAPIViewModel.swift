@@ -137,10 +137,9 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _postId)
             .disposed(by: disposeBag)
         
-        let conversationDataModelObservable = spotId
-                    .withLatestFrom(postId) { [weak self] spotId, postId -> SDKConversationDataModel in
-                        return SDKConversationDataModel(spotId: spotId, postId: postId)
-                    }
+        let conversationDataModelObservable = Observable.combineLatest(spotId, postId) { spotId, postId -> SDKConversationDataModel in
+            return SDKConversationDataModel(spotId: spotId, postId: postId)
+        }.asObservable()
         
         uiFlowsTapped
             .withLatestFrom(conversationDataModelObservable)

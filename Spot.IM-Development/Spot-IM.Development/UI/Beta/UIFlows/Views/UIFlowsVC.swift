@@ -19,8 +19,6 @@ class UIFlowsVC: UIViewController {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
-        static let buttonCorners: CGFloat = 16
-        static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
     
@@ -35,81 +33,27 @@ class UIFlowsVC: UIViewController {
     }()
     
     fileprivate lazy var btnPreConversationPushMode: UIButton = {
-        let txt = NSLocalizedString("PreConversationPushMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("PreConversationPushMode", comment: "").blueRoundedButton
     }()
     
     fileprivate lazy var btnPreConversationPresentMode: UIButton = {
-        let txt = NSLocalizedString("PreConversationPresentMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("PreConversationPresentMode", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnFullConversationPushMode: UIButton = {
-        let txt = NSLocalizedString("FullConversationPushMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("FullConversationPushMode", comment: "").blueRoundedButton
     }()
-    
+        
     fileprivate lazy var btnFullConversationPresentMode: UIButton = {
-        let txt = NSLocalizedString("FullConversationPresentMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("FullConversationPresentMode", comment: "").blueRoundedButton
     }()
     
     fileprivate lazy var btnCommentCreationPushMode: UIButton = {
-        let txt = NSLocalizedString("CommentCreationPushMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("CommentCreationPushMode", comment: "").blueRoundedButton
     }()
    
     fileprivate lazy var btnCommentCreationPresentMode: UIButton = {
-        let txt = NSLocalizedString("CommentCreationPresentMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("CommentCreationPresentMode", comment: "").blueRoundedButton
     }()
     
     init(viewModel: UIFlowsViewModeling) {
@@ -134,7 +78,7 @@ class UIFlowsVC: UIViewController {
 
 fileprivate extension UIFlowsVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
         
         // Adding scroll view
         view.addSubview(scrollView)
