@@ -12,4 +12,5 @@ struct OWCommentRequiredData {
     let comment: SPComment
     let user: SPUser
     let replyToUser: SPUser?
+    let lineLimit: Int
 }

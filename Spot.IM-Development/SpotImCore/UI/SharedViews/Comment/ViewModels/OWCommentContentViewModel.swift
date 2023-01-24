@@ -12,7 +12,6 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentContentViewModelingInputs {
-//    var commentTextLabelWidth: PublishSubject<CGFloat> { get }
 }
 
 protocol OWCommentContentViewModelingOutputs {
@@ -54,7 +53,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     
     var collapsableLabelViewModel: OWCommentTextViewModeling
     
-    init(comment: SPComment, lineLimit: Int = 3, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) { // TODO: pass line limit
+    init(comment: SPComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.lineLimit = lineLimit
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, lineLimit: lineLimit)
         self.imageProvider = imageProvider
@@ -65,13 +64,6 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), lineLimit: lineLimit)
         self.imageProvider = OWCloudinaryImageProvider()
     }
-    
-//    var commentTextLabelWidth = PublishSubject<CGFloat>()
-//    var _commentTextLabelWidth: Observable<CGFloat> {
-//        commentTextLabelWidth
-//            .map {$0}
-//            .asObservable()
-//    }
     
     var gifUrl: Observable<String> {
         _comment
