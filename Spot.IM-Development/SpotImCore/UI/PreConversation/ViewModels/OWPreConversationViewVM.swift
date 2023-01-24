@@ -244,14 +244,19 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
         
         
-        commentCellsVmsObservable
-            .flatMap { commentCellsVms -> Observable<Int> in
-                let sizeChangeObservable: [Observable<Int>] = commentCellsVms.enumerated().map { (index, commentCellVm) -> Observable<Int> in
-                    let commentVM = commentCellVm.outputs.commentVM
-                    return commentVM.outputs.contentVM
-                        .outputs.collapsableLabelViewModel.outputs.textHeightChange
-                        .map { index }
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<Int> in
+                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+                    if case.comment(let commentCellViewModel) = vm {
+                        let commentVM = commentCellViewModel.outputs.commentVM
+                        return commentVM.outputs.contentVM
+                            .outputs.collapsableLabelViewModel.outputs.textHeightChange
+                            .map { index }
+                    } else {
+                        return nil
+                    }
                 }
+                .unwrap()
                 return Observable.merge(sizeChangeObservable)
             }
             .subscribe(onNext: { [weak self] commentIndex in
