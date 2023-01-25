@@ -14,6 +14,7 @@ class OWCommentTextView: UILabel {
     fileprivate var viewModel: OWCommentTextViewModeling!
     fileprivate var disposeBag: DisposeBag!
     fileprivate var width: CGFloat = 0
+    fileprivate var didUpdateWidth: Bool = false
     
     init() {
         super.init(frame: .zero)
@@ -25,6 +26,11 @@ class OWCommentTextView: UILabel {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         self.width = 0
+//        didUpdateWidth = false
+//        if(self.frame.width > 0) {
+//            didUpdateWidth = true
+//            viewModel.inputs.width.onNext(self.frame.width)
+//        }
         setupObservers()
     }
     
@@ -32,14 +38,16 @@ class OWCommentTextView: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard let viewModel = viewModel,
-              self.width != self.frame.width
-        else { return }
-        self.width = self.frame.width
-        viewModel.inputs.width.onNext(self.frame.width)
-    }
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        guard let viewModel = viewModel,
+//              didUpdateWidth == false
+////              self.width != self.frame.width
+//        else { return }
+////        self.width = self.frame.width
+//        didUpdateWidth = true
+//        viewModel.inputs.width.onNext(self.frame.width)
+//    }
 }
 
 extension OWCommentTextView: UIGestureRecognizerDelegate {

@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentTextViewModelingInputs {
-    var width: PublishSubject<CGFloat> { get }
+    var width: BehaviorSubject<CGFloat?> { get }
     var readMoreTap: PublishSubject<Void> { get }
     var readLessTap: PublishSubject<Void> { get }
     var urlTap: PublishSubject<URL> { get }
@@ -46,7 +46,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
     var editedText: String = LocalizationManager.localizedString(key: "Edited")
     
-    var width = PublishSubject<CGFloat>()
     var readMoreTap = PublishSubject<Void>()
     var readLessTap = PublishSubject<Void>()
     var activeURLs: [NSRange: URL]
@@ -55,6 +54,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         self.lineLimit = lineLimit
         self.activeURLs = [:]
         _comment.onNext(comment)
+        width.onNext(361.0)
         setupObservers()
     }
     
@@ -82,8 +82,12 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .unwrap()
     }
     
+    
+    var width = BehaviorSubject<CGFloat?>(value: nil)
     fileprivate var widthObservable: Observable<CGFloat> {
-        width.asObservable()
+        width
+            .unwrap()
+            .asObservable()
     }
     
 //    fileprivate var _lines: Observable<[CTLine]> {
@@ -95,20 +99,20 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 //        .asObservable()
 //    }
     
+    fileprivate var _lines: Observable<[CTLine]> {
+        Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, currentWidth in
+            return messageAttributedString.getLines(with: currentWidth)
+        }
+        .unwrap()
+        .asObservable()
+    }
 //    fileprivate var _lines: Observable<[CTLine]> {
-//        Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, currentWidth in
-//            print("NOGAH: width \(currentWidth)")
-//            return messageAttributedString.getLines(with: currentWidth)
+//        fullAttributedString.map { messageAttributedString in
+//            let width = 361.0 // TODO: get real width
+//            return messageAttributedString.getLines(with: width)
 //        }
 //        .asObservable()
 //    }
-    fileprivate var _lines: Observable<[CTLine]> {
-        fullAttributedString.map { messageAttributedString in
-            let width = 361.0 // TODO: get real width
-            return messageAttributedString.getLines(with: width)
-        }
-        .asObservable()
-    }
     
     fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
     var attributedString: Observable<NSMutableAttributedString?> {
