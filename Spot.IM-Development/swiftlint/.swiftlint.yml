@@ -1,30 +1,17 @@
 disabled_rules: # rule identifiers to exclude from running
-  - colon
-  - comma
-  - control_statement
-  - force_cast
-  - function_body_length
-  - legacy_constant
-  - legacy_constructor
-  - nesting
-  - operator_usage
-  - return_arrow_whitespace
-  - todo
-  - trailing_semicolon
-  - trailing_whitespace
-  - variable_name
-  - vertical_whitespace
+  - closing_brace
+  - closure_parameter_position
+  - comment_spacing
+  - compiler_protocol_init
+  - computed_accessors_order
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
-  - Carthage
   - Pods
   - fastlane
-  - Example
-  - ExampleUITests
-  - ExampleTests
+  - Spot-IM.DevelopmentTests
 
 included: # paths to include during linting. `excluded` paths are still ignored.
-  - MyApp
+  - Spot-IM.Development
 
 opt_in_rules: # some rules are only opt-in
   - empty_count
