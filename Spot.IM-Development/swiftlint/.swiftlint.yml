@@ -6,12 +6,12 @@ disabled_rules: # rule identifiers to exclude from running
   - computed_accessors_order
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
-  - Pods
-  - fastlane
-  - Spot-IM.DevelopmentTests
+  - ../Pods
+  - ../fastlane
+  - ../Spot-IM.DevelopmentTests
 
 included: # paths to include during linting. `excluded` paths are still ignored.
-  - Spot-IM.Development
+  - ../Spot-IM.Development
 
 opt_in_rules: # some rules are only opt-in
   - empty_count
