@@ -241,8 +241,9 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.changeSizeAtIndex
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
-                    print("NOGAH: changeSizeAtIndex \(index)")
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                    UIView.performWithoutAnimation {
+                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                    }
                 })
                 .disposed(by: disposeBag)
         
