@@ -238,7 +238,10 @@ jobs:
       # Check for SwiftLint errors and warnings
       - run:
           name: SwiftLint
-          command: swiftlint lint --config Spot.IM-Development/swiftlint/.swiftlint.yml
+          command: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            brew install swiftlint
+            swiftlint lint --config Spot.IM-Development/swiftlint/.swiftlint.yml
 
       # Fail the PR if any SwiftLint errors or warnings are found
       - run:
