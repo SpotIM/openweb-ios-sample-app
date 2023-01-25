@@ -81,6 +81,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
         tableView.allowsSelection = false
+        tableView.estimatedRowHeight = 280
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
@@ -240,6 +241,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.changeSizeAtIndex
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
+                    print("NOGAH: changeSizeAtIndex \(index)")
                     self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
                 })
                 .disposed(by: disposeBag)

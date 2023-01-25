@@ -226,10 +226,12 @@ fileprivate extension OWCommentTextViewModel {
                 let lineString = (attString.string as NSString).substring(with: range)
                 visibleString.append(lineString)
             }
-            let res = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes(with: style))
+            var res = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes(with: style))
             let readMore = NSMutableAttributedString(
                 string: self.readMoreText,
                 attributes: actionStringAttributes(with: style))
+            let trimmedRes = res.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
+            res = trimmedRes.mutableCopy() as? NSMutableAttributedString ?? res
             res.append(ellipsis)
             res.append(readMore)
             return res
