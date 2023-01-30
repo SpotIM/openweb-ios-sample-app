@@ -13,8 +13,6 @@ import RxSwift
 class OWCommentTextView: UILabel {
     fileprivate var viewModel: OWCommentTextViewModeling!
     fileprivate var disposeBag: DisposeBag!
-    fileprivate var width: CGFloat = 0
-    fileprivate var didUpdateWidth: Bool = false
     
     init() {
         super.init(frame: .zero)
@@ -25,12 +23,6 @@ class OWCommentTextView: UILabel {
     func configure(with viewModel: OWCommentTextViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
-        self.width = 0
-//        didUpdateWidth = false
-//        if(self.frame.width > 0) {
-//            didUpdateWidth = true
-//            viewModel.inputs.width.onNext(self.frame.width)
-//        }
         setupObservers()
     }
     
@@ -38,16 +30,12 @@ class OWCommentTextView: UILabel {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        guard let viewModel = viewModel,
-//              didUpdateWidth == false
-////              self.width != self.frame.width
-//        else { return }
-////        self.width = self.frame.width
-//        didUpdateWidth = true
-//        viewModel.inputs.width.onNext(self.frame.width)
-//    }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let viewModel = viewModel else { return }
+        
+        viewModel.inputs.width.onNext(self.frame.width)
+    }
 }
 
 extension OWCommentTextView: UIGestureRecognizerDelegate {
@@ -65,14 +53,27 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
 
 fileprivate extension OWCommentTextView {
     func setupUI() {
+//        self.OWSnp.makeConstraints { make in
+//            make.height.equalTo(0)
+//        }
     }
     
     func setupObservers() {
         viewModel.outputs.attributedString
             .subscribe(onNext: { [weak self] attString in
-                self?.attributedText = attString
+                guard let self = self else { return }
+                self.attributedText = attString
             })
-            .disposed(by: disposeBag)        
+            .disposed(by: disposeBag)
+        
+//        viewModel.outputs.height
+//            .subscribe(onNext: { [weak self] newHeight in
+//                guard let self = self else { return }
+//                self.OWSnp.updateConstraints { make in
+//                    make.height.equalTo(newHeight)
+//                }
+//            })
+//            .disposed(by: disposeBag)
     }
     
     func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {

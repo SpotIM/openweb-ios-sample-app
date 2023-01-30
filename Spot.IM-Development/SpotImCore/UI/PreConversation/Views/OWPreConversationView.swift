@@ -242,7 +242,8 @@ fileprivate extension OWPreConversationView {
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
                     UIView.performWithoutAnimation {
-                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+//                        self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                        self.tableView.reloadData()
                     }
                 })
                 .disposed(by: disposeBag)
