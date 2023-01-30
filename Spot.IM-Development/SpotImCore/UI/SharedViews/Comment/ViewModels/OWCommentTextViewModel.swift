@@ -12,7 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWCommentTextViewModelingInputs {
-    var width: BehaviorSubject<CGFloat?> { get }
+    var width: BehaviorSubject<CGFloat> { get }
     var readMoreTap: PublishSubject<Void> { get }
     var readLessTap: PublishSubject<Void> { get }
     var urlTap: PublishSubject<URL> { get }
@@ -25,6 +25,7 @@ protocol OWCommentTextViewModelingOutputs {
     var readLessText: String { get }
     var activeURLs: [NSRange: URL] { get }
     var urlClickedOutput: Observable<URL> { get }
+    var height: Observable<CGFloat> { get }
 }
 
 protocol OWCommentTextViewModeling {
@@ -54,7 +55,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         self.lineLimit = lineLimit
         self.activeURLs = [:]
         _comment.onNext(comment)
-        width.onNext(361.0)
         setupObservers()
     }
     
@@ -83,10 +83,10 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
     
     
-    var width = BehaviorSubject<CGFloat?>(value: nil)
+    var width = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
         width
-            .unwrap()
+            .distinctUntilChanged()
             .asObservable()
     }
     
@@ -149,6 +149,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             return attributedString?.height(withConstrainedWidth: width)
         }
         .unwrap()
+        .distinctUntilChanged()
         .asObservable()
     }
     var heighChange = PublishSubject<Void>()
