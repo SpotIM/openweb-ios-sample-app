@@ -1343,6 +1343,37 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		160E42DD29880E9F00EDC5A1 /* CommentThread */ = {
+			isa = PBXGroup;
+			children = (
+				160E42DE29880F0E00EDC5A1 /* Models */,
+				160E42DF29880F1400EDC5A1 /* ViewModels */,
+				160E42E029880F2600EDC5A1 /* Views */,
+			);
+			path = CommentThread;
+			sourceTree = "<group>";
+		};
+		160E42DE29880F0E00EDC5A1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		160E42DF29880F1400EDC5A1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		160E42E029880F2600EDC5A1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		16229EDB27EA22A0000AA832 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -1598,7 +1629,6 @@
 				1628A75828EB0E220019B5EC /* OWCommentContentView.swift */,
 				1628A74428EB08540019B5EC /* OWCommentView.swift */,
 				24B516DA294B062A00EBD965 /* OWCommentLabelView.swift */,
-				24A21761295328BB00DC1CCB /* OWPaddedLabelView.swift */,
 				241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */,
 				249DF28B295C397000F5D69A /* OWCommentRatingView.swift */,
 				249DF29E296D560E00F5D69A /* OWCommentLabelsContainerView.swift */,
@@ -2706,6 +2736,7 @@
 				24B32B9828BCB65C00FB701C /* PreConversation */,
 				3D08E0592875987500E6F1AC /* Conversation */,
 				16D8D49F28C632F200895FCB /* CommentCreation */,
+				160E42DD29880E9F00EDC5A1 /* CommentThread */,
 				445417C623685144001D0ED0 /* ViewControllers */,
 				445417DA23685144001D0ED0 /* Views - Old without VMs */,
 			);
