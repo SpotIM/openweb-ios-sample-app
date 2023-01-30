@@ -3293,15 +3293,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		8D455ADC296C45B10091A027 /* linter */ = {
-			isa = PBXGroup;
-			children = (
-				8D455ADF296C46100091A027 /* .swiftlint.yml */,
-				8D455AE1296C4FD70091A027 /* pre-push-swiftlint.sh */,
-			);
-			path = linter;
-			sourceTree = "<group>";
-		};
 		8DCBE85A293CEF7D00C8677C /* UIFlows */ = {
 			isa = PBXGroup;
 			children = (
@@ -3724,7 +3715,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    # Relative path from the .xcodeproj which contains this script\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"warning: SwiftLint not installed\"\nfi\n";
 		};
 		8EC0B5EED95074D03AAB854D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
