@@ -98,9 +98,9 @@ class OWCommentCreationEntryViewModelV2: OWCommentCreationEntryViewModeling, OWC
     
     fileprivate let disposeBag = DisposeBag()
     
-    var imageURLProvider: SPImageProvider
+    var imageURLProvider: OWImageProviding
     
-    init (imageURLProvider: SPImageProvider) {
+    init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageURLProvider = imageURLProvider
         setupObservers()
     }
@@ -115,7 +115,7 @@ class OWCommentCreationEntryViewModelV2: OWCommentCreationEntryViewModeling, OWC
     }
     
     lazy var avatarViewVM: OWAvatarViewModeling = {
-        return OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
+        return OWAvatarViewModelV2(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
     }()
     
     var ctaText: Observable<String> {

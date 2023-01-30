@@ -19,7 +19,7 @@ class ConversationCounterCell: UITableViewCell {
     fileprivate lazy var mainArea: UIView = {
         let view = UIView()
             .corner(radius: Metrics.cornerRadius)
-            .backgroundColor(ColorPalette.basicGrey)
+            .backgroundColor(ColorPalette.shared.color(type: .basicGrey))
         view.apply(shadow: .medium)
         return view
     }()
@@ -29,7 +29,7 @@ class ConversationCounterCell: UITableViewCell {
         return txt
             .label
             .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.blackish)
+            .textColor(ColorPalette.shared.color(type: .blackish))
     }()
     
     fileprivate lazy var lblComments: UILabel = {
@@ -37,7 +37,7 @@ class ConversationCounterCell: UITableViewCell {
         return txt
             .label
             .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.blue)
+            .textColor(ColorPalette.shared.color(type: .blue))
     }()
     
     fileprivate lazy var lblReplies: UILabel = {
@@ -45,7 +45,7 @@ class ConversationCounterCell: UITableViewCell {
         return txt
             .label
             .font(FontBook.secondaryHeading)
-            .textColor(ColorPalette.blue)
+            .textColor(ColorPalette.shared.color(type: .blue))
     }()
     
     fileprivate var viewModel: ConversationCounterCellViewModeling!

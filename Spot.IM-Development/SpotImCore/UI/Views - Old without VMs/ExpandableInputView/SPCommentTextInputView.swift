@@ -17,8 +17,7 @@ internal protocol SPTextInputView: AnyObject {
 internal protocol SPTextInputViewDelegate: AnyObject {
     
     func input(_ view: SPTextInputView, didChange text: String)
-    func tooLongTextWasPassed()
-    
+    func validateInput(lenght: Int) -> Bool
 }
 
 final class SPCommentTextInputView: OWBaseView, SPTextInputView {
@@ -164,27 +163,11 @@ extension SPCommentTextInputView: UITextViewDelegate {
     func textViewDidChangeSelection(_ textView: UITextView) {
         ensureCursorVisibleOnBottom(textView: textView)
     }
-
-    func textView(
-        _ textView: UITextView,
-        shouldChangeTextIn range: NSRange,
-        replacementText text: String
-        ) -> Bool {
-        let shouldReplace = true
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         
-//        if let currentText = textView.text,
-//            let textRange = Range(range, in: currentText) {
-//            let possibleText = currentText
-//                .replacingCharacters(in: textRange, with: text)
-//                .trimmingCharacters(in: .whitespacesAndNewlines)
-//            shouldReplace = possibleText.count <= Theme.maximumCommentLength
-//
-//            if possibleText.count - Theme.maximumCommentLength > 1 {
-//                delegate?.tooLongTextWasPassed()
-//            }
-//        }
-        
-        return shouldReplace
+        return delegate?.validateInput(lenght: newText.count) ?? true
     }
 }
 

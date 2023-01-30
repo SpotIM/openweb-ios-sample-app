@@ -21,6 +21,7 @@ protocol BetaNewAPIViewModelingInputs {
     var selectPresetTapped: PublishSubject<Void> { get }
     var doneSelectPresetTapped: PublishSubject<Void> { get }
     var settingsTapped: PublishSubject<Void> { get }
+    var authenticationTapped: PublishSubject<Void> { get }
     var selectedConversationPresetIndex: PublishSubject<Int> { get }
 }
 
@@ -35,6 +36,7 @@ protocol BetaNewAPIViewModelingOutputs {
     var openUIViews: Observable<SDKConversationDataModel> { get }
     var openMiscellaneous: Observable<SDKConversationDataModel> { get }
     var openSettings: Observable<Void> { get }
+    var openAuthentication: Observable<Void> { get }
 }
 
 protocol BetaNewAPIViewModeling {
@@ -60,6 +62,7 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     let miscellaneousTapped = PublishSubject<Void>()
     let selectPresetTapped = PublishSubject<Void>()
     let settingsTapped = PublishSubject<Void>()
+    let authenticationTapped = PublishSubject<Void>()
     let doneSelectPresetTapped = PublishSubject<Void>()
     
     fileprivate let _shouldShowSelectPreset = BehaviorSubject<Bool>(value: false)
@@ -72,12 +75,14 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     fileprivate let _spotId = BehaviorSubject<String>(value: Metrics.preFilledSpotId)
     var spotId: Observable<String> {
         return _spotId
+            .distinctUntilChanged()
             .asObservable()
     }
     
     fileprivate let _postId = BehaviorSubject<String>(value: Metrics.preFilledPostId)
     var postId: Observable<String> {
         return _postId
+            .distinctUntilChanged()
             .asObservable()
     }
     
@@ -101,6 +106,11 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
         return _openSettings.asObservable()
     }
     
+    fileprivate let _openAuthentication = PublishSubject<Void>()
+    var openAuthentication: Observable<Void> {
+        return _openAuthentication.asObservable()
+    }
+    
     lazy var title: String = {
         return NSLocalizedString("NewAPI", comment: "")
     }()
@@ -122,17 +132,18 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 fileprivate extension BetaNewAPIViewModel {
     func setupObservers() {
         enteredSpotId
+            .distinctUntilChanged()
             .bind(to: _spotId)
             .disposed(by: disposeBag)
         
         enteredPostId
+            .distinctUntilChanged()
             .bind(to: _postId)
             .disposed(by: disposeBag)
         
-        let conversationDataModelObservable = spotId
-                    .withLatestFrom(postId) { [weak self] spotId, postId -> SDKConversationDataModel in
-                        return SDKConversationDataModel(spotId: spotId, postId: postId)
-                    }
+        let conversationDataModelObservable = Observable.combineLatest(spotId, postId) { spotId, postId -> SDKConversationDataModel in
+            return SDKConversationDataModel(spotId: spotId, postId: postId)
+        }.asObservable()
         
         uiFlowsTapped
             .withLatestFrom(conversationDataModelObservable)
@@ -158,10 +169,15 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _openSettings)
             .disposed(by: disposeBag)
         
+        authenticationTapped
+            .bind(to: _openAuthentication)
+            .disposed(by: disposeBag)
+        
         Observable.merge(uiFlowsTapped.voidify(),
                          uiViewsTapped.voidify(),
                          miscellaneousTapped.voidify(),
                          settingsTapped.voidify(),
+                         authenticationTapped.voidify(),
                          enteredSpotId.voidify().skip(1),
                          enteredPostId.voidify().skip(1),
                          doneSelectPresetTapped)

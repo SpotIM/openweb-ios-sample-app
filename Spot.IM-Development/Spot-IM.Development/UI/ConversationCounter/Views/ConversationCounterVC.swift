@@ -26,7 +26,7 @@ class ConversationCounterVC: UIViewController {
     
     fileprivate lazy var counterTableView: UITableView = {
         let tblView = UITableView()
-            .backgroundColor(ColorPalette.lightGrey)
+            .backgroundColor(ColorPalette.shared.color(type: .lightGrey))
             .separatorStyle(.none)
         
         tblView.register(cellClass: ConversationCounterCell.self)
@@ -40,7 +40,7 @@ class ConversationCounterVC: UIViewController {
             .label
             .hugContent(axis: .horizontal)
             .font(FontBook.mainHeading)
-            .textColor(ColorPalette.blackish)
+            .textColor(ColorPalette.shared.color(type: .blackish))
     }()
     
     fileprivate lazy var lblDescription: UILabel = {
@@ -49,14 +49,14 @@ class ConversationCounterVC: UIViewController {
         return txt
             .label
             .font(FontBook.helper)
-            .textColor(ColorPalette.red)
+            .textColor(ColorPalette.shared.color(type: .red))
             .numberOfLines(0)
     }()
     
     fileprivate lazy var txtFieldPostIds: UITextField = {
         let txtField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
-            .border(width: 1.0, color: ColorPalette.blackish)
+            .border(width: 1.0, color: ColorPalette.shared.color(type: .blackish))
         
         txtField.borderStyle = .roundedRect
         txtField.autocapitalizationType = .none
@@ -68,8 +68,8 @@ class ConversationCounterVC: UIViewController {
 
         return txt
             .button
-            .backgroundColor(ColorPalette.green)
-            .textColor(ColorPalette.extraLightGrey)
+            .backgroundColor(ColorPalette.shared.color(type: .green))
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
             .corner(radius: Metrics.executeButtonCorners)
             .withPadding(Metrics.executeButtonPadding)
             .font(FontBook.secondaryHeadingBold)
@@ -114,7 +114,7 @@ class ConversationCounterVC: UIViewController {
 
 fileprivate extension ConversationCounterVC {
     func setupViews() {
-        view.backgroundColor = ColorPalette.lightGrey
+        view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
         
         view.addSubview(lblPostIds)
         lblPostIds.snp.makeConstraints { make in

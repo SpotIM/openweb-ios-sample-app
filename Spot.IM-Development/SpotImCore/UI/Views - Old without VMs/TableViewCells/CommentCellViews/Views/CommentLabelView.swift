@@ -18,7 +18,7 @@ internal final class CommentLabelView: OWBaseView {
     private let label: OWBaseLabel = .init()
     
     private var commentLabelColor: UIColor = .clear
-    private var state: LabelState = .readOnly 
+    private var state: OWLabelState = .readOnly 
         
     var id: String = .init()
     
@@ -28,7 +28,7 @@ internal final class CommentLabelView: OWBaseView {
         setupUI()
     }
     
-    func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, labelId: String, state: LabelState) {
+    func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, labelId: String, state: OWLabelState) {
         self.id = labelId
         self.commentLabelColor = labelColor
         // update UI
@@ -51,7 +51,7 @@ internal final class CommentLabelView: OWBaseView {
         setState(state: state)
     }
     
-    func setState(state: LabelState) {
+    func setState(state: OWLabelState) {
         // set background, border, image and text colors according to state
         switch state {
             case .notSelected:
@@ -77,7 +77,7 @@ internal final class CommentLabelView: OWBaseView {
         self.state = state
     }
     
-    func getState() -> LabelState {
+    func getState() -> OWLabelState {
         return state
     }
     
@@ -146,7 +146,7 @@ private enum Theme {
     static let iconTrailingOffset: CGFloat = 5.0
 }
 
-enum LabelState {
+enum OWLabelState {
     case notSelected, selected, readOnly
 }
 
