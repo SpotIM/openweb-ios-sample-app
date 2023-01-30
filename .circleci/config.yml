@@ -521,8 +521,8 @@ workflows:
           filters:
             branches:
               only:
-                - /^release/tag14.1/.*/
-          xcode: "14.1.0"
+                - /^release/tag14.2/.*/
+          xcode: "14.2.0"
 
       - release_app_job:
           filters:
@@ -562,7 +562,7 @@ workflows:
       - release_tag:
           requires:
             - "release_sdk_job"
-          xcode: "14.1.0"
+          xcode: "14.2.0"
 
   validate_workflow:
     jobs:

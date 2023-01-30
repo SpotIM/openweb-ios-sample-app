@@ -15,6 +15,13 @@ class SettingsVC: UIViewController {
         static let verticalOffset: CGFloat = 50
         static let horizontalOffset: CGFloat = 10
     }
+    
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
         
     fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
         return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle)
@@ -71,38 +78,46 @@ class SettingsVC: UIViewController {
 
 fileprivate extension SettingsVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
         
         title = viewModel.outputs.title
         
-        view.addSubview(switchHideArticleHeader)
-        switchHideArticleHeader.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+        // Adding scroll view
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
         
-        view.addSubview(switchCommentCreationNewDesign)
+        scrollView.addSubview(switchHideArticleHeader)
+        switchHideArticleHeader.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
+        }
+        
+        scrollView.addSubview(switchCommentCreationNewDesign)
         switchCommentCreationNewDesign.snp.makeConstraints { make in
             make.top.equalTo(switchHideArticleHeader.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
-        view.addSubview(segmentedReadOnlyMode)
+        scrollView.addSubview(segmentedReadOnlyMode)
         segmentedReadOnlyMode.snp.makeConstraints { make in
             make.top.equalTo(switchCommentCreationNewDesign.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
-        view.addSubview(segmentedThemeMode)
+        scrollView.addSubview(segmentedThemeMode)
         segmentedThemeMode.snp.makeConstraints { make in
             make.top.equalTo(segmentedReadOnlyMode.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
         
-        view.addSubview(segmentedModalStyle)
+        scrollView.addSubview(segmentedModalStyle)
         segmentedModalStyle.snp.makeConstraints { make in
             make.top.equalTo(segmentedThemeMode.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalOffset)
         }
     }
     
@@ -117,23 +132,23 @@ fileprivate extension SettingsVC {
             .disposed(by: disposeBag)
         
         viewModel.outputs.readOnlyModeIndex
-            .bind(to: segmentedReadOnlyMode.rx.value)
+            .bind(to: segmentedReadOnlyMode.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
         
         viewModel.outputs.themeModeIndex
-            .bind(to: segmentedThemeMode.rx.value)
+            .bind(to: segmentedThemeMode.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
         
         viewModel.outputs.modalStyleIndex
-            .bind(to: segmentedModalStyle.rx.value)
+            .bind(to: segmentedModalStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
         
-        switchHideArticleHeader.rx.value
+        switchHideArticleHeader.rx.isOn
             .bind(to: viewModel.inputs.hideArticleHeaderToggled)
             .disposed(by: disposeBag)
         
-        switchCommentCreationNewDesign.rx.value
-            .bind(to: viewModel.inputs.hideArticleHeaderToggled)
+        switchCommentCreationNewDesign.rx.isOn
+            .bind(to: viewModel.inputs.commentCreationNewDesignToggled)
             .disposed(by: disposeBag)
         
         segmentedReadOnlyMode.rx.selectedSegmentIndex
