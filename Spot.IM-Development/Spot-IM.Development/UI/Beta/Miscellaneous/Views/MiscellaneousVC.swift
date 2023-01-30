@@ -18,24 +18,21 @@ class MiscellaneousVC: UIViewController {
     fileprivate struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
-        static let buttonCorners: CGFloat = 16
-        static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
     
     fileprivate let viewModel: MiscellaneousViewModeling
     fileprivate let disposeBag = DisposeBag()
     
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
     fileprivate lazy var btnConversationCounter: UIButton = {
-        let txt = NSLocalizedString("ConversationCounter", comment: "")
-
-        return txt
-            .button
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("ConversationCounter", comment: "").blueRoundedButton
     }()
     
     init(viewModel: MiscellaneousViewModeling) {
@@ -60,15 +57,25 @@ class MiscellaneousVC: UIViewController {
 
 fileprivate extension MiscellaneousVC {
     func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        
+        // Adding scroll view
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+        }
         
         // Adding conversation counter button
-        view.addSubview(btnConversationCounter)
+        scrollView.addSubview(btnConversationCounter)
         btnConversationCounter.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
+            
+            //Move to last view in scroll view
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
     

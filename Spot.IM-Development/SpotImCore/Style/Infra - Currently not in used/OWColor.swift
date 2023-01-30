@@ -20,9 +20,11 @@ struct OWColor {
         case foreground1Color
         case foreground2Color
         case foreground3Color
+        case background0Color
         case background1Color
         case separatorColor
         case borderColor
+        case brandColor
         
         var `default`: OWColor {
             switch self {
@@ -47,6 +49,9 @@ struct OWColor {
             case .foreground3Color:
                 return OWColor(lightThemeColor: UIColor(red: 123.0/255.0, green: 127.0/255.0, blue: 131.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 182.0/255.0, green: 185.0/255.0, blue: 187.0/255.0, alpha: 1.0))
+            case .background0Color:
+                return OWColor(lightThemeColor: UIColor.white,
+                               darkThemeColor: UIColor(red: 35.0/255.0, green: 35.0/255.0, blue: 35.0/255.0, alpha: 1.0))
             case .background1Color:
                 return OWColor(lightThemeColor: UIColor.white,
                                darkThemeColor: UIColor.white.withAlphaComponent(0.15))
@@ -56,6 +61,8 @@ struct OWColor {
             case .borderColor:
                 return OWColor(lightThemeColor: UIColor(red: 212.0/255.0, green: 214.0/255.0, blue: 215.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor.clear)
+            case .brandColor:
+                return OWColor(lightThemeColor: .black, darkThemeColor: .white)
             }
         }
     }

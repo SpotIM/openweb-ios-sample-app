@@ -16,9 +16,15 @@ protocol OWCommentViewModelingInputs {
 
 protocol OWCommentViewModelingOutputs {
     var commentUserVM: OWCommentUserViewModeling { get }
-    var contentVM: OWCommentContentViewModeling { get }
     var statusIndicationVM: OWCommentStatusIndicationViewModeling { get }
     var commentActionsVM: OWCommentActionsViewModeling { get }
+    
+    var commentHeaderVM: OWCommentHeaderViewModeling { get }
+    var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling { get }
+    var contentVM: OWCommentContentViewModeling { get }
+    var commentEngagementVM: OWCommentEngagementViewModeling { get }
+    
+    var comment: SPComment { get }
 }
 
 protocol OWCommentViewModeling {
@@ -33,13 +39,7 @@ class OWCommentViewModel: OWCommentViewModeling,
     var inputs: OWCommentViewModelingInputs { return self }
     var outputs: OWCommentViewModelingOutputs { return self }
     
-    var commentUserVM: OWCommentUserViewModeling {
-        return OWCommentUserViewModel(user: nil, imageProvider: nil)
-    }
-    
-    var contentVM: OWCommentContentViewModeling {
-        return OWCommentContentViewModel()
-    }
+    var commentUserVM: OWCommentUserViewModeling
     
     var statusIndicationVM: OWCommentStatusIndicationViewModeling {
         return OWCommentStatusIndicationViewModel()
@@ -47,5 +47,29 @@ class OWCommentViewModel: OWCommentViewModeling,
     
     var commentActionsVM: OWCommentActionsViewModeling {
         return OWCommentActionsViewModel()
+    }
+    
+    var commentHeaderVM: OWCommentHeaderViewModeling
+    var commentLabelsContainerVM: OWCommentLabelsContainerViewModeling
+    var contentVM: OWCommentContentViewModeling
+    var commentEngagementVM: OWCommentEngagementViewModeling
+    var comment: SPComment
+    
+    init(data: OWCommentRequiredData) {
+        commentUserVM = OWCommentUserViewModel(user: data.user, imageProvider: nil)
+        commentHeaderVM = OWCommentHeaderViewModel(data: data)
+        commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
+        contentVM = OWCommentContentViewModel(comment: data.comment)
+        commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? SPComment.Rank())
+        comment = data.comment
+    }
+    
+    init() {
+        commentUserVM = OWCommentUserViewModel(user: nil, imageProvider: nil)
+        commentHeaderVM = OWCommentHeaderViewModel()
+        commentLabelsContainerVM = OWCommentLabelsContainerViewModel()
+        contentVM = OWCommentContentViewModel()
+        commentEngagementVM = OWCommentEngagementViewModel()
+        comment = SPComment()
     }
 }

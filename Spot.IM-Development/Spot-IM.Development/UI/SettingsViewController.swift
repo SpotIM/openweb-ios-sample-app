@@ -98,6 +98,8 @@ class SettingsViewController: UIViewController {
         
         modeControl.isHidden = !isCustomDarkModeEnabled
         modeControl.selectedSegmentIndex = interfaceStyle
+        
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
