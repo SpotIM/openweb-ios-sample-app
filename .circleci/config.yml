@@ -491,6 +491,15 @@ jobs:
             cd simulator_build/*/Products/Applications
             ls
 
+      - aws-s3/sync:
+          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          to: 's3://todo'
+          arguments: |
+            --region $AWS_REGION \
+            --acl public-read \
+            --cache-control "max-age=31536000" \
+            --content-encoding "app"
+
 workflows:
   version: 2
   independent_job_workflow:
