@@ -16,6 +16,11 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let whatYouThinkHeight: CGFloat = 64
         static let commentCreationVerticalPadding: CGFloat = 16
         static let horizontalOffset: CGFloat = 16.0
+        static let btnFullConversationCornerRadius: CGFloat = 4
+        static let btnFullConversationFontSize: CGFloat = 14
+        static let btnFullConversationTextPadding: CGFloat = 13
+        static let btnFullConversationTopPadding: CGFloat = 13
+
         
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
         // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
@@ -27,17 +32,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         
         static let separatorHeight: CGFloat = 1.0
     }
-    
-    // TODO: Testing - remove later (hard coded cause only for testing)
-    fileprivate lazy var btnFullConversation: UIButton = {
-        return "Full Conversation - testing"
-            .button
-            .backgroundColor(.orange)
-            .textColor(.white)
-            .corner(radius: 12.0)
-            .withPadding(20)
-            .font(UIFont.preferred(style: .regular, of: 20))
-    }()
     
     // TODO: Testing - remove later (hard coded cause only for testing)
     fileprivate lazy var btnCommentCreation: UIButton = {
@@ -73,7 +67,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
     }()
-    
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -88,6 +81,15 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         }
         
         return tableView
+    }()
+    fileprivate lazy var btnFullConversation: UIButton = {
+        return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
+            .button
+            .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+            .textColor(.white)
+            .corner(radius: Metrics.btnFullConversationCornerRadius)
+            .withPadding(Metrics.btnFullConversationTextPadding)
+            .font(UIFont.preferred(style: .medium, of: Metrics.btnFullConversationFontSize))
     }()
     
     fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
@@ -169,22 +171,22 @@ fileprivate extension OWPreConversationView {
                 make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-                make.bottom.equalToSuperview() // TODO: bottom constraint
+//                make.bottom.equalToSuperview() // TODO: bottom constraint
             }
         }
         
         
         
-        self.addSubview(btnCommentCreation)
-        btnCommentCreation.OWSnp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-20)
-        }
+//        self.addSubview(btnCommentCreation)
+//        btnCommentCreation.OWSnp.makeConstraints { make in
+//            make.centerX.equalToSuperview()
+//            make.bottom.equalToSuperview().offset(-20)
+//        }
         
         self.addSubview(btnFullConversation)
         btnFullConversation.OWSnp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(btnCommentCreation.OWSnp.top).offset(-20)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
         
         
@@ -268,6 +270,7 @@ fileprivate extension OWPreConversationView {
                 self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
+                self.btnFullConversation.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
     
