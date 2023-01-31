@@ -13,7 +13,7 @@ import UIKit
 
 protocol OWAvatarViewModelingInputs {
     func configureUser(user: SPUser)
-    func configure(isAvatartVisible isVisible: Bool)
+    func changeAvatarVisibility(isVisible: Bool)
     
     var tapAvatar: PublishSubject<Void> { get }
 }
@@ -92,7 +92,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
         self._user.onNext(user)
     }
     
-    func configure(isAvatartVisible isVisible: Bool) {
+    func changeAvatarVisibility(isVisible: Bool) {
         self._isAvatartVisible.onNext(isVisible)
     }
 }
@@ -162,7 +162,7 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
         self._user.onNext(user)
     }
     
-    func configure(isAvatartVisible isVisible: Bool) {
+    func changeAvatarVisibility(isVisible: Bool) {
         self._isAvatartVisible.onNext(isVisible)
     }
 }
