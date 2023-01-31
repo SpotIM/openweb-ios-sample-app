@@ -97,7 +97,11 @@ fileprivate extension OWPreConversationCoordinator {
             .outputs.urlClickedOutput
         
         // Coordinate to safari tab
-        Observable.merge(openSafariViewControllerObservable, viewModel.outputs.urlClickedOutput)
+        Observable.merge(
+            openSafariViewControllerObservable,
+            viewModel.outputs.urlClickedOutput,
+            viewModel.outputs.footerViewViewModel.outputs.openUrl
+        )
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }
                     let safariCoordinator = OWSafariTabCoordinator(router: self.router,

@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 
-// TODO: complete
 internal class OWPreConversationFooterView: UIView {
     fileprivate struct Metrics {
         static let identifier = "pre_conversation_footer_id"
@@ -113,6 +112,18 @@ fileprivate extension OWPreConversationFooterView {
     }
     
     func setupObservers() {
+        termsButton.rx.tap
+            .bind(to: viewModel.inputs.termsTapped)
+            .disposed(by: disposeBag)
+        
+        privacyButton.rx.tap
+            .bind(to: viewModel.inputs.privacyTapped)
+            .disposed(by: disposeBag)
+        
+        poweredByOWButton.rx.tap
+            .bind(to: viewModel.inputs.poweredByOWTapped)
+            .disposed(by: disposeBag)
+        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
