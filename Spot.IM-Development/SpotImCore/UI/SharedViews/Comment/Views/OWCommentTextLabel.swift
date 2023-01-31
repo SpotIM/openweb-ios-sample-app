@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-class OWCommentTextView: UILabel {
+class OWCommentTextLabel: UILabel {
     fileprivate var viewModel: OWCommentTextViewModeling!
     fileprivate var disposeBag: DisposeBag!
     
@@ -33,12 +33,12 @@ class OWCommentTextView: UILabel {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let viewModel = viewModel else { return }
-        
-        viewModel.inputs.width.onNext(self.frame.width)
+        print("NOGAH: OWCommentTextLabel layoutSubviews width - \(self.bounds.width)")
+        viewModel.inputs.width.onNext(self.bounds.width)
     }
 }
 
-extension OWCommentTextView: UIGestureRecognizerDelegate {
+extension OWCommentTextLabel: UIGestureRecognizerDelegate {
     @objc
     func handleTap(gesture: UITapGestureRecognizer) {
         if isTarget(substring: viewModel.outputs.readMoreText, destinationOf: gesture) {
@@ -51,10 +51,17 @@ extension OWCommentTextView: UIGestureRecognizerDelegate {
     }
 }
 
-fileprivate extension OWCommentTextView {
+fileprivate extension OWCommentTextLabel {
     func setupUI() {
+//        self.wrapContent()
+//        self.hugContent()
 //        self.OWSnp.makeConstraints { make in
-//            make.height.equalTo(0)
+//            heightConstraint = make.height.equalTo(0).constraint
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+//            self?.OWSnp.remakeConstraints { make in
+//                make.height.equalTo(500)
+//            }
 //        }
     }
     
@@ -70,8 +77,14 @@ fileprivate extension OWCommentTextView {
 //            .subscribe(onNext: { [weak self] newHeight in
 //                guard let self = self else { return }
 //                self.OWSnp.updateConstraints { make in
-//                    make.height.equalTo(newHeight)
+//                    if let constraint = self.heightConstraint {
+//                        self.heightConstraint?.update(inset: newHeight)
+//                    } else {
+//                        self.heightConstraint = make.height.equalTo(0).constraint
+//                    }
 //                }
+////                self.setNeedsLayout()
+////                self.layoutIfNeeded()
 //            })
 //            .disposed(by: disposeBag)
     }
