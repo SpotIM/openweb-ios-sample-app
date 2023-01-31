@@ -75,12 +75,14 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     fileprivate let _spotId = BehaviorSubject<String>(value: Metrics.preFilledSpotId)
     var spotId: Observable<String> {
         return _spotId
+            .distinctUntilChanged()
             .asObservable()
     }
     
     fileprivate let _postId = BehaviorSubject<String>(value: Metrics.preFilledPostId)
     var postId: Observable<String> {
         return _postId
+            .distinctUntilChanged()
             .asObservable()
     }
     
@@ -130,10 +132,12 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
 fileprivate extension BetaNewAPIViewModel {
     func setupObservers() {
         enteredSpotId
+            .distinctUntilChanged()
             .bind(to: _spotId)
             .disposed(by: disposeBag)
         
         enteredPostId
+            .distinctUntilChanged()
             .bind(to: _postId)
             .disposed(by: disposeBag)
         
