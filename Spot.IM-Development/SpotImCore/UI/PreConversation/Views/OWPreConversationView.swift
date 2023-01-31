@@ -20,6 +20,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let btnFullConversationFontSize: CGFloat = 14
         static let btnFullConversationTextPadding: CGFloat = 13
         static let btnFullConversationTopPadding: CGFloat = 13
+        static let bottomPadding: CGFloat = 23
 
         
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
@@ -32,17 +33,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         
         static let separatorHeight: CGFloat = 1.0
     }
-    
-    // TODO: Testing - remove later (hard coded cause only for testing)
-    fileprivate lazy var btnCommentCreation: UIButton = {
-        return "Comment Creation - testing"
-            .button
-            .backgroundColor(.orange)
-            .textColor(.white)
-            .corner(radius: 12.0)
-            .withPadding(20)
-            .font(UIFont.preferred(style: .regular, of: 20))
-    }()
     
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
     
@@ -83,6 +73,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return tableView
     }()
     fileprivate lazy var btnFullConversation: UIButton = {
+        // TODO: button text should be handle via VM - for button only mode etc
         return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
             .button
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
@@ -177,14 +168,6 @@ fileprivate extension OWPreConversationView {
             }
         }
         
-        
-        
-//        self.addSubview(btnCommentCreation)
-//        btnCommentCreation.OWSnp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.bottom.equalToSuperview().offset(-20)
-//        }
-        
         self.addSubview(btnFullConversation)
         btnFullConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
@@ -197,45 +180,8 @@ fileprivate extension OWPreConversationView {
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(btnFullConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
-            make.bottom.equalToSuperview().offset(-23)
+            make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
         }
-        
-        // After building the other views, position the table view in the appropriate place
-        //        self.addSubviews(tableView, footerView)
-        //        if SpotIm.buttonOnlyMode != .withoutTitle {
-        //            self.addSubview(header)
-        //            header.OWSnp.makeConstraints { make in
-        //                make.top.equalToSuperview()
-        //                make.leading.trailing.equalToSuperview()
-        //                make.height.equalTo(Metrics.headerHeight)
-        //            }
-        //        }
-        //        if !viewModel.outputs.isButtonOnlyModeEnabled {
-        //            self.addSubviews(communityGuidelinesView, communityQuestionView, commentCreationEntryView)
-        //            communityGuidelinesView.OWSnp.makeConstraints { make in
-        //                make.top.equalTo(header.OWSnp.bottom)
-        //                make.leading.trailing.equalToSuperview()
-        //            }
-        //            communityQuestionView.OWSnp.makeConstraints { make in
-        //                make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
-        //                make.leading.trailing.equalToSuperview()
-        //            }
-        //            commentCreationEntryView.OWSnp.makeConstraints { make in
-        //                make.top.equalTo(communityQuestionView.OWSnp.bottom)
-        //                make.leading.trailing.equalToSuperview()
-        //                make.height.equalTo(Metrics.whatYouThinkHeight)
-        //            }
-        //        }
-        //        tableView.OWSnp.makeConstraints { make in
-        //            make.top.equalTo(commentCreationEntryView.OWSnp.bottom)
-        //            make.leading.trailing.equalToSuperview()
-        //            make.height.equalTo(0.0)
-        //        }
-        //        let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled && SpotIm.buttonOnlyMode == .withoutTitle ? header.OWSnp.bottom :  tableView.OWSnp.bottom
-        //        footerView.OWSnp.makeConstraints { make in
-        //            make.top.equalTo(footerViewTopConstraint)
-        //            make.leading.trailing.equalToSuperview()
-        //        }
     }
     
     func setupObservers() {
@@ -265,14 +211,6 @@ fileprivate extension OWPreConversationView {
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
-        
-        btnCommentCreation.rx.tap
-                .voidify()
-                .bind(onNext: { [weak self] in
-                    self?.viewModel.inputs.commentCreationTap.onNext(.comment)
-                })
-                .disposed(by: disposeBag)
-        
                 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
