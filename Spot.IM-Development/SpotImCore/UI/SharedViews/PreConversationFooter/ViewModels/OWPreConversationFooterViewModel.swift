@@ -27,9 +27,15 @@ protocol OWPreConversationFooterViewModeling {
 class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWPreConversationFooterViewModelingInputs, OWPreConversationFooterViewModelingOutputs {
     var inputs: OWPreConversationFooterViewModelingInputs { return self }
     var outputs: OWPreConversationFooterViewModelingOutputs { return self }
-        
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+    
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+    }
+    
     fileprivate var mobileSdkConfig: Observable<SPConfigurationSDKStatus> {
-        OWSharedServicesProvider.shared.spotConfigurationService()
+        servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationSDKStatus? in
                 return config.mobileSdk
