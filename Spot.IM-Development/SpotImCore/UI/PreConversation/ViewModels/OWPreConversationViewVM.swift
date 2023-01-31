@@ -177,17 +177,9 @@ fileprivate extension OWPreConversationViewViewModel {
                         guard let self = self, let responseComments = response.conversation?.comments else { return nil }
                         var viewModels = [OWPreConversationCellOption]()
                         
-                        let comments: [SPComment]
-                        switch self.preConversationStyle {
-                        case .regular(let numOfComments):
-                            comments = Array(responseComments.prefix(numOfComments))
-                        case .compact:
-                            comments = Array(responseComments.prefix(1))
-                        default:
-                            comments = []
-                        }
-                        
-                        
+                        let numOfComments = self.preConversationStyle.numberOfComments
+                        let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+      
                         for (index, comment) in comments.enumerated() {
                             // TODO: replies
                             guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
@@ -261,16 +253,7 @@ fileprivate extension OWPreConversationViewViewModel {
     
     func populateInitialUI() {
         if self.shouldShowComments {
-            let numberOfComments: Int
-            switch self.preConversationStyle {
-            case .regular(let numOfComments):
-                numberOfComments = numOfComments
-            case .compact:
-                numberOfComments = 1
-            default:
-                numberOfComments = 0
-            }
-            
+            let numberOfComments = self.preConversationStyle.numberOfComments
             let skeletonCellVMs = (0 ..< numberOfComments).map { _ in OWCommentSkeletonShimmeringCellViewModel() }
             let skeletonCells = skeletonCellVMs.map { OWPreConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
             _cellsViewModels.append(contentsOf: skeletonCells)
