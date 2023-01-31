@@ -11,13 +11,20 @@ import Foundation
 #if NEW_API
 public struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
     public var selectedCommentId: String?
+    public var style: OWConversationStyle
     
-    public init(selectedCommentId: String? = nil) {
+    public init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
         self.selectedCommentId = selectedCommentId
+        self.style = style
     }
     
     @discardableResult public mutating func selectedCommentId(id: String?) -> OWConversationSettingsBuilder {
         self.selectedCommentId = id
+        return self
+    }
+    
+    @discardableResult public mutating func style(_ style: OWConversationStyle) -> OWConversationSettingsBuilder {
+        self.style = style
         return self
     }
 }
