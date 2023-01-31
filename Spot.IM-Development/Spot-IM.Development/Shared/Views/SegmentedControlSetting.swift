@@ -17,6 +17,7 @@ class SegmentedControlSetting: UIView {
         static let verticalOffset: CGFloat = 10
         static let horizontalOffset: CGFloat = 10
         static let segmentMinWidth: CGFloat = 220
+        static let titleNumberOfLines: Int = 2
     }
     
     fileprivate let title: String
@@ -26,7 +27,7 @@ class SegmentedControlSetting: UIView {
         return title
             .label
             .font(FontBook.paragraph)
-            .numberOfLines(2)
+            .numberOfLines(Metrics.titleNumberOfLines)
             .lineBreakMode(.byWordWrapping)
     }()
     
