@@ -16,6 +16,7 @@ class PickerSetting: UIView {
         static let titleFontSize: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
         static let pickerMaxWidth: CGFloat = 220
+        static let titleNumberOfLines: Int = 2
     }
     
     fileprivate let title: String
@@ -26,7 +27,7 @@ class PickerSetting: UIView {
         return title
             .label
             .font(FontBook.paragraph)
-            .numberOfLines(2)
+            .numberOfLines(Metrics.titleNumberOfLines)
             .lineBreakMode(.byWordWrapping)
     }()
     
