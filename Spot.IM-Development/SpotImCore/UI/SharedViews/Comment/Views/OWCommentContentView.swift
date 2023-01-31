@@ -17,8 +17,8 @@ class OWCommentContentView: UIView {
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
     
-    fileprivate lazy var textLabel: OWCommentTextView = {
-       return OWCommentTextView()
+    fileprivate lazy var textLabel: OWCommentTextLabel = {
+       return OWCommentTextLabel()
             .numberOfLines(0)
     }()
     
@@ -28,6 +28,7 @@ class OWCommentContentView: UIView {
     
     fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate var disposeBag: DisposeBag!
+    fileprivate var textHeightConstraint: OWConstraint?
 
     
     required init?(coder aDecoder: NSCoder) {
@@ -53,6 +54,7 @@ fileprivate extension OWCommentContentView {
         
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
+            textHeightConstraint = make.height.equalTo(0).constraint
         }
         
         mediaView.OWSnp.makeConstraints { make in
@@ -90,6 +92,20 @@ fileprivate extension OWCommentContentView {
                         size != CGSize.zero ? Metrics.commentMediaTopPadding : Metrics.emptyCommentMediaTopPadding
                     )
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.collapsableLabelViewModel
+            .outputs.height
+            .subscribe(onNext: { [weak self] newHeight in
+//                self?.textLabel.OWSnp.updateConstraints { make in
+                print("NOGAH: update height \(newHeight), comment: \(self?.textLabel.text ?? "none")")
+                self?.textHeightConstraint?.update(offset: newHeight)
+                self?.setNeedsLayout()
+                self?.layoutIfNeeded()
+                
+//                }
+                
             })
             .disposed(by: disposeBag)
     }
