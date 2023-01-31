@@ -11,9 +11,11 @@ import Foundation
 #if NEW_API
 public protocol OWConversationSettingsProtocol {
     var selectedCommentId: String? { get }
+    var style: OWConversationStyle { get }
 }
 #else
 protocol OWConversationSettingsProtocol {
     var selectedCommentId: String? { get }
+    var style: OWConversationStyle { get }
 }
 #endif
