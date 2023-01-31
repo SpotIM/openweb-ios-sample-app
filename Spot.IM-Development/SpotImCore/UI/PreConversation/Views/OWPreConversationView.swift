@@ -27,7 +27,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 1200
+        static let initialHeight: CGFloat = 800
         static let changedHeight: CGFloat = 700
         
         static let separatorHeight: CGFloat = 1.0
@@ -64,9 +64,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
         return view
     }()
-    fileprivate lazy var footerView: OWPreConversationFooterView = {
-        return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
-    }()
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -74,7 +71,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
         tableView.allowsSelection = false
-//        tableView.estimatedRowHeight = 280
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 280
+        tableView.hugContent()
+        tableView.wrapContent()
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
@@ -90,6 +90,9 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .corner(radius: Metrics.btnFullConversationCornerRadius)
             .withPadding(Metrics.btnFullConversationTextPadding)
             .font(UIFont.preferred(style: .medium, of: Metrics.btnFullConversationFontSize))
+    }()
+    fileprivate lazy var footerView: OWPreConversationFooterView = {
+        return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
     }()
     
     fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
@@ -171,7 +174,6 @@ fileprivate extension OWPreConversationView {
                 make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
                 make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
                 make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-//                make.bottom.equalToSuperview() // TODO: bottom constraint
             }
         }
         
@@ -185,11 +187,18 @@ fileprivate extension OWPreConversationView {
         
         self.addSubview(btnFullConversation)
         btnFullConversation.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
         
-        
+        self.addSubview(footerView)
+        footerView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(btnFullConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.bottom.equalToSuperview().offset(-23)
+        }
         
         // After building the other views, position the table view in the appropriate place
         //        self.addSubviews(tableView, footerView)
