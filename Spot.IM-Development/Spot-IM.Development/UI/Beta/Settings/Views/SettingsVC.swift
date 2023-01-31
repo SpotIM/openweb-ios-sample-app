@@ -52,6 +52,11 @@ class SettingsVC: UIViewController {
         return SegmentedControlSetting(title: title, items: items)
     }()
     
+    fileprivate lazy var textFieldArticleURL: TextFieldSetting = {
+        let txtField = TextFieldSetting(title: viewModel.outputs.articleURLTitle, font: FontBook.paragraph)
+        return txtField
+    }()
+    
     fileprivate let viewModel: SettingsViewModeling
     fileprivate let disposeBag = DisposeBag()
     
@@ -117,6 +122,12 @@ fileprivate extension SettingsVC {
         segmentedModalStyle.snp.makeConstraints { make in
             make.top.equalTo(segmentedThemeMode.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+        }
+        
+        scrollView.addSubview(textFieldArticleURL)
+        textFieldArticleURL.snp.makeConstraints { make in
+            make.top.equalTo(segmentedModalStyle.snp.bottom).offset(Metrics.verticalOffset)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalOffset)
         }
     }
@@ -143,6 +154,10 @@ fileprivate extension SettingsVC {
             .bind(to: segmentedModalStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
         
+        viewModel.outputs.articleAssociatedURL
+            .bind(to: textFieldArticleURL.rx.textFieldText)
+            .disposed(by: disposeBag)
+        
         switchHideArticleHeader.rx.isOn
             .bind(to: viewModel.inputs.hideArticleHeaderToggled)
             .disposed(by: disposeBag)
@@ -161,6 +176,10 @@ fileprivate extension SettingsVC {
         
         segmentedModalStyle.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.modalStyleSelectedIndex)
+            .disposed(by: disposeBag)
+        
+        textFieldArticleURL.rx.textFieldText
+            .bind(to: viewModel.inputs.articleAssociatedSelectedURL)
             .disposed(by: disposeBag)
     }
 }
