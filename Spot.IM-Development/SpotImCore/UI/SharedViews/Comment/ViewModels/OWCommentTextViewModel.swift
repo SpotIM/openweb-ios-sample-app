@@ -145,8 +145,10 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
     
     var height: Observable<CGFloat> {
-        Observable.combineLatest(attributedString, widthObservable) { attributedString, width in
-            return attributedString?.height(withConstrainedWidth: width)
+        attributedString
+            .withLatestFrom(widthObservable) { attributedString, width in
+                let newHeight = attributedString?.height(withConstrainedWidth: width)
+                return newHeight
         }
         .unwrap()
         .distinctUntilChanged()
@@ -176,7 +178,8 @@ fileprivate extension OWCommentTextViewModel {
             .disposed(by: disposeBag)
         
         height
-            .subscribe(onNext: {_ in
+            .subscribe(onNext: { newHeight in
+                print("NOGAH: update text height change: \(newHeight)")
                 self.heighChange.onNext()
             })
             .disposed(by: disposeBag)

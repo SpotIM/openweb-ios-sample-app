@@ -74,7 +74,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
         tableView.allowsSelection = false
-        tableView.estimatedRowHeight = 280
+//        tableView.estimatedRowHeight = 280
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
@@ -244,8 +244,10 @@ fileprivate extension OWPreConversationView {
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
                     UIView.performWithoutAnimation {
+                        print("NOGAH: update row: \(index)")
+                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
 //                        self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
-                        self.tableView.reloadData()
+//                        self.tableView.reloadData()
                     }
                 })
                 .disposed(by: disposeBag)
