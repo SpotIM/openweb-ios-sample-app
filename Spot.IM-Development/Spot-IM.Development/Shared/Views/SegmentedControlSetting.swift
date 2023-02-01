@@ -38,12 +38,13 @@ class SegmentedControlSetting: UIView {
         return segment
     }()
     
-    init(title: String, items: [String]) {
+    init(title: String, accessibilityPrefixId: String, items: [String]) {
         self.title = title
         self.items = items
         super.init(frame: .zero)
         
         setupViews()
+        applyAccessibility(prefixId: accessibilityPrefixId)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -53,6 +54,11 @@ class SegmentedControlSetting: UIView {
 }
 
 fileprivate extension SegmentedControlSetting {
+    func applyAccessibility(prefixId: String) {
+        segmentTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
+        segmentedControl.accessibilityIdentifier = prefixId + "_segment_id"
+    }
+    
     func setupViews() {
         self.addSubview(segmentTitleLbl)
         segmentTitleLbl.snp.makeConstraints { make in
