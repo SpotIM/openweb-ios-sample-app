@@ -10,10 +10,10 @@ import Foundation
 
 #if NEW_API
 public protocol OWPreConversationSettingsProtocol {
-    var numberOfComments: Int { get }
+    var style: OWPreConversationStyle { get }
 }
 #else
 protocol OWPreConversationSettingsProtocol {
-    var numberOfComments: Int { get }
+    var style: OWPreConversationStyle { get }
 }
 #endif
