@@ -54,6 +54,19 @@ platform :ios do
     )
   end
 
+  desc "Build device ipa"
+  lane :build_device_ipa do
+    match(type: "development", readonly: true)
+    cocoapods(use_bundle_exec: false)
+    gym(
+        scheme: "Spot-IM.Development",
+        workspace: "Spot-IM.Development.xcworkspace",
+        export_method: "development",
+        destination: "generic/platform=iOS",
+        export_options: { compileBitcode: false}
+    )
+  end
+
   # Excpect parameter `version`
   desc "Build a release version of the SDK"
   lane :build_release_sdk do |options|
