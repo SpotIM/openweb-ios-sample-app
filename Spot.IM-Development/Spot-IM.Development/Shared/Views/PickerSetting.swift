@@ -35,7 +35,7 @@ class PickerSetting: UIView {
         return UIPickerView()
     }()
     
-    init(title: String, items: [String]? = nil) {
+    init(title: String, accessibilityPrefixId: String, items: [String]? = nil) {
         self.title = title
         if let items = items {
             self.items.onNext(items)
@@ -44,6 +44,7 @@ class PickerSetting: UIView {
         
         setupViews()
         setupObservers()
+        applyAccessibility(prefixId: accessibilityPrefixId)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -53,6 +54,11 @@ class PickerSetting: UIView {
 }
 
 fileprivate extension PickerSetting {
+    func applyAccessibility(prefixId: String) {
+        pickerTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
+        pickerControl.accessibilityIdentifier = prefixId + "_picker_id"
+    }
+    
     func setupViews() {
         self.addSubview(pickerControl)
         self.addSubview(pickerTitleLbl)
