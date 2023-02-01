@@ -12,6 +12,13 @@ import RxSwift
 class SettingsVC: UIViewController {
     
     fileprivate struct Metrics {
+        static let identifier = "settings_vc_id"
+        static let switchHideArticleHeaderIdentifier = "hide_article_header"
+        static let switchCommentCreationNewDesignIdentifier = "comment_creation_new_design"
+        static let segmentedReadOnlyModeIdentifier = "read_only_mode"
+        static let segmentedThemeModeIdentifier = "theme_mode"
+        static let segmentedModalStyleIdentifier = "modal_style"
+        static let textFieldArticleURLIdentifier = "article_url"
         static let verticalOffset: CGFloat = 50
         static let horizontalOffset: CGFloat = 10
     }
@@ -24,36 +31,36 @@ class SettingsVC: UIViewController {
     }()
         
     fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle)
+        return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle, accessibilityPrefixId: Metrics.switchHideArticleHeaderIdentifier)
     }()
     
     fileprivate lazy var switchCommentCreationNewDesign: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.commentCreationNewDesignTitle)
+        return SwitchSetting(title: viewModel.outputs.commentCreationNewDesignTitle, accessibilityPrefixId: Metrics.switchCommentCreationNewDesignIdentifier)
     }()
     
     fileprivate lazy var segmentedReadOnlyMode: SegmentedControlSetting = {
         let title = viewModel.outputs.readOnlyTitle
         let items = viewModel.outputs.readOnlySettings
         
-        return SegmentedControlSetting(title: title, items: items)
+        return SegmentedControlSetting(title: title, accessibilityPrefixId: Metrics.segmentedReadOnlyModeIdentifier, items: items)
     }()
     
     fileprivate lazy var segmentedThemeMode: SegmentedControlSetting = {
         let title = viewModel.outputs.themeModeTitle
         let items = viewModel.outputs.themeModeSettings
         
-        return SegmentedControlSetting(title: title, items: items)
+        return SegmentedControlSetting(title: title, accessibilityPrefixId: Metrics.segmentedThemeModeIdentifier, items: items)
     }()
     
     fileprivate lazy var segmentedModalStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.modalStyleTitle
         let items = viewModel.outputs.modalStyleSettings
         
-        return SegmentedControlSetting(title: title, items: items)
+        return SegmentedControlSetting(title: title, accessibilityPrefixId: Metrics.segmentedModalStyleIdentifier, items: items)
     }()
     
     fileprivate lazy var textFieldArticleURL: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: viewModel.outputs.articleURLTitle, font: FontBook.paragraph)
+        let txtField = TextFieldSetting(title: viewModel.outputs.articleURLTitle, accessibilityPrefixId: Metrics.textFieldArticleURLIdentifier, font: FontBook.paragraph)
         return txtField
     }()
     
@@ -73,6 +80,7 @@ class SettingsVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -82,6 +90,10 @@ class SettingsVC: UIViewController {
 }
 
 fileprivate extension SettingsVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+    }
+    
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         

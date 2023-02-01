@@ -12,6 +12,17 @@ import SpotImCore
 
 class SettingsViewController: UIViewController {
     
+    fileprivate struct Metrics {
+        static let identifier = "settings_view_controller_id"
+        static let hideArtcleHeaderSwitchIdentifier = "hide_artcle_header_switch_id"
+        static let createCommentNewDesignSwitchIdentifier = "create_comment_new_design_switch_id"
+        static let darkModeSwitchIdentifier = "dark_mode_switch_id"
+        static let modeControlIdentifier = "mode_control_id"
+        static let buttonOnlyModeControlIdentifier = "button_only_mode_control_id"
+        static let readOnlyModeControlIdentifier = "read_only_mode_control_id"
+        static let enableCustomNavigationTitleSwitchIdentifier = "enable_custom_navigation_title_switch_id"
+    }
+    
     @IBOutlet weak var hideArtcleHeaderSwitch: UISwitch!
     @IBOutlet weak var createCommentNewDesignSwitch: UISwitch!
     @IBOutlet weak var darkModeSwitch: UISwitch!
@@ -102,6 +113,11 @@ class SettingsViewController: UIViewController {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
     }
 
+    override func loadView() {
+        super.loadView()
+        applyAccessibility()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(navBarHiddenOldValue, animated: animated)
     }
@@ -150,5 +166,17 @@ class SettingsViewController: UIViewController {
             SpotIm.overrideUserInterfaceStyle = nil
         }
     }
+}
 
+fileprivate extension SettingsViewController {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        hideArtcleHeaderSwitch.accessibilityIdentifier = Metrics.hideArtcleHeaderSwitchIdentifier
+        createCommentNewDesignSwitch.accessibilityIdentifier = Metrics.createCommentNewDesignSwitchIdentifier
+        darkModeSwitch.accessibilityIdentifier = Metrics.darkModeSwitchIdentifier
+        modeControl.accessibilityIdentifier = Metrics.modeControlIdentifier
+        buttonOnlyModeControl.accessibilityIdentifier = Metrics.buttonOnlyModeControlIdentifier
+        readOnlyModeControl.accessibilityIdentifier = Metrics.readOnlyModeControlIdentifier
+        enableCustomNavigationTitleSwitch.accessibilityIdentifier = Metrics.enableCustomNavigationTitleSwitchIdentifier
+    }
 }

@@ -16,6 +16,13 @@ import SnapKit
 class UIFlowsVC: UIViewController {
     
     fileprivate struct Metrics {
+        static let identifier = "uiviews_vc_id"
+        static let btnPreConversationPushModeIdentifier = "btn_pre_conversation_push_mode_id"
+        static let btnPreConversationPresentModeIdentifier = "btn_pre_conversation_present_mode_id"
+        static let btnFullConversationPushModeIdentifier = "btn_full_conversation_push_mode_id"
+        static let btnFullConversationPresentModeIdentifier = "btn_full_conversation_present_mode_id"
+        static let btnCommentCreationPushModeIdentifier = "btn_comment_creation_push_mode_id"
+        static let btnCommentCreationPresentModeIdentifier = "btn_comment_creation_present_mode_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -68,6 +75,7 @@ class UIFlowsVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -77,6 +85,16 @@ class UIFlowsVC: UIViewController {
 }
 
 fileprivate extension UIFlowsVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        btnPreConversationPushMode.accessibilityIdentifier = Metrics.btnPreConversationPushModeIdentifier
+        btnPreConversationPresentMode.accessibilityIdentifier = Metrics.btnPreConversationPresentModeIdentifier
+        btnFullConversationPushMode.accessibilityIdentifier = Metrics.btnFullConversationPushModeIdentifier
+        btnFullConversationPresentMode.accessibilityIdentifier = Metrics.btnFullConversationPresentModeIdentifier
+        btnCommentCreationPushMode.accessibilityIdentifier = Metrics.btnCommentCreationPushModeIdentifier
+        btnCommentCreationPresentMode.accessibilityIdentifier = Metrics.btnCommentCreationPresentModeIdentifier
+    }
+    
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         

@@ -41,7 +41,7 @@ class TextFieldSetting: UIView {
         return textField
     }()
     
-    init(title: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
+    init(title: String, accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
         self.title = title
         if let text = text {
             self.text.onNext(text)
@@ -51,6 +51,7 @@ class TextFieldSetting: UIView {
         
         setupViews()
         setupObservers()
+        applyAccessibility(prefixId: accessibilityPrefixId)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -60,6 +61,11 @@ class TextFieldSetting: UIView {
 }
 
 fileprivate extension TextFieldSetting {
+    func applyAccessibility(prefixId: String) {
+        textFieldTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
+        textFieldControl.accessibilityIdentifier = prefixId + "_text_field_id"
+    }
+    
     func setupViews() {
         let stackView = UIStackView()
         self.addSubview(stackView)
