@@ -230,24 +230,24 @@ jobs:
           paths:
             - 'vendor/bundle'
 
-      - run:
-          name: Build app and run unit-tests
-          command: |
-            bundle exec fastlane unit_tests
-            
       # Check for SwiftLint errors and warnings
       - run:
           name: SwiftLint
           command: |
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             brew install swiftlint
-            swiftlint lint --config Spot.IM-Development/swiftlint/.swiftlint.yml
+            swiftlint lint --config swiftlint/.swiftlint.yml
 
       # Fail the PR if any SwiftLint errors or warnings are found
       - run:
           name: Fail PR if SwiftLint fails
           command: |
             if [ -f "./swiftlint.log" ]; then echo "SwiftLint failed." && cat "./swiftlint.log" && exit 1; else echo "SwiftLint passed."; fi
+            
+      - run:
+          name: Build app and run unit-tests
+          command: |
+            bundle exec fastlane unit_tests
 
       # Collect XML test results data to show in the UI, and save the same XML
       # files under test-results folder in the Artifacts tab
