@@ -287,6 +287,8 @@ internal final class SPCommentCell: SPBaseTableViewCell, MessageItemContainable 
     
     private func updateUserView(with dataModel: CommentViewModel) {
         dataModel.commentUserVM.inputs.configure(with: dataModel)
+        let avatarVM = dataModel.commentUserVM.outputs.avatarVM
+        avatarVM.inputs.changeAvatarVisibility(isVisible: !dataModel.isHiddenComment())
         userView.configure(with: dataModel)
     }
     

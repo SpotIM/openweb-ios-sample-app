@@ -16,6 +16,8 @@ import SnapKit
 class MiscellaneousVC: UIViewController {
     
     fileprivate struct Metrics {
+        static let identifier = "miscellaneous_vc_id"
+        static let btnConversationCounterIdentifier = "btn_conversation_counter_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonHeight: CGFloat = 50
@@ -47,6 +49,7 @@ class MiscellaneousVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -56,6 +59,11 @@ class MiscellaneousVC: UIViewController {
 }
 
 fileprivate extension MiscellaneousVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        btnConversationCounter.accessibilityIdentifier = Metrics.btnConversationCounterIdentifier
+    }
+    
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         
