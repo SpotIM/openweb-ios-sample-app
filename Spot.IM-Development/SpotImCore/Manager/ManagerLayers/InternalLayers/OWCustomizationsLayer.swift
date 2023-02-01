@@ -28,15 +28,6 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
     
-    var spacing: OWSpacing {
-        get {
-            return _spacing
-        }
-        set(newSpacing) {
-            _spacing = newSpacing
-        }
-    }
-    
     var sorting: OWSortingCustomizations {
         get {
             return _sortingCustomizer
@@ -75,7 +66,6 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     }
     
     fileprivate var _fontFamily: String? = nil
-    fileprivate var _spacing: OWSpacing = .regular
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
