@@ -236,7 +236,7 @@ jobs:
           command: |
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             brew install swiftlint
-            swiftlint lint --config swiftlint/.swiftlint.yml
+            swiftlint lint --config swiftlint/.swiftlint.yml || true
 
       # Fail the PR if any SwiftLint errors or warnings are found
       - run:
