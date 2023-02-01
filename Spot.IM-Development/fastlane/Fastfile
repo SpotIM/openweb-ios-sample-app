@@ -60,8 +60,8 @@ platform :ios do
   desc "Release Sample App (internal preset)"
   lane :release_demo_app do |options|
     # Set a build in the following range
-    internal_sample_app_build_low_threshold = 1
-    internal_sample_app_build_high_threshold = 50
+    internal_sample_app_build_low_threshold = 200
+    internal_sample_app_build_high_threshold = 300
     increment_build_in_range(build_low:internal_sample_app_build_low_threshold, build_high:internal_sample_app_build_high_threshold)
     # Set a specific version number
     set_version(version:options[:version])
