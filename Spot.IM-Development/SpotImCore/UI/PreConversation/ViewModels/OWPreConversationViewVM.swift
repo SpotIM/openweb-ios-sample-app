@@ -28,12 +28,13 @@ protocol OWPreConversationViewViewModelingOutputs {
     var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
     var footerViewViewModel: OWPreConversationFooterViewModeling { get }
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
-    var isButtonOnlyModeEnabled: Bool { get }
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
     var changeSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
+    var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
+    var shouldShowComments: Bool { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -55,14 +56,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return _cellsViewModels
             .rx_elements()
             .asObservable()
-    }
-    
-    fileprivate var numberOfMessagesToShow: Int {
-        return preConversationData.settings?.numberOfComments ?? 2
-    }
-    
-    var isButtonOnlyModeEnabled: Bool {
-        self.numberOfMessagesToShow == 0 || SpotIm.buttonOnlyMode.isEnabled()
     }
     
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> {
@@ -94,6 +87,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
         return OWPreConversationFooterViewModel()
+    }()
+    
+    fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
+        return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
     
     
@@ -131,6 +128,26 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
     
     var viewInitialized = PublishSubject<Void>()
+    
+    var shouldShowCommunityGuidelinesAndQuestion: Bool {
+        switch self.preConversationStyle {
+        case .regular(_):
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var shouldShowComments: Bool {
+        switch self.preConversationStyle {
+        case .regular(_):
+            return true
+        case .compact:
+            return true
+        default:
+            return false
+        }
+    }
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -170,15 +187,19 @@ fileprivate extension OWPreConversationViewViewModel {
                     .conversation
                     .conversationRead(postId: postId, mode: OWCommentSortMode.newest, page: OWPaginationPage.first, parentId: "", offset: 0)
                     .response
-                    .map { response -> SPConversationReadRM? in
-                        guard let comments = response.conversation?.comments else { return nil }
+                    .map { [weak self] response -> SPConversationReadRM? in
+                        guard let self = self, let responseComments = response.conversation?.comments else { return nil }
                         var viewModels = [OWPreConversationCellOption]()
-                        for (index, comment) in comments.prefix(self.numberOfMessagesToShow).enumerated() {
+                        
+                        let numOfComments = self.preConversationStyle.numberOfComments
+                        let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+      
+                        for (index, comment) in comments.enumerated() {
                             // TODO: replies
                             guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
                             let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, lineLimit: 4))
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
-                            if (index < self.numberOfMessagesToShow - 1) {
+                            if (index < comments.count - 1) {
                                 viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
                             }
                         }
@@ -280,10 +301,11 @@ fileprivate extension OWPreConversationViewViewModel {
     }
     
     func populateInitialUI() {
-        let skeletonCellVMs = (0 ..< numberOfMessagesToShow).map { _ in
-            return OWCommentSkeletonShimmeringCellViewModel()
+        if self.shouldShowComments {
+            let numberOfComments = self.preConversationStyle.numberOfComments
+            let skeletonCellVMs = (0 ..< numberOfComments).map { _ in OWCommentSkeletonShimmeringCellViewModel() }
+            let skeletonCells = skeletonCellVMs.map { OWPreConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
+            _cellsViewModels.append(contentsOf: skeletonCells)
         }
-        let skeletonCells = skeletonCellVMs.map { OWPreConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
-        _cellsViewModels.append(contentsOf: skeletonCells)
     }
 }

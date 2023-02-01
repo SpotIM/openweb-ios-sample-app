@@ -12,6 +12,11 @@ import SnapKit
 
 class AuthenticationPlaygroundNewAPIVC: UIViewController {
     fileprivate struct Metrics {
+        static let identifier = "authentication_playground_new_api_vc_id"
+        static let switchInitializeSDKIdentifier = "initialize_sdk"
+        static let pickerGenericSSOIdentifier = "generic_sso"
+        static let pickerJWTSSOIdentifier = "jwt_sso"
+        static let switchAutomaticallyDismissIdentifier = "automatically_dismiss"
         static let verticalMargin: CGFloat = 20
         static let verticalBigMargin: CGFloat = 60
         static let horizontalMargin: CGFloat = 10
@@ -31,7 +36,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
     }()
     
     fileprivate lazy var switchInitializeSDK: SwitchSetting = {
-        return SwitchSetting(title: NSLocalizedString("InitializeSDKFirst", comment: "") + ":")
+        return SwitchSetting(title: NSLocalizedString("InitializeSDKFirst", comment: "") + ":", accessibilityPrefixId: Metrics.switchInitializeSDKIdentifier)
     }()
     
     fileprivate lazy var lblAutomaticallyDismissDescription: UILabel = {
@@ -43,16 +48,16 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
     
     fileprivate lazy var pickerGenericSSO: PickerSetting = {
         let title = NSLocalizedString("GenericSSO", comment: "") + ":"
-        return PickerSetting(title: title)
+        return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerGenericSSOIdentifier)
     }()
     
     fileprivate lazy var pickerJWTSSO: PickerSetting = {
         let title = NSLocalizedString("JWTSSO", comment: "") + ":"
-        return PickerSetting(title: title)
+        return PickerSetting(title: title, accessibilityPrefixId: Metrics.pickerJWTSSOIdentifier)
     }()
     
     fileprivate lazy var switchAutomaticallyDismiss: SwitchSetting = {
-        return SwitchSetting(title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":", isOn: true)
+        return SwitchSetting(title: NSLocalizedString("AutomaticallyDismissAfterLogin", comment: "") + ":", accessibilityPrefixId: Metrics.switchAutomaticallyDismissIdentifier, isOn: true)
     }()
     
     fileprivate lazy var lblGenericSSOStatus: UILabel = statusLabel
@@ -103,6 +108,7 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -112,6 +118,10 @@ class AuthenticationPlaygroundNewAPIVC: UIViewController {
 }
 
 fileprivate extension AuthenticationPlaygroundNewAPIVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+    }
+    
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         

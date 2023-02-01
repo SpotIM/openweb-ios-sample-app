@@ -27,7 +27,7 @@ struct SPConfigurationConversation: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case subscriberBadgeConfig = "subscriberBadge"
-        case disableShareComment = "disableShare"
+        case disableShareComment = "disable_share"
         case showCommentEditOption = "showCommentEditOption"
         case readBatchSize,
              socialEnable,
