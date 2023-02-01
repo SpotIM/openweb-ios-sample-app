@@ -68,7 +68,9 @@ final class OWCommentActionsView: OWBaseView {
     }
     
     func setIsDisabled(isDisabled: Bool) {
-        replyButton.isEnabled = !isDisabled
+        if (!isReadOnlyMode) {
+            replyButton.isEnabled = !isDisabled
+        }
         votingView.isUserInteractionEnabled = !isDisabled
     }
     
