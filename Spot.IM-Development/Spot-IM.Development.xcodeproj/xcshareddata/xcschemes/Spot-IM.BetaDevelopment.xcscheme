@@ -100,7 +100,7 @@
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "Beta"
+      buildConfiguration = "ReleaseBeta"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -117,10 +117,10 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Beta">
+      buildConfiguration = "ReleaseBeta">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Beta"
+      buildConfiguration = "ReleaseBeta"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
