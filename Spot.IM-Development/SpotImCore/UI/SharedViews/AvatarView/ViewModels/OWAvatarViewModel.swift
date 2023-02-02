@@ -38,7 +38,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var outputs: OWAvatarViewModelingOutputs { return self }
     
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)
+    fileprivate let _isAvatartVisible = BehaviorSubject<Bool>(value: true)
     
     fileprivate let imageURLProvider: SPImageProvider?
     
@@ -59,7 +59,6 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     
     fileprivate lazy var isAvatartVisible: Observable<Bool> = {
         self._isAvatartVisible
-            .unwrap()
     }()
     
     var imageType: Observable<OWImageType> {
