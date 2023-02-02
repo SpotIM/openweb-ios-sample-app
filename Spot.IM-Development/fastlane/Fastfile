@@ -70,7 +70,6 @@ platform :ios do
         readonly: true,
         api_key_path: "apple_api_key.json"
     )
-    match(type: "development", readonly: true)
     cocoapods(use_bundle_exec: false)
     gym(
         scheme: "Spot-IM.Development",
@@ -79,7 +78,7 @@ platform :ios do
         export_options: {
             signingStyle: "manual",
             provisioningProfiles: {
-                "im.spot.demo" => "match AppStore_im.spot.demo"
+                "im.spot.demo" => "match AppStore im.spot.demo"
             }
         },
         xcargs: "-allowProvisioningUpdates"
