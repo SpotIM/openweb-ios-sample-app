@@ -599,15 +599,15 @@
 		8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE882295069B400C8677C /* SwitchSetting.swift */; };
 		9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */; };
 		9E1589BC2941E65100A050CA /* UserDefaultsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */; };
-		9E53758C297841C000C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-		9E53758E2978476900C85983 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9E53758C297841C000C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9E53758E2978476900C85983 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9E53759029784D3700C85983 /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53758F29784D3700C85983 /* ThemeStyle.swift */; };
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
 		9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
-		9EE2CDED29798919000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-		9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77C297E84F100814648 /* PickerSetting.swift */; };
 		9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE77D297E84F100814648 /* TextFieldSetting.swift */; };
 		9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFFE780297E851400814648 /* UIColor+Extensions.swift */; };
@@ -4442,11 +4442,11 @@
 				3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */,
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
 				8DCBE87829478ECD00C8677C /* ConversationPreset.swift in Sources */,
-				9EE2CDEF297D2FFA000C0E38 /* BuildFile in Sources */,
+				9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */,
 				3D3E3ABC28B3A2A4003B4F05 /* ConversationCounterViewModel.swift in Sources */,
 				3D3E3ABF28B4EA04003B4F05 /* ConversationCounterRequiredData.swift in Sources */,
 				5D697A4122B65106001AD556 /* ViewController.swift in Sources */,
-				9EE2CDED29798919000C0E38 /* BuildFile in Sources */,
+				9EE2CDED29798919000C0E38 /* (null) in Sources */,
 				3D611B8A28C4DB07003960CE /* ImageProvider.swift in Sources */,
 				3DB3D188282A5038008654CF /* AuthenticationPlaygroundViewModel.swift in Sources */,
 				9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */,
@@ -4457,7 +4457,7 @@
 				8DCBE8722940D99E00C8677C /* UIViewsViewModel.swift in Sources */,
 				8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */,
 				3DB3D199282AFDD2008654CF /* FontBook.swift in Sources */,
-				9E53758C297841C000C85983 /* BuildFile in Sources */,
+				9E53758C297841C000C85983 /* (null) in Sources */,
 				3D6A4C0828524A40007420AD /* UIImage+URL.swift in Sources */,
 				9EFFE77E297E84F100814648 /* PickerSetting.swift in Sources */,
 				8DCBE868293DFC7700C8677C /* MicellaneousViewModel.swift in Sources */,
@@ -4501,7 +4501,7 @@
 				3D3E3ABA28B3A28A003B4F05 /* ConversationCounterVC.swift in Sources */,
 				3DB3D18B282A5624008654CF /* DLog.swift in Sources */,
 				3D611B8E28C4EE68003960CE /* MockArticleViewModel.swift in Sources */,
-				9E53758E2978476900C85983 /* BuildFile in Sources */,
+				9E53758E2978476900C85983 /* (null) in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4989,7 +4989,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "im.spot.demo Development";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore im.spot.demo";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NEW_API;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -5161,7 +5161,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "im.spot.demo Development";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore im.spot.demo";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PUBLIC_DEMO_APP;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -5515,7 +5515,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "im.spot.demo Development";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore im.spot.demo";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
