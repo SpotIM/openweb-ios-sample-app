@@ -76,6 +76,12 @@ platform :ios do
         scheme: "Spot-IM.Development",
         workspace: "Spot-IM.Development.xcworkspace",
         export_method: "app-store",
+        export_options: {
+            signingStyle: "manual",
+            provisioningProfiles: {
+                "im.spot.demo" => "match AppStore im.spot.demo"
+            }
+        },
         xcargs: "-allowProvisioningUpdates"
     )
     upload_to_testflight(api_key_path: "apple_api_key.json")
