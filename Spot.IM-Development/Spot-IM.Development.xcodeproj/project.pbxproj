@@ -5110,8 +5110,8 @@
 				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore im.spot.demo";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
