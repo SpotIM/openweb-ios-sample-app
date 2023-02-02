@@ -5091,7 +5091,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
-				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 203;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -5110,7 +5110,7 @@
 				MARKETING_VERSION = 1.18.1;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5126,7 +5126,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 203;
 				DEFINES_MODULE = YES;
@@ -5145,7 +5145,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore im.spot.demo";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
