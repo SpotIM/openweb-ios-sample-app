@@ -28,7 +28,9 @@ final class GoogleAdsProvider: NSObject, AdsProvider {
         self.spotId = spotId
     }
 
-    func setupAdsBanner(with adId: String = Configuration.testBannerID, in controller: UIViewController, validSizes: Set<AdSize>) {
+    func setupAdsBanner(with adId: String = Configuration.testBannerID,
+                        in controller: UIViewController,
+                        validSizes: Set<AdSize>) {
         var sizes: [NSValue] = validSizes.map { (size) -> NSValue in
             let gadSize = parseAdSizeToGADAdSize(adSize: size)
             return NSValueFromGADAdSize(gadSize)
@@ -105,7 +107,9 @@ extension GoogleAdsProvider: GADFullScreenContentDelegate {
 extension GoogleAdsProvider: GADBannerViewDelegate {
 
     func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
-        bannerDelegate?.bannerLoaded(bannerView: bannerView, adBannerSize: bannerView.adSize.size, adUnitID: bannerView.adUnitID ?? "")
+        bannerDelegate?.bannerLoaded(bannerView: bannerView,
+                                     adBannerSize: bannerView.adSize.size,
+                                     adUnitID: bannerView.adUnitID ?? "")
     }
 
     func bannerView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: Error) {

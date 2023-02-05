@@ -129,8 +129,10 @@ class ArticleTableViewCell: UITableViewCell {
             titleLabel.attributedText = attributedOutlineText(title, color: titleLabel.textColor,
                                                              outlineColor: Metrics.outlineColor, font: titleLabel.font)
 
-            descriptionLabel.attributedText = attributedOutlineText(description, color: descriptionLabel.textColor,
-                                                             outlineColor: Metrics.outlineColor, font: descriptionLabel.font)
+            descriptionLabel.attributedText = attributedOutlineText(description,
+                                                                    color: descriptionLabel.textColor,
+                                                                    outlineColor: Metrics.outlineColor,
+                                                                    font: descriptionLabel.font)
 
             if let url = URL(string: extract.thumbnailUrl) {
                 backgroundImageView.image(from: url)

@@ -27,7 +27,9 @@ protocol ConversationCounterViewModeling {
     var outputs: ConversationCounterViewModelingOutputs { get }
 }
 
-class ConversationCounterViewModel: ConversationCounterViewModeling, ConversationCounterViewModelingInputs, ConversationCounterViewModelingOutputs {
+class ConversationCounterViewModel: ConversationCounterViewModeling,
+                                        ConversationCounterViewModelingInputs,
+                                        ConversationCounterViewModelingOutputs {
     var inputs: ConversationCounterViewModelingInputs { return self }
     var outputs: ConversationCounterViewModelingOutputs { return self }
 
@@ -61,7 +63,9 @@ class ConversationCounterViewModel: ConversationCounterViewModeling, Conversatio
 
     fileprivate let _cellsViewModels = BehaviorSubject<[ConversationCounterCellViewModeling]?>(value: nil)
     var cellsViewModels: Observable<[ConversationCounterCellViewModeling]> {
+        // swiftlint:disable line_length
         return Observable.combineLatest(_cellsViewModels, _shouldShowError, showLoader) { viewModels, shouldShowError, shouldShowLoader in
+            // swiftlint:enable line_length
             guard !shouldShowLoader, !shouldShowError, let cellVMs = viewModels else { return [] }
             return cellVMs
         }

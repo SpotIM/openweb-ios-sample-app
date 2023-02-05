@@ -13,6 +13,7 @@ struct ConversationPreset {
     let conversationDataModel: SDKConversationDataModel
 }
 
+// swiftlint:disable line_length
 extension ConversationPreset {
     static let mockModels = Self.createMockModels()
 
@@ -26,7 +27,6 @@ extension ConversationPreset {
         return demoConversationPreset
 
     #else
-        // swiftlint:disable line_length
         return demoConversationPreset + [ConversationPreset(displayName: "FOX News",
                                                          conversationDataModel: SDKConversationDataModel(spotId: "sp_ANQXRpqH",
                                                                                                          postId: "urn:uri:base64:3cb1232f-b7ea-5546-81a5-395a75a27b1b")),
@@ -55,7 +55,7 @@ extension ConversationPreset {
                                                          conversationDataModel: SDKConversationDataModel(spotId: "sp_mobileSocialGuest",
                                                                                                          postId: "sdk1"))]
 
-        // swiftlint:enable line_length
     #endif
     }
 }
+// swiftlint:enable line_length
