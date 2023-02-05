@@ -3715,7 +3715,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    # Relative path from the .xcodeproj which contains this script\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
 		};
 		8EC0B5EED95074D03AAB854D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
