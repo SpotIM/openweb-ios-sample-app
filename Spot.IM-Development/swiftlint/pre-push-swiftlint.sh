@@ -8,21 +8,32 @@
 
 # hook script for swiftlint. It will triggered when you make a push.
 
-# Check if swiftlint is installed
-command -v swiftlint >/dev/null 2>&1 || { echo >&2 "SwiftLint is not installed. Aborting pre-push hook."; exit 1; }
+if test -d "/opt/homebrew/bin/"; then
+  PATH="/opt/homebrew/bin/:${PATH}"
+fi
 
-# Print message indicating that swiftlint check has started
-echo "Starting swiftlint check..."
+export PATH
 
-# Run swiftlint
-OUTPUT=$(swiftlint)
+# Set the path to the .swiftlint.yml config file
+SWIFTLINT_CONFIG="Spot.IM-Development/swiftlint/.swiftlint.yml"
 
-# Check if swiftlint found any warnings or errors
-if [[ $OUTPUT == *"warning:"* || $OUTPUT == *"error:"* ]]; then
-    echo "SwiftLint found warnings or errors:"
-    echo "$OUTPUT"
-    echo "Aborting pre-push-swiftlint hook."
-    exit 1
+# Check if the .swiftlint.yml file exists
+if [ -f $SWIFTLINT_CONFIG ]; then
+    # Check if swiftlint is installed
+    if which swiftlint >/dev/null; then
+        echo "SwiftLint check started..."
+        # Run swiftlint lint command with the specified config file
+        if swiftlint lint --strict --config $SWIFTLINT_CONFIG; then
+            echo "SwiftLint check succeeded"
+        else
+            echo "SwiftLint check failed, please fix the warnings and errors"
+            exit 1
+        fi
+    else
+        echo "warning: SwiftLint not installed."
+    fi
 else
-    echo "SwiftLint check succeeded"
+    # If the .swiftlint.yml file is missing, print an error message
+    echo "error: $SWIFTLINT_CONFIG not found"
+    exit 1
 fi
