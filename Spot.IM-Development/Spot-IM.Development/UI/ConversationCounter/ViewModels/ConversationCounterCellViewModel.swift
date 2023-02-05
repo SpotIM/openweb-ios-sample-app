@@ -27,11 +27,11 @@ class ConversationCounterCellViewModel: ConversationCounterCellViewModeling,
                                             ConversationCounterCellViewModelingOutputs {
     var inputs: ConversationCounterCellViewModelingInputs { return self }
     var outputs: ConversationCounterCellViewModelingOutputs { return self }
-    
+
     let postId: String
     let comments: Int
     let replies: Int
-    
+
     init(counter: SpotImConversationCounters, postId: String) {
         self.postId = postId
         comments = counter.comments

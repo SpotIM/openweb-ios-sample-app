@@ -14,7 +14,7 @@ import SnapKit
 #if NEW_API
 
 class MiscellaneousVC: UIViewController {
-    
+
     fileprivate struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
@@ -22,10 +22,10 @@ class MiscellaneousVC: UIViewController {
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
-    
+
     fileprivate let viewModel: MiscellaneousViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var btnConversationCounter: UIButton = {
         let txt = NSLocalizedString("ConversationCounter", comment: "")
 
@@ -37,7 +37,7 @@ class MiscellaneousVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     init(viewModel: MiscellaneousViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -46,7 +46,7 @@ class MiscellaneousVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func loadView() {
         super.loadView()
         setupViews()
@@ -61,7 +61,7 @@ class MiscellaneousVC: UIViewController {
 fileprivate extension MiscellaneousVC {
     func setupViews() {
         view.backgroundColor = .white
-        
+
         // Adding conversation counter button
         view.addSubview(btnConversationCounter)
         btnConversationCounter.snp.makeConstraints { make in
@@ -71,7 +71,7 @@ fileprivate extension MiscellaneousVC {
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
         }
     }
-    
+
     func setupObservers() {
         title = viewModel.outputs.title
     }

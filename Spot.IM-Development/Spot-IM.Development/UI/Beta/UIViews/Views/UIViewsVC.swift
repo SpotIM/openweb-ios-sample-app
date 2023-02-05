@@ -14,7 +14,7 @@ import SnapKit
 #if NEW_API
 
 class UIViewsVC: UIViewController {
-    
+
     fileprivate struct Metrics {
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
@@ -23,14 +23,14 @@ class UIViewsVC: UIViewController {
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
-    
+
     fileprivate let viewModel: UIViewsViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var optionsScrollView: UIScrollView = {
         return UIScrollView()
     }()
-    
+
     fileprivate lazy var btnPreConversation: UIButton = {
         let txt = NSLocalizedString("PreConversation", comment: "")
 
@@ -54,7 +54,7 @@ class UIViewsVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     fileprivate lazy var btnCommentCreation: UIButton = {
         let txt = NSLocalizedString("CommentCreation", comment: "")
 
@@ -66,7 +66,7 @@ class UIViewsVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-   
+
     fileprivate lazy var btnIndependentAdUnit: UIButton = {
         let txt = NSLocalizedString("IndependentAdUnit", comment: "")
 
@@ -78,7 +78,7 @@ class UIViewsVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     init(viewModel: UIViewsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -87,7 +87,7 @@ class UIViewsVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func loadView() {
         super.loadView()
         setupViews()
@@ -102,13 +102,13 @@ class UIViewsVC: UIViewController {
 fileprivate extension UIViewsVC {
     func setupViews() {
         view.backgroundColor = .white
-        
+
         // Adding scroll view
         view.addSubview(optionsScrollView)
         optionsScrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         // Adding pre conversation button
         optionsScrollView.addSubview(btnPreConversation)
         btnPreConversation.snp.makeConstraints { make in
@@ -117,7 +117,7 @@ fileprivate extension UIViewsVC {
             make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         // Adding full conversation button
         optionsScrollView.addSubview(btnFullConversation)
         btnFullConversation.snp.makeConstraints { make in
@@ -126,7 +126,7 @@ fileprivate extension UIViewsVC {
             make.top.equalTo(btnPreConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         // Adding comment creation button
         optionsScrollView.addSubview(btnCommentCreation)
         btnCommentCreation.snp.makeConstraints { make in
@@ -135,7 +135,7 @@ fileprivate extension UIViewsVC {
             make.top.equalTo(btnFullConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         // Adding independent ad unit button
         optionsScrollView.addSubview(btnIndependentAdUnit)
         btnIndependentAdUnit.snp.makeConstraints { make in
@@ -145,23 +145,23 @@ fileprivate extension UIViewsVC {
             make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
         }
     }
-    
+
     func setupObservers() {
         title = viewModel.outputs.title
-        
+
         // Bind buttons
         btnPreConversation.rx.tap
             .bind(to: viewModel.inputs.preConversationTapped)
             .disposed(by: disposeBag)
-        
+
         btnFullConversation.rx.tap
             .bind(to: viewModel.inputs.fullConversationTapped)
             .disposed(by: disposeBag)
-        
+
         btnCommentCreation.rx.tap
             .bind(to: viewModel.inputs.commentCreationTapped)
             .disposed(by: disposeBag)
-        
+
         btnIndependentAdUnit.rx.tap
             .bind(to: viewModel.inputs.independentAdUnitTapped)
             .disposed(by: disposeBag)
@@ -169,5 +169,4 @@ fileprivate extension UIViewsVC {
 }
 
 #endif
-
 

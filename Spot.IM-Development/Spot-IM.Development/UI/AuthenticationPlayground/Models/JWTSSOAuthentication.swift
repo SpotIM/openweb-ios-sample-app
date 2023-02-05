@@ -16,7 +16,7 @@ struct JWTSSOAuthentication {
 
 extension JWTSSOAuthentication {
     static let mockModels = Self.createMockModels()
-    
+
     static func createMockModels() -> [JWTSSOAuthentication] {
     #if PUBLIC_DEMO_APP
         return []

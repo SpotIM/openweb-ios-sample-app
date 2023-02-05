@@ -31,26 +31,26 @@ protocol UIFlowsViewModeling {
 class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlowsViewModelingInputs {
     var inputs: UIFlowsViewModelingInputs { return self }
     var outputs: UIFlowsViewModelingOutputs { return self }
-    
+
     fileprivate let dataModel: SDKConversationDataModel
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     let preConversationTapped = PublishSubject<PresentationalModeCompact>()
     let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
     let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
-    
+
     fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
         return _openMockArticleScreen
             .unwrap()
             .asObservable()
     }
-    
+
     lazy var title: String = {
         return NSLocalizedString("UIFlows", comment: "")
     }()
-    
+
     init(dataModel: SDKConversationDataModel) {
         self.dataModel = dataModel
         setupObservers()
@@ -58,31 +58,31 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
 }
 
 fileprivate extension UIFlowsViewModel {
-    
+
     func setupObservers() {
         let postId = dataModel.postId
-        
+
         let fullConversationTappedModel = fullConversationTapped
             .map { mode -> SDKUIFlowActionSettings in
                 let action = SDKUIFlowActionType.fullConversation(presentationalMode: mode)
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
-        
+
         let commentCreationTappedModel = commentCreationTapped
             .map { mode -> SDKUIFlowActionSettings in
                 let action = SDKUIFlowActionType.commentCreation(presentationalMode: mode)
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
-        
+
         let preConversationTappedModel = preConversationTapped
             .map { mode -> SDKUIFlowActionSettings in
                 let action = SDKUIFlowActionType.preConversation(presentationalMode: mode)
                 let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
                 return model
             }
-        
+
         Observable.merge(fullConversationTappedModel, commentCreationTappedModel, preConversationTappedModel)
             .map { return $0 }
             .bind(to: _openMockArticleScreen)
@@ -91,5 +91,4 @@ fileprivate extension UIFlowsViewModel {
 }
 
 #endif
-
 
