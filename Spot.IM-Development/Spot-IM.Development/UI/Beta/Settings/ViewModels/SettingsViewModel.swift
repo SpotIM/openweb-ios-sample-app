@@ -139,7 +139,7 @@ extension SettingsViewModel {
         // Bind hide article header toggle
         hideArticleHeaderToggled
             .do(onNext: { _ in
-                // TODO: should be done
+                // TODO: should be done // swiftlint:disable:this todo
             })
             .bind(to: _shouldHideArticleHeader)
             .disposed(by: disposeBag)
@@ -147,7 +147,7 @@ extension SettingsViewModel {
         // Bind comment creation new design toggle
         commentCreationNewDesignToggled
             .do(onNext: { _ in
-                // TODO: should be done
+                // TODO: should be done // swiftlint:disable:this todo
             })
             .bind(to: _shouldCommentCreationNewDesign)
             .disposed(by: disposeBag)

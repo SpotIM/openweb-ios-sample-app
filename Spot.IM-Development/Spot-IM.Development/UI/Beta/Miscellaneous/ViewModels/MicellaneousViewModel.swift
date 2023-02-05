@@ -24,7 +24,9 @@ protocol MiscellaneousViewModeling {
     var outputs: MiscellaneousViewModelingOutputs { get }
 }
 
-class MiscellaneousViewModel: MiscellaneousViewModeling, MiscellaneousViewModelingOutputs, MiscellaneousViewModelingInputs {
+class MiscellaneousViewModel: MiscellaneousViewModeling,
+                                MiscellaneousViewModelingOutputs,
+                                MiscellaneousViewModelingInputs {
     var inputs: MiscellaneousViewModelingInputs { return self }
     var outputs: MiscellaneousViewModelingOutputs { return self }
 

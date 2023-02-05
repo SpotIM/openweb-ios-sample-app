@@ -50,8 +50,9 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        // swiftlint:disable line_length
         currentSpotId = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.spotIdKey, defaultValue: "")
+        // swiftlint:enable line_length
         setupUI()
         fillVersionAndBuildNumber()
 
@@ -137,7 +138,9 @@ class ViewController: UIViewController {
             appearance.titleTextAttributes = navigationTitleTextAttributes
 
             navigationController?.navigationBar.standardAppearance = appearance
+            // swiftlint:disable line_length
             navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+            // swiftlint:enable line_length
         } else {
             navigationController?.navigationBar.backgroundColor = navigationBarBackgroundColor
             navigationController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
@@ -157,29 +160,36 @@ class ViewController: UIViewController {
 
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
         setup(with: .demoGenericSpotKeyForSSO, from: sender)
+        // swiftlint:disable line_length
         showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO,
                                       authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        // swiftlint:enable line_length
     }
 
     @IBAction func showsp_mobileSSO(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSSO, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSSO, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        showArticles(with: .demoSpotKeyForMobileSSO,
+                     authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
 
     @IBAction func showsp_mobileGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileGuest, from: sender)
+        // swiftlint:disable line_length
         showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest,
                                       authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        // swiftlint:enable line_length
     }
 
     @IBAction func showsp_mobileSocial(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSocial, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSocial, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        showArticles(with: .demoSpotKeyForMobileSocial,
+                     authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
 
     @IBAction func show_spmobileSocialGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileSocialGuest, from: sender)
-        showArticles(with: .demoSpotKeyForMobileSocialGuest, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        showArticles(with: .demoSpotKeyForMobileSocialGuest,
+                     authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
 
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
@@ -194,9 +204,11 @@ class ViewController: UIViewController {
 
         if validate(spotId: spotId) {
             setup(with: spotId, from: sender)
+            // swiftlint:disable line_length
             showArticlesWithSettingsAlert(with: spotId,
                                           authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId,
                                           enableConversationCounter: true)
+            // swiftlint:enable line_length
         } else {
             showInvalidSpotIdMessage()
         }
@@ -370,7 +382,9 @@ fileprivate extension ViewController {
         let keyboardShowHeight = NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .map { notification -> CGFloat in
+                // swiftlint:disable line_length
                 let height = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height
+                // swiftlint:enable line_length
                 return height ?? 0
             }
 

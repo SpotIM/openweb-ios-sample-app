@@ -22,7 +22,8 @@ class SettingsViewController: UIViewController {
 
     private var navBarHiddenOldValue = false
     var isCustomDarkModeEnabled: Bool {
-        get { UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.isCustomDarkModeEnabled, defaultValue: false) }
+        get { UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.isCustomDarkModeEnabled,
+                                              defaultValue: false) }
         set { setCustomDarkMode(enabled: newValue) }
     }
 
@@ -68,13 +69,13 @@ class SettingsViewController: UIViewController {
             switch newValue {
             case 0:
                 newMode = .disable
-                break
+
             case 1:
                 newMode = .withTitle
-                break
+
             case 2:
                 newMode = .withoutTitle
-                break
+
             default:
                 break
             }

@@ -128,6 +128,7 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
 }
 
 fileprivate extension MockArticleViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.onNext(articleURL)
@@ -251,6 +252,7 @@ fileprivate extension MockArticleViewModel {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,
@@ -260,7 +262,7 @@ fileprivate extension MockArticleViewModel {
         let presentationalMode = mode == .push ? OWPresentationalMode.push(navigationController: navController) : OWPresentationalMode.present(viewController: presentationalVC) // , style: .fullScreen)
         // swiftlint:enable line_length
 
-        // TODO: Add settings for the new API (which present style will be an option)
+        // TODO: Add settings for the new API (which present style will be an option) // swiftlint:disable:this todo
         return presentationalMode
     }
 }
