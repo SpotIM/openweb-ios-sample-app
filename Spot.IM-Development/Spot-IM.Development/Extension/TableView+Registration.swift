@@ -15,7 +15,9 @@ private struct AssociatedCells {
 extension UITableView {
     func dequeueReusableCellAndReigsterIfNeeded<T: UITableViewCell>(cellClass: T.Type, for indexPath: IndexPath) -> T {
         registerIfNeeded(cellClass: cellClass)
+        // swiftlint:disable force_cast
         let cell = self.dequeueReusableCell(withIdentifier: cellClass.identifierName, for: indexPath) as! T
+        // swiftlint:enabled force_case
         return cell
     }
 

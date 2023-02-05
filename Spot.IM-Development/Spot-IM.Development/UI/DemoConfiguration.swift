@@ -26,9 +26,11 @@ class DemoConfiguration {
     public private(set) var articles = [Post]()
     public let spotColor: UIColor
     public let spotFontName: String
-    
+
     public static let shared = DemoConfiguration()
-    
+
+    // swiftlint:disable line_length
+    // swiftlint:disable function_body_length
     private init() {
         let bundleId = Bundle.main.bundleIdentifier ?? ""
         let bundleIdEnum: DemoAppsIds = DemoAppsIds(rawValue: bundleId) ?? .unknown
@@ -364,6 +366,8 @@ class DemoConfiguration {
             spotFontName = "roboto"
         }
     }
+    // swiftlint:enable function_body_lenght
+    // swiftlint:enable line_lenght
 }
 
 extension UIColor {

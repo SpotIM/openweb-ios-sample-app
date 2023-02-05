@@ -35,7 +35,9 @@ protocol AuthenticationPlaygroundViewModeling {
     var outputs: AuthenticationPlaygroundViewModelingOutputs { get }
 }
 
-class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, AuthenticationPlaygroundViewModelingInputs, AuthenticationPlaygroundViewModelingOutputs {
+class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
+                                            AuthenticationPlaygroundViewModelingInputs,
+                                            AuthenticationPlaygroundViewModelingOutputs {
     var inputs: AuthenticationPlaygroundViewModelingInputs { return self }
     var outputs: AuthenticationPlaygroundViewModelingOutputs { return self }
     
@@ -65,26 +67,25 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     lazy var title: String = {
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
     }()
-    
+
     fileprivate let _genericSSOOptions = BehaviorSubject(value: GenericSSOAuthentication.mockModels)
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> {
         return _genericSSOOptions
             .asObservable()
     }
-    
+
     fileprivate let _JWTSSOOptions = BehaviorSubject(value: JWTSSOAuthentication.mockModels)
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> {
         return _JWTSSOOptions
             .asObservable()
     }
-    
-    
+
     fileprivate let _genericSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _genericSSOAuthenticationStatus
             .asObservable()
     }
-    
+
     fileprivate let _JWTSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _JWTSSOAuthenticationStatus
@@ -92,13 +93,14 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling, A
     }
     
     fileprivate let disposeBag = DisposeBag()
-    
+
     init() {
         setupObservers()
     }
 }
 
 fileprivate extension AuthenticationPlaygroundViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         // Different generic SSO selected
         selectedGenericSSOOptionIndex
@@ -303,7 +305,8 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             .subscribe()
             .disposed(by: disposeBag)
     }
-    
+    // swiftlint:enable function_body_lenght
+
     func startSSO() -> Observable<String?> {
         return Observable.create { observer in
             SpotIm.startSSO { result in

@@ -20,7 +20,9 @@ class FoxAuthenticationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // swiftlint:disable line_length
         self.shouldPresentFullConInNewNavStack = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack, defaultValue: false)
+        // swiftlint:enable line_length
         title = "Authentication"
     }
     

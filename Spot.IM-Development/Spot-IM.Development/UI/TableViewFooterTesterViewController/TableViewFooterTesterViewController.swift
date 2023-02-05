@@ -18,8 +18,10 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         
         return 0
     }
-    
+
+    // swiftlint:disable line_length
     let data: [String] = ["First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth"]
+    // swiftlint:enable line_length
     
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     let spotIMContainerView = UIView()
@@ -114,7 +116,9 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         }
         
         self.setupSpotIM = true
-        spotIMCoordinator?.preConversationController(withPostId: self.postId, articleMetadata: self.metadata, navigationController: navigationController!) { preConversationVC in
+        spotIMCoordinator?.preConversationController(withPostId: self.postId,
+                                                     articleMetadata: self.metadata,
+                                                     navigationController: navigationController!) { preConversationVC in
             preConversationVC.view.translatesAutoresizingMaskIntoConstraints = false
             self.addChild(preConversationVC)
             self.spotIMContainerView.addSubview(preConversationVC.view)
