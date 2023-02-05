@@ -117,7 +117,7 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "ReleaseBeta">
+      buildConfiguration = "Beta">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "ReleaseBeta"
