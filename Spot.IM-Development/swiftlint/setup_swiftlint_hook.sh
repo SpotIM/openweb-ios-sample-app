@@ -10,4 +10,4 @@ cp swiftlint/pre-push-swiftlint.sh "$HOOKS_DIR/pre-push"
 
 # Make the pre-push hook executable
 chmod +x "$HOOKS_DIR/pre-push"
- 
+
