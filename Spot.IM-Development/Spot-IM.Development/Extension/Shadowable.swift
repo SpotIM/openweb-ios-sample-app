@@ -32,7 +32,7 @@ private extension ShadowType {
         case .high: return CGSize(width: 0, height: 6)
         }
     }
-    
+
     var opacity: Float {
         switch self {
         case .none: return 0
@@ -41,7 +41,7 @@ private extension ShadowType {
         case .high: return 0.2
         }
     }
-    
+
     var radius: CGFloat {
         switch self {
         case .none: return 0
@@ -56,15 +56,15 @@ extension UIView: Shadowable {
     func apply(shadow type: ShadowType) {
         apply(shadow: type, color: ColorPalette.blackish, direction: .down)
     }
-    
+
     func apply(shadow type: ShadowType, direction: ShadowDirection) {
         apply(shadow: type, color: ColorPalette.blackish, direction: direction)
     }
-    
+
     func apply(shadow type: ShadowType, color: UIColor) {
         apply(shadow: type, color: color, direction: .down)
     }
-    
+
     func apply(shadow type: ShadowType, color: UIColor, direction: ShadowDirection) {
         var offset = type.offset
         if direction == .up {

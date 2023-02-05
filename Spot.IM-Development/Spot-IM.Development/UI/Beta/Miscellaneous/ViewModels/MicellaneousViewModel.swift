@@ -27,17 +27,17 @@ protocol MiscellaneousViewModeling {
 class MiscellaneousViewModel: MiscellaneousViewModeling, MiscellaneousViewModelingOutputs, MiscellaneousViewModelingInputs {
     var inputs: MiscellaneousViewModelingInputs { return self }
     var outputs: MiscellaneousViewModelingOutputs { return self }
-    
+
     fileprivate let dataModel: SDKConversationDataModel
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     let conversationCounterTapped = PublishSubject<Void>()
-    
+
     lazy var title: String = {
         return NSLocalizedString("Miscellaneous", comment: "")
     }()
-    
+
     init(dataModel: SDKConversationDataModel) {
         self.dataModel = dataModel
         setupObservers()
@@ -45,7 +45,7 @@ class MiscellaneousViewModel: MiscellaneousViewModeling, MiscellaneousViewModeli
 }
 
 fileprivate extension MiscellaneousViewModel {
-    
+
     func setupObservers() { }
 }
 
