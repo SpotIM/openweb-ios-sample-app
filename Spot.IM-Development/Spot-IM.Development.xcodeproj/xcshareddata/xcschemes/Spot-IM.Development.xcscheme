@@ -117,7 +117,7 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "ReleaseInternal">
+      buildConfiguration = "Internal">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "ReleaseInternal"
