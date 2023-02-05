@@ -43,6 +43,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - self_in_property_initialization
   - shorthand_operator
   - statement_position
+  - todo
   - trailing_comma
   - trailing_semicolon
   - trailing_whitespace
@@ -57,26 +58,28 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - vertical_whitespace
   - void_function_in_ternary
   - void_return
-
-
-excluded: # paths to ignore during linting. Takes precedence over `included`.
-  - ../Pods
-  - ../Spot-IM.Development/fastlane
-  - ../Spot-IM.Development/Spot-IM.DevelopmentTests
+  - file_length
+  - function_body_length
+  - large_tuple
+  - line_length
 
 included: # paths to include during linting. `excluded` paths are still ignored.
   - ../Spot-IM.Development
+  
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - ../Pods
+  - Spot-IM.Development/swiftlint
+  - Spot-IM.Development/fastlane
+  - Spot-IM.Development/Spot-IM.DevelopmentTests
 
 # naming rules can set warnings/errors for min_length and max_length
 # additionally they can set excluded names
 file_length:
-  max_length:
     warning: 800
     error: 1000
-  ignore_comment_only_lines: true
+    ignore_comment_only_lines: true
 
 function_body_length:
-  max_length:
     warning: 100
     error: 150
 
@@ -85,12 +88,9 @@ large_tuple:
     error: 5
 
 line_length:
-  max_length:
     warning: 120
     error: 150
-  ignores_urls: true
-  ignores_function_declarations: false
-  ignores_comments: true
-  ignores_interpolated_strings: false
-    
-
+    ignores_urls: true
+    ignores_function_declarations: false
+    ignores_comments: true
+    ignores_interpolated_strings: false

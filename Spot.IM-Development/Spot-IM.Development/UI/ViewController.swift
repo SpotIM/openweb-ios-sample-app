@@ -156,7 +156,8 @@ class ViewController: UIViewController {
     
     @IBAction private func showDemoSpotConversation(_ sender: UIButton) {
         setup(with: .demoGenericSpotKeyForSSO, from: sender)
-        showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        showArticlesWithSettingsAlert(with: .demoGenericSpotKeyForSSO,
+                                      authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
 
     @IBAction func showsp_mobileSSO(_ sender: UIButton) {
@@ -166,7 +167,8 @@ class ViewController: UIViewController {
     
     @IBAction func showsp_mobileGuest(_ sender: UIButton) {
         setup(with: .demoSpotKeyForMobileGuest, from: sender)
-        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
+        showArticlesWithSettingsAlert(with: .demoSpotKeyForMobileGuest,
+                                      authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId)
     }
     
     @IBAction func showsp_mobileSocial(_ sender: UIButton) {
@@ -181,7 +183,9 @@ class ViewController: UIViewController {
     
     @IBAction private func showFoxMainConversation(_ sender: UIButton) {
         setSpotId(spotId: .demoFoxSpotKeyForSSO)
-        showArticlesWithSettingsAlert(with: .demoFoxSpotKeyForSSO, authenticationControllerId: AuthenticationMetrics.foxAuthenticationId, showArticleOnTableView: sender.accessibilityIdentifier == "table")
+        showArticlesWithSettingsAlert(with: .demoFoxSpotKeyForSSO,
+                                      authenticationControllerId: AuthenticationMetrics.foxAuthenticationId,
+                                      showArticleOnTableView: sender.accessibilityIdentifier == "table")
     }
     
     @IBAction func showCustomSpotConversation(_ sender: UIButton) {
@@ -189,7 +193,9 @@ class ViewController: UIViewController {
         
         if validate(spotId: spotId) {
             setup(with: spotId, from: sender)
-            showArticlesWithSettingsAlert(with: spotId, authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId, enableConversationCounter: true)
+            showArticlesWithSettingsAlert(with: spotId,
+                                          authenticationControllerId: AuthenticationMetrics.defaultAuthenticationPlaygroundId,
+                                          enableConversationCounter: true)
         } else {
             showInvalidSpotIdMessage()
         }
@@ -202,12 +208,17 @@ class ViewController: UIViewController {
     }
     
     private func showInvalidSpotIdMessage() {
-        let alert = UIAlertController(title: "Alert", message: "Seems like the spotId is invalid, please enter a valid spotId", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Alert",
+                                      message: "Seems like the spotId is invalid, please enter a valid spotId",
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
-    private func showArticlesWithSettingsAlert(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false, enableConversationCounter: Bool = false) {
+    private func showArticlesWithSettingsAlert(with spotId: String,
+                                               authenticationControllerId: String,
+                                               showArticleOnTableView: Bool = false,
+                                               enableConversationCounter: Bool = false) {
         let showArticles = {
             self.showArticles(with: spotId, authenticationControllerId: authenticationControllerId, showArticleOnTableView: showArticleOnTableView)
         }
@@ -255,7 +266,10 @@ class ViewController: UIViewController {
     private func showArticles(with spotId: String, authenticationControllerId: String, showArticleOnTableView: Bool = false) {
         let shouldReinit = spotId != currentSpotId
         currentSpotId = spotId
-        let controller = ArticlesListViewController(spotId: spotId, authenticationControllerId: authenticationControllerId, addToTableView: showArticleOnTableView, shouldReinint: shouldReinit)
+        let controller = ArticlesListViewController(spotId: spotId,
+                                                    authenticationControllerId: authenticationControllerId,
+                                                    addToTableView: showArticleOnTableView,
+                                                    shouldReinint: shouldReinit)
         
         //This is for testing with a Tabbar
         setNavController(forController: controller, shouldAddTabBar: false)

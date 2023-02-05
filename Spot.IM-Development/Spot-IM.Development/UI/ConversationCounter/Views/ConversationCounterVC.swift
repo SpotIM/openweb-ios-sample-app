@@ -160,7 +160,8 @@ fileprivate extension ConversationCounterVC {
         title = viewModel.outputs.title
         
         viewModel.outputs.cellsViewModels
-            .bind(to: counterTableView.rx.items(cellIdentifier: ConversationCounterCell.identifierName, cellType: ConversationCounterCell.self)) { _, viewModel, cell in
+            .bind(to: counterTableView.rx.items(cellIdentifier: ConversationCounterCell.identifierName,
+                                                cellType: ConversationCounterCell.self)) { _, viewModel, cell in
                 cell.configure(with: viewModel)
             }
             .disposed(by: disposeBag)

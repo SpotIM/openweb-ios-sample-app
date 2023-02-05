@@ -22,7 +22,9 @@ protocol ConversationCounterCellViewModeling {
     var outputs: ConversationCounterCellViewModelingOutputs { get }
 }
 
-class ConversationCounterCellViewModel: ConversationCounterCellViewModeling, ConversationCounterCellViewModelingInputs, ConversationCounterCellViewModelingOutputs {
+class ConversationCounterCellViewModel: ConversationCounterCellViewModeling,
+                                            ConversationCounterCellViewModelingInputs,
+                                            ConversationCounterCellViewModelingOutputs {
     var inputs: ConversationCounterCellViewModelingInputs { return self }
     var outputs: ConversationCounterCellViewModelingOutputs { return self }
     
