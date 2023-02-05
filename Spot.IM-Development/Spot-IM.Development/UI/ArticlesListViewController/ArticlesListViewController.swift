@@ -151,7 +151,10 @@ class ArticlesListViewController: UITableViewController {
     
     @objc private func customPostClicked() {
         if let postId = customPostTextField.text, let postForCopy = self.data?.posts?[0] {
-            let post = Post(spotId: postForCopy.spotId, conversationId: postId, publishedAt: postForCopy.publishedAt, extractData: postForCopy.extractData)
+            let post = Post(spotId: postForCopy.spotId,
+                            conversationId: postId,
+                            publishedAt: postForCopy.publishedAt,
+                            extractData: postForCopy.extractData)
             articleCellTapped(withPost: post)
         }
         
@@ -172,12 +175,24 @@ extension ArticlesListViewController : ArticleTableViewCellDelegate {
         ]
         let readOnlyMode = SpotImReadOnlyMode.parseSampleAppManualConfig()
 
-        let metadata = SpotImArticleMetadata(url: post.extractData.url, title: post.extractData.title, subtitle: post.extractData.description, thumbnailUrl: post.extractData.thumbnailUrl, customBIData: customBIData, readOnlyMode: readOnlyMode)
+        let metadata = SpotImArticleMetadata(url: post.extractData.url,
+                                             title: post.extractData.title,
+                                             subtitle: post.extractData.description,
+                                             thumbnailUrl: post.extractData.thumbnailUrl,
+                                             customBIData: customBIData, readOnlyMode: readOnlyMode)
         if addToTableView {
-            let tableViewController = TableViewFooterTesterViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
+            let tableViewController = TableViewFooterTesterViewController(spotId: spotId,
+                                                                          postId: postId,
+                                                                          metadata: metadata,
+                                                                          url: post.extractData.url,
+                                                                          authenticationControllerId: authenticationControllerId)
             self.navigationController?.pushViewController(tableViewController, animated: true)
         } else {
-            let articleViewController = ArticleWebViewController(spotId: spotId, postId:postId, metadata: metadata, url: post.extractData.url, authenticationControllerId: authenticationControllerId)
+            let articleViewController = ArticleWebViewController(spotId: spotId,
+                                                                 postId: postId,
+                                                                 metadata: metadata,
+                                                                 url: post.extractData.url,
+                                                                 authenticationControllerId: authenticationControllerId)
             self.navigationController?.pushViewController(articleViewController, animated: true)
         }
     }
@@ -209,9 +224,16 @@ extension ArticlesListViewController {
                 }
             }
         } else {
-            let posts = [Post(spotId: spotId, conversationId: spotId + "_sdk1", publishedAt: "2020-08-03T05:46:26Z", extractData: Article(url: "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-secretly-living-in-brazil-reddit-selfie-sparks-conspiracy-theories/", title: "He Doesn't Know How Volatile This Issue Is': Pro-Gun Group Responds To Trump Gun Control", width: 0, height: 0, description: "A gun rights group warned President Donald Trump Monday not to underestimate the volatile effect proposing gun control legislation could have on his base.", thumbnailUrl: "https://images.spot.im/v1/production/vtbnok9nqxxkpnhz7rru")),
-                         Post(spotId: spotId, conversationId: spotId + "_sdk2", publishedAt: "2020-08-02T05:46:26Z", extractData: Article(url: "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-secretly-living-in-brazil-reddit-selfie-sparks-conspiracy-theories/", title: "TAKALA: Think Google Controls The News? It's Worse Than You Think, Experts Say", width: 0, height: 0, description: "You're going to have a hard time finding negative information about Google in Axios or the Washington Post", thumbnailUrl: "https://images.spot.im/v1/production/d0aibkn9pyfeza52lz8a"))]
+            // swiftlint:disable line_length
+            let posts = [Post(spotId: spotId,
+                              conversationId: spotId + "_sdk1",
+                              publishedAt: "2020-08-03T05:46:26Z",
+                              extractData: Article(url: "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-secretly-living-in-brazil-reddit-selfie-sparks-conspiracy-theories/", title: "He Doesn't Know How Volatile This Issue Is': Pro-Gun Group Responds To Trump Gun Control", width: 0, height: 0, description: "A gun rights group warned President Donald Trump Monday not to underestimate the volatile effect proposing gun control legislation could have on his base.", thumbnailUrl: "https://images.spot.im/v1/production/vtbnok9nqxxkpnhz7rru")),
+                         Post(spotId: spotId, conversationId: spotId + "_sdk2",
+                              publishedAt: "2020-08-02T05:46:26Z",
+                              extractData: Article(url: "https://pix11.com/2014/08/07/is-steve-jobs-alive-and-secretly-living-in-brazil-reddit-selfie-sparks-conspiracy-theories/", title: "TAKALA: Think Google Controls The News? It's Worse Than You Think, Experts Say", width: 0, height: 0, description: "You're going to have a hard time finding negative information about Google in Axios or the Washington Post", thumbnailUrl: "https://images.spot.im/v1/production/d0aibkn9pyfeza52lz8a"))]
             self.data = Response(posts: posts)
+            // swiftlint:enable line_length
         }
     }
     

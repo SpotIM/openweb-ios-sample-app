@@ -59,9 +59,11 @@ internal final class ArticleWebViewController: UIViewController {
         self.metadata = metadata
         self.url = url
         self.authenticationControllerId = authenticationControllerId
+        // swiftlint:disable line_length
         self.shouldShowOpenFullConversationButton = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldShowOpenFullConversation, defaultValue: false)
         self.shouldShowOpenCommentButton = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldOpenComment, defaultValue: false)
         self.shouldPresentFullConInNewNavStack = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Bool>.shouldPresentInNewNavStack, defaultValue: false)
+        // swiftlint:enable line_length
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -125,7 +127,10 @@ internal final class ArticleWebViewController: UIViewController {
     }
 
     private func setupSpotPreConversationView() {
-        spotIMCoordinator?.preConversationController(withPostId: postId, articleMetadata: metadata, navigationController: navigationController!, callbacks: callbacks) {
+        spotIMCoordinator?.preConversationController(withPostId: postId,
+                                                     articleMetadata: metadata,
+                                                     navigationController: navigationController!,
+                                                     callbacks: callbacks) {
             [weak self] preConversationVC in
             guard let self = self else { return }
             self.addChild(preConversationVC)
@@ -158,7 +163,11 @@ internal final class ArticleWebViewController: UIViewController {
             mode = .push(navigationController: self.navigationController!)
         }
         
-        coordinator.openFullConversationViewController(postId: self.postId, articleMetadata: self.metadata, presentationalMode: mode, callbacks: callbacks, completion: completionHandler)
+        coordinator.openFullConversationViewController(postId: self.postId,
+                                                       articleMetadata: self.metadata,
+                                                       presentationalMode: mode,
+                                                       callbacks: callbacks,
+                                                       completion: completionHandler)
     }
     
     
@@ -182,7 +191,11 @@ internal final class ArticleWebViewController: UIViewController {
             mode = .push(navigationController: self.navigationController!)
         }
         
-        coordinator.openNewCommentViewController(postId: postId, articleMetadata: metadata, fullConversationPresentationalMode: mode, callbacks: callbacks, completion: completionHandler)
+        coordinator.openNewCommentViewController(postId: postId,
+                                                 articleMetadata: metadata,
+                                                 fullConversationPresentationalMode: mode,
+                                                 callbacks: callbacks,
+                                                 completion: completionHandler)
     }
 }
 

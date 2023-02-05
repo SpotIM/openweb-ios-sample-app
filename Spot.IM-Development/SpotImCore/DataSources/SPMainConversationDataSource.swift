@@ -5,7 +5,6 @@
 //  Created by Andriy Fedin on 14/07/19.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
-// swiftlint:disable file_length
 
 import Foundation
 
