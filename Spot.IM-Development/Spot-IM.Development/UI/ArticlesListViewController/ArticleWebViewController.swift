@@ -272,7 +272,9 @@ extension ArticleWebViewController: SpotImLoginDelegate {
         if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
             authVC = AuthenticationPlaygroundVC()
         } else {
+            // swiftlint:disable line_length
             authVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+            // swiftlint:enable line_length
         }
         navigationController.pushViewController(authVC, animated: true)
     }
@@ -373,7 +375,8 @@ extension ArticleWebViewController: SpotImCustomUIDelegate {
         if let textViewAttributedString = textView.attributedText.mutableCopy() as? NSMutableAttributedString {
             textViewAttributedString.addAttribute(.font,
                                                   value: UIFont.systemFont(ofSize: 22, weight: .heavy),
-                                                  range: NSRange(location: 0,length:
+                                                  range: NSRange(location: 0,
+                                                                 length:
             textViewAttributedString.length))
             textView.attributedText = textViewAttributedString
         }

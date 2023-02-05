@@ -180,11 +180,13 @@ extension ArticlesListViewController: ArticleTableViewCellDelegate {
                                              thumbnailUrl: post.extractData.thumbnailUrl,
                                              customBIData: customBIData, readOnlyMode: readOnlyMode)
         if addToTableView {
+            // swiftlint:disable line_length
             let tableViewController = TableViewFooterTesterViewController(spotId: spotId,
                                                                           postId: postId,
                                                                           metadata: metadata,
                                                                           url: post.extractData.url,
                                                                           authenticationControllerId: authenticationControllerId)
+            // swiftlint:enable line_length
             self.navigationController?.pushViewController(tableViewController, animated: true)
         } else {
             let articleViewController = ArticleWebViewController(spotId: spotId,
@@ -262,7 +264,9 @@ extension ArticlesListViewController {
     }
 
     private func showFailure() {
-        let alert = UIAlertController(title: "Damn, failed loading these articles", message: "Try again soon", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Damn, failed loading these articles",
+                                      message: "Try again soon",
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {[weak self] _ in
             self?.navigationController?.popViewController(animated: true)
         }))
@@ -311,7 +315,9 @@ extension ArticlesListViewController: SpotImLoginDelegate {
         if (authenticationControllerId == AuthenticationMetrics.defaultAuthenticationPlaygroundId) {
             authVC = AuthenticationPlaygroundVC()
         } else {
+            // swiftlint:disable line_length
             authVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: authenticationControllerId)
+            // swiftlint:enable line_length
         }
         navigationController.pushViewController(authVC, animated: true)
     }

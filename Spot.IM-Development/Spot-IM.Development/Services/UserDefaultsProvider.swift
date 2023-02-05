@@ -49,7 +49,9 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
         }
 
         guard let valueToReturn = try? decoder.decode(T.self, from: data) else {
+            // swiftlint:disable line_length
             DLog("Failed to decode data for key: \(key.rawValue) to class: \(T.self) after retrieving from UserDefaults")
+            // swiftlint:enable line_length
             return nil
         }
 

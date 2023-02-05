@@ -75,7 +75,9 @@ class FoxAuthenticationViewController: UIViewController {
 
     fileprivate func handleErrorFromJWTSSO(error: Error) {
         DLog("Authentication error:\n\(String(describing: error))")
-        let alert = UIAlertController(title: "Failed authenticating with SpotIm", message: error.localizedDescription, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Failed authenticating with SpotIm",
+                                      message: error.localizedDescription,
+                                      preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
            }))
         self.present(alert, animated: true, completion: nil)
@@ -87,7 +89,9 @@ class FoxAuthenticationViewController: UIViewController {
         }
     }
 
-    private func authenticate(email: String, password: String, completion: @escaping (_ token: String?, _ error: String?) -> Void) {
+    private func authenticate(email: String,
+                              password: String,
+                              completion: @escaping (_ token: String?, _ error: String?) -> Void) {
 
         let parameters = ["email": email, "password": password]
 
@@ -98,7 +102,8 @@ class FoxAuthenticationViewController: UIViewController {
         request.httpMethod = "POST"
 
         do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) // pass dictionary to nsdata object
+            request.httpBody = try JSONSerialization.data(withJSONObject: parameters,
+                                                          options: .prettyPrinted) // pass dictionary to nsdata object
         } catch let error {
             print(error.localizedDescription)
         }
@@ -120,7 +125,9 @@ class FoxAuthenticationViewController: UIViewController {
             }
 
             do {
+                // swiftlint:disable line_length
                 if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
+                    // swiftlint:enable line_length
                     if let token = json["accessToken"] as? String {
                         completion(token, nil)
                         return

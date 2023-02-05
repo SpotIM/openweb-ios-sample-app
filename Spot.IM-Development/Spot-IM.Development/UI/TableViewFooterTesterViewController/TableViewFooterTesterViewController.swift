@@ -34,7 +34,11 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     var commentViewHeight: CGFloat = 0
     let metadata: SpotImArticleMetadata
 
-    init(spotId: String, postId: String, metadata: SpotImArticleMetadata, url: String, authenticationControllerId: String) {
+    init(spotId: String,
+         postId: String,
+         metadata: SpotImArticleMetadata,
+         url: String,
+         authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
         self.url = url
@@ -122,9 +126,11 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
             self.spotIMContainerView.addSubview(preConversationVC.view)
 
             preConversationVC.view.topAnchor.constraint(equalTo: self.spotIMContainerView.topAnchor).isActive = true
+            // swiftlint:disable line_length
             preConversationVC.view.leadingAnchor.constraint(equalTo: self.spotIMContainerView.leadingAnchor).isActive = true
             preConversationVC.view.bottomAnchor.constraint(equalTo: self.spotIMContainerView.bottomAnchor).isActive = true
             preConversationVC.view.trailingAnchor.constraint(equalTo: self.spotIMContainerView.trailingAnchor).isActive = true
+            // swiftlint:enable line_length
 
             preConversationVC.didMove(toParent: self)
         }

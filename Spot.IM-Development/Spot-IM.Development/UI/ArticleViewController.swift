@@ -33,14 +33,14 @@ internal final class ArticleViewController: UIViewController {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
 
+                // swiftlint:disable line_length
                 coordinator.preConversationController(withPostId: self.postId ?? self.foxArticleId,
                                                       articleMetadata: SpotImArticleMetadata(url: "",
                                                                                              title: "",
                                                                                              subtitle: "",
                                                                                              thumbnailUrl: ""),
-                                                      navigationController: self.navigationController!) {
-                    [weak self] preConversationVC in
-
+                                                      navigationController: self.navigationController!) { [weak self] preConversationVC in
+                    // swiftlint:enable line_length
                     guard let self = self else { return }
 
                     self.addChild(preConversationVC)
