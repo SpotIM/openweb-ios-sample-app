@@ -237,7 +237,7 @@ jobs:
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             brew install swiftlint
             swiftlint lint --config swiftlint/.swiftlint.yml || (echo "SwiftLint failed." && cat "./swiftlint.log" && exit 1)
-      echo "SwiftLint passed."
+            echo "SwiftLint passed."
             
       - run:
           name: Build app and run unit-tests
