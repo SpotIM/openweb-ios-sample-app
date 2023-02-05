@@ -117,7 +117,7 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "ReleasePublic">
+      buildConfiguration = "Public">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "ReleasePublic"
