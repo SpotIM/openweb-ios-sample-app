@@ -23,7 +23,7 @@ extension SpotImReadOnlyMode {
         default:
             readOnlyMode = .default
         }
-        
+
         return readOnlyMode
     }
 }

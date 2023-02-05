@@ -15,14 +15,14 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         if section == 0 {
             return data.count
         }
-        
+
         return 0
     }
 
     // swiftlint:disable line_length
-    let data: [String] = ["First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth","First", "Second", "Third", "Forth"]
+    let data: [String] = ["First", "Second", "Third", "Forth", "First", "Second", "Third", "Forth", "First", "Second", "Third", "Forth", "First", "Second", "Third", "Forth", "First", "Second", "Third", "Forth", "First", "Second", "Third", "Forth", "First", "Second", "Third", "Forth"]
     // swiftlint:enable line_length
-    
+
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
     let spotIMContainerView = UIView()
     var setupSpotIM = false
@@ -33,7 +33,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
     let authVCId: String
     var commentViewHeight: CGFloat = 0
     let metadata: SpotImArticleMetadata
-    
+
     init(spotId: String, postId: String, metadata: SpotImArticleMetadata, url: String, authenticationControllerId: String) {
         self.spotId = spotId
         self.postId = postId
@@ -42,39 +42,39 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         self.metadata = metadata
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         SpotIm.initialize(spotId: spotId)
         setupTableView()
         SpotIm.createSpotImFlowCoordinator(loginDelegate: self) { [weak self] result in
             guard let self = self else { return }
-            
+
             switch result {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
                 coordinator.setLayoutDelegate(delegate: self)
-                
+
                 self.setupSpotView()
             case .failure(let error):
                 print(error)
             }
         }
-        
+
         navigationController?.setNavigationBarHidden(false, animated: false)
         tableView.delegate = self
         tableView.dataSource = self
-        
+
         self.setupContainerView()
     }
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") else {
@@ -82,31 +82,29 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
             }
             return cell
         }()
-        
-        
+
         cell.textLabel?.text = data[indexPath.row]
-        
 
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == 1 {
             return self.spotIMContainerView
         }
-        
+
         return nil
     }
-    
+
     private func setupContainerView() {
         spotIMContainerView.frame = CGRect(x: 0, y: 0, width: self.tableView.frame.size.width, height: 0)
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 1 {
             return commentViewHeight
         }
-        
+
         return 0
     }
 
@@ -114,7 +112,7 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
         guard self.setupSpotIM == false else {
             return
         }
-        
+
         self.setupSpotIM = true
         spotIMCoordinator?.preConversationController(withPostId: self.postId,
                                                      articleMetadata: self.metadata,
@@ -122,12 +120,12 @@ class TableViewFooterTesterViewController: UIViewController, UITableViewDataSour
             preConversationVC.view.translatesAutoresizingMaskIntoConstraints = false
             self.addChild(preConversationVC)
             self.spotIMContainerView.addSubview(preConversationVC.view)
-            
+
             preConversationVC.view.topAnchor.constraint(equalTo: self.spotIMContainerView.topAnchor).isActive = true
             preConversationVC.view.leadingAnchor.constraint(equalTo: self.spotIMContainerView.leadingAnchor).isActive = true
             preConversationVC.view.bottomAnchor.constraint(equalTo: self.spotIMContainerView.bottomAnchor).isActive = true
             preConversationVC.view.trailingAnchor.constraint(equalTo: self.spotIMContainerView.trailingAnchor).isActive = true
-            
+
             preConversationVC.didMove(toParent: self)
         }
     }

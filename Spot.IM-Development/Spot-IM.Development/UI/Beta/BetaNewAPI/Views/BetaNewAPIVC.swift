@@ -29,33 +29,33 @@ class BetaNewAPIVC: UIViewController {
         static let animatePickerDamping: CGFloat = 0.5
         static let animatePickerVelocity: CGFloat = 0.5
     }
-    
+
     fileprivate let viewModel: BetaNewAPIViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var settingsRightBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
                                target: nil,
                                action: nil)
     }()
-    
+
     fileprivate lazy var conversationPresetSelectionView: UIView = {
         let spotPresetSelection = UIView()
         spotPresetSelection.backgroundColor = ColorPalette.midGrey
-        
+
         spotPresetSelection.addSubview(toolbarPicker)
         toolbarPicker.snp.makeConstraints { (make) in
             make.height.equalTo(Metrics.toolbarPickerHeight)
             make.top.leading.trailing.equalToSuperview()
         }
-        
+
         spotPresetSelection.addSubview(presetPicker)
         presetPicker.snp.makeConstraints { (make) in
             make.width.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(toolbarPicker.snp.bottom)
         }
-        
+
         return spotPresetSelection
     }()
 
@@ -67,20 +67,20 @@ class BetaNewAPIVC: UIViewController {
         var toolbar = UIToolbar()
         toolbar.barTintColor = ColorPalette.darkGrey
         toolbar.tintColor = ColorPalette.blackish
-        
+
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        
+
         let title = NSLocalizedString("PresetSelection", comment: "").label
             .font(FontBook.paragraphBold)
             .barButtonItem
-        
+
         toolbar.setItems([spaceButton, title, spaceButton, btnDone.barButtonItem], animated: false)
         return toolbar
     }()
-    
+
     fileprivate lazy var btnDone: UIButton = {
         let txt = NSLocalizedString("Done", comment: "")
-        
+
         return txt
             .button
             .backgroundColor(ColorPalette.blue)
@@ -89,7 +89,7 @@ class BetaNewAPIVC: UIViewController {
             .corner(radius: Metrics.buttonCorners)
             .withPadding(Metrics.buttonPadding)
     }()
-    
+
     fileprivate lazy var btnSelectPreset: UIButton = {
         let txt = NSLocalizedString("SelectPreset", comment: "")
 
@@ -101,7 +101,7 @@ class BetaNewAPIVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     fileprivate lazy var lblSpotId: UILabel = {
         let txt = NSLocalizedString("SpotId", comment: "") + ":"
 
@@ -111,7 +111,7 @@ class BetaNewAPIVC: UIViewController {
             .font(FontBook.mainHeading)
             .textColor(ColorPalette.blackish)
     }()
-    
+
     fileprivate lazy var lblPostId: UILabel = {
         let txt = NSLocalizedString("PostId", comment: "") + ":"
 
@@ -121,30 +121,30 @@ class BetaNewAPIVC: UIViewController {
             .font(FontBook.mainHeading)
             .textColor(ColorPalette.blackish)
     }()
-    
+
     fileprivate lazy var txtFieldSpotId: UITextField = {
         let txtField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
             .border(width: 1.0, color: ColorPalette.blackish)
-        
+
         txtField.borderStyle = .roundedRect
         txtField.autocapitalizationType = .none
         return txtField
     }()
-    
+
     fileprivate lazy var txtFieldPostId: UITextField = {
         let txtField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
             .border(width: 1.0, color: ColorPalette.blackish)
-        
+
         txtField.borderStyle = .roundedRect
         txtField.autocapitalizationType = .none
         return txtField
     }()
-    
+
     fileprivate lazy var btnUIFlows: UIButton = {
         let txt = NSLocalizedString("UIFlows", comment: "")
-        
+
         return txt
             .button
             .backgroundColor(ColorPalette.blue)
@@ -153,10 +153,10 @@ class BetaNewAPIVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     fileprivate lazy var btnUIViews: UIButton = {
         let txt = NSLocalizedString("UIViews", comment: "")
-        
+
         return txt
             .button
             .backgroundColor(ColorPalette.blue)
@@ -165,10 +165,10 @@ class BetaNewAPIVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     fileprivate lazy var btnMiscellaneous: UIButton = {
         let txt = NSLocalizedString("Miscellaneous", comment: "")
-        
+
         return txt
             .button
             .backgroundColor(ColorPalette.blue)
@@ -177,9 +177,9 @@ class BetaNewAPIVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     fileprivate var selectedAnswer: ConversationPreset?
-    
+
     init(viewModel: BetaNewAPIViewModeling = BetaNewAPIViewModel()) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -188,12 +188,12 @@ class BetaNewAPIVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
-    
+
     override func loadView() {
         super.loadView()
         setupViews()
@@ -201,7 +201,7 @@ class BetaNewAPIVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         navigationItem.rightBarButtonItem = settingsRightBarItem
         setupObservers()
     }
@@ -210,7 +210,7 @@ class BetaNewAPIVC: UIViewController {
 fileprivate extension BetaNewAPIVC {
     func setupViews() {
         view.backgroundColor = .white
-        
+
         // Adding select preset button
         view.addSubview(btnSelectPreset)
         btnSelectPreset.snp.makeConstraints { make in
@@ -219,13 +219,13 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         view.addSubview(lblSpotId)
         lblSpotId.snp.makeConstraints { make in
             make.top.equalTo(btnSelectPreset.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         view.addSubview(txtFieldSpotId)
         txtFieldSpotId.snp.makeConstraints { make in
             make.centerY.equalTo(lblSpotId)
@@ -233,13 +233,13 @@ fileprivate extension BetaNewAPIVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
-        
+
         view.addSubview(lblPostId)
         lblPostId.snp.makeConstraints { make in
             make.top.equalTo(lblSpotId.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         view.addSubview(txtFieldPostId)
         txtFieldPostId.snp.makeConstraints { make in
             make.centerY.equalTo(lblPostId)
@@ -247,7 +247,7 @@ fileprivate extension BetaNewAPIVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
-        
+
         // Adding UIFlows button
         view.addSubview(btnUIFlows)
         btnUIFlows.snp.makeConstraints { make in
@@ -256,7 +256,7 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(txtFieldPostId.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         // Adding UIViews button
         view.addSubview(btnUIViews)
         btnUIViews.snp.makeConstraints { make in
@@ -265,7 +265,7 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(btnUIFlows.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         // Adding miscellaneous button
         view.addSubview(btnMiscellaneous)
         btnMiscellaneous.snp.makeConstraints { make in
@@ -274,7 +274,7 @@ fileprivate extension BetaNewAPIVC {
             make.top.equalTo(btnUIViews.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(Metrics.horizontalMargin)
         }
-        
+
         // Setup preset picker and its container.
         view.addSubview(conversationPresetSelectionView)
         conversationPresetSelectionView.snp.makeConstraints { (make) in
@@ -283,53 +283,53 @@ fileprivate extension BetaNewAPIVC {
             make.bottom.equalToSuperview().inset(-Metrics.pickerHeight)
         }
     }
-    
+
     func setupObservers() {
         title = viewModel.outputs.title
 
         viewModel.outputs.spotId
             .bind(to: txtFieldSpotId.rx.text)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.postId
             .bind(to: txtFieldPostId.rx.text)
             .disposed(by: disposeBag)
-        
+
         // Dismiss keyboard
         txtFieldSpotId.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
             .subscribe(onNext: { [weak self] _ in
                 self?.txtFieldSpotId.endEditing(true)
             })
             .disposed(by: disposeBag)
-        
+
         txtFieldPostId.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
             .subscribe(onNext: { [weak self] _ in
                 self?.txtFieldPostId.endEditing(true)
             })
             .disposed(by: disposeBag)
-        
+
         // Bind text fields
         txtFieldSpotId.rx.text
             .unwrap()
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.enteredSpotId)
             .disposed(by: disposeBag)
-        
+
         txtFieldPostId.rx.text
             .unwrap()
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.enteredPostId)
             .disposed(by: disposeBag)
-        
+
         // Bind buttons
         btnSelectPreset.rx.tap
             .bind(to: viewModel.inputs.selectPresetTapped)
             .disposed(by: disposeBag)
-        
+
         btnUIFlows.rx.tap
             .bind(to: viewModel.inputs.uiFlowsTapped)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.openUIFlows
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
@@ -338,11 +338,11 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(uiFlowsVC, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         btnUIViews.rx.tap
             .bind(to: viewModel.inputs.uiViewsTapped)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.openUIViews
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
@@ -351,11 +351,11 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(uiViewsVC, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         btnMiscellaneous.rx.tap
             .bind(to: viewModel.inputs.miscellaneousTapped)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.openMiscellaneous
             .subscribe(onNext: { [weak self] dataModel in
                 guard let self = self else { return }
@@ -364,11 +364,11 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(miscellaneousVC, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         settingsRightBarItem.rx.tap
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.openSettings
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -377,19 +377,19 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(settingsVC, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         // Bind select preset
         viewModel.outputs.shouldShowSelectPreset
             .skip(1)
             .subscribe { [weak self] in self?.showPresetPicker($0) }
             .disposed(by: disposeBag)
-        
+
         btnDone.rx.tap
             .map { false }
             .voidify()
             .bind(to: viewModel.inputs.doneSelectPresetTapped)
             .disposed(by: disposeBag)
-        
+
         // Bind picker
         presetPicker.rx.itemSelected
             .map { event in
@@ -398,7 +398,7 @@ fileprivate extension BetaNewAPIVC {
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.selectedConversationPresetIndex)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.conversationPresets
             .map { options in
                 return options.map { $0.displayName }
@@ -411,7 +411,7 @@ fileprivate extension BetaNewAPIVC {
 }
 
 fileprivate extension BetaNewAPIVC {
-    
+
     func showPresetPicker(_ isShown: Bool) {
         if isShown {
             // Dismiss keyboard

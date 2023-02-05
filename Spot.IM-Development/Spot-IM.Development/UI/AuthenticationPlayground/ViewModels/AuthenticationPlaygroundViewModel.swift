@@ -40,30 +40,30 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
                                             AuthenticationPlaygroundViewModelingOutputs {
     var inputs: AuthenticationPlaygroundViewModelingInputs { return self }
     var outputs: AuthenticationPlaygroundViewModelingOutputs { return self }
-    
+
     fileprivate struct Metrics {
         static let delayUntilDismissVC = 500 // milliseconds
     }
-    
+
     fileprivate let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedGenericSSOOptionIndex = PublishSubject<Int>()
-    
+
     fileprivate let _selectedJWTSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedJWTSSOOptionIndex = PublishSubject<Int>()
-    
+
     fileprivate let shouldInitializeSDK = BehaviorSubject(value: false)
     var initializeSDKToggled = PublishSubject<Bool>()
-    
+
     fileprivate let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
     var automaticallyDismissToggled = PublishSubject<Bool>()
-    
+
     var logoutPressed = PublishSubject<Void>()
-    
+
     var dismissVC = PublishSubject<Void>()
-    
+
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
     var JWTSSOAuthenticatePressed = PublishSubject<Void>()
-    
+
     lazy var title: String = {
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
     }()
@@ -91,7 +91,7 @@ class AuthenticationPlaygroundViewModel: AuthenticationPlaygroundViewModeling,
         return _JWTSSOAuthenticationStatus
             .asObservable()
     }
-    
+
     fileprivate let disposeBag = DisposeBag()
 
     init() {
@@ -109,7 +109,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .bind(to: _selectedGenericSSOOptionIndex)
             .disposed(by: disposeBag)
-        
+
         // Different JWT SSO selected
         selectedJWTSSOOptionIndex
             .do(onNext: { [weak self] _ in
@@ -117,7 +117,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .bind(to: _selectedJWTSSOOptionIndex)
             .disposed(by: disposeBag)
-        
+
         // Bind SDK initialization toggle
         initializeSDKToggled
             .do(onNext: { [weak self] _ in
@@ -126,7 +126,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .bind(to: shouldInitializeSDK)
             .disposed(by: disposeBag)
-                
+
         // Bind automatically dismiss toggle (after successful login)
         automaticallyDismissToggled
             .do(onNext: { [weak self] _ in
@@ -135,10 +135,10 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .bind(to: shouldAutomaticallyDismiss)
             .disposed(by: disposeBag)
-           
+
         // Logout
         logoutPressed
-            .do(onNext: { [weak self] JWTSSO in
+            .do(onNext: { [weak self] _ in
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
@@ -158,7 +158,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 }
             })
             .disposed(by: disposeBag)
-           
+
         // Generic SSO authentication started
         genericSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
@@ -175,7 +175,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 return options[index]
             }
             .unwrap()
-            .do(onNext: { [weak self] genericSSO in
+            .do(onNext: { [weak self] _ in
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
             })
@@ -199,7 +199,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     })
                     .unwrap()
                     .map { ($0, genericSSO) }
-                    
+
             }
             .flatMapLatest { [weak self] token, genericSSO -> Observable<(String, String, GenericSSOAuthentication)> in
                 // 4. Start SSO
@@ -251,7 +251,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             })
             .subscribe()
             .disposed(by: disposeBag)
-        
+
         // JWT SSO authentication started
         JWTSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
@@ -268,7 +268,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 return options[index]
             }
             .unwrap()
-            .do(onNext: { [weak self] JWTSSO in
+            .do(onNext: { [weak self] _ in
                 self?._JWTSSOAuthenticationStatus.onNext(.inProgress)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
@@ -324,11 +324,11 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create()
         }
     }
-    
+
     func completeSSO(codeB: String) -> Observable<String?> {
         return Observable.create { observer in
             SpotIm.completeSSO(with: codeB) { result in
@@ -341,11 +341,11 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create()
         }
     }
-    
+
     func sso(jwtSecret: String) -> Observable<Void?> {
         return Observable.create { observer in
             SpotIm.sso(withJwtSecret: jwtSecret) { result in
@@ -356,7 +356,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                         observer.onError(AuthenticationError.JWTSSOFailed)
                         return
                     }
-                    
+
                     observer.onNext(())
                     observer.onCompleted()
                 case .failure(let error):
@@ -364,11 +364,11 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create()
         }
     }
-    
+
     func login(user: UserAuthentication) -> Observable<String?> {
         return Observable.create { observer in
             DemoUserAuthentication.logIn(with: user.username, password: user.password) { token, error in
@@ -384,7 +384,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
             return Disposables.create()
         }
     }
-    
+
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String?> {
         return Observable.create { observer in
             DemoUserAuthentication.getCodeB(with: codeA,
@@ -400,7 +400,7 @@ fileprivate extension AuthenticationPlaygroundViewModel {
                 observer.onNext(codeB)
                 observer.onCompleted()
             }
-            
+
             return Disposables.create()
         }
     }

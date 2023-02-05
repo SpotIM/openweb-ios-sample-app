@@ -11,17 +11,17 @@ import RxSwift
 import RxCocoa
 
 class SwitchSetting: UIView {
-    
+
     fileprivate struct Metrics {
         static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
         static let switchMinWidth: CGFloat = 50
     }
-    
+
     fileprivate let title: String
     fileprivate let initialIsOn: Bool
-    
+
     fileprivate lazy var settingTitleLbl: UILabel = {
         return title
             .label
@@ -29,37 +29,37 @@ class SwitchSetting: UIView {
             .numberOfLines(2)
             .lineBreakMode(.byWordWrapping)
     }()
-    
+
     fileprivate lazy var switchSetting: UISwitch = {
         let aSwitch = UISwitch()
         aSwitch.setOn(initialIsOn, animated: false)
-        
+
         return aSwitch
     }()
-    
+
     init(title: String, isOn: Bool = false) {
         self.title = title
         self.initialIsOn = isOn
         super.init(frame: .zero)
-        
+
         setupViews()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 fileprivate extension SwitchSetting {
-    
+
     func setupViews() {
         self.addSubview(settingTitleLbl)
         settingTitleLbl.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
         }
-        
+
         self.addSubview(switchSetting)
         switchSetting.snp.makeConstraints { make in
             make.centerY.equalTo(settingTitleLbl)
@@ -71,7 +71,7 @@ fileprivate extension SwitchSetting {
 }
 
 extension Reactive where Base: SwitchSetting {
-    
+
     var text: Binder<String?> {
         return Binder(self.base.settingTitleLbl) { label, text in
             label.text = text
