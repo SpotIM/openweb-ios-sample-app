@@ -13,6 +13,7 @@ import UIKit
 
 protocol OWAvatarViewModelingInputs {
     func configureUser(user: SPUser)
+    func changeAvatarVisibility(isVisible: Bool)
     
     var tapAvatar: PublishSubject<Void> { get }
 }
@@ -37,6 +38,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     var outputs: OWAvatarViewModelingOutputs { return self }
     
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    fileprivate let _isAvatartVisible = BehaviorSubject<Bool>(value: true)
     
     fileprivate let imageURLProvider: SPImageProvider?
     
@@ -55,11 +57,15 @@ class OWAvatarViewModel: OWAvatarViewModeling,
             .unwrap()
     }()
     
+    fileprivate lazy var isAvatartVisible: Observable<Bool> = {
+        self._isAvatartVisible
+    }()
+    
     var imageType: Observable<OWImageType> {
-        self.user
-            .map {
-                if ($0.isMuted) { return .defaultImage }
-                if let url = self.imageURLProvider?.imageURL(with: $0.imageId, size: nil) {
+        Observable.combineLatest(user, isAvatartVisible)
+            .map { user, isAvatartVisible in
+                if let url = self.imageURLProvider?.imageURL(with: user.imageId, size: nil),
+                    isAvatartVisible {
                     return .custom(url: url)
                 }
                 return .defaultImage
@@ -84,6 +90,10 @@ class OWAvatarViewModel: OWAvatarViewModeling,
     func configureUser(user: SPUser) {
         self._user.onNext(user)
     }
+    
+    func changeAvatarVisibility(isVisible: Bool) {
+        self._isAvatartVisible.onNext(isVisible)
+    }
 }
 
 
@@ -96,6 +106,7 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
     var outputs: OWAvatarViewModelingOutputs { return self }
     
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
+    fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)
     
     fileprivate let imageURLProvider: OWImageProviding
     
@@ -148,6 +159,10 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
     
     func configureUser(user: SPUser) {
         self._user.onNext(user)
+    }
+    
+    func changeAvatarVisibility(isVisible: Bool) {
+        self._isAvatartVisible.onNext(isVisible)
     }
 }
 

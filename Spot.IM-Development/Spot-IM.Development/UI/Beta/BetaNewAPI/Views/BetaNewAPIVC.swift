@@ -15,6 +15,19 @@ import SnapKit
 
 class BetaNewAPIVC: UIViewController {
     fileprivate struct Metrics {
+        static let identifier = "beta_api_vc_id"
+        static let settingsBarItemIdentifier = "settings_bar_item_id"
+        static let authBarItemIdentifier = "auth_bar_item_id"
+        static let conversationPresetSelectionIdentifier = "conversation_preset_selection_id"
+        static let presetPickerIdentifier = "preset_picker_id"
+        static let toolbarPickerIdentifier = "toolbar_picker_id"
+        static let btnDoneIdentifier = "btn_done_id"
+        static let btnSelectPresetIdentifier = "btn_select_preset_id"
+        static let txtFieldSpotIdIdentifier = "spot_id"
+        static let txtFieldPostIdIdentifier = "post_id"
+        static let btnUIFlowsIdentifier = "btn_ui_flows_id"
+        static let btnUIViewsIdentifier = "btn_ui_views_id"
+        static let btnMiscellaneousIdentifier = "btn_miscellaneous_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let textFieldHeight: CGFloat = 40
@@ -27,7 +40,7 @@ class BetaNewAPIVC: UIViewController {
         static let animatePickerDuration: CGFloat = 0.6
         static let animatePickerDamping: CGFloat = 0.5
         static let animatePickerVelocity: CGFloat = 0.5
-        static let authLeftBarItemMargin: CGFloat = 65
+        static let authBarItemMargin: CGFloat = 65
     }
     
     fileprivate let viewModel: BetaNewAPIViewModeling
@@ -40,20 +53,20 @@ class BetaNewAPIVC: UIViewController {
         return scrollView
     }()
     
-    fileprivate lazy var settingsRightBarItem: UIBarButtonItem = {
+    fileprivate lazy var settingsBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
                                target: nil,
                                action: nil)
     }()
     
-    fileprivate lazy var authLeftBarItem: UIBarButtonItem = {
-        let authLeftBarItem = UIBarButtonItem(image: UIImage(named: "authenticationIcon"),
+    fileprivate lazy var authBarItem: UIBarButtonItem = {
+        let authBarItem = UIBarButtonItem(image: UIImage(named: "authenticationIcon"),
                                    style: .plain,
                                    target: nil,
                                    action: nil)
-        authLeftBarItem.imageInsets = UIEdgeInsets(top: 0, left: Metrics.authLeftBarItemMargin, bottom: 0, right: 0)
-        return authLeftBarItem
+        authBarItem.imageInsets = UIEdgeInsets(top: 0, left: Metrics.authBarItemMargin, bottom: 0, right: 0)
+        return authBarItem
     }()
     
     fileprivate lazy var conversationPresetSelectionView: UIView = {
@@ -105,12 +118,12 @@ class BetaNewAPIVC: UIViewController {
     }()
     
     fileprivate lazy var txtFieldSpotId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: NSLocalizedString("SpotId", comment: "") + ":")
+        let txtField = TextFieldSetting(title: NSLocalizedString("SpotId", comment: "") + ":", accessibilityPrefixId: Metrics.txtFieldSpotIdIdentifier)
         return txtField
     }()
     
     fileprivate lazy var txtFieldPostId: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: NSLocalizedString("PostId", comment: "") + ":")
+        let txtField = TextFieldSetting(title: NSLocalizedString("PostId", comment: "") + ":", accessibilityPrefixId: Metrics.txtFieldPostIdIdentifier)
         return txtField
     }()
     
@@ -145,17 +158,32 @@ class BetaNewAPIVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.rightBarButtonItems = [settingsRightBarItem, authLeftBarItem]
+        navigationItem.rightBarButtonItems = [settingsBarItem, authBarItem]
         setupObservers()
     }
 }
 
 fileprivate extension BetaNewAPIVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        settingsBarItem.accessibilityIdentifier = Metrics.settingsBarItemIdentifier
+        authBarItem.accessibilityIdentifier = Metrics.authBarItemIdentifier
+        conversationPresetSelectionView.accessibilityIdentifier = Metrics.conversationPresetSelectionIdentifier
+        presetPicker.accessibilityIdentifier = Metrics.presetPickerIdentifier
+        toolbarPicker.accessibilityIdentifier = Metrics.toolbarPickerIdentifier
+        btnDone.accessibilityIdentifier = Metrics.btnDoneIdentifier
+        btnSelectPreset.accessibilityIdentifier = Metrics.btnSelectPresetIdentifier
+        btnUIFlows.accessibilityIdentifier = Metrics.btnUIFlowsIdentifier
+        btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
+        btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
+    }
+    
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         
@@ -296,11 +324,11 @@ fileprivate extension BetaNewAPIVC {
             })
             .disposed(by: disposeBag)
         
-        settingsRightBarItem.rx.tap
+        settingsBarItem.rx.tap
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
         
-        authLeftBarItem.rx.tap
+        authBarItem.rx.tap
             .bind(to: viewModel.inputs.authenticationTapped)
             .disposed(by: disposeBag)
         
