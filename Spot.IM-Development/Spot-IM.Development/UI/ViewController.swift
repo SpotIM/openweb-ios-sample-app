@@ -14,6 +14,17 @@ import SnapKit
 
 class ViewController: UIViewController {
     fileprivate struct Metrics {
+        static let identifier = "view_controller_id"
+        static let betaNewAPIBtnIdentifier = "beta_api_btn_id"
+        static let settingsBtnIdentifier = "settings_btn_id"
+        static let showDemoTableViewBtnIdentifier = "show_demo_table_view_btn_id"
+        static let showDemoSpotArticlesBtnIdentifier = "show_demo_spot_articles_btn_id"
+        static let showFoxNewsBtnIdentifier = "show_fox_news_btn_id"
+        static let showMobileSSOIdentifier = "show_mobile_sso_btn_id"
+        static let showMobileGuestIdentifier = "show_mobile_guest_btn_id"
+        static let showMobileSocialIdentifier = "show_mobile_social_btn_id"
+        static let authenticationPlaygroundBtnIdentifier = "authentication_playground_btn_id"
+        static let customSpotBtnIdentifier = "custom_spot_btn_id"
         static let verticalMarginInScrollView: CGFloat = 8
     }
 
@@ -63,6 +74,11 @@ class ViewController: UIViewController {
         SpotIm.setAnalyticsEventDelegate(delegate: self)
         
         setupObservers()
+    }
+    
+    override func loadView() {
+        super.loadView()
+        applyAccessibility()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -336,6 +352,20 @@ extension ViewController: SPAnalyticsEventDelegate {
 
 
 fileprivate extension ViewController {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        betaNewAPIBtn.accessibilityIdentifier = Metrics.betaNewAPIBtnIdentifier
+        settingsBtn.accessibilityIdentifier = Metrics.settingsBtnIdentifier
+        showDemoTableViewBtn.accessibilityIdentifier = Metrics.showDemoTableViewBtnIdentifier
+        showDemoSpotArticlesBtn.accessibilityIdentifier = Metrics.showDemoSpotArticlesBtnIdentifier
+        showFoxNewsBtn.accessibilityIdentifier = Metrics.showFoxNewsBtnIdentifier
+        showMobileSSO.accessibilityIdentifier = Metrics.showMobileSSOIdentifier
+        showMobileGuest.accessibilityIdentifier = Metrics.showMobileGuestIdentifier
+        showMobileSocial.accessibilityIdentifier = Metrics.showMobileSocialIdentifier
+        autenticationPlaygroundBtn.accessibilityIdentifier = Metrics.authenticationPlaygroundBtnIdentifier
+        customSpotBtn.accessibilityIdentifier = Metrics.customSpotBtnIdentifier
+    }
+    
     func setupObservers() {
         customSpotTextField.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
             .subscribe(onNext: { [weak self] _ in

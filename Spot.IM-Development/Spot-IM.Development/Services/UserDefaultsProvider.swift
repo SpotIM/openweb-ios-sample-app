@@ -92,6 +92,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case readOnlyModeIndex = "readOnlyModeIndex"
         case themeModeIndex = "themeModeSelectedIndex"
         case modalStyleIndex = "modalStyleIndex"
+        case articleAssociatedURL = "articleAssociatedURL"
     }
 }
 
@@ -137,6 +138,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores the theme mode (default, light, dark)"
         case .modalStyleIndex:
             return "Key which stores modal style (full screen, page sheet)"
+        case .articleAssociatedURL:
+            return "Key which stores injected article url for easy testing"
         }
     }
 }

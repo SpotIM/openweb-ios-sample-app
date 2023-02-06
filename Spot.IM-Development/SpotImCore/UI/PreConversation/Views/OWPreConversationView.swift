@@ -132,40 +132,41 @@ fileprivate extension OWPreConversationView {
             make.top.leading.trailing.equalToSuperview()
         }
         
-        if !viewModel.outputs.isButtonOnlyModeEnabled {
-            self.addSubview(communityGuidelinesView)
-            communityGuidelinesView.OWSnp.makeConstraints { make in
-                make.top.equalTo(header.OWSnp.bottom)
-                make.leading.trailing.equalToSuperview()
-            }
-            
-            self.addSubview(communityQuestionView)
-            communityQuestionView.OWSnp.makeConstraints { make in
-                make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
-                make.leading.trailing.equalToSuperview()
-            }
-            
-            self.addSubview(separatorView)
-            separatorView.OWSnp.makeConstraints { make in
-                make.top.equalTo(communityQuestionView.OWSnp.bottom)
-                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-                make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-                make.height.equalTo(Metrics.separatorHeight)
-            }
-            
-            self.addSubview(commentCreationEntryView)
-            commentCreationEntryView.OWSnp.makeConstraints { make in
-                make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
-                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-                make.trailing.equalToSuperview()
-            }
-            
-            self.addSubview(tableView)
-            tableView.OWSnp.makeConstraints { make in
-                make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
-                make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-                make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            }
+        // TODO: Adjust UI correctly according to the style
+        // Each component should be added separately
+        // DO NOT pass style in the VM, use `shouldShowCommunityGuidelinesAndQuestion` and etc.
+        self.addSubview(communityGuidelinesView)
+        communityGuidelinesView.OWSnp.makeConstraints { make in
+            make.top.equalTo(header.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        self.addSubview(communityQuestionView)
+        communityQuestionView.OWSnp.makeConstraints { make in
+            make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        self.addSubview(separatorView)
+        separatorView.OWSnp.makeConstraints { make in
+            make.top.equalTo(communityQuestionView.OWSnp.bottom)
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.height.equalTo(Metrics.separatorHeight)
+        }
+        
+        self.addSubview(commentCreationEntryView)
+        commentCreationEntryView.OWSnp.makeConstraints { make in
+            make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview()
+        }
+        
+        self.addSubview(tableView)
+        tableView.OWSnp.makeConstraints { make in
+            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
         }
         
         self.addSubview(btnFullConversation)
