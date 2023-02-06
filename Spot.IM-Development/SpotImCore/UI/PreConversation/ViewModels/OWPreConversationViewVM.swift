@@ -35,6 +35,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
     var shouldShowComments: Bool { get }
+    var fullConvButtonTitle: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -93,6 +94,34 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
     
+    fileprivate var commentsCount: Observable<String> {
+        guard let postId = OWManager.manager.postId else { return .empty()}
+        
+        return OWSharedServicesProvider.shared.realtimeService().realtimeData
+            .map { realtimeData in
+                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
+                return count
+            }
+            .unwrap()
+            .map { count in
+                return count > 0 ? "(\(count))" : ""
+            }
+            .asObservable()
+    }
+    var fullConvButtonTitle: Observable<String> {
+        commentsCount
+            .map { [weak self] count in
+                guard let self = self else { return "" }
+                switch(self.preConversationStyle) {
+                case .ctaButtonOnly:
+                    return LocalizationManager.localizedString(key: "Show Comments") + "(\(count))"
+                case .ctaWithSummary:
+                    return LocalizationManager.localizedString(key: "Post a Comment")
+                default:
+                    return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
+                }
+            }
+    }
     
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {

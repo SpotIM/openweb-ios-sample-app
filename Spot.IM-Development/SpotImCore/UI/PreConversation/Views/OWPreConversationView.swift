@@ -70,9 +70,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return tableView
     }()
     fileprivate lazy var btnFullConversation: UIButton = {
-        // TODO: button text should be handle via VM - for button only mode etc
-        return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
-            .button
+        return UIButton()
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
@@ -183,6 +181,10 @@ fileprivate extension OWPreConversationView {
     }
     
     func setupObservers() {
+        viewModel.outputs.fullConvButtonTitle
+            .bind(to: btnFullConversation.rx.title())
+            .disposed(by: disposeBag)
+        
         viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
         
         viewModel.outputs.preConversationDataSourceSections
