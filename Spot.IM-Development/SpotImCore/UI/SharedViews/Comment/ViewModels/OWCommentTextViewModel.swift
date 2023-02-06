@@ -218,9 +218,9 @@ fileprivate extension OWCommentTextViewModel {
         return attributes
     }
     
-    func appendActionStringIfNeeded(_ attString: NSMutableAttributedString, lines: [CTLine], currentState: TextState, style: OWThemeStyle) -> NSMutableAttributedString {
+    func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: TextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
-        guard lines.count > self.lineLimit else { return attString }
+        guard lines.count > self.lineLimit else { return NSMutableAttributedString(attributedString: attString) }
         switch currentState {
         case .collapsed:
             let visibleLines = lines[0...lineLimit - 1]
