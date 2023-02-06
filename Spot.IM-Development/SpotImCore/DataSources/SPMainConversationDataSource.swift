@@ -977,13 +977,35 @@ extension SPMainConversationDataSource {
     func muteComment(userId: String) {
         let indexPaths = indexPathsOfComments(for: userId)
         guard !indexPaths.isEmpty else { return }
-        
+
+        var checkIfMutedComments = [Int]()
+
         for indexPath in indexPaths {
             var commentVM = cellData[indexPath.section][indexPath.row]
             commentVM.setIsMuted(true)
             cellData[indexPath.section][indexPath.row] = commentVM
+
+            if !checkIfMutedComments.contains(indexPath.section) {
+                checkIfMutedComments.append(indexPath.section)
+            }
+        }
+
+        for commentIndex in checkIfMutedComments {
+            if isAllCommentAndRepliesShouldBeMuted(commentIndex) {
+                cellData.remove(at: commentIndex)
+            }
         }
         
         delegate?.reload(shouldBeScrolledToTop: false)
+    }
+
+    private func isAllCommentAndRepliesShouldBeMuted(_ section: Int) -> Bool {
+        var verifyComments = [Bool]()
+        let sectionData = cellData[section]
+        for rawIndex in 0..<sectionData.count {
+            let commentVM = sectionData[rawIndex]
+            verifyComments.append(commentVM.isCommentAuthorMuted)
+        }
+        return !verifyComments.contains(false)
     }
 }
