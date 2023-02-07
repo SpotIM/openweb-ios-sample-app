@@ -854,14 +854,14 @@ extension SPMainConversationDataSource {
 
 fileprivate extension SPMainConversationDataSource {
 
-    private func handleDeletedCommentReplies(commentId: String, sectionIndexPath: IndexPath) {
+    func handleDeletedCommentReplies(commentId: String, sectionIndexPath: IndexPath) {
         for i in sectionIndexPath.row + 1..<cellData[sectionIndexPath.section].count
             where cellData[sectionIndexPath.section][i].parentCommentId == commentId {
                 cellData[sectionIndexPath.section][i].replyingToDisplayName = nil
         }
     }
 
-    private func handleDeletedParentComment(parentId: String) {
+    func handleDeletedParentComment(parentId: String) {
         guard let indexPath = indexPathOfComment(with: parentId),
             cellData[indexPath.section].filter({ $0.parentCommentId == parentId && !$0.shouldBeRemoved }).isEmpty,
             cellData[indexPath.section][indexPath.row].isDeleted else { return }
@@ -872,7 +872,7 @@ fileprivate extension SPMainConversationDataSource {
             }
     }
 
-    private func deleteComments(for id: String, at indexPath: IndexPath, isCascade: Bool) -> DeletedIndexPathsInfo {
+    func deleteComments(for id: String, at indexPath: IndexPath, isCascade: Bool) -> DeletedIndexPathsInfo {
         cellData[indexPath.section][indexPath.row].shouldBeRemoved = true
         if let parentCommentId = cellData[indexPath.section][indexPath.row].parentCommentId, !parentCommentId.isEmpty {
             handleDeletedParentComment(parentId: parentCommentId)
@@ -893,7 +893,7 @@ fileprivate extension SPMainConversationDataSource {
         return (deletedPaths, shouldRemoveSection)
     }
 
-    private func markChildrenDeleted(for id: String?) {
+    func markChildrenDeleted(for id: String?) {
         guard let id = id, let indexPath = indexPathOfComment(with: id) else { return }
         for i in indexPath.row..<cellData[indexPath.section].count
             where cellData[indexPath.section][i].parentCommentId == id {
@@ -902,7 +902,7 @@ fileprivate extension SPMainConversationDataSource {
         }
     }
 
-    private func updateRepliesButtonIfNeeded(in comment: CommentViewModel?) {
+    func updateRepliesButtonIfNeeded(in comment: CommentViewModel?) {
         guard let isRoot = comment?.isRoot,
             let replyCount = loadedChildren(of: comment?.commentId)?.count,
             comment?.repliesButtonState == .hidden else { return }
@@ -914,7 +914,7 @@ fileprivate extension SPMainConversationDataSource {
         }
     }
 
-    private func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
+    func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
         let logger = servicesProvider.logger()
         logger.log(level: .verbose, "pushLocalComment called, sorting is \(String(describing: sortMode))")
         let updatedMessageCount = messageCount + 1
@@ -931,7 +931,7 @@ fileprivate extension SPMainConversationDataSource {
         self.cachedCommentReply = nil
     }
 
-    private func pushLocalReply(reply: SPComment, viewModel: CommentViewModel) {
+    func pushLocalReply(reply: SPComment, viewModel: CommentViewModel) {
         let lastReplyViewModel = cellData.flatMap { $0 }.last { $0.parentCommentId == reply.parentId }
         let commentIndexPath = cellData
             .flatMap { $0 }
@@ -969,7 +969,7 @@ fileprivate extension SPMainConversationDataSource {
         delegate?.reload(scrollToIndexPath: newReplyIndexPath)
     }
 
-    private func indexForInsertion(initialIP: IndexPath, currentReplyDepth: Int) -> Int {
+    func indexForInsertion(initialIP: IndexPath, currentReplyDepth: Int) -> Int {
         let sectionData = cellData[initialIP.section]
         let count = sectionData.count
         let firstIndex = initialIP.row + 1
@@ -984,7 +984,7 @@ fileprivate extension SPMainConversationDataSource {
         return (latestIndexPath ?? IndexPath(row: firstIndex, section: initialIP.section)).row
     }
 
-    private func updateEditedCommentAndSendEvent(comment: SPComment, viewModel: CommentViewModel) {
+    func updateEditedCommentAndSendEvent(comment: SPComment, viewModel: CommentViewModel) {
         guard let indexPath = indexPathOfComment(with: comment.id) else { return }
         (cellData[indexPath.section])[indexPath.row] = viewModel
         delegate?.reloadAt(indexPath: indexPath)
