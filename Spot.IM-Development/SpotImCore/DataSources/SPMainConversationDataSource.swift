@@ -647,6 +647,12 @@ internal final class SPMainConversationDataSource {
             if let id = comment.id {
                 hiddenData[id]?.reverse()
             }
+
+            if viewModel.isCommentAuthorMuted && isAllCommentAndRepliesShouldBeMuted(section) {
+                // if comment is muted and all it's replies are muted - we filter out this comment and it's replies
+                return
+            }
+
             visibleComments.append(section)
 
             makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
@@ -841,7 +847,10 @@ extension SPMainConversationDataSource {
             cellData[indexPath.section][indexPath.row] = commentVM
         }
 
-        let sectionIndexPaths = Set(indexPaths.map { $0.section }).reversed()
+        let sectionIndexPaths = Set(indexPaths.map { $0.section }).sorted { a, b in
+            return a > b
+        }
+
         sectionIndexPaths.forEach { sectionIndex in
             if isAllCommentAndRepliesShouldBeMuted(sectionIndex) {
                 cellData.remove(at: sectionIndex)
@@ -998,8 +1007,11 @@ fileprivate extension SPMainConversationDataSource {
     }
 
     func isAllCommentAndRepliesShouldBeMuted(_ sectionIndex: Int) -> Bool {
-        let sectionData = cellData[sectionIndex]
-        for commentVM in sectionData {
+        isAllCommentAndRepliesShouldBeMuted(cellData[sectionIndex])
+    }
+
+    func isAllCommentAndRepliesShouldBeMuted(_ section: [CommentViewModel]) -> Bool {
+        for commentVM in section {
             if !commentVM.isCommentAuthorMuted {
                 return false
             }
