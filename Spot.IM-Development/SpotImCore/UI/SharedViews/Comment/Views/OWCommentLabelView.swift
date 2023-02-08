@@ -19,7 +19,6 @@ class OWCommentLabelView: UIView {
         static let iconImageHeight: CGFloat = 24.0
         static let iconImageWidth: CGFloat = 14.0
         static let iconTrailingOffset: CGFloat = 5.0
-        static let commentLabelViewHeight: CGFloat = 28.0
         
         static var opacityDarkMode: CGFloat = 0.2
         static var opacityLightMode: CGFloat = 0.1
@@ -28,7 +27,6 @@ class OWCommentLabelView: UIView {
         static var borderOpacityDarkMode: CGFloat = 0.7
         static var borderOpacityLightMode: CGFloat = 0.4
     }
-    fileprivate var heightConstraint: OWConstraint?
     
     fileprivate lazy var labelContainer: UIView = {
         return UIView()
@@ -76,7 +74,6 @@ fileprivate extension OWCommentLabelView {
         addSubviews(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
-            heightConstraint = make.height.equalTo(0).constraint
         }
         
         labelContainer.addSubview(label)
@@ -125,13 +122,6 @@ fileprivate extension OWCommentLabelView {
                 guard let self = self else { return }
                 self.setUIColors(state: state, labelColor: color, currentStyle: style)
             }
-            .disposed(by: disposeBag)
-        
-        viewModel.outputs.commentLabelSettings
-            .subscribe(onNext: { [weak self] label in
-                guard let self = self else { return }
-                self.heightConstraint?.update(offset: Metrics.commentLabelViewHeight)
-            })
             .disposed(by: disposeBag)
         
         tapGesture.rx.event.voidify()

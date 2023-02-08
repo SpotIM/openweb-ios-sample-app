@@ -36,10 +36,6 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         static let depth1Offset: CGFloat = 25.0
         static let depth2Offset: CGFloat = 40.0
         static let maxDepthOffset: CGFloat = 55.0
-        static let editedTextAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.gray,
-            .font: UIFont.preferred(style: .italic, of: OWCommentContentView.Metrics.fontSize),
-]
     }
     
     var inputs: OWCommentContentViewModelingInputs { return self }
@@ -49,8 +45,6 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     fileprivate let lineLimit: Int
     fileprivate let imageProvider: OWImageProviding
     
-    fileprivate let editedSuffix: NSAttributedString = NSAttributedString(string: LocalizationManager.localizedString(key: "Edited"), attributes: Metrics.editedTextAttributes)
-    
     var collapsableLabelViewModel: OWCommentTextViewModeling
     
     init(comment: SPComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
@@ -59,10 +53,11 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         self.imageProvider = imageProvider
         _comment.onNext(comment)
     }
-    init() {
+    
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         lineLimit = 0
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), lineLimit: lineLimit)
-        self.imageProvider = OWCloudinaryImageProvider()
+        self.imageProvider = imageProvider
     }
     
     var gifUrl: Observable<String> {

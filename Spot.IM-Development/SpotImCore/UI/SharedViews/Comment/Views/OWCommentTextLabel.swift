@@ -16,7 +16,6 @@ class OWCommentTextLabel: UILabel {
     
     init() {
         super.init(frame: .zero)
-        setupUI()
         setupGestureRecognizer()
     }
     
@@ -33,7 +32,7 @@ class OWCommentTextLabel: UILabel {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let viewModel = viewModel else { return }
-        print("NOGAH: OWCommentTextLabel layoutSubviews width - \(self.bounds.width)")
+
         viewModel.inputs.width.onNext(self.bounds.width)
     }
 }
@@ -52,18 +51,6 @@ extension OWCommentTextLabel: UIGestureRecognizerDelegate {
 }
 
 fileprivate extension OWCommentTextLabel {
-    func setupUI() {
-//        self.wrapContent()
-//        self.hugContent()
-//        self.OWSnp.makeConstraints { make in
-//            heightConstraint = make.height.equalTo(0).constraint
-//        }
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-//            self?.OWSnp.remakeConstraints { make in
-//                make.height.equalTo(500)
-//            }
-//        }
-    }
     
     func setupObservers() {
         viewModel.outputs.attributedString
@@ -72,27 +59,12 @@ fileprivate extension OWCommentTextLabel {
                 self.attributedText = attString
             })
             .disposed(by: disposeBag)
-        
-//        viewModel.outputs.height
-//            .subscribe(onNext: { [weak self] newHeight in
-//                guard let self = self else { return }
-//                self.OWSnp.updateConstraints { make in
-//                    if let constraint = self.heightConstraint {
-//                        self.heightConstraint?.update(inset: newHeight)
-//                    } else {
-//                        self.heightConstraint = make.height.equalTo(0).constraint
-//                    }
-//                }
-////                self.setNeedsLayout()
-////                self.layoutIfNeeded()
-//            })
-//            .disposed(by: disposeBag)
     }
     
     func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
         guard let string = self.attributedText?.string else { return false }
-        
         guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
+        
         let tapLocation = gesture.location(in: self)
         let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
         

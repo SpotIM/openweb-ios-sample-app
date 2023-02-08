@@ -90,15 +90,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .asObservable()
     }
     
-//    fileprivate var _lines: Observable<[CTLine]> {
-//        widthObservable
-//            .withLatestFrom(fullAttributedString) { currentWidth, messageAttributedString in
-//            print("NOGAH: width \(currentWidth)")
-//            return messageAttributedString.getLines(with: currentWidth)
-//        }
-//        .asObservable()
-//    }
-    
     fileprivate var _lines: Observable<[CTLine]> {
         Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, currentWidth in
             return messageAttributedString.getLines(with: currentWidth)
@@ -106,13 +97,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .unwrap()
         .asObservable()
     }
-//    fileprivate var _lines: Observable<[CTLine]> {
-//        fullAttributedString.map { messageAttributedString in
-//            let width = 361.0 // TODO: get real width
-//            return messageAttributedString.getLines(with: width)
-//        }
-//        .asObservable()
-//    }
     
     fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
     var attributedString: Observable<NSMutableAttributedString?> {
@@ -178,9 +162,8 @@ fileprivate extension OWCommentTextViewModel {
             .disposed(by: disposeBag)
         
         height
-            .subscribe(onNext: { newHeight in
-                print("NOGAH: update text height change: \(newHeight)")
-                self.heighChange.onNext()
+            .subscribe(onNext: { [weak self] newHeight in
+                self?.heighChange.onNext()
             })
             .disposed(by: disposeBag)
     }
