@@ -98,14 +98,10 @@ fileprivate extension OWCommentContentView {
         viewModel.outputs.collapsableLabelViewModel
             .outputs.height
             .subscribe(onNext: { [weak self] newHeight in
-//                self?.textLabel.OWSnp.updateConstraints { make in
-                print("NOGAH: update height \(newHeight), comment: \(self?.textLabel.text ?? "none")")
-                self?.textHeightConstraint?.update(offset: newHeight)
-                self?.setNeedsLayout()
-                self?.layoutIfNeeded()
-                
-//                }
-                
+                guard let self = self else { return }
+                self.textHeightConstraint?.update(offset: newHeight)
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
     }
