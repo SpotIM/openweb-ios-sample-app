@@ -69,7 +69,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return tableView
     }()
     fileprivate lazy var btnFullConversation: UIButton = {
-        return UIButton()
+        return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
+            .button
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)

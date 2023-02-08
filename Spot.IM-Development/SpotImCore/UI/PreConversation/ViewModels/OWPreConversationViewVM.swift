@@ -111,7 +111,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var fullConvButtonTitle: Observable<String> {
         commentsCount
             .map { [weak self] count in
-                guard let self = self else { return "" }
+                guard let self = self else { return nil }
                 switch(self.preConversationStyle) {
                 case .ctaButtonOnly:
                     return LocalizationManager.localizedString(key: "Show Comments") + "(\(count))"
@@ -121,6 +121,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                     return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
                 }
             }
+            .unwrap()
     }
     
     var fullConversationTap = PublishSubject<Void>()
