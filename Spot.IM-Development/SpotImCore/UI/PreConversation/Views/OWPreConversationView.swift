@@ -81,7 +81,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .separatorStyle(.none)
         tableView.isScrollEnabled = false
         tableView.allowsSelection = false
-//        tableView.estimatedRowHeight = 280
         // Register cells
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
