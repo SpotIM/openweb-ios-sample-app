@@ -86,7 +86,7 @@ fileprivate extension OWOnlineViewingUsersCounterView {
     func configureViews() {
         imgViewIcon.image = viewModel.outputs.image
         viewModel.outputs.viewingCount
-            .startWith("0")
+            .startWith("1")
             .bind(to: lblViewersNumber.rx.text)
             .disposed(by: disposeBag)
         

@@ -226,7 +226,7 @@ fileprivate extension OWPreConversationViewViewModel {
                         for (index, comment) in comments.enumerated() {
                             // TODO: replies
                             guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
-                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, lineLimit: 4))
+                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, lineLimit: 4)) // TODO: get line limit from style ?
                             viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                             if (index < comments.count - 1) {
                                 viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
