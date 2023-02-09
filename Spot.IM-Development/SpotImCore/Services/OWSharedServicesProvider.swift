@@ -34,6 +34,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
     func timeMeasuringService() -> OWTimeMeasuringServicing
+    func sortDictateService() -> OWSortDictateServicing
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -113,6 +114,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     fileprivate lazy var _timeMeasuringService: OWTimeMeasuringServicing = {
         return OWTimeMeasuringService()
     }()
+    
+    fileprivate lazy var _sortDictateService: OWSortDictateServicing = {
+        return OWSortDictateService()
+    }()
 
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
@@ -173,6 +178,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func timeMeasuringService() -> OWTimeMeasuringServicing {
         return _timeMeasuringService
     }
+    
+    func sortDictateService() -> OWSortDictateServicing {
+        return _sortDictateService
+    }
 }
 
 // Configure
@@ -183,20 +192,27 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     }
     
     func set(spotId: OWSpotId) {
+        fetchConfig(spotId: spotId)
+    }
+    
+    func change(spotId : OWSpotId) {
+        fetchConfig(spotId: spotId)
+        
+        // Stop / re-create services which depend on spot id
+        _realtimeService.stopFetchingData()
+        _skeletonShimmeringService.removeAllSkeletons()
+        _sortDictateService.invalidateCache()
+    }
+}
+
+fileprivate extension OWSharedServicesProvider {
+    func fetchConfig(spotId: OWSpotId) {
+        // TODO: Replace it with new network API - create a dedicated class which do initialization stuff for new spotId
         _ = SPClientSettings.main.setup(spotId: spotId)
             .take(1)
             .do(onNext: { config in
                 LocalizationManager.setLocale(config.appConfig.mobileSdk.locale ?? "en")
             })
             .subscribe()
-    }
-    
-    func change(spotId : OWSpotId) {
-        _ = SPClientSettings.main.setup(spotId: spotId)
-            .take(1)
-            .subscribe()
-        // Stop / re-create services which depend on spot id
-        _realtimeService.stopFetchingData()
-        _skeletonShimmeringService.removeAllSkeletons()
     }
 }
