@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWSortDictateServicing {
     func sortOption(perPostId postId: OWPostId) -> Observable<OWSortOption>
-    func sortTextPresentation(perOption option: OWSortOption) -> String
+    func sortTextPresentation(perOption sortOption: OWSortOption) -> String
     func update(sortOption: OWSortOption, perPostId postId: OWPostId)
     func invalidateCache()
 }
@@ -27,6 +27,13 @@ class OWSortDictateService: OWSortDictateServicing {
             .observe(on: MainScheduler.instance)
     }()
     
+    fileprivate lazy var sortCustomizer: OWSortingCustomizations = {
+        return OpenWeb.manager
+            .ui
+            .customizations
+            .sorting
+    }()
+    
     init (servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
     }
@@ -35,8 +42,17 @@ class OWSortDictateService: OWSortDictateServicing {
         return .empty()
     }
     
-    func sortTextPresentation(perOption option: OWSortOption) -> String {
-        return ""
+    func sortTextPresentation(perOption sortOption: OWSortOption) -> String {
+        guard let sortCustomizerInternal = sortCustomizer as? OWSortingCustomizationsInternal else {
+            return sortOption.title
+        }
+        
+        let customizedTitleType = sortCustomizerInternal.customizedTitle(forOption: sortOption)
+        guard case .customized(title: let customizedTitle) = customizedTitleType else {
+            return sortOption.title
+        }
+        
+        return customizedTitle
     }
     
     func update(sortOption: OWSortOption, perPostId postId: OWPostId) {
