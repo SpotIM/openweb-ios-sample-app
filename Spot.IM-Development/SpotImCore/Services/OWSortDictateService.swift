@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWSortDictateServicing {
     func sortOption(perPostId postId: OWPostId) -> Observable<OWSortOption>
-    func sortTranslation(perOption option: OWSortOption) -> String
+    func sortTextPresentation(perOption option: OWSortOption) -> String
     func update(sortOption: OWSortOption, perPostId postId: OWPostId)
     func invalidateCache()
 }
@@ -35,7 +35,7 @@ class OWSortDictateService: OWSortDictateServicing {
         return .empty()
     }
     
-    func sortTranslation(perOption option: OWSortOption) -> String {
+    func sortTextPresentation(perOption option: OWSortOption) -> String {
         return ""
     }
     
