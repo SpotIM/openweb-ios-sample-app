@@ -17,8 +17,8 @@ extension OWSortOption {
             return LocalizationManager.localizedString(key:"Newest")
         case .oldest:
             return LocalizationManager.localizedString(key:"Oldest")
-        case .default:
-            // Will never happen
+        case .`default`:
+            // Will never be used
             return ""
         }
     }
