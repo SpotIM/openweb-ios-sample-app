@@ -30,10 +30,3 @@ class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInter
         return .customized(title: title)
     }
 }
-
-
-//guard let title = customizationTitleMapper[sortOption] else {
-//    return sortOption.title
-//}
-//
-//return title
