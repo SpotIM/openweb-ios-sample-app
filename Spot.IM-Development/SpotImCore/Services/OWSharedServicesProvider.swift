@@ -116,7 +116,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
     
     fileprivate lazy var _sortDictateService: OWSortDictateServicing = {
-        return OWSortDictateService()
+        return OWSortDictateService(servicesProvider: self)
     }()
 
     func themeStyleService() -> OWThemeStyleServicing {
