@@ -7,11 +7,24 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol OWSortDictateServicing {
-    
+    func sortOption(perPostId postId: OWPostId) -> Observable<OWSortOption>
+    func sortTranslation(perOption option: OWSortOption) -> String
+    func update(sortOption: OWSortOption, perPostId postId: OWPostId)
 }
 
 class OWSortDictateService: OWSortDictateServicing {
+    func sortOption(perPostId postId: OWPostId) -> Observable<OWSortOption> {
+        return .empty()
+    }
     
+    func sortTranslation(perOption option: OWSortOption) -> String {
+        return ""
+    }
+    
+    func update(sortOption: OWSortOption, perPostId postId: OWPostId) {
+        
+    }
 }
