@@ -9,7 +9,7 @@
 import Foundation
 
 protocol OWSortingCustomizationsInternal {
-    func title(forOption sortOption: OWSortOption) -> String
+    func customizedTitle(forOption sortOption: OWSortOption) -> OWCustomizedSortTitle
 }
 
 class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInternal {
@@ -22,11 +22,18 @@ class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInter
         customizationTitleMapper[sortOption] = title
     }
     
-    func title(forOption sortOption: OWSortOption) -> String {
+    func customizedTitle(forOption sortOption: OWSortOption) -> OWCustomizedSortTitle {
         guard let title = customizationTitleMapper[sortOption] else {
-            return sortOption.title
+            return .none
         }
         
-        return title
+        return .customized(title: title)
     }
 }
+
+
+//guard let title = customizationTitleMapper[sortOption] else {
+//    return sortOption.title
+//}
+//
+//return title
