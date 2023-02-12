@@ -109,6 +109,7 @@ class OWSortDictateService: OWSortDictateServicing {
 
                 return sortOption
             }
+            .distinctUntilChanged()
         }
     
     func sortTextPresentation(perOption sortOption: OWSortOption) -> String {
