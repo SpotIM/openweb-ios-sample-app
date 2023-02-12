@@ -155,7 +155,7 @@ fileprivate extension MockArticleViewModel {
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
                 flows.preConversation(postId: postId,
-                                   article: OWArticle.stub(),
+                                   article: self.createMockArticle(),
                                    presentationalMode: presentationalMode,
                                    additionalSettings: nil,
                                    callbacks: nil,
@@ -197,7 +197,7 @@ fileprivate extension MockArticleViewModel {
                 let flows = manager.ui.flows
                 
                 flows.conversation(postId: postId,
-                                   article: OWArticle.stub(),
+                                   article: self.createMockArticle(),
                                    presentationalMode: presentationalMode,
                                    additionalSettings: nil,
                                    callbacks: nil,
@@ -233,7 +233,7 @@ fileprivate extension MockArticleViewModel {
                 let flows = manager.ui.flows
                 
                 flows.commentCreation(postId: postId,
-                                      article: OWArticle.stub(),
+                                      article: self.createMockArticle(),
                                       presentationalMode: presentationalMode,
                                       additionalSettings: nil,
                                       callbacks: nil,
@@ -252,14 +252,37 @@ fileprivate extension MockArticleViewModel {
             })
             .disposed(by: disposeBag)
     }
+    
+    func createMockArticle() -> OWArticle {
+        let articleStub = OWArticle.stub()
+
+        let persistenceReadOnlyMode = OWReadOnlyMode.modeFromPersistence(index: UserDefaultsProvider.shared.get(key: .readOnlyModeIndex, defaultValue: 0))
+        let settings = OWArticleSettings(section: articleStub.additionalSettings.section, readOnlyMode: persistenceReadOnlyMode)
+            
+        var url = articleStub.url
+        if let strURL =  UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
+           let persistenceURL = URL(string: strURL) {
+            url = persistenceURL
+        }
+        
+        let article = OWArticle(url: url,
+                                title: articleStub.title,
+                                subtitle: articleStub.subtitle,
+                                thumbnailUrl: articleStub.thumbnailUrl,
+                                additionalSettings: settings)
+        return article
+    }
                        
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,
               let presentationalVC = self.presentationalVC else { return nil }
         
-        let presentationalMode = mode == .push ? OWPresentationalMode.push(navigationController: navController) : OWPresentationalMode.present(viewController: presentationalVC) //, style: .fullScreen)
-        // TODO: Add settings for the new API (which present style will be an option)
-        return presentationalMode
+        switch mode {
+        case .present(let style):
+            return OWPresentationalMode.present(viewController: presentationalVC, style: style)
+        case .push:
+            return OWPresentationalMode.push(navigationController: navController)
+        }
     }
 }
 
