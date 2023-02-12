@@ -16,7 +16,7 @@ class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInter
     
     fileprivate var customizationTitleMapper: [OWSortOption: String] = [:]
     
-    var initialOption: OWSortOption = .default
+    var initialOption: OWInitialSortStrategy = .useServerConfig
     
     func setTitle(_ title: String, forOption sortOption: OWSortOption) {
         customizationTitleMapper[sortOption] = title
