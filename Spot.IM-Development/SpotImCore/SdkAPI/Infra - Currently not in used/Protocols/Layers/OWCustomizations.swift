@@ -11,6 +11,7 @@ import Foundation
 #if NEW_API
 public protocol OWCustomizations {
     // TODO: Complete
+    var themeEnforcement: OWThemeStyleEnforcement { get set }
 }
 #else
 protocol OWCustomizations {
