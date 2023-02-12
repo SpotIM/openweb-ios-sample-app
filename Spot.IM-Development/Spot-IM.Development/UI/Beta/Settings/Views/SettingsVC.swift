@@ -33,7 +33,8 @@ class SettingsVC: UIViewController {
     }()
 
     fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle, accessibilityPrefixId: Metrics.switchHideArticleHeaderIdentifier)
+        return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle,
+                             accessibilityPrefixId: Metrics.switchHideArticleHeaderIdentifier)
     }()
 
     fileprivate lazy var switchCommentCreationNewDesign: SwitchSetting = {
@@ -45,21 +46,27 @@ class SettingsVC: UIViewController {
         let title = viewModel.outputs.readOnlyTitle
         let items = viewModel.outputs.readOnlySettings
 
-        return SegmentedControlSetting(title: title, accessibilityPrefixId: Metrics.segmentedReadOnlyModeIdentifier, items: items)
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedReadOnlyModeIdentifier,
+                                       items: items)
     }()
 
     fileprivate lazy var segmentedThemeMode: SegmentedControlSetting = {
         let title = viewModel.outputs.themeModeTitle
         let items = viewModel.outputs.themeModeSettings
 
-        return SegmentedControlSetting(title: title, accessibilityPrefixId: Metrics.segmentedThemeModeIdentifier, items: items)
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedThemeModeIdentifier,
+                                       items: items)
     }()
 
     fileprivate lazy var segmentedModalStyle: SegmentedControlSetting = {
         let title = viewModel.outputs.modalStyleTitle
         let items = viewModel.outputs.modalStyleSettings
 
-        return SegmentedControlSetting(title: title, accessibilityPrefixId: Metrics.segmentedModalStyleIdentifier, items: items)
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedModalStyleIdentifier,
+                                       items: items)
     }()
 
     fileprivate lazy var textFieldArticleURL: TextFieldSetting = {

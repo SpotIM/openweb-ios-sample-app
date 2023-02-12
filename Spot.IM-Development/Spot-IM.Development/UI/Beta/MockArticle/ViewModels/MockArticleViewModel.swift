@@ -253,7 +253,7 @@ fileprivate extension MockArticleViewModel {
             .disposed(by: disposeBag)
     }
     // swiftlint:enable function_body_length
-    
+
     func createMockArticle() -> OWArticle {
         let articleStub = OWArticle.stub()
 
@@ -262,13 +262,13 @@ fileprivate extension MockArticleViewModel {
         // swiftlint:enable line_length
         let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
                                          readOnlyMode: persistenceReadOnlyMode)
-            
+
         var url = articleStub.url
         if let strURL =  UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL) {
             url = persistenceURL
         }
-        
+
         let article = OWArticle(url: url,
                                 title: articleStub.title,
                                 subtitle: articleStub.subtitle,
@@ -276,11 +276,11 @@ fileprivate extension MockArticleViewModel {
                                 additionalSettings: settings)
         return article
     }
-                       
+
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,
               let presentationalVC = self.presentationalVC else { return nil }
-        
+
         switch mode {
         case .present(let style):
             return OWPresentationalMode.present(viewController: presentationalVC, style: style)
