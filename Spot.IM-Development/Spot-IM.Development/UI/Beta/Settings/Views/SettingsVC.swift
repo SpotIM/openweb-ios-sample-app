@@ -9,6 +9,8 @@
 import UIKit
 import RxSwift
 
+#if NEW_API
+
 class SettingsVC: UIViewController {
     
     fileprivate struct Metrics {
@@ -195,3 +197,5 @@ fileprivate extension SettingsVC {
             .disposed(by: disposeBag)
     }
 }
+
+#endif
