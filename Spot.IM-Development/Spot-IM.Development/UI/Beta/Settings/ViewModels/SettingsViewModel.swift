@@ -15,12 +15,14 @@ protocol SettingsViewModelingInputs {
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
     var modalStyleSelectedIndex: PublishSubject<Int> { get }
+    var articleAssociatedSelectedURL: PublishSubject<String?> { get }
 }
 
 protocol SettingsViewModelingOutputs {
     var title: String { get }
     var hideArticleHeaderTitle: String { get }
     var commentCreationNewDesignTitle: String { get }
+    var articleURLTitle: String { get }
     var readOnlyTitle: String { get }
     var readOnlySettings: [String] { get }
     var themeModeTitle: String { get }
@@ -32,6 +34,7 @@ protocol SettingsViewModelingOutputs {
     var readOnlyModeIndex: Observable<Int> { get }
     var themeModeIndex: Observable<Int> { get }
     var modalStyleIndex: Observable<Int> { get }
+    var articleAssociatedURL: Observable<String> { get }
 }
 
 protocol SettingsViewModeling {
@@ -48,35 +51,32 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
-
-    fileprivate let _shouldHideArticleHeader = BehaviorSubject<Bool>(value: false)
+    var articleAssociatedSelectedURL = PublishSubject<String?>()
+    
+    var userDefaultsProvider: UserDefaultsProviderProtocol
+    
     var shouldHideArticleHeader: Observable<Bool> {
-        return _shouldHideArticleHeader
-            .asObservable()
+        return userDefaultsProvider.values(key: .hideArticleHeader, defaultValue: false)
     }
-
-    fileprivate let _shouldCommentCreationNewDesign = BehaviorSubject<Bool>(value: false)
+    
     var shouldCommentCreationNewDesign: Observable<Bool> {
-        return _shouldCommentCreationNewDesign
-            .asObservable()
+        return userDefaultsProvider.values(key: .showCommentCreationNewDesign, defaultValue: false)
     }
-
-    fileprivate let _readOnlyModeIndex = BehaviorSubject(value: 0)
+    
     var readOnlyModeIndex: Observable<Int> {
-        return _readOnlyModeIndex
-            .asObservable()
+        return userDefaultsProvider.values(key: .readOnlyModeIndex, defaultValue: 0)
     }
-
-    fileprivate let _themeModeIndex = BehaviorSubject(value: 0)
+    
     var themeModeIndex: Observable<Int> {
-        return _themeModeIndex
-            .asObservable()
+        return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: 0)
     }
-
-    fileprivate let _modalStyleIndex = BehaviorSubject(value: 0)
+    
     var modalStyleIndex: Observable<Int> {
-        return _modalStyleIndex
-            .asObservable()
+        return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: 0)
+    }
+    
+    var articleAssociatedURL: Observable<String> {
+        return userDefaultsProvider.values(key: .articleAssociatedURL)
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -96,7 +96,11 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     lazy var readOnlyTitle: String = {
         return NSLocalizedString("ReadOnlyMode", comment: "")
     }()
-
+    
+    lazy var articleURLTitle: String = {
+        return NSLocalizedString("ArticleAssociatedURL", comment: "")
+    }()
+    
     lazy var readOnlySettings: [String] = {
         let _default = NSLocalizedString("Default", comment: "")
         let _enabled = NSLocalizedString("Enabled", comment: "")
@@ -127,44 +131,49 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
 
         return [_fullScreen, _pageSheet]
     }()
-
-    init() {
+    
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
+        self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
     }
 }
 
 extension SettingsViewModel {
     func setupObservers() {
-
-        // Bind hide article header toggle
         hideArticleHeaderToggled
-            .do(onNext: { _ in
-                // TODO: should be done // swiftlint:disable:this todo
-            })
-            .bind(to: _shouldHideArticleHeader)
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Bool>.hideArticleHeader))
             .disposed(by: disposeBag)
-
-        // Bind comment creation new design toggle
+        
         commentCreationNewDesignToggled
-            .do(onNext: { _ in
-                // TODO: should be done // swiftlint:disable:this todo
-            })
-            .bind(to: _shouldCommentCreationNewDesign)
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Bool>.showCommentCreationNewDesign))
             .disposed(by: disposeBag)
-
-        // Different read only mode selected
+        
         readOnlyModeSelectedIndex
-            .bind(to: _readOnlyModeIndex)
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.readOnlyModeIndex))
             .disposed(by: disposeBag)
-
-        // Different theme mode selected
+                
         themeModeSelectedIndex
-            .bind(to: _themeModeIndex)
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.themeModeIndex))
             .disposed(by: disposeBag)
-
-        // Different modal style selected
+        
         modalStyleSelectedIndex
-            .bind(to: _modalStyleIndex)
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.modalStyleIndex))
+            .disposed(by: disposeBag)
+        
+        articleAssociatedSelectedURL
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<String?>.articleAssociatedURL))
             .disposed(by: disposeBag)
     }
 }

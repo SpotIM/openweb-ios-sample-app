@@ -15,7 +15,6 @@ public protocol OWCustomizations {
 #else
 protocol OWCustomizations {
     var fontFamily: String? { get set }
-    var spacing: OWSpacing { get set }
     var sorting: OWSortingCustomizations { get }
     var themeEnforcement: OWThemeStyleEnforcement { get set }
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)

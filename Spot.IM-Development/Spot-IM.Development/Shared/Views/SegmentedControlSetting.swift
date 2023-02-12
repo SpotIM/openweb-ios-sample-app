@@ -17,6 +17,7 @@ class SegmentedControlSetting: UIView {
         static let verticalOffset: CGFloat = 10
         static let horizontalOffset: CGFloat = 10
         static let segmentMinWidth: CGFloat = 220
+        static let titleNumberOfLines: Int = 2
     }
 
     fileprivate let title: String
@@ -26,7 +27,7 @@ class SegmentedControlSetting: UIView {
         return title
             .label
             .font(FontBook.paragraph)
-            .numberOfLines(2)
+            .numberOfLines(Metrics.titleNumberOfLines)
             .lineBreakMode(.byWordWrapping)
     }()
 
@@ -36,13 +37,14 @@ class SegmentedControlSetting: UIView {
 
         return segment
     }()
-
-    init(title: String, items: [String]) {
+    
+    init(title: String, accessibilityPrefixId: String, items: [String]) {
         self.title = title
         self.items = items
         super.init(frame: .zero)
 
         setupViews()
+        applyAccessibility(prefixId: accessibilityPrefixId)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -52,6 +54,11 @@ class SegmentedControlSetting: UIView {
 }
 
 fileprivate extension SegmentedControlSetting {
+    func applyAccessibility(prefixId: String) {
+        segmentTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
+        segmentedControl.accessibilityIdentifier = prefixId + "_segment_id"
+    }
+    
     func setupViews() {
         self.addSubview(segmentTitleLbl)
         segmentTitleLbl.snp.makeConstraints { make in
@@ -78,10 +85,10 @@ extension Reactive where Base: SegmentedControlSetting {
     }
 
     var selectedSegmentIndex: ControlProperty<Int> {
-        value
+        return value
     }
 
-    var value: ControlProperty<Int> {
+    fileprivate var value: ControlProperty<Int> {
         return base.segmentedControl.rx.controlProperty(editingEvents: .valueChanged) { segmentedControl in
             segmentedControl.selectedSegmentIndex
         } setter: { segmentedControl, value in

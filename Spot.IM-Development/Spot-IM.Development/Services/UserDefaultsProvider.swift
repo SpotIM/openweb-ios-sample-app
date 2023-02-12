@@ -7,18 +7,29 @@
 //
 
 import Foundation
+import RxSwift
 
-protocol UserDefaultsProviderProtocol {
+protocol UserDefaultsProviderProtocol: UserDefaultsProviderRxProtocol {
     func get<T>(key: UserDefaultsProvider.UDKey<T>) -> T?
     func get<T>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T) -> T
     func save<T>(value: T, forKey key: UserDefaultsProvider.UDKey<T>)
     func remove<T>(key: UserDefaultsProvider.UDKey<T>)
+    var rxProtocol: UserDefaultsProviderRxProtocol { get }
 }
 
-class UserDefaultsProvider: UserDefaultsProviderProtocol {
+protocol UserDefaultsProviderRxProtocol {
+    func values<T>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T?) -> Observable<T>
+    func values<T>(key: UserDefaultsProvider.UDKey<T>) -> Observable<T>
+    func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T>
+}
+
+class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
     // Singleton
     static let shared: UserDefaultsProviderProtocol = UserDefaultsProvider()
-
+    
+    var rxProtocol: UserDefaultsProviderRxProtocol { return self }
+    fileprivate var rxHelper: UserDefaultsProviderRxHelperProtocol
+    
     fileprivate struct Metrics {
         static let suiteName = "com.open-web.demo-app"
     }
@@ -33,6 +44,7 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
         self.userDefaults = userDefaults
         self.encoder = encoder
         self.decoder = decoder
+        self.rxHelper = UserDefaultsProviderRxHelper(decoder: decoder, encoder: encoder)
     }
 
     func save<T>(value: T, forKey key: UDKey<T>) {
@@ -40,6 +52,9 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
             DLog("Failed to encode data for key: \(key.rawValue) before writing to UserDefaults")
             return
         }
+        
+        rxHelper.onNext(key: key, data: encodedData)
+        
         _save(data: encodedData, forKey: key)
     }
 
@@ -74,6 +89,26 @@ class UserDefaultsProvider: UserDefaultsProviderProtocol {
         case isReadOnlyEnabled = "demo.isReadOnlyEnabled"
         case interfaceStyle = "demo.interfaceStyle"
         case spotIdKey = "spotIdKey"
+        case hideArticleHeader = "hideArticleHeader"
+        case showCommentCreationNewDesign = "showCommentCreationNewDesign"
+        case readOnlyModeIndex = "readOnlyModeIndex"
+        case themeModeIndex = "themeModeSelectedIndex"
+        case modalStyleIndex = "modalStyleIndex"
+        case articleAssociatedURL = "articleAssociatedURL"
+    }
+}
+
+extension UserDefaultsProvider {
+    func values<T>(key: UserDefaultsProvider.UDKey<T>) -> Observable<T> {
+        return rx.values(key: key, defaultValue: nil)
+    }
+    
+    func values<T>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T? = nil) -> Observable<T> {
+        return rx.values(key: key, defaultValue: defaultValue)
+    }
+    
+    func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T> {
+        return rx.setValues(key: key)
     }
 }
 
@@ -95,6 +130,18 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores if we should override system's interface style (light, dark)"
         case .spotIdKey:
             return "Key which stores the current spot id to be tested"
+        case .hideArticleHeader:
+            return "Key which stores if we should show/hide article header"
+        case .showCommentCreationNewDesign:
+            return "Key which stores if to show comment creation new design or old design"
+        case .readOnlyModeIndex:
+            return "Key which stores read only mode (default, enabled, disabled)"
+        case .themeModeIndex:
+            return "Key which stores the theme mode (default, light, dark)"
+        case .modalStyleIndex:
+            return "Key which stores modal style (full screen, page sheet)"
+        case .articleAssociatedURL:
+            return "Key which stores injected article url for easy testing"
         }
     }
 }
@@ -113,5 +160,17 @@ fileprivate extension UserDefaultsProvider {
     func _remove<T>(key: UDKey<T>) {
         DLog("Removing data from UserDefaults for key: \(key.rawValue)")
         userDefaults.removeObject(forKey: key.rawValue)
+    }
+}
+
+fileprivate extension Reactive where Base: UserDefaultsProvider {
+    func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T> {
+        return base.rxHelper.binder(key: key) { (value) in
+            base.save(value: value, forKey: key)
+        }
+    }
+
+    func values<T>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T? = nil) -> Observable<T> {
+        return base.rxHelper.observable(key: key, value: base._get(key: key), defaultValue: defaultValue)
     }
 }
