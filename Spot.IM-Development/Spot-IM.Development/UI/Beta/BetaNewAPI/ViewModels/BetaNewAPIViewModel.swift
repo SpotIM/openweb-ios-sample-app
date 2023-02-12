@@ -141,7 +141,8 @@ fileprivate extension BetaNewAPIViewModel {
             .bind(to: _postId)
             .disposed(by: disposeBag)
 
-        let conversationDataModelObservable = Observable.combineLatest(spotId, postId) { spotId, postId -> SDKConversationDataModel in
+        let conversationDataModelObservable =
+        Observable.combineLatest(spotId, postId) { spotId, postId -> SDKConversationDataModel in
             return SDKConversationDataModel(spotId: spotId, postId: postId)
         }.asObservable()
 
@@ -225,7 +226,9 @@ fileprivate extension BetaNewAPIViewModel {
         var manager = OpenWeb.manager
         manager.spotId = spotId
         var customizations = manager.ui.customizations
+        // swiftlint:disable line_length
         customizations.themeEnforcement = .themeFromPersistence(index: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: 0))
+        // swiftlint:enable line_length
     }
 }
 

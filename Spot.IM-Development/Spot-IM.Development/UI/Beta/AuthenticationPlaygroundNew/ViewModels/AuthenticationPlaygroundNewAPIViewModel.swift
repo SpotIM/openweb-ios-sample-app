@@ -11,7 +11,7 @@ import RxSwift
 import Alamofire
 import SpotImCore
 
-protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
+protocol AuthenticationPlaygroundNewAPIViewModelingInputs { // swiftlint:disable:this type_name
     var selectedGenericSSOOptionIndex: PublishSubject<Int> { get }
     var selectedJWTSSOOptionIndex: PublishSubject<Int> { get }
     var logoutPressed: PublishSubject<Void> { get }
@@ -21,7 +21,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
 }
 
-protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
+protocol AuthenticationPlaygroundNewAPIViewModelingOutputs { // swiftlint:disable:this type_name
     var title: String { get }
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> { get }
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> { get }
@@ -30,7 +30,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
     var dismissVC: PublishSubject<Void> { get }
 }
 
-protocol AuthenticationPlaygroundNewAPIViewModeling {
+protocol AuthenticationPlaygroundNewAPIViewModeling { // swiftlint:disable:this type_name
     var inputs: AuthenticationPlaygroundNewAPIViewModelingInputs { get }
     var outputs: AuthenticationPlaygroundNewAPIViewModelingOutputs { get }
 }
@@ -143,7 +143,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
             .subscribe(onNext: {
-                // TODO change to new API
+                // TODO change to new API // swiftlint:disable:this todo
                 SpotIm.getUserLoginStatus { loginStatus in
                     DLog("Before logout \(loginStatus))")
                     SpotIm.logout { result in
@@ -160,7 +160,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             })
             .disposed(by: disposeBag)
 
-        // TODO change to new API
+        // TODO change to new API // swiftlint:disable:this todo
         // Generic SSO authentication started
         genericSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
@@ -254,7 +254,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .subscribe()
             .disposed(by: disposeBag)
 
-        // TODO change to new API
+        // TODO change to new API // swiftlint:disable:this todo
         // JWT SSO authentication started
         JWTSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
@@ -310,27 +310,27 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
     }
     // swiftlint:enable function_body_length
 
-    // TODO add new API
+    // TODO add new API // swiftlint:disable:this todo
     func startSSO() -> Observable<String?> {
         return .empty()
     }
 
-    // TODO add new API
+    // TODO add new API // swiftlint:disable:this todo
     func completeSSO(codeB: String) -> Observable<String?> {
         return .empty()
     }
 
-    // TODO add new API
+    // TODO add new API // swiftlint:disable:this todo
     func sso(jwtSecret: String) -> Observable<Void?> {
         return .empty()
     }
 
-    // TODO add new API
+    // TODO add new API // swiftlint:disable:this todo
     func login(user: UserAuthentication) -> Observable<String?> {
         return .empty()
     }
 
-    // TODO add new API
+    // TODO add new API // swiftlint:disable:this todo
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String?> {
         return .empty()
     }

@@ -17,7 +17,7 @@ extension UITableView {
         registerIfNeeded(cellClass: cellClass)
         // swiftlint:disable force_cast
         let cell = self.dequeueReusableCell(withIdentifier: cellClass.identifierName, for: indexPath) as! T
-        // swiftlint:enabled force_case
+        // swiftlint:enable force_case
         return cell
     }
 
