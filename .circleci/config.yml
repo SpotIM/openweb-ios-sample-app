@@ -370,6 +370,14 @@ jobs:
             - 'vendor/bundle'
 
       - run:
+          name: SwiftLint
+          command: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            brew install swiftlint
+            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
+            echo "SwiftLint check succeeded."
+
+      - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
@@ -413,6 +421,14 @@ jobs:
             - 'vendor/bundle'
 
       - run:
+          name: SwiftLint
+          command: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            brew install swiftlint
+            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
+            echo "SwiftLint check succeeded."
+
+      - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_beta_demo_app version:$RELEASE_VERSION
@@ -454,6 +470,14 @@ jobs:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
             - 'vendor/bundle'
+
+      - run:
+          name: SwiftLint
+          command: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            brew install swiftlint
+            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
+            echo "SwiftLint check succeeded."
 
       - run:
           name: Run Fastlane Release Sample App
