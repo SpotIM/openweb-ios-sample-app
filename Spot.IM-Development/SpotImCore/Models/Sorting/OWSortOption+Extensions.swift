@@ -17,11 +17,18 @@ extension OWSortOption {
             return LocalizationManager.localizedString(key:"Newest")
         case .oldest:
             return LocalizationManager.localizedString(key:"Oldest")
-        case .`default`:
-            // Will never be used
-            return ""
         }
     }
     
-    static var validPresentationalOptions: [OWSortOption] = [.best, .newest, .oldest]
+    // TODO: Remove once we will remove old `SPCommentSortMode` class
+    init(fromOldSortType oldSortType: SPCommentSortMode) {
+        switch oldSortType {
+        case .best:
+            self = .best
+        case .newest:
+            self = .newest
+        case .oldest:
+            self = .oldest
+        }
+    }
 }
