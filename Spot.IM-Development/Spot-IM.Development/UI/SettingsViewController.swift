@@ -11,7 +11,7 @@ import UIKit
 import SpotImCore
 
 class SettingsViewController: UIViewController {
-    
+
     fileprivate struct Metrics {
         static let identifier = "settings_view_controller_id"
         static let hideArtcleHeaderSwitchIdentifier = "hide_artcle_header_switch_id"
@@ -22,7 +22,7 @@ class SettingsViewController: UIViewController {
         static let readOnlyModeControlIdentifier = "read_only_mode_control_id"
         static let enableCustomNavigationTitleSwitchIdentifier = "enable_custom_navigation_title_switch_id"
     }
-    
+
     @IBOutlet weak var hideArtcleHeaderSwitch: UISwitch!
     @IBOutlet weak var createCommentNewDesignSwitch: UISwitch!
     @IBOutlet weak var darkModeSwitch: UISwitch!
@@ -110,7 +110,7 @@ class SettingsViewController: UIViewController {
 
         modeControl.isHidden = !isCustomDarkModeEnabled
         modeControl.selectedSegmentIndex = interfaceStyle
-        
+
         view.backgroundColor = ColorPalette.shared.color(type: .background)
     }
 
@@ -118,7 +118,7 @@ class SettingsViewController: UIViewController {
         super.loadView()
         applyAccessibility()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(navBarHiddenOldValue, animated: animated)
     }

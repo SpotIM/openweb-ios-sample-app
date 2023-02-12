@@ -37,7 +37,7 @@ class SegmentedControlSetting: UIView {
 
         return segment
     }()
-    
+
     init(title: String, accessibilityPrefixId: String, items: [String]) {
         self.title = title
         self.items = items
@@ -58,7 +58,7 @@ fileprivate extension SegmentedControlSetting {
         segmentTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         segmentedControl.accessibilityIdentifier = prefixId + "_segment_id"
     }
-    
+
     func setupViews() {
         self.addSubview(segmentTitleLbl)
         segmentTitleLbl.snp.makeConstraints { make in
