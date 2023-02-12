@@ -224,6 +224,8 @@ fileprivate extension BetaNewAPIViewModel {
     func setSDKSpotId(_ spotId: String) {
         var manager = OpenWeb.manager
         manager.spotId = spotId
+        var customizations = manager.ui.customizations
+        customizations.themeEnforcement = .themeFromPersistence(index: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: 0))
     }
 }
 

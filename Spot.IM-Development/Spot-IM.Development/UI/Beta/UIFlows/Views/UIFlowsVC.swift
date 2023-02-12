@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import SpotImCore
 
 #if NEW_API
 
@@ -169,7 +170,7 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnPreConversationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present }
+            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
             .bind(to: viewModel.inputs.preConversationTapped)
             .disposed(by: disposeBag)
 
@@ -179,7 +180,7 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnFullConversationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present }
+            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
             .bind(to: viewModel.inputs.fullConversationTapped)
             .disposed(by: disposeBag)
 
@@ -189,7 +190,7 @@ fileprivate extension UIFlowsVC {
             .disposed(by: disposeBag)
 
         btnCommentCreationPresentMode.rx.tap
-            .map { PresentationalModeCompact.present }
+            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
             .bind(to: viewModel.inputs.commentCreationTapped)
             .disposed(by: disposeBag)
 
