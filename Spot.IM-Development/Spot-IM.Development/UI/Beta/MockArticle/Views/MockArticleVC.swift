@@ -30,8 +30,8 @@ class MockArticleVC: UIViewController {
 
     fileprivate lazy var articleScrollView: UIScrollView = {
         let scroll = UIScrollView()
-        scroll.backgroundColor = ColorPalette.lightGrey
-
+        scroll.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
+        
         scroll.contentLayoutGuide.snp.makeConstraints { make in
             make.width.equalTo(scroll)
         }
@@ -81,13 +81,13 @@ class MockArticleVC: UIViewController {
             .label
             .numberOfLines(0)
             .font(FontBook.secondaryHeadingMedium)
-            .textColor(ColorPalette.blackish)
+            .textColor(ColorPalette.shared.color(type: .blackish))
     }()
 
     fileprivate lazy var btnFullConversation: UIButton = {
         return UIButton()
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
+            .backgroundColor(ColorPalette.shared.color(type: .blue))
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
             .corner(radius: Metrics.buttonCorners)
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
@@ -95,8 +95,8 @@ class MockArticleVC: UIViewController {
 
     fileprivate lazy var btnCommentCreation: UIButton = {
         return UIButton()
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
+            .backgroundColor(ColorPalette.shared.color(type: .blue))
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
             .corner(radius: Metrics.buttonCorners)
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
@@ -129,8 +129,8 @@ class MockArticleVC: UIViewController {
 
 fileprivate extension MockArticleVC {
     func setupViews() {
-        view.backgroundColor = ColorPalette.lightGrey
-
+        view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
+        
         view.addSubview(articleScrollView)
         articleScrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)

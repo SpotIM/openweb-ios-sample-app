@@ -42,7 +42,9 @@ class ArticlesListViewController: UITableViewController {
         customPostTextField.borderStyle = .roundedRect
         customPostTextField.autocapitalizationType = .none
         customPostTextField.returnKeyType = .done
-
+        customPostTextField.border(width: 1, color: ColorPalette.shared.color(type: .text))
+        customPostTextField.layer.cornerRadius = 10
+        
         super.init(style: .plain)
     }
 
@@ -124,8 +126,8 @@ class ArticlesListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: Metrics.headerHeight))
-        headerView.backgroundColor = .white
-
+        headerView.backgroundColor = ColorPalette.shared.color(type: .background)
+        
         let headerStackView = UIStackView()
         headerStackView.spacing = 5
         headerStackView.alignment = .fill
@@ -133,9 +135,9 @@ class ArticlesListViewController: UITableViewController {
 
         let button = UIButton()
         button.setTitle("Custom PostId", for: .normal)
-        button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(customPostClicked), for: .touchUpInside)
-
+        button.setTitleColor(ColorPalette.shared.color(type: .text), for: .normal)
+        
         headerStackView.addArrangedSubview(button)
         headerStackView.addArrangedSubview(customPostTextField)
 
@@ -156,7 +158,6 @@ class ArticlesListViewController: UITableViewController {
                             extractData: postForCopy.extractData)
             articleCellTapped(withPost: post)
         }
-
     }
 
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

@@ -57,7 +57,30 @@ internal struct SPComment: Decodable, Equatable {
     var text: Content.Text?
     var gif: Content.Animation?
     var image: Content.Image?
-        
+    
+    // empty init
+    init() {
+        id = nil
+        parentId = nil
+        rootComment = nil
+        depth = nil
+        userId = nil
+        writtenAt = nil
+        time = nil
+        self.repliesCount = nil
+        offset = nil
+        rawStatus = nil
+        hasNext = false
+        edited = false
+        deleted = false
+        published = false
+        rank = nil
+        content = nil
+        users = nil
+        replies = nil
+        additionalData = nil
+        strictMode = nil
+    }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         

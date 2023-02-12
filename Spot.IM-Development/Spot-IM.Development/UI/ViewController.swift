@@ -14,6 +14,17 @@ import SnapKit
 
 class ViewController: UIViewController {
     fileprivate struct Metrics {
+        static let identifier = "view_controller_id"
+        static let betaNewAPIBtnIdentifier = "beta_api_btn_id"
+        static let settingsBtnIdentifier = "settings_btn_id"
+        static let showDemoTableViewBtnIdentifier = "show_demo_table_view_btn_id"
+        static let showDemoSpotArticlesBtnIdentifier = "show_demo_spot_articles_btn_id"
+        static let showFoxNewsBtnIdentifier = "show_fox_news_btn_id"
+        static let showMobileSSOIdentifier = "show_mobile_sso_btn_id"
+        static let showMobileGuestIdentifier = "show_mobile_guest_btn_id"
+        static let showMobileSocialIdentifier = "show_mobile_social_btn_id"
+        static let authenticationPlaygroundBtnIdentifier = "authentication_playground_btn_id"
+        static let customSpotBtnIdentifier = "custom_spot_btn_id"
         static let verticalMarginInScrollView: CGFloat = 8
     }
 
@@ -26,7 +37,8 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var customSpotTextField: UITextField!
     @IBOutlet weak var optionsScrollView: UIScrollView!
-
+    
+    @IBOutlet weak var settingsBtn: UIButton!
     @IBOutlet weak var showDemoTableViewBtn: UIButton!
     @IBOutlet weak var showDemoSpotArticlesBtn: UIButton!
     @IBOutlet weak var showFoxNewsBtn: UIButton!
@@ -38,9 +50,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var customSpotBtn: UIButton!
 
     fileprivate lazy var betaNewAPIBtn: UIButton = {
-       let btn = NSLocalizedString("BetaNewAPI", comment: "")
+        let btn = NSLocalizedString("BetaNewAPI", comment: "")
             .button
-            .textColor(.black)
+            .textColor(ColorPalette.shared.color(type: .text))
             .font(FontBook.paragraph)
 
         return btn
@@ -66,6 +78,11 @@ class ViewController: UIViewController {
 
         setupObservers()
     }
+    
+    override func loadView() {
+        super.loadView()
+        applyAccessibility()
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -86,6 +103,23 @@ class ViewController: UIViewController {
         logo.layer.cornerRadius = 8
         customSpotTextField.returnKeyType = .done
         setupAppPreset()
+        setupColors()
+    }
+    
+    private func setupColors() {
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        
+        let textColor = ColorPalette.shared.color(type: .text)
+        settingsBtn.setTitleColor(textColor, for: .normal)
+        showDemoTableViewBtn.setTitleColor(textColor, for: .normal)
+        showDemoSpotArticlesBtn.setTitleColor(textColor, for: .normal)
+        showFoxNewsBtn.setTitleColor(textColor, for: .normal)
+        showMobileSSO.setTitleColor(textColor, for: .normal)
+        showMobileGuest.setTitleColor(textColor, for: .normal)
+        showMobileSocial.setTitleColor(textColor, for: .normal)
+        showMobileSocialGuest.setTitleColor(textColor, for: .normal)
+        autenticationPlaygroundBtn.setTitleColor(textColor, for: .normal)
+        customSpotBtn.setTitleColor(textColor, for: .normal)
     }
 
     private func setupAppPreset() {
@@ -120,31 +154,8 @@ class ViewController: UIViewController {
 
     private func setupNavigationBar() {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .done, target: nil, action: nil)
-
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.barTintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        navigationController?.navigationBar.isTranslucent = false
-
-        let navigationBarBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        let navigationTitleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20),
-            NSAttributedString.Key.foregroundColor: UIColor.black
-        ]
-
-        if #available(iOS 13.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = navigationBarBackgroundColor
-            appearance.titleTextAttributes = navigationTitleTextAttributes
-
-            navigationController?.navigationBar.standardAppearance = appearance
-            // swiftlint:disable line_length
-            navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
-            // swiftlint:enable line_length
-        } else {
-            navigationController?.navigationBar.backgroundColor = navigationBarBackgroundColor
-            navigationController?.navigationBar.titleTextAttributes = navigationTitleTextAttributes
-        }
+        navigationController?.navigationBar.tintColor = ColorPalette.shared.color(type: .text)
+        navigationController?.navigationBar.barTintColor = ColorPalette.shared.color(type: .background)
     }
 
     private func fillVersionAndBuildNumber() {
@@ -372,6 +383,20 @@ extension ViewController: SPAnalyticsEventDelegate {
 }
 
 fileprivate extension ViewController {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        betaNewAPIBtn.accessibilityIdentifier = Metrics.betaNewAPIBtnIdentifier
+        settingsBtn.accessibilityIdentifier = Metrics.settingsBtnIdentifier
+        showDemoTableViewBtn.accessibilityIdentifier = Metrics.showDemoTableViewBtnIdentifier
+        showDemoSpotArticlesBtn.accessibilityIdentifier = Metrics.showDemoSpotArticlesBtnIdentifier
+        showFoxNewsBtn.accessibilityIdentifier = Metrics.showFoxNewsBtnIdentifier
+        showMobileSSO.accessibilityIdentifier = Metrics.showMobileSSOIdentifier
+        showMobileGuest.accessibilityIdentifier = Metrics.showMobileGuestIdentifier
+        showMobileSocial.accessibilityIdentifier = Metrics.showMobileSocialIdentifier
+        autenticationPlaygroundBtn.accessibilityIdentifier = Metrics.authenticationPlaygroundBtnIdentifier
+        customSpotBtn.accessibilityIdentifier = Metrics.customSpotBtnIdentifier
+    }
+    
     func setupObservers() {
         customSpotTextField.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
             .subscribe(onNext: { [weak self] _ in

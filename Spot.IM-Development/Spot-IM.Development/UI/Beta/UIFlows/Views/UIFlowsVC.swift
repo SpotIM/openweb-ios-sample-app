@@ -16,97 +16,51 @@ import SnapKit
 class UIFlowsVC: UIViewController {
 
     fileprivate struct Metrics {
+        static let identifier = "uiviews_vc_id"
+        static let btnPreConversationPushModeIdentifier = "btn_pre_conversation_push_mode_id"
+        static let btnPreConversationPresentModeIdentifier = "btn_pre_conversation_present_mode_id"
+        static let btnFullConversationPushModeIdentifier = "btn_full_conversation_push_mode_id"
+        static let btnFullConversationPresentModeIdentifier = "btn_full_conversation_present_mode_id"
+        static let btnCommentCreationPushModeIdentifier = "btn_comment_creation_push_mode_id"
+        static let btnCommentCreationPresentModeIdentifier = "btn_comment_creation_present_mode_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
-        static let buttonCorners: CGFloat = 16
-        static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
 
     fileprivate let viewModel: UIFlowsViewModeling
     fileprivate let disposeBag = DisposeBag()
-
-    fileprivate lazy var optionsScrollView: UIScrollView = {
-        return UIScrollView()
+    
+    fileprivate lazy var scrollView: UIScrollView = {
+        var scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
     }()
 
     fileprivate lazy var btnPreConversationPushMode: UIButton = {
-        let txt = NSLocalizedString("PreConversationPushMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("PreConversationPushMode", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnPreConversationPresentMode: UIButton = {
-        let txt = NSLocalizedString("PreConversationPresentMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("PreConversationPresentMode", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnFullConversationPushMode: UIButton = {
-        let txt = NSLocalizedString("FullConversationPushMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("FullConversationPushMode", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnFullConversationPresentMode: UIButton = {
-        let txt = NSLocalizedString("FullConversationPresentMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("FullConversationPresentMode", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnCommentCreationPushMode: UIButton = {
-        let txt = NSLocalizedString("CommentCreationPushMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("CommentCreationPushMode", comment: "").blueRoundedButton
     }()
 
     fileprivate lazy var btnCommentCreationPresentMode: UIButton = {
-        let txt = NSLocalizedString("CommentCreationPresentMode", comment: "")
-
-        return txt
-            .button
-            .adjustsFontSizeToFitWidth
-            .backgroundColor(ColorPalette.blue)
-            .textColor(ColorPalette.extraLightGrey)
-            .corner(radius: Metrics.buttonCorners)
-            .withHorizontalPadding(Metrics.buttonPadding)
-            .font(FontBook.paragraphBold)
+        return NSLocalizedString("CommentCreationPresentMode", comment: "").blueRoundedButton
     }()
 
     init(viewModel: UIFlowsViewModeling) {
@@ -121,6 +75,7 @@ class UIFlowsVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -130,64 +85,77 @@ class UIFlowsVC: UIViewController {
 }
 
 fileprivate extension UIFlowsVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        btnPreConversationPushMode.accessibilityIdentifier = Metrics.btnPreConversationPushModeIdentifier
+        btnPreConversationPresentMode.accessibilityIdentifier = Metrics.btnPreConversationPresentModeIdentifier
+        btnFullConversationPushMode.accessibilityIdentifier = Metrics.btnFullConversationPushModeIdentifier
+        btnFullConversationPresentMode.accessibilityIdentifier = Metrics.btnFullConversationPresentModeIdentifier
+        btnCommentCreationPushMode.accessibilityIdentifier = Metrics.btnCommentCreationPushModeIdentifier
+        btnCommentCreationPresentMode.accessibilityIdentifier = Metrics.btnCommentCreationPresentModeIdentifier
+    }
+    
     func setupViews() {
-        view.backgroundColor = .white
-
+        view.backgroundColor = ColorPalette.shared.color(type: .background)
+        
         // Adding scroll view
-        view.addSubview(optionsScrollView)
-        optionsScrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
         // Adding pre conversation buttons
-        optionsScrollView.addSubview(btnPreConversationPushMode)
+        scrollView.addSubview(btnPreConversationPushMode)
         btnPreConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
-            make.top.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView).offset(Metrics.verticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
-
-        optionsScrollView.addSubview(btnPreConversationPresentMode)
+        
+        scrollView.addSubview(btnPreConversationPresentMode)
         btnPreConversationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnPreConversationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
         // Adding full conversation buttons
-        optionsScrollView.addSubview(btnFullConversationPushMode)
+        scrollView.addSubview(btnFullConversationPushMode)
         btnFullConversationPushMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
-
-        optionsScrollView.addSubview(btnFullConversationPresentMode)
+        
+        scrollView.addSubview(btnFullConversationPresentMode)
         btnFullConversationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnFullConversationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
 
         // Adding comment creation buttons
-        optionsScrollView.addSubview(btnCommentCreationPushMode)
+        scrollView.addSubview(btnCommentCreationPushMode)
         btnCommentCreationPushMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
-
-        optionsScrollView.addSubview(btnCommentCreationPresentMode)
+        
+        scrollView.addSubview(btnCommentCreationPresentMode)
         btnCommentCreationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
-            make.leading.equalTo(optionsScrollView.contentLayoutGuide).offset(Metrics.horizontalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
 

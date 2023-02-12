@@ -54,11 +54,11 @@ private extension ShadowType {
 
 extension UIView: Shadowable {
     func apply(shadow type: ShadowType) {
-        apply(shadow: type, color: ColorPalette.blackish, direction: .down)
+        apply(shadow: type, color: ColorPalette.shared.color(type: .blackish), direction: .down)
     }
 
     func apply(shadow type: ShadowType, direction: ShadowDirection) {
-        apply(shadow: type, color: ColorPalette.blackish, direction: direction)
+        apply(shadow: type, color: ColorPalette.shared.color(type: .blackish), direction: direction)
     }
 
     func apply(shadow type: ShadowType, color: UIColor) {
