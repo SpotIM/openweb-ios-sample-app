@@ -105,12 +105,12 @@ class BetaNewAPIViewModel: BetaNewAPIViewModeling, BetaNewAPIViewModelingInputs,
     var openSettings: Observable<Void> {
         return _openSettings.asObservable()
     }
-    
+
     fileprivate let _openAuthentication = PublishSubject<Void>()
     var openAuthentication: Observable<Void> {
         return _openAuthentication.asObservable()
     }
-    
+
     lazy var title: String = {
         return NSLocalizedString("NewAPI", comment: "")
     }()
@@ -140,11 +140,11 @@ fileprivate extension BetaNewAPIViewModel {
             .distinctUntilChanged()
             .bind(to: _postId)
             .disposed(by: disposeBag)
-        
+
         let conversationDataModelObservable = Observable.combineLatest(spotId, postId) { spotId, postId -> SDKConversationDataModel in
             return SDKConversationDataModel(spotId: spotId, postId: postId)
         }.asObservable()
-        
+
         uiFlowsTapped
             .withLatestFrom(conversationDataModelObservable)
             .bind(to: _openUIFlows)
@@ -168,11 +168,11 @@ fileprivate extension BetaNewAPIViewModel {
         settingsTapped
             .bind(to: _openSettings)
             .disposed(by: disposeBag)
-        
+
         authenticationTapped
             .bind(to: _openAuthentication)
             .disposed(by: disposeBag)
-        
+
         Observable.merge(uiFlowsTapped.voidify(),
                          uiViewsTapped.voidify(),
                          miscellaneousTapped.voidify(),

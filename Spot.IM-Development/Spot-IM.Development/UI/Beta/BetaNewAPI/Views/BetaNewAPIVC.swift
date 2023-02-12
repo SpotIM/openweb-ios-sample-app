@@ -45,21 +45,21 @@ class BetaNewAPIVC: UIViewController {
 
     fileprivate let viewModel: BetaNewAPIViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
-    
+
     fileprivate lazy var settingsBarItem: UIBarButtonItem = {
         return UIBarButtonItem(image: UIImage(named: "settingsIcon"),
                                style: .plain,
                                target: nil,
                                action: nil)
     }()
-    
+
     fileprivate lazy var authBarItem: UIBarButtonItem = {
         let authBarItem = UIBarButtonItem(image: UIImage(named: "authenticationIcon"),
                                    style: .plain,
@@ -68,11 +68,11 @@ class BetaNewAPIVC: UIViewController {
         authBarItem.imageInsets = UIEdgeInsets(top: 0, left: Metrics.authBarItemMargin, bottom: 0, right: 0)
         return authBarItem
     }()
-    
+
     fileprivate lazy var conversationPresetSelectionView: UIView = {
         let spotPresetSelection = UIView()
         spotPresetSelection.backgroundColor = ColorPalette.shared.color(type: .background)
-        
+
         spotPresetSelection.addSubview(toolbarPicker)
         toolbarPicker.snp.makeConstraints { (make) in
             make.height.equalTo(Metrics.toolbarPickerHeight)
@@ -96,7 +96,7 @@ class BetaNewAPIVC: UIViewController {
         var toolbar = UIToolbar()
         toolbar.barTintColor = ColorPalette.shared.color(type: .darkGrey)
         toolbar.tintColor = ColorPalette.shared.color(type: .blackish)
-        
+
         let spaceButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
         let title = NSLocalizedString("PresetSelection", comment: "").label
@@ -116,13 +116,13 @@ class BetaNewAPIVC: UIViewController {
     fileprivate lazy var btnSelectPreset: UIButton = {
         return NSLocalizedString("SelectPreset", comment: "").darkGrayRoundedButton
     }()
-    
+
     fileprivate lazy var txtFieldSpotId: TextFieldSetting = {
         let txtField = TextFieldSetting(title: NSLocalizedString("SpotId", comment: "") + ":",
                                         accessibilityPrefixId: Metrics.txtFieldSpotIdIdentifier)
         return txtField
     }()
-    
+
     fileprivate lazy var txtFieldPostId: TextFieldSetting = {
         let txtField = TextFieldSetting(title: NSLocalizedString("PostId", comment: "") + ":",
                                         accessibilityPrefixId: Metrics.txtFieldPostIdIdentifier)
@@ -165,7 +165,7 @@ class BetaNewAPIVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         navigationItem.rightBarButtonItems = [settingsBarItem, authBarItem]
         setupObservers()
     }
@@ -185,17 +185,17 @@ fileprivate extension BetaNewAPIVC {
         btnUIViews.accessibilityIdentifier = Metrics.btnUIViewsIdentifier
         btnMiscellaneous.accessibilityIdentifier = Metrics.btnMiscellaneousIdentifier
     }
-    
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         // Adding select preset button
         scrollView.addSubview(btnSelectPreset)
         btnSelectPreset.snp.makeConstraints { make in
@@ -204,7 +204,7 @@ fileprivate extension BetaNewAPIVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
-        
+
         scrollView.addSubview(txtFieldSpotId)
         txtFieldSpotId.snp.makeConstraints { make in
             make.top.equalTo(btnSelectPreset.snp.bottom).offset(Metrics.verticalMargin)
@@ -212,7 +212,7 @@ fileprivate extension BetaNewAPIVC {
             make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-Metrics.horizontalMargin)
             make.height.equalTo(Metrics.textFieldHeight)
         }
-                
+
         scrollView.addSubview(txtFieldPostId)
         txtFieldPostId.snp.makeConstraints { make in
             make.top.equalTo(txtFieldSpotId.snp.bottom).offset(Metrics.verticalMargin)
@@ -275,7 +275,7 @@ fileprivate extension BetaNewAPIVC {
             .distinctUntilChanged()
             .bind(to: viewModel.inputs.enteredSpotId)
             .disposed(by: disposeBag)
-        
+
         txtFieldPostId.rx.textFieldText
             .unwrap()
             .distinctUntilChanged()
@@ -325,15 +325,15 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(miscellaneousVC, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         settingsBarItem.rx.tap
             .bind(to: viewModel.inputs.settingsTapped)
             .disposed(by: disposeBag)
-        
+
         authBarItem.rx.tap
             .bind(to: viewModel.inputs.authenticationTapped)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.openSettings
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -342,7 +342,7 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(settingsVC, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.openAuthentication
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -351,7 +351,7 @@ fileprivate extension BetaNewAPIVC {
                 self.navigationController?.pushViewController(authenticationVC, animated: true)
             })
             .disposed(by: disposeBag)
-        
+
         // Bind select preset
         viewModel.outputs.shouldShowSelectPreset
             .skip(1)

@@ -52,29 +52,29 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     var themeModeSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
     var articleAssociatedSelectedURL = PublishSubject<String?>()
-    
+
     var userDefaultsProvider: UserDefaultsProviderProtocol
-    
+
     var shouldHideArticleHeader: Observable<Bool> {
         return userDefaultsProvider.values(key: .hideArticleHeader, defaultValue: false)
     }
-    
+
     var shouldCommentCreationNewDesign: Observable<Bool> {
         return userDefaultsProvider.values(key: .showCommentCreationNewDesign, defaultValue: false)
     }
-    
+
     var readOnlyModeIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .readOnlyModeIndex, defaultValue: 0)
     }
-    
+
     var themeModeIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .themeModeIndex, defaultValue: 0)
     }
-    
+
     var modalStyleIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: 0)
     }
-    
+
     var articleAssociatedURL: Observable<String> {
         return userDefaultsProvider.values(key: .articleAssociatedURL)
     }
@@ -96,11 +96,11 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     lazy var readOnlyTitle: String = {
         return NSLocalizedString("ReadOnlyMode", comment: "")
     }()
-    
+
     lazy var articleURLTitle: String = {
         return NSLocalizedString("ArticleAssociatedURL", comment: "")
     }()
-    
+
     lazy var readOnlySettings: [String] = {
         let _default = NSLocalizedString("Default", comment: "")
         let _enabled = NSLocalizedString("Enabled", comment: "")
@@ -131,7 +131,7 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
 
         return [_fullScreen, _pageSheet]
     }()
-    
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
         self.userDefaultsProvider = userDefaultsProvider
         setupObservers()
@@ -145,31 +145,31 @@ extension SettingsViewModel {
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Bool>.hideArticleHeader))
             .disposed(by: disposeBag)
-        
+
         commentCreationNewDesignToggled
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Bool>.showCommentCreationNewDesign))
             .disposed(by: disposeBag)
-        
+
         readOnlyModeSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.readOnlyModeIndex))
             .disposed(by: disposeBag)
-                
+
         themeModeSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.themeModeIndex))
             .disposed(by: disposeBag)
-        
+
         modalStyleSelectedIndex
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.modalStyleIndex))
             .disposed(by: disposeBag)
-        
+
         articleAssociatedSelectedURL
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol

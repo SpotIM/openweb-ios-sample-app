@@ -57,7 +57,7 @@ class ConversationCounterVC: UIViewController {
         let txtField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
             .border(width: 1.0, color: ColorPalette.shared.color(type: .blackish))
-        
+
         txtField.borderStyle = .roundedRect
         txtField.autocapitalizationType = .none
         return txtField
@@ -115,7 +115,7 @@ class ConversationCounterVC: UIViewController {
 fileprivate extension ConversationCounterVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        
+
         view.addSubview(lblPostIds)
         lblPostIds.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(Metrics.verticalMargin)

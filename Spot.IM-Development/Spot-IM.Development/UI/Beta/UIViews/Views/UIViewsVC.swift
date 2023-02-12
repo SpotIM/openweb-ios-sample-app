@@ -29,7 +29,7 @@ class UIViewsVC: UIViewController {
 
     fileprivate let viewModel: UIViewsViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
@@ -82,10 +82,10 @@ fileprivate extension UIViewsVC {
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnIndependentAdUnit.accessibilityIdentifier = Metrics.btnIndependentAdUnitIdentifier
     }
-    
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in

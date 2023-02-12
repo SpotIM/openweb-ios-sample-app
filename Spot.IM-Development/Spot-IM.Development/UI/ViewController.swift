@@ -37,7 +37,7 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var customSpotTextField: UITextField!
     @IBOutlet weak var optionsScrollView: UIScrollView!
-    
+
     @IBOutlet weak var settingsBtn: UIButton!
     @IBOutlet weak var showDemoTableViewBtn: UIButton!
     @IBOutlet weak var showDemoSpotArticlesBtn: UIButton!
@@ -78,7 +78,7 @@ class ViewController: UIViewController {
 
         setupObservers()
     }
-    
+
     override func loadView() {
         super.loadView()
         applyAccessibility()
@@ -105,10 +105,10 @@ class ViewController: UIViewController {
         setupAppPreset()
         setupColors()
     }
-    
+
     private func setupColors() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        
+
         let textColor = ColorPalette.shared.color(type: .text)
         settingsBtn.setTitleColor(textColor, for: .normal)
         showDemoTableViewBtn.setTitleColor(textColor, for: .normal)
@@ -396,7 +396,7 @@ fileprivate extension ViewController {
         autenticationPlaygroundBtn.accessibilityIdentifier = Metrics.authenticationPlaygroundBtnIdentifier
         customSpotBtn.accessibilityIdentifier = Metrics.customSpotBtnIdentifier
     }
-    
+
     func setupObservers() {
         customSpotTextField.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
             .subscribe(onNext: { [weak self] _ in

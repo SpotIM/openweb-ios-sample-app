@@ -64,7 +64,7 @@ extension UITextField {
         self.borderStyle = borderStyle
         return self
     }
-    
+
     @discardableResult func autocapitalizationType(_ autocapitalizationType: UITextAutocapitalizationType) -> Self {
         self.autocapitalizationType = autocapitalizationType
         return self

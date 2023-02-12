@@ -31,7 +31,7 @@ class MockArticleVC: UIViewController {
     fileprivate lazy var articleScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        
+
         scroll.contentLayoutGuide.snp.makeConstraints { make in
             make.width.equalTo(scroll)
         }
@@ -130,7 +130,7 @@ class MockArticleVC: UIViewController {
 fileprivate extension MockArticleVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        
+
         view.addSubview(articleScrollView)
         articleScrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
