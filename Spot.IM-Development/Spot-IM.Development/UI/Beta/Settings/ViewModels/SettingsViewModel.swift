@@ -55,10 +55,10 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     var themeModeSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
     var articleAssociatedSelectedURL = PublishSubject<String?>()
-    
+
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
-    
+
     var shouldHideArticleHeader: Observable<Bool> {
         return userDefaultsProvider.values(key: .hideArticleHeader, defaultValue: false)
     }
@@ -135,8 +135,9 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
 
         return [_fullScreen, _pageSheet]
     }()
-    
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared, manager: OWManagerProtocol = OpenWeb.manager) {
+
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
+         manager: OWManagerProtocol = OpenWeb.manager) {
         self.userDefaultsProvider = userDefaultsProvider
         self.manager = manager
         setupObservers()
@@ -180,7 +181,7 @@ extension SettingsViewModel {
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<String?>.articleAssociatedURL))
             .disposed(by: disposeBag)
-        
+
         themeModeSelectedIndex // 0. default 1. light 2. dark
             .subscribe(onNext: { [weak self] index in
                 guard let self = self else { return }

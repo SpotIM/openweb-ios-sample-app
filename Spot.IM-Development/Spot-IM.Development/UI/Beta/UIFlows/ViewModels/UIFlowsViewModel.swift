@@ -48,11 +48,13 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
             .unwrap()
             .asObservable()
     }
-    
+
     var presentStyle: OWModalPresentationStyle {
+        // swiftlint:disable line_length
         return OWModalPresentationStyle.styleFromPersistence(index: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: 0))
+        // swiftlint:enable line_length
     }
-    
+
     lazy var title: String = {
         return NSLocalizedString("UIFlows", comment: "")
     }()
