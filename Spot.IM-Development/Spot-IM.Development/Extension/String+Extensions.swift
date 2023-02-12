@@ -32,15 +32,15 @@ extension String {
             return self.prefix(limit) + leader
         }
     }
-    
+
     var blueRoundedButton: UIButton {
         return self.button(color: ColorPalette.shared.color(type: .blue))
     }
-    
+
     var darkGrayRoundedButton: UIButton {
         return self.button(color: ColorPalette.shared.color(type: .darkGrey))
     }
-    
+
     func button(color: UIColor) -> UIButton {
         return self
             .button

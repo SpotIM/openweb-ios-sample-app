@@ -26,10 +26,10 @@ protocol UserDefaultsProviderRxProtocol {
 class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
     // Singleton
     static let shared: UserDefaultsProviderProtocol = UserDefaultsProvider()
-    
+
     var rxProtocol: UserDefaultsProviderRxProtocol { return self }
     fileprivate var rxHelper: UserDefaultsProviderRxHelperProtocol
-    
+
     fileprivate struct Metrics {
         static let suiteName = "com.open-web.demo-app"
     }
@@ -52,9 +52,9 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
             DLog("Failed to encode data for key: \(key.rawValue) before writing to UserDefaults")
             return
         }
-        
+
         rxHelper.onNext(key: key, data: encodedData)
-        
+
         _save(data: encodedData, forKey: key)
     }
 
@@ -102,11 +102,11 @@ extension UserDefaultsProvider {
     func values<T>(key: UserDefaultsProvider.UDKey<T>) -> Observable<T> {
         return rx.values(key: key, defaultValue: nil)
     }
-    
+
     func values<T>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T? = nil) -> Observable<T> {
         return rx.values(key: key, defaultValue: defaultValue)
     }
-    
+
     func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T> {
         return rx.setValues(key: key)
     }

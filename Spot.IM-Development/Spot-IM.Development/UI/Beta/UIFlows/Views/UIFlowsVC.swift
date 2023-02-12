@@ -31,7 +31,7 @@ class UIFlowsVC: UIViewController {
 
     fileprivate let viewModel: UIFlowsViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
@@ -94,10 +94,10 @@ fileprivate extension UIFlowsVC {
         btnCommentCreationPushMode.accessibilityIdentifier = Metrics.btnCommentCreationPushModeIdentifier
         btnCommentCreationPresentMode.accessibilityIdentifier = Metrics.btnCommentCreationPresentModeIdentifier
     }
-    
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -114,7 +114,7 @@ fileprivate extension UIFlowsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
-        
+
         scrollView.addSubview(btnPreConversationPresentMode)
         btnPreConversationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -131,7 +131,7 @@ fileprivate extension UIFlowsVC {
             make.top.equalTo(btnPreConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
-        
+
         scrollView.addSubview(btnFullConversationPresentMode)
         btnFullConversationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -148,7 +148,7 @@ fileprivate extension UIFlowsVC {
             make.top.equalTo(btnFullConversationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
-        
+
         scrollView.addSubview(btnCommentCreationPresentMode)
         btnCommentCreationPresentMode.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

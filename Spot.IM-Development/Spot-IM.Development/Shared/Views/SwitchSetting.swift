@@ -37,7 +37,7 @@ class SwitchSetting: UIView {
 
         return aSwitch
     }()
-    
+
     init(title: String, accessibilityPrefixId: String, isOn: Bool = false) {
         self.title = title
         self.initialIsOn = isOn
@@ -58,7 +58,7 @@ fileprivate extension SwitchSetting {
         settingTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         switchSetting.accessibilityIdentifier = prefixId + "_switch_id"
     }
-    
+
     func setupViews() {
         self.addSubview(settingTitleLbl)
         settingTitleLbl.snp.makeConstraints { make in
