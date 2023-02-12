@@ -184,9 +184,11 @@ fileprivate extension OWPreConversationViewViewModel {
         let viewInitializedObservable = viewInitialized
             .flatMap { _ -> Observable<OWSortOption> in
                 return sortOptionObservable
+                    .take(1)
             }
             .flatMap { _ -> Observable<SPConversationReadRM> in
                 return conversationReadObservable
+                    .take(1)
             }
             .share()
         
