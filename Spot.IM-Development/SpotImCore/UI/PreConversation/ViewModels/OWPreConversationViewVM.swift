@@ -134,6 +134,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             return false
         }
     }
+    
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
+    }
 
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -163,36 +167,54 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
-        viewInitialized
-            .flatMap { [weak self] _ -> Observable<SPConversationReadRM?> in
-                guard let self = self,
-                      let postId = OWManager.manager.postId else { return .empty() }
-                
+        let sortOptionObservable = self.servicesProvider
+            .sortDictateService()
+            .sortOption(perPostId: self.postId)
+        
+        let conversationReadObservable = sortOptionObservable
+            .flatMap { [weak self] sortOption -> Observable<SPConversationReadRM> in
+                guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
-                    .conversation
-                    .conversationRead(postId: postId, mode: OWSortOption.newest, page: OWPaginationPage.first, parentId: "", offset: 0)
-                    .response
-                    .map { [weak self] response -> SPConversationReadRM? in
-                        guard let self = self, let responseComments = response.conversation?.comments else { return nil }
-                        var viewModels = [OWPreConversationCellOption]()
-                        
-                        let numOfComments = self.preConversationStyle.numberOfComments
-                        let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
-      
-                        for (index, comment) in comments.enumerated() {
-                            // TODO: replies
-                            guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
-                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
-                            viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
-                            if (index < comments.count - 1) {
-                                viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                            }
-                        }
-                        self._cellsViewModels.removeAll()
-                        self._cellsViewModels.append(contentsOf: viewModels)
-                        return response
+                .netwokAPI()
+                .conversation
+                .conversationRead(postId: self.postId, mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
+                .response
+            }
+        
+        let viewInitializedObservable = viewInitialized
+            .flatMap { _ -> Observable<OWSortOption> in
+                return sortOptionObservable
+            }
+            .flatMap { _ -> Observable<SPConversationReadRM> in
+                return conversationReadObservable
+            }
+            .share()
+        
+        viewInitializedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self, let responseComments = response.conversation?.comments else { return }
+                var viewModels = [OWPreConversationCellOption]()
+                
+                let numOfComments = self.preConversationStyle.numberOfComments
+                let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+                
+                for (index, comment) in comments.enumerated() {
+                    // TODO: replies
+                    guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
+                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
+                    viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+                    if (index < comments.count - 1) {
+                        viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
                     }
+                }
+                self._cellsViewModels.removeAll()
+                self._cellsViewModels.append(contentsOf: viewModels)
+            })
+            .disposed(by: disposeBag)
+        
+        viewInitializedObservable
+            .map { conversationRead -> SPConversationReadRM? in
+                return conversationRead
             }
             .asDriver(onErrorJustReturn: nil)
             .asObservable()
