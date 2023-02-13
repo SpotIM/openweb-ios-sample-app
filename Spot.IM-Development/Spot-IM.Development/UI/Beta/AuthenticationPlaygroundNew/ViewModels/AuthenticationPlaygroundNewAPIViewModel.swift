@@ -11,7 +11,7 @@ import RxSwift
 import Alamofire
 import SpotImCore
 
-protocol AuthenticationPlaygroundNewAPIViewModelingInputs { // swiftlint:disable:this type_name
+protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
     var selectedGenericSSOOptionIndex: PublishSubject<Int> { get }
     var selectedJWTSSOOptionIndex: PublishSubject<Int> { get }
     var logoutPressed: PublishSubject<Void> { get }
@@ -21,7 +21,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingInputs { // swiftlint:disable
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
 }
 
-protocol AuthenticationPlaygroundNewAPIViewModelingOutputs { // swiftlint:disable:this type_name
+protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
     var title: String { get }
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> { get }
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> { get }
@@ -30,7 +30,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingOutputs { // swiftlint:disabl
     var dismissVC: PublishSubject<Void> { get }
 }
 
-protocol AuthenticationPlaygroundNewAPIViewModeling { // swiftlint:disable:this type_name
+protocol AuthenticationPlaygroundNewAPIViewModeling {
     var inputs: AuthenticationPlaygroundNewAPIViewModelingInputs { get }
     var outputs: AuthenticationPlaygroundNewAPIViewModelingOutputs { get }
 }

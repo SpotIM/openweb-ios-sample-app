@@ -88,17 +88,9 @@ commands:
 
       - run:
           name: Run SwiftLint
-          command: swiftlint lint --strict --config swiftlint/.swiftlint.yml
-
-      - run:
-          name: Handle SwiftLint Result
           command: |
-            if [ $? -ne 0 ]; then
-                echo "SwiftLint check failed."
-            exit 1
-            else
-                echo "SwiftLint check succeeded."
-            fi
+            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
+            echo "SwiftLint check succeeded."
 
 jobs:
   validate_spm_job:

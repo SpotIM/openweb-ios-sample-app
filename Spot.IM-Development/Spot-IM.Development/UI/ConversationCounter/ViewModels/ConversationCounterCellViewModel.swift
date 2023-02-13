@@ -9,9 +9,9 @@
 import Foundation
 import SpotImCore
 
-protocol ConversationCounterCellViewModelingInputs {} // swiftlint:disable:this type_name
+protocol ConversationCounterCellViewModelingInputs {}
 
-protocol ConversationCounterCellViewModelingOutputs { // swiftlint:disable:this type_name
+protocol ConversationCounterCellViewModelingOutputs {
     var postId: String { get }
     var comments: Int { get }
     var replies: Int { get }
