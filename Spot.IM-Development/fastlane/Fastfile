@@ -59,31 +59,49 @@ platform :ios do
   desc "Build release ipa"
   lane :build_release_ipa do | options |
     scheme = "Spot-IM.Development"
+    type = "app-store"
+
     if options[:app] == "public"
       scheme = "Spot-IM.PublicDemoApp"
     elsif options[:app] == "beta"
       scheme = "Spot-IM.BetaDevelopment"
     end
-    match(
-        type: "appstore",
-        readonly: true,
-        api_key_path: "apple_api_key.json"
-    )
-    match(type: "development", readonly: true)
-    cocoapods(use_bundle_exec: false)
-    gym(
+
+    if options[:type] == "development"
+      type = "development"
+    end
+
+    if type == "app-store"
+      match(
+          type: "appstore",
+          readonly: true,
+          api_key_path: "apple_api_key.json"
+      )
+      cocoapods(use_bundle_exec: false)
+      gym(
+          scheme: scheme,
+          workspace: "Spot-IM.Development.xcworkspace",
+          export_method: "app-store",
+          destination: "generic/platform=iOS",
+          export_options: {
+              signingStyle: "manual",
+              provisioningProfiles: {
+                  "im.spot.demo" => "match AppStore im.spot.demo"
+              }
+          },
+          xcargs: "-allowProvisioningUpdates"
+      )
+    else
+      match(type: "development", readonly: true)
+      cocoapods(use_bundle_exec: false)
+      gym(
         scheme: scheme,
         workspace: "Spot-IM.Development.xcworkspace",
-        export_method: "app-store",
+        export_method: "development",
         destination: "generic/platform=iOS",
-        export_options: {
-            signingStyle: "manual",
-            provisioningProfiles: {
-                "im.spot.demo" => "match AppStore im.spot.demo"
-            }
-        },
-        xcargs: "-allowProvisioningUpdates"
+        export_options: { compileBitcode: false}
     )
+    end
   end
 
   # Excpect parameter `version`
