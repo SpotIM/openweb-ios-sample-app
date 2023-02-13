@@ -500,6 +500,7 @@ jobs:
             --region $AWS_REGION \
             --content-encoding "app"
 
+
 workflows:
   version: 2
   independent_job_workflow:
