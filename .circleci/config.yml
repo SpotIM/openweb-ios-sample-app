@@ -462,6 +462,8 @@ jobs:
       - checkout:
           path: ~/project
 
+      - *define_var_release_version
+
       - restore_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
 
@@ -493,17 +495,23 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: 's3://todo'
+          to: 's3://prod-ow-mobile/iOS/version-${RELEASE_VERSION}/Spot-IM.Development.app'
           arguments: |
             --region $AWS_REGION \
-            --acl public-read \
-            --cache-control "max-age=31536000" \
             --content-encoding "app"
 
 workflows:
   version: 2
   independent_job_workflow:
     jobs:
+      - upload_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^test/s3/.*/
+          xcode: "14.0.0"
+
       - default_job:
           filters:
             branches:
