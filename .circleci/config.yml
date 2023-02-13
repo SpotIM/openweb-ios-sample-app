@@ -76,6 +76,30 @@ commands:
              ls -l Release
              git status
 
+  swiftlint:
+    steps:
+      - run:
+          name: Install Homebrew
+          command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - run:
+          name: Install SwiftLint
+          command: brew install swiftlint
+
+      - run:
+          name: Run SwiftLint
+          command: swiftlint lint --strict --config swiftlint/.swiftlint.yml
+
+      - run:
+          name: Handle SwiftLint Result
+          command: |
+            if [ $? -ne 0 ]; then
+                echo "SwiftLint check failed."
+            exit 1
+            else
+                echo "SwiftLint check succeeded."
+            fi
+
 jobs:
   validate_spm_job:
     <<: *ios_config_xcode
@@ -230,14 +254,7 @@ jobs:
           paths:
             - 'vendor/bundle'
 
-      # Check for SwiftLint errors and warnings
-      - run:
-          name: SwiftLint
-          command: |
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            brew install swiftlint
-            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
-            echo "SwiftLint check succeeded."
+      - swiftlint
             
       - run:
           name: Build app and run unit-tests
@@ -294,6 +311,8 @@ jobs:
           name: Run Fastlane Release
           command: |
             bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
+
+      - swiftlint
 
       - run:
          name: After Running Fastlane Release
@@ -369,13 +388,7 @@ jobs:
           paths:
             - 'vendor/bundle'
 
-      - run:
-          name: SwiftLint
-          command: |
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            brew install swiftlint
-            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
-            echo "SwiftLint check succeeded."
+      - swiftlint
 
       - run:
           name: Run Fastlane Release Sample App
@@ -420,13 +433,7 @@ jobs:
           paths:
             - 'vendor/bundle'
 
-      - run:
-          name: SwiftLint
-          command: |
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            brew install swiftlint
-            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
-            echo "SwiftLint check succeeded."
+      - swiftlint
 
       - run:
           name: Run Fastlane Release Sample App
@@ -471,13 +478,7 @@ jobs:
           paths:
             - 'vendor/bundle'
 
-      - run:
-          name: SwiftLint
-          command: |
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            brew install swiftlint
-            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
-            echo "SwiftLint check succeeded."
+      - swiftlint
 
       - run:
           name: Run Fastlane Release Sample App
