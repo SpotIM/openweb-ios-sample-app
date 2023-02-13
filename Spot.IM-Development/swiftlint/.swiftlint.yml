@@ -30,7 +30,6 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - mark
   - nesting
   - no_space_in_method_call
-  - ns_number_init_as_function_reference
   - opening_brace
   - operator_whitespace
   - protocol_property_accessors_order
@@ -94,3 +93,6 @@ line_length:
     ignores_function_declarations: false
     ignores_comments: true
     ignores_interpolated_strings: false
+
+type_name:
+    max_length: 60
