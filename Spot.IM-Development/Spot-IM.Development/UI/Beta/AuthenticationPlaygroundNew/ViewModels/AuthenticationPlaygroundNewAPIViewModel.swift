@@ -143,7 +143,8 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
             .subscribe(onNext: {
-                // TODO change to new API  
+                // TODO change to new API // swiftlint:disable:this todo
+
                 SpotIm.getUserLoginStatus { loginStatus in
                     DLog("Before logout \(loginStatus))")
                     SpotIm.logout { result in
