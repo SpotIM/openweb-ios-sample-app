@@ -157,6 +157,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: _preConversationChangedSize)
             .disposed(by: disposeBag)
         
+        // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self,
@@ -167,10 +168,12 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
+        // Observable for the sort option
         let sortOptionObservable = self.servicesProvider
             .sortDictateService()
             .sortOption(perPostId: self.postId)
         
+        // Observable for the conversation network API
         let conversationReadObservable = sortOptionObservable
             .flatMap { [weak self] sortOption -> Observable<SPConversationReadRM> in
                 guard let self = self else { return .empty() }
@@ -181,14 +184,15 @@ fileprivate extension OWPreConversationViewViewModel {
                 .response
             }
         
-        let viewInitializedObservable = viewInitialized
+        let conversationFetchedObservable = viewInitialized
             .flatMap { _ -> Observable<SPConversationReadRM> in
                 return conversationReadObservable
                     .take(1)
             }
             .share()
         
-        viewInitializedObservable
+        // Creating the cells VMs for the pre conversation
+        conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
                 guard let self = self, let responseComments = response.conversation?.comments else { return }
                 var viewModels = [OWPreConversationCellOption]()
@@ -210,7 +214,8 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
         
-        viewInitializedObservable
+        // Binding to community question component
+        conversationFetchedObservable
             .map { conversationRead -> SPConversationReadRM? in
                 return conversationRead
             }
@@ -223,11 +228,12 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
             .disposed(by: disposeBag)
         
+        // Subscribing to customize UI related stuff
         Observable.merge(
             preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
             preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
-        )
-            .bind(onNext: { label in
+            )
+            .subscribe(onNext: { label in
 //            TODO: custom UI
 //            TODO: Map to the appropriate case
             })
@@ -235,11 +241,12 @@ fileprivate extension OWPreConversationViewViewModel {
         
         _ = commentCreationEntryViewModel.outputs
             .tapped
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 self?.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
         
+        // Observable of the comment cell VMs
         let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
                     .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
                         let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
@@ -255,6 +262,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     }
                     .share()
         
+        // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<SPComment> in
                 let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
