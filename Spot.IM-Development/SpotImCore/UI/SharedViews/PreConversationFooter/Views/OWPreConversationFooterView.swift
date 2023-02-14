@@ -19,7 +19,6 @@ internal class OWPreConversationFooterView: UIView {
         static let fontSize: CGFloat = 13
         static let iconSize: CGFloat = 13
         static let iconTrailingPadding: CGFloat = 5
-        static let footerHeight: CGFloat = 15
         static let dotPadding: CGFloat = 5
     }
     
@@ -74,10 +73,6 @@ internal class OWPreConversationFooterView: UIView {
 
 fileprivate extension OWPreConversationFooterView {
     func setupUI() {
-        self.OWSnp.makeConstraints { make in
-            make.height.equalTo(Metrics.footerHeight)
-        }
-        
         self.addSubview(termsButton)
         termsButton.OWSnp.makeConstraints { make in
             make.leading.centerY.equalToSuperview()
@@ -97,7 +92,7 @@ fileprivate extension OWPreConversationFooterView {
         
         self.addSubview(poweredByOWButton)
         poweredByOWButton.OWSnp.makeConstraints { make in
-            make.centerY.trailing.equalToSuperview()
+            make.top.bottom.trailing.equalToSuperview()
         }
         
         poweredByOWButton.addSubview(openWebIconImageView)
