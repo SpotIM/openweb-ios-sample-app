@@ -97,7 +97,7 @@ fileprivate extension OWPreConversationCoordinator {
         Observable.merge(
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
             viewModel.outputs.urlClickedOutput,
-            viewModel.outputs.footerViewViewModel.outputs.openUrl
+            viewModel.outputs.footerViewViewModel.outputs.urlClickedOutput
         )
             .flatMap { [weak self] url -> Observable<OWSafariTabCoordinatorResult> in
                 guard let self = self else { return .empty() }

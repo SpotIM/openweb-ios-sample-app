@@ -35,7 +35,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
     var shouldShowComments: Bool { get }
-    var fullConvButtonTitle: Observable<String> { get }
+    var conversationCTAButtonTitle: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -94,7 +94,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
     
-    fileprivate var commentsCount: Observable<String> {
+    fileprivate lazy var commentsCountObservable: Observable<String> = {
         guard let postId = OWManager.manager.postId else { return .empty()}
         
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
@@ -107,18 +107,19 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 return count > 0 ? "(\(count))" : ""
             }
             .asObservable()
-    }
-    var fullConvButtonTitle: Observable<String> {
-        commentsCount
+    }()
+    
+    var conversationCTAButtonTitle: Observable<String> {
+        commentsCountObservable
             .map { [weak self] count in
                 guard let self = self else { return nil }
                 switch(self.preConversationStyle) {
                 case .ctaButtonOnly:
-                    return LocalizationManager.localizedString(key: "Show Comments") + "(\(count))"
+                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
                 case .ctaWithSummary:
                     return LocalizationManager.localizedString(key: "Post a Comment")
                 default:
-                    return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
+                    return LocalizationManager.localizedString(key: "Show more comments")
                 }
             }
             .unwrap()
