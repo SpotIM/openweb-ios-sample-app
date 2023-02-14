@@ -16,7 +16,7 @@ protocol OWPreConversationFooterViewModelingInputs {
 }
 
 protocol OWPreConversationFooterViewModelingOutputs {
-    var openUrl: Observable<URL> { get }
+    var urlClickedOutput: Observable<URL> { get }
 }
 
 protocol OWPreConversationFooterViewModeling {
@@ -34,20 +34,20 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
         self.servicesProvider = servicesProvider
     }
     
-    fileprivate var mobileSdkConfig: Observable<SPConfigurationSDKStatus> {
+    fileprivate lazy var mobileSdkConfigObservable: Observable<SPConfigurationSDKStatus> = {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> SPConfigurationSDKStatus? in
                 return config.mobileSdk
             }
             .unwrap()
-    }
+    }()
     
     var termsTapped = PublishSubject<Void>()
     var _openTerms: Observable<URL> {
         return termsTapped
             .asObserver()
-            .withLatestFrom(mobileSdkConfig) { _, sdkConfig -> URL? in
+            .withLatestFrom(mobileSdkConfigObservable) { _, sdkConfig -> URL? in
                 return URL(string: sdkConfig.openwebTermsUrl)
             }
             .unwrap()
@@ -57,7 +57,7 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
     var _openPrivacy: Observable<URL> {
         return privacyTapped
             .asObserver()
-            .withLatestFrom(mobileSdkConfig) { _, sdkConfig -> URL? in
+            .withLatestFrom(mobileSdkConfigObservable) { _, sdkConfig -> URL? in
                 return URL(string: sdkConfig.openwebPrivacyUrl)
             }
             .unwrap()
@@ -67,13 +67,13 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
     var _openOWWebsite: Observable<URL> {
         return poweredByOWTapped
             .asObserver()
-            .withLatestFrom(mobileSdkConfig) { _, sdkConfig -> URL? in
+            .withLatestFrom(mobileSdkConfigObservable) { _, sdkConfig -> URL? in
                 return URL(string: sdkConfig.openwebWebsiteUrl)
             }
             .unwrap()
     }
     
-    var openUrl: Observable<URL> {
+    var urlClickedOutput: Observable<URL> {
         return Observable.merge(_openTerms, _openPrivacy, _openOWWebsite)
     }
 }
