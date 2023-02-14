@@ -68,8 +68,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         
         return tableView
     }()
-    fileprivate lazy var btnFullConversation: UIButton = {
-        return LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
+    fileprivate lazy var btnCTAConversation: UIButton = {
+        return LocalizationManager.localizedString(key: "Show more comments")
             .button
             .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
             .textColor(.white)
@@ -164,8 +164,8 @@ fileprivate extension OWPreConversationView {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
         }
         
-        self.addSubview(btnFullConversation)
-        btnFullConversation.OWSnp.makeConstraints { make in
+        self.addSubview(btnCTAConversation)
+        btnCTAConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
@@ -175,14 +175,14 @@ fileprivate extension OWPreConversationView {
         footerView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(btnFullConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
             make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
         }
     }
     
     func setupObservers() {
-        viewModel.outputs.fullConvButtonTitle
-            .bind(to: btnFullConversation.rx.title())
+        viewModel.outputs.conversationCTAButtonTitle
+            .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
         
         viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
@@ -204,7 +204,7 @@ fileprivate extension OWPreConversationView {
                 })
                 .disposed(by: disposeBag)
         
-        btnFullConversation.rx.tap
+        btnCTAConversation.rx.tap
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
@@ -216,7 +216,7 @@ fileprivate extension OWPreConversationView {
                 self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
-                self.btnFullConversation.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
+                self.btnCTAConversation.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
     

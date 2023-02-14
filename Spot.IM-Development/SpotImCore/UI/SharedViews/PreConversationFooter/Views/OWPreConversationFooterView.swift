@@ -52,12 +52,11 @@ internal class OWPreConversationFooterView: UIView {
         return btn
     }()
     
-    fileprivate let disposeBag: DisposeBag
+    fileprivate let disposeBag = DisposeBag()
     fileprivate let viewModel: OWPreConversationFooterViewModeling
     
     init(with viewModel: OWPreConversationFooterViewModeling) {
         self.viewModel = viewModel
-        self.disposeBag = DisposeBag()
         super.init(frame: .zero)
         self.enforceSemanticAttribute()
             .backgroundColor(.clear)
@@ -132,7 +131,8 @@ fileprivate extension OWPreConversationFooterView {
                 self.dotLabel.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
                 self.privacyButton.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
                 self.openWebIconImageView.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
     
     func applyAccessibility() {
