@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import SpotImCore
 
 #if NEW_API
 
@@ -21,6 +22,7 @@ protocol UIFlowsViewModelingOutputs {
     var title: String { get }
     // Usually the coordinator layer will handle this, however current architecture is missing a coordinator layer until we will do a propper refactor
     var openMockArticleScreen: Observable<SDKUIFlowActionSettings> { get }
+    var presentStyle: OWModalPresentationStyle { get }
 }
 
 protocol UIFlowsViewModeling {
@@ -45,6 +47,10 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
         return _openMockArticleScreen
             .unwrap()
             .asObservable()
+    }
+    
+    var presentStyle: OWModalPresentationStyle {
+        return OWModalPresentationStyle.styleFromPersistence(index: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: 0))
     }
     
     lazy var title: String = {

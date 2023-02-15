@@ -21,13 +21,14 @@ class TextFieldSetting: UIView {
     
     fileprivate let title: String
     fileprivate let text = BehaviorSubject<String?>(value: nil)
+    fileprivate var font: UIFont
     fileprivate let disposeBag = DisposeBag()
     
     fileprivate lazy var textFieldTitleLbl: UILabel = {
         return title
             .label
-            .font(FontBook.mainHeading)
-            .numberOfLines(2)
+            .font(font)
+            .numberOfLines(Metrics.titleNumberOfLines)
             .lineBreakMode(.byWordWrapping)
     }()
     
@@ -40,15 +41,17 @@ class TextFieldSetting: UIView {
         return textField
     }()
     
-    init(title: String, text: String? = nil) {
+    init(title: String, accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
         self.title = title
         if let text = text {
             self.text.onNext(text)
         }
+        self.font = font
         super.init(frame: .zero)
         
         setupViews()
         setupObservers()
+        applyAccessibility(prefixId: accessibilityPrefixId)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -58,15 +61,18 @@ class TextFieldSetting: UIView {
 }
 
 fileprivate extension TextFieldSetting {
+    func applyAccessibility(prefixId: String) {
+        textFieldTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
+        textFieldControl.accessibilityIdentifier = prefixId + "_text_field_id"
+    }
+    
     func setupViews() {
         let stackView = UIStackView()
         self.addSubview(stackView)
         stackView.distribution = .fillProportionally
         stackView.addArrangedSubview(textFieldTitleLbl)
         stackView.addArrangedSubview(textFieldControl)
-        
         stackView.spacing = Metrics.horizontalOffset
-        
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
@@ -78,7 +84,7 @@ fileprivate extension TextFieldSetting {
         }
         
         textFieldControl.snp.makeConstraints { make in
-            make.width.equalTo(self.snp.width).multipliedBy(1-Metrics.titleWidthProportion)
+            make.width.equalTo(self.snp.width).multipliedBy(1 - Metrics.titleWidthProportion).priority(250)
         }
     }
     

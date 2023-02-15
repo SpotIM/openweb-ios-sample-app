@@ -8,6 +8,9 @@
 
 import Foundation
 import RxSwift
+import SpotImCore
+
+#if NEW_API
 
 protocol SettingsViewModelingInputs {
     var hideArticleHeaderToggled: PublishSubject<Bool> { get }
@@ -15,12 +18,14 @@ protocol SettingsViewModelingInputs {
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
     var modalStyleSelectedIndex: PublishSubject<Int> { get }
+    var articleAssociatedSelectedURL: PublishSubject<String?> { get }
 }
 
 protocol SettingsViewModelingOutputs {
     var title: String { get }
     var hideArticleHeaderTitle: String { get }
     var commentCreationNewDesignTitle: String { get }
+    var articleURLTitle: String { get }
     var readOnlyTitle: String { get }
     var readOnlySettings: [String] { get }
     var themeModeTitle: String { get }
@@ -32,6 +37,7 @@ protocol SettingsViewModelingOutputs {
     var readOnlyModeIndex: Observable<Int> { get }
     var themeModeIndex: Observable<Int> { get }
     var modalStyleIndex: Observable<Int> { get }
+    var articleAssociatedURL: Observable<String> { get }
 }
 
 protocol SettingsViewModeling {
@@ -48,8 +54,10 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
+    var articleAssociatedSelectedURL = PublishSubject<String?>()
     
-    var userDefaultsProvider: UserDefaultsProviderProtocol
+    fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
+    fileprivate var manager: OWManagerProtocol
     
     var shouldHideArticleHeader: Observable<Bool> {
         return userDefaultsProvider.values(key: .hideArticleHeader, defaultValue: false)
@@ -71,6 +79,10 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
         return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: 0)
     }
     
+    var articleAssociatedURL: Observable<String> {
+        return userDefaultsProvider.values(key: .articleAssociatedURL)
+    }
+    
     fileprivate let disposeBag = DisposeBag()
     
     lazy var title: String = {
@@ -87,6 +99,10 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     
     lazy var readOnlyTitle: String = {
         return NSLocalizedString("ReadOnlyMode", comment: "")
+    }()
+    
+    lazy var articleURLTitle: String = {
+        return NSLocalizedString("ArticleAssociatedURL", comment: "")
     }()
     
     lazy var readOnlySettings: [String] = {
@@ -120,8 +136,9 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
         return [_fullScreen, _pageSheet]
     }()
     
-    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared) {
+    init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared, manager: OWManagerProtocol = OpenWeb.manager) {
         self.userDefaultsProvider = userDefaultsProvider
+        self.manager = manager
         setupObservers()
     }
 }
@@ -157,5 +174,21 @@ extension SettingsViewModel {
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.modalStyleIndex))
             .disposed(by: disposeBag)
+        
+        articleAssociatedSelectedURL
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<String?>.articleAssociatedURL))
+            .disposed(by: disposeBag)
+        
+        themeModeSelectedIndex // 0. default 1. light 2. dark
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self else { return }
+                var customizations = self.manager.ui.customizations
+                customizations.themeEnforcement = .themeFromPersistence(index: index)
+            })
+            .disposed(by: disposeBag)
     }
 }
+
+#endif

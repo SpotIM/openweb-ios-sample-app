@@ -647,6 +647,12 @@ internal final class SPMainConversationDataSource {
             if let id = comment.id {
                 hiddenData[id]?.reverse()
             }
+
+            if viewModel.isCommentAuthorMuted && areAllCommentAndRepliesMuted(atCommentVMs: section) {
+                // if comment is muted and all it's replies are muted - we filter out this comment and it's replies
+                return
+            }
+
             visibleComments.append(section)
 
             makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
@@ -771,54 +777,6 @@ extension SPMainConversationDataSource {
         }
     }
     
-    private func handleDeletedCommentReplies(commentId: String, sectionIndexPath: IndexPath) {
-        for i in sectionIndexPath.row + 1..<cellData[sectionIndexPath.section].count
-            where cellData[sectionIndexPath.section][i].parentCommentId == commentId {
-                cellData[sectionIndexPath.section][i].replyingToDisplayName = nil
-        }
-    }
-    
-    private func handleDeletedParentComment(parentId: String) {
-        guard let indexPath = indexPathOfComment(with: parentId),
-            cellData[indexPath.section].filter({ $0.parentCommentId == parentId && !$0.shouldBeRemoved }).isEmpty,
-            cellData[indexPath.section][indexPath.row].isDeleted else { return }
-        
-            cellData[indexPath.section][indexPath.row].shouldBeRemoved = true
-            if let parentCommentId = cellData[indexPath.section][indexPath.row].parentCommentId {
-                handleDeletedParentComment(parentId: parentCommentId)
-            }
-    }
-
-    private func deleteComments(for id: String, at indexPath: IndexPath, isCascade: Bool) -> DeletedIndexPathsInfo {
-        cellData[indexPath.section][indexPath.row].shouldBeRemoved = true
-        if let parentCommentId = cellData[indexPath.section][indexPath.row].parentCommentId, !parentCommentId.isEmpty {
-            handleDeletedParentComment(parentId: parentCommentId)
-        }
-        if isCascade {
-            markChildrenDeleted(for: id)
-        }
-
-        var deletedPaths = [IndexPath]()
-        for (i, comment) in cellData[indexPath.section].enumerated() where comment.shouldBeRemoved {
-                deletedPaths.append(IndexPath(row: i, section: indexPath.section))
-        }
-        cellData[indexPath.section].removeAll { $0.shouldBeRemoved }
-        
-        let shouldRemoveSection: Bool = !cellData.filter { $0.isEmpty }.isEmpty
-        cellData.removeAll { $0.isEmpty }
-        
-        return (deletedPaths, shouldRemoveSection)
-    }
-
-    private func markChildrenDeleted(for id: String?) {
-        guard let id = id, let indexPath = indexPathOfComment(with: id) else { return }
-        for i in indexPath.row..<cellData[indexPath.section].count
-            where cellData[indexPath.section][i].parentCommentId == id {
-            cellData[indexPath.section][i].shouldBeRemoved = true
-            markChildrenDeleted(for: cellData[indexPath.section][i].commentId)
-        }
-    }
-    
     func update(with comment: SPComment) {
         servicesProvider.logger().log(level: .verbose, "update: preparing comment view model")
         let parentComment = self.comment(with: comment.parentId)
@@ -848,8 +806,110 @@ extension SPMainConversationDataSource {
             pushLocalComment(comment: comment, viewModel: viewModel)
         }
     }
+    
+    func reportComment(with id: String) {
+        guard let indexPath = indexPathOfComment(with: id) else { return }
+        (cellData[indexPath.section])[indexPath.row].isReported = true
+        delegate?.reloadAt(indexPath: indexPath)
+    }
+    
+    func isCommentInConversation(commentId: String) -> Bool {
+        for section in cellData {
+            for comment in section {
+                if comment.commentId == commentId {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    func addNewComments(comments: [SPComment]) {
+        var sortedComments = comments
+        sortedComments.sort {
+            if let date1 = $0.writtenAt, let date2 = $1.writtenAt {
+                return Date(timeIntervalSince1970: date1).timeAgo() > Date(timeIntervalSince1970: date2).timeAgo()
+            } else {
+                return true
+            }
+        }
+        let processedComments = self.processed(sortedComments)
+        self.cellData.insert(contentsOf: processedComments, at: self.shouldShowBanner ? 1 : 0)
+    }
 
-    private func updateRepliesButtonIfNeeded(in comment: CommentViewModel?) {
+    func muteComment(userId: String) {
+        let indexPaths = indexPathsOfComments(for: userId)
+        guard !indexPaths.isEmpty else { return }
+
+        for indexPath in indexPaths {
+            var commentVM = cellData[indexPath.section][indexPath.row]
+            commentVM.setIsMuted(true)
+            cellData[indexPath.section][indexPath.row] = commentVM
+        }
+
+        let sectionIndexPaths = Set(indexPaths.map { $0.section }).sorted { $0 > $1}
+
+        sectionIndexPaths.forEach { sectionIndex in
+            if areAllCommentAndRepliesMuted(atSectionIndex: sectionIndex) {
+                cellData.remove(at: sectionIndex)
+            }
+        }
+
+        delegate?.reload(shouldBeScrolledToTop: false)
+    }
+}
+
+fileprivate extension SPMainConversationDataSource {
+
+    func handleDeletedCommentReplies(commentId: String, sectionIndexPath: IndexPath) {
+        for i in sectionIndexPath.row + 1..<cellData[sectionIndexPath.section].count
+            where cellData[sectionIndexPath.section][i].parentCommentId == commentId {
+                cellData[sectionIndexPath.section][i].replyingToDisplayName = nil
+        }
+    }
+
+    func handleDeletedParentComment(parentId: String) {
+        guard let indexPath = indexPathOfComment(with: parentId),
+            cellData[indexPath.section].filter({ $0.parentCommentId == parentId && !$0.shouldBeRemoved }).isEmpty,
+            cellData[indexPath.section][indexPath.row].isDeleted else { return }
+
+            cellData[indexPath.section][indexPath.row].shouldBeRemoved = true
+            if let parentCommentId = cellData[indexPath.section][indexPath.row].parentCommentId {
+                handleDeletedParentComment(parentId: parentCommentId)
+            }
+    }
+
+    func deleteComments(for id: String, at indexPath: IndexPath, isCascade: Bool) -> DeletedIndexPathsInfo {
+        cellData[indexPath.section][indexPath.row].shouldBeRemoved = true
+        if let parentCommentId = cellData[indexPath.section][indexPath.row].parentCommentId, !parentCommentId.isEmpty {
+            handleDeletedParentComment(parentId: parentCommentId)
+        }
+        if isCascade {
+            markChildrenDeleted(for: id)
+        }
+
+        var deletedPaths = [IndexPath]()
+        for (i, comment) in cellData[indexPath.section].enumerated() where comment.shouldBeRemoved {
+                deletedPaths.append(IndexPath(row: i, section: indexPath.section))
+        }
+        cellData[indexPath.section].removeAll { $0.shouldBeRemoved }
+
+        let shouldRemoveSection: Bool = !cellData.filter { $0.isEmpty }.isEmpty
+        cellData.removeAll { $0.isEmpty }
+
+        return (deletedPaths, shouldRemoveSection)
+    }
+
+    func markChildrenDeleted(for id: String?) {
+        guard let id = id, let indexPath = indexPathOfComment(with: id) else { return }
+        for i in indexPath.row..<cellData[indexPath.section].count
+            where cellData[indexPath.section][i].parentCommentId == id {
+            cellData[indexPath.section][i].shouldBeRemoved = true
+            markChildrenDeleted(for: cellData[indexPath.section][i].commentId)
+        }
+    }
+
+    func updateRepliesButtonIfNeeded(in comment: CommentViewModel?) {
         guard let isRoot = comment?.isRoot,
             let replyCount = loadedChildren(of: comment?.commentId)?.count,
             comment?.repliesButtonState == .hidden else { return }
@@ -860,8 +920,8 @@ extension SPMainConversationDataSource {
             cellData[indexPath.section][indexPath.row].repliesButtonState = .expanded
         }
     }
-    
-    private func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
+
+    func pushLocalComment(comment: SPComment, viewModel: CommentViewModel) {
         let logger = servicesProvider.logger()
         logger.log(level: .verbose, "pushLocalComment called, sorting is \(String(describing: sortMode))")
         let updatedMessageCount = messageCount + 1
@@ -877,14 +937,14 @@ extension SPMainConversationDataSource {
         }
         self.cachedCommentReply = nil
     }
-    
-    private func pushLocalReply(reply: SPComment, viewModel: CommentViewModel) {
+
+    func pushLocalReply(reply: SPComment, viewModel: CommentViewModel) {
         let lastReplyViewModel = cellData.flatMap { $0 }.last { $0.parentCommentId == reply.parentId }
         let commentIndexPath = cellData
             .flatMap { $0 }
             .last { $0.commentId == reply.parentId }
             .map { indexPathOfComment(with: $0.commentId) }
-        
+
         if let unwrappedIndexPath = commentIndexPath, let indexPath = unwrappedIndexPath {
             let repliesCount = cellData[indexPath.section][indexPath.row].repliesRawCount ?? 0
             cellData[indexPath.section][indexPath.row].repliesRawCount = repliesCount + 1
@@ -915,8 +975,8 @@ extension SPMainConversationDataSource {
         cachedCommentReply = nil
         delegate?.reload(scrollToIndexPath: newReplyIndexPath)
     }
-    
-    private func indexForInsertion(initialIP: IndexPath, currentReplyDepth: Int) -> Int {
+
+    func indexForInsertion(initialIP: IndexPath, currentReplyDepth: Int) -> Int {
         let sectionData = cellData[initialIP.section]
         let count = sectionData.count
         let firstIndex = initialIP.row + 1
@@ -927,63 +987,33 @@ extension SPMainConversationDataSource {
             }
             latestIndexPath = IndexPath(row: index + 1, section: initialIP.section)
         }
-        
+
         return (latestIndexPath ?? IndexPath(row: firstIndex, section: initialIP.section)).row
     }
-    
-    func reportComment(with id: String) {
-        guard let indexPath = indexPathOfComment(with: id) else { return }
-        (cellData[indexPath.section])[indexPath.row].isReported = true
+
+    func updateEditedCommentAndSendEvent(comment: SPComment, viewModel: CommentViewModel) {
+        guard let indexPath = indexPathOfComment(with: comment.id) else { return }
+        (cellData[indexPath.section])[indexPath.row] = viewModel
         delegate?.reloadAt(indexPath: indexPath)
-    }
-    
-    private func updateEditedCommentAndSendEvent(comment: SPComment, viewModel: CommentViewModel) {
-           guard let indexPath = indexPathOfComment(with: comment.id) else { return }
-           (cellData[indexPath.section])[indexPath.row] = viewModel
-           delegate?.reloadAt(indexPath: indexPath)
-           if let commentId = comment.id {
-               SPAnalyticsHolder.default.log(
+        if let commentId = comment.id {
+            SPAnalyticsHolder.default.log(
                 event: .commentEdited(
                     messageId: commentId,
                     relatedMessageId: viewModel.rootCommentId),
                 source: .conversation)
-               }
-       }
-    
-    func isCommentInConversation(commentId: String) -> Bool {
-        for section in cellData {
-            for comment in section {
-                if comment.commentId == commentId {
-                    return true
-                }
+        }
+    }
+
+    func areAllCommentAndRepliesMuted(atSectionIndex sectionIndex: Int) -> Bool {
+        areAllCommentAndRepliesMuted(atCommentVMs: cellData[sectionIndex])
+    }
+
+    func areAllCommentAndRepliesMuted(atCommentVMs commentVMs: [CommentViewModel]) -> Bool {
+        for commentVM in commentVMs {
+            if !commentVM.isCommentAuthorMuted {
+                return false
             }
         }
-        return false
-    }
-    
-    func addNewComments(comments: [SPComment]) {
-        var sortedComments = comments
-        sortedComments.sort {
-            if let date1 = $0.writtenAt, let date2 = $1.writtenAt {
-                return Date(timeIntervalSince1970: date1).timeAgo() > Date(timeIntervalSince1970: date2).timeAgo()
-            } else {
-                return true
-            }
-        }
-        let processedComments = self.processed(sortedComments)
-        self.cellData.insert(contentsOf: processedComments, at: self.shouldShowBanner ? 1 : 0)
-    }
-    
-    func muteComment(userId: String) {
-        let indexPaths = indexPathsOfComments(for: userId)
-        guard !indexPaths.isEmpty else { return }
-        
-        for indexPath in indexPaths {
-            var commentVM = cellData[indexPath.section][indexPath.row]
-            commentVM.setIsMuted(true)
-            cellData[indexPath.section][indexPath.row] = commentVM
-        }
-        
-        delegate?.reload(shouldBeScrolledToTop: false)
+        return true
     }
 }

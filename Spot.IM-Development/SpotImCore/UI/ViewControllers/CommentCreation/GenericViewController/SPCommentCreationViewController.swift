@@ -134,7 +134,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
     
     private func applyAccessibility() {
-        self.view.accessibilityIdentifier = Metrics.identifier
+        view.accessibilityIdentifier = Metrics.identifier
         activityIndicator.accessibilityIdentifier = Metrics.activityIndicatorIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
         commentingOnLabel.accessibilityIdentifier = Metrics.commentingOnLabelIdentifier
