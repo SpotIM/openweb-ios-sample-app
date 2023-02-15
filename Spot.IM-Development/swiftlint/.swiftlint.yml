@@ -42,7 +42,6 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - self_in_property_initialization
   - shorthand_operator
   - statement_position
-  - todo
   - trailing_comma
   - trailing_semicolon
   - trailing_whitespace
