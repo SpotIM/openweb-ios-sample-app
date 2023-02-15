@@ -99,7 +99,13 @@ platform :ios do
         workspace: "Spot-IM.Development.xcworkspace",
         export_method: "development",
         destination: "generic/platform=iOS",
-        export_options: { compileBitcode: false}
+        export_options: {
+            signingStyle: "manual",
+            provisioningProfiles: {
+                "im.spot.demo" => "match Development im.spot.demo"
+            }
+        },
+        xcargs: "-allowProvisioningUpdates"
     )
     end
   end
