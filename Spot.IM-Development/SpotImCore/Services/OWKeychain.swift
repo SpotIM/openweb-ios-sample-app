@@ -154,8 +154,8 @@ fileprivate extension OWKeychain {
         case errSecSuccess:
             guard let queriedItem = queryResult as? [String: Any],
                   let data = queriedItem [String(kSecValueData)] as? Data else {
-                      servicesProvider.logger().log(level: .error, "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue)")
-                      return nil
+                servicesProvider.logger().log(level: .error, "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue)")
+                return nil
             }
             return data
         case errSecItemNotFound:
