@@ -217,12 +217,19 @@ fileprivate extension OWCommentRatingView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.rankUpButton.imageColorOff = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.rankUpButton.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
                 self.rankDownButton.imageColorOff = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.rankDownButton.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
                 self.rankUpLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
                 self.rankDownLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
+        
+        OWColorPalette.shared.colorObservable(type: .brandColor)
+            .subscribe(onNext: { [weak self] brandColor in
+                guard let self = self else { return }
+                self.rankUpButton.brandColor = brandColor
+                self.rankDownButton.brandColor = brandColor
+            })
+            .disposed(by: disposeBag)
     }
 }
 

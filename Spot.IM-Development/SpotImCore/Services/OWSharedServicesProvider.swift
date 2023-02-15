@@ -198,5 +198,6 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         // Stop / re-create services which depend on spot id
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()
+        _spotConfigurationService.spotChanged(spotId: spotId)
     }
 }

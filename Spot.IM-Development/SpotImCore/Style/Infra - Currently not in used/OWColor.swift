@@ -73,6 +73,13 @@ struct OWColor {
                                darkThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0))
             }
         }
+        
+        var shouldUpdateRxObservable: Bool {
+            switch self {
+            case .brandColor: return true
+            default: return false
+            }
+        }
     }
     
     init(lightThemeColor: UIColor, darkThemeColor: UIColor) {
