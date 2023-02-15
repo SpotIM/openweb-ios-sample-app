@@ -37,7 +37,7 @@ extension OWLayoutConstraintItem {
     }
 
     var constraints: [OWConstraint] {
-        return self.constraintsSet.allObjects as! [OWConstraint]
+        return self.constraintsSet.allObjects as! [OWConstraint] // swiftlint:disable:this force_cast
     }
 
     func add(constraints: [OWConstraint]) {

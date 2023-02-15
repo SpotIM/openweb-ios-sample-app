@@ -60,8 +60,7 @@ internal extension UIImage {
 
     static func load(with url: URL) -> Observable<UIImage> {
         return Observable.create { observer in
-            let dataRequest = UIImage.load(with: url, completion: {
-                image, error in
+            let dataRequest = UIImage.load(with: url, completion: { image, error in
                 if let error = error {
                     observer.onError(error)
                 } else if let image = image {

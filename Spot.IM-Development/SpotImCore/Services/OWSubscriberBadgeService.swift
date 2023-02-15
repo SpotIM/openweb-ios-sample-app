@@ -17,7 +17,9 @@ class OWSubscriberBadgeService: OWSubscriberBadgeServicing {
 
     fileprivate struct URLS {
         static let subscriberBadgeBaseUrl: String = "\(APIConstants.cdnBaseURL)\(SPImageRequestConstants.iconsPathComponent)"
+        // swiftlint:disable line_length
         static let subscriberBadgeFontAwesomeBaseUrl: String = "\(subscriberBadgeBaseUrl)\(SPImageRequestConstants.fontAwesomePathComponent)\(SPImageRequestConstants.fontAwesomeVersionPathComponent)"
+        // swiftlint:enable line_length
     }
 
     fileprivate enum OWSubscriberBadgeIconType: String {

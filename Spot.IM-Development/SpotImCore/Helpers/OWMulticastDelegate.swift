@@ -31,7 +31,7 @@ class OWMulticastDelegate<T> {
 
     func invoke(invocation: (T) -> Void) {
         for delegate in delegates.allObjects.reversed() {
-            invocation(delegate as! T)
+            invocation(delegate as! T) // swiftlint:disable:this force_cast
         }
     }
 }

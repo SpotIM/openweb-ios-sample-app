@@ -21,7 +21,7 @@ internal protocol SPMainConversationDataSourceDelegate: NSObjectProtocol {
 
 }
 
-typealias CommentActionAvailability = (isDeletable: Bool, isEditable: Bool, isReportable: Bool, isMuteable: Bool, isShareable: Bool)
+typealias CommentActionAvailability = (isDeletable: Bool, isEditable: Bool, isReportable: Bool, isMuteable: Bool, isShareable: Bool) // swiftlint:disable:this large_tuple
 typealias DeletedIndexPathsInfo = (indexPathes: [IndexPath], shouldRemoveSection: Bool)
 
 internal final class SPMainConversationDataSource {
@@ -147,9 +147,9 @@ internal final class SPMainConversationDataSource {
             loadingFinished: loadingFinished
         ) { [weak self] (response, error) in
             guard let self = self
-                else {
-                    completion(false, SPNetworkError.default)
-                    return
+            else {
+                completion(false, SPNetworkError.default)
+                return
             }
 
             if let error = error {
@@ -189,42 +189,42 @@ internal final class SPMainConversationDataSource {
         loadingStarted: (() -> Void)? = nil,
         loadingFinished: (() -> Void)? = nil,
         completion: @escaping (Bool, IndexSet?, Error?) -> Void) {
-        sortMode = mode
-        sortIsUpdated?()
-        dataProvider.conversation(
-            postId,
-            mode,
-            page: page,
-            loadingStarted: loadingStarted,
-            loadingFinished: loadingFinished
-        ) { [weak self] (response, error) in
-            guard
-                let self = self
+            sortMode = mode
+            sortIsUpdated?()
+            dataProvider.conversation(
+                postId,
+                mode,
+                page: page,
+                loadingStarted: loadingStarted,
+                loadingFinished: loadingFinished
+            ) { [weak self] (response, error) in
+                guard
+                    let self = self
                 else {
                     completion(false, nil, SPNetworkError.default)
                     return
-            }
-
-            if let error = error {
-                completion(false, nil, error)
-            } else {
-                if let newUsers = response?.conversation?.users {
-                    let mergedUsers = self.users.merging(newUsers) { $1 }
-                    self.users = mergedUsers
                 }
 
-                let processedComments = self.processed(response?.conversation?.comments)
+                if let error = error {
+                    completion(false, nil, error)
+                } else {
+                    if let newUsers = response?.conversation?.users {
+                        let mergedUsers = self.users.merging(newUsers) { $1 }
+                        self.users = mergedUsers
+                    }
 
-                let insertedSections = self.insertedSections(with: processedComments.count)
-                self.cellData.append(contentsOf: processedComments)
+                    let processedComments = self.processed(response?.conversation?.comments)
 
-                self.messageCount = response?.conversation?.messagesCount ?? 0
-                self.messageCounterUpdated?(self.messageCount)
+                    let insertedSections = self.insertedSections(with: processedComments.count)
+                    self.cellData.append(contentsOf: processedComments)
 
-                completion(true, insertedSections, nil)
+                    self.messageCount = response?.conversation?.messagesCount ?? 0
+                    self.messageCounterUpdated?(self.messageCount)
+
+                    completion(true, insertedSections, nil)
+                }
             }
         }
-    }
 
     internal func expandAllCommentsIfNeeded() {
         guard showReplies else { return }
@@ -243,59 +243,59 @@ internal final class SPMainConversationDataSource {
         loadingStarted: (() -> Void)? = nil,
         loadingFinished: (() -> Void)? = nil) {
 
-        guard let commentId = commentId, let indexPath = indexPathOfComment(with: commentId) else { return }
+            guard let commentId = commentId, let indexPath = indexPathOfComment(with: commentId) else { return }
 
-        let provider = repliesProviders[commentId]
+            let provider = repliesProviders[commentId]
 
-        if let comments = hiddenData[commentId] {
+            if let comments = hiddenData[commentId] {
 
-            let indexPaths = IndexPath.indexPaths(forSection: indexPath.section,
-                                                  from: indexPath.row + 1,
-                                                  pathesCount: comments.count)
-            cellData[indexPath.section].insert(contentsOf: comments, at: indexPath.row + 1)
+                let indexPaths = IndexPath.indexPaths(forSection: indexPath.section,
+                                                      from: indexPath.row + 1,
+                                                      pathesCount: comments.count)
+                cellData[indexPath.section].insert(contentsOf: comments, at: indexPath.row + 1)
 
-            hiddenData[commentId] = nil
+                hiddenData[commentId] = nil
 
-            delegate?.dataSource(dataSource: self, didInsertRowsAt: indexPaths)
-            updateReplyButton(with: provider, inCellWith: indexPath)
+                delegate?.dataSource(dataSource: self, didInsertRowsAt: indexPaths)
+                updateReplyButton(with: provider, inCellWith: indexPath)
 
-            return
-        }
+                return
+            }
 
-        // to show loader
-        DispatchQueue.main.async { self.updateReplyButton(with: provider, inCellWith: indexPath) }
+            // to show loader
+            DispatchQueue.main.async { self.updateReplyButton(with: provider, inCellWith: indexPath) }
 
-        provider?.comments(
-            postId,
-            sortMode,
-            page: .next,
-            parentId: commentId,
-            loadingStarted: loadingStarted,
-            loadingFinished: loadingFinished) { (response, _) in
-                if let newUsers = response?.conversation?.users {
-                    let mergedUsers = self.users.merging(newUsers) { $1 }
-                    self.users = mergedUsers
+            provider?.comments(
+                postId,
+                sortMode,
+                page: .next,
+                parentId: commentId,
+                loadingStarted: loadingStarted,
+                loadingFinished: loadingFinished) { (response, _) in
+                    if let newUsers = response?.conversation?.users {
+                        let mergedUsers = self.users.merging(newUsers) { $1 }
+                        self.users = mergedUsers
+                    }
+
+                    let parentCellData = self.comment(with: commentId)
+
+                    let processedReplies = self.processedReplies(
+                        response?.conversation?.comments,
+                        replyingToCommentId: parentCellData?.commentId,
+                        replyingToDisplayName: (parentCellData?.isDeleted == true) ? nil : parentCellData?.displayName
+                    )
+                    if let indexPath = self.indexPathOfComment(with: commentId) {
+                        self.cellData[indexPath.section].insert(contentsOf: processedReplies,
+                                                                at: indexPath.row + 1)
+
+                        self.updateReplyButton(with: provider, inCellWith: indexPath)
+                        let indexPaths = IndexPath.indexPaths(forSection: indexPath.section,
+                                                              from: indexPath.row + 1,
+                                                              pathesCount: processedReplies.count)
+                        self.delegate?.dataSource(dataSource: self, didInsertRowsAt: indexPaths)
+                    }
                 }
-
-                let parentCellData = self.comment(with: commentId)
-
-                let processedReplies = self.processedReplies(
-                    response?.conversation?.comments,
-                    replyingToCommentId: parentCellData?.commentId,
-                    replyingToDisplayName: (parentCellData?.isDeleted == true) ? nil : parentCellData?.displayName
-                )
-                if let indexPath = self.indexPathOfComment(with: commentId) {
-                    self.cellData[indexPath.section].insert(contentsOf: processedReplies,
-                                                            at: indexPath.row + 1)
-
-                    self.updateReplyButton(with: provider, inCellWith: indexPath)
-                    let indexPaths = IndexPath.indexPaths(forSection: indexPath.section,
-                                                          from: indexPath.row + 1,
-                                                          pathesCount: processedReplies.count)
-                    self.delegate?.dataSource(dataSource: self, didInsertRowsAt: indexPaths)
-                }
         }
-    }
 
     private func resetAllComments() {
         cellData.removeAll()
@@ -344,14 +344,14 @@ internal final class SPMainConversationDataSource {
         if let userComment = comment {
             if userComment.isAReply(),
                let replyComment = cellData.flatMap { $0 }.first { $0.commentId == userComment.parentCommentId } {
-                replyModel = SPReplyCommentDTO(
+                   replyModel = SPReplyCommentDTO(
                     authorName: replyComment.displayName,
                     commentText: replyComment.commentText,
                     commentId: replyComment.commentId ?? "",
                     rootCommentId: replyComment.rootCommentId,
                     parentDepth: replyComment.depth
-                )
-            }
+                   )
+               }
 
             editModel = gatherEditModelData(comment: userComment)
             return createSPCommentDTO(replyModel: replyModel, editModel: editModel)
@@ -521,8 +521,8 @@ internal final class SPMainConversationDataSource {
     // MARK: - Private methods
 
     private func getCommentViewModel(with comment: SPComment,
-                                  replyingToCommentId: String? = nil,
-                                  replyingToDisplayName: String? = nil) -> CommentViewModel {
+                                     replyingToCommentId: String? = nil,
+                                     replyingToDisplayName: String? = nil) -> CommentViewModel {
         var user: SPUser?
         if let userId = comment.userId {
             user = users[userId]
@@ -551,8 +551,8 @@ internal final class SPMainConversationDataSource {
         }
 
         let viewModel = getCommentViewModel(with: reply,
-                                         replyingToCommentId: reply.parentId,
-                                         replyingToDisplayName: parent.deleted ? nil :  displayName)
+                                            replyingToCommentId: reply.parentId,
+                                            replyingToDisplayName: parent.deleted ? nil :  displayName)
         makeRepliesProviderIfNeeded(for: reply, viewModel: viewModel)
 
         return viewModel
@@ -572,8 +572,8 @@ internal final class SPMainConversationDataSource {
 
         comments?.forEach { comment in
             var viewModel = getCommentViewModel(with: comment,
-                                             replyingToCommentId: replyingToCommentId,
-                                             replyingToDisplayName: replyingToDisplayName)
+                                                replyingToCommentId: replyingToCommentId,
+                                                replyingToDisplayName: replyingToDisplayName)
 
             makeRepliesProviderIfNeeded(for: comment, viewModel: viewModel)
 
@@ -608,8 +608,8 @@ internal final class SPMainConversationDataSource {
         comments?.forEach { comment in
             var section = [CommentViewModel]()
             let viewModel = getCommentViewModel(with: comment,
-                                             replyingToCommentId: replyingToCommentId,
-                                             replyingToDisplayName: replyingToDisplayName)
+                                                replyingToCommentId: replyingToCommentId,
+                                                replyingToDisplayName: replyingToDisplayName)
 
             if viewModel.isCommentAuthorMuted && (comment.replies == nil || comment.replies?.isEmpty == true) {
                 // if comment is muted without replies - we filter out this comment
@@ -861,20 +861,20 @@ fileprivate extension SPMainConversationDataSource {
 
     func handleDeletedCommentReplies(commentId: String, sectionIndexPath: IndexPath) {
         for i in sectionIndexPath.row + 1..<cellData[sectionIndexPath.section].count
-            where cellData[sectionIndexPath.section][i].parentCommentId == commentId {
-                cellData[sectionIndexPath.section][i].replyingToDisplayName = nil
+        where cellData[sectionIndexPath.section][i].parentCommentId == commentId {
+            cellData[sectionIndexPath.section][i].replyingToDisplayName = nil
         }
     }
 
     func handleDeletedParentComment(parentId: String) {
         guard let indexPath = indexPathOfComment(with: parentId),
-            cellData[indexPath.section].filter({ $0.parentCommentId == parentId && !$0.shouldBeRemoved }).isEmpty,
-            cellData[indexPath.section][indexPath.row].isDeleted else { return }
+              cellData[indexPath.section].filter({ $0.parentCommentId == parentId && !$0.shouldBeRemoved }).isEmpty,
+              cellData[indexPath.section][indexPath.row].isDeleted else { return }
 
-            cellData[indexPath.section][indexPath.row].shouldBeRemoved = true
-            if let parentCommentId = cellData[indexPath.section][indexPath.row].parentCommentId {
-                handleDeletedParentComment(parentId: parentCommentId)
-            }
+        cellData[indexPath.section][indexPath.row].shouldBeRemoved = true
+        if let parentCommentId = cellData[indexPath.section][indexPath.row].parentCommentId {
+            handleDeletedParentComment(parentId: parentCommentId)
+        }
     }
 
     func deleteComments(for id: String, at indexPath: IndexPath, isCascade: Bool) -> DeletedIndexPathsInfo {
@@ -888,7 +888,7 @@ fileprivate extension SPMainConversationDataSource {
 
         var deletedPaths = [IndexPath]()
         for (i, comment) in cellData[indexPath.section].enumerated() where comment.shouldBeRemoved {
-                deletedPaths.append(IndexPath(row: i, section: indexPath.section))
+            deletedPaths.append(IndexPath(row: i, section: indexPath.section))
         }
         cellData[indexPath.section].removeAll { $0.shouldBeRemoved }
 
@@ -901,7 +901,7 @@ fileprivate extension SPMainConversationDataSource {
     func markChildrenDeleted(for id: String?) {
         guard let id = id, let indexPath = indexPathOfComment(with: id) else { return }
         for i in indexPath.row..<cellData[indexPath.section].count
-            where cellData[indexPath.section][i].parentCommentId == id {
+        where cellData[indexPath.section][i].parentCommentId == id {
             cellData[indexPath.section][i].shouldBeRemoved = true
             markChildrenDeleted(for: cellData[indexPath.section][i].commentId)
         }
@@ -909,8 +909,8 @@ fileprivate extension SPMainConversationDataSource {
 
     func updateRepliesButtonIfNeeded(in comment: CommentViewModel?) {
         guard let isRoot = comment?.isRoot,
-            let replyCount = loadedChildren(of: comment?.commentId)?.count,
-            comment?.repliesButtonState == .hidden else { return }
+              let replyCount = loadedChildren(of: comment?.commentId)?.count,
+              comment?.repliesButtonState == .hidden else { return }
 
         let minRepliesToShowButton = (isRoot ? minVisibleReplies : 0) + 1
 
@@ -951,9 +951,9 @@ fileprivate extension SPMainConversationDataSource {
         var newReplyIndexPath: IndexPath?
         let updatedMessageCount = messageCount + 1
         if let lastReplyViewModel = lastReplyViewModel,
-            let indexPath = indexPathOfComment(with: lastReplyViewModel.commentId) {
+           let indexPath = indexPathOfComment(with: lastReplyViewModel.commentId) {
             let insertionIndex = indexForInsertion(initialIP: indexPath,
-            currentReplyDepth: viewModel.depth)
+                                                   currentReplyDepth: viewModel.depth)
             cellData[indexPath.section].insert(viewModel, at: insertionIndex)
             newReplyIndexPath = IndexPath(row: insertionIndex, section: indexPath.section)
             self.messageCount = updatedMessageCount
@@ -961,7 +961,7 @@ fileprivate extension SPMainConversationDataSource {
         } else {
             let commentViewModel = cellData.flatMap { $0 }.last { $0.commentId == reply.parentId }
             if let commentViewModel = commentViewModel,
-                let indexPath = indexPathOfComment(with: commentViewModel.commentId) {
+               let indexPath = indexPathOfComment(with: commentViewModel.commentId) {
                 let insertionIndex = indexForInsertion(initialIP: indexPath,
                                                        currentReplyDepth: viewModel.depth)
                 cellData[indexPath.section].insert(viewModel, at: insertionIndex)

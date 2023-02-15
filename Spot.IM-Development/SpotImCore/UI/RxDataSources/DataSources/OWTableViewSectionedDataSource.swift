@@ -23,12 +23,12 @@ class OWTableViewSectionedDataSource<Section: OWSectionModelType>: NSObject, UIT
     typealias OWSectionForSectionIndexTitle = (OWTableViewSectionedDataSource<Section>, _ title: String, _ index: Int) -> Int
 
     init(configureCell: @escaping OWConfigureCell,
-        titleForHeaderInSection: @escaping  OWTitleForHeaderInSection = { _, _ in nil },
-        titleForFooterInSection: @escaping OWTitleForFooterInSection = { _, _ in nil },
-        canEditRowAtIndexPath: @escaping OWCanEditRowAtIndexPath = { _, _ in true },
-        canMoveRowAtIndexPath: @escaping OWCanMoveRowAtIndexPath = { _, _ in true },
-        sectionIndexTitles: @escaping OWSectionIndexTitles = { _ in nil },
-        sectionForSectionIndexTitle: @escaping OWSectionForSectionIndexTitle = { _, _, index in index }) {
+         titleForHeaderInSection: @escaping  OWTitleForHeaderInSection = { _, _ in nil },
+         titleForFooterInSection: @escaping OWTitleForFooterInSection = { _, _ in nil },
+         canEditRowAtIndexPath: @escaping OWCanEditRowAtIndexPath = { _, _ in true },
+         canMoveRowAtIndexPath: @escaping OWCanMoveRowAtIndexPath = { _, _ in true },
+         sectionIndexTitles: @escaping OWSectionIndexTitles = { _ in nil },
+         sectionForSectionIndexTitle: @escaping OWSectionForSectionIndexTitle = { _, _, index in index }) {
         self.configureCell = configureCell
         self.titleForHeaderInSection = titleForHeaderInSection
         self.titleForFooterInSection = titleForFooterInSection
@@ -45,7 +45,9 @@ class OWTableViewSectionedDataSource<Section: OWSectionModelType>: NSObject, UIT
     var _dataSourceBound: Bool = false
 
     private func ensureNotMutatedAfterBinding() {
+        // swiftlint:disable line_length
         assert(!_dataSourceBound, "Data source is already bound. Please write this line before binding call (`bindTo`, `drive`). Data source must first be completely configured, and then bound after that, otherwise there could be runtime bugs, glitches, or partial malfunctions.")
+        // swiftlint:enable line_length
     }
     #endif
 

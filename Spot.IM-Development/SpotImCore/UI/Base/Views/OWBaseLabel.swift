@@ -23,12 +23,10 @@ public class OWBaseLabel: UILabel {
         super.drawText(in: rect.inset(by: insets))
     }
     public override var intrinsicContentSize: CGSize {
-        get {
-            var contentSize = super.intrinsicContentSize
-            contentSize.height += insets.top + insets.bottom
-            contentSize.width += insets.left + insets.right
-            return contentSize
-        }
+        var contentSize = super.intrinsicContentSize
+        contentSize.height += insets.top + insets.bottom
+        contentSize.width += insets.left + insets.right
+        return contentSize
     }
 
     @available(*,

@@ -71,8 +71,7 @@ fileprivate extension OWCommunityQuestionView {
             .disposed(by: disposeBag)
 
         communityQuestionObservable
-            .subscribe(onNext: {
-                [weak self] question in
+            .subscribe(onNext: { [weak self] question in
                     guard let self = self else { return }
                     if let questionString = question, !questionString.isEmpty {
                         self.heightConstraint?.deactivate()

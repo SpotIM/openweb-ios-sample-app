@@ -29,9 +29,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     }
 
     var sorting: OWSortingCustomizations {
-        get {
-            return _sortingCustomizer
-        }
+        return _sortingCustomizer
     }
 
     var themeEnforcement: OWThemeStyleEnforcement {
@@ -47,7 +45,8 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback) {
         guard callbacks.count < Metrics.maxCustomizableElementCallbacksNumber else {
             let logger = OWSharedServicesProvider.shared.logger()
-            logger.log(level: .error, "`addElementCallback` function can accept up to \(Metrics.maxCustomizableElementCallbacksNumber) different callbacks. This number was already reached.")
+            logger.log(level: .error,
+                       "`addElementCallback` function can accept up to \(Metrics.maxCustomizableElementCallbacksNumber) different callbacks. This number was already reached.")
             return
         }
 

@@ -53,7 +53,7 @@ struct UIRxAlertAction: Equatable {
 }
 
 extension UIRxAlertAction {
-    static func ==(lhs: UIRxAlertAction, rhs: UIRxAlertAction) -> Bool {
+    static func == (lhs: UIRxAlertAction, rhs: UIRxAlertAction) -> Bool {
         return lhs.uuid == rhs.uuid
     }
 }

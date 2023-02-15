@@ -163,7 +163,12 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         }
     }
 
-    public func openFullConversationViewController(postId: String, articleMetadata: SpotImArticleMetadata, presentationalMode: SPViewControllerPresentationalMode, selectedCommentId: String? = nil, callbacks: SPViewActionsCallbacks? = nil, completion: SPShowFullConversationCompletionHandler? = nil) {
+    public func openFullConversationViewController(postId: String,
+                                                   articleMetadata: SpotImArticleMetadata,
+                                                   presentationalMode: SPViewControllerPresentationalMode,
+                                                   selectedCommentId: String? = nil,
+                                                   callbacks: SPViewActionsCallbacks? = nil,
+                                                   completion: SPShowFullConversationCompletionHandler? = nil) {
 
         let navController: UINavigationController
         switch presentationalMode {
@@ -197,15 +202,23 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                 self.presentFailureAlert(viewController: vcToPresentError, spNetworkError: spNetworkError) { _ in
                     // Retry
-                    self.openFullConversationViewController(postId: postId, articleMetadata: articleMetadata, presentationalMode: presentationalMode, selectedCommentId: selectedCommentId, callbacks: callbacks, completion: completion)
+                    self.openFullConversationViewController(postId: postId,
+                                                            articleMetadata: articleMetadata,
+                                                            presentationalMode: presentationalMode,
+                                                            selectedCommentId: selectedCommentId,
+                                                            callbacks: callbacks,
+                                                            completion: completion)
                 }
                 completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
-                break
             }
         }
     }
 
-    public func openNewCommentViewController(postId: String, articleMetadata: SpotImArticleMetadata, fullConversationPresentationalMode: SPViewControllerPresentationalMode, callbacks: SPViewActionsCallbacks? = nil, completion: SPOpenNewCommentCompletionHandler? = nil) {
+    public func openNewCommentViewController(postId: String,
+                                             articleMetadata: SpotImArticleMetadata,
+                                             fullConversationPresentationalMode: SPViewControllerPresentationalMode,
+                                             callbacks: SPViewActionsCallbacks? = nil,
+                                             completion: SPOpenNewCommentCompletionHandler? = nil) {
         self.viewActionsCallback = callbacks
         switch fullConversationPresentationalMode {
         case .present(let viewController):
@@ -215,7 +228,10 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                 guard let self = self else { return }
                 switch result {
                 case .success( _):
-                    self.presentConversationInternal(presentationalController: viewController, internalNavController: navController, selectedCommentId: nil, animated: true)
+                    self.presentConversationInternal(presentationalController: viewController,
+                                                     internalNavController: navController,
+                                                     selectedCommentId: nil,
+                                                     animated: true)
 
                     let model = self.conversationModel!
                     if (!model.isReadOnlyMode()) {
@@ -226,12 +242,15 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: viewController, spNetworkError: spNetworkError) { _ in
-                        self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
+                        self.openNewCommentViewController(postId: postId,
+                                                          articleMetadata: articleMetadata,
+                                                          fullConversationPresentationalMode: fullConversationPresentationalMode,
+                                                          completion: completion)
                     }
-                    break
+
                 }
             }
-            break
+
         case .push(let navigationController):
             prepareAndLoadConversation(containerViewController: navigationController, withPostId: postId, articleMetadata: articleMetadata) { [weak self] result in
                 guard let self = self else { return }
@@ -249,15 +268,20 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
                     self.servicesProvider.logger().log(level: .error, "spNetworkError: \(spNetworkError.localizedDescription)")
                     completion?(false, SpotImError.internalError(spNetworkError.localizedDescription))
                     self.presentFailureAlert(viewController: navigationController, spNetworkError: spNetworkError) { _ in
-                        self.openNewCommentViewController(postId: postId, articleMetadata: articleMetadata, fullConversationPresentationalMode: fullConversationPresentationalMode, completion: completion)
+                        self.openNewCommentViewController(postId: postId,
+                                                          articleMetadata: articleMetadata,
+                                                          fullConversationPresentationalMode: fullConversationPresentationalMode,
+                                                          completion: completion)
                     }
-                    break
                 }
             }
         }
     }
 
-    private func prepareAndLoadConversation(containerViewController: UIViewController?, withPostId postId: String, articleMetadata: SpotImArticleMetadata, completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
+    private func prepareAndLoadConversation(containerViewController: UIViewController?,
+                                            withPostId postId: String,
+                                            articleMetadata: SpotImArticleMetadata,
+                                            completion: @escaping (Swift.Result<Bool, SPNetworkError>) -> Void) {
         guard !self.isLoadingConversation else { return }
         self.postId = (postId as OWPostId).encoded
         self.containerViewController = containerViewController
@@ -275,7 +299,10 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         startFlow(with: controller, animated: animated)
     }
 
-    private func presentConversationInternal(presentationalController: UIViewController, internalNavController: UINavigationController, selectedCommentId: String?, animated: Bool) {
+    private func presentConversationInternal(presentationalController: UIViewController,
+                                             internalNavController: UINavigationController,
+                                             selectedCommentId: String?,
+                                             animated: Bool) {
         let conversationController = conversationController(with: conversationModel!, openedByPublisher: true)
         conversationController.commentIdToShowOnOpen = selectedCommentId
         self.conversationModel!.dataSource.showReplies = true
@@ -391,9 +418,14 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         navigationController?.pushViewController(controller, animated: animated)
     }
 
-    private func buildPreConversationController(with conversationModel: SPMainConversationModel, numberOfPreLoadedMessages: Int, completion: @escaping (UIViewController) -> Void) {
+    private func buildPreConversationController(with conversationModel: SPMainConversationModel,
+                                                numberOfPreLoadedMessages: Int,
+                                                completion: @escaping (UIViewController) -> Void) {
 
-        let preConversationViewController = SPPreConversationViewController(model: conversationModel, numberOfMessagesToShow: numberOfPreLoadedMessages, adsProvider: adsManager.adsProvider(), customUIDelegate: self)
+        let preConversationViewController = SPPreConversationViewController(model: conversationModel,
+                                                                            numberOfMessagesToShow: numberOfPreLoadedMessages,
+                                                                            adsProvider: adsManager.adsProvider(),
+                                                                            customUIDelegate: self)
 
         conversationModel.delegates.add(delegate: preConversationViewController)
         conversationModel.commentsCounterDelegates.add(delegate: preConversationViewController)
@@ -416,7 +448,10 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
     }
 
     private func conversationController(with model: SPMainConversationModel, openedByPublisher: Bool = false) -> SPMainConversationViewController {
-        let controller = SPMainConversationViewController(model: model, adsProvider: adsManager.adsProvider(), customUIDelegate: self, openedByPublisher: openedByPublisher)
+        let controller = SPMainConversationViewController(model: model,
+                                                          adsProvider: adsManager.adsProvider(),
+                                                          customUIDelegate: self,
+                                                          openedByPublisher: openedByPublisher)
 
         controller.delegate = self
         controller.userAuthFlowDelegate = self
@@ -481,11 +516,13 @@ final public class SpotImSDKFlowCoordinator: OWCoordinator {
         // We should insert the main conversation below the comment creation screen
         guard let navController = navigationController,
               let commentVCIndex = navController.viewControllers.firstIndex(where: { $0 is SPCommentCreationViewController }) else {
-                  logger.log(level: .medium, "Couldn't find comment creation VC index, recovering by inserting main conversation VC to the previous position before the last one in the navigation stack VCs")
-                  let index = (navigationController?.viewControllers.count ?? 1) - 1
-                  navigationController?.viewControllers.insert(controller, at: index)
-                  return
-              }
+            // swiftlint:disable line_length
+            logger.log(level: .medium, "Couldn't find comment creation VC index, recovering by inserting main conversation VC to the previous position before the last one in the navigation stack VCs")
+            // swiftlint:enable line_length
+            let index = (navigationController?.viewControllers.count ?? 1) - 1
+            navigationController?.viewControllers.insert(controller, at: index)
+            return
+        }
 
         logger.log(level: .verbose, "Inserting main conversation VC before the comment creation VC")
         navigationController?.viewControllers.insert(controller, at: commentVCIndex)
@@ -524,7 +561,10 @@ extension SpotImSDKFlowCoordinator {
     private func createBackBarButtonItem() -> UIBarButtonItem {
         let backButton = UIButton(frame: CGRect(x: 0, y: 0, width: Metrics.backBarButtonSize, height: Metrics.backBarButtonSize))
         backButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: Metrics.backBarButtonImageInsetLeft, bottom: 0, right: 0)
-        backButton.titleEdgeInsets = UIEdgeInsets(top: Metrics.backBarButtonTitleInset, left: Metrics.backBarButtonTitleInset, bottom: Metrics.backBarButtonTitleInset, right: 0.0)
+        backButton.titleEdgeInsets = UIEdgeInsets(top: Metrics.backBarButtonTitleInset,
+                                                  left: Metrics.backBarButtonTitleInset,
+                                                  bottom: Metrics.backBarButtonTitleInset,
+                                                  right: 0.0)
 
         backButton.setTitleColor(.brandColor, for: .normal) // You can change the TitleColor
         backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal) // Image can be downloaded from here below link

@@ -71,7 +71,7 @@ final class SPCommentFooterView: OWBaseView {
             case .image:
                 addSubview(addImageButton)
                 configureAddImageButton()
-                break
+
             default:
                 break
             }
@@ -125,7 +125,10 @@ final class SPCommentFooterView: OWBaseView {
     }
 
     private func addInsentsToActionButton(_ button: OWBaseButton) {
-        button.imageEdgeInsets = UIEdgeInsets(top: Theme.actionButtonVerticalInset, left: Theme.actionButtonHorizontalInset, bottom: Theme.actionButtonVerticalInset, right: Theme.actionButtonHorizontalInset)
+        button.imageEdgeInsets = UIEdgeInsets(top: Theme.actionButtonVerticalInset,
+                                              left: Theme.actionButtonHorizontalInset,
+                                              bottom: Theme.actionButtonVerticalInset,
+                                              right: Theme.actionButtonHorizontalInset)
     }
 
     @objc

@@ -22,7 +22,9 @@ protocol OWCommentSkeletonShimmeringCellViewModeling: OWCellViewModel {
     var outputs: OWCommentSkeletonShimmeringCellViewModelingOutputs { get }
 }
 
-class OWCommentSkeletonShimmeringCellViewModel: OWCommentSkeletonShimmeringCellViewModeling, OWCommentSkeletonShimmeringCellViewModelingInputs, OWCommentSkeletonShimmeringCellViewModelingOutputs {
+class OWCommentSkeletonShimmeringCellViewModel: OWCommentSkeletonShimmeringCellViewModeling,
+                                                    OWCommentSkeletonShimmeringCellViewModelingInputs,
+                                                    OWCommentSkeletonShimmeringCellViewModelingOutputs {
     var inputs: OWCommentSkeletonShimmeringCellViewModelingInputs { return self }
     var outputs: OWCommentSkeletonShimmeringCellViewModelingOutputs { return self }
 

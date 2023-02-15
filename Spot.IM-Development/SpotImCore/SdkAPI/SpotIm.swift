@@ -39,7 +39,13 @@ public struct SpotImArticleMetadata {
     var customBIData: [String: String]?
     var readOnlyMode: SpotImReadOnlyMode
 
-    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String: String]? = nil, readOnlyMode: SpotImReadOnlyMode = .default) {
+    public init(url: String,
+                title: String,
+                subtitle: String,
+                thumbnailUrl: String,
+                section: String = "default",
+                customBIData: [String: String]? = nil,
+                readOnlyMode: SpotImReadOnlyMode = .default) {
         self.url = url
         self.title = title
         self.subtitle = subtitle
@@ -96,7 +102,8 @@ public typealias InitizlizeCompletionHandler = (Swift.Result<Void, SpotImError>)
 public class SpotIm {
     private static var configuration: SpotConfig?
     private static let apiManager: OWApiManager = OWApiManager()
-    internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
+    internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager,
+                                                                                                  internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     internal static let profileProvider: SPProfileProvider = SPProfileProvider(apiManager: SpotIm.apiManager)
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?

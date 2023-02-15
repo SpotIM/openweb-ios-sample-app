@@ -261,7 +261,7 @@ enum OWDiff {
     }
 
     private struct OWCommandGenerator<Section: OWAnimatableSectionModelType> {
-        typealias Item = Section.Item
+        typealias Item = Section.Item // swiftlint:disable:this nesting
 
         let initialSections: [Section]
         let finalSections: [Section]

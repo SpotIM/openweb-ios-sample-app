@@ -52,11 +52,11 @@ struct OWNetworkDataResponse<Success, Failure: Error> {
     ///   - serializationDuration: The duration taken by serialization.
     ///   - result:                The `Result` of response serialization.
     init(request: URLRequest?,
-                response: HTTPURLResponse?,
-                data: Data?,
-                metrics: URLSessionTaskMetrics?,
-                serializationDuration: TimeInterval,
-                result: Result<Success, Failure>) {
+         response: HTTPURLResponse?,
+         data: Data?,
+         metrics: URLSessionTaskMetrics?,
+         serializationDuration: TimeInterval,
+         result: Result<Success, Failure>) {
         self.request = request
         self.response = response
         self.data = data
@@ -122,11 +122,11 @@ extension OWNetworkDataResponse {
     ///            result is a failure, returns a response wrapping the same failure.
     func map<NewSuccess>(_ transform: (Success) -> NewSuccess) -> OWNetworkDataResponse<NewSuccess, Failure> {
         OWNetworkDataResponse<NewSuccess, Failure>(request: request,
-                                          response: response,
-                                          data: data,
-                                          metrics: metrics,
-                                          serializationDuration: serializationDuration,
-                                          result: result.map(transform))
+                                                   response: response,
+                                                   data: data,
+                                                   metrics: metrics,
+                                                   serializationDuration: serializationDuration,
+                                                   result: result.map(transform))
     }
 
     /// Evaluates the given closure when the result of this `DataResponse` is a success, passing the unwrapped result
@@ -145,11 +145,11 @@ extension OWNetworkDataResponse {
     ///            result is a failure, returns the same failure.
     func tryMap<NewSuccess>(_ transform: (Success) throws -> NewSuccess) -> OWNetworkDataResponse<NewSuccess, Error> {
         OWNetworkDataResponse<NewSuccess, Error>(request: request,
-                                        response: response,
-                                        data: data,
-                                        metrics: metrics,
-                                        serializationDuration: serializationDuration,
-                                        result: result.tryMap(transform))
+                                                 response: response,
+                                                 data: data,
+                                                 metrics: metrics,
+                                                 serializationDuration: serializationDuration,
+                                                 result: result.tryMap(transform))
     }
 
     /// Evaluates the specified closure when the `DataResponse` is a failure, passing the unwrapped error as a parameter.
@@ -164,11 +164,11 @@ extension OWNetworkDataResponse {
     /// - Returns: A `DataResponse` instance containing the result of the transform.
     func mapError<NewFailure: Error>(_ transform: (Failure) -> NewFailure) -> OWNetworkDataResponse<Success, NewFailure> {
         OWNetworkDataResponse<Success, NewFailure>(request: request,
-                                          response: response,
-                                          data: data,
-                                          metrics: metrics,
-                                          serializationDuration: serializationDuration,
-                                          result: result.mapError(transform))
+                                                   response: response,
+                                                   data: data,
+                                                   metrics: metrics,
+                                                   serializationDuration: serializationDuration,
+                                                   result: result.mapError(transform))
     }
 
     /// Evaluates the specified closure when the `DataResponse` is a failure, passing the unwrapped error as a parameter.
@@ -185,11 +185,11 @@ extension OWNetworkDataResponse {
     /// - Returns: A `DataResponse` instance containing the result of the transform.
     func tryMapError<NewFailure: Error>(_ transform: (Failure) throws -> NewFailure) -> OWNetworkDataResponse<Success, Error> {
         OWNetworkDataResponse<Success, Error>(request: request,
-                                     response: response,
-                                     data: data,
-                                     metrics: metrics,
-                                     serializationDuration: serializationDuration,
-                                     result: result.tryMapError(transform))
+                                              response: response,
+                                              data: data,
+                                              metrics: metrics,
+                                              serializationDuration: serializationDuration,
+                                              result: result.tryMapError(transform))
     }
 }
 
@@ -238,12 +238,12 @@ struct OWNetworkDownloadResponse<Success, Failure: Error> {
     ///   - serializationDuration: The duration taken by serialization.
     ///   - result:                The `Result` of response serialization.
     init(request: URLRequest?,
-                response: HTTPURLResponse?,
-                fileURL: URL?,
-                resumeData: Data?,
-                metrics: URLSessionTaskMetrics?,
-                serializationDuration: TimeInterval,
-                result: Result<Success, Failure>) {
+         response: HTTPURLResponse?,
+         fileURL: URL?,
+         resumeData: Data?,
+         metrics: URLSessionTaskMetrics?,
+         serializationDuration: TimeInterval,
+         result: Result<Success, Failure>) {
         self.request = request
         self.response = response
         self.fileURL = fileURL
@@ -303,12 +303,12 @@ extension OWNetworkDownloadResponse {
     ///            result is a failure, returns a response wrapping the same failure.
     func map<NewSuccess>(_ transform: (Success) -> NewSuccess) -> OWNetworkDownloadResponse<NewSuccess, Failure> {
         OWNetworkDownloadResponse<NewSuccess, Failure>(request: request,
-                                              response: response,
-                                              fileURL: fileURL,
-                                              resumeData: resumeData,
-                                              metrics: metrics,
-                                              serializationDuration: serializationDuration,
-                                              result: result.map(transform))
+                                                       response: response,
+                                                       fileURL: fileURL,
+                                                       resumeData: resumeData,
+                                                       metrics: metrics,
+                                                       serializationDuration: serializationDuration,
+                                                       result: result.map(transform))
     }
 
     /// Evaluates the given closure when the result of this `DownloadResponse` is a success, passing the unwrapped
@@ -327,12 +327,12 @@ extension OWNetworkDownloadResponse {
     /// instance's result is a failure, returns the same failure.
     func tryMap<NewSuccess>(_ transform: (Success) throws -> NewSuccess) -> OWNetworkDownloadResponse<NewSuccess, Error> {
         OWNetworkDownloadResponse<NewSuccess, Error>(request: request,
-                                            response: response,
-                                            fileURL: fileURL,
-                                            resumeData: resumeData,
-                                            metrics: metrics,
-                                            serializationDuration: serializationDuration,
-                                            result: result.tryMap(transform))
+                                                     response: response,
+                                                     fileURL: fileURL,
+                                                     resumeData: resumeData,
+                                                     metrics: metrics,
+                                                     serializationDuration: serializationDuration,
+                                                     result: result.tryMap(transform))
     }
 
     /// Evaluates the specified closure when the `DownloadResponse` is a failure, passing the unwrapped error as a parameter.
@@ -347,12 +347,12 @@ extension OWNetworkDownloadResponse {
     /// - Returns: A `DownloadResponse` instance containing the result of the transform.
     func mapError<NewFailure: Error>(_ transform: (Failure) -> NewFailure) -> OWNetworkDownloadResponse<Success, NewFailure> {
         OWNetworkDownloadResponse<Success, NewFailure>(request: request,
-                                              response: response,
-                                              fileURL: fileURL,
-                                              resumeData: resumeData,
-                                              metrics: metrics,
-                                              serializationDuration: serializationDuration,
-                                              result: result.mapError(transform))
+                                                       response: response,
+                                                       fileURL: fileURL,
+                                                       resumeData: resumeData,
+                                                       metrics: metrics,
+                                                       serializationDuration: serializationDuration,
+                                                       result: result.mapError(transform))
     }
 
     /// Evaluates the specified closure when the `DownloadResponse` is a failure, passing the unwrapped error as a parameter.
@@ -369,12 +369,12 @@ extension OWNetworkDownloadResponse {
     /// - Returns: A `DownloadResponse` instance containing the result of the transform.
     func tryMapError<NewFailure: Error>(_ transform: (Failure) throws -> NewFailure) -> OWNetworkDownloadResponse<Success, Error> {
         OWNetworkDownloadResponse<Success, Error>(request: request,
-                                         response: response,
-                                         fileURL: fileURL,
-                                         resumeData: resumeData,
-                                         metrics: metrics,
-                                         serializationDuration: serializationDuration,
-                                         result: result.tryMapError(transform))
+                                                  response: response,
+                                                  fileURL: fileURL,
+                                                  resumeData: resumeData,
+                                                  metrics: metrics,
+                                                  serializationDuration: serializationDuration,
+                                                  result: result.tryMapError(transform))
     }
 }
 

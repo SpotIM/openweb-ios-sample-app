@@ -708,16 +708,16 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         switch change.operation {
         case "like":
             SPAnalyticsHolder.default.log(event: .commentRankUpButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
-            break
+
         case "toggle-like":
             SPAnalyticsHolder.default.log(event: .commentRankUpButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
-            break
+
         case "dislike":
             SPAnalyticsHolder.default.log(event: .commentRankDownButtonClicked(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
-            break
+
         case "toggle-dislike":
             SPAnalyticsHolder.default.log(event: .commentRankDownButtonUndo(messageId: commentId ?? "", relatedMessageId: replyingToID), source: .conversation)
-            break
+
         default:
             break
         }
@@ -903,16 +903,16 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         switch type {
         case .delete(let commentId, let replyingToID):
             showCommentDeletionFlow(commentId, replyingToID: replyingToID)
-            break
+
         case .report(let commentId, let replyingToID):
             showCommentReportFlow(commentId, replyingToID: replyingToID)
-            break
+
         case .edit(let commentId, _):
             showCommentEditingFlow(commentId)
-            break
+
         case .share(let commentId, let replyingToID):
             showCommentShareFlow(commentId, sender: sender, replyingToID: replyingToID)
-            break
+
         case .mute(let commentId, let replyingToID, let userId):
             showCommentMuteFlow(commentId, replyingToID: replyingToID, userId: userId)
         }
@@ -997,9 +997,11 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
 
         let cancelAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
+
+        let message = "Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings"
         showAlert(
             title: LocalizationManager.localizedString(key: "Mute User"),
-            message: LocalizationManager.localizedString(key: "Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings"),
+            message: LocalizationManager.localizedString(key: message),
             actions: [muteAction, cancelAction])
     }
 

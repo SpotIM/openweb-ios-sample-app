@@ -151,14 +151,14 @@ func + (left: OWConstraintAttributes, right: OWConstraintAttributes) -> OWConstr
     return left.union(right)
 }
 
-func +=(left: inout OWConstraintAttributes, right: OWConstraintAttributes) {
+func += (left: inout OWConstraintAttributes, right: OWConstraintAttributes) {
     left.formUnion(right)
 }
 
-func -=(left: inout OWConstraintAttributes, right: OWConstraintAttributes) {
+func -= (left: inout OWConstraintAttributes, right: OWConstraintAttributes) {
     left.subtract(right)
 }
 
-func ==(left: OWConstraintAttributes, right: OWConstraintAttributes) -> Bool {
+func == (left: OWConstraintAttributes, right: OWConstraintAttributes) -> Bool {
     return left.rawValue == right.rawValue
 }

@@ -64,7 +64,7 @@ enum OWNetworkError: Error {
     // The underlying reason the `.parameterEncoderFailed` error occurred.
     enum ParameterEncoderFailureReason {
         // Possible missing components.
-        enum RequiredComponent {
+        enum RequiredComponent { // swiftlint:disable:this nesting
             // The `URL` was missing or unable to be extracted from the passed `URLRequest` or during encoding.
             case url
             // The `HTTPMethod` could not be extracted from the passed `URLRequest`.
@@ -117,7 +117,7 @@ enum OWNetworkError: Error {
     // Underlying reason a server trust evaluation error occurred.
     enum ServerTrustFailureReason {
         // The output of a server trust evaluation.
-        struct Output {
+        struct Output { // swiftlint:disable:this nesting
             // The host for which the evaluation was performed.
             let host: String
             // The `SecTrust` value which was evaluated.

@@ -93,8 +93,7 @@ class SPCommentCreationModel {
         commentService.createComment(
             parameters: requestParameters,
             postId: dataModel.postId,
-            success: {
-                [weak self] response in
+            success: { [weak self] response in
                 guard let self = self else { return }
 
                 var responseData = self.populateResponseFields(response)
@@ -111,8 +110,7 @@ class SPCommentCreationModel {
                 })
 
             },
-            failure: {
-                [weak self] error in
+            failure: { [weak self] error in
                 self?.errorHandler?(error)
             }
         )
@@ -248,7 +246,8 @@ class SPCommentCreationModel {
             return false
         } else if !Bundle.main.hasCameraUsageDescription ||
                     !Bundle.main.hasPhotoLibraryUsageDescription {
-            servicesProvider.logger().log(level: .medium, "Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file")
+            let message = "Can't show add image button, make sure you have set NSCameraUsageDescription and NSPhotoLibraryUsageDescription in your info.plist file"
+            servicesProvider.logger().log(level: .medium, message)
             return false
         } else {
             return true
@@ -302,8 +301,7 @@ class SPCommentCreationModel {
         let imageId = UUID().uuidString
         self.currentUploadingImageId = imageId
 
-        imageProvider.uploadImage(imageData: imageData, imageId: imageId) {
-            [weak self] imageContent, err in
+        imageProvider.uploadImage(imageData: imageData, imageId: imageId) { [weak self] imageContent, err in
             guard let self = self else { return }
             if self.currentUploadingImageId == imageContent?.imageId {
                 self.imageContent = imageContent
