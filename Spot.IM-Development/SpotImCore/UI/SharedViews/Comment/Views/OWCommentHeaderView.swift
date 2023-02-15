@@ -253,9 +253,15 @@ fileprivate extension OWCommentHeaderView {
                 self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
                 self.dateLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.badgeTagLabel.textColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
-                self.badgeTagContainer.border(width: 1, color: OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle))
             }).disposed(by: disposeBag)
+        
+        OWColorPalette.shared.colorObservable(type: .brandColor)
+            .subscribe(onNext: { [weak self] brandColor in
+                guard let self = self else { return }
+                self.badgeTagLabel.textColor = brandColor
+                self.badgeTagContainer.border(width: 1, color: brandColor)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
