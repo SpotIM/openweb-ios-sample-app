@@ -9,15 +9,15 @@
 import Foundation
 
 struct SPSpotConfiguration: Decodable {
-    
+
     enum CodingKeys: String, CodingKey {
-        
+
         case apm, conversation, realtime, spotlight, sso, reactions, shared
         case initialization = "init"
         case mobileSdk = "mobile-sdk"
-        
+
     }
-    
+
     let apm: SPConfigurationAPM?
     let initialization: SPConfigurationInitialization?
     let conversation: SPConfigurationConversation?

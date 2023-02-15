@@ -9,15 +9,14 @@
 import Foundation
 import UIKit
 import RxCocoa
-    
+
 class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject, UICollectionViewDataSource, SectionedViewDataSourceType {
     typealias Item = Section.Item
     typealias Section = Section
     typealias ConfigureCell = (OWCollectionViewSectionedDataSource<Section>, UICollectionView, IndexPath, Item) -> UICollectionViewCell
     typealias ConfigureSupplementaryView = (OWCollectionViewSectionedDataSource<Section>, UICollectionView, String, IndexPath) -> UICollectionReusableView
-    typealias MoveItem = (OWCollectionViewSectionedDataSource<Section>, _ sourceIndexPath:IndexPath, _ destinationIndexPath:IndexPath) -> Void
+    typealias MoveItem = (OWCollectionViewSectionedDataSource<Section>, _ sourceIndexPath: IndexPath, _ destinationIndexPath: IndexPath) -> Void
     typealias CanMoveItemAtIndexPath = (OWCollectionViewSectionedDataSource<Section>, IndexPath) -> Bool
-
 
     init(
         configureCell: @escaping ConfigureCell,
@@ -40,7 +39,7 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
     private func ensureNotMutatedAfterBinding() {
         assert(!_dataSourceBound, "Data source is already bound. Please write this line before binding call (`bindTo`, `drive`). Data source must first be completely configured, and then bound after that, otherwise there could be runtime bugs, glitches, or partial malfunctions.")
     }
-    
+
     #endif
 
     // This structure exists because model can be mutable
@@ -50,7 +49,7 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
     // If particular item is mutable, that is irrelevant for this logic to function
     // properly.
     typealias SectionModelSnapshot = OWSectionModel<Section, Item>
-    
+
     private var _sectionModels: [SectionModelSnapshot] = []
 
     var sectionModels: [Section] {
@@ -61,7 +60,7 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
         let sectionModel = self._sectionModels[section]
         return Section(original: sectionModel.model, items: sectionModel.items)
     }
-    
+
     subscript(indexPath: IndexPath) -> Item {
         get {
             return self._sectionModels[indexPath.section].items[indexPath.item]
@@ -72,20 +71,20 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
             self._sectionModels[indexPath.section] = section
         }
     }
-    
+
     func model(at indexPath: IndexPath) throws -> Any {
         guard indexPath.section < self._sectionModels.count,
               indexPath.item < self._sectionModels[indexPath.section].items.count else {
             throw OWRxDataSourceError.outOfBounds(indexPath: indexPath)
         }
-    
+
         return self[indexPath]
     }
-    
+
     func setSections(_ sections: [Section]) {
         self._sectionModels = sections.map { SectionModelSnapshot(model: $0, items: $0.items) }
     }
-    
+
     var configureCell: ConfigureCell {
         didSet {
             #if DEBUG
@@ -101,7 +100,7 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
             #endif
         }
     }
-    
+
     var moveItem: MoveItem {
         didSet {
             #if DEBUG
@@ -118,33 +117,33 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
     }
 
     // UICollectionViewDataSource
-    
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return _sectionModels.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return _sectionModels[section].items.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         precondition(indexPath.item < _sectionModels[indexPath.section].items.count)
-        
+
         return configureCell(self, collectionView, indexPath, self[indexPath])
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         return configureSupplementaryView!(self, collectionView, kind, indexPath)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
         guard let canMoveItem = canMoveItemAtIndexPath?(self, indexPath) else {
             return false
         }
-        
+
         return canMoveItem
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         self._sectionModels.moveFromSourceIndexPath(sourceIndexPath, destinationIndexPath: destinationIndexPath)
         self.moveItem(self, sourceIndexPath, destinationIndexPath)
@@ -153,8 +152,7 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
     override func responds(to aSelector: Selector!) -> Bool {
         if aSelector == #selector(UICollectionViewDataSource.collectionView(_:viewForSupplementaryElementOfKind:at:)) {
             return configureSupplementaryView != nil
-        }
-        else {
+        } else {
             return super.responds(to: aSelector)
         }
     }

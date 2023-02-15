@@ -9,37 +9,37 @@
 import UIKit
 
 protocol TotalTypingIndicationViewDelegate: class {
-    
+
     func horisontalPositionChangeDidEnd()
     func horisontalPositionDidChange(transition: CGFloat)
     func indicationViewClicked()
 }
 
 final class TotalTypingIndicationView: OWBaseView {
-    
+
     weak var delegate: TotalTypingIndicationViewDelegate?
     private let animationImageView: OWBaseUIImageView = .init()
     private let typingLabel: OWBaseLabel = .init()
     private let newCommentsArrowImageView: OWBaseUIImageView = .init()
-    
+
     private var panGesture: UIPanGestureRecognizer?
     private var animationImageWidthConstraint: OWConstraint?
     private var arrowImageWidthConstraint: OWConstraint?
-    
+
     override var bounds: CGRect {
         didSet {
             dropShadowIfNeeded()
         }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         addCornerRadius(Metrics.viewCornerRadius)
         clipsToBounds = false
         setup()
     }
-    
+
     func setCount(count: Int, isBlitz: Bool) {
         if isBlitz {
             typingLabel.text = "\(count) " + LocalizationManager.localizedString(key: count > 1 ? "New Comments" : "New Comment")
@@ -51,14 +51,14 @@ final class TotalTypingIndicationView: OWBaseView {
         animationImageView.isHidden = isBlitz
         animationImageWidthConstraint?.update(offset: isBlitz ? 0 : Metrics.animationImageWidth)
         arrowImageWidthConstraint?.update(offset: isBlitz ? Metrics.arrowImageWidth : 0)
-        
+
         UIView.animate(
             withDuration: 0.3,
             animations: {
                 self.layoutIfNeeded()
             })
     }
-    
+
     private func setup() {
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(detectPan(recognizer:)))
         addGestureRecognizer(panGesture!)
@@ -70,7 +70,7 @@ final class TotalTypingIndicationView: OWBaseView {
         configureArrowImage()
         updateColorsAccordingToStyle()
     }
-    
+
     func updateColorsAccordingToStyle() {
         typingLabel.textColor = .spForeground1
         typingLabel.backgroundColor = .spBackground0
@@ -78,7 +78,7 @@ final class TotalTypingIndicationView: OWBaseView {
         newCommentsArrowImageView.image = UIImage(spNamed: "newCommentsArrow", supportDarkMode: true)
         dropShadowIfNeeded()
     }
-    
+
     private func configureTypingLabel() {
         typingLabel.text = LocalizationManager.localizedString(key: "Typing")
         typingLabel.textAlignment = .center
@@ -89,7 +89,7 @@ final class TotalTypingIndicationView: OWBaseView {
             make.leading.equalTo(animationImageView.OWSnp.trailing).offset(Metrics.typingLabelLeadingOffset)
         }
     }
-    
+
     private func configureAnimatedView() {
         animationImageView.animationImages = UIImage.animationImages(with: "Typing")
         animationImageView.contentMode = .scaleAspectFill
@@ -104,7 +104,7 @@ final class TotalTypingIndicationView: OWBaseView {
             animationImageWidthConstraint = make.width.equalTo(Metrics.animationImageWidth).constraint
         }
     }
-    
+
     private func configureArrowImage() {
         newCommentsArrowImageView.contentMode = .scaleAspectFill
         newCommentsArrowImageView.OWSnp.makeConstraints { make in
@@ -116,29 +116,29 @@ final class TotalTypingIndicationView: OWBaseView {
         }
         newCommentsArrowImageView.isHidden = true
     }
-    
+
     @objc
     private func detectPan(recognizer: UIPanGestureRecognizer) {
         guard let superView = superview else { return }
-        
+
         switch recognizer.state {
         case .changed, .began:
             let translation = recognizer.translation(in: superView)
             delegate?.horisontalPositionDidChange(transition: translation.x)
-            
+
         case .ended:
             delegate?.horisontalPositionChangeDidEnd()
-            
+
         default:
             break
         }
     }
-    
+
     @objc
     private func detectTap() {
         delegate?.indicationViewClicked()
     }
-    
+
     private func dropShadowIfNeeded() {
         let shadowRect = CGRect(x: Metrics.shadowRectX, y: Metrics.shadowRectY, width: bounds.width, height: bounds.height-7)
         let shadowPath = UIBezierPath(rect: shadowRect)

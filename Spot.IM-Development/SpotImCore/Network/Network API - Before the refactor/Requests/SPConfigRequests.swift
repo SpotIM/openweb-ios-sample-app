@@ -9,11 +9,11 @@
 import Foundation
 
 internal enum SPConfigRequests: SPRequest {
-    
+
     case config(spotId: String)
     case adsConfig
     case abTestData
-    
+
     internal var method: OWNetworkHTTPMethod {
         switch self {
         case .config: return .get

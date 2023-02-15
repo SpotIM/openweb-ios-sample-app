@@ -14,7 +14,7 @@ struct OWSkeletonShimmeringConfiguration {
     let duration: Int // In milliseconds
     let backgroundColor: OWColor.OWType
     let highlightColor: OWColor.OWType
-    
+
     mutating func direction(_ direction: OWShimmeringDirection) {
         shimmeringDirection = direction
     }
@@ -28,7 +28,7 @@ extension OWSkeletonShimmeringConfiguration {
                                           highlightColor: .skeletonShimmeringColor)
         return config
     }()
-    
+
     static var defaultLeftToRight: OWSkeletonShimmeringConfiguration = {
         var config = OWSkeletonShimmeringConfiguration.default
         config.direction(.leftToRight)

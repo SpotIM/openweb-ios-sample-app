@@ -16,30 +16,29 @@ class OWCommentContentView: UIView {
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
-    
+
     fileprivate lazy var textLabel: UILabel = {
        return UILabel()
             .numberOfLines(0)
             .font(.preferred(style: .regular, of: Metrics.fontSize))
     }()
-    
+
     fileprivate lazy var mediaView: CommentMediaView = {
         return CommentMediaView()
     }()
-    
+
     fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
     }
-    
+
     func configure(with viewModel: OWCommentContentViewModeling) {
         self.viewModel = viewModel
         self.disposeBag = DisposeBag()
@@ -50,11 +49,11 @@ class OWCommentContentView: UIView {
 fileprivate extension OWCommentContentView {
     func setupViews() {
         self.addSubviews(textLabel, mediaView)
-        
+
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
         }
-        
+
         mediaView.OWSnp.makeConstraints { make in
             make.top.equalTo(textLabel.OWSnp.bottom).offset(Metrics.emptyCommentMediaTopPadding)
             make.trailing.lessThanOrEqualToSuperview()
@@ -62,14 +61,14 @@ fileprivate extension OWCommentContentView {
             make.size.equalTo(0)
         }
     }
-    
+
     func setupObservers() {
         viewModel.outputs.attributedString
             .subscribe(onNext: { [weak self] attributedString in
                 self?.textLabel.attributedText = attributedString
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.imageUrl
             .unwrap()
             .subscribe(onNext: { [weak self] url in
@@ -77,7 +76,7 @@ fileprivate extension OWCommentContentView {
                 self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
             })
             .disposed(by: disposeBag)
-                
+
         viewModel.outputs.gifUrl
             .unwrap()
             .subscribe(onNext: { [weak self] url in
@@ -85,7 +84,7 @@ fileprivate extension OWCommentContentView {
                 self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.mediaSize
             .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }

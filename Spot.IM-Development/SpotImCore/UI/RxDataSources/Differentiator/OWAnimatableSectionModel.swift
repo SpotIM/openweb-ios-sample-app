@@ -16,7 +16,7 @@ struct OWAnimatableSectionModel<Section: OWIdentifiableType, ItemType: OWIdentif
         self.model = model
         self.items = items
     }
-    
+
 }
 
 extension OWAnimatableSectionModel: OWAnimatableSectionModelType {
@@ -31,12 +31,11 @@ extension OWAnimatableSectionModel: OWAnimatableSectionModelType {
         self.model = original.model
         self.items = items
     }
-    
+
     var hashValue: Int {
         return self.model.identity.hashValue
     }
 }
-
 
 extension OWAnimatableSectionModel: CustomStringConvertible {
 
@@ -47,7 +46,7 @@ extension OWAnimatableSectionModel: CustomStringConvertible {
 }
 
 extension OWAnimatableSectionModel: Equatable where Section: Equatable {
-    
+
     static func == (lhs: OWAnimatableSectionModel, rhs: OWAnimatableSectionModel) -> Bool {
         return lhs.model == rhs.model
             && lhs.items == rhs.items

@@ -16,6 +16,6 @@ extension FloatingPoint {
     }
 }
 
-extension Float : OWIdentifiableType {}
+extension Float: OWIdentifiableType {}
 
-extension Double : OWIdentifiableType {}
+extension Double: OWIdentifiableType {}

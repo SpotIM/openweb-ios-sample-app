@@ -37,23 +37,23 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         static let depth2Offset: CGFloat = 40.0
         static let maxDepthOffset: CGFloat = 55.0
     }
-    
+
     var inputs: OWCommentContentViewModelingInputs { return self }
     var outputs: OWCommentContentViewModelingOutputs { return self }
-    
+
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
-    
+
     init(comment: SPComment) {
         _comment.onNext(comment)
     }
     init() {}
-    
+
     var text: Observable<String?> {
         _comment
             .map {$0?.text?.text}
             .asObservable()
     }
-    
+
     var attributedString: Observable<NSMutableAttributedString?> {
         _comment
             .map { $0?.text?.text }
@@ -65,13 +65,13 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             }
             .asObservable()
     }
-    
+
     var gifUrl: Observable<String?> {
         _comment
             .map { $0?.gif?.originalUrl }
             .asObservable()
     }
-    
+
     var imageUrl: Observable<URL?> {
         _comment
             .map { [weak self] comment in
@@ -79,7 +79,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             }
             .asObservable()
     }
-    
+
     var mediaSize: Observable<CGSize?> {
         Observable.combineLatest(_commentMediaOriginalSize, _commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize in
             guard let self = self else { return .zero }
@@ -102,7 +102,7 @@ fileprivate extension OWCommentContentViewModel {
             }
             .asObservable()
     }
-    
+
     var _commentLeadingOffset: Observable<CGFloat> {
         _comment
             .unwrap()
@@ -112,7 +112,7 @@ fileprivate extension OWCommentContentViewModel {
             }
             .asObservable()
     }
-    
+
     func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
         case 0: return Metrics.depth0Offset
@@ -121,7 +121,7 @@ fileprivate extension OWCommentContentViewModel {
         default: return Metrics.maxDepthOffset
         }
     }
-    
+
     func getMediaSize(originalSize: CGSize, leadingOffset: CGFloat) -> CGSize {
         guard originalSize.height > 0 && originalSize.width > 0 else { return .zero }
         let maxWidth = SPUIWindow.frame.width - leadingOffset // TODO: comment leading+trailing offset ?
@@ -139,21 +139,21 @@ fileprivate extension OWCommentContentViewModel {
 
         return CGSize(width: CGFloat(width), height: CGFloat(height))
     }
-    
+
     // TODO: should be in some imageprovider
     func imageURL(with id: String?, size: CGSize? = nil) -> URL? {
         guard var id = id else { return nil }
-        
+
         if id.hasPrefix(SPImageRequestConstants.placeholderImagePrefix) {
             id.removeFirst(SPImageRequestConstants.placeholderImagePrefix.count)
             id = SPImageRequestConstants.avatarPathComponent.appending(id)
         }
         return URL(string: cloudinaryURLString(size).appending(id))
     }
-    
+
     func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
         var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
-        
+
         if let imageSize = imageSize {
             result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
                 "\(Int(imageSize.width))" +
@@ -161,7 +161,7 @@ fileprivate extension OWCommentContentViewModel {
                 "\(Int(imageSize.height))"
             )
         }
-        
+
         return result.appending("/")
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 
 class OWRequestLogger: OWNetworkLogging, OWRequestMiddleware {
     func process(request: URLRequest) -> URLRequest {
-        if let url = request.url{
+        if let url = request.url {
             log(output: "Network send request: \(url)")
         }
         return request

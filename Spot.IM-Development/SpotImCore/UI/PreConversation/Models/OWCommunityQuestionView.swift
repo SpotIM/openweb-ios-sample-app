@@ -16,7 +16,7 @@ class OWCommunityQuestionView: UIView {
         static let fontSize: CGFloat = 20.0
         static let questionHorizontalOffset: CGFloat = 16.0
     }
-    
+
     fileprivate lazy var questionTextView: UITextView = {
         let textView = UITextView()
             .isEditable(false)
@@ -28,11 +28,11 @@ class OWCommunityQuestionView: UIView {
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         return textView
     }()
-    
+
     fileprivate var heightConstraint: OWConstraint?
     fileprivate let viewModel: OWCommunityQuestionViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     init(with viewModel: OWCommunityQuestionViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -40,36 +40,36 @@ class OWCommunityQuestionView: UIView {
         setupViews()
         setupObservers()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 fileprivate extension OWCommunityQuestionView {
     func setupViews() {
         self.backgroundColor = .clear
         self.addSubviews(questionTextView)
-        
+
         questionTextView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalToSuperview().offset(Metrics.questionHorizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset)
             heightConstraint = make.height.equalTo(0).constraint
-        }        
+        }
     }
-    
+
     func setupObservers() {
         let communityQuestionObservable = viewModel.outputs
                     .communityQuestionOutput
                     .observe(on: MainScheduler.instance)
                     .share(replay: 0)
-        
+
         communityQuestionObservable
             .bind(to: questionTextView.rx.text)
             .disposed(by: disposeBag)
-        
+
         communityQuestionObservable
             .subscribe(onNext: {
                 [weak self] question in
@@ -81,7 +81,7 @@ fileprivate extension OWCommunityQuestionView {
                     }
             })
             .disposed(by: disposeBag)
-        
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

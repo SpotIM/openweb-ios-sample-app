@@ -12,7 +12,7 @@ import RxSwift
 let commentCacheMinCount: Int = 10
 
 class SPCommentCreationModel {
-    
+
     var postCompletionHandler: ((SPComment) -> Void)?
     var errorHandler: ((Error) -> Void)?
     var commentText: String = ""
@@ -24,26 +24,26 @@ class SPCommentCreationModel {
     var commentLabelsSection: String?
     var sectionCommentLabelsConfig: SPCommentLabelsSectionConfiguration?
     var dataModel: SPCommentCreationDTO
-    
+
     let imageProvider: SPImageProvider
     let commentService: SPCommentUpdater
-    
+
     private var currentUploadingImageId: String?
-    
+
     let avatarViewVM: OWAvatarViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     var actionCallback: Observable<SPViewActionCallbackType> {
         let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
             .map { _ -> SPViewActionCallbackType in
                 return .articleHeaderPressed
             }
-        
+
         return Observable.merge([headerTappedObservable])
     }
-    
+
     init(commentCreationDTO: SPCommentCreationDTO,
          updater: SPCommentUpdater,
          imageProvider: SPImageProvider,
@@ -60,15 +60,15 @@ class SPCommentCreationModel {
         avatarViewVM = OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageProvider)
         articleHeaderVM = OWArticleHeaderViewModel(articleMetadata: articleMetadate)
         setupCommentLabels()
-        
+
         let commentIdentifier: String = getCommentIdentifierForCommentType()
-        
+
         if let text = commentCreationDTO.editModel?.commentText {
             commentText = text
         } else {
             commentText = OWSharedServicesProvider.shared.commentsInMemoryCacheService()[commentIdentifier] ?? ""
         }
-        
+
         if let image = commentCreationDTO.editModel?.commentImage {
             imageContent = SPComment.Content.Image(
                 originalWidth: image.width,
@@ -76,30 +76,30 @@ class SPCommentCreationModel {
                 imageId: image.id)
         }
     }
-    
+
     func post() {
-        
+
         let createCommentParameters: [String: Any] = gatherParametersForCreateCommentRequest()
-        
+
         if self.isInEditMode() {
             handleEditCommentRequest(requestParameters: createCommentParameters)
         } else {
             handleCreateCommentRequest(requestParameters: createCommentParameters)
         }
     }
-    
-    func handleCreateCommentRequest(requestParameters: [String:Any]) {
-        
+
+    func handleCreateCommentRequest(requestParameters: [String: Any]) {
+
         commentService.createComment(
             parameters: requestParameters,
             postId: dataModel.postId,
             success: {
                 [weak self] response in
                 guard let self = self else { return }
-                
+
                 var responseData = self.populateResponseFields(response)
                 let commentIdentifier: String = self.getCommentIdentifierForCommentType()
-                
+
                 // set new comment status after "/status" call
                 self.commentService.commentStatus(conversationId: self.dataModel.postId, commentId: responseData.id ?? "", success: { status in
                     responseData.rawStatus = status["status"]
@@ -109,7 +109,7 @@ class SPCommentCreationModel {
                     OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
                     self.postCompletionHandler?(responseData)
                 })
-                
+
             },
             failure: {
                 [weak self] error in
@@ -117,8 +117,8 @@ class SPCommentCreationModel {
             }
         )
     }
-    
-    func handleEditCommentRequest(requestParameters: [String:Any]) {
+
+    func handleEditCommentRequest(requestParameters: [String: Any]) {
         commentService.editComment(
             parameters: requestParameters,
             postId: dataModel.postId,
@@ -135,34 +135,34 @@ class SPCommentCreationModel {
             }
         )
     }
-    
+
     func gatherParametersForCreateCommentRequest() -> [String: Any] {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         let isRegistered = SPUserSessionHolder.session.user?.registered ?? false
-        
+
         var metadata: [String: Any] = [:]
-        
+
         if (!isRegistered) {
             metadata[SPRequestKeys.displayName] = displayName
         }
-        
+
         if let bundleId = Bundle.main.bundleIdentifier {
             metadata[SPRequestKeys.appBundleId] = bundleId
         }
-        
+
         var parameters: [String: Any] = [
             SPRequestKeys.content: self.getContentRequestParam()
         ]
-        
+
         if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
             parameters[SPRequestKeys.additionalData] = [
                 SPRequestKeys.labels: [
                     SPRequestKeys.labelsSection: selectedLabels.section,
-                    SPRequestKeys.labelsIds: selectedLabels.ids,
+                    SPRequestKeys.labelsIds: selectedLabels.ids
                 ]
             ]
         }
-        
+
         if isCommentAReply() {
             let commentId = dataModel.replyModel?.commentId
             let rootCommentId = dataModel.replyModel?.rootCommentId
@@ -173,32 +173,32 @@ class SPCommentCreationModel {
             parameters[SPRequestKeys.conversationId] = dataModel.postId
             parameters[SPRequestKeys.parentId] = rootCommentId ?? commentId
         }
-        
+
         if let messageId = dataModel.editModel?.commentId {
             parameters[SPRequestKeys.messageId] = messageId
         }
-        
+
         parameters[SPRequestKeys.metadata] = metadata
-        
+
         return parameters
     }
-    
+
     func populateResponseFields(_ response: SPComment) -> SPComment {
         var responseData = response
         responseData.writtenAt = Date().timeIntervalSince1970
-        
+
         let user = SPUserSessionHolder.session.user
         responseData.userId = user?.id
-        
+
         if let user = user, let userId = responseData.userId {
             responseData.users = [userId: user]
         }
-        
+
         if let labels = self.selectedLabels {
             let commentLabels = SPComment.CommentLabel(section: labels.section, ids: labels.ids)
             responseData.additionalData = SPComment.AdditionalData(labels: commentLabels)
         }
-        
+
         if self.isCommentAReply() {
             responseData.parentId = self.dataModel.replyModel?.commentId
             responseData.rootComment = self.dataModel.replyModel?.rootCommentId
@@ -207,41 +207,41 @@ class SPCommentCreationModel {
             responseData.rootComment = responseData.id
             responseData.depth = 0
         }
-        
+
         let commentIdentifier: String = self.getCommentIdentifierForCommentType()
         OWSharedServicesProvider.shared.commentsInMemoryCacheService().remove(forKey: commentIdentifier)
-        
+
         return responseData
     }
-    
+
     func updateCommentText(_ text: String) {
         commentText = text
         saveCommentTextInCache()
     }
-    
+
     func isCommentAReply() -> Bool {
         return dataModel.replyModel != nil
     }
-    
+
     func isInEditMode() -> Bool {
         return dataModel.editModel != nil
     }
-    
+
     private func saveCommentTextInCache() {
         guard !isInEditMode() && commentText.count >= commentCacheMinCount else { return } // do not save edited message in cache
-        
+
         let commentIdentifier: String = getCommentIdentifierForCommentType()
         OWSharedServicesProvider.shared.commentsInMemoryCacheService()[commentIdentifier] = commentText
     }
-    
+
     private func getCommentIdentifierForCommentType() -> String {
         if let commentIdentifier: String = dataModel.replyModel?.commentId {
             return commentIdentifier
         }
-        
+
         return dataModel.postId
     }
-    
+
     func shouldDisplayImageUploadButton() -> Bool {
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            conversationConfig.disableImageUploadButton == true {
@@ -261,7 +261,7 @@ class SPCommentCreationModel {
               let commentLabelsConfig = sharedConfig.commentLabels else { return }
         (sectionCommentLabelsConfig, commentLabelsSection) = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
     }
-    
+
     private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> (SPCommentLabelsSectionConfiguration?, String?) {
         var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
         var commentLabelsSection: String? = nil
@@ -275,7 +275,7 @@ class SPCommentCreationModel {
         }
         return (sectionLabelsConfig, commentLabelsSection)
     }
-    
+
     func updateCommentLabels(labelsIds: [String]) {
         if let commentLabelsSection = commentLabelsSection, !labelsIds.isEmpty {
             selectedLabels = SelectedLabels(section: commentLabelsSection, ids: labelsIds)
@@ -283,13 +283,13 @@ class SPCommentCreationModel {
             selectedLabels = nil
         }
     }
-    
+
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
         imageProvider.image(from: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
     }
-    
+
     func isValidContent() -> Bool {
         return
             commentText.hasContent ||
@@ -344,7 +344,7 @@ class SPCommentCreationModel {
         return content
     }
 }
-    
+
 extension SPCommentCreationModel {
     private enum SPRequestKeys {
         static let content = "content"
@@ -367,11 +367,10 @@ extension SPCommentCreationModel {
         static let messageId = "message_id"
         static let appBundleId = "app_bundle_id"
     }
-    
+
     struct SelectedLabels {
         var section: String
         var ids: [String]
     }
 }
-
 

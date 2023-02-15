@@ -9,11 +9,11 @@
 import Foundation
 
 internal enum SPCommentSortMode: String, CaseIterable, Decodable {
-    
+
     case best
     case newest
     case oldest
-    
+
     init(from sortByOption: SpotImSortByOption) {
         switch sortByOption {
         case .best:
@@ -40,7 +40,7 @@ internal enum SPCommentSortMode: String, CaseIterable, Decodable {
         }
         return LocalizationManager.localizedString(key: title)
     }
-    
+
     private func getCustomSortByModeTitleIfExists() -> String? {
         switch self {
         case .best:

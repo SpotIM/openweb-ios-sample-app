@@ -11,11 +11,11 @@ import RxSwift
 
 // TODO: complete
 protocol OWPreConversationFooterViewModelingInputs {
-    
+
 }
 
 protocol OWPreConversationFooterViewModelingOutputs {
-    
+
 }
 
 protocol OWPreConversationFooterViewModeling {

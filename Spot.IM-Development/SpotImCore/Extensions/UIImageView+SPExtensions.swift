@@ -33,11 +33,11 @@ internal extension UIImage {
             completion?(nil, SPNetworkError.custom("No image URL"))
             return nil
         }
-        
+
         let imageCacheService = OWSharedServicesProvider.shared.imageCacheService()
         if let image = imageCacheService[url.absoluteString] {
             completion?(image, nil)
-            
+
             return nil
         } else {
             return OWNetworkSession.default.request(url)
@@ -46,7 +46,7 @@ internal extension UIImage {
                     switch response.result {
                     case .success(let data):
                         let image = UIImage(data: data)
-                        
+
                         imageCacheService[url.absoluteString] = image
                         if let completion = completion {
                             completion(image, nil)
@@ -57,7 +57,7 @@ internal extension UIImage {
                 }
         }
     }
-    
+
     static func load(with url: URL) -> Observable<UIImage> {
         return Observable.create { observer in
             let dataRequest = UIImage.load(with: url, completion: {
@@ -69,7 +69,7 @@ internal extension UIImage {
                     observer.onCompleted()
                 }
             })
-            
+
             return Disposables.create {
                 dataRequest?.cancel()
             }

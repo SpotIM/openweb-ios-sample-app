@@ -11,11 +11,11 @@ import Foundation
 #if NEW_API
 public struct OWPreConversationSettingsBuilder: OWPreConversationSettingsProtocol {
     public var style: OWPreConversationStyle
-    
+
     public init(style: OWPreConversationStyle = .regular()) {
         self.style = style.validate()
     }
-    
+
     @discardableResult public mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
         self.style = style.validate()
         return self
