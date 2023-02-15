@@ -37,6 +37,7 @@ class OWKeychain: ReactiveCompatible, OWKeychainProtocol {
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          encoder: JSONEncoder = JSONEncoder(),
          decoder: JSONDecoder = JSONDecoder()) {
+
         self.servicesProvider = servicesProvider
         self.encoder = encoder
         self.decoder = decoder
