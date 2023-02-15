@@ -17,6 +17,7 @@ class SwitchSetting: UIView {
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 10
         static let switchMinWidth: CGFloat = 50
+        static let titleNumberOfLines: Int = 2
     }
     
     fileprivate let title: String
@@ -26,7 +27,7 @@ class SwitchSetting: UIView {
         return title
             .label
             .font(FontBook.paragraph)
-            .numberOfLines(2)
+            .numberOfLines(Metrics.titleNumberOfLines)
             .lineBreakMode(.byWordWrapping)
     }()
     
@@ -37,12 +38,13 @@ class SwitchSetting: UIView {
         return aSwitch
     }()
     
-    init(title: String, isOn: Bool = false) {
+    init(title: String, accessibilityPrefixId: String, isOn: Bool = false) {
         self.title = title
         self.initialIsOn = isOn
         super.init(frame: .zero)
         
         setupViews()
+        applyAccessibility(prefixId: accessibilityPrefixId)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,6 +54,10 @@ class SwitchSetting: UIView {
 }
 
 fileprivate extension SwitchSetting {
+    func applyAccessibility(prefixId: String) {
+        settingTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
+        switchSetting.accessibilityIdentifier = prefixId + "_switch_id"
+    }
     
     func setupViews() {
         self.addSubview(settingTitleLbl)

@@ -11,11 +11,11 @@ import Foundation
 #if NEW_API
 public protocol OWCustomizations {
     // TODO: Complete
+    var themeEnforcement: OWThemeStyleEnforcement { get set }
 }
 #else
 protocol OWCustomizations {
     var fontFamily: String? { get set }
-    var spacing: OWSpacing { get set }
     var sorting: OWSortingCustomizations { get }
     var themeEnforcement: OWThemeStyleEnforcement { get set }
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)

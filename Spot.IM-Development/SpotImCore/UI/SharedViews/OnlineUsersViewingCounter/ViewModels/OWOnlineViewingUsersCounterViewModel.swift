@@ -41,7 +41,7 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
 
     var viewingCount: Observable<String> {
         return model.unwrap()
-            .map { $0.count }
+            .map { max($0.count, 1) }
             .map { $0.decimalFormatted }
     }
     
@@ -67,7 +67,7 @@ class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewMo
                 try? realtimeData.data?.onlineViewingUsersCount("\(OWManager.manager.spotId)_\(postId)")
             }
             .unwrap()
-            .map { $0.count }
+            .map { max($0.count, 1) }
             .map {
                 $0.decimalFormatted
             }
