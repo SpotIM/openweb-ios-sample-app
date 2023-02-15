@@ -13,27 +13,27 @@ internal class CommentMediaView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_media_view_id"
     }
-    
+
     private let gifWebView: GifWebView = .init()
     private let imageView: OWBaseUIImageView = .init()
-    
+
     private var imageViewHeightConstraint: NSLayoutConstraint?
     private var imageViewWidthConstraint: NSLayoutConstraint?
     private var gifViewHeightConstraint: NSLayoutConstraint?
     private var gifViewWidthConstraint: NSLayoutConstraint?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
         self.backgroundColor = .clear
     }
-    
+
     private func configureGifWebView() {
         gifWebView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-    
+
     private func configureImageView() {
         imageView.contentMode = .scaleAspectFill
         // set placeholder image
@@ -44,13 +44,13 @@ internal class CommentMediaView: OWBaseView {
             make.edges.equalToSuperview()
         }
     }
-    
+
     func clearExistingMedia() {
         for view in subviews {
             view.removeFromSuperview()
         }
     }
-    
+
     func configureMedia(imageUrl: URL?, gifUrl: String?) {
         clearExistingMedia()
         // if imageUrl exist, set image and clean gif

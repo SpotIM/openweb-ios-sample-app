@@ -21,7 +21,7 @@ internal final class SPReadingTracker {
         logReadingTracking()
         readingStartTime = nil
     }
-    
+
     private func logReadingTracking() {
         guard let readingStart = readingStartTime else { return }
         let seconds = Date().seconds(fromDate: readingStart)

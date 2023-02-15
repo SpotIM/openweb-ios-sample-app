@@ -18,7 +18,7 @@ class OWOptionalEncapsulation<T> {
     init(value: T) {
         self._value = value
     }
-    
+
     func value() -> T? {
         return _value
     }

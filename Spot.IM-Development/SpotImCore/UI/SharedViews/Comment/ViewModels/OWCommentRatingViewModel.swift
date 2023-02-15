@@ -22,7 +22,7 @@ protocol OWCommentRatingViewModelingOutputs {
     var voteTypes: Observable<[VoteType]> { get }
     var rankUpSelected: Observable<Bool> { get }
     var rankDownSelected: Observable<Bool> { get }
-    
+
     var votingUpImages: Observable<VotingImages> { get }
     var votingDownImages: Observable<VotingImages> { get }
 }
@@ -38,17 +38,17 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
 
     var inputs: OWCommentRatingViewModelingInputs { return self }
     var outputs: OWCommentRatingViewModelingOutputs { return self }
-    
+
     fileprivate let disposeBag = DisposeBag()
     fileprivate let sharedServiceProvider: OWSharedServicesProviding
-    
+
     var tapRankUp = PublishSubject<Void>()
     var tapRankDown = PublishSubject<Void>()
-    
+
     fileprivate let _rankUp = BehaviorSubject<Int?>(value: nil)
     fileprivate let _rankDown = BehaviorSubject<Int?>(value: nil)
     fileprivate let _rankedByUser = BehaviorSubject<Int?>(value: nil)
-    
+
     fileprivate var _voteSymbolType: Observable<OWVotesType> {
         self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
@@ -59,20 +59,20 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             }
             .asObservable()
     }
-    
+
     init (sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
     }
-    
+
     init(model: OWCommentVotingModel, sharedServiceProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.sharedServiceProvider = sharedServiceProvider
         _rankUp.onNext(model.rankUpCount)
         _rankDown.onNext(model.rankDownCount)
         _rankedByUser.onNext(model.rankedByUserValue)
-        
+
         setupObservers()
     }
-    
+
     var rankUpText: Observable<String> {
         _rankUp
             .unwrap()
@@ -86,21 +86,21 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
                 }
             }
     }
-    
+
     var rankDownText: Observable<String> {
         _rankDown
             .unwrap()
             .map { $0 > 0 ? $0.kmFormatted : "" }
     }
-    
-    var voteTypes : Observable<[VoteType]> {
+
+    var voteTypes: Observable<[VoteType]> {
         self.sharedServiceProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config -> [VoteType] in
                 var voteTypesToShow: [VoteType] = [.voteUp, .voteDown]
                 guard let convConfig = config.conversation
                 else { return voteTypesToShow }
-                
+
                 if (convConfig.disableVoteUp == true) {
                     voteTypesToShow.removeAll { $0 == .voteUp }
                 }
@@ -117,21 +117,21 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
             }
             .asObservable()
     }
-    
+
     var rankUpSelected: Observable<Bool> {
         _rankedByUser
             .unwrap()
             .map { $0 == 1 }
             .distinctUntilChanged()
     }
-    
+
     var rankDownSelected: Observable<Bool> {
         _rankedByUser
             .unwrap()
             .map { $0 == -1 }
             .distinctUntilChanged()
     }
-    
+
     var votingUpImages: Observable<VotingImages> {
         _voteSymbolType
             .map { votesType in
@@ -159,7 +159,7 @@ class OWCommentRatingViewModel: OWCommentRatingViewModeling,
                 }
             }
     }
-    
+
     var votingDownImages: Observable<VotingImages> {
         _voteSymbolType
             .map { votesType in
@@ -191,13 +191,13 @@ fileprivate extension OWCommentRatingViewModel {
                  // TODO: call new api rank + update local
             })
             .disposed(by: disposeBag)
-        
+
         tapRankDown.withLatestFrom(_rankedByUser.unwrap())
             .subscribe(onNext: { [weak self] ranked in
                 guard let self = self else { return }
                 let from: SPRank = SPRank(rawValue: ranked) ?? .unrank
                 let to: SPRank = (ranked == 0 || ranked == 1) ? .down : .unrank
-                
+
                 // TODO: call new api rank + update local
             })
             .disposed(by: disposeBag)

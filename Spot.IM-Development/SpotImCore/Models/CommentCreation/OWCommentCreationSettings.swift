@@ -11,7 +11,7 @@ import Foundation
 #if NEW_API
 public struct OWCommentCreationSettings: OWCommentCreationSettingsProtocol {
     public let conversationSettings: OWConversationSettingsProtocol
-    
+
     public init(conversationSettings: OWConversationSettingsProtocol) {
         self.conversationSettings = conversationSettings
     }

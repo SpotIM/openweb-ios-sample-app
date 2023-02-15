@@ -11,14 +11,14 @@ import UIKit
 public class OWBaseLabel: UILabel {
     // edge inset can be set to label (padding), default is no padding (insets = 0)
     var insets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
     }
-    
+
     public override func drawText(in rect: CGRect) {
         super.drawText(in: rect.inset(by: insets))
     }
@@ -30,7 +30,7 @@ public class OWBaseLabel: UILabel {
             return contentSize
         }
     }
-    
+
     @available(*,
     unavailable,
     message: "Loading this view from a nib is unsupported in this project"
@@ -39,5 +39,5 @@ public class OWBaseLabel: UILabel {
     public init?(coder aDecoder: NSCoder) {
         fatalError("Loading this view from a nib is unsupported in this project")
     }
-    
+
 }

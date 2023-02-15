@@ -9,11 +9,11 @@
 import Foundation
 
 enum OWCommentSortMode: String, CaseIterable, Decodable {
-    
+
     case best
     case newest
     case oldest
-    
+
     init(from sortByOption: OWSortOption) {
         switch sortByOption {
         case .best:

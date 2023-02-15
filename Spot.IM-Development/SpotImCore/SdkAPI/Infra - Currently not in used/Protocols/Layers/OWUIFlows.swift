@@ -15,13 +15,13 @@ public protocol OWUIFlows {
                          additionalSettings: OWPreConversationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewDynamicSizeCompletion)
-    
+
     func conversation(postId: String, article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
-    
+
     func commentCreation(postId: String, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWCommentCreationSettingsProtocol?,
@@ -35,13 +35,13 @@ protocol OWUIFlows {
                          additionalSettings: OWPreConversationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWViewDynamicSizeCompletion)
-    
+
     func conversation(postId: String, article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWConversationSettingsProtocol?,
                       callbacks: OWViewActionsCallbacks?,
                       completion: @escaping OWDefaultCompletion)
-    
+
     func commentCreation(postId: String, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWCommentCreationSettingsProtocol?,

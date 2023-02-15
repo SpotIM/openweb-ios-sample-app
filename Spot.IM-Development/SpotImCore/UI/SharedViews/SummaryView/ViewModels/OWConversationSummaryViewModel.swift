@@ -29,18 +29,18 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
                                       OWConversationSummaryViewModelingOutputs {
     var inputs: OWConversationSummaryViewModelingInputs { return self }
     var outputs: OWConversationSummaryViewModelingOutputs { return self }
-          
+
     fileprivate let _commentsCount = BehaviorSubject<Int?>(value: nil)
-    
+
     init (onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel(),
           conversationSortVM: OWConversationSortViewModeling = OWConversationSortViewModel()) {
         self.onlineViewingUsersVM = onlineViewingUsersVM
         self.conversationSortVM = conversationSortVM
     }
-    
+
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling
     var conversationSortVM: OWConversationSortViewModeling
-    
+
     var conversationCommentsCountText: Observable<String> {
         _commentsCount
             .unwrap()
@@ -51,7 +51,7 @@ class OWConversationSummaryViewModel: OWConversationSummaryViewModeling,
                 return "\($0.formatedCount()) " + commentsText
             }
     }
-    
+
     func configure(commentsCount: Int) {
         _commentsCount.onNext(commentsCount)
     }

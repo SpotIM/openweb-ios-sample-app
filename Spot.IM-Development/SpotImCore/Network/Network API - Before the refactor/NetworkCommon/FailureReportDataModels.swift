@@ -19,15 +19,15 @@ extension OWParametersPresentable where Self: Encodable {
             let data = try? JSONEncoder().encode(self),
             let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
             else { return nil }
-        
+
         return json as? [String: Any]
     }
-    
+
 }
 
 struct OWGeneralFailureReportDataModel: Encodable, OWParametersPresentable {
     let reason: String
-    
+
     var commentId: String? = nil
     var parentCommentId: String? = nil
 }

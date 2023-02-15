@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OWLayoutConstraint : NSLayoutConstraint {
+class OWLayoutConstraint: NSLayoutConstraint {
     var label: String? {
         get {
             return self.identifier
@@ -17,7 +17,7 @@ class OWLayoutConstraint : NSLayoutConstraint {
             self.identifier = newValue
         }
     }
-    
+
     weak var constraint: OWConstraint? = nil
 }
 

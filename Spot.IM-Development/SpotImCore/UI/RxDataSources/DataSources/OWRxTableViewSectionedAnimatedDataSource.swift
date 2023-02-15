@@ -50,7 +50,7 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
     func tableView(_ tableView: UITableView, observedEvent: Event<OWElement>) {
         Binder(self) { [weak tableView] dataSource, newSections in
             guard let tableView = tableView else { return }
-            
+
             #if DEBUG
                 dataSource._dataSourceBound = true
             #endif
@@ -58,8 +58,7 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
                 dataSource.dataSet = true
                 dataSource.setSections(newSections)
                 tableView.reloadData()
-            }
-            else {
+            } else {
                 // if view is not in view hierarchy, performing batch updates will crash the app
                 if tableView.window == nil {
                     dataSource.setSections(newSections)
@@ -69,7 +68,7 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
                 let oldSections = dataSource.sectionModels
                 do {
                     let differences = try OWDiff.differencesForSectionedView(initialSections: oldSections, finalSections: newSections)
-                    
+
                     switch dataSource.decideViewTransition(dataSource, tableView, differences) {
                     case .animated:
                         // each difference must be run in a separate 'performBatchUpdates', otherwise it crashes.
@@ -88,14 +87,13 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
                                 tableView.endUpdates()
                             }
                         }
-                        
+
                     case .reload:
                         dataSource.setSections(newSections)
                         tableView.reloadData()
                         return
                     }
-                }
-                catch let e {
+                } catch let e {
                     rxDebugFatalError(e)
                     dataSource.setSections(newSections)
                     tableView.reloadData()

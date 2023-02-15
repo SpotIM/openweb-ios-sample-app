@@ -8,15 +8,14 @@
 
 import UIKit
 
-
 class OWConstraint {
     struct Helpers {
         static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
         static let loggerPrefix = "OpenWebSDKSnapKitLogger"
     }
-    
+
     let sourceLocation: (String, UInt)
-    
+
     private let label: String?
     private let from: OWConstraintItem
     private let to: OWConstraintItem
@@ -38,12 +37,11 @@ class OWConstraint {
         set {
             if newValue {
                 activate()
-            }
-            else {
+            } else {
                 deactivate()
             }
         }
-        
+
         get {
             for layoutConstraint in self.layoutConstraints {
                 if layoutConstraint.isActive {
@@ -53,7 +51,7 @@ class OWConstraint {
             return false
         }
     }
-    
+
     // MARK: Initialization
     init(from: OWConstraintItem,
                   to: OWConstraintItem,
