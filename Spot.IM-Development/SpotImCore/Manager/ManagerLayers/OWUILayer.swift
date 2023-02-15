@@ -12,7 +12,7 @@ import RxSwift
 class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
-    var customizations: OWCustomizations { return self._customizations}
+    var customizations: OWCustomizations { return self._customizations }
     var authenticationUI: OWUIAuthentication { return self._authenticationUI }
     
     fileprivate let sdkCoordinator: OWSDKCoordinator

@@ -16,6 +16,11 @@ import SnapKit
 class UIViewsVC: UIViewController {
     
     fileprivate struct Metrics {
+        static let identifier = "uiviews_vc_id"
+        static let btnPreConversationIdentifier = "btn_pre_conversation_id"
+        static let btnFullConversationIdentifier = "btn_full_conversation_id"
+        static let btnCommentCreationIdentifier = "btn_comment_creation_id"
+        static let btnIndependentAdUnitIdentifier = "btn_independent_ad_unit_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -60,6 +65,7 @@ class UIViewsVC: UIViewController {
     override func loadView() {
         super.loadView()
         setupViews()
+        applyAccessibility()
     }
 
     override func viewDidLoad() {
@@ -69,6 +75,14 @@ class UIViewsVC: UIViewController {
 }
 
 fileprivate extension UIViewsVC {
+    func applyAccessibility() {
+        view.accessibilityIdentifier = Metrics.identifier
+        btnPreConversation.accessibilityIdentifier = Metrics.btnPreConversationIdentifier
+        btnFullConversation.accessibilityIdentifier = Metrics.btnFullConversationIdentifier
+        btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
+        btnIndependentAdUnit.accessibilityIdentifier = Metrics.btnIndependentAdUnitIdentifier
+    }
+    
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
         
