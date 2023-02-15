@@ -11,7 +11,7 @@ import UIKit
 struct ColorModel {
     var lightThemeColor: UIColor
     var darkThemeColor: UIColor
-    
+
     enum ColorType: CaseIterable {
         case background
         case text
@@ -29,7 +29,7 @@ struct ColorModel {
         case pink
         case highlightBlue
         case white
-        
+
         var `default`: ColorModel {
             switch self {
             case .background:
@@ -79,12 +79,12 @@ struct ColorModel {
             }
         }
     }
-    
+
     init(lightThemeColor: UIColor, darkThemeColor: UIColor) {
         self.lightThemeColor = lightThemeColor
         self.darkThemeColor = darkThemeColor
     }
-    
+
     init(color: UIColor) {
         self.lightThemeColor = color
         self.darkThemeColor = color
@@ -95,11 +95,11 @@ extension ColorModel {
     fileprivate mutating func setLightThemeColor(_ color: UIColor) {
         lightThemeColor = color
     }
-    
+
     fileprivate mutating func setDarkThemeColor(_ color: UIColor) {
         darkThemeColor = color
     }
-    
+
     func color(forThemeStyle style: ThemeStyle) -> UIColor {
         switch style {
         case .light:
