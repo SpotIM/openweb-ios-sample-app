@@ -11,7 +11,7 @@ import RxSwift
 
 protocol OWSortDictateServicing {
     func sortOption(perPostId postId: OWPostId) -> Observable<OWSortOption>
-    func sortTextPresentation(perOption sortOption: OWSortOption) -> String
+    func sortTextTitle(perOption sortOption: OWSortOption) -> String
     func update(sortOption: OWSortOption, perPostId postId: OWPostId)
     func invalidateCache()
 }
@@ -21,7 +21,7 @@ class OWSortDictateService: OWSortDictateServicing {
     fileprivate typealias OWSkipAndMapping = Observable<(Bool, [OWPostId: OWSortOption])>
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     
-    fileprivate var mapper = BehaviorSubject<[OWPostId: OWSortOption]>(value: [:])
+    fileprivate let mapper = BehaviorSubject<[OWPostId: OWSortOption]>(value: [:])
     fileprivate lazy var sharedMapper = {
         return mapper
             .share(replay: 1)
@@ -53,7 +53,7 @@ class OWSortDictateService: OWSortDictateServicing {
                 return Observable.just((true, mapping))
             }
             .flatMap { [weak self] skipAndMapper -> Observable<Void> in
-                // 2. Inject sort option to the mapper from local or from config according to `OWInitialSortStrategy`
+                // 2. Inject sort option to the mapper from local or from server config according to `OWInitialSortStrategy`
                 
                 guard let self = self else { return Observable.empty() }
                 let shouldSkip = skipAndMapper.0
@@ -76,7 +76,7 @@ class OWSortDictateService: OWSortDictateServicing {
                             guard let oldSortType = config.initialization?.sortBy else {
                                 // Should set the initial config from the server, however there isn't any.
                                 // Using the default one `.best` in such case
-                                return OWSortOption.best
+                                return OWSortOption.default
                             }
 
                             let sortOption = OWSortOption(fromOldSortType: oldSortType)
@@ -104,7 +104,7 @@ class OWSortDictateService: OWSortDictateServicing {
                     // This should never happen
                     let logMessage = "Failed to get the appropriate sort option for postId: \(postId), recovering by passing `.best` "
                     self.servicesProvider.logger().log(level: .error, logMessage)
-                    return .best
+                    return OWSortOption.default
                 }
 
                 return sortOption
@@ -112,7 +112,7 @@ class OWSortDictateService: OWSortDictateServicing {
             .distinctUntilChanged()
         }
     
-    func sortTextPresentation(perOption sortOption: OWSortOption) -> String {
+    func sortTextTitle(perOption sortOption: OWSortOption) -> String {
         guard let sortCustomizerInternal = sortCustomizer as? OWSortingCustomizationsInternal else {
             let logMessage = "Failed casting `OWSortingCustomizer` to `OWSortingCustomizationsInternal` protocol, recovering by returning the default title for sort option"
             servicesProvider.logger().log(level: .medium, logMessage)
