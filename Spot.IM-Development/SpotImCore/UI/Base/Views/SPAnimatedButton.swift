@@ -5,7 +5,6 @@
 //  Created by Itay Dressler on 29/07/2019.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
-// swiftlint:disable all
 
 import UIKit
 

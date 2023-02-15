@@ -153,7 +153,6 @@ enum OWDiff {
         finalItemCache: ContiguousArray<ContiguousArray<Item>>
     ) throws
         -> (ContiguousArray<ContiguousArray<OWItemAssociatedData>>, ContiguousArray<ContiguousArray<OWItemAssociatedData>>) {
-            // swiftlint:disable:next nesting
             typealias OWIdentity = Item.Identity
             let totalInitialItems = initialItemCache.map { $0.count }.reduce(0, +)
 
@@ -263,7 +262,6 @@ enum OWDiff {
     }
 
     private struct OWCommandGenerator<Section: OWAnimatableSectionModelType> {
-        // swiftlint:disable:next nesting
         typealias Item = Section.Item
 
         let initialSections: [Section]
