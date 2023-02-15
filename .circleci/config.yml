@@ -89,7 +89,7 @@ commands:
       - run:
           name: Run SwiftLint
           command: |
-            swiftlint lint --strict --config swiftlint/.swiftlint.yml || (echo "SwiftLint check failed." && exit 1)
+            swiftlint lint --strict --config swiftlint/.swiftlint.yml --reporter xcode || (echo "SwiftLint check failed." && exit 1)
             echo "SwiftLint check succeeded."
 
 jobs:

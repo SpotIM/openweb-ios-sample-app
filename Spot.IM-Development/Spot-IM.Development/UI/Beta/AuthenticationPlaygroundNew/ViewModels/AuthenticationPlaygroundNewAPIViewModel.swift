@@ -143,7 +143,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
             .subscribe(onNext: {
-                // TODO change to new API // swiftlint:disable:this todo
+                // TODO change to new API
 
                 SpotIm.getUserLoginStatus { loginStatus in
                     DLog("Before logout \(loginStatus))")
@@ -161,7 +161,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             })
             .disposed(by: disposeBag)
 
-        // TODO change to new API // swiftlint:disable:this todo
+        // TODO change to new API
         // Generic SSO authentication started
         genericSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
@@ -255,7 +255,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .subscribe()
             .disposed(by: disposeBag)
 
-        // TODO change to new API // swiftlint:disable:this todo
+        // TODO change to new API
         // JWT SSO authentication started
         JWTSSOAuthenticatePressed
             .flatMapLatest { [weak self] _ -> Observable<Int> in
@@ -311,27 +311,27 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
     }
     // swiftlint:enable function_body_length
 
-    // TODO add new API // swiftlint:disable:this todo
+    // TODO add new API
     func startSSO() -> Observable<String?> {
         return .empty()
     }
 
-    // TODO add new API // swiftlint:disable:this todo
+    // TODO add new API
     func completeSSO(codeB: String) -> Observable<String?> {
         return .empty()
     }
 
-    // TODO add new API // swiftlint:disable:this todo
+    // TODO add new API
     func sso(jwtSecret: String) -> Observable<Void?> {
         return .empty()
     }
 
-    // TODO add new API // swiftlint:disable:this todo
+    // TODO add new API
     func login(user: UserAuthentication) -> Observable<String?> {
         return .empty()
     }
 
-    // TODO add new API // swiftlint:disable:this todo
+    // TODO add new API
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String?> {
         return .empty()
     }
