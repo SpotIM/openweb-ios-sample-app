@@ -60,19 +60,19 @@ internal final class CommentLabelView: OWBaseView {
                 labelContainer.layer.borderColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBorderOpacity).cgColor
                 iconImageView.tintColor = commentLabelColor
                 label.textColor = self.commentLabelColor
-                break
+
             case .selected:
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = .white
                 label.textColor = .white
-                break
+
             case .readOnly:
                 labelContainer.backgroundColor = commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = commentLabelColor
                 label.textColor = commentLabelColor
-                break
+
         }
         self.state = state
     }
@@ -87,10 +87,10 @@ internal final class CommentLabelView: OWBaseView {
         switch state {
             case .selected:
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
-                break
+
             case .readOnly:
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
-                break
+
             case .notSelected:
                 break
         }

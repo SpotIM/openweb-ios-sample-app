@@ -81,15 +81,15 @@ final class OWCommentActionsView: OWBaseView {
         switch (self.isReadOnlyMode, repliesCount, shouldHideButton) {
         case (_, _, true), (true, nil, _):
             isEnabled = false
-            break
+
         case (false, _, false):
             isEnabled = true
             replyButtonTitle = replyDefaultTitle
-            break
+
         case (true, .some, false):
             isEnabled = false
             replyButtonTitle = LocalizationManager.localizedString(key: "Replies")
-            break
+
         }
 
         replyButton.isEnabled = isEnabled

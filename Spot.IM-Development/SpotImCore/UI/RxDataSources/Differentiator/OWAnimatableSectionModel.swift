@@ -32,7 +32,7 @@ extension OWAnimatableSectionModel: OWAnimatableSectionModelType {
         self.items = items
     }
 
-    var hashValue: Int {
+    var hashValue: Int { // swiftlint:disable:this legacy_hashing
         return self.model.identity.hashValue
     }
 }

@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModelType>: OWTableViewSectionedDataSource<Section>
-    , RxTableViewDataSourceType {
+, RxTableViewDataSourceType {
     typealias OWElement = [Section]
     typealias OWDecideViewTransition = (OWTableViewSectionedDataSource<Section>, UITableView, [OWChangeset<Section>]) -> OWViewTransition
 
@@ -22,28 +22,28 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
     /// Calculates view transition depending on type of changes
     var decideViewTransition: OWDecideViewTransition
 
-        init(animationConfiguration: OWAnimationConfiguration = OWAnimationConfiguration(),
-                decideViewTransition: @escaping OWDecideViewTransition = { _, _, _ in .animated },
-                configureCell: @escaping OWConfigureCell,
-                titleForHeaderInSection: @escaping  OWTitleForHeaderInSection = { _, _ in nil },
-                titleForFooterInSection: @escaping OWTitleForFooterInSection = { _, _ in nil },
-                canEditRowAtIndexPath: @escaping OWCanEditRowAtIndexPath = { _, _ in false },
-                canMoveRowAtIndexPath: @escaping OWCanMoveRowAtIndexPath = { _, _ in false },
-                sectionIndexTitles: @escaping OWSectionIndexTitles = { _ in nil },
-                sectionForSectionIndexTitle: @escaping OWSectionForSectionIndexTitle = { _, _, index in index }
-            ) {
-            self.animationConfiguration = animationConfiguration
-            self.decideViewTransition = decideViewTransition
-            super.init(
-                configureCell: configureCell,
-               titleForHeaderInSection: titleForHeaderInSection,
-               titleForFooterInSection: titleForFooterInSection,
-               canEditRowAtIndexPath: canEditRowAtIndexPath,
-               canMoveRowAtIndexPath: canMoveRowAtIndexPath,
-               sectionIndexTitles: sectionIndexTitles,
-               sectionForSectionIndexTitle: sectionForSectionIndexTitle
-            )
-        }
+    init(animationConfiguration: OWAnimationConfiguration = OWAnimationConfiguration(),
+         decideViewTransition: @escaping OWDecideViewTransition = { _, _, _ in .animated },
+         configureCell: @escaping OWConfigureCell,
+         titleForHeaderInSection: @escaping  OWTitleForHeaderInSection = { _, _ in nil },
+         titleForFooterInSection: @escaping OWTitleForFooterInSection = { _, _ in nil },
+         canEditRowAtIndexPath: @escaping OWCanEditRowAtIndexPath = { _, _ in false },
+         canMoveRowAtIndexPath: @escaping OWCanMoveRowAtIndexPath = { _, _ in false },
+         sectionIndexTitles: @escaping OWSectionIndexTitles = { _ in nil },
+         sectionForSectionIndexTitle: @escaping OWSectionForSectionIndexTitle = { _, _, index in index }
+    ) {
+        self.animationConfiguration = animationConfiguration
+        self.decideViewTransition = decideViewTransition
+        super.init(
+            configureCell: configureCell,
+            titleForHeaderInSection: titleForHeaderInSection,
+            titleForFooterInSection: titleForFooterInSection,
+            canEditRowAtIndexPath: canEditRowAtIndexPath,
+            canMoveRowAtIndexPath: canMoveRowAtIndexPath,
+            sectionIndexTitles: sectionIndexTitles,
+            sectionForSectionIndexTitle: sectionForSectionIndexTitle
+        )
+    }
 
     var dataSet = false
 
@@ -51,9 +51,9 @@ class OWRxTableViewSectionedAnimatedDataSource<Section: OWAnimatableSectionModel
         Binder(self) { [weak tableView] dataSource, newSections in
             guard let tableView = tableView else { return }
 
-            #if DEBUG
-                dataSource._dataSourceBound = true
-            #endif
+#if DEBUG
+            dataSource._dataSourceBound = true
+#endif
             if !dataSource.dataSet {
                 dataSource.dataSet = true
                 dataSource.setSections(newSections)

@@ -107,13 +107,13 @@ internal struct SPComment: Decodable, Equatable {
                 switch contentItem {
                 case .text(let textContent):
                     self.text = textContent
-                    break
+
                 case .image(let imageContent):
                     self.image = imageContent
-                    break
+
                 case .animation(let animationContent):
                     self.gif = animationContent
-                    break
+
                 case .none:
                     break
                 }
@@ -164,16 +164,16 @@ extension SPComment {
 
     enum Content: Decodable, Equatable {
 
-        enum CodingKeys: CodingKey {
+        enum CodingKeys: CodingKey { // swiftlint:disable:this nesting
             case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId
         }
 
-        struct Text: Decodable, Equatable {
+        struct Text: Decodable, Equatable { // swiftlint:disable:this nesting
             var id: String
             var text: String
         }
 
-        struct Animation: Decodable, Equatable {
+        struct Animation: Decodable, Equatable { // swiftlint:disable:this nesting
             var previewWidth: Int
             var previewHeight: Int
             var originalWidth: Int
@@ -181,7 +181,7 @@ extension SPComment {
             var originalUrl: String
         }
 
-        struct Image: Decodable, Equatable {
+        struct Image: Decodable, Equatable { // swiftlint:disable:this nesting
             var originalWidth: Int
             var originalHeight: Int
             var imageId: String
@@ -206,7 +206,11 @@ extension SPComment {
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
                 let originalUrl = try container.decode(String.self, forKey: .originalUrl)
-                self = .animation(Animation( previewWidth: previewWidth, previewHeight: previewHeight, originalWidth: originalWidth, originalHeight: originalHeight, originalUrl: originalUrl))
+                self = .animation(Animation( previewWidth: previewWidth,
+                                             previewHeight: previewHeight,
+                                             originalWidth: originalWidth,
+                                             originalHeight: originalHeight,
+                                             originalUrl: originalUrl))
             case "image":
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)

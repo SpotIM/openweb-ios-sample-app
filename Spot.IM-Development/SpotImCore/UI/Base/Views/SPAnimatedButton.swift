@@ -120,12 +120,15 @@ internal class SPAnimatedButton: OWBaseButton {
         addTargets()
     }
 
-    fileprivate func createLayers(buttonInset insets: UIEdgeInsets) {
+    fileprivate func createLayers(buttonInset insets: UIEdgeInsets) { // swiftlint:disable:this function_body_length
         self.layer.sublayers = nil
         let imageFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height).inset(by: insets)
 
         let imgCenterPoint = CGPoint(x: imageFrame.midX, y: imageFrame.midY)
-        let lineFrame = CGRect(x: imageFrame.origin.x - imageFrame.width / 4, y: imageFrame.origin.y - imageFrame.height / 4, width: imageFrame.width * 1.5, height: imageFrame.height * 1.5)
+        let lineFrame = CGRect(x: imageFrame.origin.x - imageFrame.width / 4,
+                               y: imageFrame.origin.y - imageFrame.height / 4,
+                               width: imageFrame.width * 1.5,
+                               height: imageFrame.height * 1.5)
 
         // ===============
         // circle layer

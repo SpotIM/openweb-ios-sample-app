@@ -119,7 +119,8 @@ fileprivate extension OWSkeletonShimmeringService {
             .observe(on: scheduler)
             .startWith(0) // Start immediately
             .voidify()
-            .delay(.milliseconds(10), scheduler: scheduler) // 10 milliseconds delay cause usually when we will start the service, a few skeleton views will be created, so let's sync their shimmering
+        // 10 milliseconds delay cause usually when we will start the service, a few skeleton views will be created, so let's sync their shimmering
+            .delay(.milliseconds(10), scheduler: scheduler)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }

@@ -53,10 +53,10 @@ internal final class SPPermissionsProvider {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             onAuthorized()
-            break
+
         case .denied:
             handlePermissionDenied(for: .camera)
-            break
+
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 if granted { // access allowed
@@ -65,7 +65,7 @@ internal final class SPPermissionsProvider {
                     // TODO - Do something?
                 }
             }
-            break
+
         default:
             break
         }

@@ -493,7 +493,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineWillInitialize, .banner), source: .conversation)
                     adsProvider.setupAdsBanner(with: adsId, in: self, validSizes: [.small])
                 }
-                break
+
             case .fullConversationBanner:
                 if model.adsGroup().mainConversationBannerEnabled() {
                     SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonitizationLoad, .banner), source: .conversation)

@@ -29,8 +29,8 @@ struct OWArticleSettings: OWArticleSettingsProtocol {
     let readOnlyMode: OWReadOnlyMode
 
     init(section: String,
-                showHeader: Bool = true,
-                readOnlyMode: OWReadOnlyMode = .default) {
+         showHeader: Bool = true,
+         readOnlyMode: OWReadOnlyMode = .default) {
         self.section = section
         self.showHeader = showHeader
         self.readOnlyMode = readOnlyMode

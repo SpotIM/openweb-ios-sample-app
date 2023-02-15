@@ -51,8 +51,8 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
 
     func startCommentCreationFlow(conversationData: OWConversationRequiredData,
                                   commentCreationData: OWCommentCreationRequiredData,
-                               presentationalMode: OWPresentationalMode,
-                               callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
+                                  presentationalMode: OWPresentationalMode,
+                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
 
         let deepLink = OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
         return startConversationFlow(conversationData: conversationData,

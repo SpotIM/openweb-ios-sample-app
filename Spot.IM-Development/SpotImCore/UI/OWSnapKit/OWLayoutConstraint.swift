@@ -21,7 +21,7 @@ class OWLayoutConstraint: NSLayoutConstraint {
     weak var constraint: OWConstraint? = nil
 }
 
-func ==(lhs: OWLayoutConstraint, rhs: OWLayoutConstraint) -> Bool {
+func == (lhs: OWLayoutConstraint, rhs: OWLayoutConstraint) -> Bool {
     // If firstItem or secondItem on either constraint has a dangling pointer
     // this comparison can cause a crash. The solution for this is to ensure
     // your layout code hold strong references to things like Views, LayoutGuides

@@ -14,15 +14,13 @@ enum OWConstraintRelation: Int {
     case greaterThanOrEqual
 
     var layoutRelation: OWLayoutRelation {
-        get {
-            switch(self) {
-            case .equal:
-                return .equal
-            case .lessThanOrEqual:
-                return .lessThanOrEqual
-            case .greaterThanOrEqual:
-                return .greaterThanOrEqual
-            }
+        switch(self) {
+        case .equal:
+            return .equal
+        case .lessThanOrEqual:
+            return .lessThanOrEqual
+        case .greaterThanOrEqual:
+            return .greaterThanOrEqual
         }
     }
 }

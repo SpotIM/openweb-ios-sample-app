@@ -95,7 +95,13 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
                 .downloadProgress(closure: { prog in
                     progress.onNext(prog)
                 })
-                .responseDecodable(of: T.self, queue: self.queue, dataPreprocessor: OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor, decoder: decoder, emptyResponseCodes: OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes, emptyRequestMethods: OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods, completionHandler: { [weak self] (response: OWNetworkDataResponse<T, OWNetworkError>) in
+                .responseDecodable(of: T.self,
+                                   queue: self.queue,
+                                   dataPreprocessor: OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
+                                   decoder: decoder,
+                                   emptyResponseCodes: OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
+                                   emptyRequestMethods: OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods,
+                                   completionHandler: { [weak self] (response: OWNetworkDataResponse<T, OWNetworkError>) in
 
                     guard let `self` = self else { return }
 

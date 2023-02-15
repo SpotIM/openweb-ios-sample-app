@@ -149,19 +149,19 @@ fileprivate extension OWCommentLabelView {
                 labelContainer.layer.borderColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.borderOpacityDarkMode : Metrics.borderOpacityLightMode).cgColor
                 iconImageView.tintColor = labelColor
                 label.textColor = labelColor
-                break
+
             case .selected:
                 labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.selectedOpacityDarkMode : Metrics.selectedOpacityLightMode)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = .white
                 label.textColor = .white
-                break
+
             case .readOnly:
                 labelContainer.backgroundColor = labelColor.withAlphaComponent(isDarkMode ? Metrics.opacityDarkMode : Metrics.opacityLightMode)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = labelColor
                 label.textColor = labelColor
-                break
+
         }
     }
 }

@@ -37,7 +37,7 @@ struct OWConstraintPriority: ExpressibleByFloatLiteral, Equatable, Strideable {
         return 250.0
     }
 
-    static func ==(lhs: OWConstraintPriority, rhs: OWConstraintPriority) -> Bool {
+    static func == (lhs: OWConstraintPriority, rhs: OWConstraintPriority) -> Bool {
         return lhs.value == rhs.value
     }
 

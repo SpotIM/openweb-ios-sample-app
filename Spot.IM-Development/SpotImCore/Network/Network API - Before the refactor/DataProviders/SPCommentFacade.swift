@@ -33,7 +33,7 @@ internal protocol SPCommentUpdater {
                      success: @escaping CommentHandler, failure: @escaping ErrorHandler)
 
     func muteComment(parameters: [String: Any], postId: String,
-                      success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler)
+                     success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler)
 
     func shareComment(parameters: [String: Any], postId: String,
                       success: @escaping ShareCommentHandler, failure: @escaping ErrorHandler)
