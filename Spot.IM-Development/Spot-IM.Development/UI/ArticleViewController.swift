@@ -16,14 +16,14 @@ internal final class ArticleViewController: UIViewController {
     @IBOutlet weak var stubImageView: UIImageView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerHeightConstraint: NSLayoutConstraint!
-    
-    var spotId : String?
+
+    var spotId: String?
     var postId: String?
 
     let foxArticleId = "urn:uri:base64:11ed1e55-b77b-505b-9ef5-5e42fbd9daed"
 
     var spotIMCoordinator: SpotImSDKFlowCoordinator?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,19 +32,24 @@ internal final class ArticleViewController: UIViewController {
             switch result {
             case .success(let coordinator):
                 self.spotIMCoordinator = coordinator
-                
-                coordinator.preConversationController(withPostId: self.postId ?? self.foxArticleId, articleMetadata: SpotImArticleMetadata(url: "", title: "", subtitle: "", thumbnailUrl: ""), navigationController: self.navigationController!) {
-                    [weak self] preConversationVC in
-                    
+
+                // swiftlint:disable line_length
+                coordinator.preConversationController(withPostId: self.postId ?? self.foxArticleId,
+                                                      articleMetadata: SpotImArticleMetadata(url: "",
+                                                                                             title: "",
+                                                                                             subtitle: "",
+                                                                                             thumbnailUrl: ""),
+                                                      navigationController: self.navigationController!) { [weak self] preConversationVC in
+                    // swiftlint:enable line_length
                     guard let self = self else { return }
-                    
+
                     self.addChild(preConversationVC)
                     self.containerView.addSubview(preConversationVC.view)
-                    
+
                     preConversationVC.view.snp.makeConstraints { make in
                         make.edges.equalToSuperview()
                     }
-                    
+
                     preConversationVC.didMove(toParent: self)
                 }
             case .failure(let error):
@@ -57,10 +62,10 @@ internal final class ArticleViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
