@@ -113,7 +113,7 @@ fileprivate extension OWCommentRatingView {
         
         // stackView
         stackView.OWSnp.makeConstraints { make in
-            make.top.bottom.leading.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
     

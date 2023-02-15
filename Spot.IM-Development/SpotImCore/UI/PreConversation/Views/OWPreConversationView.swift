@@ -110,6 +110,12 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         setupViews()
         setupObservers()
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+//        self.updateTableViewHeightIfNeeded()
+        self.viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: self.intrinsicContentSize.width, height: self.intrinsicContentSize.height))
+    }
 }
 
 fileprivate extension OWPreConversationView {
@@ -118,9 +124,9 @@ fileprivate extension OWPreConversationView {
         
         self.useAsThemeStyleInjector()
 
-        self.OWSnp.makeConstraints { make in
-            make.height.equalTo(Metrics.initialHeight)
-        }
+//        self.OWSnp.makeConstraints { make in
+//            make.height.equalTo(Metrics.initialHeight)
+//        }
         
         self.addSubviews(header)
         header.OWSnp.makeConstraints { make in
@@ -162,6 +168,7 @@ fileprivate extension OWPreConversationView {
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.height.equalTo(0)
         }
         
         self.addSubview(btnCTAConversation)
@@ -169,6 +176,7 @@ fileprivate extension OWPreConversationView {
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+//            make.height.equalTo(btnCTAConversation.intrinsicContentSize.height)
         }
         
         self.addSubview(footerView)
@@ -190,7 +198,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.preConversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
-                self?.updateTableViewHeightIfNeeded()
+//                self?.updateTableViewHeightIfNeeded()
             })
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
@@ -200,6 +208,9 @@ fileprivate extension OWPreConversationView {
                     guard let self = self else { return }
                     UIView.performWithoutAnimation {
                         self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+//                        self.tableView.setNeedsLayout()
+//                        self.tableView.layoutIfNeeded()
+//                        self.updateTableViewHeightIfNeeded()
                     }
                 })
                 .disposed(by: disposeBag)
@@ -218,15 +229,37 @@ fileprivate extension OWPreConversationView {
                                                                    themeStyle: currentStyle)
                 self.btnCTAConversation.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
+                
+        self.tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
     
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
-    private func updateTableViewHeightIfNeeded() {
-//        if (tableView.frame.size.height != tableView.contentSize.height) {
+//    private func updateTableViewHeightIfNeeded() {
+//        if (tableView.frame.size.height != tableView.contentSize.height && tableView.contentSize.height > 0) {
+//            print("NOGAH: new height - \(tableView.contentSize.height)")
+//            tableView.layoutIfNeeded()
 //            tableView.OWSnp.updateConstraints { make in
 //                make.height.equalTo(tableView.contentSize.height)
 //            }
 //            self.layoutIfNeeded()
 //        }
+//    }
+    
+    
+
+    internal override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if let obj = object as? UITableView {
+            if obj == self.tableView && keyPath == "contentSize" {
+                if let newSize = change?[NSKeyValueChangeKey.newKey] as? CGSize {
+                    print("NOGAH: table new contentSize height: \(newSize.height)")
+//                    self.tableView.frame.size.height = newSize.height
+                    tableView.OWSnp.updateConstraints { make in
+                        make.height.equalTo(newSize.height)
+                    }
+//                    tableView.setNeedsLayout()
+//                    tableView.layoutIfNeeded()
+                }
+            }
+        }
     }
 }

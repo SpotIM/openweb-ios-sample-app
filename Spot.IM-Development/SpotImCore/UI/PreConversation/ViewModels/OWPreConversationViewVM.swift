@@ -144,6 +144,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return _preConversationChangedSize
             .unwrap()
             .asObservable()
+            .distinctUntilChanged()
     }
     
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
