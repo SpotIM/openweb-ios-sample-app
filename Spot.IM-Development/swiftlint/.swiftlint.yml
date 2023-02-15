@@ -63,6 +63,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
 
 included: # paths to include during linting. `excluded` paths are still ignored.
   - ../Spot-IM.Development
+  - ../SpotImCore
   
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - ../Pods
