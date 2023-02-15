@@ -46,7 +46,7 @@ class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWP
             }
             .unwrap()
             .map { count in
-                return count > 0 ? "(\(count))" : ""
+                return count > 0 ? "(\(count.decimalFormatted))" : ""
             }
             .asObservable()
     }
