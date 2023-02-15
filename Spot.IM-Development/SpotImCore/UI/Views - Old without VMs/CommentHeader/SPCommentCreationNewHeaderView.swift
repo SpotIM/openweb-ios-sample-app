@@ -39,7 +39,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         static let commentLabelIdentifier = "comment_creation_new_header_view_comment_label_id"
     }
     weak var delegate: SPCommentCreationNewHeaderViewDelegate?
-    
+
     let closeButton: OWBaseButton = .init()
 
     private let headerTitleLabel: OWBaseLabel = .init()
@@ -47,17 +47,17 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
     private let commentAuthorLabel: OWBaseLabel = .init()
     private let commentLabel: OWBaseLabel = .init()
     private let separatorView: OWBaseView = .init()
-    
+
     private var replyingLabelTopConstraint: OWConstraint? = nil
     private var commentLabelTopConstraint: OWConstraint? = nil
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setup()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
@@ -66,7 +66,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         commentAuthorLabel.accessibilityIdentifier = Metrics.commentAuthorLabelIdentifier
         commentLabel.accessibilityIdentifier = Metrics.commentLabelIdentifier
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -79,22 +79,22 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         commentLabel.textColor = .spForeground1
         separatorView.backgroundColor = .spSeparator2
         closeButton.setImage(UIImage(spNamed: "closeCrossIconNew", supportDarkMode: true), for: .normal)
-        
+
         delegate?.customizeHeaderTitle(label: headerTitleLabel)
     }
-    
+
     func hideCommentText() {
         commentLabel.text = ""
         commentLabelTopConstraint?.update(offset: 0)
         commentLabel.isHidden = true
     }
-    
+
     func setupHeader(for headerMode: HeaderMode) {
         headerTitleLabel.text = headerMode.title
     }
-    
+
     // MARK: - Internal methods
-    
+
     internal func configure(with commentModel: CommentReplyDataModel? = nil) {
         if let commentModel = commentModel {
             commentAuthorLabel.text = commentModel.author
@@ -104,25 +104,25 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         }
         updateColorsAccordingToStyle()
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func hideReplyingViews() {
         hideCommentText()
         hideReplyingLabel()
     }
-    
+
     private func hideReplyingLabel() {
         replyingLabelTopConstraint?.update(offset: 0)
         replyingLabel.text = ""
         replyingLabel.isHidden = true
     }
-    
+
     private func hideCommentAuthorLabel() {
         commentAuthorLabel.text = ""
         commentAuthorLabel.isHidden = true
     }
-    
+
     private func setup() {
         addSubviews(headerTitleLabel, replyingLabel, commentAuthorLabel, closeButton, commentLabel, separatorView)
         setupHeaderTitle()
@@ -133,7 +133,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
         setupSeparatorView()
         updateColorsAccordingToStyle()
     }
-    
+
     private func setupHeaderTitle() {
         headerTitleLabel.textAlignment = .center
         headerTitleLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
@@ -144,7 +144,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
             make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
         }
     }
-    
+
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIconNew", supportDarkMode: true), for: .normal)
         closeButton.OWSnp.makeConstraints { make in
@@ -153,7 +153,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
             make.size.equalTo(45.0)
         }
     }
-    
+
     private func setupSeparatorView() {
         separatorView.OWSnp.makeConstraints { make in
             make.top.equalTo(headerTitleLabel.OWSnp.bottom)
@@ -161,7 +161,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
             make.height.equalTo(Theme.separatorHeight)
         }
     }
-    
+
     private func setupReplyingLabel() {
         replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.replyingToFontSize)
@@ -170,7 +170,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
         }
     }
-    
+
     private func setupCommentAuthorLabel() {
         commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.replyingToFontSize)
         commentAuthorLabel.OWSnp.makeConstraints { make in
@@ -179,7 +179,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
             make.trailing.lessThanOrEqualToSuperview().offset(-Theme.trailingOffset)
         }
     }
-    
+
     private func setupCommentLabel() {
         commentLabel.numberOfLines = 2
         commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
@@ -193,7 +193,7 @@ final class SPCommentCreationNewHeaderView: OWBaseView {
 }
 
 private enum Theme {
-    
+
     static let headerTitleHeight: CGFloat = 40.0
     static let topOffset: CGFloat = 22.0
     static let replyingTopOffset: CGFloat = 15.0
@@ -205,5 +205,5 @@ private enum Theme {
     static let titleFontSize: CGFloat = 18.0
     static let replyingToFontSize: CGFloat = 16.0
     static let commentFontSize: CGFloat = 16.0
-    
+
 }

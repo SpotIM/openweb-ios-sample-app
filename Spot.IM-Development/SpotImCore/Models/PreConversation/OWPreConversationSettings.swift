@@ -11,7 +11,7 @@ import Foundation
 #if NEW_API
 public struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
     public let style: OWPreConversationStyle
-    
+
     public init(style: OWPreConversationStyle = .regular()) {
         self.style = style.validate()
     }
@@ -19,7 +19,7 @@ public struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
 #else
 struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
     let style: OWPreConversationStyle
-    
+
     init(style: OWPreConversationStyle = .regular()) {
         self.style = style.validate()
     }

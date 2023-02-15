@@ -17,7 +17,7 @@ enum OWConversationCellOption: CaseIterable {
                 .ad(viewModel: OWAdCellViewModel.stub()),
                 .spacer(viewModel: OWSpacerCellViewModel.stub())]
     }
-    
+
     case comment(viewModel: OWCommentCellViewModeling)
     case commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModeling)
     case reply(viewModel: OWReplyCellViewModeling)
@@ -40,7 +40,7 @@ extension OWConversationCellOption {
             return viewModel
         }
     }
-    
+
     var cellClass: UITableViewCell.Type {
         // TODO: Return the actual cell type once developed
         switch self {
@@ -58,7 +58,7 @@ extension OWConversationCellOption {
     }
 }
 
-extension OWConversationCellOption: Equatable  {
+extension OWConversationCellOption: Equatable {
     var identifier: String {
         // TODO: Once developed, return id of the comment/reply/ad for each.
         // Spacer will also have a specific id which will be generated with "UUID" as the VM created.
@@ -80,7 +80,7 @@ extension OWConversationCellOption: Equatable  {
 //            return viewModel.outputs.id
         }
     }
-   
+
     static func == (lhs: OWConversationCellOption, rhs: OWConversationCellOption) -> Bool {
         switch (lhs, rhs) {
         case (.comment(_), .comment(_)):

@@ -9,7 +9,7 @@
 import UIKit
 
 extension UINavigationBar {
-    
+
     func applyLightAppearance(with barColor: UIColor? = nil) {
         shadowImage = UIImage()
         isTranslucent = false
@@ -24,7 +24,7 @@ extension UINavigationBar {
         backIndicatorImage = image
         backIndicatorTransitionMaskImage = image
     }
-    
+
     func applyDarkAppearance(with barColor: UIColor? = nil) {
         shadowImage = UIImage()
         isTranslucent = false

@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIImage {
-    
+
     /// Will search images with names: `'name'_index`
     static func animationImages(with name: String) -> [UIImage] {
         var index = 0
@@ -23,7 +23,7 @@ extension UIImage {
                 images.append(image)
             }
         }
-        
+
         return images
     }
 }

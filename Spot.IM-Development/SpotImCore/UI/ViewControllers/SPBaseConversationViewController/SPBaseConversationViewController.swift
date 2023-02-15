@@ -10,13 +10,13 @@ import UIKit
 import RxSwift
 
 internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPresentable, OWLoaderPresentable, OWUserAuthFlowDelegateContainable {
-    
+
     weak var userAuthFlowDelegate: OWUserAuthFlowDelegate?
     private var authHandler: OWAuthenticationHandler?
-    
+
     // If we are using inheritance let's at least take advantage of it, that's why not private
     let servicesProvider: OWSharedServicesProviding
-    
+
     weak var webPageDelegate: SPSafariWebPageDelegate?
 
     internal lazy var tableView: UITableView = {
@@ -26,7 +26,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
             .separatorStyle(.none)
             .dataSource(self)
             .delegate(self)
-        
+
         tableView.register(cellClass: SPReplyCell.self)
         tableView.register(cellClass: SPCommentCell.self)
         tableView.register(cellClass: SPLoaderCell.self)
@@ -34,10 +34,10 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
 
         return tableView
     }()
-    
+
     internal weak var delegate: SPCommentsCreationDelegate?
     internal var stateActionView: SPEmptyConversationActionView?
-    
+
     let activityIndicator: SPLoaderView = SPLoaderView()
     internal let model: SPMainConversationModel
 
@@ -53,15 +53,15 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     private var typingViewBottomConstraint: OWConstraint?
     private var typingViewCenterConstraint: OWConstraint?
     private var typingViewCenterCurrentOffset: CGFloat?
-    
+
     // MARK: - Internal methods
 
     internal init(model: SPMainConversationModel, customUIDelegate: OWCustomUIDelegate? = nil,
                   servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.model = model
-        
+
         self.servicesProvider = servicesProvider
-        
+
         super.init(customUIDelegate: customUIDelegate)
         self.model.openUserProfileDelegate = self
     }
@@ -73,29 +73,29 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         setupUI()
         addLongTouchHandler()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         model.dataSource.delegate = self
         tableView.reloadData()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         configureBaseModelHandlers()
-        
+
     }
-    
+
     override func viewDidChangeWindowSize() {
         self.tableView.reloadData()
     }
-    
+
     func didStartSignInFlow() {
         // Override this method in your VC to handle
     }
-    
+
     func userDidSignInHandler() -> OWAuthenticationHandler? {
         authHandler = OWAuthenticationHandler()
         authHandler?.authHandler = { [weak self] isAuthenticated in
@@ -104,12 +104,12 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
 
         return authHandler
     }
-    
+
     func handleUserSignedIn(isAuthenticated: Bool) {
         // Override this method in your VC to handle
         self.reloadConversation()
     }
-    
+
     @objc
     internal func reloadConversation(showLoader: Bool = true) {
         guard !model.dataSource.isLoading else { return }
@@ -128,15 +128,14 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
             }
         )
     }
-    
-    
+
     func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         // Override this method in your VC to handle
     }
-    
+
     internal func updateCommunityQuestionCustomUI(communityQuestionView: SPCommunityQuestionView) {
         guard let customUIDelegate = self.customUIDelegate else { return }
-        communityQuestionView.customizeCommunityQuestion (
+        communityQuestionView.customizeCommunityQuestion(
             customUIDelegate: customUIDelegate,
             source: runtimeSource
         )
@@ -145,7 +144,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         guard let customUIDelegate = self.customUIDelegate else { return }
         footerView.handleUICustomizations(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
     }
-    
+
     internal func getCommunityGuidelinesTextIfExists() -> String? {
         guard let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
               conversationConfig.communityGuidelinesEnabled == true,
@@ -154,25 +153,25 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         }
         return getCommunityGuidelinesHtmlString(communityGuidelinesTitle: communityGuidelinesTitle)
     }
-    
+
     internal func getCommunityQuestion() -> String? {
         return model.dataSource.communityQuestion
     }
-    
+
     internal func isReadOnlyModeEnabled() -> Bool {
         return model.isReadOnlyMode()
     }
-    
+
     private func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: SPCommunityGuidelinesTitle) -> String {
         var htmlString = communityGuidelinesTitle.value
-        
+
         // remove <p> and </p> tags to control the text height by the sdk
         htmlString = htmlString.replacingOccurrences(of: "<p>", with: "")
         htmlString = htmlString.replacingOccurrences(of: "</p>", with: "")
-        
+
         return htmlString
     }
-    
+
     private func myUserAvatarDidTap() {
         guard let user = SPUserSessionHolder.session.user,
               let policyForceRegister = SPConfigsDataSource.appConfig?.initialization?.policyForceRegister else {
@@ -201,7 +200,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
 
     func configureEmptyStateView() {
         guard stateActionView == nil else { return }
-        
+
         stateActionView = createEmptyConversationActionView()
         view.addSubview(stateActionView!)
     }
@@ -213,7 +212,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
     internal func cellDataHeight(for indexPath: IndexPath) -> CGFloat {
         let isLast = model.dataSource.numberOfRows(in: indexPath.section) == indexPath.row + 1
         let cellData = model.dataSource.cellData(for: indexPath)
-        
+
         return cellData.height(with: messageLineLimit, isLastInSection: isLast)
     }
 
@@ -228,12 +227,12 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
                 action: errorAction)
         )
     }
-    
+
     func hideEmptyStateView() {
         self.stateActionView?.removeFromSuperview()
         self.stateActionView = nil
     }
-    
+
     internal func showEmptyStateView() {
         configureEmptyStateView()
         let actionMessage: String
@@ -265,7 +264,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
             customUIDelegate?.customizeView(.emptyStateReadOnlyLabel(label: label), source: runtimeSource)
         }
     }
-    
+
     internal func updateEmptyStateViewAccordingToStyle() {
         stateActionView?.updateColorsAccordingToStyle()
     }
@@ -288,11 +287,11 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         longGesture.delaysTouchesBegan = true
         tableView.addGestureRecognizer(longGesture)
     }
-    
+
     private func configureBaseModelHandlers() {
         model.commentsActionDelegate = self
     }
-    
+
     private func showNoInternetStateView() {
         configureEmptyStateView()
         let noInternetAction = configureNoInternetAction()
@@ -340,11 +339,11 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         didCheckAdsAvailability = true
         setupAds(for: tags)
     }
-    
+
     func setupAds(for tags: [SPAdsConfigurationTag]) {
-        //Override this method in your VC if you need to configure advertisement
+        // Override this method in your VC if you need to configure advertisement
     }
-    
+
     func disableAdsForUser() -> Bool {
         guard let config = SPConfigsDataSource.appConfig,
               let disableAdsForSubscribers = config.mobileSdk.disableAdsForSubscribers,
@@ -353,7 +352,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
         else { return false }
         return disableAdsForSubscribers && ssoData.isSubscriber
     }
-    
+
     internal func handleCommentSizeChange() {
         // implement in subclasses if needed
     }
@@ -368,29 +367,29 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
             source: .conversation
         )
     }
-    
+
     @objc
     private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         guard gestureRecognizer.state == .began else { return }
-        
+
         let touchInTableView = gestureRecognizer.location(in: tableView)
-        
+
         guard let indexPath = tableView.indexPathForRow(at: touchInTableView),
             let cell = tableView.cellForRow(at: indexPath),
             let cellWithMessage = cell as? MessageItemContainable
             else {
                 return
         }
-        
+
         let touchInCell = tableView.convert(touchInTableView, to: cell)
-        
+
         guard cellWithMessage.containsChatItem(at: touchInCell) else { return }
-        
+
         model.copyCommentText(at: indexPath)
-        
+
         showToast(message: LocalizationManager.localizedString(key: "Text copied to clipboard"),
                   hideAfter: 0.7)
-        
+
     }
 
     public func heightForRow(at indexPath: IndexPath) -> CGFloat {
@@ -403,7 +402,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
             return cellDataHeight(for: indexPath) + headerSpacing
         }
     }
-    
+
     private func handleTypingIndicationViewUpdate(typingCount: Int, newCommentsCount: Int, shouldShowBlitz: Bool) {
         if typingCount <= 0 && !shouldShowBlitz {
             hideTypingIndicationView()
@@ -433,13 +432,12 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
         self.handleConversationReloaded(success: true, error: nil)
         model.setReltime(viewType: .typing)
     }
-    
-    
+
     func horisontalPositionChangeDidEnd() {
         guard
             let currentCenterConstant = typingViewCenterCurrentOffset
             else { return }
-        
+
         if currentCenterConstant > (view.bounds.width / 4) ||
             currentCenterConstant < -(view.bounds.width / 4) {
             model.stopTypingTracking()
@@ -447,17 +445,17 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             returnTypingViewToTheCenter()
         }
     }
-    
+
     func horisontalPositionDidChange(transition: CGFloat) {
         typingViewCenterCurrentOffset = transition
         typingViewCenterConstraint?.update(offset: transition)
     }
-    
+
     private func dismissTypingViewToTheSide() {
         guard
             let currentCenterConstant = typingViewCenterCurrentOffset
             else { return }
-        
+
         typingViewCenterConstraint?.update(offset: currentCenterConstant > 0 ? view.bounds.width : -view.bounds.width)
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
@@ -467,14 +465,14 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             self.typingViewCenterCurrentOffset = 0
         })
     }
-    
+
     private func returnTypingViewToTheCenter() {
         typingViewCenterConstraint?.update(offset: 0)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
     }
-    
+
     private func hideTypingIndicationView() {
         typingViewBottomConstraint?.update(offset: 100.0)
         UIView.animate(
@@ -489,13 +487,13 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             }
         )
     }
-    
+
     private func createAndShowTypingIndicationView() {
         typingIndicationView = TotalTypingIndicationView()
         typingIndicationView?.delegate = self
         typingIndicationView?.alpha = 0
         view.insertSubview(typingIndicationView!, aboveSubview: tableView)
-        
+
         typingIndicationView?.OWSnp.makeConstraints({ make in
             typingViewBottomConstraint = make.bottom.equalTo(tableView).offset(100.0).constraint
             typingViewCenterConstraint = make.centerX.equalToSuperview().constraint
@@ -503,7 +501,7 @@ extension SPBaseConversationViewController: TotalTypingIndicationViewDelegate {
             make.height.equalTo(34.0)
         })
         view.layoutIfNeeded()
-        
+
         typingViewBottomConstraint?.update(offset: -25.0)
         UIView.animate(
             withDuration: 0.3,
@@ -558,11 +556,11 @@ extension SPBaseConversationViewController: UITableViewDataSource {
                 windowWidth: self.view.window?.frame.width
             )
             replyCell.delegate = self
-            
+
             return replyCell
         }
     }
-    
+
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let commentCell = cell as? SPCommentCell {
             commentCell.updateColorsAccordingToStyle()
@@ -583,7 +581,7 @@ extension SPBaseConversationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         heightForRow(at: indexPath)
     }
-    
+
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return nil
     }
@@ -601,7 +599,7 @@ extension SPBaseConversationViewController: UITableViewDelegate {
             return 1.01
         }
     }
-    
+
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         if #available(iOS 11.0, *) {
             return 0.01
@@ -609,12 +607,12 @@ extension SPBaseConversationViewController: UITableViewDelegate {
             return 1.01
         }
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         // required to have correct section separator in older versions of iOS
         return 0.01
     }
-    
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // required to have correct section separator in older versions of iOS
         return 0.01
@@ -626,8 +624,7 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
     func reloadAt(indexPath: IndexPath) {
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
-    
-    
+
     @objc
     func reload(shouldBeScrolledToTop: Bool) {
         if shouldBeScrolledToTop {
@@ -635,21 +632,21 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
         }
         tableView.reloadData()
     }
-    
+
     @objc
     func reload(scrollToIndexPath: IndexPath?) {}
-    
+
     func dataSource(dataSource: SPMainConversationDataSource, didInsertRowsAt indexPaths: [IndexPath]) {
         tableView.insertRows(at: indexPaths, with: .automatic)
     }
-    
+
     func dataSource(dataSource: SPMainConversationDataSource, didInsertSectionsAt indexes: [Int]) {
         CATransaction.begin()
         tableView.beginUpdates()
         CATransaction.setCompletionBlock {
             self.tableView.reloadData()
         }
-        
+
         // Part of the reason why inheritance is crap.. We won't have such things once we will refactor the UI layer
         if let preConversation = self as? SPPreConversationViewController {
             // In the pre conversation we can add section only if we didn't exceed the max number of sections (which return in the table view number of sections delegate)
@@ -669,7 +666,7 @@ extension SPBaseConversationViewController: SPMainConversationDataSourceDelegate
             hideEmptyStateView()
         }
     }
-    
+
     @objc
     func dataSource(didChangeRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? SPReplyCell {
@@ -724,7 +721,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         default:
             break
         }
-        
+
         model.dataSource.updateRank(with: change, inCellWith: commentId)
         let rankActionDataModel = RankActionDataModel(change: change,
                                                       commentId: commentId,
@@ -742,7 +739,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             } else if success == false {
                 self.showAlert(
                     title: LocalizationManager.localizedString(key: "Oops..."),
-                    message: LocalizationManager.localizedString(key: 
+                    message: LocalizationManager.localizedString(key:
                         "It seems we are experiencing technical issues. Please try again")
                 )
                 self.model.dataSource.updateRank(with: change.reversed, inCellWith: commentId)
@@ -764,14 +761,14 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
 
     func replyTapped(for commentId: String?) {
         guard let id = commentId, let delegate = delegate else { return }
-        
+
         guard SpotIm.reactNativeShowLoginScreenOnRootVC,
               SPUserSessionHolder.session.user?.id == nil else {
             logCreationOpen(with: .reply, parentId: commentId)
             delegate.createReply(with: model, to: id)
             return
         }
-        
+
         self.startLoginFlow()
     }
 
@@ -782,7 +779,7 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
             event: .messageContextMenuClicked(messageId: commentId, relatedMessageId: replyingToID),
             source: .conversation
         )
-        
+
         let actions = model.commentAvailableActions(commentId, sender: sender)
         if !actions.isEmpty {
             showActionSheet(actions: actions, sender: sender)
@@ -820,11 +817,11 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
         tableView.reloadData()
         handleCommentSizeChange()
     }
-    
+
     func clickOnUrlInComment(url: URL) {
         webPageDelegate?.openWebPage(with: url.absoluteString)
     }
-    
+
     private func startLoginFlow() {
         if SpotIm.reactNativeShowLoginScreenOnRootVC &&
             self.isInFullConversationVC() {
@@ -837,15 +834,15 @@ extension SPBaseConversationViewController: SPCommentCellDelegate {
 }
 
 extension SPBaseConversationViewController: MainConversationModelDelegate {
-    
+
     func stopTypingTrack() {
         dismissTypingViewToTheSide()
     }
-    
+
     func totalTypingCountDidUpdate(count: Int, newCommentsCount: Int) {
         handleTypingIndicationViewUpdate(typingCount: count, newCommentsCount: newCommentsCount, shouldShowBlitz: model.realtimeViewType == .blitz)
     }
-    
+
     func realtimeViewTypeDidUpdate() {
         do {
             handleTypingIndicationViewUpdate(typingCount: try model.typingCount(), newCommentsCount: try model.newMessagesCount(), shouldShowBlitz: model.realtimeViewType == .blitz)
@@ -856,13 +853,13 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
             }
         }
     }
-    
+
 }
 
 extension SPBaseConversationViewController: OWCommentCreationEntryViewDelegate {
     func labelContainerDidTap() {
         guard let delegate = delegate else { return }
-        
+
         if SpotIm.reactNativeShowLoginScreenOnRootVC &&
             SPUserSessionHolder.session.user?.id == nil {
             self.startLoginFlow()
@@ -871,18 +868,18 @@ extension SPBaseConversationViewController: OWCommentCreationEntryViewDelegate {
         logCreationOpen(with: .comment)
         delegate.createComment(with: model)
     }
-    
+
     func userAvatarDidTap() {
         myUserAvatarDidTap()
     }
-    
+
     private func isInFullConversationVC() -> Bool {
         return self is SPMainConversationViewController
     }
 }
 
 extension SPBaseConversationViewController: CommentsActionDelegate {
-    
+
     func localCommentWillBeCreated() {
         guard tableView.numberOfSections > 0,
             tableView.numberOfRows(inSection: 0) > 0,
@@ -890,7 +887,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
 
         tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: false)
     }
-    
+
     func localCommentWasCreated() {
         servicesProvider.logger().log(level: .verbose, "FirstComment:")
         model.handlePendingComment()
@@ -901,7 +898,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             self.presentMessageBlockedAlert(with: messageText)
         }
     }
-    
+
     func prepareFlowForAction(_ type: ActionType, sender: OWUISource) {
         switch type {
         case .delete(let commentId, let replyingToID):
@@ -920,7 +917,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             showCommentMuteFlow(commentId, replyingToID: replyingToID, userId: userId)
         }
     }
-    
+
     private func showCommentDeletionFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Delete"),
@@ -941,7 +938,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                     }
                 }
         }
-        
+
         let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
@@ -949,7 +946,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             message: LocalizationManager.localizedString(key: "Do you really want to delete this comment?"),
             actions: [noAction, yesAction])
     }
-    
+
     private func showCommentReportFlow(_ commentId: String, replyingToID: String?) {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Report"),
@@ -970,7 +967,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                     }
                 }
         }
-        
+
         let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
@@ -979,7 +976,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             actions: [noAction, yesAction])
         SPAnalyticsHolder.default.log(event: .commentReportClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
     }
-    
+
     private func showCommentMuteFlow(_ commentId: String, replyingToID: String?, userId: String) {
         let muteAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Mute"),
@@ -997,7 +994,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
                 }
                 SPAnalyticsHolder.default.log(event: .commentMuteClicked(messageId: commentId, relatedMessageId: replyingToID, muteUserId: userId), source: .conversation)
         }
-        
+
         let cancelAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(
@@ -1005,12 +1002,12 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             message: LocalizationManager.localizedString(key: "Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings"),
             actions: [muteAction, cancelAction])
     }
-    
+
     private func showCommentShareFlow(_ commentId: String, sender: OWUISource, replyingToID: String?) {
         showLoader()
         model.shareComment(with: commentId) { [weak self] url, error in
             guard let self = self else { return }
-            
+
             self.hideLoader()
             if let error = error {
                 self.showAlert(
@@ -1025,7 +1022,7 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
             SPAnalyticsHolder.default.log(event: .commentShareClicked(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
     }
-    
+
     private func showCommentEditingFlow(_ commentId: String) {
         self.delegate?.editComment(with: self.model, to: commentId)
     }
@@ -1074,9 +1071,9 @@ extension SPBaseConversationViewController: OpenUserProfileDelegate {
             postId: model.dataSource.postId,
             userId: userId
         )
-        
+
         let isMyProfile = SPPublicSessionInterface.isMe(userId: userId)
-        
+
         if isMyProfile {
             // add singleUseTicket to params when navigating to profile screen
             _ = SpotIm.profileProvider.getSingleUseToken()
@@ -1093,7 +1090,7 @@ extension SPBaseConversationViewController: OpenUserProfileDelegate {
             SPWebSDKProvider.openWebModule(delegate: webPageDelegate, params: params)
         }
     }
-    
+
     func getCurrentNavigationController() -> UINavigationController? {
         return navigationController
     }

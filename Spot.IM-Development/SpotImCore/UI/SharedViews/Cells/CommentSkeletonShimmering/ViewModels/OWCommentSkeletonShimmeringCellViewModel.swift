@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentSkeletonShimmeringCellViewModelingInputs {
-    
+
 }
 
 protocol OWCommentSkeletonShimmeringCellViewModelingOutputs {
@@ -25,7 +25,7 @@ protocol OWCommentSkeletonShimmeringCellViewModeling: OWCellViewModel {
 class OWCommentSkeletonShimmeringCellViewModel: OWCommentSkeletonShimmeringCellViewModeling, OWCommentSkeletonShimmeringCellViewModelingInputs, OWCommentSkeletonShimmeringCellViewModelingOutputs {
     var inputs: OWCommentSkeletonShimmeringCellViewModelingInputs { return self }
     var outputs: OWCommentSkeletonShimmeringCellViewModelingOutputs { return self }
-    
+
     // Unique identifier
     let id: String = UUID().uuidString
 }

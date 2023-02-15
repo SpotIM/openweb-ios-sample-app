@@ -12,17 +12,17 @@ import Foundation
 public struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
     public var selectedCommentId: String?
     public var style: OWConversationStyle
-    
+
     public init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
         self.selectedCommentId = selectedCommentId
         self.style = style
     }
-    
+
     @discardableResult public mutating func selectedCommentId(id: String?) -> OWConversationSettingsBuilder {
         self.selectedCommentId = id
         return self
     }
-    
+
     @discardableResult public mutating func style(_ style: OWConversationStyle) -> OWConversationSettingsBuilder {
         self.style = style
         return self

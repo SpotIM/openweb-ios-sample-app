@@ -8,10 +8,10 @@
 
 import UIKit
 
-struct OWConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
-    
+struct OWConstraintAttributes: OptionSet, ExpressibleByIntegerLiteral {
+
     typealias IntegerLiteralType = UInt
-    
+
     init(rawValue: UInt) {
         self.rawValue = rawValue
     }
@@ -28,11 +28,11 @@ struct OWConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     private static var allZeros: OWConstraintAttributes { return 0 }
     private static func convertFromNilLiteral() -> OWConstraintAttributes { return 0 }
     private var boolValue: Bool { return self.rawValue != 0 }
-    
+
     private func toRaw() -> UInt { return self.rawValue }
     private static func fromRaw(_ raw: UInt) -> OWConstraintAttributes? { return self.init(raw) }
     private static func fromMask(_ raw: UInt) -> OWConstraintAttributes { return self.init(raw) }
-    
+
     // normal
     static let none: OWConstraintAttributes = 0
     static let left: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 0)
@@ -47,23 +47,23 @@ struct OWConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     static let centerY: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 9)
     static let lastBaseline: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 10)
     static let firstBaseline: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 11)
-    
+
     static let leftMargin: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 12)
-    
+
     static let rightMargin: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 13)
-    
+
     static let topMargin: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 14)
-    
+
     static let bottomMargin: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 15)
-    
+
     static let leadingMargin: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 16)
-    
+
     static let trailingMargin: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 17)
-    
+
     static let centerXWithinMargins: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 18)
-    
+
     static let centerYWithinMargins: OWConstraintAttributes = OWConstraintAttributes(UInt(1) << 19)
-    
+
     // aggregates
     static let edges: OWConstraintAttributes = [.horizontalEdges, .verticalEdges]
     static let horizontalEdges: OWConstraintAttributes = [.left, .right]
@@ -73,14 +73,14 @@ struct OWConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
     static let directionalVerticalEdges: OWConstraintAttributes = [.top, .bottom]
     static let size: OWConstraintAttributes = [.width, .height]
     static let center: OWConstraintAttributes = [.centerX, .centerY]
-    
+
     static let margins: OWConstraintAttributes = [.leftMargin, .topMargin, .rightMargin, .bottomMargin]
-    
+
     static let directionalMargins: OWConstraintAttributes = [.leadingMargin, .topMargin, .trailingMargin, .bottomMargin]
-    
+
     static let centerWithinMargins: OWConstraintAttributes = [.centerXWithinMargins, .centerYWithinMargins]
-    
-    var layoutAttributes:[OWLayoutAttribute] {
+
+    var layoutAttributes: [OWLayoutAttribute] {
         var attrs = [OWLayoutAttribute]()
         if (self.contains(OWConstraintAttributes.left)) {
             attrs.append(.left)
@@ -142,7 +142,7 @@ struct OWConstraintAttributes : OptionSet, ExpressibleByIntegerLiteral {
         if (self.contains(OWConstraintAttributes.centerYWithinMargins)) {
             attrs.append(.centerYWithinMargins)
         }
-        
+
         return attrs
     }
 }

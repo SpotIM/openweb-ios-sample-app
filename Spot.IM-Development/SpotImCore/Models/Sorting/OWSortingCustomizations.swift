@@ -17,6 +17,6 @@ class OWSortingCustomizer: OWSortingCustomizations {
     func setTitle(_ title: String, forOption sortOption: OWSortOption) {
         // TODO: Complete
     }
-    
+
     var initialOption: OWSortOption = .default
 }

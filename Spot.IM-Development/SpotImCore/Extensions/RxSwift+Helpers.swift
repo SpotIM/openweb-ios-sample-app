@@ -41,7 +41,7 @@ extension ObservableType {
             }
         }
     }
-    
+
     // Exponential retry (simple algorithm)
     func exponentialRetry(maxAttempts: Int, millisecondsDelay: Int, scheduler: SchedulerType = MainScheduler.instance) -> Observable<Self.Element> {
         return self.retry { errors in

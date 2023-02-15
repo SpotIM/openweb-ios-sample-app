@@ -34,13 +34,13 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     private lazy var communityQuestionView = SPCommunityQuestionView()
     private lazy var communityGuidelinesView = SPCommunityGuidelinesView()
     private lazy var footer = SPMainConversationFooterView()
-    
+
     private var bannerView: UIView?
 
     internal override var screenTargetType: SPAnScreenTargetType {
         return .main
     }
-    
+
     // true if the full conversation is opened via present/push and not from pre-conversation
     internal var openedByPublisher = false
 
@@ -88,7 +88,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
-    
+
     fileprivate let disposeBag = DisposeBag()
 
     init(model: SPMainConversationModel, adsProvider: AdsProvider, customUIDelegate: OWCustomUIDelegate?, openedByPublisher: Bool = false) {
@@ -135,7 +135,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             selector: #selector(self.userLoginSuccessNotification(notification:)),
             name: Notification.Name(SpotImSDKFlowCoordinator.USER_LOGIN_SUCCESS_NOTIFICATION),
             object: nil)
-        
+
         startRealtimeService()
         setupObservers()
     }
@@ -149,7 +149,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             }
         }
     }
-    
+
     override func viewDidChangeWindowSize() {
         super.viewDidChangeWindowSize()
         self.resetCollapsableContainerHeight()
@@ -160,7 +160,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.updateColorsAccordingToStyle()
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if self.isMovingFromParent {
@@ -172,8 +172,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         if self.shouldDisplayLoginPrompt && SPUserSessionHolder.session.user?.id == nil {
             // publisher point of integration - this is where NY Post for example can configure text, font, color, etc, etc
             self.customUIDelegate?.customizeView(.loginPrompt(textView: loginPromptView.getTextView()), source: .conversation)
-        }
-        else {
+        } else {
             loginPromptView.isHidden = true
             loginPromptView.OWSnp.makeConstraints { make in
                 make.height.equalTo(0)
@@ -184,7 +183,6 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     @objc func userLoginSuccessNotification(notification: Notification) {
         self.shouldDisplayLoginPrompt = false
     }
-
 
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
@@ -234,7 +232,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         checkAdsAvailability()
 
         model.delegates.add(delegate: self)
@@ -285,12 +283,12 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             let messageCount = self.model.dataSource.messageCount
             SPAnalyticsHolder.default.totalComments = messageCount
             // show/hide empty view if needed
-            if self.model.areCommentsEmpty(){
+            if self.model.areCommentsEmpty() {
                 showEmptyStateView()
             } else {
                 hideEmptyStateView()
             }
-            self.tableView.scrollRectToVisible(.init(x: 0, y: 0 , width: 1, height: 1), animated: true)
+            self.tableView.scrollRectToVisible(.init(x: 0, y: 0, width: 1, height: 1), animated: true)
         }
         logger.log(level: .verbose, "FirstComment: Calling reload on table view")
         self.tableView.reloadData()
@@ -310,7 +308,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     }
 
     // MARK: - Private Methods
-    
+
     private func resetCollapsableContainerHeight() {
         guard shouldDisplayCollapsableContainer else { return }
 
@@ -319,7 +317,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             heightConstraint.deactivate()
             collapsableContainerHeightConstraint = nil
         }
-        
+
         // recalculate height of subviews
         // This will trigger `viewDidLayoutSubviews` method after orientation change, in which
         // the frame of the collapsableContainer will update and we will re-make the height constarint
@@ -339,7 +337,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 
     private func loadCommentsNextPage() {
         guard !model.dataSource.isLoading else { return }
-        
+
         let logger = servicesProvider.logger()
         logger.log(level: .verbose, "Loading comments next page")
         SPAnalyticsHolder.default.log(event: .loadMoreComments, source: .conversation)
@@ -484,7 +482,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             make.bottom.equalTo(footer.OWSnp.top)
         }
     }
-    
+
     override func setupAds(for tags: [SPAdsConfigurationTag]) {
         for tag in tags {
             guard let adsId = tag.code else { break }
@@ -551,7 +549,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
         }
         refreshControl.addTarget(self, action: #selector(refreshControllChanged), for: .valueChanged)
     }
-    
+
     @objc
     private func refreshControllChanged() {
         self.reloadConversation(showLoader: false)
@@ -583,7 +581,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             make.height.equalTo(articleHeaderMaxHeight)
         }
     }
-    
+
     private func removeBannerFromConversation() {
         if model.dataSource.shouldShowBanner {
             tableView.beginUpdates()
@@ -592,10 +590,10 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
             tableView.endUpdates()
         }
     }
-    
+
     private func startRealtimeService() {
         let delay = (SPConfigsDataSource.appConfig?.realtime?.startTimeoutMilliseconds ?? 5000) / 1000
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
             self.model.startTypingTracking()
         }
@@ -627,7 +625,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
     override func isLastSection(with section: Int) -> Bool {
         return model.dataSource.numberOfSections() == section + 1
     }
-    
+
     override func heightForRow(at indexPath: IndexPath) -> CGFloat {
         if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
             return 280.0
@@ -638,7 +636,7 @@ final class SPMainConversationViewController: SPBaseConversationViewController, 
 }
 
 extension SPMainConversationViewController { // UITableViewDelegate
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.section == 0 && model.dataSource.shouldShowBanner) {
             let adBannerCell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: SPAdBannerCell.self, for: indexPath)
@@ -696,7 +694,7 @@ extension SPMainConversationViewController { // UITableViewDataSource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return model.dataSource.numberOfRows(in: section)
     }
-    
+
     override func numberOfSections(in tableView: UITableView) -> Int {
         return model.dataSource.numberOfSections()
     }
@@ -713,7 +711,7 @@ extension SPMainConversationViewController: SPAdBannerCellDelegate {
 extension SPMainConversationViewController { // SPMainConversationDataSourceDelegate
 
     override func reload(shouldBeScrolledToTop: Bool) {
-        if self.model.areCommentsEmpty(){
+        if self.model.areCommentsEmpty() {
             showEmptyStateView()
         } else {
             hideEmptyStateView()
@@ -818,7 +816,7 @@ extension SPMainConversationViewController { // Article header scrolling logic
         } else {
             height = articleHeaderMaxHeight
         }
-        
+
         articleHeader.OWSnp.updateConstraints { make in
             make.height.equalTo(height)
         }
@@ -864,18 +862,18 @@ extension SPMainConversationViewController: AdsProviderBannerDelegate {
         guard navigationController?.topViewController is SPMainConversationViewController else {
             return
         }
-        
+
 //        preparation code for banner in the footer view -
 //        need to use adUnitID to handle different banners.
-        
+
 //        footerHeightConstraint?.constant = 80.0 + adBannerSize.height + 16.0
 //        footer.updateBannerView(bannerView, height: adBannerSize.height)
-        
+
         self.bannerView = bannerView
-        
+
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineInitialized, .banner), source: .conversation)
         SPAnalyticsHolder.default.log(event: .engineStatus(.engineMonetizationView, .banner), source: .conversation)
-        
+
         if !self.model.dataSource.shouldShowBanner && !self.model.dataSource.isLoading {
             tableView.beginUpdates()
             self.model.dataSource.shouldShowBanner = true
