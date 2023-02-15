@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the aliases
-ALIAS_LINT="alias sLint='swiftlint lint --config swiftlint/.swiftlint.yml' --reporter xcode'"
+ALIAS_LINT="alias sLint='swiftlint lint --config swiftlint/.swiftlint.yml --reporter xcode'"
 ALIAS_FIX="alias sFix='swiftlint --fix --config swiftlint/.swiftlint.yml --reporter xcode'"
 
 # Define the shell configuration files to modify
