@@ -100,7 +100,6 @@ protocol OWSectionedViewType {
 
 extension OWSectionedViewType {
     func batchUpdates<OWSection>(_ changes: OWChangeset<OWSection>, animationConfiguration: OWAnimationConfiguration) {
-        // swiftlint:disable:next nesting
         typealias OWItem = OWSection.Item
         
         deleteSections(changes.deletedSections, animationStyle: animationConfiguration.deleteAnimation)

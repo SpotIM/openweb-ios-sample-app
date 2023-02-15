@@ -14,7 +14,7 @@ import SnapKit
 #if NEW_API
 
 class UIViewsVC: UIViewController {
-    
+
     fileprivate struct Metrics {
         static let identifier = "uiviews_vc_id"
         static let btnPreConversationIdentifier = "btn_pre_conversation_id"
@@ -26,17 +26,17 @@ class UIViewsVC: UIViewController {
         static let buttonVerticalMargin: CGFloat = 20
         static let buttonHeight: CGFloat = 50
     }
-    
+
     fileprivate let viewModel: UIViewsViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
-    
+
     fileprivate lazy var btnPreConversation: UIButton = {
         return NSLocalizedString("PreConversation", comment: "").blueRoundedButton
     }()
@@ -44,15 +44,15 @@ class UIViewsVC: UIViewController {
     fileprivate lazy var btnFullConversation: UIButton = {
         return NSLocalizedString("FullConversation", comment: "").blueRoundedButton
     }()
-    
+
     fileprivate lazy var btnCommentCreation: UIButton = {
         return NSLocalizedString("CommentCreation", comment: "").blueRoundedButton
     }()
-   
+
     fileprivate lazy var btnIndependentAdUnit: UIButton = {
         return NSLocalizedString("IndependentAdUnit", comment: "").blueRoundedButton
     }()
-    
+
     init(viewModel: UIViewsViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -61,7 +61,7 @@ class UIViewsVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func loadView() {
         super.loadView()
         setupViews()
@@ -82,17 +82,17 @@ fileprivate extension UIViewsVC {
         btnCommentCreation.accessibilityIdentifier = Metrics.btnCommentCreationIdentifier
         btnIndependentAdUnit.accessibilityIdentifier = Metrics.btnIndependentAdUnitIdentifier
     }
-    
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         // Adding pre conversation button
         scrollView.addSubview(btnPreConversation)
         btnPreConversation.snp.makeConstraints { make in
@@ -102,7 +102,7 @@ fileprivate extension UIViewsVC {
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
         }
-        
+
         // Adding full conversation button
         scrollView.addSubview(btnFullConversation)
         btnFullConversation.snp.makeConstraints { make in
@@ -111,7 +111,7 @@ fileprivate extension UIViewsVC {
             make.top.equalTo(btnPreConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
-        
+
         // Adding comment creation button
         scrollView.addSubview(btnCommentCreation)
         btnCommentCreation.snp.makeConstraints { make in
@@ -120,7 +120,7 @@ fileprivate extension UIViewsVC {
             make.top.equalTo(btnFullConversation.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
         }
-        
+
         // Adding independent ad unit button
         scrollView.addSubview(btnIndependentAdUnit)
         btnIndependentAdUnit.snp.makeConstraints { make in
@@ -131,23 +131,23 @@ fileprivate extension UIViewsVC {
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
-    
+
     func setupObservers() {
         title = viewModel.outputs.title
-        
+
         // Bind buttons
         btnPreConversation.rx.tap
             .bind(to: viewModel.inputs.preConversationTapped)
             .disposed(by: disposeBag)
-        
+
         btnFullConversation.rx.tap
             .bind(to: viewModel.inputs.fullConversationTapped)
             .disposed(by: disposeBag)
-        
+
         btnCommentCreation.rx.tap
             .bind(to: viewModel.inputs.commentCreationTapped)
             .disposed(by: disposeBag)
-        
+
         btnIndependentAdUnit.rx.tap
             .bind(to: viewModel.inputs.independentAdUnitTapped)
             .disposed(by: disposeBag)
@@ -155,5 +155,4 @@ fileprivate extension UIViewsVC {
 }
 
 #endif
-
 

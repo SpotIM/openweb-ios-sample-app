@@ -20,27 +20,28 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
         var subscribableObservable: BehaviorSubject<Data?>?
         var binderObservable: Observable<Data?>?
     }
-    
+
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
-    
+
     fileprivate var rxObjects: [String: RxHelperModel] = [:]
-    
+
     init(decoder: JSONDecoder, encoder: JSONEncoder) {
         self.decoder = decoder
         self.encoder = encoder
     }
-    
+
     func observable<T>(key: UserDefaultsProvider.UDKey<T>, value: Data?, defaultValue: T? = nil) -> Observable<T> {
         var defaultValueData: Data? = nil
         if value == nil,
            let defaultValue = defaultValue,
-           let encodedData = try? encoder.encode(defaultValue)
-        {
+           let encodedData = try? encoder.encode(defaultValue) {
             defaultValueData = encodedData
         }
-        
+
+        // swiftlint:disable line_length
         let subscribable = rxObjects[key.rawValue]?.subscribableObservable ?? BehaviorSubject<Data?>(value: value ?? defaultValueData)
+        // swiftlint:enable line_length
         addSubscribableIfNeeded(key: key, subscribable: subscribable)
         return subscribable
             .unwrap()
@@ -50,13 +51,13 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
             .unwrap()
             .share(replay: 1)
     }
-    
+
     func binder<T>(key: UserDefaultsProvider.UDKey<T>, binderBlock: @escaping (_ value: T) -> Void) -> Binder<T> {
-        return Binder(getBinderObservable(key: key)) { observer, value in
+        return Binder(getBinderObservable(key: key)) { _, value in
             binderBlock(value)
         }
     }
-    
+
     func onNext<T>(key: UserDefaultsProvider.UDKey<T>, data: Data?) {
         rxObjects[key.rawValue]?
             .subscribableObservable?
@@ -67,24 +68,24 @@ class UserDefaultsProviderRxHelper: UserDefaultsProviderRxHelperProtocol {
 fileprivate extension UserDefaultsProviderRxHelper {
     func getBinderObservable<T>(key: UserDefaultsProvider.UDKey<T>) -> Observable<Data?> {
         guard let observer = rxObject(key: key).binderObservable else {
-            let observer = Observable<Data?>.create { observer in
+            let observer = Observable<Data?>.create { _ in
                 return Disposables.create()
             }
             .share(replay: 0)
-            
+
             rxObject(key: key).binderObservable = observer
-            
+
             return observer
         }
         return observer
     }
-    
+
     func addSubscribableIfNeeded<T>(key: UserDefaultsProvider.UDKey<T>, subscribable: BehaviorSubject<Data?>) {
         if rxObject(key: key).subscribableObservable == nil {
             rxObject(key: key).subscribableObservable = subscribable
         }
     }
-    
+
     func rxObject<T>(key: UserDefaultsProvider.UDKey<T>) -> RxHelperModel {
         let rxObject = rxObjects[key.rawValue] ?? RxHelperModel()
         if rxObjects[key.rawValue] == nil {
