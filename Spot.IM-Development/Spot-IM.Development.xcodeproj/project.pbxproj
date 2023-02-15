@@ -587,6 +587,7 @@
 		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
 		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
 		8D5D7A602970111C0082A7C6 /* OWTimeMeasuringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */; };
+        8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */ = {isa = PBXBuildFile; fileRef = 8D5D7A63297560FC0082A7C6 /* swiftlint */; };
 		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
@@ -607,6 +608,9 @@
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
 		9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
+		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
+		9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */; };
+		9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
 		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -1260,6 +1264,7 @@
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D50BEF955866E10D93D3985 /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringService.swift; sourceTree = "<group>"; };
+        8D5D7A63297560FC0082A7C6 /* swiftlint */ = {isa = PBXFileReference; lastKnownFileType = folder; path = swiftlint; sourceTree = "<group>"; };
 		8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
@@ -1282,6 +1287,9 @@
 		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
 		9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
 		9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
+		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
+		9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
+		9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWThemeStyleEnforcement+Extensions.swift"; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
 		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
 		9EFFE77D297E84F100814648 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
@@ -1358,6 +1366,7 @@
 		0E1125DC2304BC48006B1489 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */,
 				9EFFE780297E851400814648 /* UIColor+Extensions.swift */,
 				0E1125D72304BC29006B1489 /* Date+extensions.swift */,
 				0E1125DD2304C127006B1489 /* String+Extensions.swift */,
@@ -3293,6 +3302,7 @@
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
+				8D5D7A63297560FC0082A7C6 /* swiftlint */,
 				0EAFED7922E505A900B57E29 /* fastlane */,
 				5D697A3D22B65106001AD556 /* Spot-IM.Development */,
 				5D697A5222B65108001AD556 /* Spot-IM.DevelopmentTests */,
@@ -3573,6 +3583,16 @@
 			path = "Spot-IM.Development/UI/Beta/AuthenticationPlaygroundNew/ViewModels";
 			sourceTree = SOURCE_ROOT;
 		};
+		9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */,
+				9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */,
+				9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */,
+			);
+			path = "OpenWebSDK+Extensions";
+			sourceTree = "<group>";
+		};
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -3722,6 +3742,7 @@
 				5D697A3822B65106001AD556 /* Frameworks */,
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
+				8D455ADB296C13CA0091A027 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3828,6 +3849,7 @@
 				0EAFED7A22E505A900B57E29 /* fastlane in Resources */,
 				5D909AB62397E1D400FF51AD /* Demo.storyboard in Resources */,
 				3DDA9A4328F5919600FE3B86 /* Roboto-Light.ttf in Resources */,
+				8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */,
 				3DDA9A4028F5919600FE3B86 /* Roboto-Italic.ttf in Resources */,
 				4416C655237ABDE700D3F7B9 /* LaunchScreen.storyboard in Resources */,
 				3DDA9A4128F5919600FE3B86 /* Roboto-Regular.ttf in Resources */,
@@ -3865,6 +3887,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash -x ./create_xcframework_script.sh    \n\n";
+		};
+		8D455ADB296C13CA0091A027 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
 		};
 		8EC0B5EED95074D03AAB854D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4477,8 +4516,10 @@
 				3D611B8628C4D934003960CE /* SDKUIFlowActionSettings.swift in Sources */,
 				0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */,
 				3D611B7928BFA906003960CE /* BetaNewAPIVC.swift in Sources */,
+				9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */,
 				3D3E3AC128B4EB61003B4F05 /* ConversationCounterCellViewModel.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
+				9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */,
 				3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */,
 				9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
 				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
@@ -4494,6 +4535,7 @@
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
 				3DB3D190282A7F7C008654CF /* AuthenticationStatus.swift in Sources */,
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
+				9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				3D3E3AC628B4F712003B4F05 /* Shadowable.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
 				9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */,
@@ -4644,7 +4686,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4671,7 +4713,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4710,10 +4752,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PUBLIC_DEMO_APP";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -4820,7 +4863,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -4847,7 +4890,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4886,7 +4929,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4990,7 +5033,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -5018,7 +5061,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5057,10 +5100,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NEW_API;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -5160,7 +5204,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -5188,7 +5232,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5227,10 +5271,11 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PUBLIC_DEMO_APP;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -5278,7 +5323,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5319,7 +5364,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5480,7 +5525,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
@@ -5511,7 +5556,7 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
@@ -5538,7 +5583,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5563,7 +5608,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
