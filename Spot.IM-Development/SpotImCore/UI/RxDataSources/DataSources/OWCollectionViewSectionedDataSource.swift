@@ -37,7 +37,9 @@ class OWCollectionViewSectionedDataSource<Section: OWSectionModelType>: NSObject
     var _dataSourceBound: Bool = false
 
     private func ensureNotMutatedAfterBinding() {
+        // swiftlint:disable line_length
         assert(!_dataSourceBound, "Data source is already bound. Please write this line before binding call (`bindTo`, `drive`). Data source must first be completely configured, and then bound after that, otherwise there could be runtime bugs, glitches, or partial malfunctions.")
+        // swiftlint:enable line_length
     }
 
     #endif

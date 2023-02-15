@@ -48,7 +48,7 @@ class OWUserDefaults: ReactiveCompatible, OWUserDefaultsProtocol {
     }
 
     enum OWKey<T: Codable>: String, OWRawableKey {
-        case testKey = "testKey"
+        case testKey = "keyThatSymbolsTheCase"
     }
 
     func save<T>(value: T, forKey key: OWKey<T>) {

@@ -153,7 +153,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             if user.isMuted {
                 localizationKey = "This user is muted."
             } else if let id = model.id,
-                      let _ = SPUserSessionHolder.session.reportedComments[id] { // TODO: is reported - should be in new infra?
+                        SPUserSessionHolder.session.reportedComments[id] != nil { // TODO: is reported - should be in new infra?
                 localizationKey = "This message was reported."
             } else if model.deleted {
                 localizationKey = "This message was deleted."

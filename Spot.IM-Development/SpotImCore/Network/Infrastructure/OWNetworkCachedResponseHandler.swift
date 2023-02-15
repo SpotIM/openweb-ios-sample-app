@@ -60,8 +60,8 @@ struct OWNetworkResponseCacher {
 
 extension OWNetworkResponseCacher: OWNetworkCachedResponseHandler {
     func dataTask(_ task: URLSessionDataTask,
-                         willCacheResponse response: CachedURLResponse,
-                         completion: @escaping (CachedURLResponse?) -> Void) {
+                  willCacheResponse response: CachedURLResponse,
+                  completion: @escaping (CachedURLResponse?) -> Void) {
         switch behavior {
         case .cache:
             completion(response)

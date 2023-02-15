@@ -58,7 +58,9 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
 
     init(replies: Int, rank: SPComment.Rank) {
         _replies.onNext(replies)
-        votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0, rankDownCount: rank.ranksDown ?? 0, rankedByUserValue: rank.rankedByCurrentUser ?? 0))
+        votingVM = OWCommentRatingViewModel(model: OWCommentVotingModel(rankUpCount: rank.ranksUp ?? 0,
+                                                                        rankDownCount: rank.ranksDown ?? 0,
+                                                                        rankedByUserValue: rank.rankedByCurrentUser ?? 0))
     }
 
     init() {

@@ -107,9 +107,9 @@ extension OWNetworkRequestInterceptor {
     }
 
     func retry(_ request: OWNetworkRequest,
-                      for session: OWNetworkSession,
-                      dueTo error: Error,
-                      completion: @escaping (OWNetworkRetryResult) -> Void) {
+               for session: OWNetworkSession,
+               dueTo error: Error,
+               completion: @escaping (OWNetworkRetryResult) -> Void) {
         completion(.doNotRetry)
     }
 }
@@ -165,9 +165,9 @@ class OWNetworkRetrier: OWNetworkRequestInterceptor {
     }
 
     func retry(_ request: OWNetworkRequest,
-                    for session: OWNetworkSession,
-                    dueTo error: Error,
-                    completion: @escaping (OWNetworkRetryResult) -> Void) {
+               for session: OWNetworkSession,
+               dueTo error: Error,
+               completion: @escaping (OWNetworkRetryResult) -> Void) {
         retryHandler(request, session, error, completion)
     }
 }
@@ -271,9 +271,9 @@ class OWNetworkInterceptor: OWNetworkRequestInterceptor {
     }
 
     func retry(_ request: OWNetworkRequest,
-                    for session: OWNetworkSession,
-                    dueTo error: Error,
-                    completion: @escaping (OWNetworkRetryResult) -> Void) {
+               for session: OWNetworkSession,
+               dueTo error: Error,
+               completion: @escaping (OWNetworkRetryResult) -> Void) {
         retry(request, for: session, dueTo: error, using: retriers, completion: completion)
     }
 
@@ -328,8 +328,8 @@ extension OWNetworkRequestInterceptor where Self == OWNetworkInterceptor {
     ///   - interceptors: `RequestInterceptor`s to use to intercept the request.
     /// - Returns:        The `Interceptor`.
     static func interceptor(adapters: [OWNetworkRequestAdapter] = [],
-                                   retriers: [OWNetworkRequestRetrier] = [],
-                                   interceptors: [OWNetworkRequestInterceptor] = []) -> OWNetworkInterceptor {
+                            retriers: [OWNetworkRequestRetrier] = [],
+                            interceptors: [OWNetworkRequestInterceptor] = []) -> OWNetworkInterceptor {
         OWNetworkInterceptor(adapters: adapters, retriers: retriers, interceptors: interceptors)
     }
 }

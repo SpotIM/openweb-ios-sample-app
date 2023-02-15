@@ -112,10 +112,10 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
                     imageId: publicId
                 )
                 completion(image, nil)
-                break
+
             case .failure(let err):
                 completion(nil, err)
-                break
+
             }
         }
     }
@@ -138,10 +138,10 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             switch result {
             case .success(let response):
                 completion(response.signature, nil)
-                break
+
             case .failure(let err):
                 completion(nil, err)
-                break
+
             }
         }
     }

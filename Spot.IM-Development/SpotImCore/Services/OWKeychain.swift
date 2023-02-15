@@ -136,7 +136,8 @@ fileprivate extension OWKeychain {
                 servicesProvider.logger().log(level: .error, "Failed to write to Keychain using SecItemAdd with key: \(key.rawValue)")
             }
         default:
-            servicesProvider.logger().log(level: .error, "Failed to write to Keychain with key: \(key.rawValue), got status: \(searchStatus.description) when using SecItemCopyMatching")
+            let message = "Failed to write to Keychain with key: \(key.rawValue), got status: \(searchStatus.description) when using SecItemCopyMatching"
+            servicesProvider.logger().log(level: .error, message)
         }
     }
 
@@ -159,7 +160,8 @@ fileprivate extension OWKeychain {
         case errSecItemNotFound:
             return nil
         default:
-            servicesProvider.logger().log(level: .error, "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue), got status: \(searchStatus.description)")
+            let message = "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue), got status: \(searchStatus.description)"
+            servicesProvider.logger().log(level: .error, message)
             return nil
         }
     }

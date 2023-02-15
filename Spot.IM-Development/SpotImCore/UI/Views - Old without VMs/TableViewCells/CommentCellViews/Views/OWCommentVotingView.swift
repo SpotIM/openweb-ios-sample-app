@@ -173,7 +173,7 @@ fileprivate extension OWCommentVotingView {
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
                 guard let self = self else { return }
-                selected ? self.rankUpButton.select() : self.rankUpButton.deselect()
+                _ = selected ? self.rankUpButton.select() : self.rankUpButton.deselect()
             })
             .disposed(by: disposeBag)
 
@@ -188,7 +188,7 @@ fileprivate extension OWCommentVotingView {
             .skip(1)
             .subscribe(onNext: { [weak self] selected in
                 guard let self = self else { return }
-                selected ? self.rankDownButton.select() : self.rankDownButton.deselect()
+                _ = selected ? self.rankDownButton.select() : self.rankDownButton.deselect()
             })
             .disposed(by: disposeBag)
 

@@ -29,7 +29,7 @@ class OWNetworkMultipartFormData {
     }
 
     enum BoundaryGenerator {
-        enum BoundaryType {
+        enum BoundaryType { // swiftlint:disable:this nesting
             case initial, encapsulated, final
         }
 
@@ -261,10 +261,10 @@ class OWNetworkMultipartFormData {
     ///   - fileName: Filename to associate with the stream content in the `Content-Disposition` HTTP header.
     ///   - mimeType: MIME type to associate with the stream content in the `Content-Type` HTTP header.
     func append(_ stream: InputStream,
-                       withLength length: UInt64,
-                       name: String,
-                       fileName: String,
-                       mimeType: String) {
+                withLength length: UInt64,
+                name: String,
+                fileName: String,
+                mimeType: String) {
         let headers = contentHeaders(withName: name, fileName: fileName, mimeType: mimeType)
         append(stream, withLength: length, headers: headers)
     }
@@ -371,7 +371,7 @@ class OWNetworkMultipartFormData {
     private func encodeHeaders(for bodyPart: BodyPart) -> Data {
         let headerText = bodyPart.headers.map { "\($0.name): \($0.value)\(EncodingCharacters.crlf)" }
             .joined()
-            + EncodingCharacters.crlf
+        + EncodingCharacters.crlf
 
         return Data(headerText.utf8)
     }
@@ -400,7 +400,7 @@ class OWNetworkMultipartFormData {
 
         guard UInt64(encoded.count) == bodyPart.bodyContentLength else {
             let error = OWNetworkError.UnexpectedInputStreamLength(bytesExpected: bodyPart.bodyContentLength,
-                                                            bytesRead: UInt64(encoded.count))
+                                                                   bytesRead: UInt64(encoded.count))
             throw OWNetworkError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: error))
         }
 

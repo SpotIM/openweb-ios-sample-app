@@ -223,8 +223,8 @@ class OWNetworkAuthenticationInterceptor<AuthenticatorType>: OWNetworkRequestInt
     ///   - credential:    The `Credential` if it exists. `nil` by default.
     ///   - refreshWindow: The `RefreshWindow` used to identify excessive refresh calls. `RefreshWindow()` by default.
     init(authenticator: AuthenticatorType,
-                credential: Credential? = nil,
-                refreshWindow: RefreshWindow? = RefreshWindow()) {
+         credential: Credential? = nil,
+         refreshWindow: RefreshWindow? = RefreshWindow()) {
         self.authenticator = authenticator
         mutableState = MutableState(credential: credential, refreshWindow: refreshWindow)
     }

@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWRawableKey<T> {
-    associatedtype T
+    associatedtype T // swiftlint:disable:this type_name
     var rawValue: String { get }
 }
 

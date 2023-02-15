@@ -24,7 +24,7 @@ class OWConstraintItem {
 
 }
 
-func ==(lhs: OWConstraintItem, rhs: OWConstraintItem) -> Bool {
+func == (lhs: OWConstraintItem, rhs: OWConstraintItem) -> Bool {
     // pointer equality
     guard lhs !== rhs else {
         return true

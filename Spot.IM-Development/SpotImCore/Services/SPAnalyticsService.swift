@@ -66,8 +66,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         self.customBIData = customBIData
     }
 
-    private func analyticsInfo(from event: SPAnalyticsEvent,
-                               source: SPAnSource) -> SPEventInfo {
+    private func analyticsInfo(from event: SPAnalyticsEvent, source: SPAnSource) -> SPEventInfo { // swiftlint:disable:this function_body_length
 
         var itemType: String?
         var targetType: String?

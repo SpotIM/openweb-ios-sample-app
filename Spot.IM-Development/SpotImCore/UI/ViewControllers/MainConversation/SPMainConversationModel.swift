@@ -378,7 +378,9 @@ final class SPMainConversationModel {
         if let abGroup = abTestsData.tests
             .first(where: { $0.testName == CURRENT_ADS_GROUP_TEST_NAME })?
             .abTestGroup {
-            return AdsABGroup(abGroup: abGroup, isUserRegistered: SPUserSessionHolder.session.user?.registered ?? false, disableInterstitialOnLogin: SPConfigsDataSource.appConfig?.mobileSdk.disableInterstitialOnLogin ?? false)
+            return AdsABGroup(abGroup: abGroup,
+                              isUserRegistered: SPUserSessionHolder.session.user?.registered ?? false,
+                              disableInterstitialOnLogin: SPConfigsDataSource.appConfig?.mobileSdk.disableInterstitialOnLogin ?? false)
         }
 
         return AdsABGroup()

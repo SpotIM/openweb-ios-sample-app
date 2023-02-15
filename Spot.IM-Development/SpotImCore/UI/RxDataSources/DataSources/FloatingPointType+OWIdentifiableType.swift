@@ -9,7 +9,7 @@
 import Foundation
 
 extension FloatingPoint {
-    typealias identity = Self
+    typealias Identity = Self
 
     var identity: Self {
         return self

@@ -379,8 +379,7 @@ class SPCommentCreationViewController: SPBaseViewController,
     }
 
     func configureModelHandlers() {
-        model.postCompletionHandler = {
-            [weak self] responseData in
+        model.postCompletionHandler = { [weak self] responseData in
             guard let self = self else { return }
 
             if responseData.edited {

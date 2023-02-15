@@ -44,7 +44,7 @@ class OWBaseCoordinator<ResultType> {
     // 2. Calls method `start()` on that coordinator.
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.
     func coordinate<T: OWCoordinatorResultProtocol>(to coordinator: OWBaseCoordinator<T>,
-                       deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<T> {
+                                                    deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<T> {
         store(coordinator: coordinator)
         return coordinator.start(deepLinkOptions: deepLinkOptions)
             .do(onNext: { [weak self, weak coordinator] result in
