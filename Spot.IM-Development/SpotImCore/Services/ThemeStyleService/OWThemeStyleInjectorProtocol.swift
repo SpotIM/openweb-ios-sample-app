@@ -15,7 +15,7 @@ protocol OWThemeStyleInjectorProtocol {
 extension OWThemeStyleInjectorProtocol where Self: UIView {
     func useAsThemeStyleInjector() {
         let dummyThemeStyleViewUpdaterView = OWDummyThemeStyleUpdaterView()
-        
+
         self.addSubview(dummyThemeStyleViewUpdaterView)
         dummyThemeStyleViewUpdaterView.OWSnp.makeConstraints { make in
             make.leading.top.equalToSuperview()

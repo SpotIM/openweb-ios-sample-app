@@ -16,7 +16,7 @@ internal final class OWArticleHeader: OWBaseView {
         static let conversationTitleIdentifier = "article_header_conversation_title_id"
         static let conversationAuthorIdentifier = "article_header_conversation_author_id"
     }
-    
+
     private lazy var conversationImageView: OWBaseUIImageView = .init()
     private lazy var conversationTitleLabel: OWBaseLabel = .init()
     private lazy var conversationAuthorLabel: OWBaseLabel = .init()
@@ -25,23 +25,23 @@ internal final class OWArticleHeader: OWBaseView {
 
     fileprivate var viewModel: OWArticleHeaderViewModeling!
     fileprivate var disposeBag: DisposeBag!
-    
+
     // MARK: - Overrides
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setup()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         conversationImageView.accessibilityIdentifier = Metrics.conversationImageIdentifier
         conversationTitleLabel.accessibilityIdentifier = Metrics.conversationTitleIdentifier
         conversationAuthorLabel.accessibilityIdentifier = Metrics.conversationAuthorIdentifier
     }
-    
+
     func configure(with viewModel: OWArticleHeaderViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
@@ -63,21 +63,21 @@ internal final class OWArticleHeader: OWBaseView {
         viewModel.outputs.conversationTitle
             .bind(to: conversationTitleLabel.rx.text)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.conversationAuthor
             .bind(to: conversationAuthorLabel.rx.text)
             .disposed(by: disposeBag)
-        
+
         let tapGesture = UITapGestureRecognizer()
         self.addGestureRecognizer(tapGesture)
-        
+
         tapGesture.rx.event.map { _ in
             return
         }
         .bind(to: viewModel.inputs.tap)
         .disposed(by: disposeBag)
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -95,22 +95,21 @@ internal final class OWArticleHeader: OWBaseView {
     private func setImage(with url: URL) {
         conversationImageView.setImage(with: url) { [weak self] image, error in
             guard let self = self else { return }
-            
+
             if error != nil {
                 self.setNoImageConstraints()
-            }
-            else if let image = image {
+            } else if let image = image {
                 self.conversationImageView.image = image
             }
         }
     }
-    
+
     private func setNoImageConstraints() {
         self.conversationImageView.OWSnp.updateConstraints { make in
             make.width.equalTo(0)
         }
     }
-    
+
     // MARK: - Private Methods
 
     private func setup() {
@@ -126,7 +125,7 @@ internal final class OWArticleHeader: OWBaseView {
         conversationImageView.contentMode = .scaleAspectFill
         conversationImageView.clipsToBounds = true
         conversationImageView.addCornerRadius(Theme.imageCornerRadius)
-        
+
         conversationImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Theme.imageLeadingOffset)
             make.bottom.equalToSuperview().offset(-Theme.imageBottomOffset)
@@ -140,7 +139,7 @@ internal final class OWArticleHeader: OWBaseView {
             make.height.equalTo(Theme.separatorHeight)
         }
     }
-    
+
     private func setupConversationTitleContainer() {
         titlesContainer.addSubviews(conversationTitleLabel, conversationAuthorLabel)
         titlesContainer.OWSnp.makeConstraints { make in
@@ -152,7 +151,7 @@ internal final class OWArticleHeader: OWBaseView {
         setupConversationTitleLabel()
         setupConversationAuthorLabel()
     }
-    
+
     private func setupConversationTitleLabel() {
         conversationTitleLabel.text = LocalizationManager.localizedString(key: "Loading")
         conversationTitleLabel.numberOfLines = 2
@@ -162,21 +161,21 @@ internal final class OWArticleHeader: OWBaseView {
             make.top.leading.trailing.equalToSuperview()
         }
     }
-    
+
     private func setupConversationAuthorLabel() {
         conversationAuthorLabel.numberOfLines = 1
         conversationAuthorLabel.font = UIFont.preferred(style: .regular, of: Theme.subTitleFontSize)
-        
+
         conversationAuthorLabel.OWSnp.makeConstraints { make in
             make.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(conversationTitleLabel.OWSnp.bottom).offset(Theme.insetTiny)
         }
     }
-    
+
 }
 
 private enum Theme {
-    
+
     static let titlesTrailingOffset: CGFloat = 24.0
     static let separatorHeight: CGFloat = 1.0
     static let insetTiny: CGFloat = 6.0

@@ -131,8 +131,8 @@ struct OWNetworkURLEncoding: OWNetworkParameterEncoding {
     ///   - arrayEncoding: `ArrayEncoding` to use. `.brackets` by default.
     ///   - boolEncoding:  `BoolEncoding` to use. `.numeric` by default.
     init(destination: Destination = .methodDependent,
-                arrayEncoding: ArrayEncoding = .brackets,
-                boolEncoding: BoolEncoding = .numeric) {
+         arrayEncoding: ArrayEncoding = .brackets,
+         boolEncoding: BoolEncoding = .numeric) {
         self.destination = destination
         self.arrayEncoding = arrayEncoding
         self.boolEncoding = boolEncoding

@@ -37,26 +37,26 @@ protocol OWSharedServicesProviding: AnyObject {
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
-    
+
     // Singleton
     static let shared: OWSharedServicesProviding = OWSharedServicesProvider()
-    
+
     private init() {}
-    
+
     var configure: OWSharedServicesProviderConfigure { return self }
-    
+
     fileprivate lazy var _themeStyleService: OWThemeStyleServicing = {
         return OWThemeStyleService()
     }()
-    
+
     fileprivate lazy var _imageCacheService: OWCacheService<String, UIImage> = {
         return OWCacheService<String, UIImage>()
     }()
-    
+
     fileprivate lazy var _commentsInMemoryCacheService: OWCacheService<String, String> = {
         return OWCacheService<String, String>()
     }()
-    
+
     fileprivate lazy var _networkAPI: OWNetworkAPIProtocol = {
         /*
          By default we create the network once.
@@ -66,50 +66,50 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
          */
         return OWNetworkAPI(environment: OWEnvironment.currentEnvironment)
     }()
-    
+
     fileprivate lazy var _logger: OWLogger = {
         var methods: [OWLogMethod] = [.nsLog, .file(maxFilesNumber: OWLogger.Metrics.defaultLogFilesNumber)]
         let logger = OWLogger(logLevel: .verbose, logMethods: methods)
         logger.log(level: .verbose, "Logger initialized")
         return logger
     }()
-    
+
     fileprivate lazy var _appLifeCycle: OWRxAppLifeCycleProtocol = {
         return OWRxAppLifeCycle()
     }()
-    
+
     fileprivate lazy var _keychain: OWKeychainProtocol = {
         return OWKeychain(servicesProvider: self)
     }()
-    
+
     fileprivate lazy var _analyticsService: OWAnalyticsServicing = {
         return OWAnalyticsService()
     }()
-    
+
     fileprivate lazy var _keychainMigration: OWKeychainMigrationServicing = {
         return OWKeychainMigrationService(servicesProvider: self)
     }()
-    
+
     fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
         return OWUserDefaults(servicesProvider: self)
     }()
-    
+
     fileprivate lazy var _realtimeService: OWRealtimeServicing = {
         return OWRealtimeService(servicesProvider: self)
     }()
-    
+
     fileprivate lazy var _spotConfigurationService: OWSpotConfigurationServicing = {
         return OWSpotConfigurationService(servicesProvider: self)
     }()
-    
+
     fileprivate lazy var _skeletonShimmeringService: OWSkeletonShimmeringServicing = {
         return OWSkeletonShimmeringService(config: OWSkeletonShimmeringConfiguration.default)
     }()
-    
+
     fileprivate lazy var _authorizationRecoveryService: OWAuthorizationRecoveryServicing = {
         return OWAuthorizationRecoveryService(servicesProvider: self)
     }()
-    
+
     fileprivate lazy var _timeMeasuringService: OWTimeMeasuringServicing = {
         return OWTimeMeasuringService()
     }()
@@ -117,59 +117,59 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
-    
+
     func imageCacheService() -> OWCacheService<String, UIImage> {
         return _imageCacheService
     }
-    
+
     func commentsInMemoryCacheService() -> OWCacheService<String, String> {
         return _commentsInMemoryCacheService
     }
-    
+
     func netwokAPI() -> OWNetworkAPIProtocol {
         return _networkAPI
     }
-    
+
     func logger() -> OWLogger {
         return _logger
     }
-    
+
     func appLifeCycle() -> OWRxAppLifeCycleProtocol {
         return _appLifeCycle
     }
-    
+
     func keychain() -> OWKeychainProtocol {
         return _keychain
     }
-    
+
     func keychainMigrationService() -> OWKeychainMigrationServicing {
         return _keychainMigration
     }
-    
+
     func userDefaults() -> OWUserDefaultsProtocol {
         return _userDefaults
     }
-    
+
     func realtimeService() -> OWRealtimeServicing {
         return _realtimeService
     }
-    
+
     func spotConfigurationService() -> OWSpotConfigurationServicing {
         return _spotConfigurationService
     }
-    
+
     func analyticsService() -> OWAnalyticsServicing {
         return _analyticsService
     }
-    
+
     func skeletonShimmeringService() -> OWSkeletonShimmeringServicing {
         return _skeletonShimmeringService
     }
-    
+
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing {
         return _authorizationRecoveryService
     }
-    
+
     func timeMeasuringService() -> OWTimeMeasuringServicing {
         return _timeMeasuringService
     }
@@ -181,7 +181,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _logger = OWLogger(logLevel: level, logMethods: methods)
         _logger.log(level: .verbose, "Logger re-initialized with new configuration")
     }
-    
+
     func set(spotId: OWSpotId) {
         _ = SPClientSettings.main.setup(spotId: spotId)
             .take(1)
@@ -190,8 +190,8 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
             })
             .subscribe()
     }
-    
-    func change(spotId : OWSpotId) {
+
+    func change(spotId: OWSpotId) {
         _ = SPClientSettings.main.setup(spotId: spotId)
             .take(1)
             .subscribe()

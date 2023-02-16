@@ -11,5 +11,5 @@ import Foundation
 protocol OWIdentifiableType {
     associatedtype Identity: Hashable
 
-    var identity : Identity { get }
+    var identity: Identity { get }
 }

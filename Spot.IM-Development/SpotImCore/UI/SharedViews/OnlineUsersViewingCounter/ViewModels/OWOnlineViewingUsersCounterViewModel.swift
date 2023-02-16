@@ -28,13 +28,13 @@ protocol OWOnlineViewingUsersCounterViewModeling {
 class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModeling, OWOnlineViewingUsersCounterViewModelingInputs, OWOnlineViewingUsersCounterViewModelingOutputs {
     var inputs: OWOnlineViewingUsersCounterViewModelingInputs { return self }
     var outputs: OWOnlineViewingUsersCounterViewModelingOutputs { return self }
-    
+
     fileprivate var model = BehaviorSubject<RealTimeOnlineViewingUsersModel?>(value: nil)
 
     init (_ model: RealTimeOnlineViewingUsersModel) {
         configureModel(model)
     }
-    
+
     // Allow creation without a model due to current limitations
     // Idealy we will never create a VM without a model or services
     init () {}
@@ -44,11 +44,11 @@ class OWOnlineViewingUsersCounterViewModel: OWOnlineViewingUsersCounterViewModel
             .map { max($0.count, 1) }
             .map { $0.decimalFormatted }
     }
-    
+
     lazy var image: UIImage = {
         return UIImage(spNamed: "viewingUsers", supportDarkMode: false)!
     }()
-    
+
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
         self.model.onNext(model)
     }
@@ -61,7 +61,7 @@ class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewMo
 
     var viewingCount: Observable<String> {
         guard let postId = OWManager.manager.postId else { return .empty()}
-        
+
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
                 try? realtimeData.data?.onlineViewingUsersCount("\(OWManager.manager.spotId)_\(postId)")
@@ -73,11 +73,11 @@ class OWOnlineViewingUsersCounterViewModelNew: OWOnlineViewingUsersCounterViewMo
             }
             .asObservable()
     }
-    
+
     lazy var image: UIImage = {
         return UIImage(spNamed: "viewingUsers", supportDarkMode: false)!
     }()
-    
+
     // TODO: once old view is removed this configureModel function should be removed
     func configureModel(_ model: RealTimeOnlineViewingUsersModel) {
     }

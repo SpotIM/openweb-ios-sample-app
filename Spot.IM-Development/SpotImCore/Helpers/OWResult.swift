@@ -9,17 +9,17 @@
 import Foundation
 
 public enum OWResult<T> {
-    
+
     case success(T)
     case failure(Error)
-    
+
     public var value: T? {
         switch self {
         case .success(let result): return result
         case .failure: return nil
         }
     }
-    
+
     public var error: Error? {
         switch self {
         case .success: return nil
@@ -29,7 +29,7 @@ public enum OWResult<T> {
 }
 
 extension OWResult {
-    
+
     @discardableResult
     public func map<U>(_ function: (T) -> U) -> OWResult<U> {
         switch self {
@@ -37,7 +37,7 @@ extension OWResult {
         case .failure(let error): return .failure(error)
         }
     }
-    
+
     @discardableResult
     public func map<U>(_ function: () -> U) -> OWResult<U> {
         switch self {
@@ -45,7 +45,7 @@ extension OWResult {
         case .failure(let error): return .failure(error)
         }
     }
-    
+
     @discardableResult
     public func next<U>(_ function: (T) -> OWResult<U>) -> OWResult<U> {
         switch self {
@@ -53,7 +53,7 @@ extension OWResult {
         case .failure(let error): return .failure(error)
         }
     }
-    
+
     @discardableResult
     public func next<U>(_ function: () -> OWResult<U>) -> OWResult<U> {
         switch self {
@@ -61,7 +61,7 @@ extension OWResult {
         case .failure(let error): return .failure(error)
         }
     }
-    
+
     @discardableResult
     public func onError(_ function: (Error) -> Error) -> OWResult<T> {
         switch self {
@@ -69,7 +69,7 @@ extension OWResult {
         case .failure(let error): return .failure(function(error))
         }
     }
-    
+
     @discardableResult
     public func require() -> T {
         switch self {
@@ -77,5 +77,5 @@ extension OWResult {
         case .failure(let error): fatalError("Value is required: \(error)")
         }
     }
-    
+
 }

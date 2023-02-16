@@ -8,15 +8,14 @@
 
 import UIKit
 
-
 class OWConstraint {
     struct Helpers {
         static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
         static let loggerPrefix = "OpenWebSDKSnapKitLogger"
     }
-    
+
     let sourceLocation: (String, UInt)
-    
+
     private let label: String?
     private let from: OWConstraintItem
     private let to: OWConstraintItem
@@ -35,15 +34,6 @@ class OWConstraint {
     var layoutConstraints: [OWLayoutConstraint]
 
     var isActive: Bool {
-        set {
-            if newValue {
-                activate()
-            }
-            else {
-                deactivate()
-            }
-        }
-        
         get {
             for layoutConstraint in self.layoutConstraints {
                 if layoutConstraint.isActive {
@@ -52,17 +42,25 @@ class OWConstraint {
             }
             return false
         }
+
+        set {
+            if newValue {
+                activate()
+            } else {
+                deactivate()
+            }
+        }
     }
-    
+
     // MARK: Initialization
     init(from: OWConstraintItem,
-                  to: OWConstraintItem,
-                  relation: OWConstraintRelation,
-                  sourceLocation: (String, UInt),
-                  label: String?,
-                  multiplier: OWConstraintMultiplierTarget,
-                  constant: OWConstraintConstantTarget,
-                  priority: OWConstraintPriorityTarget) {
+         to: OWConstraintItem,
+         relation: OWConstraintRelation,
+         sourceLocation: (String, UInt),
+         label: String?,
+         multiplier: OWConstraintMultiplierTarget,
+         constant: OWConstraintConstantTarget,
+         priority: OWConstraintPriorityTarget) {
         self.from = from
         self.to = to
         self.relation = relation
@@ -234,7 +232,8 @@ class OWConstraint {
 
     func activateIfNeeded(updatingExisting: Bool = false) {
         guard let item = self.from.layoutConstraintItem else {
-            Helpers.servicesProvider.logger().log(level: .medium, "WARNING: OWSnapKit failed to get from item from constraint. Activate will be a no-op.", prefix: Helpers.loggerPrefix)
+            Helpers.servicesProvider.logger().log(level: .medium, "WARNING: OWSnapKit failed to get from item from constraint. Activate will be a no-op.",
+                                                  prefix: Helpers.loggerPrefix)
             return
         }
         let layoutConstraints = self.layoutConstraints
@@ -251,7 +250,9 @@ class OWConstraint {
                     fatalError("OWSnapKit - Updated constraint could not find existing matching constraint to update: \(layoutConstraint)")
                 }
 
-                let updateLayoutAttribute = (updateLayoutConstraint.secondAttribute == .notAnAttribute) ? updateLayoutConstraint.firstAttribute : updateLayoutConstraint.secondAttribute
+                let updateLayoutAttribute = (updateLayoutConstraint.secondAttribute == .notAnAttribute) ?
+                updateLayoutConstraint.firstAttribute : updateLayoutConstraint.secondAttribute
+
                 updateLayoutConstraint.constant = self.constant.constraintConstantTargetValueFor(layoutAttribute: updateLayoutAttribute)
             }
         } else {
@@ -262,7 +263,8 @@ class OWConstraint {
 
     func deactivateIfNeeded() {
         guard let item = self.from.layoutConstraintItem else {
-            Helpers.servicesProvider.logger().log(level: .medium, "WARNING: OWSnapKit failed to get from item from constraint. Deactivate will be a no-op.", prefix: Helpers.loggerPrefix)
+            Helpers.servicesProvider.logger().log(level: .medium, "WARNING: OWSnapKit failed to get from item from constraint. Deactivate will be a no-op.",
+                                                  prefix: Helpers.loggerPrefix)
             return
         }
         let layoutConstraints = self.layoutConstraints

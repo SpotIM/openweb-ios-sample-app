@@ -18,7 +18,7 @@ struct OWItemPath {
     }
 }
 
-extension OWItemPath : Equatable {}
+extension OWItemPath: Equatable {}
 
 func == (lhs: OWItemPath, rhs: OWItemPath) -> Bool {
     return lhs.sectionIndex == rhs.sectionIndex && lhs.itemIndex == rhs.itemIndex

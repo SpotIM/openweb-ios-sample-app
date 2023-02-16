@@ -16,7 +16,7 @@ public enum SPViewSourceType {
     case conversation
     case createComment
     case login
-    
+
     public var description: String {
         switch self {
         case .preConversation:

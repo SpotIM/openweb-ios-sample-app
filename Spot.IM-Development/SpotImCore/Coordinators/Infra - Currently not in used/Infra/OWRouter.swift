@@ -28,7 +28,7 @@ class OWRouter: NSObject, OWRoutering {
     weak var navigationController: UINavigationController?
     fileprivate let presentationalMode: OWPresentationalModeExtended
     fileprivate var navDisposedBag: DisposeBag!
-    
+
     var rootViewController: UIViewController? {
         return navigationController?.viewControllers.first
     }
@@ -43,7 +43,7 @@ class OWRouter: NSObject, OWRoutering {
             setupSDKNavigationObserver(navigationController: sdkNavigationController)
         }
     }
-    
+
     func start() {
         guard let navigationController = navigationController else { return }
         switch presentationalMode {
@@ -89,7 +89,7 @@ class OWRouter: NSObject, OWRoutering {
         }
         navigationController?.setViewControllers([module.toPresentable()], animated: animated)
     }
-    
+
     func pop(animated: Bool) {
         if let controller = navigationController?.popViewController(animated: animated) {
             runCompletion(for: controller)
@@ -107,10 +107,10 @@ class OWRouter: NSObject, OWRoutering {
             controllers.forEach { runCompletion(for: $0) }
         }
     }
-    
+
     func isEmpty() -> Bool {
         guard let navController = navigationController else { return true }
-        
+
         let childs = navController.children
         return childs.isEmpty
     }
@@ -119,7 +119,8 @@ class OWRouter: NSObject, OWRoutering {
 extension OWRouter: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         // Ensure the view controller is popping
-        guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from), !navigationController.viewControllers.contains(poppedViewController) else {
+        guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
+                !navigationController.viewControllers.contains(poppedViewController) else {
             return
         }
         runCompletion(for: poppedViewController)
@@ -134,10 +135,10 @@ fileprivate extension OWRouter {
         completion.onNext()
         completions.removeValue(forKey: controller)
     }
-    
+
     func setupSDKNavigationObserver(navigationController: OWNavigationControllerProtocol) {
         navDisposedBag = DisposeBag()
-        
+
         navigationController.dismissed
             .subscribe(onNext: { [ weak self] _ in
                 guard let self = self,
