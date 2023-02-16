@@ -13,20 +13,20 @@ protocol OWSortingCustomizationsInternal {
 }
 
 class OWSortingCustomizer: OWSortingCustomizations, OWSortingCustomizationsInternal {
-    
+
     fileprivate var customizationTitleMapper: [OWSortOption: String] = [:]
-    
+
     var initialOption: OWInitialSortStrategy = .useServerConfig
-    
+
     func setTitle(_ title: String, forOption sortOption: OWSortOption) {
         customizationTitleMapper[sortOption] = title
     }
-    
+
     func customizedTitle(forOption sortOption: OWSortOption) -> OWCustomizedSortTitle {
         guard let title = customizationTitleMapper[sortOption] else {
             return .none
         }
-        
+
         return .customized(title: title)
     }
 }
