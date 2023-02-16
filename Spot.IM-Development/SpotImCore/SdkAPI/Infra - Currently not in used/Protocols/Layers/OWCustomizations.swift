@@ -10,8 +10,10 @@ import Foundation
 
 #if NEW_API
 public protocol OWCustomizations {
-    // TODO: Complete
+    var fontFamily: String? { get set }
+    var sorting: OWSortingCustomizations { get }
     var themeEnforcement: OWThemeStyleEnforcement { get set }
+    func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)
 }
 #else
 protocol OWCustomizations {
