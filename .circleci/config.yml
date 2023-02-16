@@ -80,14 +80,12 @@ commands:
     steps:
       - run:
           name: Install Homebrew
-          command: |
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            brew update
+          command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
       - run:
           name: Install SwiftLint
           command: |
-            brew upgrade swiftlint
+            brew update
             brew install swiftlint
             swiftlint version
 
