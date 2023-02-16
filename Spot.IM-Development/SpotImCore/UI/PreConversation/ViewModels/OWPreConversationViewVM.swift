@@ -134,6 +134,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         }
     }
 
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
+    }
+
     init (
         servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
         imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
@@ -152,6 +156,7 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: _preConversationChangedSize)
             .disposed(by: disposeBag)
 
+        // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self,
@@ -162,36 +167,56 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        viewInitialized
-            .flatMap { [weak self] _ -> Observable<SPConversationReadRM?> in
-                guard let self = self,
-                      let postId = OWManager.manager.postId else { return .empty() }
+        // Observable for the sort option
+        let sortOptionObservable = self.servicesProvider
+            .sortDictateService()
+            .sortOption(perPostId: self.postId)
 
+        // Observable for the conversation network API
+        let conversationReadObservable = sortOptionObservable
+            .flatMap { [weak self] sortOption -> Observable<SPConversationReadRM> in
+                guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
-                    .conversation
-                    .conversationRead(postId: postId, mode: OWCommentSortMode.newest, page: OWPaginationPage.first, parentId: "", offset: 0)
-                    .response
-                    .map { [weak self] response -> SPConversationReadRM? in
-                        guard let self = self, let responseComments = response.conversation?.comments else { return nil }
-                        var viewModels = [OWPreConversationCellOption]()
+                .netwokAPI()
+                .conversation
+                .conversationRead(postId: self.postId, mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
+                .response
+            }
 
-                        let numOfComments = self.preConversationStyle.numberOfComments
-                        let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+        let conversationFetchedObservable = viewInitialized
+            .flatMap { _ -> Observable<SPConversationReadRM> in
+                return conversationReadObservable
+                    .take(1)
+            }
+            .share()
 
-                        for (index, comment) in comments.enumerated() {
-                            // TODO: replies
-                            guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
-                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
-                            viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
-                            if (index < comments.count - 1) {
-                                viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                            }
-                        }
-                        self._cellsViewModels.removeAll()
-                        self._cellsViewModels.append(contentsOf: viewModels)
-                        return response
+        // Creating the cells VMs for the pre conversation
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self, let responseComments = response.conversation?.comments else { return }
+                var viewModels = [OWPreConversationCellOption]()
+
+                let numOfComments = self.preConversationStyle.numberOfComments
+                let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+
+                for (index, comment) in comments.enumerated() {
+                    // TODO: replies
+                    guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
+                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
+                    viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+                    if (index < comments.count - 1) {
+                        viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
                     }
+                }
+                self._cellsViewModels.removeAll()
+                self._cellsViewModels.append(contentsOf: viewModels)
+            })
+            .disposed(by: disposeBag)
+
+        // Binding to community question component
+        conversationFetchedObservable
+            .map { conversationRead -> SPConversationReadRM? in
+                return conversationRead
             }
             .asDriver(onErrorJustReturn: nil)
             .asObservable()
@@ -202,11 +227,12 @@ fileprivate extension OWPreConversationViewViewModel {
             .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
             .disposed(by: disposeBag)
 
+        // Subscribing to customize UI related stuff
         Observable.merge(
             preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
             preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
-        )
-            .bind(onNext: { _ in
+            )
+            .subscribe(onNext: { _ in
 //            TODO: custom UI
 //            TODO: Map to the appropriate case
             })
@@ -214,11 +240,12 @@ fileprivate extension OWPreConversationViewViewModel {
 
         _ = commentCreationEntryViewModel.outputs
             .tapped
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 self?.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
 
+        // Observable of the comment cell VMs
         let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
                     .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
                         let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
@@ -234,6 +261,7 @@ fileprivate extension OWPreConversationViewViewModel {
                     }
                     .share()
 
+        // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<SPComment> in
                 let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
