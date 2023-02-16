@@ -9,12 +9,12 @@
 import Foundation
 
 internal struct SPComment: Decodable, Equatable {
-    
+
     enum CodingKeys: String, CodingKey {
         case id, parentId, rootComment, depth, userId, writtenAt, time, repliesCount, totalRepliesCount, offset,
         status, hasNext, edited, deleted, published, rank, content, users, replies, isReply, additionalData, strictMode
     }
-    
+
     var id: String?
     var parentId: String?
     var rootComment: String?
@@ -43,7 +43,7 @@ internal struct SPComment: Decodable, Equatable {
         }
         return id != rootComment
     }
-    
+
     mutating func setIsEdited(_ editedStatus: Bool) {
         edited = editedStatus
     }
@@ -53,11 +53,11 @@ internal struct SPComment: Decodable, Equatable {
         let status = CommentStatus(rawValue: rawStatus)
         return status == .unknown ? nil : status
     }
-    
+
     var text: Content.Text?
     var gif: Content.Animation?
     var image: Content.Image?
-    
+
     // empty init
     init() {
         id = nil
@@ -83,7 +83,7 @@ internal struct SPComment: Decodable, Equatable {
     }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         id = try? container.decode(String.self, forKey: .id)
         parentId = try? container.decode(String.self, forKey: .parentId)
         rootComment = try? container.decode(String.self, forKey: .rootComment)
@@ -107,13 +107,13 @@ internal struct SPComment: Decodable, Equatable {
                 switch contentItem {
                 case .text(let textContent):
                     self.text = textContent
-                    break
+
                 case .image(let imageContent):
                     self.image = imageContent
-                    break
+
                 case .animation(let animationContent):
                     self.gif = animationContent
-                    break
+
                 case .none:
                     break
                 }
@@ -155,7 +155,7 @@ internal struct SPComment: Decodable, Equatable {
 }
 
 extension SPComment {
-    
+
     struct Rank: Decodable, Equatable {
         var ranksUp: Int?
         var ranksDown: Int?
@@ -163,36 +163,35 @@ extension SPComment {
     }
 
     enum Content: Decodable, Equatable {
-        
-        enum CodingKeys: CodingKey {
+
+        enum CodingKeys: CodingKey { // swiftlint:disable:this nesting
             case type, id, text, previewWidth, previewHeight, originalWidth, originalHeight, originalUrl, imageId
         }
 
-        struct Text: Decodable, Equatable {
+        struct Text: Decodable, Equatable { // swiftlint:disable:this nesting
             var id: String
             var text: String
         }
-        
-        struct Animation: Decodable, Equatable {
+
+        struct Animation: Decodable, Equatable { // swiftlint:disable:this nesting
             var previewWidth: Int
             var previewHeight: Int
             var originalWidth: Int
             var originalHeight: Int
             var originalUrl: String
         }
-        
-        struct Image: Decodable, Equatable {
+
+        struct Image: Decodable, Equatable { // swiftlint:disable:this nesting
             var originalWidth: Int
             var originalHeight: Int
             var imageId: String
         }
-        
-        
+
         case text(Text)
         case animation(Animation)
         case image(Image)
         case none
-        
+
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let type = try? container.decode(String.self, forKey: .type)
@@ -207,7 +206,11 @@ extension SPComment {
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
                 let originalUrl = try container.decode(String.self, forKey: .originalUrl)
-                self = .animation(Animation( previewWidth: previewWidth, previewHeight: previewHeight, originalWidth: originalWidth, originalHeight: originalHeight, originalUrl: originalUrl))
+                self = .animation(Animation( previewWidth: previewWidth,
+                                             previewHeight: previewHeight,
+                                             originalWidth: originalWidth,
+                                             originalHeight: originalHeight,
+                                             originalUrl: originalUrl))
             case "image":
                 let originalWidth = try container.decode(Int.self, forKey: .originalWidth)
                 let originalHeight = try container.decode(Int.self, forKey: .originalHeight)
@@ -222,14 +225,14 @@ extension SPComment {
     struct CommentUser: Decodable, Equatable {
         var id: String?
     }
-    
+
     struct AdditionalData: Decodable, Equatable {
         var labels: CommentLabel?
     }
-    
+
     struct CommentLabel: Decodable, Equatable {
         var section: String?
         var ids: [String]?
     }
-    
+
 }

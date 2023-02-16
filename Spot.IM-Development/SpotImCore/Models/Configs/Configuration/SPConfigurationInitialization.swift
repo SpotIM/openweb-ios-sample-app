@@ -9,9 +9,9 @@
 import Foundation
 
 struct SPConfigurationInitialization: Decodable {
-    
+
     enum CodingKeys: String, CodingKey {
-        
+
         case ads, name, brandColor, categoryId, commentRepliesMaxDepth, customLogin, giphyLevel,
         displayNameInSayControlForGuests, emojiKeyboardEnabled, emojisEnabled, enableDislikes,
         enableRealtimeCommentsSticky, enableSpotimUtm, enableUserPoints, externalPublicProfile,
@@ -20,7 +20,7 @@ struct SPConfigurationInitialization: Decodable {
         openLinksInNewTab, openingMode, platform, recommendationEnabled, richSayControlEnabled, sortBy,
         ssoEditableProfile, ssoEnabled, ssoStartedBySpotim, subCategoryId, tickerIcon, tickerIconSize,
         tickerSkin, uppercaseMsgsEnabled, userModerationEnabled, websiteUrl
-        
+
         case avatarsFont = "avatars.font"
         case avatarsFontBackgroundColor = "avatars.fontBackgroundColor"
         case avatarsInitials = "avatars.initials"

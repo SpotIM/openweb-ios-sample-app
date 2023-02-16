@@ -39,7 +39,7 @@ internal extension UIColor {
     private static var defaultBrandColor: UIColor {
         UIColor.openWebBrandColor
     }
-    
+
     static var brandColor: UIColor {
         UIColor.color(with: SPConfigsDataSource.appConfig?.initialization?.brandColor) ?? UIColor.defaultBrandColor
     }
@@ -54,7 +54,7 @@ internal extension UIColor {
     static var spAvatarBG: UIColor {
         SPUserInterfaceStyle.isDarkMode ? black : paleBlue
      }
-    
+
     static var spInactiveButtonBG: UIColor {
         SPUserInterfaceStyle.isDarkMode ? mineShaft2 : cloudyBlue
     }
@@ -64,21 +64,21 @@ internal extension UIColor {
     static var spForeground2: UIColor { SPUserInterfaceStyle.isDarkMode ? lightGreyBlue : coolGrey }
     static var spForeground3: UIColor { SPUserInterfaceStyle.isDarkMode ? lightGreyBlue : steelGrey }
     static var spForeground4: UIColor { SPUserInterfaceStyle.isDarkMode ? almostWhite : steelGrey }
-    
+
     static var buttonTitle: UIColor { SPUserInterfaceStyle.isDarkMode ? lightBlueGrey : steelGrey }
-    
+
     static var spBorder: UIColor {
         SPUserInterfaceStyle.isDarkMode ? clear : lightBlueGrey
     }
-    
+
     static var spSeparator: UIColor {
         SPUserInterfaceStyle.isDarkMode ? mineShaft2 : iceBlue
     }
-    
+
     static var spSeparator2: UIColor {
         SPUserInterfaceStyle.isDarkMode ? white.withAlphaComponent(0.15) : iceBlue
     }
-    
+
     static var spSeparator3: UIColor {
         SPUserInterfaceStyle.isDarkMode ? steelGrey : white.withAlphaComponent(0.1)
     }
@@ -90,23 +90,23 @@ internal extension UIColor {
     static var spSeparator5: UIColor {
         SPUserInterfaceStyle.isDarkMode ? mineShaft2 : white.withAlphaComponent(0.1)
     }
-    
+
     static var commentStatusIndicatorText: UIColor {
         SPUserInterfaceStyle.isDarkMode ? .coolGrey : .steelGrey
     }
-    
+
     static var commentStatusIndicatorBackground: UIColor {
         SPUserInterfaceStyle.isDarkMode ? white.withAlphaComponent(0.15) : .iceBlue
     }
-    
+
     static var commentLabelBackgroundOpacity: CGFloat {
         SPUserInterfaceStyle.isDarkMode ? 0.2 : 0.1
     }
-    
+
     static var commentLabelSelectedBackgroundOpacity: CGFloat {
         SPUserInterfaceStyle.isDarkMode ? 0.7 : 1
     }
-    
+
     static var commentLabelBorderOpacity: CGFloat {
         SPUserInterfaceStyle.isDarkMode ? 0.7 : 0.4
     }

@@ -17,7 +17,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var preConversationChangedSize: PublishSubject<CGSize> { get }
-    
+
     var viewInitialized: PublishSubject<Void> { get }
 }
 
@@ -43,19 +43,19 @@ protocol OWPreConversationViewViewModeling: AnyObject {
 class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
-    
+
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
         return _cellsViewModels
             .rx_elements()
             .asObservable()
     }
-    
+
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> {
         return cellsViewModels
             .map { items in
@@ -66,44 +66,43 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 return [section]
             }
     }
-    
+
     lazy var preConversationHeaderVM: OWPreConversationHeaderViewModeling = {
         return OWPreConversationHeaderViewModel()
     }()
-    
+
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
         return OWCommunityGuidelinesViewModel()
     }()
-    
+
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel()
     }()
-    
+
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
         return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
     }()
-    
+
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
         return OWPreConversationFooterViewModel()
     }()
-    
+
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
-    
-    
+
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
         return fullConversationTap
             .asObservable()
     }
-    
+
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
     var openCommentConversation: Observable<OWCommentCreationType> {
         return commentCreationTap
             .asObservable()
     }
-    
+
     var preConversationChangedSize = PublishSubject<CGSize>()
     // BehaviorSubject required since the size set immediately before subscribers establish
     fileprivate var _preConversationChangedSize = BehaviorSubject<CGSize?>(value: nil)
@@ -112,9 +111,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .unwrap()
             .asObservable()
     }
-    
+
     var viewInitialized = PublishSubject<Void>()
-    
+
     var shouldShowCommunityGuidelinesAndQuestion: Bool {
         switch self.preConversationStyle {
         case .regular(_):
@@ -123,7 +122,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             return false
         }
     }
-    
+
     var shouldShowComments: Bool {
         switch self.preConversationStyle {
         case .regular(_):
@@ -163,7 +162,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 guard let self = self,
                       let postId = OWManager.manager.postId
                 else { return }
-                
+
                 self.servicesProvider.realtimeService().startFetchingData(postId: postId)
             })
             .disposed(by: disposeBag)
@@ -238,7 +237,7 @@ fileprivate extension OWPreConversationViewViewModel {
 //            TODO: Map to the appropriate case
             })
             .disposed(by: disposeBag)
-        
+
         _ = commentCreationEntryViewModel.outputs
             .tapped
             .subscribe(onNext: { [weak self] in
@@ -278,7 +277,7 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func populateInitialUI() {
         if self.shouldShowComments {
             let numberOfComments = self.preConversationStyle.numberOfComments

@@ -9,7 +9,7 @@
 import UIKit
 
 extension OWModalPresentationStyle {
-    var toOSModalPresentationStyle: UIModalPresentationStyle  {
+    var toOSModalPresentationStyle: UIModalPresentationStyle {
         switch self {
         case.fullScreen:
             return .fullScreen

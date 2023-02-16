@@ -13,7 +13,7 @@ class OWFiles {
         static let OpenSDKWebFolder: String = "OpenWebSdk"
         static let LogsSubfolder: String = "Logs"
     }
-    
+
     // Return true if exist
     static func isFileExist(filename: String, folder: String?, subfolder: String?) -> Bool {
         // Path before the file
@@ -26,30 +26,29 @@ class OWFiles {
             return false
         }
     }
-    
+
     // Return true if wrote successfully
     static func write(text: String, filename: String, folder: String?, subfolder: String?) -> Bool {
         // Path before the file
         guard let url = url(forFolder: folder, subfolder: subfolder) else { return false }
-        
-        //Create directory if needed
+
+        // Create directory if needed
         if let folder = folder, !FileManager.default.fileExists(atPath: url.path) {
             let dirCreationResult = createFolder(folder, subfolder: subfolder)
             if !dirCreationResult { return false }
         }
-        
+
         // File url
         let fileUrl = url.appendingPathComponent(filename)
         do {
             try text.write(to: fileUrl, atomically: false, encoding: .utf8)
             return true
-        }
-        catch {
+        } catch {
             // Just return false
             return false
         }
     }
-    
+
     // Return true if removed successfully
     static func remove(filename: String, folder: String?, subfolder: String?) -> Bool {
         // Path before the file
@@ -59,13 +58,12 @@ class OWFiles {
         do {
             try FileManager.default.removeItem(atPath: fileUrl.path)
             return true
-        }
-        catch {
+        } catch {
             // Just return false
             return false
         }
     }
-    
+
     // Return number of files / elements in path
     static func numOfElements(folder: String, subfolder: String?) -> Int {
         // Path before the file
@@ -75,7 +73,7 @@ class OWFiles {
               }
         return dirContents.count
     }
-    
+
     // Return file names in path ()
     static func elementsName(folder: String, subfolder: String?) -> [String] {
         // Path before the file
@@ -101,14 +99,13 @@ fileprivate extension OWFiles {
         }
         return url
     }
-    
+
     static func createFolder(_ folder: String, subfolder: String?, withIntermediateDirectories: Bool = true) -> Bool {
         guard let url = url(forFolder: folder, subfolder: subfolder) else { return false }
         do {
             try FileManager.default.createDirectory(at: url, withIntermediateDirectories: withIntermediateDirectories, attributes: nil)
             return true
-        }
-        catch {
+        } catch {
             // Just return false
             return false
         }

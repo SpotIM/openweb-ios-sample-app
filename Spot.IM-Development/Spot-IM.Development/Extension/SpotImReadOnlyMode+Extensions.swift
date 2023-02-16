@@ -11,19 +11,21 @@ import SpotImCore
 
 extension SpotImReadOnlyMode {
     static func parseSampleAppManualConfig() -> SpotImReadOnlyMode {
+        // swiftlint:disable line_length
         let readOnlyModeRawValue = UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<Int>.isReadOnlyEnabled, defaultValue: 0)
+        // swiftlint:enable line_length
         let readOnlyMode: SpotImReadOnlyMode
         switch readOnlyModeRawValue {
         case 1:
             readOnlyMode = .enable
-            break
+
         case 2:
             readOnlyMode = .disable
-            break
+
         default:
             readOnlyMode = .default
         }
-        
+
         return readOnlyMode
     }
 }

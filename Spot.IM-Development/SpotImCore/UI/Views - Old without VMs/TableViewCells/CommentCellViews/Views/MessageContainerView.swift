@@ -13,33 +13,33 @@ final class MessageContainerView: OWBaseView {
         static let identifier = "message_container_id"
         static let mainTextLabelIdentifier = "message_container_main_text_label_id"
     }
-    
+
     weak var delegate: MessageContainerViewDelegate?
     private let mainTextLabel: OWBaseLabel = .init()
     private var activeURLs: [NSRange: URL] = [:]
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
         setupGestureRecognizer()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         mainTextLabel.accessibilityIdentifier = Metrics.mainTextLabelIdentifier
     }
-    
+
     func setMessage(
         _ message: String,
         attributes: [NSAttributedString.Key: Any],
         clipToLine: Int = 0,
         width: CGFloat = 0.0,
         clippedTextSettings: SPClippedTextSettings) {
-        
+
         var settings = clippedTextSettings
         settings.fontPointSize = mainTextLabel.font.pointSize
-            
+
         mainTextLabel.attributedText = NSAttributedString(string: "")
         activeURLs.removeAll()
         let attributedMessage = NSAttributedString(string: message, attributes: attributes)
@@ -53,16 +53,16 @@ final class MessageContainerView: OWBaseView {
         locateURLsInText(text: &clippedText)
         mainTextLabel.attributedText = clippedText
     }
-    
+
     func updateColorsAccordingToStyle() {
         mainTextLabel.backgroundColor = .spBackground0
     }
-    
+
     @objc
     private func handleTap(gesture: UITapGestureRecognizer) {
         let readMoreString = LocalizationManager.localizedString(key: "Read More")
         let readLessString = LocalizationManager.localizedString(key: "Read Less")
-        
+
         if isTarget(substring: readMoreString, destinationOf: gesture) {
             handleReadMoreTap()
         } else if isTarget(substring: readLessString, destinationOf: gesture) {
@@ -71,14 +71,14 @@ final class MessageContainerView: OWBaseView {
             checkURLTap(in: gesture.location(in: mainTextLabel))
         }
     }
-    
+
     private func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
         guard let string = mainTextLabel.attributedText?.string else { return false }
-        
+
         guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
         let tapLocation = gesture.location(in: mainTextLabel)
         let index = mainTextLabel.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
-        
+
         return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
     }
 
@@ -90,20 +90,20 @@ final class MessageContainerView: OWBaseView {
 
         handleURLTap(url: activeUrl)
     }
-    
+
     private func isURLTap(in point: CGPoint) -> Bool {
         let index = mainTextLabel.indexOfAttributedTextCharacterAtPoint(point: point)
         return (activeURLs.first { $0.key.contains(index) }?.value != nil)
     }
-    
+
     private func handleURLTap(url: URL) {
         delegate?.urlTappedInMessageContainer(view: self, url: url)
     }
-    
+
     private func handleReadMoreTap() {
         delegate?.readMoreTappedInMessageContainer(view: self)
     }
-    
+
     private func handleReadLessTap() {
         delegate?.readLessTappedInMessageContainer(view: self)
     }
@@ -119,12 +119,12 @@ final class MessageContainerView: OWBaseView {
         }
         return false
     }
-    
+
     private func setupUI() {
         addSubview(mainTextLabel)
         configureTextLabel()
     }
-    
+
     private func configureTextLabel() {
         mainTextLabel.backgroundColor = .spBackground0
         mainTextLabel.numberOfLines = 0
@@ -133,14 +133,14 @@ final class MessageContainerView: OWBaseView {
             make.edges.equalToSuperview()
         }
     }
-    
+
     private func setupGestureRecognizer() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tap.delegate = self
         mainTextLabel.addGestureRecognizer(tap)
         mainTextLabel.isUserInteractionEnabled = true
     }
-    
+
     private func locateURLsInText(text: inout NSMutableAttributedString) {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
         if let detector = try? NSDataDetector(types: linkType.rawValue) {
@@ -150,7 +150,7 @@ final class MessageContainerView: OWBaseView {
                 options: [],
                 range: NSRange(location: 0, length: rawText.count)
             )
-            
+
             for match in matches {
                 if let urlMatch = match.url, isUrlSchemeValid(for: urlMatch) {
                         text.addAttributes([.foregroundColor: UIColor.darkSkyBlue], range: match.range)
@@ -159,7 +159,7 @@ final class MessageContainerView: OWBaseView {
                 }
             }
     }
-    
+
     private func isUrlSchemeValid(for url: URL) -> Bool {
         return url.scheme?.lowercased() != "mailto"
     }

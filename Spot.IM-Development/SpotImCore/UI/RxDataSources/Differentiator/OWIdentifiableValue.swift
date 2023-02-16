@@ -16,7 +16,7 @@ extension OWIdentifiableValue: OWIdentifiableType {
 
     typealias Identity = Value
 
-    var identity : Identity {
+    var identity: Identity {
         return value
     }
 }
