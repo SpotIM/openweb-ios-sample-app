@@ -9,9 +9,9 @@
 import UIKit
 
 final class SPCommentCreationViewController: SPBaseCommentCreationViewController<SPCommentCreationModel> {
-    
+
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
-    
+
     private lazy var articleView: SPArticleHeader = SPArticleHeader()
     private let commentingOnLabel: BaseLabel = .init()
     private let commentingContainer: UIView = .init()
@@ -29,12 +29,12 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
            name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
            object: nil)
     }
-    
+
     @objc
     private func overrideUserInterfaceStyleDidChange() {
         self.updateColorsAccordingToStyle()
     }
-    
+
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
         super.updateColorsAccordingToStyle()
@@ -50,7 +50,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
         articleView.updateColorsAccordingToStyle()
         updateAvatar() // placeholder is adjusted to theme
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         let state = UIApplication.shared.applicationState
@@ -67,7 +67,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
             }
         }
     }
-    
+
     private func shouldDisplayArticleHeader() -> Bool {
         if shouldShowArticleView(for: model?.dataModel),
            UIDevice.current.screenType != .iPhones_5_5s_5c_SE,
@@ -78,10 +78,10 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
             return false
         }
     }
-    
+
     internal override func updateModelData() {
         configureModelHandlers()
-        
+
         if SpotIm.enableCreateCommentNewDesign {
             setupNewHeader()
         } else {
@@ -91,25 +91,25 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
         updateTextInputContainer(with: .comment)
         updateAvatar()
     }
-    
+
     private func setupNewHeader() {
         guard commentNewHeaderView.superview == nil else {
             return
         }
         topContainerStack.insertArrangedSubview(commentNewHeaderView, at: 0)
-        
+
         commentNewHeaderView.layout {
             $0.top.equal(to: topContainerStack.topAnchor)
             $0.leading.equal(to: topContainerStack.leadingAnchor)
             $0.trailing.equal(to: topContainerStack.trailingAnchor)
             $0.height.equal(to: 60)
         }
-        
+
         commentNewHeaderView.delegate = self
         commentNewHeaderView.configure()
         commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
     }
-    
+
     private func setupHeader() {
         setupHeaderComponentsIfNeeded()
         if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
@@ -122,7 +122,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
                 $0.height.equal(to: 85.0)
                 $0.width.equal(to: topContainerStack.widthAnchor)
             }
-            
+
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         } else {
@@ -130,7 +130,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Add a Comment")
         }
     }
-    
+
     private func setupHeaderComponentsIfNeeded() {
         guard commentingOnLabel.superview == nil, closeButton.superview == nil else {
             return
@@ -141,26 +141,26 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
         topContainerStack.insertArrangedSubview(commentingContainer, at: 0)
 
         topContainerView.addSubview(closeButton)
-        
+
         commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
         commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.sizeToFit()
-        
+
         commentingContainer.layout {
             $0.top.equal(to: topContainerStack.topAnchor)
             $0.leading.equal(to: topContainerStack.leadingAnchor)
             $0.trailing.equal(to: topContainerStack.trailingAnchor)
             $0.height.equal(to: commentingOnLabel.frame.height + 41)
         }
-        
+
         commentingOnLabel.layout {
             $0.top.equal(to: commentingContainer.topAnchor, offsetBy: 25)
             $0.leading.equal(to: commentingContainer.leadingAnchor, offsetBy: 16)
             $0.trailing.equal(to: commentingContainer.trailingAnchor, offsetBy: -16)
             $0.bottom.equal(to: commentingContainer.bottomAnchor, offsetBy: -16)
         }
-        
+
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon"), for: .normal)
         closeButton.layout {
             $0.centerY.equal(to: topContainerView.topAnchor, offsetBy: 35)
@@ -168,7 +168,7 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
             $0.width.equal(to: 40.0)
             $0.height.equal(to: 40.0)
         }
-        
+
         closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
     }
 
@@ -203,5 +203,5 @@ final class SPCommentCreationViewController: SPBaseCommentCreationViewController
     private func shouldShowArticleView(for model: SPCommentCreationDTO?) -> Bool {
         model != nil
     }
-    
+
 }

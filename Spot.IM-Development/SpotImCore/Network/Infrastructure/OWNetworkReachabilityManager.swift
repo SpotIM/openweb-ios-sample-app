@@ -36,7 +36,7 @@ class OWNetworkReachabilityManager {
         }
 
         /// Defines the various connection types detected by reachability flags.
-        enum ConnectionType {
+        enum ConnectionType { // swiftlint:disable:this nesting
             /// The connection type is either over Ethernet or WiFi.
             case ethernetOrWiFi
             /// The connection type is a cellular connection.
@@ -147,7 +147,7 @@ class OWNetworkReachabilityManager {
     /// - Returns: `true` if listening was started successfully, `false` otherwise.
     @discardableResult
     func startListening(onQueue queue: DispatchQueue = .main,
-                             onUpdatePerforming listener: @escaping Listener) -> Bool {
+                        onUpdatePerforming listener: @escaping Listener) -> Bool {
         stopListening()
 
         $mutableState.write { state in
@@ -223,11 +223,11 @@ extension SCNetworkReachabilityFlags {
     var canConnectWithoutUserInteraction: Bool { canConnectAutomatically && !contains(.interventionRequired) }
     var isActuallyReachable: Bool { isReachable && (!isConnectionRequired || canConnectWithoutUserInteraction) }
     var isCellular: Bool {
-        #if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS)
         return contains(.isWWAN)
-        #else
+#else
         return false
-        #endif
+#endif
     }
 
     /// Human readable `String` for all states, to help with debugging.

@@ -178,11 +178,11 @@ extension OWNetworkDataRequest {
 
             self.underlyingQueue.async {
                 let response = OWNetworkDataResponse(request: self.request,
-                                            response: self.response,
-                                            data: self.data,
-                                            metrics: self.metrics,
-                                            serializationDuration: 0,
-                                            result: result)
+                                                     response: self.response,
+                                                     data: self.data,
+                                                     metrics: self.metrics,
+                                                     serializationDuration: 0,
+                                                     result: result)
 
                 self.eventMonitor?.request(self, didParseResponse: response)
 
@@ -194,9 +194,9 @@ extension OWNetworkDataRequest {
     }
 
     private func _response<Serializer: OWNetworkDataResponseSerializerProtocol>(queue: DispatchQueue = .main,
-                                                                       responseSerializer: Serializer,
-                                                                       completionHandler: @escaping (OWNetworkDataResponseTypealias<Serializer.SerializedObject>) -> Void)
-        -> Self {
+                                                                                responseSerializer: Serializer,
+                                                                                completionHandler: @escaping (OWNetworkDataResponseTypealias<Serializer.SerializedObject>) -> Void)
+    -> Self {
         appendResponseSerializer {
             // Start work that should be on the serialization queue.
             let start = ProcessInfo.processInfo.systemUptime
@@ -214,11 +214,11 @@ extension OWNetworkDataRequest {
 
             self.underlyingQueue.async {
                 let response = OWNetworkDataResponse(request: self.request,
-                                            response: self.response,
-                                            data: self.data,
-                                            metrics: self.metrics,
-                                            serializationDuration: end - start,
-                                            result: result)
+                                                     response: self.response,
+                                                     data: self.data,
+                                                     metrics: self.metrics,
+                                                     serializationDuration: end - start,
+                                                     result: result)
 
                 self.eventMonitor?.request(self, didParseResponse: response)
 
@@ -241,14 +241,15 @@ extension OWNetworkDataRequest {
                         didComplete = { completionHandler(response) }
 
                     case let .doNotRetryWithError(retryError):
-                        let result: OWNetworkResult<Serializer.SerializedObject> = .failure(retryError.asOWNetworkError(orFailWith: "Received retryError was not already OWNetworkError"))
+                        let result: OWNetworkResult<Serializer.SerializedObject> =
+                            .failure(retryError.asOWNetworkError(orFailWith: "Received retryError was not already OWNetworkError"))
 
                         let response = OWNetworkDataResponse(request: self.request,
-                                                    response: self.response,
-                                                    data: self.data,
-                                                    metrics: self.metrics,
-                                                    serializationDuration: end - start,
-                                                    result: result)
+                                                             response: self.response,
+                                                             data: self.data,
+                                                             metrics: self.metrics,
+                                                             serializationDuration: end - start,
+                                                             result: result)
 
                         didComplete = { completionHandler(response) }
 
@@ -272,9 +273,9 @@ extension OWNetworkDataRequest {
     /// - Returns:              The request.
     @discardableResult
     func response<Serializer: OWNetworkDataResponseSerializerProtocol>(queue: DispatchQueue = .main,
-                                                                     responseSerializer: Serializer,
-                                                                     completionHandler: @escaping (OWNetworkDataResponseTypealias<Serializer.SerializedObject>) -> Void)
-        -> Self {
+                                                                       responseSerializer: Serializer,
+                                                                       completionHandler: @escaping (OWNetworkDataResponseTypealias<Serializer.SerializedObject>) -> Void)
+    -> Self {
         _response(queue: queue, responseSerializer: responseSerializer, completionHandler: completionHandler)
     }
 
@@ -288,9 +289,9 @@ extension OWNetworkDataRequest {
     /// - Returns:              The request.
     @discardableResult
     func response<Serializer: OWNetworkResponseSerializer>(queue: DispatchQueue = .main,
-                                                         responseSerializer: Serializer,
-                                                         completionHandler: @escaping (OWNetworkDataResponseTypealias<Serializer.SerializedObject>) -> Void)
-        -> Self {
+                                                           responseSerializer: Serializer,
+                                                           completionHandler: @escaping (OWNetworkDataResponseTypealias<Serializer.SerializedObject>) -> Void)
+    -> Self {
         _response(queue: queue, responseSerializer: responseSerializer, completionHandler: completionHandler)
     }
 }
@@ -305,8 +306,8 @@ extension OWNetworkDownloadRequest {
     /// - Returns:             The request.
     @discardableResult
     func response(queue: DispatchQueue = .main,
-                         completionHandler: @escaping (OWNetworkDownloadResponseTypealias<URL?>) -> Void)
-        -> Self {
+                  completionHandler: @escaping (OWNetworkDownloadResponseTypealias<URL?>) -> Void)
+    -> Self {
         appendResponseSerializer {
             // Start work that should be on the serialization queue.
             let result = OWNetworkResult<URL?>(value: self.fileURL, error: self.error)
@@ -314,12 +315,12 @@ extension OWNetworkDownloadRequest {
 
             self.underlyingQueue.async {
                 let response = OWNetworkDownloadResponse(request: self.request,
-                                                response: self.response,
-                                                fileURL: self.fileURL,
-                                                resumeData: self.resumeData,
-                                                metrics: self.metrics,
-                                                serializationDuration: 0,
-                                                result: result)
+                                                         response: self.response,
+                                                         fileURL: self.fileURL,
+                                                         resumeData: self.resumeData,
+                                                         metrics: self.metrics,
+                                                         serializationDuration: 0,
+                                                         result: result)
 
                 self.eventMonitor?.request(self, didParseResponse: response)
 
@@ -331,9 +332,9 @@ extension OWNetworkDownloadRequest {
     }
 
     private func _response<Serializer: OWNetworkDownloadResponseSerializerProtocol>(queue: DispatchQueue = .main,
-                                                                           responseSerializer: Serializer,
-                                                                           completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Serializer.SerializedObject>) -> Void)
-        -> Self {
+                                                                                    responseSerializer: Serializer,
+                                                                                    completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Serializer.SerializedObject>) -> Void)
+    -> Self {
         appendResponseSerializer {
             // Start work that should be on the serialization queue.
             let start = ProcessInfo.processInfo.systemUptime
@@ -350,12 +351,12 @@ extension OWNetworkDownloadRequest {
 
             self.underlyingQueue.async {
                 let response = OWNetworkDownloadResponse(request: self.request,
-                                                response: self.response,
-                                                fileURL: self.fileURL,
-                                                resumeData: self.resumeData,
-                                                metrics: self.metrics,
-                                                serializationDuration: end - start,
-                                                result: result)
+                                                         response: self.response,
+                                                         fileURL: self.fileURL,
+                                                         resumeData: self.resumeData,
+                                                         metrics: self.metrics,
+                                                         serializationDuration: end - start,
+                                                         result: result)
 
                 self.eventMonitor?.request(self, didParseResponse: response)
 
@@ -378,15 +379,16 @@ extension OWNetworkDownloadRequest {
                         didComplete = { completionHandler(response) }
 
                     case let .doNotRetryWithError(retryError):
-                        let result: OWNetworkResult<Serializer.SerializedObject> = .failure(retryError.asOWNetworkError(orFailWith: "Received retryError was not already AFError"))
+                        let result: OWNetworkResult<Serializer.SerializedObject> =
+                            .failure(retryError.asOWNetworkError(orFailWith: "Received retryError was not already AFError"))
 
                         let response = OWNetworkDownloadResponse(request: self.request,
-                                                        response: self.response,
-                                                        fileURL: self.fileURL,
-                                                        resumeData: self.resumeData,
-                                                        metrics: self.metrics,
-                                                        serializationDuration: end - start,
-                                                        result: result)
+                                                                 response: self.response,
+                                                                 fileURL: self.fileURL,
+                                                                 resumeData: self.resumeData,
+                                                                 metrics: self.metrics,
+                                                                 serializationDuration: end - start,
+                                                                 result: result)
 
                         didComplete = { completionHandler(response) }
 
@@ -411,9 +413,9 @@ extension OWNetworkDownloadRequest {
     /// - Returns:              The request.
     @discardableResult
     func response<Serializer: OWNetworkDownloadResponseSerializerProtocol>(queue: DispatchQueue = .main,
-                                                                         responseSerializer: Serializer,
-                                                                         completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Serializer.SerializedObject>) -> Void)
-        -> Self {
+                                                                           responseSerializer: Serializer,
+                                                                           completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Serializer.SerializedObject>) -> Void)
+    -> Self {
         _response(queue: queue, responseSerializer: responseSerializer, completionHandler: completionHandler)
     }
 
@@ -428,9 +430,9 @@ extension OWNetworkDownloadRequest {
     /// - Returns:              The request.
     @discardableResult
     func response<Serializer: OWNetworkResponseSerializer>(queue: DispatchQueue = .main,
-                                                         responseSerializer: Serializer,
-                                                         completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Serializer.SerializedObject>) -> Void)
-        -> Self {
+                                                           responseSerializer: Serializer,
+                                                           completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Serializer.SerializedObject>) -> Void)
+    -> Self {
         _response(queue: queue, responseSerializer: responseSerializer, completionHandler: completionHandler)
     }
 }
@@ -444,9 +446,9 @@ struct OWNetworkURLResponseSerializer: OWNetworkDownloadResponseSerializerProtoc
     init() {}
 
     func serializeDownload(request: URLRequest?,
-                                  response: HTTPURLResponse?,
-                                  fileURL: URL?,
-                                  error: Error?) throws -> URL {
+                           response: HTTPURLResponse?,
+                           fileURL: URL?,
+                           error: Error?) throws -> URL {
         guard error == nil else { throw error! }
 
         guard let url = fileURL else {
@@ -472,7 +474,7 @@ extension OWNetworkDownloadRequest {
     /// - Returns:             The request.
     @discardableResult
     func responseURL(queue: DispatchQueue = .main,
-                            completionHandler: @escaping (OWNetworkDownloadResponseTypealias<URL>) -> Void) -> Self {
+                     completionHandler: @escaping (OWNetworkDownloadResponseTypealias<URL>) -> Void) -> Self {
         response(queue: queue, responseSerializer: OWNetworkURLResponseSerializer(), completionHandler: completionHandler)
     }
 }
@@ -482,7 +484,7 @@ extension OWNetworkDownloadRequest {
 /// A `ResponseSerializer` that performs minimal response checking and returns any response `Data` as-is. By default, a
 /// request returning `nil` or no data is considered an error. However, if the request has an `HTTPMethod` or the
 /// response has an  HTTP status code valid for empty responses, then an empty `Data` value is returned.
- class OWNetworkDataResponseSerializer: OWNetworkResponseSerializer {
+class OWNetworkDataResponseSerializer: OWNetworkResponseSerializer {
     let dataPreprocessor: OWNetworkDataPreprocessor
     let emptyResponseCodes: Set<Int>
     let emptyRequestMethods: Set<OWNetworkHTTPMethod>
@@ -494,8 +496,8 @@ extension OWNetworkDownloadRequest {
     ///   - emptyResponseCodes:  The HTTP response codes for which empty responses are allowed. `[204, 205]` by default.
     ///   - emptyRequestMethods: The HTTP request methods for which empty responses are allowed. `[.head]` by default.
     init(dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
-                emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
-                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods) {
+         emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
+         emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods) {
         self.dataPreprocessor = dataPreprocessor
         self.emptyResponseCodes = emptyResponseCodes
         self.emptyRequestMethods = emptyRequestMethods
@@ -531,11 +533,11 @@ extension OWNetworkResponseSerializer where Self == OWNetworkDataResponseSeriali
     ///
     /// - Returns:               The `DataResponseSerializer`.
     static func data(dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
-                            emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
-                            emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataResponseSerializer {
+                     emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
+                     emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataResponseSerializer {
         OWNetworkDataResponseSerializer(dataPreprocessor: dataPreprocessor,
-                               emptyResponseCodes: emptyResponseCodes,
-                               emptyRequestMethods: emptyRequestMethods)
+                                        emptyResponseCodes: emptyResponseCodes,
+                                        emptyRequestMethods: emptyRequestMethods)
     }
 }
 
@@ -553,14 +555,14 @@ extension OWNetworkDataRequest {
     /// - Returns:               The request.
     @discardableResult
     func responseData(queue: DispatchQueue = .main,
-                             dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
-                             emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
-                             emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods,
-                             completionHandler: @escaping (OWNetworkDataResponseTypealias<Data>) -> Void) -> Self {
+                      dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
+                      emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
+                      emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods,
+                      completionHandler: @escaping (OWNetworkDataResponseTypealias<Data>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: OWNetworkDataResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                            emptyResponseCodes: emptyResponseCodes,
-                                                            emptyRequestMethods: emptyRequestMethods),
+                                                                     emptyResponseCodes: emptyResponseCodes,
+                                                                     emptyRequestMethods: emptyRequestMethods),
                  completionHandler: completionHandler)
     }
 }
@@ -579,14 +581,14 @@ extension OWNetworkDownloadRequest {
     /// - Returns:               The request.
     @discardableResult
     func responseData(queue: DispatchQueue = .main,
-                             dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
-                             emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
-                             emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods,
-                             completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Data>) -> Void) -> Self {
+                      dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
+                      emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
+                      emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods,
+                      completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Data>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: OWNetworkDataResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                            emptyResponseCodes: emptyResponseCodes,
-                                                            emptyRequestMethods: emptyRequestMethods),
+                                                                     emptyResponseCodes: emptyResponseCodes,
+                                                                     emptyRequestMethods: emptyRequestMethods),
                  completionHandler: completionHandler)
     }
 }
@@ -596,7 +598,7 @@ extension OWNetworkDownloadRequest {
 /// A `ResponseSerializer` that decodes the response data as a `String`. By default, a request returning `nil` or no
 /// data is considered an error. However, if the request has an `HTTPMethod` or the response has an  HTTP status code
 /// valid for empty responses, then an empty `String` is returned.
- class OWNetworkStringResponseSerializer: OWNetworkResponseSerializer {
+class OWNetworkStringResponseSerializer: OWNetworkResponseSerializer {
     let dataPreprocessor: OWNetworkDataPreprocessor
     /// Optional string encoding used to validate the response.
     let encoding: String.Encoding?
@@ -612,9 +614,9 @@ extension OWNetworkDownloadRequest {
     ///   - emptyResponseCodes:  The HTTP response codes for which empty responses are allowed. `[204, 205]` by default.
     ///   - emptyRequestMethods: The HTTP request methods for which empty responses are allowed. `[.head]` by default.
     init(dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
-                encoding: String.Encoding? = nil,
-                emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
-                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods) {
+         encoding: String.Encoding? = nil,
+         emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
+         emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods) {
         self.dataPreprocessor = dataPreprocessor
         self.encoding = encoding
         self.emptyResponseCodes = emptyResponseCodes
@@ -665,13 +667,14 @@ extension OWNetworkResponseSerializer where Self == OWNetworkStringResponseSeria
     ///
     /// - Returns:               The `StringResponseSerializer`.
     static func string(dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
-                              encoding: String.Encoding? = nil,
-                              emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
-                              emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkStringResponseSerializer {
+                       encoding: String.Encoding? = nil,
+                       emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
+                       emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods)
+    -> OWNetworkStringResponseSerializer {
         OWNetworkStringResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                 encoding: encoding,
-                                 emptyResponseCodes: emptyResponseCodes,
-                                 emptyRequestMethods: emptyRequestMethods)
+                                          encoding: encoding,
+                                          emptyResponseCodes: emptyResponseCodes,
+                                          emptyRequestMethods: emptyRequestMethods)
     }
 }
 
@@ -691,16 +694,16 @@ extension OWNetworkDataRequest {
     /// - Returns:               The request.
     @discardableResult
     func responseString(queue: DispatchQueue = .main,
-                               dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
-                               encoding: String.Encoding? = nil,
-                               emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
-                               emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods,
-                               completionHandler: @escaping (OWNetworkDataResponseTypealias<String>) -> Void) -> Self {
+                        dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
+                        encoding: String.Encoding? = nil,
+                        emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
+                        emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods,
+                        completionHandler: @escaping (OWNetworkDataResponseTypealias<String>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: OWNetworkStringResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                              encoding: encoding,
-                                                              emptyResponseCodes: emptyResponseCodes,
-                                                              emptyRequestMethods: emptyRequestMethods),
+                                                                       encoding: encoding,
+                                                                       emptyResponseCodes: emptyResponseCodes,
+                                                                       emptyRequestMethods: emptyRequestMethods),
                  completionHandler: completionHandler)
     }
 }
@@ -721,16 +724,16 @@ extension OWNetworkDownloadRequest {
     /// - Returns:               The request.
     @discardableResult
     func responseString(queue: DispatchQueue = .main,
-                               dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
-                               encoding: String.Encoding? = nil,
-                               emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
-                               emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods,
-                               completionHandler: @escaping (OWNetworkDownloadResponseTypealias<String>) -> Void) -> Self {
+                        dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
+                        encoding: String.Encoding? = nil,
+                        emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
+                        emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods,
+                        completionHandler: @escaping (OWNetworkDownloadResponseTypealias<String>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: OWNetworkStringResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                              encoding: encoding,
-                                                              emptyResponseCodes: emptyResponseCodes,
-                                                              emptyRequestMethods: emptyRequestMethods),
+                                                                       encoding: encoding,
+                                                                       emptyResponseCodes: emptyResponseCodes,
+                                                                       emptyRequestMethods: emptyRequestMethods),
                  completionHandler: completionHandler)
     }
 }
@@ -741,7 +744,7 @@ extension OWNetworkDownloadRequest {
 /// `nil` or no data is considered an error. However, if the request has an `HTTPMethod` or the response has an
 /// HTTP status code valid for empty responses, then an `NSNull` value is returned.
 @available(*, deprecated, message: "JSONResponseSerializer deprecated and will be removed in version 6. Use DecodableResponseSerializer instead.")
- class JSONResponseSerializer: OWNetworkResponseSerializer {
+class JSONResponseSerializer: OWNetworkResponseSerializer {
     let dataPreprocessor: OWNetworkDataPreprocessor
     let emptyResponseCodes: Set<Int>
     let emptyRequestMethods: Set<OWNetworkHTTPMethod>
@@ -756,9 +759,9 @@ extension OWNetworkDownloadRequest {
     ///   - emptyRequestMethods: The HTTP request methods for which empty responses are allowed. `[.head]` by default.
     ///   - options:             The options to use. `.allowFragments` by default.
     init(dataPreprocessor: OWNetworkDataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
-                emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
-                emptyRequestMethods: Set<OWNetworkHTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
-                options: JSONSerialization.ReadingOptions = .allowFragments) {
+         emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
+         emptyRequestMethods: Set<OWNetworkHTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
+         options: JSONSerialization.ReadingOptions = .allowFragments) {
         self.dataPreprocessor = dataPreprocessor
         self.emptyResponseCodes = emptyResponseCodes
         self.emptyRequestMethods = emptyRequestMethods
@@ -803,11 +806,11 @@ extension OWNetworkDataRequest {
     @available(*, deprecated, message: "responseJSON deprecated and will be removed in version 6. Use responseDecodable instead.")
     @discardableResult
     func responseJSON(queue: DispatchQueue = .main,
-                             dataPreprocessor: OWNetworkDataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
-                             emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
-                             emptyRequestMethods: Set<OWNetworkHTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
-                             options: JSONSerialization.ReadingOptions = .allowFragments,
-                             completionHandler: @escaping (OWNetworkDataResponseTypealias<Any>) -> Void) -> Self {
+                      dataPreprocessor: OWNetworkDataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
+                      emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
+                      emptyRequestMethods: Set<OWNetworkHTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
+                      options: JSONSerialization.ReadingOptions = .allowFragments,
+                      completionHandler: @escaping (OWNetworkDataResponseTypealias<Any>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: JSONResponseSerializer(dataPreprocessor: dataPreprocessor,
                                                             emptyResponseCodes: emptyResponseCodes,
@@ -834,11 +837,11 @@ extension OWNetworkDownloadRequest {
     @available(*, deprecated, message: "responseJSON deprecated and will be removed in version 6. Use responseDecodable instead.")
     @discardableResult
     func responseJSON(queue: DispatchQueue = .main,
-                             dataPreprocessor: OWNetworkDataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
-                             emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
-                             emptyRequestMethods: Set<OWNetworkHTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
-                             options: JSONSerialization.ReadingOptions = .allowFragments,
-                             completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Any>) -> Void) -> Self {
+                      dataPreprocessor: OWNetworkDataPreprocessor = JSONResponseSerializer.defaultDataPreprocessor,
+                      emptyResponseCodes: Set<Int> = JSONResponseSerializer.defaultEmptyResponseCodes,
+                      emptyRequestMethods: Set<OWNetworkHTTPMethod> = JSONResponseSerializer.defaultEmptyRequestMethods,
+                      options: JSONSerialization.ReadingOptions = .allowFragments,
+                      completionHandler: @escaping (OWNetworkDownloadResponseTypealias<Any>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: JSONResponseSerializer(dataPreprocessor: dataPreprocessor,
                                                             emptyResponseCodes: emptyResponseCodes,
@@ -913,9 +916,9 @@ class OWNetworkDecodableResponseSerializer<T: Decodable>: OWNetworkResponseSeria
     ///   - emptyResponseCodes:  The HTTP response codes for which empty responses are allowed. `[204, 205]` by default.
     ///   - emptyRequestMethods: The HTTP request methods for which empty responses are allowed. `[.head]` by default.
     init(dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer.defaultDataPreprocessor,
-                decoder: OWNetworkDataDecoder = JSONDecoder(),
-                emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer.defaultEmptyResponseCodes,
-                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer.defaultEmptyRequestMethods) {
+         decoder: OWNetworkDataDecoder = JSONDecoder(),
+         emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer.defaultEmptyResponseCodes,
+         emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer.defaultEmptyRequestMethods) {
         self.dataPreprocessor = dataPreprocessor
         self.decoder = decoder
         self.emptyResponseCodes = emptyResponseCodes
@@ -959,14 +962,15 @@ extension OWNetworkResponseSerializer {
     ///
     /// - Returns:               The `DecodableResponseSerializer`.
     static func decodable<T: Decodable>(of type: T.Type,
-                                               dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
-                                               decoder: OWNetworkDataDecoder = JSONDecoder(),
-                                               emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
-                                               emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods) -> OWNetworkDecodableResponseSerializer<T> where Self == OWNetworkDecodableResponseSerializer<T> {
+                                        dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
+                                        decoder: OWNetworkDataDecoder = JSONDecoder(),
+                                        emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
+                                        emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods)
+    -> OWNetworkDecodableResponseSerializer<T> where Self == OWNetworkDecodableResponseSerializer<T> {
         OWNetworkDecodableResponseSerializer<T>(dataPreprocessor: dataPreprocessor,
-                                       decoder: decoder,
-                                       emptyResponseCodes: emptyResponseCodes,
-                                       emptyRequestMethods: emptyRequestMethods)
+                                                decoder: decoder,
+                                                emptyResponseCodes: emptyResponseCodes,
+                                                emptyRequestMethods: emptyRequestMethods)
     }
 }
 
@@ -986,17 +990,17 @@ extension OWNetworkDataRequest {
     /// - Returns:               The request.
     @discardableResult
     func responseDecodable<T: Decodable>(of type: T.Type = T.self,
-                                                queue: DispatchQueue = .main,
-                                                dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
-                                                decoder: OWNetworkDataDecoder = JSONDecoder(),
-                                                emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
-                                                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods,
-                                                completionHandler: @escaping (OWNetworkDataResponseTypealias<T>) -> Void) -> Self {
+                                         queue: DispatchQueue = .main,
+                                         dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
+                                         decoder: OWNetworkDataDecoder = JSONDecoder(),
+                                         emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
+                                         emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods,
+                                         completionHandler: @escaping (OWNetworkDataResponseTypealias<T>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: OWNetworkDecodableResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                                 decoder: decoder,
-                                                                 emptyResponseCodes: emptyResponseCodes,
-                                                                 emptyRequestMethods: emptyRequestMethods),
+                                                                          decoder: decoder,
+                                                                          emptyResponseCodes: emptyResponseCodes,
+                                                                          emptyRequestMethods: emptyRequestMethods),
                  completionHandler: completionHandler)
     }
 }
@@ -1017,17 +1021,17 @@ extension OWNetworkDownloadRequest {
     /// - Returns:               The request.
     @discardableResult
     func responseDecodable<T: Decodable>(of type: T.Type = T.self,
-                                                queue: DispatchQueue = .main,
-                                                dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
-                                                decoder: OWNetworkDataDecoder = JSONDecoder(),
-                                                emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
-                                                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods,
-                                                completionHandler: @escaping (OWNetworkDownloadResponseTypealias<T>) -> Void) -> Self {
+                                         queue: DispatchQueue = .main,
+                                         dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
+                                         decoder: OWNetworkDataDecoder = JSONDecoder(),
+                                         emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
+                                         emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods,
+                                         completionHandler: @escaping (OWNetworkDownloadResponseTypealias<T>) -> Void) -> Self {
         response(queue: queue,
                  responseSerializer: OWNetworkDecodableResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                                 decoder: decoder,
-                                                                 emptyResponseCodes: emptyResponseCodes,
-                                                                 emptyRequestMethods: emptyRequestMethods),
+                                                                          decoder: decoder,
+                                                                          emptyResponseCodes: emptyResponseCodes,
+                                                                          emptyRequestMethods: emptyRequestMethods),
                  completionHandler: completionHandler)
     }
 }
@@ -1101,8 +1105,8 @@ extension OWNetworkDataStreamSerializer {
     ///   - dataPreprocessor: `DataPreprocessor` used to process incoming `Data` before it's passed through the
     ///                       `decoder`. `PassthroughPreprocessor()` by default.
     static func decodable<T: Decodable>(of type: T.Type,
-                                               decoder: OWNetworkDataDecoder = JSONDecoder(),
-                                               dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkPassthroughPreprocessor()) -> Self where Self == OWNetworkDecodableStreamSerializer<T> {
+                                        decoder: OWNetworkDataDecoder = JSONDecoder(),
+                                        dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkPassthroughPreprocessor()) -> Self where Self == OWNetworkDecodableStreamSerializer<T> {
         OWNetworkDecodableStreamSerializer<T>(decoder: decoder, dataPreprocessor: dataPreprocessor)
     }
 }
@@ -1153,8 +1157,8 @@ extension OWNetworkDataStreamRequest {
     /// - Returns:      The `DataStreamRequest`.
     @discardableResult
     func responseStream<Serializer: OWNetworkDataStreamSerializer>(using serializer: Serializer,
-                                                                 on queue: DispatchQueue = .main,
-                                                                 stream: @escaping Handler<Serializer.SerializedObject, OWNetworkError>) -> Self {
+                                                                   on queue: DispatchQueue = .main,
+                                                                   stream: @escaping Handler<Serializer.SerializedObject, OWNetworkError>) -> Self {
         let parser = { [unowned self] (data: Data) in
             self.serializationQueue.async {
                 // Start work on serialization queue.
@@ -1194,7 +1198,7 @@ extension OWNetworkDataStreamRequest {
     /// - Returns:  The `DataStreamRequest`.
     @discardableResult
     func responseStreamString(on queue: DispatchQueue = .main,
-                                     stream: @escaping Handler<String, Never>) -> Self {
+                              stream: @escaping Handler<String, Never>) -> Self {
         let parser = { [unowned self] (data: Data) in
             self.serializationQueue.async {
                 // Start work on serialization queue.
@@ -1244,10 +1248,10 @@ extension OWNetworkDataStreamRequest {
     /// - Returns: The `DataStreamRequest`.
     @discardableResult
     func responseStreamDecodable<T: Decodable>(of type: T.Type = T.self,
-                                                      on queue: DispatchQueue = .main,
-                                                      using decoder: OWNetworkDataDecoder = JSONDecoder(),
-                                                      preprocessor: OWNetworkDataPreprocessor = OWNetworkPassthroughPreprocessor(),
-                                                      stream: @escaping Handler<T, OWNetworkError>) -> Self {
+                                               on queue: DispatchQueue = .main,
+                                               using decoder: OWNetworkDataDecoder = JSONDecoder(),
+                                               preprocessor: OWNetworkDataPreprocessor = OWNetworkPassthroughPreprocessor(),
+                                               stream: @escaping Handler<T, OWNetworkError>) -> Self {
         responseStream(using: OWNetworkDecodableStreamSerializer<T>(decoder: decoder, dataPreprocessor: preprocessor),
                        stream: stream)
     }

@@ -9,7 +9,7 @@
 import Foundation
 
 struct SPConfigurationSpotlight: Decodable {
-    
+
     let enabled: Bool?
-    
+
 }

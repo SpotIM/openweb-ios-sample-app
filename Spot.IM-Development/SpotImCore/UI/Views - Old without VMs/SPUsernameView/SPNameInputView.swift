@@ -25,10 +25,10 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
     var isSelected: Bool {
         usernameTextView.isFirstResponder
     }
-    
+
     let font = UIFont.preferred(style: .regular, of: Theme.fontSize)
     let boldFont = UIFont.preferred(style: .bold, of: Theme.fontSize)
-    
+
     // MARK: - Overrides
 
     deinit {
@@ -41,7 +41,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         setup()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         usernameTextView.accessibilityIdentifier = Metrics.usernameIdentifier
@@ -50,7 +50,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
     func makeFirstResponder() {
         usernameTextView.becomeFirstResponder()
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.backgroundColor = .clear
@@ -60,7 +60,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         separatorView.backgroundColor = .spSeparator2
         avatarUserView.updateColorsAccordingToStyle()
     }
-    
+
     func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
         usernameTextView.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
     }
@@ -93,7 +93,7 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
         usernameTextView.font = usernameTextView.isEditable ? font : boldFont
         usernameTextView.delegate = self
         usernameTextView.textContainer.maximumNumberOfLines = 1
-        
+
         usernameTextView.placeholder = LocalizationManager.localizedString(key: "Your Username")
         usernameTextView.OWSnp.makeConstraints { make in
             make.leading.equalTo(avatarUserView.OWSnp.trailing).offset(Theme.usernameLeading)
@@ -102,11 +102,11 @@ internal final class SPNameInputView: OWBaseView, SPTextInputView {
             make.height.equalTo(avatarUserView)
         }
     }
-    
+
     func configureAvatarViewModel(with model: OWAvatarViewModeling) {
         self.avatarUserView.configure(with: model)
     }
-    
+
     func setTextAccess(isEditable: Bool) {
         usernameTextView.isEditable = isEditable
         usernameTextView.isSelectable = isEditable
@@ -149,11 +149,11 @@ extension SPNameInputView: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         notifyDelegateAboutChange()
     }
-    
+
     func textViewDidChange(_ textView: UITextView) {
         notifyDelegateAboutChange()
     }
-    
+
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         return text.rangeOfCharacter(from: .newlines) == nil && (textView.text.length + text.length) <= 12
     }
