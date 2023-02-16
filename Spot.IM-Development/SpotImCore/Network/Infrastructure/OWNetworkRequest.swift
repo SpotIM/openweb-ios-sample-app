@@ -931,7 +931,7 @@ class OWNetworkRequest {
 // MARK: - Protocol Conformances
 
 extension OWNetworkRequest: Equatable {
-    static func ==(lhs: OWNetworkRequest, rhs: OWNetworkRequest) -> Bool {
+    static func == (lhs: OWNetworkRequest, rhs: OWNetworkRequest) -> Bool {
         lhs.id == rhs.id
     }
 }
@@ -1299,14 +1299,14 @@ final class OWNetworkDataStreamRequest: OWNetworkRequest {
 
     func didReceive(data: Data) {
         $streamMutableState.write { state in
-            #if !(os(Linux) || os(Windows))
+#if !(os(Linux) || os(Windows))
             if let stream = state.outputStream {
                 underlyingQueue.async {
                     var bytes = Array(data)
                     stream.write(&bytes, maxLength: bytes.count)
                 }
             }
-            #endif
+#endif
             state.numberOfExecutingStreams += state.streams.count
             let localState = state
             underlyingQueue.async { localState.streams.forEach { $0(data) } }
@@ -1468,7 +1468,7 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
     /// - Note: Downloads from a local `file://` `URL`s do not use the `Destination` closure, as those downloads do not
     ///         return an `HTTPURLResponse`. Instead the file is merely moved within the temporary directory.
     typealias Destination = (_ temporaryURL: URL,
-                                    _ response: HTTPURLResponse) -> (destinationURL: URL, options: Options)
+                             _ response: HTTPURLResponse) -> (destinationURL: URL, options: Options)
 
     /// Creates a download file destination closure which uses the default file manager to move the temporary file to a
     /// file URL in the first available directory with the specified search path directory and search path domain mask.
@@ -1480,8 +1480,8 @@ class OWNetworkDownloadRequest: OWNetworkRequest {
     ///                default.
     /// - Returns: The `Destination` closure.
     class func suggestedDownloadDestination(for directory: FileManager.SearchPathDirectory = .documentDirectory,
-                                                   in domain: FileManager.SearchPathDomainMask = .userDomainMask,
-                                                   options: Options = []) -> Destination {
+                                            in domain: FileManager.SearchPathDomainMask = .userDomainMask,
+                                            options: Options = []) -> Destination {
         { temporaryURL, response in
             let directoryURLs = FileManager.default.urls(for: directory, in: domain)
             let url = directoryURLs.first?.appendingPathComponent(response.suggestedFilename!) ?? temporaryURL

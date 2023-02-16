@@ -13,7 +13,7 @@ protocol OWLoaderPresentable {
 }
 
 extension OWLoaderPresentable where Self: UIViewController {
-    
+
     func showLoader() {
         view.addSubview(activityIndicator)
         activityIndicator.OWSnp.makeConstraints { make in
@@ -21,7 +21,7 @@ extension OWLoaderPresentable where Self: UIViewController {
         }
         activityIndicator.startLoader()
     }
-    
+
     func hideLoader() {
         activityIndicator.stopLoader()
         activityIndicator.removeFromSuperview()

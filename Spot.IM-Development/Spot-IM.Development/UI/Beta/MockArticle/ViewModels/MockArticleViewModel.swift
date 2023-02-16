@@ -37,49 +37,49 @@ protocol MockArticleViewModeling {
 class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInputs, MockArticleViewModelingOutputs {
     var inputs: MockArticleViewModelingInputs { return self }
     var outputs: MockArticleViewModelingOutputs { return self }
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate let imageProviderAPI: ImageProviding
-    
+
     fileprivate weak var navController: UINavigationController?
     fileprivate weak var presentationalVC: UIViewController?
-    
+
     fileprivate let _articleImageURL = BehaviorSubject<URL?>(value: nil)
     var articleImageURL: Observable<URL> {
         return _articleImageURL
             .unwrap()
             .asObservable()
     }
-    
+
     fileprivate let _actionSettings = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     fileprivate var actionSettings: Observable<SDKUIFlowActionSettings> {
         return _actionSettings
             .unwrap()
             .asObservable()
     }
-    
+
     fileprivate let _showError = PublishSubject<String>()
     var showError: Observable<String> {
         return _showError
             .asObservable()
     }
-    
+
     fileprivate let _showPreConversation = PublishSubject<(UIView, CGSize)>()
     var showPreConversation: Observable<(UIView, CGSize)> {
         return _showPreConversation
             .asObservable()
     }
-    
+
     fileprivate let _updatePreConversationSize = PublishSubject<(UIView, CGSize)>()
     var updatePreConversationSize: Observable<(UIView, CGSize)> {
         return _updatePreConversationSize
             .asObservable()
     }
-    
+
     let fullConversationButtonTapped = PublishSubject<Void>()
     var commentCreationButtonTapped = PublishSubject<Void>()
-    
+
     var showFullConversationButton: Observable<PresentationalModeCompact> {
         return actionSettings
             // Map here is also like a filter
@@ -91,9 +91,9 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
                 }
             }
             .unwrap()
-            
+
     }
-    
+
     var showCommentCreationButton: Observable<PresentationalModeCompact> {
         return actionSettings
             // Map here is also like a filter
@@ -106,32 +106,33 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
             }
             .unwrap()
     }
-    
+
     lazy var title: String = {
         return NSLocalizedString("MockArticle", comment: "")
     }()
-    
+
     init(imageProviderAPI: ImageProviding = ImageProvider(),
          actionSettings: SDKUIFlowActionSettings) {
         self.imageProviderAPI = imageProviderAPI
         _actionSettings.onNext(actionSettings)
         setupObservers()
     }
-    
+
     func setNavigationController(_ navController: UINavigationController?) {
         self.navController = navController
     }
-    
+
     func setPresentationalVC(_ viewController: UIViewController) {
         presentationalVC = viewController
     }
 }
 
 fileprivate extension MockArticleViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         let articleURL = imageProviderAPI.randomImageUrl()
         _articleImageURL.onNext(articleURL)
-        
+
         // Pre conversation
         actionSettings
             .map { settings -> (PresentationalModeCompact, String)? in
@@ -178,8 +179,7 @@ fileprivate extension MockArticleViewModel {
                 })
             })
             .disposed(by: disposeBag)
-            
-        
+
         // Full conversation
         fullConversationButtonTapped
             .withLatestFrom(showFullConversationButton)
@@ -190,12 +190,12 @@ fileprivate extension MockArticleViewModel {
                 guard let self = self else { return }
                 let mode = result.0
                 let postId = result.1
-                
+
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
-                
+
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
-                
+
                 flows.conversation(postId: postId,
                                    article: self.createMockArticle(),
                                    presentationalMode: presentationalMode,
@@ -226,12 +226,12 @@ fileprivate extension MockArticleViewModel {
                 guard let self = self else { return }
                 let mode = result.0
                 let postId = result.1
-                
+
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
-                
+
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
-                
+
                 flows.commentCreation(postId: postId,
                                       article: self.createMockArticle(),
                                       presentationalMode: presentationalMode,
@@ -252,19 +252,23 @@ fileprivate extension MockArticleViewModel {
             })
             .disposed(by: disposeBag)
     }
-    
+    // swiftlint:enable function_body_length
+
     func createMockArticle() -> OWArticle {
         let articleStub = OWArticle.stub()
 
+        // swiftlint:disable line_length
         let persistenceReadOnlyMode = OWReadOnlyMode.modeFromPersistence(index: UserDefaultsProvider.shared.get(key: .readOnlyModeIndex, defaultValue: 0))
-        let settings = OWArticleSettings(section: articleStub.additionalSettings.section, readOnlyMode: persistenceReadOnlyMode)
-            
+        // swiftlint:enable line_length
+        let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
+                                         readOnlyMode: persistenceReadOnlyMode)
+
         var url = articleStub.url
         if let strURL =  UserDefaultsProvider.shared.get(key: UserDefaultsProvider.UDKey<String>.articleAssociatedURL),
            let persistenceURL = URL(string: strURL) {
             url = persistenceURL
         }
-        
+
         let article = OWArticle(url: url,
                                 title: articleStub.title,
                                 subtitle: articleStub.subtitle,
@@ -272,11 +276,11 @@ fileprivate extension MockArticleViewModel {
                                 additionalSettings: settings)
         return article
     }
-                       
+
     func presentationalMode(fromCompactMode mode: PresentationalModeCompact) -> OWPresentationalMode? {
         guard let navController = self.navController,
               let presentationalVC = self.presentationalVC else { return nil }
-        
+
         switch mode {
         case .present(let style):
             return OWPresentationalMode.present(viewController: presentationalVC, style: style)

@@ -11,11 +11,11 @@ import Foundation
 struct SPRankChange {
     var from: SPRank
     var to: SPRank
-    
+
     var reversed: SPRankChange {
         return SPRankChange(from: self.to, to: self.from)
     }
-    
+
     var operation: String? {
         switch (self.from, self.to) {
             case (_, .up): return "like"

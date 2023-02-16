@@ -15,7 +15,9 @@ private struct AssociatedCells {
 extension UITableView {
     func dequeueReusableCellAndReigsterIfNeeded<T: UITableViewCell>(cellClass: T.Type, for indexPath: IndexPath) -> T {
         registerIfNeeded(cellClass: cellClass)
+        // swiftlint:disable force_cast
         let cell = self.dequeueReusableCell(withIdentifier: cellClass.identifierName, for: indexPath) as! T
+        // swiftlint:enable force_case
         return cell
     }
 
@@ -42,7 +44,9 @@ fileprivate extension UITableView {
     var registeredCellsIdentifiers: Set<String> {
         get {
             // Check if it was already set
+            // swiftlint:disable line_length
             if let registered = objc_getAssociatedObject(self, &AssociatedCells.registeredCellsIdentifiers) as? Set<String> {
+                // swiftlint:enable line_length
                 return registered
             }
 

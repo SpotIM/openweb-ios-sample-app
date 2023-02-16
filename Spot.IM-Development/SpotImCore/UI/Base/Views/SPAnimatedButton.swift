@@ -5,16 +5,15 @@
 //  Created by Itay Dressler on 29/07/2019.
 //  Copyright © 2019 Spot.IM. All rights reserved.
 //
-// swiftlint:disable all
 
 import UIKit
 
 @IBDesignable
 internal class SPAnimatedButton: OWBaseButton {
-    
+
     fileprivate var imageShape: CAShapeLayer!
     fileprivate var selectedImageShape: CAShapeLayer!
-    
+
     var image: UIImage? {
         didSet {
             imageShape?.mask?.contents = image?.cgImage
@@ -26,7 +25,7 @@ internal class SPAnimatedButton: OWBaseButton {
             selectedImageShape?.mask?.contents = selectedImage?.cgImage
         }
     }
-    
+
     var brandColor: UIColor! {
         didSet {
             lineColor = brandColor
@@ -34,7 +33,7 @@ internal class SPAnimatedButton: OWBaseButton {
             imageColorOn = brandColor
         }
     }
-    
+
     fileprivate var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             if (isSelected) {
@@ -49,7 +48,7 @@ internal class SPAnimatedButton: OWBaseButton {
             }
         }
     }
-    
+
     fileprivate var circleShape: CAShapeLayer!
     fileprivate var circleMask: CAShapeLayer!
     fileprivate var circleColor: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
@@ -57,7 +56,7 @@ internal class SPAnimatedButton: OWBaseButton {
             circleShape.fillColor = circleColor.cgColor
         }
     }
-    
+
     fileprivate var lines: [CAShapeLayer]!
     fileprivate var lineColor: UIColor! = UIColor(red: 250/255, green: 120/255, blue: 68/255, alpha: 1.0) {
         didSet {
@@ -66,26 +65,26 @@ internal class SPAnimatedButton: OWBaseButton {
             }
         }
     }
-    
+
     fileprivate let circleTransform = CAKeyframeAnimation(keyPath: "transform")
     fileprivate let circleMaskTransform = CAKeyframeAnimation(keyPath: "transform")
     fileprivate let lineStrokeStart = CAKeyframeAnimation(keyPath: "strokeStart")
     fileprivate let lineStrokeEnd = CAKeyframeAnimation(keyPath: "strokeEnd")
     fileprivate let lineOpacity = CAKeyframeAnimation(keyPath: "opacity")
     fileprivate let imageTransform = CAKeyframeAnimation(keyPath: "transform")
-    
+
     fileprivate var duration: Double = 1.0 {
         didSet {
             circleTransform.duration = 0.333 * duration // 0.0333 * 10
             circleMaskTransform.duration = 0.333 * duration // 0.0333 * 10
-            lineStrokeStart.duration = 0.6 * duration //0.0333 * 18
-            lineStrokeEnd.duration = 0.6 * duration //0.0333 * 18
-            lineOpacity.duration = 1.0 * duration //0.0333 * 30
-            imageTransform.duration = 1.0 * duration //0.0333 * 30
+            lineStrokeStart.duration = 0.6 * duration // 0.0333 * 18
+            lineStrokeEnd.duration = 0.6 * duration // 0.0333 * 18
+            lineOpacity.duration = 1.0 * duration // 0.0333 * 30
+            imageTransform.duration = 1.0 * duration // 0.0333 * 30
         }
     }
-    
-    override open var isSelected : Bool {
+
+    override open var isSelected: Bool {
         didSet {
             if (isSelected != oldValue) {
                 selectedImageShape.fillColor = imageColorOn.cgColor
@@ -100,19 +99,19 @@ internal class SPAnimatedButton: OWBaseButton {
             }
         }
     }
-    
+
     override convenience init(frame: CGRect) {
         self.init(frame: frame, image: UIImage())
     }
-    
+
     convenience init(frame: CGRect, image: UIImage) {
-        self.init(frame: frame, image:image, selectedImage: UIImage())
+        self.init(frame: frame, image: image, selectedImage: UIImage())
     }
-    
+
     convenience init(frame: CGRect, buttonInset insets: UIEdgeInsets = .zero) {
         self.init(frame: frame, image: UIImage(), selectedImage: UIImage(), buttonInset: insets)
     }
-    
+
     init(frame: CGRect, image: UIImage?, selectedImage: UIImage?, buttonInset insets: UIEdgeInsets = .zero) {
         super.init(frame: frame)
         createLayers(buttonInset: insets)
@@ -120,17 +119,20 @@ internal class SPAnimatedButton: OWBaseButton {
         self.selectedImage = selectedImage
         addTargets()
     }
-    
-    fileprivate func createLayers(buttonInset insets: UIEdgeInsets) {
+
+    fileprivate func createLayers(buttonInset insets: UIEdgeInsets) { // swiftlint:disable:this function_body_length
         self.layer.sublayers = nil
         let imageFrame = CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height).inset(by: insets)
-        
+
         let imgCenterPoint = CGPoint(x: imageFrame.midX, y: imageFrame.midY)
-        let lineFrame = CGRect(x: imageFrame.origin.x - imageFrame.width / 4, y: imageFrame.origin.y - imageFrame.height / 4 , width: imageFrame.width * 1.5, height: imageFrame.height * 1.5)
-        
-        //===============
+        let lineFrame = CGRect(x: imageFrame.origin.x - imageFrame.width / 4,
+                               y: imageFrame.origin.y - imageFrame.height / 4,
+                               width: imageFrame.width * 1.5,
+                               height: imageFrame.height * 1.5)
+
+        // ===============
         // circle layer
-        //===============
+        // ===============
         circleShape = CAShapeLayer()
         circleShape.bounds = imageFrame
         circleShape.position = imgCenterPoint
@@ -138,20 +140,20 @@ internal class SPAnimatedButton: OWBaseButton {
         circleShape.fillColor = circleColor.cgColor
         circleShape.transform = CATransform3DMakeScale(0.0, 0.0, 1.0)
         self.layer.addSublayer(circleShape)
-        
+
         circleMask = CAShapeLayer()
         circleMask.bounds = imageFrame
         circleMask.position = imgCenterPoint
         circleMask.fillRule = CAShapeLayerFillRule.evenOdd
         circleShape.mask = circleMask
-        
+
         let maskPath = UIBezierPath(rect: imageFrame)
         maskPath.addArc(withCenter: imgCenterPoint, radius: 0.1, startAngle: CGFloat(0.0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
         circleMask.path = maskPath.cgPath
-        
-        //===============
+
+        // ===============
         // line layer
-        //===============
+        // ===============
         lines = []
         for i in 0 ..< 5 {
             let line = CAShapeLayer()
@@ -177,10 +179,10 @@ internal class SPAnimatedButton: OWBaseButton {
             self.layer.addSublayer(line)
             lines.append(line)
         }
-        
-        //===============
+
+        // ===============
         // image layer
-        //===============
+        // ===============
         imageShape = CAShapeLayer()
         imageShape.bounds = imageFrame
         imageShape.position = imgCenterPoint
@@ -188,14 +190,14 @@ internal class SPAnimatedButton: OWBaseButton {
         imageShape.fillColor = imageColorOff.cgColor
         imageShape.actions = ["fillColor": NSNull()]
         self.layer.addSublayer(imageShape)
-        
+
         imageShape.mask = CALayer()
         imageShape.mask?.bounds = imageFrame
         imageShape.mask?.position = imgCenterPoint
-        
-        //===============
+
+        // ===============
         // Selected image layer
-        //===============
+        // ===============
         selectedImageShape = CAShapeLayer()
         selectedImageShape.bounds = imageFrame
         selectedImageShape.position = imgCenterPoint
@@ -204,14 +206,14 @@ internal class SPAnimatedButton: OWBaseButton {
         selectedImageShape.actions = ["fillColor": NSNull()]
         selectedImageShape.opacity = 0
         self.layer.addSublayer(selectedImageShape)
-        
+
         selectedImageShape.mask = CALayer()
         selectedImageShape.mask!.bounds = imageFrame
         selectedImageShape.mask!.position = imgCenterPoint
-        
-        //==============================
+
+        // ==============================
         // circle transform animation
-        //==============================
+        // ==============================
         circleTransform.duration = 0.333 // 0.0333 * 10
         circleTransform.values = [
             NSValue(caTransform3D: CATransform3DMakeScale(0.0, 0.0, 1.0)),    //  0/10
@@ -233,7 +235,7 @@ internal class SPAnimatedButton: OWBaseButton {
             0.6,    //  6/10
             1.0     // 10/10
         ]
-        
+
         circleMaskTransform.duration = 0.333 // 0.0333 * 10
         circleMaskTransform.values = [
             NSValue(caTransform3D: CATransform3DIdentity),                                                              //  0/10
@@ -243,7 +245,7 @@ internal class SPAnimatedButton: OWBaseButton {
             NSValue(caTransform3D: CATransform3DMakeScale(imageFrame.width * 3.923, imageFrame.height * 3.923, 1.0)),   //  5/10
             NSValue(caTransform3D: CATransform3DMakeScale(imageFrame.width * 4.375, imageFrame.height * 4.375, 1.0)),   //  6/10
             NSValue(caTransform3D: CATransform3DMakeScale(imageFrame.width * 4.731, imageFrame.height * 4.731, 1.0)),   //  7/10
-            NSValue(caTransform3D: CATransform3DMakeScale(imageFrame.width * 5.0, imageFrame.height * 5.0,1.0)),   //  9/10
+            NSValue(caTransform3D: CATransform3DMakeScale(imageFrame.width * 5.0, imageFrame.height * 5.0, 1.0)),   //  9/10
             NSValue(caTransform3D: CATransform3DMakeScale(imageFrame.width * 5.0, imageFrame.height * 5.0, 1.0))    // 10/10
         ]
         circleMaskTransform.keyTimes = [
@@ -257,11 +259,11 @@ internal class SPAnimatedButton: OWBaseButton {
             0.9,    //  9/10
             1.0     // 10/10
         ]
-        
-        //==============================
+
+        // ==============================
         // line stroke animation
-        //==============================
-        lineStrokeStart.duration = 0.6 //0.0333 * 18
+        // ==============================
+        lineStrokeStart.duration = 0.6 // 0.0333 * 18
         lineStrokeStart.values = [
             0.0,    //  0/18
             0.0,    //  1/18
@@ -288,8 +290,8 @@ internal class SPAnimatedButton: OWBaseButton {
             0.944,  // 17/18
             1.0    // 18/18
         ]
-        
-        lineStrokeEnd.duration = 0.6 //0.0333 * 18
+
+        lineStrokeEnd.duration = 0.6 // 0.0333 * 18
         lineStrokeEnd.values = [
             0.0,    //  0/18
             0.0,    //  1/18
@@ -310,8 +312,8 @@ internal class SPAnimatedButton: OWBaseButton {
             0.944,  // 17/18
             1.0    // 18/18
         ]
-        
-        lineOpacity.duration = 1.0 //0.0333 * 30
+
+        lineOpacity.duration = 1.0 // 0.0333 * 30
         lineOpacity.values = [
             1.0,    //  0/30
             1.0,    // 12/30
@@ -322,11 +324,11 @@ internal class SPAnimatedButton: OWBaseButton {
             0.4,    // 12/30
             0.567   // 17/30
         ]
-        
-        //==============================
+
+        // ==============================
         // image transform animation
-        //==============================
-        imageTransform.duration = 1.0 //0.0333 * 30
+        // ==============================
+        imageTransform.duration = 1.0 // 0.0333 * 30
         imageTransform.values = [
             NSValue(caTransform3D: CATransform3DMakeScale(0.0, 0.0, 1.0)),  //  0/30
             NSValue(caTransform3D: CATransform3DMakeScale(0.0, 0.0, 1.0)),  //  3/30
@@ -366,18 +368,18 @@ internal class SPAnimatedButton: OWBaseButton {
             1.0     // 30/30
         ]
     }
-    
+
     fileprivate func addTargets() {
-        //===============
+        // ===============
         // add target
-        //===============
+        // ===============
         self.addTarget(self, action: #selector(SPAnimatedButton.touchDown(_:)), for: .touchDown)
         self.addTarget(self, action: #selector(SPAnimatedButton.touchUpInside(_:)), for: .touchUpInside)
         self.addTarget(self, action: #selector(SPAnimatedButton.touchDragExit(_:)), for: .touchDragExit)
         self.addTarget(self, action: #selector(SPAnimatedButton.touchDragEnter(_:)), for: .touchDragEnter)
         self.addTarget(self, action: #selector(SPAnimatedButton.touchCancel(_:)), for: .touchCancel)
     }
-    
+
     @objc
     func touchDown(_ sender: SPAnimatedButton) {
         self.layer.opacity = 0.4
@@ -398,29 +400,29 @@ internal class SPAnimatedButton: OWBaseButton {
     func touchCancel(_ sender: SPAnimatedButton) {
         self.layer.opacity = 1.0
     }
-    
+
     open func select() {
         isSelected = true
-        
+
         CATransaction.begin()
-        
+
         circleShape.add(circleTransform, forKey: "transform")
         circleMask.add(circleMaskTransform, forKey: "transform")
         imageShape.add(imageTransform, forKey: "transform")
         selectedImageShape.add(imageTransform, forKey: "transform")
-    
+
         for i in 0 ..< 5 {
             lines[i].add(lineStrokeStart, forKey: "strokeStart")
             lines[i].add(lineStrokeEnd, forKey: "strokeEnd")
             lines[i].add(lineOpacity, forKey: "opacity")
         }
-        
+
         CATransaction.commit()
     }
-    
+
     open func deselect() {
         isSelected = false
-        
+
         // remove all animations
         circleShape.removeAllAnimations()
         circleMask.removeAllAnimations()

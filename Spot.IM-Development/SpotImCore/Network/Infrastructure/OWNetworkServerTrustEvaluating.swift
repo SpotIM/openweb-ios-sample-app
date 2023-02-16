@@ -187,11 +187,11 @@ extension OWNetworkServerTrustEvaluating where Self == OWNetworkRevocationTrustE
     ///                               by default.
     /// - Returns:                    The `RevocationTrustEvaluator`.
     static func revocationChecking(performDefaultValidation: Bool = true,
-                                          validateHost: Bool = true,
-                                          options: OWNetworkRevocationTrustEvaluator.Options = .any) -> OWNetworkRevocationTrustEvaluator {
+                                   validateHost: Bool = true,
+                                   options: OWNetworkRevocationTrustEvaluator.Options = .any) -> OWNetworkRevocationTrustEvaluator {
         OWNetworkRevocationTrustEvaluator(performDefaultValidation: performDefaultValidation,
-                                 validateHost: validateHost,
-                                 options: options)
+                                          validateHost: validateHost,
+                                          options: options)
     }
 }
 
@@ -220,9 +220,9 @@ class OWNetworkPinnedCertificatesTrustEvaluator: OWNetworkServerTrustEvaluating 
     ///                                   to performing the default evaluation, even if `performDefaultValidation` is
     ///                                   `false`. `true` by default.
     init(certificates: [SecCertificate] = Bundle.main.owNetwork.certificates,
-                acceptSelfSignedCertificates: Bool = false,
-                performDefaultValidation: Bool = true,
-                validateHost: Bool = true) {
+         acceptSelfSignedCertificates: Bool = false,
+         performDefaultValidation: Bool = true,
+         validateHost: Bool = true) {
         self.certificates = certificates
         self.acceptSelfSignedCertificates = acceptSelfSignedCertificates
         self.performDefaultValidation = performDefaultValidation
@@ -251,9 +251,9 @@ class OWNetworkPinnedCertificatesTrustEvaluator: OWNetworkServerTrustEvaluating 
         let pinnedCertificatesInServerData = !serverCertificatesData.isDisjoint(with: pinnedCertificatesData)
         if !pinnedCertificatesInServerData {
             throw OWNetworkError.serverTrustEvaluationFailed(reason: .certificatePinningFailed(host: host,
-                                                                                        trust: trust,
-                                                                                        pinnedCertificates: certificates,
-                                                                                        serverCertificates: trust.owNetwork.certificates))
+                                                                                               trust: trust,
+                                                                                               pinnedCertificates: certificates,
+                                                                                               serverCertificates: trust.owNetwork.certificates))
         }
     }
 }
@@ -276,13 +276,13 @@ extension OWNetworkServerTrustEvaluating where Self == OWNetworkPinnedCertificat
     ///                                   to performing the default evaluation, even if `performDefaultValidation` is
     ///                                   `false`. `true` by default.
     static func pinnedCertificates(certificates: [SecCertificate] = Bundle.main.owNetwork.certificates,
-                                          acceptSelfSignedCertificates: Bool = false,
-                                          performDefaultValidation: Bool = true,
-                                          validateHost: Bool = true) -> OWNetworkPinnedCertificatesTrustEvaluator {
+                                   acceptSelfSignedCertificates: Bool = false,
+                                   performDefaultValidation: Bool = true,
+                                   validateHost: Bool = true) -> OWNetworkPinnedCertificatesTrustEvaluator {
         OWNetworkPinnedCertificatesTrustEvaluator(certificates: certificates,
-                                         acceptSelfSignedCertificates: acceptSelfSignedCertificates,
-                                         performDefaultValidation: performDefaultValidation,
-                                         validateHost: validateHost)
+                                                  acceptSelfSignedCertificates: acceptSelfSignedCertificates,
+                                                  performDefaultValidation: performDefaultValidation,
+                                                  validateHost: validateHost)
     }
 }
 
@@ -310,8 +310,8 @@ class OWNetworkPublicKeysTrustEvaluator: OWNetworkServerTrustEvaluating {
     ///                               performing the default evaluation, even if `performDefaultValidation` is `false`.
     ///                               `true` by default.
     init(keys: [SecKey] = Bundle.main.owNetwork.publicKeys,
-                performDefaultValidation: Bool = true,
-                validateHost: Bool = true) {
+         performDefaultValidation: Bool = true,
+         validateHost: Bool = true) {
         self.keys = keys
         self.performDefaultValidation = performDefaultValidation
         self.validateHost = validateHost
@@ -343,9 +343,9 @@ class OWNetworkPublicKeysTrustEvaluator: OWNetworkServerTrustEvaluating {
 
         if !pinnedKeysInServerKeys {
             throw OWNetworkError.serverTrustEvaluationFailed(reason: .publicKeyPinningFailed(host: host,
-                                                                                      trust: trust,
-                                                                                      pinnedKeys: keys,
-                                                                                      serverKeys: trust.owNetwork.publicKeys))
+                                                                                             trust: trust,
+                                                                                             pinnedKeys: keys,
+                                                                                             serverKeys: trust.owNetwork.publicKeys))
         }
     }
 }
@@ -368,8 +368,8 @@ extension OWNetworkServerTrustEvaluating where Self == OWNetworkPublicKeysTrustE
     ///                               performing the default evaluation, even if `performDefaultValidation` is `false`.
     ///                               `true` by default.
     static func publicKeys(keys: [SecKey] = Bundle.main.owNetwork.publicKeys,
-                                  performDefaultValidation: Bool = true,
-                                  validateHost: Bool = true) -> OWNetworkPublicKeysTrustEvaluator {
+                           performDefaultValidation: Bool = true,
+                           validateHost: Bool = true) -> OWNetworkPublicKeysTrustEvaluator {
         OWNetworkPublicKeysTrustEvaluator(keys: keys, performDefaultValidation: performDefaultValidation, validateHost: validateHost)
     }
 }
@@ -502,8 +502,8 @@ extension OWNetworkExtension where ExtendedType == SecTrust {
 
         guard status.owNetwork.isSuccess else {
             throw OWNetworkError.serverTrustEvaluationFailed(reason: .policyApplicationFailed(trust: type,
-                                                                                       policy: policy,
-                                                                                       status: status))
+                                                                                              policy: policy,
+                                                                                              status: status))
         }
 
         return type
@@ -547,14 +547,14 @@ extension OWNetworkExtension where ExtendedType == SecTrust {
         let status = SecTrustSetAnchorCertificates(type, certificates as CFArray)
         guard status.owNetwork.isSuccess else {
             throw OWNetworkError.serverTrustEvaluationFailed(reason: .settingAnchorCertificatesFailed(status: status,
-                                                                                               certificates: certificates))
+                                                                                                      certificates: certificates))
         }
 
         // Trust only the set anchor certs.
         let onlyStatus = SecTrustSetAnchorCertificatesOnly(type, true)
         guard onlyStatus.owNetwork.isSuccess else {
             throw OWNetworkError.serverTrustEvaluationFailed(reason: .settingAnchorCertificatesFailed(status: onlyStatus,
-                                                                                               certificates: certificates))
+                                                                                                      certificates: certificates))
         }
     }
 
@@ -563,7 +563,7 @@ extension OWNetworkExtension where ExtendedType == SecTrust {
         certificates.owNetwork.publicKeys
     }
 
-    #if swift(>=5.5.1) // Xcode 13.1 / 2021 SDKs.
+#if swift(>=5.5.1) // Xcode 13.1 / 2021 SDKs.
     /// The `SecCertificate`s contained in `self`.
     var certificates: [SecCertificate] {
         if #available(iOS 15, *) {
@@ -574,14 +574,14 @@ extension OWNetworkExtension where ExtendedType == SecTrust {
             }
         }
     }
-    #else
+#else
     /// The `SecCertificate`s contained in `self`.
     var certificates: [SecCertificate] {
         (0..<SecTrustGetCertificateCount(type)).compactMap { index in
             SecTrustGetCertificateAtIndex(type, index)
         }
     }
-    #endif
+#endif
 
     /// The `Data` values for all certificates contained in `self`.
     var certificateData: [Data] {
