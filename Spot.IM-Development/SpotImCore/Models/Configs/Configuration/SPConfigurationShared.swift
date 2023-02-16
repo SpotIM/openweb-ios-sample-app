@@ -9,12 +9,12 @@
 import Foundation
 
 struct SPConfigurationShared: Decodable {
-    
+
     let enableCommentLabels: Bool?
     let commentLabels: Dictionary<String, SPCommentLabelsSectionConfiguration>?
     let votesType: OWVotesType
     let usePublisherUserProfile: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case usePublisherUserProfile = "useCustomUserProfile"
         case enableCommentLabels,

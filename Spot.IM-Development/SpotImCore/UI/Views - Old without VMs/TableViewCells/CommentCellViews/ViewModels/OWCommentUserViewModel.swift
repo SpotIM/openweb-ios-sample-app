@@ -33,39 +33,39 @@ class OWCommentUserViewModel: OWCommentUserViewModeling,
 
     var inputs: OWCommentUserViewModelingInputs { return self }
     var outputs: OWCommentUserViewModelingOutputs { return self }
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     // TODO - use RX
     fileprivate var delegate: SPCommentCellDelegate?
-    
+
     fileprivate var commentId: String?
     fileprivate var user: SPUser?
     fileprivate var replyToCommentId: String?
-    
+
     let avatarVM: OWAvatarViewModeling
     let userNameVM: OWUserNameViewModeling
-    
+
     fileprivate let _conversationModel = BehaviorSubject<SPMainConversationModel?>(value: nil)
-    
+
     init(user: SPUser?, imageProvider: SPImageProvider? = nil) {
         avatarVM = OWAvatarViewModel(user: user, imageURLProvider: imageProvider)
         userNameVM = OWUserNameViewModel(user: user)
         self.user = user
-        
+
         self.setupObservers()
     }
-    
+
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
-    
+
     func configure(with model: CommentViewModel) {
         _conversationModel.onNext(model.conversationModel)
         commentId = model.commentId
         replyToCommentId = model.replyingToCommentId
-        
+
         userNameVM.inputs.configure(with: model)
     }
-    
+
     func setDelegate(_ delegate: SPCommentCellDelegate) {
         self.delegate = delegate
     }
@@ -77,7 +77,7 @@ fileprivate extension OWCommentUserViewModel {
             guard let self = self else { return }
             self.delegate?.moreTapped(for: self.commentId, replyingToID: self.replyToCommentId, sender: sender)
         }).disposed(by: disposeBag)
-        
+
         let avatarTapped = avatarVM.outputs.avatarTapped
             .flatMap { [weak self] _ -> Observable<ConversationModelIsAvatarSource> in
                 guard let self = self else { return .empty() }
@@ -86,7 +86,7 @@ fileprivate extension OWCommentUserViewModel {
                     .take(1)
                     .map {($0, true)}
             }
-        
+
         let userNameTapped = userNameVM.outputs.userNameTapped
             .flatMap { [weak self] _ -> Observable<ConversationModelIsAvatarSource> in
                 guard let self = self else { return .empty() }
@@ -95,7 +95,7 @@ fileprivate extension OWCommentUserViewModel {
                     .take(1)
                     .map {($0, false)}
             }
-        
+
         Observable.merge([avatarTapped, userNameTapped])
             .subscribe(onNext: { [weak self] result in
                 guard

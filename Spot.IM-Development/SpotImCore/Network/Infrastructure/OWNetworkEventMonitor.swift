@@ -211,47 +211,47 @@ extension OWNetworkEventMonitor {
 
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {}
     func urlSession(_ session: URLSession,
-                           task: URLSessionTask,
-                           didReceive challenge: URLAuthenticationChallenge) {}
+                    task: URLSessionTask,
+                    didReceive challenge: URLAuthenticationChallenge) {}
     func urlSession(_ session: URLSession,
-                           task: URLSessionTask,
-                           didSendBodyData bytesSent: Int64,
-                           totalBytesSent: Int64,
-                           totalBytesExpectedToSend: Int64) {}
+                    task: URLSessionTask,
+                    didSendBodyData bytesSent: Int64,
+                    totalBytesSent: Int64,
+                    totalBytesExpectedToSend: Int64) {}
     func urlSession(_ session: URLSession, taskNeedsNewBodyStream task: URLSessionTask) {}
     func urlSession(_ session: URLSession,
-                           task: URLSessionTask,
-                           willPerformHTTPRedirection response: HTTPURLResponse,
-                           newRequest request: URLRequest) {}
+                    task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest) {}
     func urlSession(_ session: URLSession,
-                           task: URLSessionTask,
-                           didFinishCollecting metrics: URLSessionTaskMetrics) {}
+                    task: URLSessionTask,
+                    didFinishCollecting metrics: URLSessionTaskMetrics) {}
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {}
     func urlSession(_ session: URLSession, taskIsWaitingForConnectivity task: URLSessionTask) {}
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {}
     func urlSession(_ session: URLSession,
-                           dataTask: URLSessionDataTask,
-                           willCacheResponse proposedResponse: CachedURLResponse) {}
+                    dataTask: URLSessionDataTask,
+                    willCacheResponse proposedResponse: CachedURLResponse) {}
     func urlSession(_ session: URLSession,
-                           downloadTask: URLSessionDownloadTask,
-                           didResumeAtOffset fileOffset: Int64,
-                           expectedTotalBytes: Int64) {}
+                    downloadTask: URLSessionDownloadTask,
+                    didResumeAtOffset fileOffset: Int64,
+                    expectedTotalBytes: Int64) {}
     func urlSession(_ session: URLSession,
-                           downloadTask: URLSessionDownloadTask,
-                           didWriteData bytesWritten: Int64,
-                           totalBytesWritten: Int64,
-                           totalBytesExpectedToWrite: Int64) {}
+                    downloadTask: URLSessionDownloadTask,
+                    didWriteData bytesWritten: Int64,
+                    totalBytesWritten: Int64,
+                    totalBytesExpectedToWrite: Int64) {}
     func urlSession(_ session: URLSession,
-                           downloadTask: URLSessionDownloadTask,
-                           didFinishDownloadingTo location: URL) {}
+                    downloadTask: URLSessionDownloadTask,
+                    didFinishDownloadingTo location: URL) {}
     func request(_ request: OWNetworkRequest, didCreateInitialURLRequest urlRequest: URLRequest) {}
     func request(_ request: OWNetworkRequest, didFailToCreateURLRequestWithError error: OWNetworkError) {}
     func request(_ request: OWNetworkRequest,
-                        didAdaptInitialRequest initialRequest: URLRequest,
-                        to adaptedRequest: URLRequest) {}
+                 didAdaptInitialRequest initialRequest: URLRequest,
+                 to adaptedRequest: URLRequest) {}
     func request(_ request: OWNetworkRequest,
-                        didFailToAdaptURLRequest initialRequest: URLRequest,
-                        withError error: OWNetworkError) {}
+                 didFailToAdaptURLRequest initialRequest: URLRequest,
+                 withError error: OWNetworkError) {}
     func request(_ request: OWNetworkRequest, didCreateURLRequest urlRequest: URLRequest) {}
     func request(_ request: OWNetworkRequest, didCreateTask task: URLSessionTask) {}
     func request(_ request: OWNetworkRequest, didGatherMetrics metrics: URLSessionTaskMetrics) {}
@@ -266,16 +266,16 @@ extension OWNetworkEventMonitor {
     func requestDidCancel(_ request: OWNetworkRequest) {}
     func request(_ request: OWNetworkRequest, didCancelTask task: URLSessionTask) {}
     func request(_ request: OWNetworkDataRequest,
-                        didValidateRequest urlRequest: URLRequest?,
-                        response: HTTPURLResponse,
-                        data: Data?,
-                        withResult result: OWNetworkRequest.ValidationResult) {}
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 data: Data?,
+                 withResult result: OWNetworkRequest.ValidationResult) {}
     func request(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Data?, OWNetworkError>) {}
     func request<Value>(_ request: OWNetworkDataRequest, didParseResponse response: OWNetworkDataResponse<Value, OWNetworkError>) {}
     func request(_ request: OWNetworkDataStreamRequest,
-                        didValidateRequest urlRequest: URLRequest?,
-                        response: HTTPURLResponse,
-                        withResult result: OWNetworkRequest.ValidationResult) {}
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 withResult result: OWNetworkRequest.ValidationResult) {}
     func request<Value>(_ request: OWNetworkDataStreamRequest, didParseStream result: Result<Value, OWNetworkError>) {}
     func request(_ request: OWNetworkUploadRequest, didCreateUploadable uploadable: OWNetworkUploadRequest.Uploadable) {}
     func request(_ request: OWNetworkUploadRequest, didFailToCreateUploadableWithError error: OWNetworkError) {}
@@ -283,10 +283,10 @@ extension OWNetworkEventMonitor {
     func request(_ request: OWNetworkDownloadRequest, didFinishDownloadingUsing task: URLSessionTask, with result: Result<URL, OWNetworkError>) {}
     func request(_ request: OWNetworkDownloadRequest, didCreateDestinationURL url: URL) {}
     func request(_ request: OWNetworkDownloadRequest,
-                        didValidateRequest urlRequest: URLRequest?,
-                        response: HTTPURLResponse,
-                        fileURL: URL?,
-                        withResult result: OWNetworkRequest.ValidationResult) {}
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 fileURL: URL?,
+                 withResult result: OWNetworkRequest.ValidationResult) {}
     func request(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<URL?, OWNetworkError>) {}
     func request<Value>(_ request: OWNetworkDownloadRequest, didParseResponse response: OWNetworkDownloadResponse<Value, OWNetworkError>) {}
 }
@@ -314,16 +314,16 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                           task: URLSessionTask,
-                           didReceive challenge: URLAuthenticationChallenge) {
+                    task: URLSessionTask,
+                    didReceive challenge: URLAuthenticationChallenge) {
         performEvent { $0.urlSession(session, task: task, didReceive: challenge) }
     }
 
     func urlSession(_ session: URLSession,
-                           task: URLSessionTask,
-                           didSendBodyData bytesSent: Int64,
-                           totalBytesSent: Int64,
-                           totalBytesExpectedToSend: Int64) {
+                    task: URLSessionTask,
+                    didSendBodyData bytesSent: Int64,
+                    totalBytesSent: Int64,
+                    totalBytesExpectedToSend: Int64) {
         performEvent {
             $0.urlSession(session,
                           task: task,
@@ -340,9 +340,9 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                           task: URLSessionTask,
-                           willPerformHTTPRedirection response: HTTPURLResponse,
-                           newRequest request: URLRequest) {
+                    task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest) {
         performEvent {
             $0.urlSession(session,
                           task: task,
@@ -368,15 +368,15 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                           dataTask: URLSessionDataTask,
-                           willCacheResponse proposedResponse: CachedURLResponse) {
+                    dataTask: URLSessionDataTask,
+                    willCacheResponse proposedResponse: CachedURLResponse) {
         performEvent { $0.urlSession(session, dataTask: dataTask, willCacheResponse: proposedResponse) }
     }
 
     func urlSession(_ session: URLSession,
-                           downloadTask: URLSessionDownloadTask,
-                           didResumeAtOffset fileOffset: Int64,
-                           expectedTotalBytes: Int64) {
+                    downloadTask: URLSessionDownloadTask,
+                    didResumeAtOffset fileOffset: Int64,
+                    expectedTotalBytes: Int64) {
         performEvent {
             $0.urlSession(session,
                           downloadTask: downloadTask,
@@ -386,10 +386,10 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                           downloadTask: URLSessionDownloadTask,
-                           didWriteData bytesWritten: Int64,
-                           totalBytesWritten: Int64,
-                           totalBytesExpectedToWrite: Int64) {
+                    downloadTask: URLSessionDownloadTask,
+                    didWriteData bytesWritten: Int64,
+                    totalBytesWritten: Int64,
+                    totalBytesExpectedToWrite: Int64) {
         performEvent {
             $0.urlSession(session,
                           downloadTask: downloadTask,
@@ -400,8 +400,8 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                           downloadTask: URLSessionDownloadTask,
-                           didFinishDownloadingTo location: URL) {
+                    downloadTask: URLSessionDownloadTask,
+                    didFinishDownloadingTo location: URL) {
         performEvent { $0.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location) }
     }
 
@@ -474,10 +474,10 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func request(_ request: OWNetworkDataRequest,
-                        didValidateRequest urlRequest: URLRequest?,
-                        response: HTTPURLResponse,
-                        data: Data?,
-                        withResult result: OWNetworkRequest.ValidationResult) {
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 data: Data?,
+                 withResult result: OWNetworkRequest.ValidationResult) {
         performEvent { $0.request(request,
                                   didValidateRequest: urlRequest,
                                   response: response,
@@ -495,9 +495,9 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func request(_ request: OWNetworkDataStreamRequest,
-                        didValidateRequest urlRequest: URLRequest?,
-                        response: HTTPURLResponse,
-                        withResult result: OWNetworkRequest.ValidationResult) {
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 withResult result: OWNetworkRequest.ValidationResult) {
         performEvent { $0.request(request,
                                   didValidateRequest: urlRequest,
                                   response: response,
@@ -530,10 +530,10 @@ class OWNetworkCompositeEventMonitor: OWNetworkEventMonitor {
     }
 
     func request(_ request: OWNetworkDownloadRequest,
-                        didValidateRequest urlRequest: URLRequest?,
-                        response: HTTPURLResponse,
-                        fileURL: URL?,
-                        withResult result: OWNetworkRequest.ValidationResult) {
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 fileURL: URL?,
+                 withResult result: OWNetworkRequest.ValidationResult) {
         performEvent { $0.request(request,
                                   didValidateRequest: urlRequest,
                                   response: response,
@@ -693,10 +693,10 @@ class OWNetworkClosureEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                         task: URLSessionTask,
-                         didSendBodyData bytesSent: Int64,
-                         totalBytesSent: Int64,
-                         totalBytesExpectedToSend: Int64) {
+                    task: URLSessionTask,
+                    didSendBodyData bytesSent: Int64,
+                    totalBytesSent: Int64,
+                    totalBytesExpectedToSend: Int64) {
         taskDidSendBodyData?(session, task, bytesSent, totalBytesSent, totalBytesExpectedToSend)
     }
 
@@ -705,9 +705,9 @@ class OWNetworkClosureEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                         task: URLSessionTask,
-                         willPerformHTTPRedirection response: HTTPURLResponse,
-                         newRequest request: URLRequest) {
+                    task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest) {
         taskWillPerformHTTPRedirection?(session, task, response, request)
     }
 
@@ -732,17 +732,17 @@ class OWNetworkClosureEventMonitor: OWNetworkEventMonitor {
     }
 
     func urlSession(_ session: URLSession,
-                         downloadTask: URLSessionDownloadTask,
-                         didResumeAtOffset fileOffset: Int64,
-                         expectedTotalBytes: Int64) {
+                    downloadTask: URLSessionDownloadTask,
+                    didResumeAtOffset fileOffset: Int64,
+                    expectedTotalBytes: Int64) {
         downloadTaskDidResumeAtOffset?(session, downloadTask, fileOffset, expectedTotalBytes)
     }
 
     func urlSession(_ session: URLSession,
-                         downloadTask: URLSessionDownloadTask,
-                         didWriteData bytesWritten: Int64,
-                         totalBytesWritten: Int64,
-                         totalBytesExpectedToWrite: Int64) {
+                    downloadTask: URLSessionDownloadTask,
+                    didWriteData bytesWritten: Int64,
+                    totalBytesWritten: Int64,
+                    totalBytesExpectedToWrite: Int64) {
         downloadTaskDidWriteData?(session, downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite)
     }
 
@@ -821,10 +821,10 @@ class OWNetworkClosureEventMonitor: OWNetworkEventMonitor {
     }
 
     func request(_ request: OWNetworkDataRequest,
-                      didValidateRequest urlRequest: URLRequest?,
-                      response: HTTPURLResponse,
-                      data: Data?,
-                      withResult result: OWNetworkRequest.ValidationResult) {
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 data: Data?,
+                 withResult result: OWNetworkRequest.ValidationResult) {
         requestDidValidateRequestResponseDataWithResult?(request, urlRequest, response, data, result)
     }
 
@@ -832,7 +832,10 @@ class OWNetworkClosureEventMonitor: OWNetworkEventMonitor {
         requestDidParseResponse?(request, response)
     }
 
-    func request(_ request: OWNetworkDataStreamRequest, didValidateRequest urlRequest: URLRequest?, response: HTTPURLResponse, withResult result: OWNetworkRequest.ValidationResult) {
+    func request(_ request: OWNetworkDataStreamRequest,
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 withResult result: OWNetworkRequest.ValidationResult) {
         requestDidValidateRequestResponseWithResult?(request, urlRequest, response, result)
     }
 
@@ -857,10 +860,10 @@ class OWNetworkClosureEventMonitor: OWNetworkEventMonitor {
     }
 
     func request(_ request: OWNetworkDownloadRequest,
-                      didValidateRequest urlRequest: URLRequest?,
-                      response: HTTPURLResponse,
-                      fileURL: URL?,
-                      withResult result: OWNetworkRequest.ValidationResult) {
+                 didValidateRequest urlRequest: URLRequest?,
+                 response: HTTPURLResponse,
+                 fileURL: URL?,
+                 withResult result: OWNetworkRequest.ValidationResult) {
         requestDidValidateRequestResponseFileURLWithResult?(request,
                                                             urlRequest,
                                                             response,

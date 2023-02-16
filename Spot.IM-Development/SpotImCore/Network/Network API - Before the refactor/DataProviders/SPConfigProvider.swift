@@ -20,14 +20,14 @@ internal struct SpotConfig {
 }
 
 internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvider {
-    
+
     /// app and ads configurations
     func fetchConfigs() -> Observable<SpotConfig> {
         guard let spotKey = SPClientSettings.main.spotKey else {
             let message = LocalizationManager.localizedString(key: "Please provide Spot Key")
             return Observable.error(SPNetworkError.custom(message))
         }
-        
+
         return self.getConfig(spotId: spotKey)
             .flatMap { [weak self] config -> Observable<(SPSpotConfiguration, OWAbTests)> in
                 guard let self = self else { return .empty() }
@@ -39,7 +39,7 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
             }
             .flatMap { [weak self] configAndAbTest -> Observable<SpotConfig> in
                 guard let self = self else { return .empty() }
-                
+
                 if configAndAbTest.0.mobileSdk.enabled ?? false && configAndAbTest.0.initialization?.monetized ?? false {
                     return self.getAdsConfig(spotId: spotKey)
                         .map { SpotConfig(appConfig: configAndAbTest.0, abConfig: configAndAbTest.1, adsConfig: $0) }
@@ -48,16 +48,16 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                 }
             }
     }
-    
+
     private func getConfig(spotId: String) -> Observable<SPSpotConfiguration> {
         return Observable.create { [weak self] observer in
             guard let self = self else {
                 return Disposables.create()
             }
-            
+
             let spRequest = SPConfigRequests.config(spotId: spotId)
             let headers = OWNetworkHTTPHeaders.basic(with: spotId)
-            
+
             let task = self.manager.execute(
                 request: spRequest,
                 parser: OWDecodableParser<SPSpotConfiguration>(),
@@ -79,25 +79,25 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                     observer.onError(SpotImError.internalError(error.localizedDescription))
                 }
             }
-            
+
             return Disposables.create {
                 task.cancel()
             }
         }
     }
-    
+
     private func getAdsConfig(spotId: String) -> Observable<SPAdsConfiguration> {
         return Observable.create { [weak self] observer in
             guard let self = self else {
                 return Disposables.create()
             }
-            
+
             let spRequest = SPAdsConfigRequest.adsConfig
             let dayName = Date.dayNameFormatter.string(from: Date()).lowercased()
             let hour = Int(Date.hourFormatter.string(from: Date()))!
             let params: [String: Any] = ["day": dayName, "hour": hour]
             let headers = OWNetworkHTTPHeaders.basic(with: spotId)
-            
+
             let task = self.manager.execute(
                 request: spRequest,
                 parameters: params,
@@ -120,31 +120,31 @@ internal final class SPDefaultConfigProvider: NetworkDataProvider, SPConfigProvi
                     observer.onError(SpotImError.internalError(error.localizedDescription))
                 }
             }
-            
+
             return Disposables.create {
                 task.cancel()
             }
         }
     }
-    
+
     private func getAbTests(spotId: String, config: SPSpotConfiguration) -> Observable<OWAbTests> {
         return Observable.create { observer in
             var tests = [SPABData(testName: "33", group: "D")]
             if let monetized = config.initialization?.monetized, monetized {
                 tests = [SPABData(testName: "33", group: "B")]
             }
-            
+
             observer.onNext(OWAbTests(tests: tests))
             observer.onCompleted()
-            
+
             return Disposables.create()
         }
-        
+
         // REMOVING THIS CALL UNTIL WE WILL HAVE ACTIVE TESTS BACK ON IOS TO REDUCE STRESS FROM BE
 //            let spRequest = SPConfigRequests.abTestData
 //
 //            let headers = HTTPHeaders.basic(with: spotId)
-        
+
 //            manager.execute(
 //                request: spRequest,
 //                parser: DecodableParser<AbTests>(),

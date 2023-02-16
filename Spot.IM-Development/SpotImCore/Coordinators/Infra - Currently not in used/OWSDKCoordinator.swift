@@ -11,7 +11,7 @@ import RxSwift
 
 class OWSDKCoordinator: OWBaseCoordinator<Void> {
     fileprivate var router: OWRoutering!
-    
+
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,
                                   callbacks: OWViewActionsCallbacks?) -> Observable<OWViewDynamicSizeOption> {
@@ -28,32 +28,32 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
                 let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
                                                                         preConversationData: preConversationData,
                                                                         actionsCallbacks: callbacks)
-                
+
                 self.store(coordinator: preConversationCoordinator)
                 return preConversationCoordinator.showableComponentDynamicSize()
             }
     }
-    
+
     func startConversationFlow(conversationData: OWConversationRequiredData,
                                presentationalMode: OWPresentationalMode,
                                callbacks: OWViewActionsCallbacks?,
                                deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
         invalidateExistingFlows()
-        
+
         prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
-        
+
         let conversationCoordinator = OWConversationCoordinator(router: router,
                                                                 conversationData: conversationData,
                                                                 actionsCallbacks: callbacks)
-        
+
         return coordinate(to: conversationCoordinator, deepLinkOptions: deepLinkOptions)
     }
-    
+
     func startCommentCreationFlow(conversationData: OWConversationRequiredData,
                                   commentCreationData: OWCommentCreationRequiredData,
-                               presentationalMode: OWPresentationalMode,
-                               callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
-        
+                                  presentationalMode: OWPresentationalMode,
+                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
+
         let deepLink = OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
         return startConversationFlow(conversationData: conversationData,
                                      presentationalMode: presentationalMode,
@@ -65,10 +65,10 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
 fileprivate extension OWSDKCoordinator {
     func prepareRouter(presentationalMode: OWPresentationalMode, presentAnimated: Bool) {
         invalidateExistingFlows()
-        
+
         let navigationController: UINavigationController
         let presentationalModeExtended: OWPresentationalModeExtended
-        
+
         switch presentationalMode {
         case .present(let viewController, let style):
             navigationController = OWNavigationController.shared
@@ -80,10 +80,10 @@ fileprivate extension OWSDKCoordinator {
             navigationController = navController
             presentationalModeExtended = OWPresentationalModeExtended.push(navigationController: navController)
         }
-                
+
         router = OWRouter(navigationController: navigationController, presentationalMode: presentationalModeExtended)
     }
-    
+
     func invalidateExistingFlows() {
         removeAllChildCoordinators()
     }

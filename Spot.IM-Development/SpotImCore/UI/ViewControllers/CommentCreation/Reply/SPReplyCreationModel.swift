@@ -9,9 +9,9 @@
 import Foundation
 
 final class SPReplyCreationModel: SPBaseCommentCreationModel {
-    
+
     var dataModel: SPReplyCreationDTO
-    
+
     init(replyCreationDTO: SPReplyCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
@@ -22,22 +22,22 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
         super.init(cacheService: cacheService, updater: updater, imageProvider: imageProvider, articleMetadate: articleMetadata)
         commentText = cacheService.comment(for: replyCreationDTO.commentId)
     }
-    
+
     override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.commentId)
     }
-    
+
     override func post() {
-       
+
         let parameters = postParameters()
-        
+
         commentService.createComment(
             parameters: parameters,
             postId: dataModel.postId,
             success: { [weak self] reply in
                 guard let self = self else { return }
-                
+
                 var reply = reply
                 reply.writtenAt = Date().timeIntervalSince1970
                 reply.rootComment = self.dataModel.rootCommentId
@@ -63,34 +63,34 @@ final class SPReplyCreationModel: SPBaseCommentCreationModel {
     }
 
     private func postParameters() -> [String: Any] {
-        
+
         let userId = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
-        
+
         var metadata: [String: Any] = [
             CreateCommentAPIKeys.displayName: userId
         ]
-        
+
         let isRootComment = dataModel.commentId == dataModel.rootCommentId
         if !isRootComment {
             metadata[CreateCommentAPIKeys.replyTo] = [CreateCommentAPIKeys.replyId: dataModel.commentId]
         }
-        
+
         var parameters = [
             CreateCommentAPIKeys.parentId: dataModel.rootCommentId ?? dataModel.commentId,
             CreateCommentAPIKeys.conversationId: dataModel.postId,
             CreateCommentAPIKeys.content: self.getContentRequestParam(),
             CreateCommentAPIKeys.metadata: metadata
-        ] as [String : Any]
-        
+        ] as [String: Any]
+
         if let selectedLabels = self.selectedLabels {
             parameters[CreateCommentAPIKeys.additionalData] = [
                 CreateCommentAPIKeys.labels: [
                     CreateCommentAPIKeys.labelsSection: selectedLabels.section,
-                    CreateCommentAPIKeys.labelsIds: selectedLabels.ids,
+                    CreateCommentAPIKeys.labelsIds: selectedLabels.ids
                 ]
             ]
         }
-        
+
         return parameters
     }
 }

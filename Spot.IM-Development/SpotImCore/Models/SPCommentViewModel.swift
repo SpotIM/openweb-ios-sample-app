@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 internal struct CommentViewModel {
-    
+
     unowned var conversationModel: SPMainConversationModel?
 
     var authorId: String?
@@ -32,7 +32,7 @@ internal struct CommentViewModel {
     var commentImage: CommentImage?
     private var commentMediaOriginalHeight: Int?
     private var commentMediaOriginalWidth: Int?
-    
+
     var replyingToDisplayName: String?
     var replyingToCommentId: String?
 
@@ -59,7 +59,7 @@ internal struct CommentViewModel {
 
         return id == rootCommentId
     }
-    
+
     let commentUserVM: OWCommentUserViewModeling
     let commentActionsVM: OWCommentActionsViewModeling = OWCommentActionsViewModel()
     let statusIndicationVM: OWCommentStatusIndicationViewModeling = OWCommentStatusIndicationViewModel()
@@ -82,17 +82,16 @@ internal struct CommentViewModel {
         parentCommentId = comment.parentId
         depth = comment.depth ?? 0
         isCommentAuthorMuted = user?.isMuted ?? false
-        
+
         if let commentId = commentId {
             isReported = SPUserSessionHolder.session.reportedComments[commentId] ?? false
         }
-        
+
         if let commentLabelsConfig = getCommentLabelsFromConfig(comment: comment) {
             commentLabels = []
             for config in commentLabelsConfig {
                 if let commentLabelColor = UIColor.color(rgb: config.color),
-                   let commentLabelIconUrl = config.getIconUrl()
-                {
+                   let commentLabelIconUrl = config.getIconUrl() {
                     commentLabels?.append(
                         OWCommentLabelSettings(id: config.id,
                                      text: config.text,
@@ -103,21 +102,20 @@ internal struct CommentViewModel {
                 }
             }
         }
-            
-        
+
         if let gif = comment.gif {
             commentGifUrl = gif.originalUrl
             self.commentMediaOriginalHeight = gif.previewHeight
             self.commentMediaOriginalWidth = gif.previewWidth
         }
-        
+
         if let image = comment.image,
             let commentImageURL = imageProvider?.imageURL(with: comment.image?.imageId, size: nil) {
             commentImage = CommentImage(id: image.imageId, height: image.originalHeight, width: image.originalWidth, imageUrl: commentImageURL)
             self.commentMediaOriginalHeight = image.originalHeight
             self.commentMediaOriginalWidth = image.originalWidth
         }
-        
+
         anyHiddenReply = 1 <= depth && (comment.replies?.count ?? 0 > 0)
 
         if comment.hasNext || anyHiddenReply {
@@ -125,7 +123,7 @@ internal struct CommentViewModel {
         } else {
             repliesButtonState = .hidden
         }
-        
+
         if let htmlText = comment.text,
            let commentText = getCommentTextFromHtmlString(htmlString: htmlText.text) {
             self.commentText = commentText
@@ -163,7 +161,7 @@ internal struct CommentViewModel {
 
         self.replyingToCommentId = replyingToCommentId
         self.replyingToDisplayName = replyingToDisplayName
-            
+
         self.commentUserVM.inputs.configure(with: self)
         updateCommentActionsVM()
         if let status = comment.status,
@@ -177,7 +175,7 @@ internal struct CommentViewModel {
         }
         self.conversationModel = conversationModel
     }
-    
+
     func getCommentTextFromHtmlString(htmlString: String) -> String? {
         if let attributedHtmlString = htmlString.htmlToMutableAttributedString {
             return attributedHtmlString.string
@@ -194,31 +192,31 @@ internal struct CommentViewModel {
             notchOffset = Int((UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0) + (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0))
         }
         let textWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - CGFloat(notchOffset)
-        
+
         return textWidth
     }
-    
+
     // check if userName & badge texts should be in one row or two
     func isUsernameOneRow() -> Bool {
         let leadingOffset: CGFloat = depthOffset()
         let lineWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset - Theme.avatarWidth - Theme.usernameTrailing
-        
-        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? "") , attributes: [.font: UIFont.preferred(style: .medium, of: Theme.fontSize)])
-        
+
+        let attributedMessage = NSAttributedString(string: (displayName ?? "") + (badgeTitle ?? ""), attributes: [.font: UIFont.preferred(style: .medium, of: Theme.fontSize)])
+
         return attributedMessage.width(withConstrainedHeight: Theme.usernameLineHeight) < lineWidth
     }
-    
+
     func usernameViewHeight() -> CGFloat {
         return isUsernameOneRow() ? Theme.userViewCollapsedHeight : Theme.userViewExpandedHeight
     }
-    
+
     func getMediaSize() -> CGSize {
         guard let mediaHeight = commentMediaOriginalHeight,
               let mediaWidth = commentMediaOriginalWidth
         else { return CGSize(width: 0, height: 0) }
         let leadingOffset: CGFloat = depthOffset()
         let maxWidth = SPUIWindow.frame.width - leadingOffset - Theme.trailingOffset
-        
+
         // calculate media width according to height ratio
         var height = Theme.commentMediaMaxHeight
         var ratio: Float = Float(height / Float(mediaHeight))
@@ -229,10 +227,10 @@ internal struct CommentViewModel {
             ratio = Float(width / Float(mediaWidth))
             height = (ratio * Float(mediaHeight))
         }
-        
+
         return CGSize(width: CGFloat(width), height: CGFloat(height))
     }
-    
+
     func height(with lineLimit: Int, isLastInSection: Bool = false) -> CGFloat {
         let width = textWidth()
         let attributedMessage = NSAttributedString(string: message(), attributes: attributes(isDeleted: isHiddenComment()))
@@ -247,22 +245,22 @@ internal struct CommentViewModel {
         let isEmptyComment = clippedMessage.string.isEmpty
         let textHeight: CGFloat = isEmptyComment ?
             0.0 : clippedMessage.height(withConstrainedWidth: width)
-        
+
         // media extra height includes - media acual heigh + media extra padding
         let mediaHeight = CGFloat(Float(getMediaSize().height) + (isEmptyComment ? Float(SPCommonConstants.emptyCommentMediaTopPadding) : Float(SPCommonConstants.commentMediaTopPadding)))
-        
+
         let moreRepliesHeight = repliesButtonState == .hidden ?
             0.0 : Theme.moreRepliesViewHeight + Theme.moreRepliesTopOffset
 
         let userViewHeight: CGFloat = usernameViewHeight()
         let commentLabelHeight: CGFloat = Theme.commentLabelViewHeight
-        
+
         let lastInSectionOffset = isLastInSection ? Theme.lastInSectionOffset : 0
         let deletedOffset = isHiddenComment() ? Theme.bottomOffset : lastInSectionOffset
         let repliesButtonExpandedOffset = repliesButtonState == .hidden ? deletedOffset : Theme.bottomOffset
-        
+
         let statusIndicationHeight: CGFloat = showStatusIndicator ? (statusIndicationVM.outputs.indicationHeight + 16) : 0
-        
+
         let height: CGFloat = (isCollapsed ? Theme.topCollapsedOffset : Theme.topOffset)
             + (isCollapsed ? 40.0 : repliesButtonExpandedOffset)
             + userViewHeight
@@ -285,20 +283,20 @@ internal struct CommentViewModel {
         default: return Theme.leadingCommentOffset + 55.0
         }
     }
-    
+
     func isHiddenComment() -> Bool {
         return isDeleted || isReported || isCommentAuthorMuted
     }
-    
+
     func isAReply() -> Bool {
         return replyingToCommentId != nil
     }
-    
+
     func updateCommentActionsVM() {
         let model = OWCommentVotingModel(rankUpCount: rankUp, rankDownCount: rankDown, rankedByUserValue: rankedByUser)
         self.commentActionsVM.inputs.configure(with: model)
     }
-    
+
     mutating func setIsDeleted(_ isDeleted: Bool) {
         self.isDeleted = isDeleted
         // hide status indicator after deleting a comment
@@ -306,7 +304,7 @@ internal struct CommentViewModel {
             self.showStatusIndicator = false
         }
     }
-    
+
     mutating func setIsMuted(_ isMuted: Bool) {
         self.isCommentAuthorMuted = isMuted
     }
@@ -364,7 +362,7 @@ internal struct CommentViewModel {
 
         return attributes
     }
-    
+
     private func getCommentLabelsFromConfig(comment: SPComment) -> [SPLabelConfiguration]? {
         // cross given commentLabels to appConfig labels
         if let sharedConfig = SPConfigsDataSource.appConfig?.shared,
@@ -382,25 +380,24 @@ internal struct CommentViewModel {
             }
             return selectedCommentLabelsConfiguration
         }
-        
+
         return nil
     }
-    
+
     // if user role exist in config translationTextOverrides -> return translation, else return user authorityTitle
     private func getUserBadgeUsingConfig(user: SPUser) -> String? {
         guard user.isStaff else { return nil }
-        
+
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            let translations = conversationConfig.translationTextOverrides,
-           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()]
-        {
+           let currentTranslation = LocalizationManager.currentLanguage == .spanish ? translations["es-ES"] : translations[LocalizationManager.getLanguageCode()] {
             if user.isAdmin, let adminBadge = currentTranslation[BadgesOverrideKeys.admin.rawValue] {
                 return adminBadge
             } else if user.isJournalist, let jurnalistBadge = currentTranslation[BadgesOverrideKeys.journalist.rawValue] {
                 return jurnalistBadge
             } else if user.isModerator, let moderatorBadge = currentTranslation[BadgesOverrideKeys.moderator.rawValue] {
                 return moderatorBadge
-            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue]  {
+            } else if user.isCommunityModerator, let communityModeratorBadge = currentTranslation[BadgesOverrideKeys.communityModerator.rawValue] {
                 return communityModeratorBadge
             }
         }
@@ -433,7 +430,7 @@ struct CommentImage {
 // MARK: - Theme
 
 private enum Theme {
-    
+
     static let fontSize: CGFloat = 16.0
     static let deletedFontSize: CGFloat = 17.0
     static let topOffset: CGFloat = 14.0

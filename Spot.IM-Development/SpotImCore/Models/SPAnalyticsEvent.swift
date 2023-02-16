@@ -9,20 +9,20 @@
 import Foundation
 
 internal enum SPAnalyticsEvent: Equatable {
-    case loaded                                     
-    case viewed                                     
-    case mainViewed                                 
+    case loaded
+    case viewed
+    case mainViewed
     case messageContextMenuClicked(messageId: String, relatedMessageId: String?)
     case messageContextMenuClosed(messageId: String, relatedMessageId: String?)
     case userProfileClicked(messageId: String, userId: String, targetType: SPAnProfileTargetType)
     case myProfileClicked(messageId: String?, userId: String, targetType: SPAnProfileTargetType)
-    case loginClicked(SPAnLoginTargetType)          
-    case reading(Int)                               
-    case loadMoreRepliesClicked(                    
+    case loginClicked(SPAnLoginTargetType)
+    case reading(Int)
+    case loadMoreRepliesClicked(
         messageId: String,
         relatedMessageId: String?
     )
-    case hideMoreRepliesClicked(                    
+    case hideMoreRepliesClicked(
         messageId: String,
         relatedMessageId: String?
     )
@@ -35,10 +35,10 @@ internal enum SPAnalyticsEvent: Equatable {
         relatedMessageId: String?
     )
     case appInit
-    case appOpened                                  
-    case appClosed                                  
-    case sortByOpened                               
-    case sortByClicked(SPCommentSortMode)           
+    case appOpened
+    case appClosed
+    case sortByOpened
+    case sortByClicked(SPCommentSortMode)
     case createMessageClicked(                      // ✅ ⚠️ // no message id
         itemType: SPAnItemType,
         targetType: SPAnScreenTargetType,
@@ -135,7 +135,7 @@ internal enum SPAnalyticsEvent: Equatable {
             return "comment-mute-clicked"
         }
     }
-    
+
     var eventType: SPEventType {
         switch self {
         case .loaded:
@@ -210,7 +210,7 @@ internal enum SPAnalyticsEvent: Equatable {
             return .commentMuteClicked
         }
     }
-    
+
     // is the event need to be send to our backand BI (or just for event delegate)
     var shouldSendToBI: Bool {
         switch self {
@@ -310,7 +310,7 @@ internal enum SPEngineStatusType: String, SPKebabable {
     case engineInitialized
     case engineInitilizeFailed
     case engineMonetizationView
-    
+
     var kebabValue: String {
         switch self {
         case .engineMonitizationLoad:

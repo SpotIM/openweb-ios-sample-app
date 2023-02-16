@@ -28,29 +28,29 @@ protocol OWArticleHeaderViewModeling {
 class OWArticleHeaderViewModel: OWArticleHeaderViewModeling,
                                 OWArticleHeaderViewModelingInputs,
                                 OWArticleHeaderViewModelingOutputs {
-    
+
     var inputs: OWArticleHeaderViewModelingInputs { return self }
     var outputs: OWArticleHeaderViewModelingOutputs { return self }
-    
+
     fileprivate let _articleMetadata = BehaviorSubject<SpotImArticleMetadata?>(value: nil)
-        
+
     init (articleMetadata: SpotImArticleMetadata? = nil) {
         if let articleMetadata = articleMetadata {
             self._articleMetadata.onNext(articleMetadata)
         }
     }
-    
+
     fileprivate lazy var articleMetadata: Observable<SpotImArticleMetadata> = {
         self._articleMetadata
             .unwrap()
     }()
-    
+
     var tap = PublishSubject<Void>()
-    
+
     var headerTapped: Observable<Void> {
         return tap.asObservable()
     }
-    
+
     var conversationImageType: Observable<OWImageType> {
         self.articleMetadata
             .map {

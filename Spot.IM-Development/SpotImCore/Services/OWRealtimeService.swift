@@ -22,7 +22,7 @@ class OWRealtimeService: OWRealtimeServicing {
     fileprivate let currentPostId = BehaviorSubject<OWPostId?>(value: nil)
     fileprivate let isCurrentlyFetching = BehaviorSubject<Bool>(value: false)
     fileprivate var disposeBag: DisposeBag?
-    
+
     init (manager: OWManagerInternalProtocol = OWManager.manager,
           servicesProvider: OWSharedServicesProviding,
           scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .utility, internalSerialQueueName: "OpenWebSDKRealtimeServiceQueue")) {
@@ -30,7 +30,7 @@ class OWRealtimeService: OWRealtimeServicing {
         self.servicesProvider = servicesProvider
         self.scheduler = scheduler
     }
-    
+
     let _realtimeData = BehaviorSubject<RealTimeModel?>(value: nil)
     var realtimeData: Observable<RealTimeModel> {
         return _realtimeData
@@ -39,7 +39,7 @@ class OWRealtimeService: OWRealtimeServicing {
             .observe(on: MainScheduler.instance)
             .share(replay: 1) // Send the last element to new subscribers immediately
     }
-    
+
     func startFetchingData(postId: OWPostId) {
         _ = manager.currentSpotId
             .take(1)
@@ -74,7 +74,7 @@ class OWRealtimeService: OWRealtimeServicing {
                     self.currentPostId.onNext(postId)
                     return .just(true)
                 }
-                
+
                 // We should fetch realtime data for the same `postId` which we already set.
                 // Let's do so only if we currently not already fetching data.
                 return self.isCurrentlyFetching
@@ -87,7 +87,7 @@ class OWRealtimeService: OWRealtimeServicing {
                 self.fetchData()
             })
     }
-    
+
     func stopFetchingData() {
         isCurrentlyFetching.onNext(false)
         // Dispose realtime subscription
@@ -99,7 +99,7 @@ fileprivate extension OWRealtimeService {
     func fetchData() {
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag
-        
+
         // Start with the currentPostId which in this state must contain a valid postId
         currentPostId
             .unwrap()
