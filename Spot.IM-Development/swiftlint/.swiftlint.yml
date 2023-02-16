@@ -1,0 +1,102 @@
+only_rules: # only the specified rules will be applied, and all other rules will be ignored.
+  - block_based_kvo
+  - closing_brace
+  - closure_parameter_position
+  - colon
+  - comma
+  - comment_spacing
+  - compiler_protocol_init
+  - computed_accessors_order
+  - discouraged_direct_init
+  - duplicate_enum_cases
+  - duplicate_imports
+  - duplicated_key_in_dictionary_literal
+  - dynamic_inline
+  - empty_parameters
+  - empty_parentheses_with_trailing_closure
+  - force_cast
+  - force_try
+  - function_parameter_count
+  - generic_type_name
+  - implicit_getter
+  - is_disjoint
+  - leading_whitespace
+  - legacy_cggeometry_functions
+  - legacy_constant
+  - legacy_constructor
+  - legacy_hashing
+  - legacy_nsgeometry_functions
+  - legacy_random
+  - mark
+  - nesting
+  - no_space_in_method_call
+  - opening_brace
+  - operator_whitespace
+  - protocol_property_accessors_order
+  - reduce_boolean
+  - redundant_discardable_let
+  - redundant_set_access_control
+  - redundant_string_enum_value
+  - redundant_void_return
+  - return_arrow_whitespace
+  - self_in_property_initialization
+  - shorthand_operator
+  - statement_position
+  - trailing_comma
+  - trailing_semicolon
+  - trailing_whitespace
+  - type_name
+  - unavailable_condition
+  - unneeded_break_in_switch
+  - unused_closure_parameter
+  - unused_control_flow_label
+  - unused_optional_binding
+  - unused_setter_value
+  - vertical_parameter_alignment
+  - vertical_whitespace
+  - void_function_in_ternary
+  - void_return
+  - file_length
+  - function_body_length
+  - large_tuple
+  - line_length
+
+included: # paths to include during linting. `excluded` paths are still ignored.
+  - ../Spot-IM.Development
+  - ../SpotImCore
+  
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - ../Pods
+  - Spot-IM.Development/swiftlint
+  - Spot-IM.Development/fastlane
+  - Spot-IM.Development/Spot-IM.DevelopmentTests
+
+# naming rules can set warnings/errors for min_length and max_length
+# additionally they can set excluded names
+file_length:
+    warning: 800
+    error: 1000
+    ignore_comment_only_lines: true
+
+function_body_length:
+    warning: 100
+    error: 150
+
+large_tuple:
+    warning: 4
+    error: 5
+
+line_length:
+    warning: 190
+    error: 200
+    ignores_urls: true
+    ignores_function_declarations: false
+    ignores_comments: true
+    ignores_interpolated_strings: false
+
+type_name:
+    max_length: 60
+
+function_parameter_count:
+    warning: 7
+    error: 8

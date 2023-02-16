@@ -589,6 +589,7 @@
 		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
 		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
 		8D5D7A602970111C0082A7C6 /* OWTimeMeasuringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */; };
+        8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */ = {isa = PBXBuildFile; fileRef = 8D5D7A63297560FC0082A7C6 /* swiftlint */; };
 		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
@@ -1267,6 +1268,7 @@
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D50BEF955866E10D93D3985 /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringService.swift; sourceTree = "<group>"; };
+        8D5D7A63297560FC0082A7C6 /* swiftlint */ = {isa = PBXFileReference; lastKnownFileType = folder; path = swiftlint; sourceTree = "<group>"; };
 		8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
@@ -3314,6 +3316,7 @@
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
+				8D5D7A63297560FC0082A7C6 /* swiftlint */,
 				0EAFED7922E505A900B57E29 /* fastlane */,
 				5D697A3D22B65106001AD556 /* Spot-IM.Development */,
 				5D697A5222B65108001AD556 /* Spot-IM.DevelopmentTests */,
@@ -3753,6 +3756,7 @@
 				5D697A3822B65106001AD556 /* Frameworks */,
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
+				8D455ADB296C13CA0091A027 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3859,6 +3863,7 @@
 				0EAFED7A22E505A900B57E29 /* fastlane in Resources */,
 				5D909AB62397E1D400FF51AD /* Demo.storyboard in Resources */,
 				3DDA9A4328F5919600FE3B86 /* Roboto-Light.ttf in Resources */,
+				8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */,
 				3DDA9A4028F5919600FE3B86 /* Roboto-Italic.ttf in Resources */,
 				4416C655237ABDE700D3F7B9 /* LaunchScreen.storyboard in Resources */,
 				3DDA9A4128F5919600FE3B86 /* Roboto-Regular.ttf in Resources */,
@@ -3896,6 +3901,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash -x ./create_xcframework_script.sh    \n\n";
+		};
+		8D455ADB296C13CA0091A027 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
 		};
 		8EC0B5EED95074D03AAB854D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

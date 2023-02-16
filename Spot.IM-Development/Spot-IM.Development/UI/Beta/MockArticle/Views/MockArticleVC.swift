@@ -24,33 +24,33 @@ class MockArticleVC: UIViewController {
         static let buttonPadding: CGFloat = 10
         static let buttonHeight: CGFloat = 50
     }
-    
+
     fileprivate let viewModel: MockArticleViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var articleScrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        
+
         scroll.contentLayoutGuide.snp.makeConstraints { make in
             make.width.equalTo(scroll)
         }
-        
+
         scroll.addSubview(articleView)
         articleView.snp.makeConstraints { make in
             make.edges.equalTo(scroll.contentLayoutGuide)
         }
-        
+
         return scroll
     }()
-    
+
     fileprivate lazy var articleView: UIView = {
         let article = UIView()
-                
+
         article.snp.makeConstraints { make in
             make.height.equalTo(Metrics.articleHeight)
         }
-        
+
         article.addSubview(imgViewArticle)
         imgViewArticle.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(Metrics.verticalMargin)
@@ -58,32 +58,32 @@ class MockArticleVC: UIViewController {
             make.width.equalTo(imgViewArticle.snp.height)
             make.width.equalToSuperview().multipliedBy(Metrics.articleImageRatio)
         }
-        
+
         article.addSubview(lblArticleDescription)
         lblArticleDescription.snp.makeConstraints { make in
             make.top.equalTo(imgViewArticle.snp.bottom).offset(Metrics.verticalMargin)
             make.leading.trailing.equalToSuperview().inset(Metrics.horizontalMargin)
         }
-        
+
         return article
     }()
-    
+
     fileprivate lazy var imgViewArticle: UIImageView = {
         return UIImageView()
             .image(UIImage(named: "general_placeholder")!)
             .contentMode(.scaleAspectFit)
     }()
-    
+
     fileprivate lazy var lblArticleDescription: UILabel = {
         let txt = NSLocalizedString("MockArticleDescription", comment: "")
-        
+
         return txt
             .label
             .numberOfLines(0)
             .font(FontBook.secondaryHeadingMedium)
             .textColor(ColorPalette.shared.color(type: .blackish))
     }()
-    
+
     fileprivate lazy var btnFullConversation: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
@@ -92,7 +92,7 @@ class MockArticleVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     fileprivate lazy var btnCommentCreation: UIButton = {
         return UIButton()
             .backgroundColor(ColorPalette.shared.color(type: .blue))
@@ -101,26 +101,26 @@ class MockArticleVC: UIViewController {
             .withHorizontalPadding(Metrics.buttonPadding)
             .font(FontBook.paragraphBold)
     }()
-    
+
     init(viewModel: MockArticleViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
-    
+
     override func loadView() {
         super.loadView()
         setupViews()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupObservers()
@@ -130,29 +130,29 @@ class MockArticleVC: UIViewController {
 fileprivate extension MockArticleVC {
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .lightGrey)
-        
+
         view.addSubview(articleScrollView)
         articleScrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
-    
+
     func setupObservers() {
         title = viewModel.outputs.title
-        
+
         // Setting those in the VM for integration with the SDK
         viewModel.inputs.setNavigationController(self.navigationController)
         viewModel.inputs.setPresentationalVC(self)
-        
+
         // Binding button
         btnFullConversation.rx.tap
             .bind(to: viewModel.inputs.fullConversationButtonTapped)
             .disposed(by: disposeBag)
-        
+
         btnCommentCreation.rx.tap
             .bind(to: viewModel.inputs.commentCreationButtonTapped)
             .disposed(by: disposeBag)
-        
+
         // Setup article image
         viewModel.outputs.articleImageURL
             .subscribe(onNext: { [weak self] url in
@@ -172,7 +172,7 @@ fileprivate extension MockArticleVC {
                 case .present:
                     btnTitle = NSLocalizedString("FullConversationPresentMode", comment: "")
                 }
-                
+
                 self.btnFullConversation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
@@ -180,7 +180,7 @@ fileprivate extension MockArticleVC {
                 return self.btnFullConversation
             }
             .unwrap()
-        
+
         // Adding comment creation button if needed
         let btnCommentCreationObservable = viewModel.outputs.showCommentCreationButton
             .take(1)
@@ -193,7 +193,7 @@ fileprivate extension MockArticleVC {
                 case .present:
                     btnTitle = NSLocalizedString("CommentCreationPresentMode", comment: "")
                 }
-                
+
                 self.btnCommentCreation.setTitle(btnTitle, for: .normal)
             })
             .map { [weak self] _ -> UIButton? in
@@ -201,66 +201,66 @@ fileprivate extension MockArticleVC {
                 return self.btnCommentCreation
             }
             .unwrap()
-        
+
         Observable.merge(btnFullConversationObservable, btnCommentCreationObservable)
             .subscribe(onNext: { [weak self] btn in
                 guard let self = self else { return }
-                
+
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
                 self.articleScrollView.addSubview(btn)
-                
+
                 btn.snp.makeConstraints { make in
                     make.height.equalTo(Metrics.buttonHeight)
                     make.centerX.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(self.articleScrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
                 }
-                
+
                 self.articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(btn.snp.top).offset(-Metrics.verticalMargin)
                 }
             })
             .disposed(by: disposeBag)
-        
+
         // Adding pre conversation
         viewModel.outputs.showPreConversation
             .subscribe(onNext: { [weak self] tuple in
                 guard let self = self else { return }
-                
+
                 let preConversationView = tuple.0
                 let size = tuple.1
-                
+
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
                 self.articleScrollView.addSubview(preConversationView)
-                
+
                 preConversationView.snp.makeConstraints { make in
                     make.height.equalTo(size.height)
                     make.leading.trailing.bottom.equalTo(self.articleScrollView.contentLayoutGuide)
                 }
-                
+
                 self.articleView.snp.makeConstraints { make in
                     make.leading.trailing.top.equalTo(self.articleScrollView.contentLayoutGuide)
                     make.bottom.equalTo(preConversationView.snp.top).offset(-Metrics.verticalMargin)
                 }
             })
             .disposed(by: disposeBag)
-        
+
         // Updating pre conversation size
         viewModel.outputs.updatePreConversationSize
             .subscribe(onNext: { [weak self] tuple in
                 guard let self = self else { return }
-                
+
                 let preConversationView = tuple.0
                 let size = tuple.1
-                
+
                 preConversationView.snp.updateConstraints { make in
                     make.height.equalTo(size.height)
                 }
             })
             .disposed(by: disposeBag)
-        
+
         // Showing error if needed
         viewModel.outputs.showError
             .subscribe(onNext: { [weak self] message in
@@ -268,7 +268,7 @@ fileprivate extension MockArticleVC {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func showError(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))

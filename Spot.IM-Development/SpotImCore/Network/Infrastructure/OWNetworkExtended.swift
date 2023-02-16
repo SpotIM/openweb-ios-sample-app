@@ -36,12 +36,12 @@ extension OWNetworkExtended {
     /// Static OWNetwork extension point.
     static var owNetwork: OWNetworkExtension<Self>.Type {
         get { OWNetworkExtension<Self>.self }
-        set {}
+        set {} // swiftlint:disable:this unused_setter_value
     }
 
     /// Instance OWNetwork extension point.
     var owNetwork: OWNetworkExtension<Self> {
         get { OWNetworkExtension(self) }
-        set {}
+        set {} // swiftlint:disable:this unused_setter_value
     }
 }

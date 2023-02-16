@@ -15,7 +15,7 @@ enum SupportedLanguage: String {
     case spanish = "es"
     case portoguese = "pt"
     case french = "fr"
-    
+
     var langStringsPath: String {
         switch self {
         case .hebrew:
@@ -32,22 +32,22 @@ enum SupportedLanguage: String {
             return "fr"
         }
     }
-    
+
     var isRightToLeft: Bool {
         return self == .hebrew || self == .arabic
     }
-    
+
     var customSemanticAttribute: UISemanticContentAttribute {
         return isRightToLeft ? .forceRightToLeft : .forceLeftToRight
     }
-    
+
 }
 
 public struct InputConfiguration {
-    
+
     let language: SupportedLanguage
     let locale: Locale
-    
+
     /// Please provide application language in format `en_US`, `he_IL`, etc.
     public init(appLanguage: String) {
         locale = Locale(identifier: appLanguage)

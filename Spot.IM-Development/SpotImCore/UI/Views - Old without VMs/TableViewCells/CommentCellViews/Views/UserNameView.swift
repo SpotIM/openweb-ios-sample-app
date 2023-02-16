@@ -15,7 +15,7 @@ internal final class UserNameView: OWBaseView {
     enum ContentType {
         case comment, reply
     }
-    
+
     fileprivate struct Metrics {
         static let fontSize: CGFloat = 16.0
         static let labelFontSize: CGFloat = 12.0
@@ -32,7 +32,7 @@ internal final class UserNameView: OWBaseView {
         static let deletedMessageLabelIdentifier = "user_name_view_deleted_message_label_id"
         static let subscriberBadgeViewIdentifier = "user_name_view_subscriber_badge_view_id"
     }
-    
+
     fileprivate var viewModel: OWUserNameViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
@@ -60,7 +60,7 @@ internal final class UserNameView: OWBaseView {
         setupViews()
         applyAccessibility()
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -74,13 +74,13 @@ internal final class UserNameView: OWBaseView {
         dateLabel.backgroundColor = .spBackground0
         hiddenCommentReasonLabel.backgroundColor = .spBackground0
     }
-    
+
     func configure(with viewModel: OWUserNameViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
-        
+
         subscriberBadgeView.configure(with: viewModel.outputs.subscriberBadgeVM)
-        
+
         setupObservers()
     }
 }
@@ -95,21 +95,21 @@ fileprivate extension UserNameView {
                     dateLabel,
                     nameAndBadgeStackview,
                     subscriberBadgeView)
-        
+
         // Setup deleted label
-        
+
         hiddenCommentReasonLabel.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
+
         // Setup name and badge stack view
-        
+
         nameAndBadgeStackview.addArrangedSubview(userNameLabel)
         nameAndBadgeStackview.addArrangedSubview(badgeTagLabel)
         nameAndBadgeStackview.axis = .horizontal
         nameAndBadgeStackview.alignment = .leading
         nameAndBadgeStackview.spacing = Metrics.badgeLeadingPadding
-        
+
         badgeTagLabel.font = .preferred(style: .medium, of: Metrics.labelFontSize)
         badgeTagLabel.layer.borderWidth = 1
         badgeTagLabel.layer.cornerRadius = 3
@@ -118,7 +118,7 @@ fileprivate extension UserNameView {
         badgeTagLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         badgeTagLabel.textColor = .brandColor
         badgeTagLabel.layer.borderColor = UIColor.brandColor.cgColor
-        
+
         userNameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         nameAndBadgeStackview.OWSnp.makeConstraints { make in
@@ -126,17 +126,17 @@ fileprivate extension UserNameView {
             make.trailing.lessThanOrEqualToSuperview().offset(-Metrics.usernameTrailingPadding)
         }
         userNameLabel.isUserInteractionEnabled = true
-        
+
         // Setup subscriber badge
-        
+
         self.addSubviews(subscriberBadgeView)
         subscriberBadgeView.OWSnp.makeConstraints { make in
             make.top.equalTo(nameAndBadgeStackview)
             make.leading.equalTo(nameAndBadgeStackview.OWSnp.trailing).offset(5.0)
         }
-        
+
         // Setup more button
-        
+
         let image = UIImage(spNamed: "menu_icon", supportDarkMode: true)
         moreButton.setImage(image, for: .normal)
         moreButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
@@ -145,9 +145,9 @@ fileprivate extension UserNameView {
             make.centerY.equalTo(userNameLabel)
             make.trailing.equalToSuperview()
         }
-        
+
         // Setup subtitle label
-        
+
         subtitleLabel.font = .preferred(style: .regular, of: Metrics.fontSize)
         subtitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -166,20 +166,18 @@ fileprivate extension UserNameView {
             make.top.equalTo(subtitleLabel)
             make.trailing.lessThanOrEqualTo(moreButton.OWSnp.leading)
         }
-        
-        
+
         // Update colors
-        
+
         self.updateColorsAccordingToStyle()
     }
 
-    
     func getHidenCommentReasonString(with message: String) -> NSAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
         paragraphStyle.updateAlignment()
-        
+
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
             .foregroundColor: UIColor.spForeground3,
@@ -198,40 +196,40 @@ fileprivate extension UserNameView {
     func setupObservers() {
         let tapGesture = UITapGestureRecognizer()
         userNameLabel.addGestureRecognizer(tapGesture)
-        
+
         tapGesture.rx.event.voidify()
         .bind(to: viewModel.inputs.tapUserName)
         .disposed(by: disposeBag)
-        
+
         moreButton.rx.tap.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.inputs.tapMore.onNext(self.moreButton)
         }).disposed(by: disposeBag)
-        
+
         viewModel.outputs.subtitleText
             .bind(to: subtitleLabel.rx.text)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.dateText
             .bind(to: dateLabel.rx.text)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.badgeTitle
             .bind(to: badgeTagLabel.rx.text)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.badgeTitle
             .map { $0.isEmpty }
             .bind(to: badgeTagLabel.rx.isHidden)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.badgeTitle
             .subscribe(onNext: { [weak self] title in
                 guard let self = self else { return }
                 self.subtitleToNameConstraint?.isActive = !title.isEmpty
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.shouldShowDeletedOrReportedMessage
             .subscribe(onNext: { [weak self] shouldShow in
                 guard let self = self else { return }
@@ -240,15 +238,15 @@ fileprivate extension UserNameView {
                 self.subscriberBadgeView.isHidden = shouldShow
                 self.nameAndBadgeStackview.isHidden = shouldShow
                 self.subtitleLabel.isHidden = shouldShow
-                
+
                 self.hiddenCommentReasonLabel.isHidden = !shouldShow
-                
+
             }).disposed(by: disposeBag)
-        
+
         viewModel.outputs.nameText
             .bind(to: userNameLabel.rx.text)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.nameTextStyle
             .subscribe(onNext: { [weak self] style in
                 guard let self = self else { return }
@@ -256,13 +254,13 @@ fileprivate extension UserNameView {
                     .preferred(style: style, of: Metrics.fontSize)
                 )
             }).disposed(by: disposeBag)
-        
+
         viewModel.outputs.isUsernameOneRow
             .subscribe(onNext: { [weak self] isOneRow in
                 guard let self = self else { return }
                 self.nameAndBadgeStackview.axis = isOneRow ? .horizontal : .vertical
             }).disposed(by: disposeBag)
-        
+
         viewModel.outputs.hiddenCommentReasonText
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
@@ -283,7 +281,7 @@ extension UserNameView {
         dateLabel.accessibilityIdentifier = Metrics.dateLabelIdentifier
         hiddenCommentReasonLabel.accessibilityIdentifier = Metrics.deletedMessageLabelIdentifier
         subscriberBadgeView.accessibilityIdentifier = Metrics.subscriberBadgeViewIdentifier
-        
+
         moreButton.accessibilityTraits = .button
         moreButton.accessibilityLabel = LocalizationManager.localizedString(key: "Options menu")
     }

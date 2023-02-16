@@ -18,7 +18,7 @@ class OWCommentView: UIView {
         static let commentLabelTopPadding: CGFloat = 10.0
         static let messageContainerTopOffset: CGFloat = 5.0
     }
-    
+
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
         return OWCommentHeaderView()
     }()
@@ -31,9 +31,9 @@ class OWCommentView: UIView {
     fileprivate lazy var commentEngagementView: OWCommentEngagementView = {
         return OWCommentEngagementView()
     }()
-    
+
     fileprivate var viewModel: OWCommentViewModeling!
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -41,7 +41,7 @@ class OWCommentView: UIView {
         super.init(frame: .zero)
         setupUI()
     }
-    
+
     func configure(with viewModel: OWCommentViewModeling) {
         self.viewModel = viewModel
         self.commentHeaderView.configure(with: viewModel.outputs.commentHeaderVM)
@@ -49,7 +49,7 @@ class OWCommentView: UIView {
         self.commentContentView.configure(with: viewModel.outputs.contentVM)
         self.commentEngagementView.configure(with: viewModel.outputs.commentEngagementVM)
     }
-    
+
     func prepareForReuse() {
         commentHeaderView.prepareForReuse()
         commentEngagementView.prepareForReuse()
@@ -59,26 +59,26 @@ class OWCommentView: UIView {
 fileprivate extension OWCommentView {
     func setupUI() {
         self.backgroundColor = .clear
-        
+
         self.addSubview(commentHeaderView)
         commentHeaderView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalToSuperview().offset(Metrics.topOffset)
         }
-        
+
         self.addSubview(commentLabelsContainerView)
         commentLabelsContainerView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentHeaderView.OWSnp.bottom).offset(Metrics.commentLabelTopPadding)
             make.leading.equalToSuperview()
             make.trailing.lessThanOrEqualToSuperview()
         }
-        
+
         self.addSubview(commentContentView)
         commentContentView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentLabelsContainerView.OWSnp.bottom).offset(Metrics.messageContainerTopOffset)
             make.leading.trailing.equalToSuperview()
         }
-        
+
         self.addSubview(commentEngagementView)
         commentEngagementView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
