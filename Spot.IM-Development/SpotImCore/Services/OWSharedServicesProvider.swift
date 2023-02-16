@@ -114,7 +114,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     fileprivate lazy var _timeMeasuringService: OWTimeMeasuringServicing = {
         return OWTimeMeasuringService()
     }()
-    
+
     fileprivate lazy var _sortDictateService: OWSortDictateServicing = {
         return OWSortDictateService(servicesProvider: self)
     }()
@@ -178,7 +178,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     func timeMeasuringService() -> OWTimeMeasuringServicing {
         return _timeMeasuringService
     }
-    
+
     func sortDictateService() -> OWSortDictateServicing {
         return _sortDictateService
     }
@@ -194,10 +194,10 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     func set(spotId: OWSpotId) {
         fetchConfig(spotId: spotId)
     }
-    
-    func change(spotId : OWSpotId) {
+
+    func change(spotId: OWSpotId) {
         fetchConfig(spotId: spotId)
-        
+
         // Stop / re-create services which depend on spot id
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()

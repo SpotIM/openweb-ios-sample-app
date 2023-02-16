@@ -12,19 +12,19 @@ extension OWSortOption {
     var title: String {
         switch self {
         case .best:
-            return LocalizationManager.localizedString(key:"Best")
+            return LocalizationManager.localizedString(key: "Best")
         case .newest:
-            return LocalizationManager.localizedString(key:"Newest")
+            return LocalizationManager.localizedString(key: "Newest")
         case .oldest:
-            return LocalizationManager.localizedString(key:"Oldest")
+            return LocalizationManager.localizedString(key: "Oldest")
         }
     }
-    
+
     static var `default`: OWSortOption {
         // This will be returned as a default sort option
         return OWSortOption.best
     }
-    
+
     // TODO: Remove once we will remove old `SPCommentSortMode` class
     init(fromOldSortType oldSortType: SPCommentSortMode) {
         switch oldSortType {

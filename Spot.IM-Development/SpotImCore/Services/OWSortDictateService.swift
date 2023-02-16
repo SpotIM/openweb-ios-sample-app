@@ -17,24 +17,24 @@ protocol OWSortDictateServicing {
 }
 
 class OWSortDictateService: OWSortDictateServicing {
-    
+
     fileprivate typealias OWSkipAndMapping = Observable<(Bool, [OWPostId: OWSortOption])>
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
-    
+
     fileprivate let mapper = BehaviorSubject<[OWPostId: OWSortOption]>(value: [:])
     fileprivate lazy var sharedMapper = {
         return mapper
             .share(replay: 1)
             .observe(on: MainScheduler.instance)
     }()
-    
+
     fileprivate lazy var sortCustomizer: OWSortingCustomizations = {
         return OpenWeb.manager
             .ui
             .customizations
             .sorting
     }()
-    
+
     init (servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
     }
@@ -44,7 +44,7 @@ class OWSortDictateService: OWSortDictateServicing {
             .take(1)
             .flatMap { mapping -> OWSkipAndMapping in
                 // 1. Check if we already have a sort option for the postId in the mapper
-                
+
                 guard let _ = mapping[postId] else {
                     return Observable.just((false, mapping))
                 }
@@ -54,11 +54,11 @@ class OWSortDictateService: OWSortDictateServicing {
             }
             .flatMap { [weak self] skipAndMapper -> Observable<Void> in
                 // 2. Inject sort option to the mapper from local or from server config according to `OWInitialSortStrategy`
-                
+
                 guard let self = self else { return Observable.empty() }
                 let shouldSkip = skipAndMapper.0
                 let mapping = skipAndMapper.1
-                
+
                 if shouldSkip {
                     // Finish flatMap, skipping this entire step
                     return Observable.just(())
@@ -92,13 +92,13 @@ class OWSortDictateService: OWSortDictateServicing {
             }
             .flatMap { [weak self] _ -> Observable<[OWPostId: OWSortOption]> in
                 // 3. Returning sharedMapper after we sure there is a sort option for the postId
-                
+
                 guard let self = self else { return .empty() }
                 return self.sharedMapper
             }
             .map { [weak self] mapping -> OWSortOption in
                 // 4. Mapping to the appropriate sort option per postId
-                
+
                 guard let self = self else { return .best }
                 guard let sortOption = mapping[postId] else {
                     // This should never happen
@@ -111,22 +111,22 @@ class OWSortDictateService: OWSortDictateServicing {
             }
             .distinctUntilChanged()
         }
-    
+
     func sortTextTitle(perOption sortOption: OWSortOption) -> String {
         guard let sortCustomizerInternal = sortCustomizer as? OWSortingCustomizationsInternal else {
             let logMessage = "Failed casting `OWSortingCustomizer` to `OWSortingCustomizationsInternal` protocol, recovering by returning the default title for sort option"
             servicesProvider.logger().log(level: .medium, logMessage)
             return sortOption.title
         }
-        
+
         let customizedTitleType = sortCustomizerInternal.customizedTitle(forOption: sortOption)
         guard case .customized(title: let customizedTitle) = customizedTitleType else {
             return sortOption.title
         }
-        
+
         return customizedTitle
     }
-    
+
     func update(sortOption: OWSortOption, perPostId postId: OWPostId) {
         _ = mapper
             .take(1)
@@ -135,7 +135,7 @@ class OWSortDictateService: OWSortDictateServicing {
                 self.inject(toPostId: postId, sortOption: sortOption, fromOriginalMapping: mapping)
             })
     }
-    
+
     func invalidateCache() {
         mapper.onNext([:])
     }
