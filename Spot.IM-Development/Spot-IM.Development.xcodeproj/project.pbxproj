@@ -400,6 +400,7 @@
 		3DDCB2A22995478700B8ED8E /* OWSortingCustomizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A12995478700B8ED8E /* OWSortingCustomizations.swift */; };
 		3DDCB2A429954CBA00B8ED8E /* OWSortOption+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A329954CBA00B8ED8E /* OWSortOption+Extensions.swift */; };
 		3DDCB2A629954FB000B8ED8E /* OWCustomizedSortTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A529954FB000B8ED8E /* OWCustomizedSortTitle.swift */; };
+		3DDF91C0299FCAB100256C32 /* OWCommentCreationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */; };
 		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
 		3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */; };
@@ -589,7 +590,7 @@
 		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
 		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
 		8D5D7A602970111C0082A7C6 /* OWTimeMeasuringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */; };
-        8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */ = {isa = PBXBuildFile; fileRef = 8D5D7A63297560FC0082A7C6 /* swiftlint */; };
+		8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */ = {isa = PBXBuildFile; fileRef = 8D5D7A63297560FC0082A7C6 /* swiftlint */; };
 		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
@@ -1051,6 +1052,7 @@
 		3DDCB2A12995478700B8ED8E /* OWSortingCustomizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortingCustomizations.swift; sourceTree = "<group>"; };
 		3DDCB2A329954CBA00B8ED8E /* OWSortOption+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWSortOption+Extensions.swift"; sourceTree = "<group>"; };
 		3DDCB2A529954FB000B8ED8E /* OWCustomizedSortTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomizedSortTitle.swift; sourceTree = "<group>"; };
+		3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationStyle.swift; sourceTree = "<group>"; };
 		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
 		3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSharedServicesProvider.swift; sourceTree = "<group>"; };
@@ -1268,7 +1270,7 @@
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D50BEF955866E10D93D3985 /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringService.swift; sourceTree = "<group>"; };
-        8D5D7A63297560FC0082A7C6 /* swiftlint */ = {isa = PBXFileReference; lastKnownFileType = folder; path = swiftlint; sourceTree = "<group>"; };
+		8D5D7A63297560FC0082A7C6 /* swiftlint */ = {isa = PBXFileReference; lastKnownFileType = folder; path = swiftlint; sourceTree = "<group>"; };
 		8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
@@ -1907,6 +1909,7 @@
 				3DA57BAC298940620016BF2A /* OWCommunityQuestionsStyle.swift */,
 				3DDA9A80291A565200FE3B86 /* OWConversationSpacing.swift */,
 				3DA57BA82989358E0016BF2A /* OWConversationStyle.swift */,
+				3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -4363,6 +4366,7 @@
 				246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */,
 				24B32BA528BCEB8900FB701C /* OWPreConversationCellOption.swift in Sources */,
 				3DA264682951E3B200688FFF /* OWNetworkResponse.swift in Sources */,
+				3DDF91C0299FCAB100256C32 /* OWCommentCreationStyle.swift in Sources */,
 				44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */,
 				3D611B9F28C74469003960CE /* OWConversationSettingsProtocol.swift in Sources */,
 				4454182223685144001D0ED0 /* SPCommentReplyHeaderView.swift in Sources */,

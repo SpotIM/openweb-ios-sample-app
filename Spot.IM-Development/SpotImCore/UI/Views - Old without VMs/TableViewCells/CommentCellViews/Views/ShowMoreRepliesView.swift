@@ -123,7 +123,7 @@ internal final class ShowMoreRepliesView: OWBaseView {
 
 // MARK: - Delegate
 
-protocol ShowMoreRepliesViewDelegate: class {
+protocol ShowMoreRepliesViewDelegate: AnyObject {
 
     func showHideReplies()
 
