@@ -845,7 +845,7 @@ extension SPBaseConversationViewController: MainConversationModelDelegate {
 
     func realtimeViewTypeDidUpdate() {
         do {
-            handleTypingIndicationViewUpdate(typingCount: try model.typingCount(), newCommentsCount: try model.newMessagesCount(), shouldShowBlitz: model.realtimeViewType == .blitz)
+            handleTypingIndicationViewUpdate(typingCount: try model.typingCount(), newCommentsCount: model.newMessagesCount(), shouldShowBlitz: model.realtimeViewType == .blitz)
         } catch {
             if let realtimeError = error as? RealTimeError {
                 model.stopRealTimeFetching()

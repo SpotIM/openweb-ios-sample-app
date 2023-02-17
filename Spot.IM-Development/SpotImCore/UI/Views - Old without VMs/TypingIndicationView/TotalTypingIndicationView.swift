@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol TotalTypingIndicationViewDelegate: class {
+protocol TotalTypingIndicationViewDelegate: AnyObject {
 
     func horisontalPositionChangeDidEnd()
     func horisontalPositionDidChange(transition: CGFloat)

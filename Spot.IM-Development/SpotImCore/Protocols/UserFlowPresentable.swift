@@ -8,18 +8,18 @@
 
 import UIKit
 
-protocol OWUserAuthFlowDelegateContainable: class {
+protocol OWUserAuthFlowDelegateContainable: AnyObject {
 
     var userAuthFlowDelegate: OWUserAuthFlowDelegate? { get set }
 
 }
 
-protocol OWUserAuthFlowDelegate: class {
+protocol OWUserAuthFlowDelegate: AnyObject {
     func presentAuth()
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
 
-protocol OWUserPresentable: class {
+protocol OWUserPresentable: AnyObject {
 
     var userIcon: OWBaseButton { get }
     /// Setup selector and target for `userIcon` here! Call it on the start of the flow.

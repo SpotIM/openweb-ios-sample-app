@@ -249,9 +249,7 @@ fileprivate extension MockArticleVC {
 
         // Updating pre conversation size
         viewModel.outputs.updatePreConversationSize
-            .subscribe(onNext: { [weak self] tuple in
-                guard let self = self else { return }
-
+            .subscribe(onNext: { tuple in
                 let preConversationView = tuple.0
                 let size = tuple.1
 
