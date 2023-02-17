@@ -22,7 +22,7 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
             case .comment:
                 return nil
             case .replyToComment(let originComment):
-                return "Reply to: \(originComment.userId)"
+                return "Reply to: \(originComment.userId ?? "missing userId")"
             }
         }()
         return UILabel()

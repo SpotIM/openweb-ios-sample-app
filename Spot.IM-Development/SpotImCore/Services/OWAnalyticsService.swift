@@ -49,7 +49,7 @@ fileprivate extension OWAnalyticsService {
     func flushEvents() {
         let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.netwokAPI().analytics
 
-        Observable.just(())
+        _ = Observable.just(())
             .flatMap { [weak self] _ -> Observable<[OWAnalyticEvent]> in
                 guard let self = self else { return .empty()}
                 return self.analyticsEvents

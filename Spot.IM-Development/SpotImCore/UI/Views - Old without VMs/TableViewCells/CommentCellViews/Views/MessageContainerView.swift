@@ -169,7 +169,7 @@ private enum Theme {
     static let fontSize: CGFloat = 16.0
 }
 
-internal protocol MessageContainerViewDelegate: class {
+internal protocol MessageContainerViewDelegate: AnyObject {
     func urlTappedInMessageContainer(view: MessageContainerView, url: URL)
     func readMoreTappedInMessageContainer(view: MessageContainerView)
     func readLessTappedInMessageContainer(view: MessageContainerView)
