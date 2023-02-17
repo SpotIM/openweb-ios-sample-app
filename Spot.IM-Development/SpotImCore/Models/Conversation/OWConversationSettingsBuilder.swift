@@ -28,4 +28,24 @@ public struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
         return self
     }
 }
+#else
+struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
+    var selectedCommentId: String?
+    var style: OWConversationStyle
+
+    init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
+        self.selectedCommentId = selectedCommentId
+        self.style = style
+    }
+
+    @discardableResult mutating func selectedCommentId(id: String?) -> OWConversationSettingsBuilder {
+        self.selectedCommentId = id
+        return self
+    }
+
+    @discardableResult mutating func style(_ style: OWConversationStyle) -> OWConversationSettingsBuilder {
+        self.style = style
+        return self
+    }
+}
 #endif
