@@ -11,13 +11,40 @@ import Foundation
 #if NEW_API
 public struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtocol {
     public var conversationSettings: OWConversationSettingsProtocol
+    public var style: OWCommentCreationStyle
 
-    public init(conversationSettings: OWConversationSettingsProtocol) {
+    public init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle) {
         self.conversationSettings = conversationSettings
+        self.style = style
     }
 
     @discardableResult public mutating func conversationSettings(settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
         self.conversationSettings = settings
+        return self
+    }
+
+    @discardableResult public mutating func commentCreationStyle(style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
+        self.style = style
+        return self
+    }
+}
+#else
+struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtocol {
+    var conversationSettings: OWConversationSettingsProtocol
+    var style: OWCommentCreationStyle
+
+    init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle) {
+        self.conversationSettings = conversationSettings
+        self.style = style
+    }
+
+    @discardableResult mutating func conversationSettings(settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
+        self.conversationSettings = settings
+        return self
+    }
+
+    @discardableResult mutating func commentCreationStyle(style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
+        self.style = style
         return self
     }
 }
