@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol RealTimeServiceDelegate: class {
+protocol RealTimeServiceDelegate: AnyObject {
 
     func realTimeDataDidUpdate(realTimeData: RealTimeModel, shouldUserBeNotified: Bool, timeOffset: Int)
 }

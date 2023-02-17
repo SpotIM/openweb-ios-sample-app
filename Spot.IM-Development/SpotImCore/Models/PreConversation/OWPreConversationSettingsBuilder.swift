@@ -21,4 +21,17 @@ public struct OWPreConversationSettingsBuilder: OWPreConversationSettingsProtoco
         return self
     }
 }
+#else
+struct OWPreConversationSettingsBuilder: OWPreConversationSettingsProtocol {
+    var style: OWPreConversationStyle
+
+    init(style: OWPreConversationStyle = .regular()) {
+        self.style = style.validate()
+    }
+
+    @discardableResult mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
+        self.style = style.validate()
+        return self
+    }
+}
 #endif
