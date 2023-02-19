@@ -10,14 +10,14 @@ import Foundation
 
 #if NEW_API
 public protocol OWCustomizations {
-    var fontFamily: String? { get set }
+    var fontFamily: OWFontGroupFamily { get set }
     var sorting: OWSortingCustomizations { get }
     var themeEnforcement: OWThemeStyleEnforcement { get set }
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)
 }
 #else
 protocol OWCustomizations {
-    var fontFamily: String? { get set }
+    var fontFamily: OWFontGroupFamily { get set }
     var sorting: OWSortingCustomizations { get }
     var themeEnforcement: OWThemeStyleEnforcement { get set }
     func addElementCallback(_ callback: @escaping OWCustomizableElementCallback)

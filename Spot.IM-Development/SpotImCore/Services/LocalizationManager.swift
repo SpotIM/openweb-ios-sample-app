@@ -18,7 +18,7 @@ final class LocalizationManager {
     static func localizedString(key: String) -> String {
         guard
             let language = currentLanguage,
-            let localizationPath = Bundle.spot.path(
+            let localizationPath = Bundle.openWeb.path(
                 forResource: language.langStringsPath,
                 ofType: "lproj"
             ),
