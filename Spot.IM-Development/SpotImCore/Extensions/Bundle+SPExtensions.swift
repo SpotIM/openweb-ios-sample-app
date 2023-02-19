@@ -9,7 +9,7 @@
 import UIKit
 
 extension Bundle {
-    static let spot = Bundle(for: OWBundleToken.self)
+    static let openWeb = Bundle(for: OWBundleToken.self)
 
     var shortVersion: String? {
         return self.infoDictionary?["CFBundleShortVersionString"] as? String

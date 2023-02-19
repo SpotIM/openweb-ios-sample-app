@@ -25,6 +25,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
         set(newFamily) {
             _fontFamily = newFamily
+            OWFontBook.shared.configure(fontFamilyGroup: newFamily)
         }
     }
 
