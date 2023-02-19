@@ -19,7 +19,7 @@ class OWSettingsWrapper {
     fileprivate var sdkVersion: String?
 
     private init() {
-        if let path = Bundle.spot.path(forResource: Metrics.openWebSettingsResource, ofType: Metrics.plistSuffix) {
+        if let path = Bundle.openWeb.path(forResource: Metrics.openWebSettingsResource, ofType: Metrics.plistSuffix) {
             let dictionary: NSDictionary?
             dictionary = NSDictionary(contentsOfFile: path)
             sdkVersion = dictionary?[Metrics.sdkVersionKey] as? String
