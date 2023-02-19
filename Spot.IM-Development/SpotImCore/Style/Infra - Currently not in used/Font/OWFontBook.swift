@@ -14,6 +14,12 @@ protocol OWFontBookProtocol {
     func font(style: OWFontStyle, size: CGFloat, forceOpenWebFont: Bool) -> UIFont
 }
 
+extension OWFontBookProtocol {
+    func font(style: OWFontStyle, size: CGFloat, forceOpenWebFont: Bool = false) -> UIFont {
+        return font(style: style, size: size, forceOpenWebFont: forceOpenWebFont)
+    }
+}
+
 protocol OWFontBookProtocolConfigurable {
     func configure(fontFamilyGroup: OWFontGroupFamily)
 }
