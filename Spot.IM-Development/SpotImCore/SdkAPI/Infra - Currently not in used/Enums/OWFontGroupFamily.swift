@@ -16,6 +16,7 @@ public enum OWFontGroupFamily {
 
 #else
 enum OWFontGroupFamily {
+    case `default`
     case custom(fontFamily: String)
 }
 #endif

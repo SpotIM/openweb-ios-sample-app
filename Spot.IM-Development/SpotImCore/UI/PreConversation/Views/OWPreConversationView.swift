@@ -36,7 +36,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(.white)
             .corner(radius: 12.0)
             .withPadding(20)
-            .font(UIFont.preferred(style: .regular, of: 20))
+            .font(OWFontBook.shared.font(style: .regular, size: 20))
     }()
 
     // TODO: Testing - remove later (hard coded cause only for testing)
@@ -47,7 +47,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(.white)
             .corner(radius: 12.0)
             .withPadding(20)
-            .font(UIFont.preferred(style: .regular, of: 20))
+            .font(OWFontBook.shared.font(style: .regular, size: 20))
     }()
 
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
