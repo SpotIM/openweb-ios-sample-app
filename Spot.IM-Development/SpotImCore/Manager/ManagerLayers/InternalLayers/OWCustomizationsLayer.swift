@@ -19,7 +19,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
     }
 
     // Prefer to expose computed property and internally work with filprivate vars
-    var fontFamily: String? {
+    var fontFamily: OWFontGroupFamily {
         get {
             return _fontFamily
         }
@@ -64,7 +64,7 @@ class OWCustomizationsLayer: OWCustomizations, OWCustomizationsInternalProtocol 
         }
     }
 
-    fileprivate var _fontFamily: String? = nil
+    fileprivate var _fontFamily: OWFontGroupFamily = .default
     fileprivate let _sortingCustomizer: OWSortingCustomizations = OWSortingCustomizer()
     fileprivate var _themeEnforcement: OWThemeStyleEnforcement = .none
     fileprivate var callbacks = [OWOptionalEncapsulation<OWCustomizableElementCallback>]()
