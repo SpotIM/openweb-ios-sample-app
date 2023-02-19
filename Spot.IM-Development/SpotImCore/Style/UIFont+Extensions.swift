@@ -43,7 +43,7 @@ internal extension UIFont {
 
     // MARK: - Make custom font bundle register to framework
     static func registerFontWith(filenameString: String) {
-        let frameworkBundle = Bundle.spot
+        let frameworkBundle = Bundle.openWeb
         guard
             let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil)
             else { return }
