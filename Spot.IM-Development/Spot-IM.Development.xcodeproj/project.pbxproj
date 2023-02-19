@@ -2585,7 +2585,7 @@
 		3DDA9A662913E7EE00FE3B86 /* Infra - Currently not in used */ = {
 			isa = PBXGroup;
 			children = (
-				3DEAA57C29A2402D0043D73E /* Font */,
+				3DEAA57C29A2402D0043D73E /* Fonts */,
 				3DEAA57B29A240200043D73E /* Colors */,
 			);
 			path = "Infra - Currently not in used";
@@ -2638,14 +2638,14 @@
 			path = Colors;
 			sourceTree = "<group>";
 		};
-		3DEAA57C29A2402D0043D73E /* Font */ = {
+		3DEAA57C29A2402D0043D73E /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
 				3DEAA57929A23D310043D73E /* OWFontBook.swift */,
 				3DEAA57E29A240670043D73E /* OWFontStyle.swift */,
 				3DEAA58029A240910043D73E /* OWFontGroupFamily+Extensions.swift */,
 			);
-			path = Font;
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		3DEDF61428C9D45F00F87056 /* NavigationController */ = {
