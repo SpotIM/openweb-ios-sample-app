@@ -113,13 +113,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .unwrap()
             .asObservable()
     }
-    
+
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var changeSizeAtIndex: Observable<Int> {
         return _changeSizeAtIndex
             .asObservable()
     }
-    
+
     fileprivate var _urlClick = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         return _urlClick
@@ -290,8 +290,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
-        
-        
+
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Int> in
                 let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
@@ -311,12 +310,12 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?._changeSizeAtIndex.onNext(commentIndex)
             })
             .disposed(by: disposeBag)
-        
+
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<URL> in
                 let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
                     let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
-                    
+
                     return commentTextVm.outputs.urlClickedOutput
                 }
                 return Observable.merge(urlClickObservable)

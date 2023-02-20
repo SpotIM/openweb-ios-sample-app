@@ -16,7 +16,7 @@ class OWCommentContentView: UIView {
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
-    
+
     fileprivate lazy var textLabel: OWCommentTextLabel = {
        return OWCommentTextLabel()
             .numberOfLines(0)
@@ -63,8 +63,8 @@ fileprivate extension OWCommentContentView {
             make.size.equalTo(0)
         }
     }
-    
-    func setupObservers() {        
+
+    func setupObservers() {
         viewModel.outputs.image
             .subscribe(onNext: { [weak self] imageType in
                 guard let self = self,
@@ -93,7 +93,7 @@ fileprivate extension OWCommentContentView {
                 }
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.collapsableLabelViewModel
             .outputs.height
             .subscribe(onNext: { [weak self] newHeight in

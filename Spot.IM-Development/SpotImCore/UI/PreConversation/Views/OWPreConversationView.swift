@@ -233,7 +233,7 @@ fileprivate extension OWPreConversationView {
             })
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
-                
+
         viewModel.outputs.changeSizeAtIndex
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }

@@ -27,7 +27,7 @@ struct OWColor {
         case brandColor
         case buttonTextColor
         case linkColor
-        
+
         var `default`: OWColor {
             switch self {
             case .skeletonEncapsulateViewBackgroundColor:
