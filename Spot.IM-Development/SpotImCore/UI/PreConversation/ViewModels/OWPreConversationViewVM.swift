@@ -93,10 +93,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
-    
+
     fileprivate lazy var commentsCountObservable: Observable<String> = {
         guard let postId = OWManager.manager.postId else { return .empty()}
-        
+
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
                 guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
@@ -108,7 +108,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
             .asObservable()
     }()
-    
+
     var conversationCTAButtonTitle: Observable<String> {
         commentsCountObservable
             .map { [weak self] count in
@@ -124,7 +124,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
             .unwrap()
     }
-    
+
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
         return fullConversationTap
