@@ -217,17 +217,16 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver) { theme, colorsDriver -> UIColor? in
-            guard let brandColorType = colorsDriver[OWColor.OWType.brandColor] else { return nil }
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
+            .subscribe(onNext: { [weak self] (style, colorMapper) -> Void in
+                guard let self = self else { return }
 
-            return brandColorType.color(forThemeStyle: theme)
-        }
-        .unwrap()
-        .subscribe(onNext: { [weak self] brandColor in
-            guard let self = self else { return }
-            self.btnCTAConversation.backgroundColor = brandColor
-        })
-        .disposed(by: disposeBag)
+                if let owBrandColor = colorMapper[.brandColor] {
+                    let brandColor = owBrandColor.color(forThemeStyle: style)
+                    self.btnCTAConversation.backgroundColor = brandColor
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
