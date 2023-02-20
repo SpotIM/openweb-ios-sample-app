@@ -14,7 +14,7 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
     case ssoComplete(codeB: String)
     case logout
     case user
-    
+
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
@@ -22,7 +22,7 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
             return .post
         }
     }
-    
+
     // MARK: - Path
     var path: String {
         switch self {
@@ -33,7 +33,7 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
         case .user:         return "/user/data"
         }
     }
-    
+
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
@@ -54,7 +54,7 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
             return nil
         }
     }
-    
+
     var additionalMiddlewares: [OWRequestMiddleware]? {
         switch self {
         case .ssoStart(let secret, let token):
@@ -75,31 +75,31 @@ protocol OWInternalAuthenticationAPI {
 extension OWNetworkAPI: OWInternalAuthenticationAPI {
     // Access by .internalAuthentication for readability
     var internalAuthentication: OWInternalAuthenticationAPI { return self }
-    
+
     func loginGuest() -> OWNetworkResponse<SPUser> {
         let endpoint = OWInternalAuthenticationEndpoints.guest
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func ssoStart(secret: String?, token: String?) -> OWNetworkResponse<SSOStartResponseInternal> {
         let endpoint = OWInternalAuthenticationEndpoints.ssoStart(secret: secret, token: token)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func ssoComplete(codeB: String) -> OWNetworkResponse<SSOCompleteResponseInternal> {
         let endpoint = OWInternalAuthenticationEndpoints.ssoComplete(codeB: codeB)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func logout() -> OWNetworkResponse<EmptyDecodable> {
         let endpoint = OWInternalAuthenticationEndpoints.logout
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func user() -> OWNetworkResponse<SPUser> {
         let endpoint = OWInternalAuthenticationEndpoints.user
         let requestConfigure = request(for: endpoint)

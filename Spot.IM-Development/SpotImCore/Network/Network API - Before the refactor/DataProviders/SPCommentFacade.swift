@@ -19,38 +19,37 @@ internal protocol SPCommentUpdater {
 
     func changeRank(_ change: SPRankChange, for commentId: String?, with parentId: String?,
                     in conversationId: String?, completion: @escaping BooleanCompletion)
-    
+
     func createComment(parameters: [String: Any], postId: String,
                        success: @escaping CommentHandler, failure: @escaping ErrorHandler)
-    
+
     func deleteComment(parameters: [String: Any], postId: String,
                        success: @escaping DeleteCommentHandler, failure: @escaping ErrorHandler)
-    
+
     func reportComment(parameters: [String: Any], postId: String,
                        success: @escaping SuccessHandler, failure: @escaping ErrorHandler)
-    
+
     func editComment(parameters: [String: Any], postId: String,
                      success: @escaping CommentHandler, failure: @escaping ErrorHandler)
-    
+
     func muteComment(parameters: [String: Any], postId: String,
-                      success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler)
-    
+                     success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler)
+
     func shareComment(parameters: [String: Any], postId: String,
                       success: @escaping ShareCommentHandler, failure: @escaping ErrorHandler)
-    
+
     func commentStatus(conversationId: String, commentId: String,
-                       success: @escaping ([String:String]) -> Void, failure: @escaping ErrorHandler)
+                       success: @escaping ([String: String]) -> Void, failure: @escaping ErrorHandler)
 }
 
 internal final class SPCommentFacade: SPCommentUpdater {
-    
+
     let apiManager: OWApiManager
-    
+
     init(apiManager: OWApiManager) {
         self.apiManager = apiManager
     }
 
-    
     internal func changeRank(_ change: SPRankChange,
                              for commentId: String?,
                              with parentId: String?,
@@ -71,7 +70,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
             completion(false, SPNetworkError.custom("Conversation ID is required"))
             return
         }
-        
+
         guard let operation = change.operation else {
             completion(false, SPNetworkError.custom("Invalid operation"))
             return
@@ -90,17 +89,17 @@ internal final class SPCommentFacade: SPCommentUpdater {
                            parameters: parameters,
                            encoding: APIConstants.encoding,
                            parser: OWEmptyParser(),
-                           headers: headers) { (result, response) in
+                           headers: headers) { (result, _) in
                             switch result {
                             case .success:
                                 completion(true, nil)
                             case .failure(_):
                                 completion(false, SPNetworkError.default)
                             }
-                            
+
         }
     }
-    
+
     internal func deleteComment(parameters: [String: Any], postId: String,
                                 success: @escaping DeleteCommentHandler, failure: @escaping ErrorHandler) {
         guard let spotKey = SPClientSettings.main.spotKey
@@ -108,11 +107,11 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
         }
-        
+
         let request = SPConversationRequest.commentDelete
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
-        
+
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
@@ -133,7 +132,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             }
         }
     }
-    
+
     internal func createComment(parameters: [String: Any], postId: String,
                                 success: @escaping CommentHandler, failure: @escaping ErrorHandler) {
         guard let spotKey = SPClientSettings.main.spotKey
@@ -141,11 +140,11 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
         }
-        
+
         let request = SPConversationRequest.commentPost
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
-        
+
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
@@ -163,12 +162,12 @@ internal final class SPCommentFacade: SPCommentUpdater {
                                     errorMessage: error.localizedDescription
                                 )
                                 SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                                
+
                                 failure(SPNetworkError.default)
                             }
         }
     }
-    
+
     func reportComment(parameters: [String: Any], postId: String,
                        success: @escaping SuccessHandler, failure: @escaping ErrorHandler) {
         guard let spotKey = SPClientSettings.main.spotKey
@@ -176,16 +175,16 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
         }
-        
+
         let request = SPConversationRequest.commentReport
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
-        
+
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
                            parser: OWEmptyParser(),
-                           headers: headers) { (result, response) in
+                           headers: headers) { (result, _) in
                             switch result {
                             case .success:
                                 success()
@@ -194,24 +193,24 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             }
         }
     }
-    
-    func muteComment(parameters: [String : Any], postId: String, success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler) {
+
+    func muteComment(parameters: [String: Any], postId: String, success: @escaping MuteCommentHandler, failure: @escaping ErrorHandler) {
         guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
         }
-        
+
         let request = OWMuteRequest.mute
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
-        
+
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
                            parser: OWEmptyParser(),
-                           headers: headers) { (result, response) in
-            
+                           headers: headers) { (result, _) in
+
                             switch result {
                             case .success(_):
                                 success()
@@ -220,7 +219,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             }
         }
     }
-    
+
     func shareComment(parameters: [String: Any], postId: String,
                       success: @escaping ShareCommentHandler, failure: @escaping ErrorHandler) {
         guard let spotKey = SPClientSettings.main.spotKey
@@ -228,7 +227,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
         }
-        
+
         let request = SPConversationRequest.commentShare
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
@@ -236,7 +235,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                            parameters: parameters,
                            encoding: APIConstants.encoding,
                            parser: OWDecodableParser<SPShareLink>(),
-                           headers: headers) { (result, response) in
+                           headers: headers) { (result, _) in
                             switch result {
                             case .success(let link):
                                 success(link.reference)
@@ -245,7 +244,7 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             }
         }
     }
-    
+
     func editComment(parameters: [String: Any], postId: String,
                      success: @escaping CommentHandler, failure: @escaping ErrorHandler) {
         guard let spotKey = SPClientSettings.main.spotKey
@@ -253,16 +252,16 @@ internal final class SPCommentFacade: SPCommentUpdater {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
         }
-        
+
         let request = SPConversationRequest.commentUpdate
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey,
                                         postId: postId)
-        
+
         apiManager.execute(request: request,
                            parameters: parameters,
                            encoding: APIConstants.encoding,
                            parser: OWDecodableParser<SPComment>(),
-                           headers: headers) { (result, response) in
+                           headers: headers) { (result, _) in
                             switch result {
                             case .success(let comment):
                                 success(comment)
@@ -271,22 +270,22 @@ internal final class SPCommentFacade: SPCommentUpdater {
                             }
         }
     }
-    
-    internal func commentStatus(conversationId: String, commentId: String, success: @escaping ([String:String]) -> Void, failure: @escaping ErrorHandler) {
+
+    internal func commentStatus(conversationId: String, commentId: String, success: @escaping ([String: String]) -> Void, failure: @escaping ErrorHandler) {
         let spRequest = SPConversationRequest.commentStatus(commentId: commentId)
         guard let spotKey = SPClientSettings.main.spotKey
             else {
                 failure(SPNetworkError.custom("Please provide Spot Key"))
                 return
         }
-            
+
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: conversationId)
 
         apiManager.execute(
             request: spRequest,
-            parser: OWDecodableParser<[String:String]>(),
+            parser: OWDecodableParser<[String: String]>(),
             headers: headers
-        ) { (result, response) in
+        ) { (result, _) in
             switch result {
             case .success(let status):
                 success(status)
@@ -295,12 +294,12 @@ internal final class SPCommentFacade: SPCommentUpdater {
             }
         }
     }
-    
+
     private enum ChangeRankAPIKeys {
         static let postId = "conversation_id"
         static let operation = "operation"
         static let parentId = "parent_id"
         static let messageId = "message_id"
     }
-    
+
 }

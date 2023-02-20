@@ -18,39 +18,39 @@ class OWCommentStatusIndicationView: OWBaseView {
         static let iconTopPadding: CGFloat = 14
         static let textVerticalPadding: CGFloat = 12
         static let statusTextHorizontalOffset: CGFloat = 8
-        
+
         static let fontSize: CGFloat = 15
-        
+
         static let identifier = "comment_status_indication_view_id"
     }
-    
+
     private let iconImageView: OWBaseUIImageView = {
         let imageView = OWBaseUIImageView()
         imageView.image = UIImage(spNamed: "pendingIcon")
         return imageView
     }()
-    
+
     private let statusTextLabel: OWBaseLabel = {
         let label = OWBaseLabel()
         label.numberOfLines = 0
         label.font = UIFont.preferred(style: .regular, of: Metrics.fontSize)
         return label
     }()
-    
+
     fileprivate var viewModel: OWCommentStatusIndicationViewModeling!
     fileprivate var disposeBag: DisposeBag!
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
         setupUI()
     }
-    
+
     func updateColorsAccordingToStyle() {
         statusTextLabel.textColor = .commentStatusIndicatorText
         self.backgroundColor = .commentStatusIndicatorBackground
     }
-    
+
     func configure(with viewModel: OWCommentStatusIndicationViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
@@ -63,22 +63,22 @@ fileprivate extension OWCommentStatusIndicationView {
         viewModel.outputs.indicationIcon
             .bind(to: iconImageView.rx.image)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.indicationText
             .bind(to: statusTextLabel.rx.text)
             .disposed(by: disposeBag)
     }
-    
+
     func setupUI() {
         self.addCornerRadius(4)
         self.addSubviews(iconImageView, statusTextLabel)
-        
+
         iconImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.iconLeadingOffset)
             make.top.equalToSuperview().offset(Metrics.iconTopPadding)
             make.width.height.equalTo(Metrics.iconSize)
         }
-        
+
         statusTextLabel.OWSnp.makeConstraints { make in
             make.leading.equalTo(iconImageView.OWSnp.trailing).offset(Metrics.statusTextHorizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.statusTextHorizontalOffset)

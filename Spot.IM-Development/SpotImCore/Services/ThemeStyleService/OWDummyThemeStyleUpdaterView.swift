@@ -9,15 +9,15 @@
 import UIKit
 
 class OWDummyThemeStyleUpdaterView: UIView, OWThemeStyleUpdaterProtocol {
-    
+
     struct Metrics {
         static let defaultSize: CGFloat = 1.0
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init() {
         super.init(frame: .zero)
         self.backgroundColor = .clear
@@ -25,7 +25,7 @@ class OWDummyThemeStyleUpdaterView: UIView, OWThemeStyleUpdaterProtocol {
             updateThemeStyleService(userInterfaceStyle: traitCollection.userInterfaceStyle)
         }
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         if #available(iOS 12.0, *) {
             updateThemeStyleService(userInterfaceStyle: traitCollection.userInterfaceStyle)

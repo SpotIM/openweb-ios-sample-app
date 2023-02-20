@@ -6,7 +6,6 @@
 //  Copyright © 2022 Spot.IM. All rights reserved.
 //
 
-
 import Foundation
 
 /// Default type of `Result` returned by OWNetwork, with an `AFError` `Failure` type.

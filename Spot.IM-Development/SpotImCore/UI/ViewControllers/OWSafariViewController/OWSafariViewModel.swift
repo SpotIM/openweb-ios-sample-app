@@ -26,14 +26,14 @@ protocol OWSafariViewModeling {
 class OWSafariViewModel: OWSafariViewModeling, OWSafariViewModelingInputs, OWSafariViewModelingOutputs {
     var inputs: OWSafariViewModelingInputs { return self }
     var outputs: OWSafariViewModelingOutputs { return self }
-    
+
     var options: OWSafariViewControllerOptions
 
     var viewDidLoad = PublishSubject<Void>()
     var screenLoaded: Observable<Void> {
         viewDidLoad.asObservable()
     }
-    
+
     init(options: OWSafariViewControllerOptions) {
         self.options = options
     }

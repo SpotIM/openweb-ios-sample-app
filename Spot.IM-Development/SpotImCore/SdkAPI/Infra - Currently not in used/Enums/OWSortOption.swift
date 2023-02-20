@@ -9,15 +9,13 @@
 import Foundation
 
 #if NEW_API
-public enum OWSortOption {
-    case `default` // In such case we will use the sorting option from the network configuration
+public enum OWSortOption: String {
     case best
     case newest
     case oldest
 }
 #else
-enum OWSortOption {
-    case `default` // In such case we will use the sorting option from the network configuration
+enum OWSortOption: String {
     case best
     case newest
     case oldest

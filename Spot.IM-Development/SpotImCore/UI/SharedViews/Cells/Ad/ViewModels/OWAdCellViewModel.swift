@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol OWAdCellViewModelingInputs {
-    
+
 }
 
 protocol OWAdCellViewModelingOutputs {
-    
+
 }
 
 protocol OWAdCellViewModeling: OWCellViewModel {

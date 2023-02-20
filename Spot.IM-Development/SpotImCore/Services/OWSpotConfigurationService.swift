@@ -26,11 +26,11 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
             .unwrap()
             .share(replay: 0) // New subscribers will get only elements which emits after their subscription
     }
-    
+
     init (servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
     }
-    
+
     func config(spotId: OWSpotId) -> Observable<SPSpotConfiguration> {
         if let cacheConfig = cacheConfigService[spotId] {
             // Return cache configuration
@@ -43,14 +43,14 @@ class OWSpotConfigurationService: OWSpotConfigurationServicing {
                     if !isFetching {
                         self.fetchConfig(spotId: spotId)
                     }
-                    
+
                     // This way if other calls to this functions are being done before the network request finish, we won't send new requests
                     return self.configWhichJustFetched
                         .take(1)
                 }
         }
     }
-    
+
     func spotChanged(spotId: OWSpotId) {
         // Dispose any current network requests if exist
         disposeBag = nil
@@ -64,10 +64,10 @@ fileprivate extension OWSpotConfigurationService {
     func fetchConfig(spotId: OWSpotId) {
         // Fetch from API
         let api: OWConfigurationAPI = self.servicesProvider.netwokAPI().configuration
-        
+
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag
-        
+
         // No need to dispose as we start with `just`
         Observable.just(())
             .do(onNext: { [weak self] _ in
@@ -92,7 +92,7 @@ fileprivate extension OWSpotConfigurationService {
             .subscribe()
             .disposed(by: disposeBag)
     }
-    
+
     func setAdditionalStuff(forConfig config: SPSpotConfiguration) {
         if let color = UIColor.color(with: config.initialization?.brandColor) {
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .light)

@@ -21,7 +21,7 @@ struct OWSectionModel<Section, ItemType> {
 extension OWSectionModel: OWSectionModelType {
     typealias Identity = Section
     typealias Item = ItemType
-    
+
     var identity: Section {
         return model
     }
