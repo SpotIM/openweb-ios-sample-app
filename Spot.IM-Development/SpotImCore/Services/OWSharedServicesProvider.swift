@@ -202,6 +202,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()
         _sortDictateService.invalidateCache()
+        _spotConfigurationService.spotChanged(spotId: spotId)
     }
 }
 
@@ -210,9 +211,6 @@ fileprivate extension OWSharedServicesProvider {
         // TODO: Replace it with new network API - create a dedicated class which do initialization stuff for new spotId
         _ = SPClientSettings.main.setup(spotId: spotId)
             .take(1)
-            .do(onNext: { config in
-                LocalizationManager.setLocale(config.appConfig.mobileSdk.locale ?? "en")
-            })
             .subscribe()
     }
 }
