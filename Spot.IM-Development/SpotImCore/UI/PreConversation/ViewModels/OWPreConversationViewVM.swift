@@ -165,6 +165,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 }
 
 fileprivate extension OWPreConversationViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         preConversationChangedSize
             .bind(to: _preConversationChangedSize)
@@ -325,6 +326,7 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 
     func populateInitialUI() {
         if self.shouldShowComments {
