@@ -52,7 +52,9 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         guard var encapsulateColor = colors[type] else { return }
         encapsulateColor.setColor(color, forThemeStyle: themeStyle)
         colors[type] = encapsulateColor // We are working with structs here, so we need to re set the encapsulated color for this key
-        let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
-        colorsMapper.onNext(colorsRx)
+        if (type.shouldUpdateRxObservable) {
+            let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
+            colorsMapper.onNext(colorsRx)
+        }
     }
 }
