@@ -27,7 +27,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
             .observe(on: MainScheduler.instance)
             .share(replay: 1)
     }
-    
+
     static let shared: OWColorPaletteProtocol & OWColorPaletteConfigurable = OWColorPalette()
 
     private init() {
