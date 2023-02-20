@@ -95,11 +95,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
 
     fileprivate lazy var commentsCountObservable: Observable<String> = {
-        guard let postId = OWManager.manager.postId else { return .empty()}
-
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
-                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
+                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(self.postId)") else {return nil}
                 return count
             }
             .unwrap()
@@ -206,11 +204,9 @@ fileprivate extension OWPreConversationViewViewModel {
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
-                guard let self = self,
-                      let postId = OWManager.manager.postId
-                else { return }
+                guard let self = self else { return }
 
-                self.servicesProvider.realtimeService().startFetchingData(postId: postId)
+                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
 
