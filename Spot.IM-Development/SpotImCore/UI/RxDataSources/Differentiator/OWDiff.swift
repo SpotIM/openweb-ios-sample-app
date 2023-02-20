@@ -20,7 +20,7 @@ fileprivate extension OWAnimatableSectionModelType {
 
 enum OWDiff {
 
-    enum Error : Swift.Error, CustomDebugStringConvertible {
+    enum Error: Swift.Error, CustomDebugStringConvertible {
 
         case duplicateItem(item: Any)
         case duplicateSection(section: Any)
@@ -40,7 +40,7 @@ enum OWDiff {
         }
     }
 
-    private enum OWEditEvent : CustomDebugStringConvertible {
+    private enum OWEditEvent: CustomDebugStringConvertible {
         case inserted               // can't be found in old sections
         case insertedAutomatically  // Item inside section being inserted
         case deleted                // Was in old, not in new, in it's place is something "not new" :(, otherwise it's Updated
@@ -69,7 +69,7 @@ enum OWDiff {
         }
     }
 
-    private struct OWSectionAssociatedData : CustomDebugStringConvertible {
+    private struct OWSectionAssociatedData: CustomDebugStringConvertible {
         var event: OWEditEvent
         var indexAfterDelete: Int?
         var moveIndex: Int?
@@ -93,13 +93,13 @@ enum OWDiff {
             return "\(event) \(String(describing: indexAfterDelete))"
         }
 
-        static var initial : OWItemAssociatedData {
+        static var initial: OWItemAssociatedData {
             return OWItemAssociatedData(event: .untouched, indexAfterDelete: nil, moveIndex: nil)
         }
     }
 
-    private static func indexSections<Section: OWAnimatableSectionModelType>(_ sections: [Section]) throws -> [Section.Identity : Int] {
-        var indexedSections: [Section.Identity : Int] = [:]
+    private static func indexSections<Section: OWAnimatableSectionModelType>(_ sections: [Section]) throws -> [Section.Identity: Int] {
+        var indexedSections: [Section.Identity: Int] = [:]
         for (i, section) in sections.enumerated() {
             guard indexedSections[section.identity] == nil else {
                 #if DEBUG
@@ -115,12 +115,12 @@ enum OWDiff {
         return indexedSections
     }
 
-    //================================================================================
+    // ================================================================================
     //  Optimizations because Swift dictionaries are extremely slow (ARC, bridging ...)
-    //================================================================================
+    // ================================================================================
     // swift dictionary optimizations {
 
-    private struct OWOptimizedIdentity<Identity: Hashable> : Hashable {
+    private struct OWOptimizedIdentity<Identity: Hashable>: Hashable {
 
         let identity: UnsafePointer<Identity>
         private let cachedHashValue: Int
@@ -221,7 +221,6 @@ enum OWDiff {
 
             return (initialItemData, finalItemData)
     }
-    
 
     // Generates differential changes suitable for sectioned view consumption.
     // It will not only detect changes between two states, but it will also try to compress those changes into
@@ -262,7 +261,7 @@ enum OWDiff {
     }
 
     private struct OWCommandGenerator<Section: OWAnimatableSectionModelType> {
-        typealias Item = Section.Item
+        typealias Item = Section.Item // swiftlint:disable:this nesting
 
         let initialSections: [Section]
         let finalSections: [Section]
@@ -474,8 +473,7 @@ enum OWDiff {
 
                         finalSectionData[i].event = moveType
                         initialSectionData[oldSectionIndex].event = moveType
-                    }
-                    else {
+                    } else {
                         finalSectionData[i].event = .inserted
                     }
                 }
@@ -561,7 +559,7 @@ enum OWDiff {
                     try differentiatorPrecondition(false, "Unhandled case in initial sections")
                 }
             }
-            
+
             for i in 0 ..< finalSections.count {
                 switch finalSectionData[i].event {
                 case .inserted:
@@ -570,80 +568,78 @@ enum OWDiff {
                     break
                 }
             }
-            
+
             if insertedSections.isEmpty && movedSections.isEmpty {
                 return []
             }
-            
+
             // sections should be in place, but items should be original without deleted ones
             let sectionsAfterChange: [Section] = try self.finalSections.enumerated().map { i, s -> Section in
                 let event = self.finalSectionData[i].event
-                
+
                 if event == .inserted {
                     // it's already set up
                     return s
-                }
-                else if event == .moved || event == .movedAutomatically {
+                } else if event == .moved || event == .movedAutomatically {
                     let originalSectionIndex = try finalSectionData[i].moveIndex.unwrap()
                     let originalSection = initialSections[originalSectionIndex]
-                    
+
                     var items: [Section.Item] = []
                     items.reserveCapacity(originalSection.items.count)
                     let itemAssociatedData = self.initialItemData[originalSectionIndex]
                     for j in 0 ..< originalSection.items.count {
                         let initialData = itemAssociatedData[j]
-                        
+
                         guard initialData.event != .deleted else {
                             continue
                         }
-                        
+
                         guard let finalIndex = initialData.moveIndex else {
                             try differentiatorPrecondition(false, "Item was moved, but no final location.")
                             continue
                         }
-                        
+
                         items.append(finalItemCache[finalIndex.sectionIndex][finalIndex.itemIndex])
                     }
-                    
+
                     let modifiedSection = try Section(safeOriginal: s, safeItems: items)
-                    
+
                     return modifiedSection
-                }
-                else {
+                } else {
                     try differentiatorPrecondition(false, "This is weird, this shouldn't happen")
                     return s
                 }
             }
-            
+
             return [OWChangeset(
                 finalSections: sectionsAfterChange,
-                insertedSections:  insertedSections,
+                insertedSections: insertedSections,
                 movedSections: movedSections
                 )]
         }
-        
+
         mutating func generateInsertAndMovedItems() throws -> [OWChangeset<Section>] {
             var insertedItems = [OWItemPath]()
             var movedItems = [(from: OWItemPath, to: OWItemPath)]()
-            
+
             // mark new and moved items {
             // 3rd stage
             for i in 0 ..< finalSections.count {
                 let finalSection = finalSections[i]
-                
+
                 let sectionEvent = finalSectionData[i].event
                 // new and deleted sections cause reload automatically
                 if sectionEvent != .moved && sectionEvent != .movedAutomatically {
                     continue
                 }
-                
+
                 for j in 0 ..< finalSection.items.count {
                     let currentItemEvent = finalItemData[i][j].event
-                    
+
                     try differentiatorPrecondition(currentItemEvent != .untouched, "Current event is not untouched")
-                    
+
                     let event = finalItemData[i][j].event
-                    
+
                     switch event {
                     case .inserted:
                         insertedItems.append(OWItemPath(sectionIndex: i, itemIndex: j))
@@ -651,7 +647,7 @@ enum OWDiff {
                         let originalIndex = try finalItemData[i][j].moveIndex.unwrap()
                         let finalSectionIndex = try initialSectionData[originalIndex.sectionIndex].moveIndex.unwrap()
                         let moveFromItemWithIndex = try initialItemData[originalIndex.sectionIndex][originalIndex.itemIndex].indexAfterDelete.unwrap()
-                        
+
                         let moveCommand = (
                             from: OWItemPath(sectionIndex: finalSectionIndex, itemIndex: moveFromItemWithIndex),
                             to: OWItemPath(sectionIndex: i, itemIndex: j)
@@ -662,7 +658,7 @@ enum OWDiff {
                     }
                 }
             }
-            
+
             if insertedItems.isEmpty && movedItems.isEmpty {
                 return []
             }

@@ -84,7 +84,10 @@ commands:
 
       - run:
           name: Install SwiftLint
-          command: brew install swiftlint
+          command: |
+            brew update
+            brew install swiftlint
+            swiftlint version
 
       - run:
           name: Run SwiftLint

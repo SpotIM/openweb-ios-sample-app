@@ -9,14 +9,14 @@
 import UIKit
 
 struct EmptyActionDataModel {
-    
+
     typealias Action = (() -> Void)
-    
+
     let actionMessage: String
     let actionIcon: UIImage
     let actionButtonTitle: String?
     let action: Action?
-    
+
     init(actionMessage: String, actionIcon: UIImage, actionButtonTitle: String? = nil, action: Action? = nil) {
         self.actionMessage = actionMessage
         self.actionIcon = actionIcon
@@ -32,10 +32,10 @@ final class SPEmptyConversationActionView: OWBaseView {
     private let actionButton: OWBaseButton = .init()
     private let containerView: OWBaseView = .init()
     private var action: (() -> Void)?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupUI(showingIcon: true)
     }
 
@@ -54,10 +54,10 @@ final class SPEmptyConversationActionView: OWBaseView {
         } else {
             actionButton.isHidden = true
         }
-        
+
         updateColorsAccordingToStyle()
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.backgroundColor = .spBackground0
@@ -67,7 +67,7 @@ final class SPEmptyConversationActionView: OWBaseView {
         messageLabel.textColor = .spForeground3
         actionButton.backgroundColor = .brandColor
     }
-    
+
     private func setupUI(showingIcon: Bool) {
         addSubview(containerView)
         configureContainerView()
@@ -77,7 +77,7 @@ final class SPEmptyConversationActionView: OWBaseView {
         }
         configureActionButton()
     }
-    
+
     private func configureContainerView() {
         containerView.addSubviews(iconView, messageLabel, actionButton)
         containerView.OWSnp.makeConstraints { make in
@@ -88,7 +88,7 @@ final class SPEmptyConversationActionView: OWBaseView {
             make.center.equalToSuperview()
         }
     }
-    
+
     private func configureImageView() {
         iconView.OWSnp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -97,7 +97,7 @@ final class SPEmptyConversationActionView: OWBaseView {
             make.width.equalTo(Theme.imageViewWidth)
         }
     }
-    
+
     private func configureMessageLabel(relativeToIcon: Bool) {
         messageLabel.numberOfLines = 0
         messageLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
@@ -113,7 +113,7 @@ final class SPEmptyConversationActionView: OWBaseView {
             make.height.greaterThanOrEqualTo(Theme.messageMinHeight)
         }
     }
-    
+
     private func configureActionButton() {
         actionButton.addTarget(self, action: #selector(handleAction), for: .touchUpInside)
         actionButton.setTitleColor(.white, for: .normal)
@@ -131,7 +131,7 @@ final class SPEmptyConversationActionView: OWBaseView {
             right: Theme.actionButtonSideOffset
         )
     }
-    
+
     @objc
     private func handleAction() {
         action?()
@@ -139,7 +139,7 @@ final class SPEmptyConversationActionView: OWBaseView {
 }
 
 private enum Theme {
-    
+
     static let horizontalOffset: CGFloat = 44.0
     static let titleFontSize: CGFloat = 16.0
     static let actionButtonMinWidth: CGFloat = 137.0

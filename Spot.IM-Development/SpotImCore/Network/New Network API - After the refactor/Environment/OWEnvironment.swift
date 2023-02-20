@@ -22,9 +22,9 @@ class OWEnvironment: OWEnvironmentProtocol {
     let domain: String
 
     static var currentEnvironment: OWEnvironmentProtocol = production
-    
+
     static var production = OWEnvironment(scheme: "https", domain: "mobile-gw.spot.im")
-    
+
     // TODO: Add staging environment as well
 
     static func set(environment: OWEnvironmentProtocol) {

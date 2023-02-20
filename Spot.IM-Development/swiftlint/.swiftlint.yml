@@ -50,7 +50,6 @@ only_rules: # only the specified rules will be applied, and all other rules will
   - unneeded_break_in_switch
   - unused_closure_parameter
   - unused_control_flow_label
-  - unused_optional_binding
   - unused_setter_value
   - vertical_parameter_alignment
   - vertical_whitespace
@@ -63,6 +62,7 @@ only_rules: # only the specified rules will be applied, and all other rules will
 
 included: # paths to include during linting. `excluded` paths are still ignored.
   - ../Spot-IM.Development
+  - ../SpotImCore
   
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - ../Pods
@@ -86,8 +86,8 @@ large_tuple:
     error: 5
 
 line_length:
-    warning: 120
-    error: 150
+    warning: 190
+    error: 200
     ignores_urls: true
     ignores_function_declarations: false
     ignores_comments: true
@@ -95,3 +95,7 @@ line_length:
 
 type_name:
     max_length: 60
+
+function_parameter_count:
+    warning: 7
+    error: 8

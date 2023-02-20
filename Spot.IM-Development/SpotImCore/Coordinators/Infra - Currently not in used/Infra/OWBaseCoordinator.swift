@@ -25,7 +25,7 @@ class OWBaseCoordinator<ResultType> {
     // Key is an `identifier` of the child coordinator and value is the coordinator itself.
     // Value type is `Any` because Swift doesn't allow to store generic types in the array.
     private var childCoordinators = [UUID: Any]()
-    
+
     func removeAllChildCoordinators() {
         childCoordinators.removeAll()
     }
@@ -44,13 +44,13 @@ class OWBaseCoordinator<ResultType> {
     // 2. Calls method `start()` on that coordinator.
     // 3. On the `onNext:` of returning observable of method `start()` removes coordinator from the dictionary.
     func coordinate<T: OWCoordinatorResultProtocol>(to coordinator: OWBaseCoordinator<T>,
-                       deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<T> {
+                                                    deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<T> {
         store(coordinator: coordinator)
         return coordinator.start(deepLinkOptions: deepLinkOptions)
             .do(onNext: { [weak self, weak coordinator] result in
                 guard let self = self,
                     let coord = coordinator else { return }
-                
+
                 if !result.loadedToScreen {
                     self.free(coordinator: coord)
                 }
@@ -61,17 +61,17 @@ class OWBaseCoordinator<ResultType> {
     func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<ResultType> {
         fatalError("Method should be implemented.")
     }
-    
+
     // Used for retriving the component which we create for publishers & partners (i.e SDK consumers) to show. Can be used when a router is NOT available
     func showableComponent() -> Observable<OWShowable> {
         fatalError("Method should be implemented.")
     }
-    
+
     // Used for retriving a component with a preferred dynamic size we create for publishers & partners (i.e SDK consumers) to show. Can be used when a router is NOT available
     func showableComponentDynamicSize() -> Observable<OWViewDynamicSizeOption> {
         fatalError("Method should be implemented.")
     }
-    
+
     // A callback once the publishers & partners (i.e SDK consumers) removed a component from their UI . Should be used when a router is NOT available
     func showableComponentRemoved() -> Observable<Void> {
         fatalError("Method should be implemented.")

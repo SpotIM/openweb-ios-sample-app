@@ -12,11 +12,11 @@ import RxSwift
 class OWCommentLabelsContainerView: UIView {
     fileprivate struct Metrics {
         static let identifier = "comment_labels_container_id"
-        
+
         static let labelsContainerStackViewSpacing: CGFloat = 10.0
         static let commentLabelViewHeight: CGFloat = 28.0
     }
-    
+
     fileprivate lazy var labelsContainerStackView: UIStackView = {
         return UIStackView()
             .spacing(Metrics.labelsContainerStackViewSpacing)
@@ -25,19 +25,19 @@ class OWCommentLabelsContainerView: UIView {
     
     fileprivate var viewModel: OWCommentLabelsContainerViewModeling!
     fileprivate var disposeBag: DisposeBag!
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
         setupUI()
     }
-    
+
     func configure(viewModel: OWCommentLabelsContainerViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -59,7 +59,7 @@ fileprivate extension OWCommentLabelsContainerView {
             heightConstraint = make.height.equalTo(0).constraint
         }
     }
-    
+
     func setupObservers() {
         viewModel.outputs.commentLabelsViewModels
             .subscribe(onNext: { [weak self] viewModels in
@@ -70,6 +70,7 @@ fileprivate extension OWCommentLabelsContainerView {
                 if viewModels.count > 0 {
                     self.heightConstraint?.update(offset: Metrics.commentLabelViewHeight)
                 }
+
                 let commentLabelsViews: [OWCommentLabelView] = viewModels.map { vm in
                     let commentLabel = OWCommentLabelView()
                     commentLabel.configure(viewModel: vm)

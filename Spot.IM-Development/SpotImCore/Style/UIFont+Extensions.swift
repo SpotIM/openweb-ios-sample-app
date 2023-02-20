@@ -9,25 +9,25 @@
 import UIKit
 
 internal extension UIFont {
-    
+
     static func preferred(style: SPFontStyle, of size: CGFloat) -> UIFont {
         if let customFontFamily = SpotIm.customFontFamily {
             return customFont(customFontFamily: customFontFamily, style: style, of: size)
         }
-        
+
         return openSans(style: style, of: size)
     }
-    
-    static func customFont(customFontFamily:String, style: SPFontStyle, of size: CGFloat) -> UIFont {
+
+    static func customFont(customFontFamily: String, style: SPFontStyle, of size: CGFloat) -> UIFont {
         let fontName = "\(customFontFamily)-\(style.rawValue)"
         return UIFont(name: fontName, size: size) ?? openSans(style: style, of: size)
     }
-    
+
     static func openSans(style: SPFontStyle, of size: CGFloat) -> UIFont {
         let openSans = name(of: .openSans, with: style)
         return UIFont(name: openSans, size: size) ?? systemFont(ofSize: size)
     }
-    
+
     private static func name(of family: SPFontFamily, with style: SPFontStyle) -> String {
         return "\(family.rawValue)-\(style.rawValue)"
     }
@@ -43,16 +43,16 @@ internal extension UIFont {
 
     // MARK: - Make custom font bundle register to framework
     static func registerFontWith(filenameString: String) {
-        let frameworkBundle = Bundle.spot
+        let frameworkBundle = Bundle.openWeb
         guard
             let pathForResourceString = frameworkBundle.path(forResource: filenameString, ofType: nil)
             else { return }
-        
+
         guard
             let fontData = NSData(contentsOfFile: pathForResourceString),
             let dataProvider = CGDataProvider(data: fontData)
             else { return }
-        
+
         let fontRef = CGFont(dataProvider)
         var errorRef: Unmanaged<CFError>?
         if CTFontManagerRegisterGraphicsFont(fontRef!, &errorRef) == false {

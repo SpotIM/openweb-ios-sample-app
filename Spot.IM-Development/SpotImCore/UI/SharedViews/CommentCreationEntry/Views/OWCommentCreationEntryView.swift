@@ -26,13 +26,13 @@ class OWCommentCreationEntryView: UIView {
         static let identifier = "comment_creation_entry_id"
         static let labelIdentifier = "comment_creation_entry_label_id"
     }
-    
+
     fileprivate lazy var userAvatarView: SPAvatarView = {
         let avatarView = SPAvatarView()
         avatarView.backgroundColor = .clear
         return avatarView
     }()
-    
+
     fileprivate lazy var labelContainer: UIView = {
         return UIView()
             .border(
@@ -42,27 +42,27 @@ class OWCommentCreationEntryView: UIView {
             .backgroundColor(OWColorPalette.shared.color(type: .background1Color, themeStyle: .light))
             .userInteractionEnabled(true)
     }()
-    
+
     fileprivate lazy var label: UILabel = {
         return UILabel()
             .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
             .text(LocalizationManager.localizedString(key: "What do you think?"))
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
-    
+
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer()
         labelContainer.addGestureRecognizer(tapGesture)
         return tapGesture
     }()
-    
+
     fileprivate var viewModel: OWCommentCreationEntryViewModeling!
     fileprivate var disposeBag = DisposeBag()
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init(with viewModel: OWCommentCreationEntryViewModeling) {
         super.init(frame: .zero)
         disposeBag = DisposeBag()
@@ -71,17 +71,17 @@ class OWCommentCreationEntryView: UIView {
         setupObservers()
         setupViews()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         label.accessibilityIdentifier = Metrics.labelIdentifier
     }
-    
+
     init() {
         super.init(frame: .zero)
         setupViews()
     }
-    
+
     func configure(with viewModel: OWCommentCreationEntryViewModeling, delegate: OWCommentCreationEntryViewDelegate) {
         disposeBag = DisposeBag()
         self.viewModel = viewModel
@@ -89,16 +89,16 @@ class OWCommentCreationEntryView: UIView {
         userAvatarView.configure(with: viewModel.outputs.avatarViewVM)
         setupObservers()
     }
-    
+
     func updateColorsAccordingToStyle() {
         labelContainer.backgroundColor = .spBackground1
         labelContainer.layer.borderColor = UIColor.spBorder.cgColor
         label.textColor = .spForeground2
     }
-    
+
     func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {
-        customUIDelegate.customizeView (
-            .sayControl (
+        customUIDelegate.customizeView(
+            .sayControl(
                 labelContainer: labelContainer,
                 label: label
             ),
@@ -115,7 +115,7 @@ fileprivate extension OWCommentCreationEntryView {
             make.centerY.leading.equalToSuperview()
             make.size.equalTo(Metrics.userAvatarSize)
         }
-        
+
         addSubview(labelContainer)
         labelContainer.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
@@ -123,7 +123,7 @@ fileprivate extension OWCommentCreationEntryView {
             make.leading.equalTo(userAvatarView.OWSnp.trailing).offset(12.0)
             make.height.equalTo(48.0)
         }
-        
+
         labelContainer.addSubview(label)
         label.OWSnp.makeConstraints { make in
             make.centerY.trailing.equalToSuperview()
@@ -131,16 +131,16 @@ fileprivate extension OWCommentCreationEntryView {
             make.height.equalTo(Metrics.callToActionHeight)
         }
     }
-    
+
     func setupObservers() {
         viewModel.outputs.ctaText
             .bind(to: label.rx.text)
             .disposed(by: disposeBag)
-        
+
         tapGesture.rx.event.voidify()
         .bind(to: viewModel.inputs.tap)
         .disposed(by: disposeBag)
-        
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

@@ -12,13 +12,12 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     static func == (lhs: SPUser, rhs: SPUser) -> Bool {
         return lhs.userId == rhs.userId
     }
-    
-    
+
     enum CodingKeys: String, CodingKey {
         case id, userId, displayName, userName, imageId, registered,
         isAdmin, isModerator, isCommunityModerator, isSuperAdmin, isJournalist, isMuted, badgeType, points, tokenExpiration, ssoData, ssoPrimaryKey
     }
-    
+
     // all users
     var userId: String?
     var id: String?
@@ -45,11 +44,11 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
     var isAuthority: Bool {
         return isAdmin || isModerator || isJournalist
     }
-    
+
     var isStaff: Bool {
         return isSuperAdmin || isAdmin || isJournalist || isModerator || isCommunityModerator
     }
-    
+
     var hasGamification: Bool {
         if !badgeType.isEmpty && badgeType != "newbie" {
             return true
@@ -67,19 +66,19 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
             return nil
         }
     }
-    
+
     var expired: Bool {
         guard let tokenExpiration = tokenExpiration else {
             return true
         }
-        
+
         let now = Date().timeIntervalSince1970
         return tokenExpiration <= Int(now)
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-    
+
         id = try? container.decode(String.self, forKey: .id)
         do {
             badgeType = try container.decode(String.self, forKey: .badgeType)
@@ -103,7 +102,7 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
         ssoPublisherId = try? container.decode(String.self, forKey: .ssoPrimaryKey)
         isMuted = (try? container.decode(Bool.self, forKey: .isMuted)) ?? false
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -123,18 +122,18 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
         try container.encode(ssoPublisherId, forKey: .ssoPrimaryKey)
         try container.encode(isMuted, forKey: .isMuted)
     }
-    
+
     func imageURL(size: CGSize) -> URL? {
         guard var id = imageId else { return nil }
-        
+
         if id.hasPrefix(SPImageRequestConstants.placeholderImagePrefix) {
             id.removeFirst(SPImageRequestConstants.placeholderImagePrefix.count)
             id = SPImageRequestConstants.avatarPathComponent.appending(id)
         }
-        
+
         return URL(string: cloudinaryURLString(size).appending(id))
     }
-    
+
     private func cloudinaryURLString(_ imageSize: CGSize) -> String {
         var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
         result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
@@ -142,10 +141,10 @@ internal class SPUser: Codable, CustomDebugStringConvertible, Equatable {
             "\(SPImageRequestConstants.cloudinaryHeightPrefix)" +
             "\(Int(imageSize.height))"
         )
-        
+
         return result.appending("/")
     }
-    
+
     var debugDescription: String {
         var result = "\n"
         result += "DEBUG: This is user: \(String(describing: id))\n"
