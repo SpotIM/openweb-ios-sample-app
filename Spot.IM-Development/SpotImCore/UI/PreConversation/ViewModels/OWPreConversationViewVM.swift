@@ -17,7 +17,7 @@ protocol OWPreConversationViewViewModelingInputs {
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
     var preConversationChangedSize: PublishSubject<CGSize> { get }
-    
+
     var viewInitialized: PublishSubject<Void> { get }
 }
 
@@ -46,19 +46,19 @@ protocol OWPreConversationViewViewModeling: AnyObject {
 class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreConversationViewViewModelingInputs, OWPreConversationViewViewModelingOutputs {
     var inputs: OWPreConversationViewViewModelingInputs { return self }
     var outputs: OWPreConversationViewViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let imageProvider: OWImageProviding
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
-    
+
     var _cellsViewModels = OWObservableArray<OWPreConversationCellOption>()
     fileprivate var cellsViewModels: Observable<[OWPreConversationCellOption]> {
         return _cellsViewModels
             .rx_elements()
             .asObservable()
     }
-    
+
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> {
         return cellsViewModels
             .map { items in
@@ -69,34 +69,34 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
                 return [section]
             }
     }
-    
+
     lazy var preConversationHeaderVM: OWPreConversationHeaderViewModeling = {
         return OWPreConversationHeaderViewModel()
     }()
-    
+
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
         return OWCommunityGuidelinesViewModel()
     }()
-    
+
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel()
     }()
-    
+
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
         return OWCommentCreationEntryViewModelV2(imageURLProvider: imageProvider)
     }()
-    
+
     lazy var footerViewViewModel: OWPreConversationFooterViewModeling = {
         return OWPreConversationFooterViewModel()
     }()
-    
+
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
-    
+
     fileprivate lazy var commentsCountObservable: Observable<String> = {
         guard let postId = OWManager.manager.postId else { return .empty()}
-        
+
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
                 guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}
@@ -108,7 +108,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
             .asObservable()
     }()
-    
+
     var conversationCTAButtonTitle: Observable<String> {
         commentsCountObservable
             .map { [weak self] count in
@@ -124,19 +124,19 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
             .unwrap()
     }
-    
+
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
         return fullConversationTap
             .asObservable()
     }
-    
+
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
     var openCommentConversation: Observable<OWCommentCreationType> {
         return commentCreationTap
             .asObservable()
     }
-    
+
     var preConversationChangedSize = PublishSubject<CGSize>()
     // BehaviorSubject required since the size set immediately before subscribers establish
     fileprivate var _preConversationChangedSize = BehaviorSubject<CGSize?>(value: nil)
@@ -145,21 +145,21 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .unwrap()
             .asObservable()
     }
-    
+
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var changeSizeAtIndex: Observable<Int> {
         return _changeSizeAtIndex
             .asObservable()
     }
-    
+
     fileprivate var _urlClick = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         return _urlClick
             .asObservable()
     }
-    
+
     var viewInitialized = PublishSubject<Void>()
-    
+
     var shouldShowCommunityGuidelinesAndQuestion: Bool {
         switch self.preConversationStyle {
         case .regular(_):
@@ -168,7 +168,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             return false
         }
     }
-    
+
     var shouldShowComments: Bool {
         switch self.preConversationStyle {
         case .regular(_):
@@ -178,6 +178,10 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         default:
             return false
         }
+    }
+
+    fileprivate var postId: OWPostId {
+        return OWManager.manager.postId ?? ""
     }
 
     init (
@@ -193,51 +197,73 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 }
 
 fileprivate extension OWPreConversationViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         preConversationChangedSize
             .bind(to: _preConversationChangedSize)
             .disposed(by: disposeBag)
-        
+
+        // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
                 guard let self = self,
                       let postId = OWManager.manager.postId
                 else { return }
-                
+
                 self.servicesProvider.realtimeService().startFetchingData(postId: postId)
             })
             .disposed(by: disposeBag)
-        
-        viewInitialized
-            .flatMap { [weak self] _ -> Observable<SPConversationReadRM?> in
-                guard let self = self,
-                      let postId = OWManager.manager.postId else { return .empty() }
-                
+
+        // Observable for the sort option
+        let sortOptionObservable = self.servicesProvider
+            .sortDictateService()
+            .sortOption(perPostId: self.postId)
+
+        // Observable for the conversation network API
+        let conversationReadObservable = sortOptionObservable
+            .flatMap { [weak self] sortOption -> Observable<SPConversationReadRM> in
+                guard let self = self else { return .empty() }
                 return self.servicesProvider
-                    .netwokAPI()
-                    .conversation
-                    .conversationRead(postId: postId, mode: OWCommentSortMode.best, page: OWPaginationPage.first, parentId: "", offset: 0)
-                    .response
-                    .map { [weak self] response -> SPConversationReadRM? in
-                        guard let self = self, let responseComments = response.conversation?.comments else { return nil }
-                        var viewModels = [OWPreConversationCellOption]()
-                        
-                        let numOfComments = self.preConversationStyle.numberOfComments
-                        let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
-      
-                        for (index, comment) in comments.enumerated() {
-                            // TODO: replies
-                            guard let user = response.conversation?.users?[comment.userId ?? ""] else { return nil }
-                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, lineLimit: 4)) // TODO: get line limit from style ?
-                            viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
-                            if (index < comments.count - 1) {
-                                viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                            }
-                        }
-                        self._cellsViewModels.removeAll()
-                        self._cellsViewModels.append(contentsOf: viewModels)
-                        return response
+                .netwokAPI()
+                .conversation
+                .conversationRead(postId: self.postId, mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
+                .response
+            }
+
+        let conversationFetchedObservable = viewInitialized
+            .flatMap { _ -> Observable<SPConversationReadRM> in
+                return conversationReadObservable
+                    .take(1)
+            }
+            .share()
+
+        // Creating the cells VMs for the pre conversation
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self, let responseComments = response.conversation?.comments else { return }
+                var viewModels = [OWPreConversationCellOption]()
+
+                let numOfComments = self.preConversationStyle.numberOfComments
+                let comments: [SPComment] = Array(responseComments.prefix(numOfComments))
+
+                for (index, comment) in comments.enumerated() {
+                    // TODO: replies
+                    guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
+                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, lineLimit: 4))
+                    viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
+                    if (index < comments.count - 1) {
+                        viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
                     }
+                }
+                self._cellsViewModels.removeAll()
+                self._cellsViewModels.append(contentsOf: viewModels)
+            })
+            .disposed(by: disposeBag)
+
+        // Binding to community question component
+        conversationFetchedObservable
+            .map { conversationRead -> SPConversationReadRM? in
+                return conversationRead
             }
             .asDriver(onErrorJustReturn: nil)
             .asObservable()
@@ -247,24 +273,26 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
             .disposed(by: disposeBag)
-        
+
+        // Subscribing to customize UI related stuff
         Observable.merge(
             preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
             preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
-        )
-            .bind(onNext: { label in
+            )
+            .subscribe(onNext: { _ in
 //            TODO: custom UI
 //            TODO: Map to the appropriate case
             })
             .disposed(by: disposeBag)
-        
+
         _ = commentCreationEntryViewModel.outputs
             .tapped
-            .bind(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] in
                 self?.commentCreationTap.onNext(.comment)
             })
             .disposed(by: disposeBag)
-        
+
+        // Observable of the comment cell VMs
         let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
                     .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
                         let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
@@ -279,7 +307,8 @@ fileprivate extension OWPreConversationViewViewModel {
                          return Observable.just(commentCellsVms)
                     }
                     .share()
-        
+
+        // Responding to reply click from comment cells VMs
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<SPComment> in
                 let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
@@ -294,8 +323,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
-        
-        
+
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Int> in
                 let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
@@ -315,12 +343,12 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?._changeSizeAtIndex.onNext(commentIndex)
             })
             .disposed(by: disposeBag)
-        
+
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<URL> in
                 let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
                     let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
-                    
+
                     return commentTextVm.outputs.urlClickedOutput
                 }
                 return Observable.merge(urlClickObservable)
@@ -330,7 +358,8 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
     }
-    
+    // swiftlint:enable function_body_length
+
     func populateInitialUI() {
         if self.shouldShowComments {
             let numberOfComments = self.preConversationStyle.numberOfComments

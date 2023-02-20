@@ -16,7 +16,7 @@ protocol SPInternalAuthProvider {
 }
 
 final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthProvider {
-        
+
     func login() -> Observable<String> {
         return Observable<String>.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
@@ -24,14 +24,14 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                 observer.onError(SPNetworkError.custom(message))
                 return Disposables.create()
             }
-            
+
             let spRequest = SPInternalAuthRequests.guest
-            
+
             var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
             if let token = SPUserSessionHolder.session.token {
                 headers[APIHeadersConstants.authorization] = token
             }
-            
+
             let task = self.manager.execute(
                 request: spRequest,
                 parser: OWDecodableParser<SPUser>(),
@@ -48,7 +48,7 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                     observer.onError(SPNetworkError.default)
                     return
                 }
-                
+
                 switch result {
                 case .success(let user):
                     SPUserSessionHolder.updateSession(with: response.response)
@@ -66,13 +66,13 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create {
                 task.cancel()
             }
         }
     }
-    
+
     func logout() -> Observable<Void> {
         return Observable.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
@@ -80,14 +80,14 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                 observer.onError(SPNetworkError.custom(message))
                 return Disposables.create()
             }
-            
+
             let spRequest = SPInternalAuthRequests.logout
-            
+
             var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
             if let token = SPUserSessionHolder.session.token {
                 headers[APIHeadersConstants.authorization] = token
             }
-            
+
             let task = self.manager.execute(
                 request: spRequest,
                 parser: OWEmptyParser(),
@@ -109,13 +109,13 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create {
                 task.cancel()
             }
         }
     }
-    
+
     // `enableRetry` used to recover from expired token / unauthorized user to enable the publishers (SDK users) to re-login / SSO after we fallback to some defualt guest user
     func user() -> Observable<SPUser> {
         return Observable<SPUser>.create { [weak self] observer in
@@ -124,10 +124,10 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                 observer.onError(SPNetworkError.custom(message))
                 return Disposables.create()
             }
-            
+
             let spRequest = SPInternalAuthRequests.user
             let headers = OWNetworkHTTPHeaders.basic(with: spotKey)
-            
+
             let task = self.manager.execute(
                 request: spRequest,
                 parser: OWDecodableParser<SPUser>(),
@@ -150,7 +150,7 @@ final class SPDefaultInternalAuthProvider: NetworkDataProvider, SPInternalAuthPr
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create {
                 task.cancel()
             }

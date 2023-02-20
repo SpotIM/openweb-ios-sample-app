@@ -13,7 +13,7 @@ enum ImageError: Error {
 }
 
 extension UIImage {
-    static func from(url: URL, completion: @escaping (Swift.Result<UIImage, ImageError>) -> Void)  {
+    static func from(url: URL, completion: @escaping (Swift.Result<UIImage, ImageError>) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
                   let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
@@ -24,7 +24,7 @@ extension UIImage {
                       completion(.failure(ImageError.failedToDownloadImage))
                       return
                   }
-            DispatchQueue.main.async() { [image] in
+            DispatchQueue.main.async { [image] in
                 completion(.success(image))
             }
         }.resume()

@@ -68,15 +68,15 @@ extension OWNetworkSessionDelegate: URLSessionTaskDelegate {
     typealias ChallengeEvaluation = (disposition: URLSession.AuthChallengeDisposition, credential: URLCredential?, error: OWNetworkError?)
 
     func urlSession(_ session: URLSession,
-                         task: URLSessionTask,
-                         didReceive challenge: URLAuthenticationChallenge,
-                         completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+                    task: URLSessionTask,
+                    didReceive challenge: URLAuthenticationChallenge,
+                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         eventMonitor?.urlSession(session, task: task, didReceive: challenge)
 
         let evaluation: ChallengeEvaluation
         switch challenge.protectionSpace.authenticationMethod {
         case NSURLAuthenticationMethodHTTPBasic, NSURLAuthenticationMethodHTTPDigest, NSURLAuthenticationMethodNTLM,
-             NSURLAuthenticationMethodNegotiate:
+        NSURLAuthenticationMethodNegotiate:
             evaluation = attemptCredentialAuthentication(for: challenge, belongingTo: task)
         case NSURLAuthenticationMethodServerTrust:
             evaluation = attemptServerTrustAuthentication(with: challenge)
@@ -141,10 +141,10 @@ extension OWNetworkSessionDelegate: URLSessionTaskDelegate {
     }
 
     func urlSession(_ session: URLSession,
-                         task: URLSessionTask,
-                         didSendBodyData bytesSent: Int64,
-                         totalBytesSent: Int64,
-                         totalBytesExpectedToSend: Int64) {
+                    task: URLSessionTask,
+                    didSendBodyData bytesSent: Int64,
+                    totalBytesSent: Int64,
+                    totalBytesExpectedToSend: Int64) {
         eventMonitor?.urlSession(session,
                                  task: task,
                                  didSendBodyData: bytesSent,
@@ -156,8 +156,8 @@ extension OWNetworkSessionDelegate: URLSessionTaskDelegate {
     }
 
     func urlSession(_ session: URLSession,
-                         task: URLSessionTask,
-                         needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
+                    task: URLSessionTask,
+                    needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
         eventMonitor?.urlSession(session, taskNeedsNewBodyStream: task)
 
         guard let request = request(for: task, as: OWNetworkUploadRequest.self) else {
@@ -170,10 +170,10 @@ extension OWNetworkSessionDelegate: URLSessionTaskDelegate {
     }
 
     func urlSession(_ session: URLSession,
-                         task: URLSessionTask,
-                         willPerformHTTPRedirection response: HTTPURLResponse,
-                         newRequest request: URLRequest,
-                         completionHandler: @escaping (URLRequest?) -> Void) {
+                    task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest,
+                    completionHandler: @escaping (URLRequest?) -> Void) {
         eventMonitor?.urlSession(session, task: task, willPerformHTTPRedirection: response, newRequest: request)
 
         if let redirectHandler = stateProvider?.request(for: task)?.redirectHandler ?? stateProvider?.redirectHandler {
@@ -223,9 +223,9 @@ extension OWNetworkSessionDelegate: URLSessionDataDelegate {
     }
 
     func urlSession(_ session: URLSession,
-                         dataTask: URLSessionDataTask,
-                         willCacheResponse proposedResponse: CachedURLResponse,
-                         completionHandler: @escaping (CachedURLResponse?) -> Void) {
+                    dataTask: URLSessionDataTask,
+                    willCacheResponse proposedResponse: CachedURLResponse,
+                    completionHandler: @escaping (CachedURLResponse?) -> Void) {
         eventMonitor?.urlSession(session, dataTask: dataTask, willCacheResponse: proposedResponse)
 
         if let handler = stateProvider?.request(for: dataTask)?.cachedResponseHandler ?? stateProvider?.cachedResponseHandler {
@@ -240,9 +240,9 @@ extension OWNetworkSessionDelegate: URLSessionDataDelegate {
 
 extension OWNetworkSessionDelegate: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession,
-                         downloadTask: URLSessionDownloadTask,
-                         didResumeAtOffset fileOffset: Int64,
-                         expectedTotalBytes: Int64) {
+                    downloadTask: URLSessionDownloadTask,
+                    didResumeAtOffset fileOffset: Int64,
+                    expectedTotalBytes: Int64) {
         eventMonitor?.urlSession(session,
                                  downloadTask: downloadTask,
                                  didResumeAtOffset: fileOffset,
@@ -257,10 +257,10 @@ extension OWNetworkSessionDelegate: URLSessionDownloadDelegate {
     }
 
     func urlSession(_ session: URLSession,
-                         downloadTask: URLSessionDownloadTask,
-                         didWriteData bytesWritten: Int64,
-                         totalBytesWritten: Int64,
-                         totalBytesExpectedToWrite: Int64) {
+                    downloadTask: URLSessionDownloadTask,
+                    didWriteData bytesWritten: Int64,
+                    totalBytesWritten: Int64,
+                    totalBytesExpectedToWrite: Int64) {
         eventMonitor?.urlSession(session,
                                  downloadTask: downloadTask,
                                  didWriteData: bytesWritten,

@@ -26,27 +26,27 @@ final class SPCommentFooterView: OWBaseView {
     }
     private let postButton: OWBaseButton = .init()
     private let footerSeperator: OWBaseView = .init()
-    
+
     private let addImageButton: OWBaseButton = .init()
-    
+
     typealias PostButtonAction = () -> Void
     private var postButtonAction: PostButtonAction?
-    
+
     public weak var delegate: SPCommentFooterViewDelegate?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setup()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         postButton.accessibilityIdentifier = Metrics.postButtonIdentifier
         addImageButton.accessibilityIdentifier = Metrics.addImageButtonIdentifier
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -55,36 +55,36 @@ final class SPCommentFooterView: OWBaseView {
         postButton.backgroundColor = .brandColor
         delegate?.updatePostCommentButtonCustomUI(button: postButton)
     }
-    
+
     func setIsPostButtonEnabled(_ isEnabled: Bool) {
         postButton.isEnabled = isEnabled
     }
-    
+
     func configurePostButton(title: String, action: @escaping PostButtonAction) {
         postButton.setTitle(title, for: .normal)
         postButtonAction = action
     }
-    
+
     func setContentButtonTypes(_ types: [SPCommentFooterContentButtonType]) {
         for type in types {
             switch type {
             case .image:
                 addSubview(addImageButton)
                 configureAddImageButton()
-                break
+
             default:
                 break
             }
         }
     }
-    
+
     private func setup() {
         addSubviews(footerSeperator, postButton)
-        
+
         configureFooterSeperator()
         configurePostButton()
     }
-    
+
     private func configurePostButton() {
         postButton.addTarget(self, action: #selector(onClickOnPostButton), for: .touchUpInside)
         postButton.setTitleColor(.white, for: .normal)
@@ -96,7 +96,7 @@ final class SPCommentFooterView: OWBaseView {
             bottom: 0.0,
             right: Theme.postButtonHorizontalInset
         )
-        
+
         postButton.addCornerRadius(Theme.postButtonRadius)
         postButton.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -104,14 +104,14 @@ final class SPCommentFooterView: OWBaseView {
             make.height.equalTo(Theme.postButtonHeight)
         }
     }
-    
+
     private func configureFooterSeperator() {
         footerSeperator.OWSnp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(1.0)
         }
     }
-    
+
     private func configureAddImageButton() {
         addImageButton.setImage(UIImage(spNamed: "addImageIcon"), for: .normal)
         addImageButton.addTarget(self, action: #selector(onClickOnAddImageButton(_:)), for: .touchUpInside)
@@ -123,16 +123,19 @@ final class SPCommentFooterView: OWBaseView {
             make.width.equalTo(Theme.actionIconWidth)
         }
     }
-    
+
     private func addInsentsToActionButton(_ button: OWBaseButton) {
-        button.imageEdgeInsets = UIEdgeInsets(top: Theme.actionButtonVerticalInset, left: Theme.actionButtonHorizontalInset, bottom: Theme.actionButtonVerticalInset, right: Theme.actionButtonHorizontalInset)
+        button.imageEdgeInsets = UIEdgeInsets(top: Theme.actionButtonVerticalInset,
+                                              left: Theme.actionButtonHorizontalInset,
+                                              bottom: Theme.actionButtonVerticalInset,
+                                              right: Theme.actionButtonHorizontalInset)
     }
-    
+
     @objc
     private func onClickOnPostButton() {
         postButtonAction?()
     }
-    
+
     @objc
     private func onClickOnAddImageButton(_ sender: UIButton) {
         delegate?.clickedOnAddContentButton(type: .image)

@@ -13,45 +13,45 @@ internal final class SPCommunityQuestionView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "community_question_id"
     }
-    
+
     private lazy var questionTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
-    
+
     private var questionBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?
     private var separatorTrailingConstraint: OWConstraint?
-    
+
     // MARK: - Overrides
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
     }
-    
+
     func customizeCommunityQuestion(customUIDelegate: OWCustomUIDelegate, source: SPViewSourceType) {
         customUIDelegate.customizeView(.communityQuestion(textView: questionTextView), source: source)
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
         questionTextView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
     }
-    
+
     func setupCommunityQuestion(with text: String) {
         self.setupSubviews()
         questionTextView.text = text
     }
-    
+
     // MARK: - Internal methods
-    
+
     internal func setupPreConversationConstraints() {
         questionBottomConstraint?.update(offset: -Theme.QuestionBottomOffsetPreConversation)
         separatorLeadingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
         separatorTrailingConstraint?.update(offset: -Theme.separatorHorizontalOffsetPreConversation)
     }
-    
+
     // MARK: - Private Methods
 
     private func setupSubviews() {
@@ -60,7 +60,7 @@ internal final class SPCommunityQuestionView: OWBaseView {
         configureSeparatorView()
         updateColorsAccordingToStyle()
     }
-    
+
     private func setupQuestionLabel() {
         questionTextView.text = ""
         questionTextView.isEditable = false
@@ -79,7 +79,7 @@ internal final class SPCommunityQuestionView: OWBaseView {
             }
         }
     }
-    
+
     private func configureSeparatorView() {
         separatorView.OWSnp.makeConstraints { make in
             separatorLeadingConstraint = make.leading.equalToSuperview().constraint

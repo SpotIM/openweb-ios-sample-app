@@ -13,7 +13,7 @@ public struct OWArticleSettings: OWArticleSettingsProtocol {
     public let section: String
     public let showHeader: Bool
     public let readOnlyMode: OWReadOnlyMode
-    
+
     public init(section: String,
                 showHeader: Bool = true,
                 readOnlyMode: OWReadOnlyMode = .default) {
@@ -27,10 +27,10 @@ struct OWArticleSettings: OWArticleSettingsProtocol {
     let section: String
     let showHeader: Bool
     let readOnlyMode: OWReadOnlyMode
-    
+
     init(section: String,
-                showHeader: Bool = true,
-                readOnlyMode: OWReadOnlyMode = .default) {
+         showHeader: Bool = true,
+         readOnlyMode: OWReadOnlyMode = .default) {
         self.section = section
         self.showHeader = showHeader
         self.readOnlyMode = readOnlyMode

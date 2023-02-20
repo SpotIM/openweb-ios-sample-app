@@ -29,11 +29,11 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
     var outputs: OWPreConversationFooterViewModelingOutputs { return self }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
     }
-    
+
     fileprivate lazy var mobileSdkConfigObservable: Observable<SPConfigurationSDKStatus> = {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
@@ -42,7 +42,7 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
             }
             .unwrap()
     }()
-    
+
     var termsTapped = PublishSubject<Void>()
     var _openTerms: Observable<URL> {
         return termsTapped
@@ -52,7 +52,7 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
             }
             .unwrap()
     }
-    
+
     var privacyTapped = PublishSubject<Void>()
     var _openPrivacy: Observable<URL> {
         return privacyTapped
@@ -62,7 +62,7 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
             }
             .unwrap()
     }
-    
+
     var poweredByOWTapped = PublishSubject<Void>()
     var _openOWWebsite: Observable<URL> {
         return poweredByOWTapped
@@ -72,7 +72,7 @@ class OWPreConversationFooterViewModel: OWPreConversationFooterViewModeling, OWP
             }
             .unwrap()
     }
-    
+
     var urlClickedOutput: Observable<URL> {
         return Observable.merge(_openTerms, _openPrivacy, _openOWWebsite)
     }

@@ -39,7 +39,7 @@ struct OWObservableArray<Element>: ExpressibleByArrayLiteral {
         elementsSubject = BehaviorSubject<[Element]>(value: elements)
     }
 
-    init<S : Sequence>(_ s: S) where S.Iterator.Element == Element {
+    init<S: Sequence>(_ s: S) where S.Iterator.Element == Element {
         elements = Array(s)
         elementsSubject = BehaviorSubject<[Element]>(value: elements)
     }
@@ -93,7 +93,7 @@ extension OWObservableArray: MutableCollection {
         arrayDidChange(OWArrayChangeEvent(inserted: [elements.count - 1]))
     }
 
-    mutating func append<S : Sequence>(contentsOf newElements: S) where S.Iterator.Element == Element {
+    mutating func append<S: Sequence>(contentsOf newElements: S) where S.Iterator.Element == Element {
         let end = elements.count
         elements.append(contentsOf: newElements)
         guard end != elements.count else {
@@ -102,7 +102,7 @@ extension OWObservableArray: MutableCollection {
         arrayDidChange(OWArrayChangeEvent(inserted: Array(end..<elements.count)))
     }
 
-    mutating func appendContentsOf<C : Collection>(_ newElements: C) where C.Iterator.Element == Element {
+    mutating func appendContentsOf<C: Collection>(_ newElements: C) where C.Iterator.Element == Element {
         guard !newElements.isEmpty else {
             return
         }
@@ -155,7 +155,7 @@ extension OWObservableArray: MutableCollection {
 }
 
 extension OWObservableArray: RangeReplaceableCollection {
-    mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newCollection: C) where C.Iterator.Element == Element {
+    mutating func replaceSubrange<C: Collection>(_ subRange: Range<Int>, with newCollection: C) where C.Iterator.Element == Element {
         let oldCount = elements.count
         elements.replaceSubrange(subRange, with: newCollection)
         let first = subRange.lowerBound

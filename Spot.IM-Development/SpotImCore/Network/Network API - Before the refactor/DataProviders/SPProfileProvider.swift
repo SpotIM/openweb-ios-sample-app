@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 internal final class SPProfileProvider: NetworkDataProvider {
-    
+
     func getSingleUseToken() -> Observable<String?> {
         return Observable.create { [weak self] observer in
             guard let self = self, let spotKey = SPClientSettings.main.spotKey else {
@@ -18,14 +18,14 @@ internal final class SPProfileProvider: NetworkDataProvider {
                 observer.onError(SPNetworkError.custom(message))
                 return Disposables.create()
             }
-            
+
             let spRequest = SPProfileRequest.createSingleUseToken
             let headers = OWNetworkHTTPHeaders.basic(with: spotKey)
             var requestParams: [String: Any] = ["access_token": SPUserSessionHolder.session.token?.replacingOccurrences(of: "Bearer ", with: "")]
             if let openwebToken = SPUserSessionHolder.session.openwebToken {
                 requestParams["open_web_token"] = openwebToken
             }
-            
+
             let task = self.manager.execute(
                 request: spRequest,
                 parameters: requestParams,
@@ -47,7 +47,7 @@ internal final class SPProfileProvider: NetworkDataProvider {
                     observer.onError(SpotImError.internalError(error.localizedDescription))
                 }
             }
-            
+
             return Disposables.create {
                 task.cancel()
             }
