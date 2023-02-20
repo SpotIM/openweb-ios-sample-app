@@ -35,13 +35,13 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
             }
         }
     }
-    
+
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor {
         guard let color = colors[type] else {
             // We should never get here. I chose to work with non-optional so as a default value we will return "clear"
             return .clear
         }
-        
+
         return color.color(forThemeStyle: themeStyle)
     }
     
@@ -59,7 +59,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
             .observe(on: MainScheduler.instance)
             .share(replay: 1)
     }
-    
+
     func setColor(_ color: UIColor, forType type: OWColor.OWType, forThemeStyle themeStyle: OWThemeStyle) {
         guard var encapsulateColor = colors[type] else { return }
         encapsulateColor.setColor(color, forThemeStyle: themeStyle)

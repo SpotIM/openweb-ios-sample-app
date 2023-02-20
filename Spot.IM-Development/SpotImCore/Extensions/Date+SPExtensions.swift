@@ -14,15 +14,15 @@ extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat  = "EEEE"
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        
+
         return dateFormatter
     }()
-    
+
     static let hourFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat  = "HH"
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        
+
         return dateFormatter
     }()
 
@@ -50,21 +50,21 @@ extension Date {
         default:                                            return formatDate()
         }
     }
-    
+
     fileprivate func formatDate() -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()
         formatter.locale = LocalizationManager.locale
         let now = Date()
-        
+
         let isInThisYear = calendar.isDate(self, equalTo: now, toGranularity: .year)
-        
+
         if isInThisYear {
             formatter.dateFormat = "d MMM"
         } else {
             formatter.dateFormat = "d MMM, yyyy"
         }
-        
+
         return formatter.string(from: self)
     }
 

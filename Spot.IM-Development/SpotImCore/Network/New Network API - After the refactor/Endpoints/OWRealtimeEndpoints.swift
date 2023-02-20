@@ -11,7 +11,7 @@ import RxSwift
 
 enum OWRealtimeEndpoints: OWEndpoints {
     case fetchData(fullConversationId: String)
-    
+
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
@@ -19,7 +19,7 @@ enum OWRealtimeEndpoints: OWEndpoints {
             return .post
         }
     }
-    
+
     // MARK: - Path
     var path: String {
         switch self {
@@ -27,7 +27,7 @@ enum OWRealtimeEndpoints: OWEndpoints {
             return "/conversation/realtime/read"
         }
     }
-    
+
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
@@ -44,7 +44,7 @@ protocol OWRealtimeAPI {
 extension OWNetworkAPI: OWRealtimeAPI {
     // Access by .realtime for readability
     var realtime: OWRealtimeAPI { return self }
-    
+
     func fetchData(fullConversationId: String) -> OWNetworkResponse<RealTimeModel> {
         let endpoint = OWRealtimeEndpoints.fetchData(fullConversationId: fullConversationId)
         let requestConfigure = request(for: endpoint)
@@ -57,7 +57,7 @@ fileprivate extension OWRealtimeEndpoints {
         let timestamp: Int = Int((Date()).timeIntervalSince1970)
         let conversationId: [String: Any] = [RealtimeAPIKeys.conversationId: fullConversationId]
         let withMessageIds = conversationId.merging([RealtimeAPIKeys.messageIds: []]) { first, _ in first }
-        
+
         return [
             RealtimeAPIKeys.timestamp: timestamp,
             RealtimeAPIKeys.data: [
@@ -72,7 +72,7 @@ fileprivate extension OWRealtimeEndpoints {
             ]
         ]
     }
-    
+
     enum RealtimeAPIKeys {
         static let timestamp = "timestamp"
         static let data = "data"

@@ -17,6 +17,6 @@ class OWMonetizationLayer: OWMonetization {
             _adsProvider = newValue
         }
     }
-    
+
     fileprivate var _adsProvider: OWAdsProvider = .none
 }

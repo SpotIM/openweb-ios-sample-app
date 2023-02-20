@@ -15,7 +15,7 @@ enum OWPreConversationCellOption: CaseIterable {
                 .commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModel.stub()),
                 .spacer(viewModel: OWSpacerCellViewModel.stub())]
     }
-    
+
     case comment(viewModel: OWCommentCellViewModeling)
     case commentSkeletonShimmering(viewModel: OWCommentSkeletonShimmeringCellViewModeling)
     case spacer(viewModel: OWSpacerCellViewModeling)
@@ -32,7 +32,7 @@ extension OWPreConversationCellOption {
             return viewModel
         }
     }
-    
+
     var cellClass: UITableViewCell.Type {
         // TODO: Return the actual cell type once developed
         switch self {
@@ -60,7 +60,7 @@ extension OWPreConversationCellOption: Equatable {
             return viewModel.outputs.id
         }
     }
-   
+
     static func == (lhs: OWPreConversationCellOption, rhs: OWPreConversationCellOption) -> Bool {
         switch (lhs, rhs) {
         case (.comment(_), .comment(_)):

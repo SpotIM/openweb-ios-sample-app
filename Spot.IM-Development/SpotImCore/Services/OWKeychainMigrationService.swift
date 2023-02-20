@@ -19,7 +19,7 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
     fileprivate let deletionUserDefaults: UserDefaults
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let decoder: JSONDecoder
-    
+
     fileprivate enum OldDataKeys: String, CaseIterable {
         case guestSessionUserId = "session.guest.userId"
         case authorizatioSessionToken = "session.authorization.token"
@@ -30,7 +30,7 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
         case oldGuestSessionToken = "session.guest.token"
         case oldOpenwebSessionToken = "openweb.session.toekn"
     }
-    
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          deletionQueue: DispatchQueue = DispatchQueue(label: "OpenWebSDKRemoveOldDataQueue", qos: .background),
          deletionUserDefaults: UserDefaults = UserDefaults.standard,
@@ -40,12 +40,12 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
         self.deletionUserDefaults = deletionUserDefaults
         self.decoder = decoder
     }
-    
+
     func migrateToKeychainIfNeeded() {
         let keychain = servicesProvider.keychain()
         let logger = servicesProvider.logger()
         let isDataMigrated = keychain.get(key: OWKeychain.OWKey<Bool>.isMigratedToKeychain) ?? false
-        
+
         if (!isDataMigrated) {
             logger.log(level: .verbose, "Performing sensitive data migration from User Defaults to Keychain")
             migratePersistentDataToKeychain()
@@ -59,7 +59,7 @@ class OWKeychainMigrationService: OWKeychainMigrationServicing {
 fileprivate extension OWKeychainMigrationService {
     func migratePersistentDataToKeychain() {
         let keychain = servicesProvider.keychain()
-        
+
         // One by one as there is no way to know the value type from the old keys
 
         // We recently changed the key for the auth token, so trying to get it from the newer key and if there is no value there, from the old key
@@ -70,7 +70,7 @@ fileprivate extension OWKeychainMigrationService {
         if let token = authToken {
             keychain.save(value: token, forKey: OWKeychain.OWKey<String>.authorizationSessionToken)
         }
-        
+
         // We recently changed the key for the open web token, so trying to get it from the newer key and if there is no value there, from the old key
         var openwebToken = deletionUserDefaults.string(forKey: OldDataKeys.openwebSessionToken.rawValue)
         if openwebToken == nil {
@@ -79,24 +79,24 @@ fileprivate extension OWKeychainMigrationService {
         if let token = openwebToken {
             keychain.save(value: token, forKey: OWKeychain.OWKey<String>.openwebSessionToken)
         }
-        
+
         // User Id
         if let userId = deletionUserDefaults.string(forKey: OldDataKeys.guestSessionUserId.rawValue) {
             keychain.save(value: userId, forKey: OWKeychain.OWKey<String>.guestSessionUserId)
         }
-        
+
         // User
         if let userData = deletionUserDefaults.object(forKey: OldDataKeys.userSession.rawValue) as? Data,
            let user = try? decoder.decode(SPUser.self, from: userData) {
             keychain.save(value: user, forKey: OWKeychain.OWKey<SPUser>.loggedInUserSession)
         }
-        
+
         // Reported comments
         if let reportedComments = deletionUserDefaults.dictionary(forKey: OldDataKeys.reportedCommentsSession.rawValue) as? [String: Bool] {
             keychain.save(value: reportedComments, forKey: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession)
         }
     }
-    
+
     func removeOldData() {
         // Done on a background queue as we don't need it to happen immediately
         deletionQueue.async { [weak self] in

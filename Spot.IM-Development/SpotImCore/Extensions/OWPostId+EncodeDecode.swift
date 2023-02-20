@@ -18,7 +18,7 @@ extension OWPostId {
             .replacingOccurrences(of: " ", with: "")
             .replacingOccurrences(of: "/", with: "$2F")
     }
-    
+
     // Decoded
     // We cannot decode back an original space, that's a limitation we cannot solve at this point of the product
     var decoded: String {

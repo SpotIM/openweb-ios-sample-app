@@ -36,35 +36,35 @@ protocol OWCommentTextViewModeling {
 class OWCommentTextViewModel: OWCommentTextViewModeling,
                                    OWCommentTextViewModelingInputs,
                                    OWCommentTextViewModelingOutputs {
-    
+
     var inputs: OWCommentTextViewModelingInputs { return self }
     var outputs: OWCommentTextViewModelingOutputs { return self }
-    
+
     fileprivate var lineLimit: Int = 0
     fileprivate var disposeBag = DisposeBag()
-    
+
     var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
     var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
     var editedText: String = LocalizationManager.localizedString(key: "Edited")
-    
+
     var readMoreTap = PublishSubject<Void>()
     var readLessTap = PublishSubject<Void>()
     var activeURLs: [NSRange: URL]
-    
+
     init(comment: SPComment, lineLimit: Int) {
         self.lineLimit = lineLimit
         self.activeURLs = [:]
         _comment.onNext(comment)
         setupObservers()
     }
-    
-    fileprivate var _themeStyleObservable:  Observable<OWThemeStyle> = OWSharedServicesProvider.shared.themeStyleService().style
-    
+
+    fileprivate var _themeStyleObservable: Observable<OWThemeStyle> = OWSharedServicesProvider.shared.themeStyleService().style
+
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     fileprivate var _commentUnwraped: Observable<SPComment> {
         _comment.unwrap()
     }
-    
+
     fileprivate var fullAttributedString: Observable<NSMutableAttributedString> {
         _themeStyleObservable
             .withLatestFrom(_commentUnwraped) { style, comment -> (OWThemeStyle, String)? in
@@ -81,15 +81,14 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             }
             .unwrap()
     }
-    
-    
+
     var width = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
         width
             .distinctUntilChanged()
             .asObservable()
     }
-    
+
     fileprivate var _lines: Observable<[CTLine]> {
         Observable.combineLatest(fullAttributedString, widthObservable) { messageAttributedString, currentWidth in
             return messageAttributedString.getLines(with: currentWidth)
@@ -97,7 +96,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .unwrap()
         .asObservable()
     }
-    
+
     fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
     var attributedString: Observable<NSMutableAttributedString?> {
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
@@ -112,7 +111,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 guard let self = self,
                       comment.edited == true
                 else { return (attString, style) }
-                
+
                 attString.append(NSAttributedString(string: self.editedText, attributes: self.editedStringAttributes(with: style)))
                 return (attString, style)
             }
@@ -123,11 +122,11 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             }
             .asObservable()
     }
-    
+
     var textHeightChange: Observable<Void> {
         Observable.merge(self.heighChange)
     }
-    
+
     var height: Observable<CGFloat> {
         attributedString
             .withLatestFrom(widthObservable) { attributedString, width in
@@ -139,7 +138,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .asObservable()
     }
     var heighChange = PublishSubject<Void>()
-    
+
     var urlTap = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
         urlTap
@@ -154,15 +153,15 @@ fileprivate extension OWCommentTextViewModel {
                 self?._textState.onNext(.expanded)
             })
             .disposed(by: disposeBag)
-        
+
         readLessTap
             .subscribe(onNext: { [weak self] in
                 self?._textState.onNext(.collapsed)
             })
             .disposed(by: disposeBag)
-        
+
         height
-            .subscribe(onNext: { [weak self] newHeight in
+            .subscribe(onNext: { [weak self] _ in
                 self?.heighChange.onNext()
             })
             .disposed(by: disposeBag)
@@ -170,7 +169,7 @@ fileprivate extension OWCommentTextViewModel {
 }
 
 fileprivate extension OWCommentTextViewModel {
-    
+
     func messageStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
@@ -185,14 +184,14 @@ fileprivate extension OWCommentTextViewModel {
 
         return attributes
     }
-    
+
     func actionStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
         attributes[.foregroundColor] = OWColorPalette.shared.color(type: .buttonTextColor, themeStyle: style)
 
         return attributes
     }
-    
+
     func editedStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
         attributes[.foregroundColor] = UIColor.gray
@@ -200,7 +199,7 @@ fileprivate extension OWCommentTextViewModel {
 
         return attributes
     }
-    
+
     func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: TextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
         guard lines.count > self.lineLimit else { return NSMutableAttributedString(attributedString: attString) }
@@ -235,7 +234,7 @@ fileprivate extension OWCommentTextViewModel {
             return res
         }
     }
-    
+
     func locateURLsInText(text: inout NSMutableAttributedString, style: OWThemeStyle) {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
         var activeURLs: [NSRange: URL] = [:]
@@ -246,7 +245,7 @@ fileprivate extension OWCommentTextViewModel {
                 options: [],
                 range: NSRange(location: 0, length: rawText.count)
             )
-            
+
             for match in matches {
                 if let urlMatch = match.url, isUrlSchemeValid(for: urlMatch) {
                     text.addAttributes([.foregroundColor: OWColorPalette.shared.color(type: .linkColor, themeStyle: style)], range: match.range)
@@ -256,12 +255,12 @@ fileprivate extension OWCommentTextViewModel {
         }
         self.activeURLs = activeURLs
     }
-    
+
     func isUrlSchemeValid(for url: URL) -> Bool {
         return url.scheme?.lowercased() != "mailto"
     }
 }
-    
+
 fileprivate enum TextState {
     case collapsed
     case expanded

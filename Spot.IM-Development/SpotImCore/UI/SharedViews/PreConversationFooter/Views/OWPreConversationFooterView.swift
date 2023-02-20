@@ -15,13 +15,13 @@ internal class OWPreConversationFooterView: UIView {
         static let termsButtonIdentifier = "pre_conversation_footer_show_terms_button_id"
         static let privacyButtonIdentifier = "pre_conversation_footer_show_privacy_button_id"
         static let poweredByOWButtonIdentifier = "pre_conversation_footer_powered_by_ow_button_id"
-        
+
         static let fontSize: CGFloat = 13
         static let iconSize: CGFloat = 13
         static let iconTrailingPadding: CGFloat = 5
         static let dotPadding: CGFloat = 5
     }
-    
+
     private lazy var termsButton: UIButton = {
         return LocalizationManager.localizedString(key: "Terms")
             .button
@@ -50,13 +50,15 @@ internal class OWPreConversationFooterView: UIView {
             .font(.openSans(style: .regular, of: Metrics.fontSize))
         return btn
     }()
-    
+
     fileprivate let disposeBag = DisposeBag()
+
     fileprivate let viewModel: OWPreConversationFooterViewModeling
-    
+
     init(with viewModel: OWPreConversationFooterViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+
         self.enforceSemanticAttribute()
             .backgroundColor(.clear)
 
@@ -64,11 +66,11 @@ internal class OWPreConversationFooterView: UIView {
         setupObservers()
         applyAccessibility()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 fileprivate extension OWPreConversationFooterView {
@@ -77,24 +79,24 @@ fileprivate extension OWPreConversationFooterView {
         termsButton.OWSnp.makeConstraints { make in
             make.leading.centerY.equalToSuperview()
         }
-        
+
         self.addSubview(dotLabel)
         dotLabel.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(termsButton.OWSnp.trailing).offset(Metrics.dotPadding)
         }
-        
+
         self.addSubview(privacyButton)
         privacyButton.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(dotLabel.OWSnp.trailing).offset(Metrics.dotPadding)
         }
-        
+
         self.addSubview(poweredByOWButton)
         poweredByOWButton.OWSnp.makeConstraints { make in
             make.top.bottom.trailing.equalToSuperview()
         }
-        
+
         poweredByOWButton.addSubview(openWebIconImageView)
         openWebIconImageView.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.iconSize)
@@ -104,20 +106,20 @@ fileprivate extension OWPreConversationFooterView {
             }
         }
     }
-    
+
     func setupObservers() {
         termsButton.rx.tap
             .bind(to: viewModel.inputs.termsTapped)
             .disposed(by: disposeBag)
-        
+
         privacyButton.rx.tap
             .bind(to: viewModel.inputs.privacyTapped)
             .disposed(by: disposeBag)
-        
+
         poweredByOWButton.rx.tap
             .bind(to: viewModel.inputs.poweredByOWTapped)
             .disposed(by: disposeBag)
-        
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -129,7 +131,7 @@ fileprivate extension OWPreConversationFooterView {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         termsButton.accessibilityIdentifier = Metrics.termsButtonIdentifier

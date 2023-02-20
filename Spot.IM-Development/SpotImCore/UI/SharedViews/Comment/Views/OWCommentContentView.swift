@@ -16,30 +16,29 @@ class OWCommentContentView: UIView {
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
-    
+
     fileprivate lazy var textLabel: OWCommentTextLabel = {
        return OWCommentTextLabel()
             .numberOfLines(0)
     }()
-    
+
     fileprivate lazy var mediaView: CommentMediaView = {
         return CommentMediaView()
     }()
-    
+
     fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate var disposeBag: DisposeBag!
     fileprivate var textHeightConstraint: OWConstraint?
 
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
     }
-    
+
     func configure(with viewModel: OWCommentContentViewModeling) {
         self.viewModel = viewModel
         textLabel.configure(with: viewModel.outputs.collapsableLabelViewModel)
@@ -51,12 +50,12 @@ class OWCommentContentView: UIView {
 fileprivate extension OWCommentContentView {
     func setupViews() {
         self.addSubviews(textLabel, mediaView)
-        
+
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             textHeightConstraint = make.height.equalTo(0).constraint
         }
-        
+
         mediaView.OWSnp.makeConstraints { make in
             make.top.equalTo(textLabel.OWSnp.bottom).offset(Metrics.emptyCommentMediaTopPadding)
             make.trailing.lessThanOrEqualToSuperview()
@@ -64,25 +63,25 @@ fileprivate extension OWCommentContentView {
             make.size.equalTo(0)
         }
     }
-    
-    func setupObservers() {        
+
+    func setupObservers() {
         viewModel.outputs.image
             .subscribe(onNext: { [weak self] imageType in
                 guard let self = self,
                       case .custom(let url) = imageType
                 else { return }
-                
+
                 self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
             })
             .disposed(by: disposeBag)
-                
+
         viewModel.outputs.gifUrl
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.mediaSize
             .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
@@ -94,7 +93,7 @@ fileprivate extension OWCommentContentView {
                 }
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.collapsableLabelViewModel
             .outputs.height
             .subscribe(onNext: { [weak self] newHeight in
