@@ -14,18 +14,18 @@ class OWSettingsWrapper {
         static let plistSuffix: String = "plist"
         static let openWebSettingsResource: String = "OpenWebSettings"
     }
-    
+
     fileprivate static let shared = OWSettingsWrapper()
     fileprivate var sdkVersion: String?
-    
+
     private init() {
-        if let path = Bundle.spot.path(forResource: Metrics.openWebSettingsResource, ofType: Metrics.plistSuffix) {
+        if let path = Bundle.openWeb.path(forResource: Metrics.openWebSettingsResource, ofType: Metrics.plistSuffix) {
             let dictionary: NSDictionary?
             dictionary = NSDictionary(contentsOfFile: path)
             sdkVersion = dictionary?[Metrics.sdkVersionKey] as? String
         }
     }
-    
+
     static func sdkVersion() -> String? {
         return shared.sdkVersion
     }

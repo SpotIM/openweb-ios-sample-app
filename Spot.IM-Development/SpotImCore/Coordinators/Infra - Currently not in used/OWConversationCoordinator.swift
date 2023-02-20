@@ -12,7 +12,7 @@ import RxSwift
 enum OWConversationCoordinatorResult: OWCoordinatorResultProtocol {
     case popped
     case loadedToScreen
-    
+
     var loadedToScreen: Bool {
         switch self {
         case .loadedToScreen:
@@ -24,7 +24,7 @@ enum OWConversationCoordinatorResult: OWCoordinatorResultProtocol {
 }
 
 class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResult> {
-    
+
     fileprivate let router: OWRoutering
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
@@ -34,20 +34,20 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         self.conversationData = conversationData
         self.actionsCallbacks = actionsCallbacks
     }
-    
+
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWConversationCoordinatorResult> {
-        
+
         let conversationVM: OWConversationViewModeling = OWConversationViewModel(conversationData: conversationData)
         let conversationVC = OWConversationVC(viewModel: conversationVM)
         let conversationPopped = PublishSubject<Void>()
-        
+
         setupObservers(forViewModel: conversationVM)
         setupViewActionsCallbacks(forViewModel: conversationVM)
-        
+
         let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
-        
+
         var animated = true
-        
+
         // Support deep links which related to conversation
         if let deepLink = deepLinkOptions {
             switch deepLink {
@@ -60,10 +60,10 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 break
             }
         }
-        
+
         // Conversation is the initial view in the router so here we start the router
         router.start()
-        
+
         if router.isEmpty() {
             router.setRoot(conversationVC, animated: false, dismissCompletion: conversationPopped)
         } else {
@@ -72,7 +72,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                         animated: animated,
                         popCompletion: conversationPopped)
         }
-        
+
         // CTA tapped from conversation screen
         let ctaCommentCreationTapped = conversationVM.outputs.ctaCommentCreationTapped
             .map { [weak self] _ -> OWCommentCreationRequiredData? in
@@ -81,7 +81,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return OWCommentCreationRequiredData(article: self.conversationData.article, commentCreationType: .comment)
             }
             .unwrap()
-        
+
         // Coordinate to comment creation
         let coordinateCommentCreationObservable = Observable.merge(ctaCommentCreationTapped,
                                                          deepLinkToCommentCreation.unwrap().asObservable())
@@ -107,18 +107,18 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
                 return Observable.never()
             }
-        
+
         let conversationPoppedObservable = conversationPopped
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
-        
+
         let conversationLoadedObservable = conversationVM.outputs.loadedToScreen
             .map { OWConversationCoordinatorResult.loadedToScreen }
             .asObservable()
-        
+
         return Observable.merge(conversationPoppedObservable, coordinateCommentCreationObservable, conversationLoadedObservable)
     }
-    
+
     override func showableComponent() -> Observable<OWShowable> {
         // TODO: Complete when we would like to support the conversation as a view
         let conversationViewVM: OWConversationViewViewModeling = OWConversationViewViewModel(conversationData: conversationData)
@@ -130,7 +130,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
 fileprivate extension OWConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWConversationViewModeling) {
         // Setting up general observers which affect app flow however not entirely inside the SDK
-        
+
         viewModel.outputs.userInitiatedAuthenticationFlow
             .subscribe(onNext: { _ in
                 // TODO: Complete a callback to trigger auth flow at publisher side
@@ -139,7 +139,7 @@ fileprivate extension OWConversationCoordinator {
             })
             .disposed(by: disposeBag)
     }
-    
+
     func setupViewActionsCallbacks(forViewModel viewModel: OWConversationViewModeling) {
         // TODO: complete binding VM to actions callbacks
     }

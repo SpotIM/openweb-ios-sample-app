@@ -18,43 +18,43 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
         static let closeButtonIdentifier = "ad_banner_cell_close_button_id"
     }
     weak var delegate: SPAdBannerCellDelegate?
-    
+
     private lazy var adBannerView: SPAdBannerView = .init()
     private lazy var closeButton: OWBaseButton = .init(type: .custom)
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        
+
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         setupUI()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
     }
-    
+
     func updateColorsAccordingToStyle() {
         contentView.backgroundColor = .spBackground0
         self.adBannerView.updateColorsAccordingToStyle()
         self.closeButton.setImage(UIImage(spNamed: "closeIcon", supportDarkMode: true), for: .normal)
     }
-    
+
     private func setupUI() {
         addSubviews(adBannerView, closeButton)
-        
+
         setupCloseButton()
         setupBannerView()
         updateColorsAccordingToStyle()
     }
-    
+
     private func setupCloseButton() {
         closeButton.addTarget(self, action: #selector(self.onCloseClicked(_:)), for: .touchUpInside)
-        
+
         closeButton.contentHorizontalAlignment = .right
         closeButton.contentVerticalAlignment = .top
-        
+
         closeButton.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Theme.bannerTopOffset)
             if #available(iOS 11.0, *) {
@@ -65,16 +65,16 @@ internal final class SPAdBannerCell: SPBaseTableViewCell {
             make.size.equalTo(Theme.closeButtonSize)
         }
     }
-    
+
     @objc
     private func onCloseClicked(_ sender: UIButton) {
         delegate?.hideBanner()
     }
-    
+
     func updateBannerView(_ bannerView: UIView, height: CGFloat) {
         self.adBannerView.update(bannerView, height: height)
     }
-    
+
     private func setupBannerView() {
         adBannerView.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Theme.bannerTopOffset)

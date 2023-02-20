@@ -8,9 +8,9 @@
 
 import Foundation
 
-typealias OWTranslationTextOverrides = [String : [String : String]]
+typealias OWTranslationTextOverrides = [String: [String: String]]
 struct SPConfigurationConversation: Decodable {
-    
+
     let readBatchSize: Int?
     let socialEnable: Bool?
     let typingAggregationTimeSeconds: Int?
@@ -24,7 +24,7 @@ struct SPConfigurationConversation: Decodable {
     let disableVoteUp: Bool?
     let disableShareComment: Bool?
     let showCommentEditOption: Bool?
-    
+
     enum CodingKeys: String, CodingKey {
         case subscriberBadgeConfig = "subscriberBadge"
         case disableShareComment = "disable_share"
@@ -40,10 +40,10 @@ struct SPConfigurationConversation: Decodable {
              disableVoteDown,
              disableVoteUp
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         readBatchSize = try? container.decode(Int.self, forKey: .readBatchSize)
         socialEnable = try? container.decode(Bool.self, forKey: .socialEnable)
         typingAggregationTimeSeconds = try? container.decode(Int.self, forKey: .typingAggregationTimeSeconds)

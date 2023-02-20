@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 final class OWCommentUserView: OWBaseView {
-    
+
     fileprivate struct Metrics {
         static let topOffset: CGFloat = 14.0
         static let topCollapsedOffset: CGFloat = 38.0
@@ -21,39 +21,39 @@ final class OWCommentUserView: OWBaseView {
         static let avatarSideSize: CGFloat = 39.0
         static let avatarImageViewTrailingOffset: CGFloat = 11.0
     }
-    
+
     fileprivate var viewModel: OWCommentUserViewModeling!
     fileprivate var disposeBag: DisposeBag!
-        
+
     private let avatarImageView: SPAvatarView = SPAvatarView()
     private let userNameView: UserNameView = .init()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupViews()
     }
-    
+
     func configure(with model: CommentViewModel) {
         self.viewModel = model.commentUserVM
         disposeBag = DisposeBag()
-        
+
         avatarImageView.configure(with: viewModel.outputs.avatarVM)
         userNameView.configure(with: viewModel.outputs.userNameVM)
-        
+
         let userViewHeight = model.usernameViewHeight()
         userNameView.OWSnp.updateConstraints { make in
             make.height.equalTo(userViewHeight)
         }
     }
-    
+
     func setDelegate(_ delegate: SPCommentCellDelegate?) {
         guard let delegate = delegate,
               let vm = self.viewModel
         else { return }
         vm.inputs.setDelegate(delegate)
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -65,7 +65,7 @@ final class OWCommentUserView: OWBaseView {
 fileprivate extension OWCommentUserView {
     func setupViews() {
         addSubviews(avatarImageView, userNameView)
-        
+
         // Setup avatar
         avatarImageView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -73,7 +73,7 @@ fileprivate extension OWCommentUserView {
             make.top.equalTo(userNameView)
             make.size.equalTo(Metrics.avatarSideSize)
         }
-        
+
         // Setup user name view
         userNameView.OWSnp.makeConstraints { make in
             make.trailing.top.equalToSuperview()

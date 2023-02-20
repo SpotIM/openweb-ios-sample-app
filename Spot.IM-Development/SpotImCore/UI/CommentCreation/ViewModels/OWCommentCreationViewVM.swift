@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCreationViewViewModelingInputs {
-    
+
 }
 
 protocol OWCommentCreationViewViewModelingOutputs {
@@ -25,10 +25,10 @@ protocol OWCommentCreationViewViewModeling {
 class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWCommentCreationViewViewModelingInputs, OWCommentCreationViewViewModelingOutputs {
     var inputs: OWCommentCreationViewViewModelingInputs { return self }
     var outputs: OWCommentCreationViewViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentCreationData = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
-    
+
     var commentType: OWCommentCreationType
 
     init (commentCreationData: OWCommentCreationRequiredData,
@@ -42,6 +42,6 @@ class OWCommentCreationViewViewModel: OWCommentCreationViewViewModeling, OWComme
 
 fileprivate extension OWCommentCreationViewViewModel {
     func setupObservers() {
-        
+
     }
 }

@@ -9,11 +9,11 @@
 import UIKit
 
 extension UIView {
-    
+
     func makeViewRound() {
         addCornerRadius(bounds.width / 2)
     }
-    
+
     func addCornerRadius(_ radius: CGFloat, corners: CACornerMask = [.layerMaxXMaxYCorner,
                                                                      .layerMaxXMinYCorner,
                                                                      .layerMinXMaxYCorner,
@@ -21,5 +21,5 @@ extension UIView {
         layer.cornerRadius = radius
         layer.masksToBounds = true
     }
-    
+
 }

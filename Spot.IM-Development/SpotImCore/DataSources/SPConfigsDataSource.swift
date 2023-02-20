@@ -16,7 +16,7 @@ internal final class SPConfigsDataSource {
             SPAnalyticsHolder.default.domain = appConfig?.initialization?.websiteUrl
         }
     }
-    
+
     static var adsConfig: SPAdsConfiguration?
 }
 

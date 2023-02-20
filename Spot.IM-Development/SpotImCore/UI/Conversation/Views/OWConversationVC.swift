@@ -12,31 +12,31 @@ import RxCocoa
 
 class OWConversationVC: UIViewController {
     fileprivate struct Metrics {
-        
+
     }
-    
+
     fileprivate let viewModel: OWConversationViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var conversationView: OWConversationView = {
         let conversationView = OWConversationView(viewModel: viewModel.outputs.conversationViewVM)
         return conversationView
     }()
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init(viewModel: OWConversationViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     override func loadView() {
         super.loadView()
         setupViews()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.inputs.viewDidLoad.onNext()

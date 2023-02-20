@@ -11,7 +11,7 @@ import RxSwift
 
 enum OWAnalyticsEndpoints: OWEndpoints {
     case sendEvent(info: SPEventInfo)
-    
+
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
@@ -19,7 +19,7 @@ enum OWAnalyticsEndpoints: OWEndpoints {
             return .post
         }
     }
-    
+
     // MARK: - Path
     var path: String {
         switch self {
@@ -27,7 +27,7 @@ enum OWAnalyticsEndpoints: OWEndpoints {
             return "/event"
         }
     }
-    
+
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
@@ -50,9 +50,9 @@ enum OWAnalyticsEndpoints: OWEndpoints {
                 "total_comments": info.totalComments ?? "",
                 "engine_status": info.engineStatusType ?? "",
                 "split_name": info.splitName,
-                "publisher_custom_data": info.publisherCustomData ?? "",
+                "publisher_custom_data": info.publisherCustomData ?? ""
             ]
-            
+
             return params
         }
     }
@@ -66,13 +66,13 @@ protocol OWAnalyticsAPI {
 extension OWNetworkAPI: OWAnalyticsAPI {
     // Access by .analytics for readability
     var analytics: OWAnalyticsAPI { return self }
-    
+
     func sendEvent(info: SPEventInfo) -> OWNetworkResponse<Bool> {
         let endpoint = OWAnalyticsEndpoints.sendEvent(info: info)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     // TODO: send events to BE and return real res
     func sendEvents(events: [OWAnalyticEvent]) -> OWNetworkResponse<Bool> {
         let progress = PublishSubject<Progress>()

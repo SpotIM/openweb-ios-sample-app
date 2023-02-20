@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWSpacerCellViewModelingInputs {
-    
+
 }
 
 protocol OWSpacerCellViewModelingOutputs {
@@ -25,7 +25,7 @@ protocol OWSpacerCellViewModeling: OWCellViewModel {
 class OWSpacerCellViewModel: OWSpacerCellViewModeling, OWSpacerCellViewModelingInputs, OWSpacerCellViewModelingOutputs {
     var inputs: OWSpacerCellViewModelingInputs { return self }
     var outputs: OWSpacerCellViewModelingOutputs { return self }
-    
+
     // Unique identifier
     let id: String = UUID().uuidString
 }

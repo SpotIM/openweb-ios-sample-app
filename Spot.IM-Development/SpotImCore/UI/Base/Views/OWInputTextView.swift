@@ -9,31 +9,31 @@
 import UIKit
 
 final class OWInputTextView: OWBaseTextView {
-    
+
     deinit {
         removeObservers()
     }
-    
+
     override public var text: String! {
         didSet {
             textDidChange()
         }
     }
-    
+
     override public var bounds: CGRect {
         didSet {
             resizePlaceholder()
         }
     }
-    
+
     var placeholder: String? {
         get {
             var placeholderText: String?
-            
+
             if let placeholderLabel = placeholderLabel {
                 placeholderText = placeholderLabel.text
             }
-            
+
             return placeholderText
         }
         set {
@@ -47,7 +47,7 @@ final class OWInputTextView: OWBaseTextView {
             }
         }
     }
-    
+
     private var placeholderLabel: OWBaseLabel?
 
     private func resizePlaceholder() {
@@ -56,11 +56,11 @@ final class OWInputTextView: OWBaseTextView {
             let labelY = textContainerInset.top - 2
             let labelWidth = frame.width - (labelX * 2)
             let labelHeight = placeholderLabel.frame.height
-            
+
             placeholderLabel.frame = CGRect(x: labelX, y: labelY, width: labelWidth, height: labelHeight)
         }
     }
-    
+
     private func addPlaceholder(_ placeholderText: String) {
         placeholderLabel = OWBaseLabel()
         guard let placeholderLabel = placeholderLabel else { return }
@@ -69,11 +69,11 @@ final class OWInputTextView: OWBaseTextView {
         placeholderLabel.font = font
         placeholderLabel.textColor = .coolGrey
         placeholderLabel.isHidden = !text.isEmpty
-        
+
         addSubview(placeholderLabel)
         resizePlaceholder()
     }
-    
+
     private func addObservers() {
         NotificationCenter.default.addObserver(
             self,
@@ -81,18 +81,18 @@ final class OWInputTextView: OWBaseTextView {
             name: UITextView.textDidChangeNotification,
             object: self
         )
-        
+
     }
-    
+
     private func removeObservers() {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     @objc
     private func textDidChange() {
         placeholderLabel?.isHidden = !text.isEmpty
     }
-    
+
     func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
         // set keyboard suggestions
         self.autocorrectionType = isPortrait && !(UIDevice.current.screenType == .iPhones_5_5s_5c_SE) ? .yes : .no
@@ -108,5 +108,5 @@ final class OWInputTextView: OWBaseTextView {
             self.becomeFirstResponder()
         }
     }
-    
+
 }

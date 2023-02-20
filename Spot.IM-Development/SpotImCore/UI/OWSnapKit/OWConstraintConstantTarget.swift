@@ -21,23 +21,23 @@ extension OWConstraintConstantTarget {
         if let value = self as? CGFloat {
             return value
         }
-        
+
         if let value = self as? Float {
             return CGFloat(value)
         }
-        
+
         if let value = self as? Double {
             return CGFloat(value)
         }
-        
+
         if let value = self as? Int {
             return CGFloat(value)
         }
-        
+
         if let value = self as? UInt {
             return CGFloat(value)
         }
-        
+
         if let value = self as? CGSize {
             if layoutAttribute == .width {
                 return value.width
@@ -47,7 +47,7 @@ extension OWConstraintConstantTarget {
                 return 0.0
             }
         }
-        
+
         if let value = self as? CGPoint {
                 switch layoutAttribute {
                 case .left, .right, .leading, .trailing, .centerX, .leftMargin, .rightMargin, .leadingMargin, .trailingMargin, .centerXWithinMargins:
@@ -60,7 +60,7 @@ extension OWConstraintConstantTarget {
                     return 0.0
             }
         }
-        
+
         if let value = self as? UIEdgeInsets {
                 switch layoutAttribute {
                 case .left, .leftMargin:
@@ -89,7 +89,7 @@ extension OWConstraintConstantTarget {
                     return 0.0
             }
         }
-      
+
         return 0.0
     }
 }
