@@ -18,7 +18,7 @@ public enum OWConversationSpacing {
         public static let maxSpace: CGFloat = 20.0
         public static let minSpace: CGFloat = 0.0
     }
-    
+
     case regular
     case compact
     case custom(betweenComments: CGFloat, belowHeader: CGFloat, belowCommunityGuidelines: CGFloat, belowCommunityQuestions: CGFloat)
@@ -33,7 +33,7 @@ enum OWConversationSpacing {
         static let maxSpace: CGFloat = 20.0
         static let minSpace: CGFloat = 0.0
     }
-    
+
     case regular
     case compact
     case custom(betweenComments: CGFloat, belowHeader: CGFloat, belowCommunityGuidelines: CGFloat, belowCommunityQuestions: CGFloat)

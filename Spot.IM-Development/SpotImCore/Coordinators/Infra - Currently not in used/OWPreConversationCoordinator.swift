@@ -11,14 +11,14 @@ import RxSwift
 
 enum OWPreConversationCoordinatorResult: OWCoordinatorResultProtocol {
     case never
-    
+
     var loadedToScreen: Bool {
         return false
     }
 }
 
 class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinatorResult> {
-    
+
     fileprivate let router: OWRoutering
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
@@ -28,21 +28,21 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
     }
-    
+
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWPreConversationCoordinatorResult> {
         // TODO: complete the flow
 //        let conversationVM: OWConversationViewModeling = OWConversationViewModel()
 //        let conversationVC = OWConversationVC(viewModel: conversationVM)
         return .empty()
     }
-    
+
     override func showableComponentDynamicSize() -> Observable<OWViewDynamicSizeOption> {
         let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
-        
+
         setupObservers(forViewModel: preConversationViewVM)
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
-        
+
         let viewDynamicSizeObservable: Observable<(UIView, CGSize)> = Observable.just(preConversationView)
             .flatMap { [weak preConversationViewVM] view -> Observable<(UIView, CGSize)> in
                 guard let viewModel = preConversationViewVM else { return .never() }
@@ -51,7 +51,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
             }
             .share(replay: 1)
             .asObservable()
-        
+
         let initial = viewDynamicSizeObservable
             .take(1)
             .map { OWViewDynamicSizeOption.viewInitialSize(view: $0.0, initialSize: $0.1) }
@@ -66,19 +66,19 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
 
 fileprivate extension OWPreConversationCoordinator {
     func setupObservers(forViewModel viewModel: OWPreConversationViewViewModeling) {
-        
+
         let openFullConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openFullConversation
             .map { _ -> OWDeepLinkOptions? in
                 return nil
             }
-        
+
         let openCommentConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentConversation
             .map { [weak self] type -> OWDeepLinkOptions? in
                 guard let self = self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, commentCreationType: type)
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
             }
-        
+
         // Coordinate to full conversation
         Observable.merge(openFullConversationObservable, openCommentConversationObservable)
             .flatMap { [weak self] deepLink -> Observable<OWConversationCoordinatorResult> in
@@ -92,7 +92,10 @@ fileprivate extension OWPreConversationCoordinator {
             }
             .subscribe()
             .disposed(by: disposeBag)
-        
+
+        let openSafariViewControllerObservable: Observable<URL> = viewModel.outputs.communityGuidelinesViewModel
+            .outputs.urlClickedOutput
+
         // Coordinate to safari tab
         Observable.merge(
             viewModel.outputs.communityGuidelinesViewModel.outputs.urlClickedOutput,
@@ -109,7 +112,7 @@ fileprivate extension OWPreConversationCoordinator {
             .subscribe()
             .disposed(by: disposeBag)
     }
-    
+
     func setupViewActionsCallbacks(forViewModel viewModel: OWPreConversationViewViewModeling) {
         // TODO: complete binding VM to actions callbacks
     }

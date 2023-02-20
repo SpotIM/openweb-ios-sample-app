@@ -19,17 +19,17 @@ class OWOnlineViewingUsersCounterView: UIView {
         static let imgViewIconIdentifier = "online_viewing_users_img_view_icon_id"
         static let lblViewersNumberIdentifier = "online_viewing_users_lbl_viewers_number_id"
     }
-    
+
     fileprivate var viewModel: OWOnlineViewingUsersCounterViewModeling!
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var imgViewIcon: UIImageView = {
         let img = UIImageView()
             .contentMode(.scaleAspectFit)
-        
+
         return img
     }()
-    
+
     fileprivate lazy var lblViewersNumber: UILabel = {
         let lbl = UILabel()
             .font(UIFont.preferred(style: .regular, of: Metrics.viewersFontSize))
@@ -37,24 +37,24 @@ class OWOnlineViewingUsersCounterView: UIView {
 
         return lbl
     }()
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupViews()
     }
-    
+
     init() {
         super.init(frame: .zero)
         setupViews()
     }
-    
+
     init(viewModel: OWOnlineViewingUsersCounterViewModeling) {
         super.init(frame: .zero)
         self.viewModel = viewModel
         setupViews()
         configureViews()
     }
-    
+
     // TODO: once old view is removed this configure function should be removed
     func configure(with viewModel: OWOnlineViewingUsersCounterViewModeling) {
         self.viewModel = viewModel
@@ -68,7 +68,7 @@ fileprivate extension OWOnlineViewingUsersCounterView {
         imgViewIcon.OWSnp.makeConstraints { make in
             make.top.leading.bottom.equalToSuperview()
         }
-        
+
         self.addSubview(lblViewersNumber)
         lblViewersNumber.OWSnp.makeConstraints { make in
             make.centerY.trailing.equalToSuperview()
@@ -76,20 +76,20 @@ fileprivate extension OWOnlineViewingUsersCounterView {
         }
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         imgViewIcon.accessibilityIdentifier = Metrics.imgViewIconIdentifier
         lblViewersNumber.accessibilityIdentifier = Metrics.lblViewersNumberIdentifier
     }
-    
+
     func configureViews() {
         imgViewIcon.image = viewModel.outputs.image
         viewModel.outputs.viewingCount
             .startWith("1")
             .bind(to: lblViewersNumber.rx.text)
             .disposed(by: disposeBag)
-        
+
 //        TODO: Uncomment once we handle theme changes correctly with themeStyleService
 //        OWSharedServicesProvider.shared.themeStyleService()
 //            .style

@@ -15,7 +15,7 @@ public struct OWArticle: OWArticleProtocol {
     public let subtitle: String?
     public let thumbnailUrl: URL?
     public let additionalSettings: OWArticleSettingsProtocol
-    
+
     public init(url: URL,
                 title: String,
                 subtitle: String? = nil,

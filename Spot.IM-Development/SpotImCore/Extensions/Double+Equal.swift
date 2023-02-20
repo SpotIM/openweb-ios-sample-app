@@ -13,7 +13,7 @@ extension Double {
     guard let value = value else {
       return lhs == rhs
     }
-        
+
     return lhs.precised(value) == rhs.precised(value)
   }
 

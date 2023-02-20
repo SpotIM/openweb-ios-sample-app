@@ -9,21 +9,21 @@
 import Foundation
 
 internal enum OWMuteRequest: SPRequest {
-    
+
     case mute
-    
+
     internal var method: OWNetworkHTTPMethod {
         switch self {
             case .mute: return .post
         }
     }
-    
+
     internal var pathString: String {
         switch self {
             case .mute: return "/user/mute-user"
         }
     }
-    
+
     internal var url: URL! {
         switch self {
             case .mute: return URL(string: APIConstants.baseURLString + pathString)

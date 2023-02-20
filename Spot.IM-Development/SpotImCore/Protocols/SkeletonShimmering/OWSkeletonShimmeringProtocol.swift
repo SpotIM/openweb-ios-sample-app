@@ -22,20 +22,20 @@ extension OWSkeletonShimmeringProtocol where Self: UIView {
             let shimmeringLayer = CAGradientLayer()
             subview.registeredSkeletonLayer = skeletonLayer
             subview.registeredShimmeringLayer = shimmeringLayer
-            
+
             skeletonLayer.frame = subview.bounds
             shimmeringLayer.frame = subview.bounds
-            
+
             subview.layer.mask = skeletonLayer
             subview.layer.addSublayer(skeletonLayer)
             subview.layer.addSublayer(shimmeringLayer)
             subview.clipsToBounds = true
-            
+
             let skeletonShimmeringService = OWSharedServicesProvider.shared.skeletonShimmeringService()
             skeletonShimmeringService.addSkeleton(to: subview)
         }
     }
-    
+
     func removeSkeletonShimmering() {
         for subview in self.subviews {
             guard let skeletonLayer = subview.getSkeletonLayer(),
@@ -51,12 +51,12 @@ extension OWSkeletonShimmeringProtocol where Self: UIView {
             shimmeringLayer.removeFromSuperlayer()
             registeredSkeletonLayer = nil
             registeredShimmeringLayer = nil
-            
+
             let skeletonShimmeringService = OWSharedServicesProvider.shared.skeletonShimmeringService()
             skeletonShimmeringService.removeSkeleton(from: subview)
         }
     }
-    
+
     func updateSkeletonShimmeringFrame() {
         for subview in self.subviews {
             guard let skeletonLayer = subview.getSkeletonLayer(),
@@ -65,22 +65,22 @@ extension OWSkeletonShimmeringProtocol where Self: UIView {
                 logger.log(level: .medium, "Failed retriving skeleton shimmering layers when trying to update their frame")
                 return
             }
-            
+
             skeletonLayer.frame = subview.bounds
             shimmeringLayer.frame = subview.bounds
         }
     }
 }
-    
+
 extension UIView {
     func getSkeletonLayer() -> CALayer? {
         return registeredSkeletonLayer
     }
-        
+
     func getShimmeringLayer() -> CAGradientLayer? {
         return registeredShimmeringLayer
     }
-    
+
     var registeredSkeletonLayer: CALayer? {
         get {
             // Check if a dictionary(mapper) is already exist
@@ -97,7 +97,7 @@ extension UIView {
                                        newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    
+
     var registeredShimmeringLayer: CAGradientLayer? {
         get {
             // Check if a dictionary(mapper) is already exist

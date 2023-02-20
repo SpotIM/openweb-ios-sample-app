@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 // Internal protocol
-protocol OWManagerInternalProtocol: AnyObject  {
+protocol OWManagerInternalProtocol: AnyObject {
     var currentSpotId: Observable<OWSpotId> { get }
     var currentPostId: Observable<OWPostId> { get }
     var postId: OWPostId? { get set }
@@ -20,7 +20,7 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     // Singleton, will be public access once a new API will be ready.
     // Publishers and SDK consumers will basically interact with the manager / public encapsulation of it.
     static let manager = OWManager()
-    
+
     // Memebers variables
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
@@ -28,14 +28,14 @@ class OWManager: OWManagerProtocol, OWManagerInternalProtocol {
     fileprivate let _currentPostId = BehaviorSubject<OWPostId?>(value: nil)
     fileprivate var _currentNonRxSpotId: OWSpotId? = nil
     fileprivate var _currentNonRxPostId: OWPostId? = nil
-    
+
     // Layers
     let analyticsLayer: OWAnalytics
     let uiLayer: OWUI
     let monetizationLayer: OWMonetization
     let authenticationLayer: OWAuthentication
     let helpersLayer: OWHelpers
-    
+
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
                  analyticsLayer: OWAnalytics = OWAnalyticsLayer(),
                  uiLayer: OWUI = OWUILayer(),
@@ -63,7 +63,7 @@ extension OWManager {
             _currentSpotId.onNext(newSpotId)
         }
     }
-    
+
     var postId: OWPostId? {
         get {
            return _currentNonRxPostId
@@ -74,7 +74,7 @@ extension OWManager {
         }
     }
 }
-    
+
 // Internal extension
 extension OWManager {
     var currentSpotId: Observable<OWSpotId> {
@@ -83,7 +83,7 @@ extension OWManager {
             .asObservable()
             .distinctUntilChanged()
     }
-    
+
     var currentPostId: Observable<OWPostId> {
         return _currentPostId
             .unwrap()
@@ -103,14 +103,14 @@ fileprivate extension OWManager {
                 self.servicesProvider.configure.set(spotId: spotId)
             })
             .disposed(by: disposeBag)
-        
+
         currentSpotId
             .scan((false, ""), accumulator: { result, newSpotId in
                 guard !result.1.isEmpty else {
                     // First time the scan called or a case in which spotId set to empty string by the publisher
                     return (false, newSpotId)
                 }
-                
+
                 if result.1 != newSpotId {
                     return (true, newSpotId)
                 } else {

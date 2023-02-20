@@ -9,7 +9,7 @@
 import UIKit
 
 extension OWConstraintMakerRelatable {
-  
+
     @discardableResult
     func equalToSuperview<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
         guard let other = self.description.item.superview else {
@@ -17,7 +17,7 @@ extension OWConstraintMakerRelatable {
         }
         return self.relatedTo(closure(other), relation: .equal, file: file, line: line)
     }
-  
+
     @discardableResult
     func lessThanOrEqualToSuperview<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
         guard let other = self.description.item.superview else {
@@ -25,7 +25,7 @@ extension OWConstraintMakerRelatable {
         }
         return self.relatedTo(closure(other), relation: .lessThanOrEqual, file: file, line: line)
     }
-  
+
     @discardableResult
     func greaterThanOrEqualTo<T: OWConstraintRelatableTarget>(_ closure: (UIView) -> T, _ file: String = #file, line: UInt = #line) -> OWConstraintMakerEditable {
         guard let other = self.description.item.superview else {
