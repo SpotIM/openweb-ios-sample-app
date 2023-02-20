@@ -160,7 +160,7 @@ internal final class SPPreConversationFooter: OWBaseView {
             make.trailing.equalToSuperview().offset(-15.0)
             make.height.equalTo(1.0)
         }
-        
+
         let title = LocalizationManager.localizedString(key: "Show more comments")
 
         showMoreCommentsButton.backgroundColor = .brandColor

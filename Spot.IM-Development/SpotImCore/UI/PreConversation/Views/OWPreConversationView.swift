@@ -78,7 +78,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
     }()
-    
+
     fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
@@ -161,14 +161,14 @@ fileprivate extension OWPreConversationView {
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
         }
-        
+
         self.addSubview(btnCTAConversation)
         btnCTAConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
-        
+
         self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
@@ -182,7 +182,7 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.conversationCTAButtonTitle
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
-        
+
         viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
 
         viewModel.outputs.preConversationDataSourceSections
@@ -201,12 +201,12 @@ fileprivate extension OWPreConversationView {
                     }
                 })
                 .disposed(by: disposeBag)
-        
+
         btnCTAConversation.rx.tap
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
-                
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
