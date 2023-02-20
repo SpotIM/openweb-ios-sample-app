@@ -10,12 +10,12 @@ import UIKit
 
 final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
-    weak var delegate: SPCommentCellDelegate?{
+    weak var delegate: SPCommentCellDelegate? {
         didSet {
             userView.setDelegate(delegate)
         }
     }
-    
+
     let messageView: MessageContainerView = .init()
     private let userView: OWCommentUserView = .init()
     private let statusIndicationView: OWCommentStatusIndicationView = .init()
@@ -24,24 +24,24 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
     private let moreRepliesView: ShowMoreRepliesView = .init()
     private let commentMediaView: CommentMediaView = .init()
     private let opacityView: OWBaseView = .init()
-    
+
     private var commentId: String?
     private var replyingToId: String?
     private var repliesButtonState: RepliesButtonState = .collapsed
-    
+
     private var textViewLeadingConstraint: OWConstraint?
     private var commentMediaViewTopConstraint: OWConstraint?
     private var statusIndicatorViewHeighConstraint: OWConstraint?
     private var statusIndicatorViewTopConstraint: OWConstraint?
-    
+
     private var imageRequest: OWNetworkDataRequest?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         setupUI()
     }
-    
+
     func configure(with data: CommentViewModel, lineLimit: Int, isReadOnlyMode: Bool, windowWidth: CGFloat?) {
         commentId = data.commentId
         replyingToId = data.replyingToCommentId
@@ -51,7 +51,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateCommentLabelView(with: data)
         messageView.delegate = self
         setStatusIndicatorVisibillity(isVisible: data.showStatusIndicator)
-        
+
         textViewLeadingConstraint?.update(offset: data.depthOffset())
         let replyActionsViewHeight: CGFloat
         if data.isHiddenComment() {
@@ -87,7 +87,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         updateCommentMediaView(with: data)
         statusIndicationView.configure(with: data.statusIndicationVM)
     }
-    
+
     private func setStatusIndicatorVisibillity(isVisible: Bool) {
         statusIndicationView.isHidden = !isVisible
         statusIndicatorViewHeighConstraint?.isActive = !isVisible
@@ -95,7 +95,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         opacityView.isHidden = !isVisible
         replyActionsView.setIsDisabled(isDisabled: isVisible)
     }
-    
+
     private func updateCommentMediaView(with dataModel: CommentViewModel) {
         guard !dataModel.isHiddenComment() && (dataModel.commentGifUrl != nil || dataModel.commentImage != nil) else {
             commentMediaViewTopConstraint?.update(offset: dataModel.isHiddenComment() ? 0.0 : SPCommonConstants.emptyCommentMediaTopPadding)
@@ -114,7 +114,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.width.equalTo(mediaSize.width)
         }
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         contentView.backgroundColor = .spBackground0
@@ -126,7 +126,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         commentLabelView.updateColorsAccordingToStyle()
         statusIndicationView.updateColorsAccordingToStyle()
     }
-    
+
     private func updateUserView(with dataModel: CommentViewModel) {
         dataModel.commentUserVM.inputs.configure(with: dataModel)
         let avatarVM = dataModel.commentUserVM.outputs.avatarVM
@@ -143,14 +143,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             moreRepliesView.expandedTitle = LocalizationManager.localizedString(key: "Hide Replies")
         }
     }
-    
+
     private func updateActionView(with dataModel: CommentViewModel, isReadOnlyMode: Bool) {
         replyActionsView.configure(with: dataModel.commentActionsVM, delegate: self)
         dataModel.updateCommentActionsVM()
         replyActionsView.setReadOnlyMode(enabled: isReadOnlyMode)
-        replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton:  dataModel.depth >= 6)
+        replyActionsView.setReplyButton(repliesCount: dataModel.repliesCount, shouldHideButton: dataModel.depth >= 6)
     }
-    
+
     private func updateCommentLabelView(with dataModel: CommentViewModel) {
         let height: CGFloat
         if let commentLabels = dataModel.commentLabels,
@@ -169,14 +169,14 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             commentLabelView.isHidden = true
             height = 0
         }
-        
+
         commentLabelView.OWSnp.updateConstraints { make in
             make.height.equalTo(height)
         }
     }
-    
+
     // MARK: - Private UISetup
-    
+
     private func setupUI() {
         contentView.addSubviews(userView, statusIndicationView, commentLabelView, messageView, replyActionsView, moreRepliesView, commentMediaView, opacityView)
         configureUserView()
@@ -188,7 +188,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         configureStatusIndicationView()
         configureOpacityView()
     }
-    
+
     private func configureOpacityView() {
         opacityView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
@@ -197,7 +197,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
         opacityView.layer.opacity = 0.4
         opacityView.isUserInteractionEnabled = false
     }
-    
+
     private func configureStatusIndicationView() {
         statusIndicationView.OWSnp.makeConstraints { make in
             make.leading.equalTo(messageView)
@@ -206,7 +206,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             statusIndicatorViewHeighConstraint = make.height.equalTo(0).constraint
         }
     }
-    
+
     private func configureCommentMediaView() {
         commentMediaView.OWSnp.makeConstraints { make in
             commentMediaViewTopConstraint = make.top.equalTo(messageView.OWSnp.bottom).offset(SPCommonConstants.emptyCommentMediaTopPadding).constraint
@@ -215,7 +215,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.height.width.equalTo(0)
         }
     }
-    
+
     private func configureUserView() {
         userView.OWSnp.makeConstraints { make in
             make.top.equalTo(statusIndicationView.OWSnp.bottom).offset(Theme.topOffset)
@@ -224,7 +224,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.height.equalTo(Theme.userViewCollapsedHeight)
         }
     }
-    
+
     private func configureCommentLabelView() {
         commentLabelView.OWSnp.makeConstraints { make in
             make.top.equalTo(userView.OWSnp.bottom).offset(10)
@@ -232,7 +232,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.height.equalTo(Theme.commentLabelHeight)
         }
     }
-    
+
     private func configureMessageView() {
         messageView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentLabelView.OWSnp.bottom).offset(Theme.messageContainerTopOffset)
@@ -240,7 +240,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.trailing.equalToSuperview().offset(-Theme.trailingOffset)
         }
     }
-    
+
     private func configureReplyActionsView() {
         replyActionsView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentMediaView.OWSnp.bottom)
@@ -249,7 +249,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.height.equalTo(Theme.replyActionsViewHeight)
         }
     }
-    
+
     private func configureMoreRepliesView() {
         moreRepliesView.delegate = self
         moreRepliesView.OWSnp.makeConstraints { make in
@@ -259,14 +259,13 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
             make.height.equalTo(Theme.moreRepliesViewHeight)
         }
     }
-    
+
     private func attributes(isDeleted: Bool) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
         paragraphStyle.lineSpacing = 3.5
         paragraphStyle.updateAlignment()
 
-        
         var attributes: [NSAttributedString.Key: Any]
         if isDeleted {
             attributes = [
@@ -281,7 +280,7 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
                 .paragraphStyle: paragraphStyle
             ]
         }
-        
+
         return attributes
     }
 }
@@ -289,22 +288,22 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 // MARK: - Extensions
 
 extension SPReplyCell: CommentActionsDelegate {
-    
+
     func reply() {
         delegate?.replyTapped(for: commentId)
     }
-    
+
     func rankUp(_ rankChange: SPRankChange) {
         delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
-    
+
     func rankDown(_ rankChange: SPRankChange) {
         delegate?.changeRank(with: rankChange, for: commentId, with: replyingToId)
     }
 }
 
 extension SPReplyCell: ShowMoreRepliesViewDelegate {
-    
+
     func showHideReplies() {
         if repliesButtonState == .collapsed {
             delegate?.showMoreReplies(for: commentId)
@@ -315,11 +314,11 @@ extension SPReplyCell: ShowMoreRepliesViewDelegate {
 }
 
 extension SPReplyCell: MessageContainerViewDelegate {
-    
+
     func urlTappedInMessageContainer(view: MessageContainerView, url: URL) {
         delegate?.clickOnUrlInComment(url: url)
     }
-    
+
     func readMoreTappedInMessageContainer(view: MessageContainerView) {
         delegate?.showMoreText(for: commentId)
         SPAnalyticsHolder.default.log(event: .commentReadMoreClicked(messageId: commentId ?? "", relatedMessageId: replyingToId), source: .conversation)
@@ -331,7 +330,7 @@ extension SPReplyCell: MessageContainerViewDelegate {
     }
 
 }
-    
+
 // MARK: - Theme
 
 private enum Theme {

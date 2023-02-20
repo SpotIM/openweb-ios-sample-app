@@ -9,7 +9,7 @@
 import UIKit
 
 internal class SPUIWindow {
-    
+
     // holding the current view window frame
     static var frame: CGRect = {
         return UIScreen.main.bounds // default

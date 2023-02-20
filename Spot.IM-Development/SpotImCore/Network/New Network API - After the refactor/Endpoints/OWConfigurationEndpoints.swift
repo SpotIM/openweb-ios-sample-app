@@ -13,7 +13,7 @@ enum OWConfigurationEndpoints: OWEndpoints {
     case fetchConfig(spotId: OWSpotId)
     case fetchAdsConfig
     case fetchAbTestData
-    
+
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
@@ -25,7 +25,7 @@ enum OWConfigurationEndpoints: OWEndpoints {
             return .get
         }
     }
-    
+
     // MARK: - Path
     var path: String {
         switch self {
@@ -37,7 +37,7 @@ enum OWConfigurationEndpoints: OWEndpoints {
             return "/config/ab_test"
         }
     }
-    
+
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
@@ -63,19 +63,19 @@ protocol OWConfigurationAPI {
 extension OWNetworkAPI: OWConfigurationAPI {
     // Access by .configuration for readability
     var configuration: OWConfigurationAPI { return self }
-    
+
     func fetchConfig(spotId: OWSpotId) -> OWNetworkResponse<SPSpotConfiguration> {
         let endpoint = OWConfigurationEndpoints.fetchConfig(spotId: spotId)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func fetchAdsConfig() -> OWNetworkResponse<SPAdsConfiguration> {
         let endpoint = OWConfigurationEndpoints.fetchAdsConfig
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func fetchAbTestData() -> OWNetworkResponse<OWAbTests> {
         let endpoint = OWConfigurationEndpoints.fetchAbTestData
         let requestConfigure = request(for: endpoint)

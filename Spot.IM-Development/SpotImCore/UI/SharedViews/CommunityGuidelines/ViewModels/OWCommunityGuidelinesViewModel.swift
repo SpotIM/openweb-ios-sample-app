@@ -27,16 +27,16 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
     struct Metrics {
         static let communityGuidelinesFontSize = 15.0
     }
-    
+
     var inputs: OWCommunityGuidelinesViewModelingInputs { return self }
     var outputs: OWCommunityGuidelinesViewModelingOutputs { return self }
-    
+
     let urlClicked = PublishSubject<URL>()
-    
+
     var urlClickedOutput: Observable<URL> {
         urlClicked.asObservable()
     }
-    
+
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> {
         OWSharedServicesProvider.shared.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
@@ -60,30 +60,30 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
 fileprivate extension OWCommunityGuidelinesViewModel {
     func getCommunityGuidelinesHtmlString(communityGuidelinesTitle: String) -> String {
         var htmlString = communityGuidelinesTitle
-        
+
         // remove <p> and </p> tags to control the text height by the sdk
         htmlString = htmlString.replacingOccurrences(of: "<p>", with: "")
         htmlString = htmlString.replacingOccurrences(of: "</p>", with: "")
-        
+
         return htmlString
     }
-    
+
     func getTitleTextViewAttributedText(htmlString: String) -> NSMutableAttributedString? {
         if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
             htmlMutableAttributedString.addAttribute(
                 .font,
                 value: UIFont.preferred(style: .medium, of: Metrics.communityGuidelinesFontSize),
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(
                 .underlineStyle,
                 value: NSNumber(value: false),
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(
                 .foregroundColor,
                 value: UIColor.spForeground0,
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             return htmlMutableAttributedString
         } else {

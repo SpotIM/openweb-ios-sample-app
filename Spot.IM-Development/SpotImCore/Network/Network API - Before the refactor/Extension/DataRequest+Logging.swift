@@ -31,13 +31,13 @@ internal extension OWNetworkDataRequest {
                 let url = self.request?.url else {
                 return
             }
-            
+
             var message = "[REQUEST] \(method) \(url)"
-            
+
             if level == .medium {
-                if let criticalHeaders = self.request?.allHTTPHeaderFields?.filter({ (key: AnyHashable, value: Any) -> Bool in
+                if let criticalHeaders = self.request?.allHTTPHeaderFields?.filter({ (key: AnyHashable, _: Any) -> Bool in
                     guard let keyString = key as? String else { return false }
-                    
+
                     return keyString == "x-spot-id" || keyString == "x-post-id"
                 }) {
                     for header in criticalHeaders {
@@ -45,7 +45,7 @@ internal extension OWNetworkDataRequest {
                     }
                 }
             }
-            
+
             if level == .verbose {
                 if let headers = self.request?.allHTTPHeaderFields {
                     for header in headers {
@@ -64,7 +64,7 @@ internal extension OWNetworkDataRequest {
                     message += "\n\(body)"
                 }
             }
-            
+
             OWSharedServicesProvider.shared.logger().log(level: level, message)
         }
     }
@@ -74,14 +74,14 @@ internal extension OWNetworkDataRequest {
         guard level != .none else {
             return self
         }
-        
+
         return self.response(completionHandler: {
             guard
                 let method = $0.request?.httpMethod,
                 let url = $0.request?.url else {
                 return
             }
-            
+
             var message = "[RESPONSE] \(method) \($0.response?.statusCode ?? -1) \(url) \(String(format: "%.3fms", ($0.metrics?.taskInterval.duration ?? 0) * 1000))"
 
             if let err = $0.error?.localizedDescription {
@@ -89,9 +89,9 @@ internal extension OWNetworkDataRequest {
             }
 
             if level == .medium {
-                if let criticalHeaders = $0.response?.allHeaderFields.filter({ (key: AnyHashable, value: Any) -> Bool in
+                if let criticalHeaders = $0.response?.allHeaderFields.filter({ (key: AnyHashable, _: Any) -> Bool in
                     guard let keyString = key as? String else { return false }
-                    
+
                     return keyString == "x-spot-id" || keyString == "x-post-id"
                 }) {
                     for header in criticalHeaders {
@@ -99,7 +99,7 @@ internal extension OWNetworkDataRequest {
                     }
                 }
             }
-            
+
             if level == .verbose {
                 if let headers = $0.response?.allHeaderFields {
                     for header in headers {
@@ -107,7 +107,7 @@ internal extension OWNetworkDataRequest {
                     }
                 }
             }
-            
+
             if level == .verbose || level == .medium {
                 if let data = $0.data,
                     let body = String(data: data, encoding: .utf8) {

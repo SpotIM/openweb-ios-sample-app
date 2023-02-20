@@ -10,8 +10,7 @@ import Foundation
 import UIKit
 
 internal extension OWNetworkHTTPHeaders {
-    
-    
+
     static func basic(with spotId: String, postId: String = "default") -> OWNetworkHTTPHeaders {
         let iosVersion = UIDevice.current.systemVersion
         let frameworkVersion = OWSettingsWrapper.sdkVersion() ?? "na"
@@ -20,7 +19,7 @@ internal extension OWNetworkHTTPHeaders {
         let agent = extendedAgent()
 
         let pageViewId = SPAnalyticsHolder.default.pageViewId
-        
+
         var headers: OWNetworkHTTPHeaders = ["Content-Type": "application/json",
                                     "x-spot-id": spotId,
                                     "x-post-id": postId,
@@ -32,7 +31,7 @@ internal extension OWNetworkHTTPHeaders {
                                     "x-app-scheme": scheme,
                                     "User-Agent": agent,
                                     "x-spotim-page-view-id": pageViewId]
-        
+
         if let userId = SPUserSessionHolder.session.guid, !userId.isEmpty {
             headers[APIHeadersConstants.guid] = userId
         }
@@ -40,11 +39,11 @@ internal extension OWNetworkHTTPHeaders {
         if let token = SPUserSessionHolder.session.token, !token.isEmpty {
             headers[APIHeadersConstants.authorization] = token
         }
-        
+
         if let openwebToken = SPUserSessionHolder.session.openwebToken, !openwebToken.isEmpty {
             headers[APIHeadersConstants.openwebTokenHeader] = openwebToken
         }
-        
+
         return headers
     }
 
@@ -60,7 +59,7 @@ internal extension Dictionary where Key == AnyHashable, Value == Any {
     var authorizationHeader: String? {
         return self[APIHeadersConstants.authorization] as? String
     }
-    
+
     var openwebTokenHeader: String? {
         return self[APIHeadersConstants.openwebTokenHeader] as? String
     }

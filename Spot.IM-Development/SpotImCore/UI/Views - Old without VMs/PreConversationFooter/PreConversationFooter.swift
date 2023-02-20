@@ -40,12 +40,12 @@ internal final class SPPreConversationFooter: OWBaseView {
     private lazy var spotIMIcon: OWBaseUIImageView = .init()
     private lazy var addSpotIMButton: OWBaseButton = .init()
     private lazy var openwebLinkView: OWBaseView = .init()
-    
+
     private var moreCommentsTopConstraint: OWConstraint?
     private var termsBottomConstraint: OWConstraint?
-    
+
     private var buttonOnlyMode: Bool = false
-    
+
     internal weak var delegate: SPPreConversationFooterDelegate?
 
     override init(frame: CGRect = .zero) {
@@ -53,7 +53,7 @@ internal final class SPPreConversationFooter: OWBaseView {
         setup()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         showMoreCommentsButton.accessibilityIdentifier = Metrics.showMoreCommentsButtonIdentifier
@@ -62,7 +62,7 @@ internal final class SPPreConversationFooter: OWBaseView {
         spotIMIcon.accessibilityIdentifier = Metrics.spotIMIconIdentifier
         addSpotIMButton.accessibilityIdentifier = Metrics.addSpotIMButtonIdentifier
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -79,7 +79,7 @@ internal final class SPPreConversationFooter: OWBaseView {
         showMoreCommentsButton.backgroundColor = color
         separatorView.isHidden = !withSeparator
     }
-    
+
     private func setup() {
         openwebLinkView.addSubviews(spotIMIcon,
                                     addSpotIMButton)
@@ -113,17 +113,17 @@ internal final class SPPreConversationFooter: OWBaseView {
         showMoreCommentsButton.isHidden = false
         separatorView.isHidden = false
     }
-    
+
     func set(buttonOnlyMode: Bool) {
         self.buttonOnlyMode = buttonOnlyMode
         setViewsAccordingToButtonOnlyMode()
     }
-    
+
     func set(commentsCount: String?) {
         showMoreCommentsButton.setCommentsCount(commentsCount: commentsCount)
         setViewsAccordingToButtonOnlyMode()
     }
-    
+
     private func setViewsAccordingToButtonOnlyMode() {
         termsButton.isHidden = buttonOnlyMode
         dotLabel.isHidden = buttonOnlyMode
@@ -137,7 +137,7 @@ internal final class SPPreConversationFooter: OWBaseView {
                 make.height.equalTo(0)
             }
             termsBottomConstraint?.update(offset: 0)
-            
+
             var title: String
             if SpotIm.buttonOnlyMode == .withTitle {
                 title = LocalizationManager.localizedString(key: "Post a Comment")
@@ -178,7 +178,7 @@ internal final class SPPreConversationFooter: OWBaseView {
 
         }
     }
-    
+
     private func setupTermsButton() {
         let title = LocalizationManager.localizedString(key: "Terms")
         termsButton.setTitle(title, for: .normal)
@@ -221,7 +221,7 @@ internal final class SPPreConversationFooter: OWBaseView {
 
     private func setupSpotIMIcon() {
         spotIMIcon.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true)
-        
+
         spotIMIcon.OWSnp.makeConstraints { make in
             make.size.equalTo(Theme.bottomRowSize)
             make.centerY.equalTo(addSpotIMButton)
@@ -253,7 +253,7 @@ internal final class SPPreConversationFooter: OWBaseView {
             make.trailing.equalToSuperview().offset(-Theme.horizontalMargin)
         }
     }
-    
+
     @objc
     private func showMoreComments() {
         delegate?.showMoreComments()

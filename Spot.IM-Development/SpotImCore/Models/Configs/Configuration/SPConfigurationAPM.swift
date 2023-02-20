@@ -9,9 +9,9 @@
 import Foundation
 
 struct SPConfigurationAPM: Decodable {
-    
+
     let driverName: String?
     let isEnabled: Bool?
     let sampleRate: Int?
-    
+
 }

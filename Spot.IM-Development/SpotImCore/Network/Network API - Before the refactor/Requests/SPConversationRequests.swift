@@ -9,7 +9,7 @@
 import Foundation
 
 internal enum SPConversationRequest: SPRequest {
-    
+
     case conversationAsync
     case conversationRead
     case commentReport
@@ -43,7 +43,7 @@ internal enum SPConversationRequest: SPRequest {
         case .commentPost, .commentUpdate, .commentDelete: return "/conversation/comment"
         case .commentRankChange: return "/rank/rank/message"
         case .commentReport: return "/conversation/report/message"
-        case .commentShare:return "/conversation/message/share"
+        case .commentShare: return "/conversation/message/share"
         case .commentsCounters: return "/conversation/count"
         case .commentStatus(let commentId): return "/message/\(commentId)/status"
         }

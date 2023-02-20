@@ -9,7 +9,6 @@
 import Foundation
 import MobileCoreServices
 
-
 /// Constructs `multipart/form-data` for uploads within an HTTP or HTTPS body. There are currently two ways to encode
 /// multipart form data. The first way is to encode the data directly in memory. This is very efficient, but can lead
 /// to memory issues if the dataset is too large. The second way is designed for larger datasets and will write all the
@@ -30,7 +29,7 @@ class OWNetworkMultipartFormData {
     }
 
     enum BoundaryGenerator {
-        enum BoundaryType {
+        enum BoundaryType { // swiftlint:disable:this nesting
             case initial, encapsulated, final
         }
 
@@ -180,18 +179,18 @@ class OWNetworkMultipartFormData {
     func append(_ fileURL: URL, withName name: String, fileName: String, mimeType: String) {
         let headers = contentHeaders(withName: name, fileName: fileName, mimeType: mimeType)
 
-        //============================================================
+        // ============================================================
         //                 Check 1 - is file URL?
-        //============================================================
+        // ============================================================
 
         guard fileURL.isFileURL else {
             setBodyPartError(withReason: .bodyPartURLInvalid(url: fileURL))
             return
         }
 
-        //============================================================
+        // ============================================================
         //              Check 2 - is file URL reachable?
-        //============================================================
+        // ============================================================
 
         do {
             let isReachable = try fileURL.checkPromisedItemIsReachable()
@@ -204,9 +203,9 @@ class OWNetworkMultipartFormData {
             return
         }
 
-        //============================================================
+        // ============================================================
         //            Check 3 - is file URL a directory?
-        //============================================================
+        // ============================================================
 
         var isDirectory: ObjCBool = false
         let path = fileURL.path
@@ -216,9 +215,9 @@ class OWNetworkMultipartFormData {
             return
         }
 
-        //============================================================
+        // ============================================================
         //          Check 4 - can the file size be extracted?
-        //============================================================
+        // ============================================================
 
         let bodyContentLength: UInt64
 
@@ -234,9 +233,9 @@ class OWNetworkMultipartFormData {
             return
         }
 
-        //============================================================
+        // ============================================================
         //       Check 5 - can a stream be created from file URL?
-        //============================================================
+        // ============================================================
 
         guard let stream = InputStream(url: fileURL) else {
             setBodyPartError(withReason: .bodyPartInputStreamCreationFailed(for: fileURL))
@@ -262,10 +261,10 @@ class OWNetworkMultipartFormData {
     ///   - fileName: Filename to associate with the stream content in the `Content-Disposition` HTTP header.
     ///   - mimeType: MIME type to associate with the stream content in the `Content-Type` HTTP header.
     func append(_ stream: InputStream,
-                       withLength length: UInt64,
-                       name: String,
-                       fileName: String,
-                       mimeType: String) {
+                withLength length: UInt64,
+                name: String,
+                fileName: String,
+                mimeType: String) {
         let headers = contentHeaders(withName: name, fileName: fileName, mimeType: mimeType)
         append(stream, withLength: length, headers: headers)
     }
@@ -372,7 +371,7 @@ class OWNetworkMultipartFormData {
     private func encodeHeaders(for bodyPart: BodyPart) -> Data {
         let headerText = bodyPart.headers.map { "\($0.name): \($0.value)\(EncodingCharacters.crlf)" }
             .joined()
-            + EncodingCharacters.crlf
+        + EncodingCharacters.crlf
 
         return Data(headerText.utf8)
     }
@@ -401,7 +400,7 @@ class OWNetworkMultipartFormData {
 
         guard UInt64(encoded.count) == bodyPart.bodyContentLength else {
             let error = OWNetworkError.UnexpectedInputStreamLength(bytesExpected: bodyPart.bodyContentLength,
-                                                            bytesRead: UInt64(encoded.count))
+                                                                   bytesRead: UInt64(encoded.count))
             throw OWNetworkError.multipartEncodingFailed(reason: .inputStreamReadFailed(error: error))
         }
 

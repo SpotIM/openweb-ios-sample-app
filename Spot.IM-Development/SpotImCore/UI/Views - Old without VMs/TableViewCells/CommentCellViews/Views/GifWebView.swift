@@ -11,22 +11,22 @@ import WebKit
 
 internal final class GifWebView: OWBaseView, WKUIDelegate {
     let gifWebView: WKWebView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .clear
         setupUI()
     }
-    
+
     private func setupUI() {
         addSubviews(gifWebView)
         configureGifWebView()
     }
-    
+
     func configure(gifUrl: String?) {
         updateGifWebView(with: gifUrl)
     }
-    
+
     private func updateGifWebView(with gifUrl: String?) {
         if let url = gifUrl {
             // set url into html template
@@ -39,7 +39,7 @@ internal final class GifWebView: OWBaseView, WKUIDelegate {
             gifWebView.loadHTMLString(htmlString!, baseURL: baseUrl)
         }
     }
-    
+
     private func configureGifWebView() {
         gifWebView.uiDelegate = self
         gifWebView.layer.cornerRadius = SPCommonConstants.commentMediaCornerRadius

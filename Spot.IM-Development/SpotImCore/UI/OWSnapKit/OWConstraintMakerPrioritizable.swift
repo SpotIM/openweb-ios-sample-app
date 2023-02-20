@@ -9,13 +9,13 @@
 import UIKit
 
 class OWConstraintMakerPrioritizable: OWConstraintMakerFinalizable {
-    
+
     @discardableResult
     func priority(_ amount: OWConstraintPriority) -> OWConstraintMakerFinalizable {
         self.description.priority = amount.value
         return self
     }
-    
+
     @discardableResult
     func priority(_ amount: OWConstraintPriorityTarget) -> OWConstraintMakerFinalizable {
         self.description.priority = amount

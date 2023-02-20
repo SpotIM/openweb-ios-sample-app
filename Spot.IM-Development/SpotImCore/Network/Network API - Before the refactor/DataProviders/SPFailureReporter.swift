@@ -17,7 +17,7 @@ struct RawReportModel {
 
 enum SPGeneralError {
     case encodingHtmlError(onCommentId: String?, parentId: String?)
-    
+
     var description: String {
         switch self {
         case .encodingHtmlError:
@@ -51,18 +51,18 @@ extension SPError {
             return prepareGeneralFailureModel(generalError).parameters()
         }
     }
-    
+
     private func prepareGeneralFailureModel(_ generalError: SPGeneralError) -> OWGeneralFailureReportDataModel {
         switch generalError {
-        case .encodingHtmlError(let commentId,let parentId):
+        case .encodingHtmlError(let commentId, let parentId):
             return OWGeneralFailureReportDataModel(reason: generalError.description, commentId: commentId, parentCommentId: parentId)
         }
     }
-    
+
     private func prepareRealTimeFailureModel(_ realTimeError: RealTimeError) -> OWRealTimeFailureModel {
         return OWRealTimeFailureModel(reason: realTimeError.description)
     }
-    
+
     private func prepareMonetizationFailureModel(_ monetizationError: SPMonetizationError) -> OWMonetizationFailureModel {
         switch monetizationError {
         case .bannerFailedToLoad(let source, let error):
@@ -71,13 +71,13 @@ extension SPError {
             return OWMonetizationFailureModel(source: .preConversation, reason: error.localizedDescription, bannerType: .interstitial)
         }
     }
-    
+
     private func prepareNetworkReportDataModel(_ rawReport: RawReportModel) -> OWNetworkFailureReportDataModel {
         var bodyString: String = rawReport.errorMessage
         if let data = rawReport.errorData, let dataString = String(data: data, encoding: .utf8) {
             bodyString = dataString
         }
-        
+
         return OWNetworkFailureReportDataModel(
             errorSource: "HTTP",
             httpPayload: OWFailureHttpPayload(
@@ -93,26 +93,26 @@ extension SPError {
 }
 
 internal final class SPDefaultFailureReporter: NetworkDataProvider {
-    
+
     static let shared = SPDefaultFailureReporter()
-    
+
     private init() {
         super.init(apiManager: OWApiManager())
     }
-    
+
     func report(error: SPError, postId: String = "default") {
         guard let spotKey = SPClientSettings.main.spotKey else { return }
-        
+
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: postId)
-        
+
         manager.execute(
             request: SPFailureReportRequest.error,
             parameters: error.parameters(),
             parser: OWEmptyParser(),
             headers: headers
-        ) { [weak self] (result, response) in
+        ) { [weak self] (result, _) in
             guard case let .failure(error) = result else { return }
-            
+
             self?.servicesProvider.logger().log(level: .error, "FailureReporter: \(error.localizedDescription)", prefix: "OpenWebSDKNetworkFailureReporterLogger")
         }
     }

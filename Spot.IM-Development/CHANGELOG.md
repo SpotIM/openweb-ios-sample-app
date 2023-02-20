@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.18.2] - 2023-02-08
+### Features
+- Added analytic callback when muting a user (.commentMuteClicked)
+### Fixed
+- Showing mute option only when the user logged in
+- Hiding a user profile as soon as this user is muted
+- Avatar was blanked for logged in user at the bottom CTA in the conversation
+
 ## [1.18.1] - 2023-01-11
 ### Features
 - Added an option to mute user straight from the mobile application
