@@ -27,26 +27,26 @@ class OWThemeStyleService: OWThemeStyleServicing {
     fileprivate var _currentStyle: OWThemeStyle = .light
     fileprivate var _enforcement: OWThemeStyleEnforcement = .none
     fileprivate let disposeBag = DisposeBag()
-   
+
     init() {
         setupObservers()
     }
-    
+
     func setEnforcement(enforcement: OWThemeStyleEnforcement) {
         _enforcement = enforcement
-        
+
         if case let OWThemeStyleEnforcement.theme(style) = enforcement {
             _style.onNext(style)
         }
     }
-    
+
     func setStyle(style: OWThemeStyle) {
         // No need to log anything in case the enforcement is not none, as it's very common that traitCollection will change but we will not actually change the style
         if _enforcement == .none {
             _style.onNext(style)
         }
     }
-    
+
     lazy var style: Observable<OWThemeStyle> = {
         return _style
             .asObservable()
@@ -54,7 +54,7 @@ class OWThemeStyleService: OWThemeStyleServicing {
             .observe(on: MainScheduler.instance)
             .share(replay: 1)
     }()
-    
+
     var currentStyle: OWThemeStyle {
         return _currentStyle
     }

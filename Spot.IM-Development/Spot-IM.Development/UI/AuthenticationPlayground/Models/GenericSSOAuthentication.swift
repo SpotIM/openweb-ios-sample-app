@@ -17,7 +17,7 @@ struct GenericSSOAuthentication {
 
 extension GenericSSOAuthentication {
     static let mockModels = Self.createMockModels()
-    
+
     static func createMockModels() -> [GenericSSOAuthentication] {
     #if PUBLIC_DEMO_APP
         return []

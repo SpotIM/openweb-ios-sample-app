@@ -23,7 +23,7 @@ internal extension UIImage {
             imageName = spNamed.dark
         }
 
-        self.init(named: imageName, in: Bundle.spot, compatibleWith: nil)
+        self.init(named: imageName, in: Bundle.openWeb, compatibleWith: nil)
     }
 }
 

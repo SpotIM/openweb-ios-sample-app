@@ -12,7 +12,7 @@ extension OWPreConversationStyle {
     struct InternalMetrics {
         static let numberOfCommentsForCompactStyle: Int = 1
     }
-    
+
     func validate() -> OWPreConversationStyle {
         guard case let .regular(numberOfComments) = self else { return self }
         if (numberOfComments > Metrics.maxNumberOfComments) || (numberOfComments < Metrics.minNumberOfComments) {
@@ -21,7 +21,7 @@ extension OWPreConversationStyle {
             return self
         }
     }
-    
+
     var numberOfComments: Int {
         switch self {
         case .regular(let numOfComments):

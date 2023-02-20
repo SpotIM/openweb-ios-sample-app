@@ -11,8 +11,8 @@ import RxSwift
 
 protocol OWNetworkAPIProtocol {
     func request(for endpoint: OWEndpoints) -> OWURLRequestConfiguration
-    
-    var analytics: OWAnalyticsAPI { get }  
+
+    var analytics: OWAnalyticsAPI { get }
     var realtime: OWRealtimeAPI { get }
     var configuration: OWConfigurationAPI { get }
     var conversation: OWConversationAPI { get }
@@ -40,7 +40,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
     let responseMiddlewares: [OWResponseMiddleware]
     let queue: DispatchQueue
     let session: OWSession
-    
+
     init(environment: OWEnvironmentProtocol,
          middlewares: [OWMiddleware] = defaultMiddlewares,
          queueName: String = "OpenWebSDKNetworkQueue",
@@ -50,7 +50,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
         self.environment = environment
         self.queue = DispatchQueue(label: queueName, qos: queuePriority)
         self.session = session
-        
+
         self.requestMiddlewares = middlewares
             .map { $0 as? OWRequestMiddleware }
             .unwrap()
@@ -89,18 +89,24 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
         let progress = PublishSubject<Progress>()
 
         let request = requestAfterPerformingMiddlewares(with: route.urlRequest!, additionalMiddlewares: route.endpoint.additionalMiddlewares ?? [])
-        
+
         let response = Observable<T>.create { observer in
             let task = self.session.afSession.request(request)
                 .downloadProgress(closure: { prog in
                     progress.onNext(prog)
                 })
-                .responseDecodable(of: T.self, queue: self.queue, dataPreprocessor: OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor, decoder: decoder, emptyResponseCodes: OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes, emptyRequestMethods: OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods, completionHandler: { [weak self] (response: OWNetworkDataResponse<T, OWNetworkError>) in
-                    
+                .responseDecodable(of: T.self,
+                                   queue: self.queue,
+                                   dataPreprocessor: OWNetworkDecodableResponseSerializer<T>.defaultDataPreprocessor,
+                                   decoder: decoder,
+                                   emptyResponseCodes: OWNetworkDecodableResponseSerializer<T>.defaultEmptyResponseCodes,
+                                   emptyRequestMethods: OWNetworkDecodableResponseSerializer<T>.defaultEmptyRequestMethods,
+                                   completionHandler: { [weak self] (response: OWNetworkDataResponse<T, OWNetworkError>) in
+
                     guard let `self` = self else { return }
-                    
+
                     let newResponse = self.responseAfterPerformingMiddlewares(with: response)
-                    
+
                     switch newResponse.result {
                     case .success(let value):
                         observer.onNext(value)
