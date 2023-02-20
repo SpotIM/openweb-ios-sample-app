@@ -9,7 +9,7 @@
 import Foundation
 
 struct SPShareLink: Decodable {
-    
+
     let reference: URL?
-    
+
 }

@@ -42,11 +42,11 @@ internal extension UIDevice {
             return "unsuppoted new value " + String(self.userInterfaceIdiom.rawValue)
         }
     }
-    
+
     // MARK: Screen sizes
     var iPhoneX: Bool { UIScreen.main.nativeBounds.height == 2436 }
     var iPhone: Bool { UIDevice.current.userInterfaceIdiom == .phone }
-    var iPad: Bool { UIDevice().userInterfaceIdiom == .pad }
+    var iPad: Bool { UIDevice().userInterfaceIdiom == .pad } // swiftlint:disable:this discouraged_direct_init
     enum ScreenType: String {
         case iPhones_4_4S = "iPhone 4 or iPhone 4S"
         case iPhones_5_5s_5c_SE = "iPhone 5, iPhone 5s, iPhone 5c or iPhone SE"
@@ -78,21 +78,23 @@ internal extension UIDevice {
             return .unknown
         }
     }
-    
+
      var hasNotch: Bool {
            if #available(iOS 11.0, *) {
                // Case 1: Portrait && top safe area inset >= 44
                let case1 = !UIDevice.current.orientation.isLandscape && (UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0) >= 44
                // Case 2: Lanscape && left/right safe area inset > 0
-               let case2 = UIDevice.current.orientation.isLandscape && ((UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0) > 0 || (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) > 0)
-               
+               let case2 = UIDevice.current.orientation.isLandscape &&
+               ((UIApplication.shared.keyWindow?.safeAreaInsets.left ?? 0) > 0 ||
+                (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) > 0)
+
                return case1 || case2
            } else {
                // Fallback on earlier versions
                return false
            }
        }
-    
+
     func isPortrait() -> Bool {
         return UIScreen.main.bounds.width < UIScreen.main.bounds.height
     }

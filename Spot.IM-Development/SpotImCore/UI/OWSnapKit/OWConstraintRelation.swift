@@ -8,21 +8,19 @@
 
 import UIKit
 
-enum OWConstraintRelation : Int {
+enum OWConstraintRelation: Int {
     case equal = 1
     case lessThanOrEqual
     case greaterThanOrEqual
-    
+
     var layoutRelation: OWLayoutRelation {
-        get {
-            switch(self) {
-            case .equal:
-                return .equal
-            case .lessThanOrEqual:
-                return .lessThanOrEqual
-            case .greaterThanOrEqual:
-                return .greaterThanOrEqual
-            }
+        switch(self) {
+        case .equal:
+            return .equal
+        case .lessThanOrEqual:
+            return .lessThanOrEqual
+        case .greaterThanOrEqual:
+            return .greaterThanOrEqual
         }
     }
 }

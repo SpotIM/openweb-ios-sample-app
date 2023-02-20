@@ -37,10 +37,10 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
         static let depth2Offset: CGFloat = 40.0
         static let maxDepthOffset: CGFloat = 55.0
     }
-    
+
     var inputs: OWCommentContentViewModelingInputs { return self }
     var outputs: OWCommentContentViewModelingOutputs { return self }
-    
+
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     fileprivate let lineLimit: Int
     fileprivate let imageProvider: OWImageProviding
@@ -106,7 +106,7 @@ fileprivate extension OWCommentContentViewModel {
             }
             .asObservable()
     }
-    
+
     var _commentLeadingOffset: Observable<CGFloat> {
         _comment
             .unwrap()
@@ -116,7 +116,7 @@ fileprivate extension OWCommentContentViewModel {
             }
             .asObservable()
     }
-    
+
     func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
         case 0: return Metrics.depth0Offset
@@ -125,7 +125,7 @@ fileprivate extension OWCommentContentViewModel {
         default: return Metrics.maxDepthOffset
         }
     }
-    
+
     func getMediaSize(originalSize: CGSize, leadingOffset: CGFloat) -> CGSize {
         guard originalSize.height > 0 && originalSize.width > 0 else { return .zero }
         let maxWidth = SPUIWindow.frame.width - leadingOffset // TODO: comment leading+trailing offset ?

@@ -9,7 +9,7 @@
 import UIKit
 
 extension NSAttributedString {
-    
+
     func clippedToLine(index: Int, width: CGFloat, clippedTextSettings: SPClippedTextSettings) -> NSAttributedString {
         guard width > 1 else { return self } // not to spoil everything before UI is layed out
 
@@ -21,7 +21,7 @@ extension NSAttributedString {
         guard let lines = linesNS as? [CTLine], !lines.isEmpty else { return self }
 
         var collapsedText: NSAttributedString = NSAttributedString()
-        
+
         if index >= linesNS.count {
             collapsedText = self
         } else if clippedTextSettings.isCollapsed {
@@ -29,23 +29,22 @@ extension NSAttributedString {
         } else {
             collapsedText = readLessAppended()
         }
-        
+
         if clippedTextSettings.isEdited {
             collapsedText = readEditedAppended(
                 text: collapsedText,
                 fontPointSize: clippedTextSettings.fontPointSize
             )
         }
-        
+
         return collapsedText
-        
-        
+
     }
-    
+
     private func handleCollapsingOfText(index: Int,
                                         width: CGFloat,
                                         isCollapsed: Bool,
-                                        linesNS : NSArray,
+                                        linesNS: NSArray,
                                         lines: [CTLine]) -> NSAttributedString {
         if index >= linesNS.count {
             return self
@@ -94,7 +93,7 @@ extension NSAttributedString {
         let trimmedSelf = clippedSelf.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
         let mutableSelf = trimmedSelf.mutableCopy() as? NSMutableAttributedString
         mutableSelf?.append(readMore)
-        
+
         return mutableSelf ?? self
     }
 
@@ -111,9 +110,9 @@ extension NSAttributedString {
 
         return mutableSelf ?? self
     }
-    
+
     private func readEditedAppended(text: NSAttributedString, fontPointSize: CGFloat) -> NSAttributedString {
-        
+
         let editedTextAttributes: [NSAttributedString.Key: Any] = [
                        .foregroundColor: UIColor.gray,
                        .font: UIFont.italicSystemFont(ofSize: fontPointSize)
@@ -163,7 +162,7 @@ internal extension NSAttributedString {
 }
 
 internal extension NSMutableAttributedString {
-    
+
      func trimCharactersInSet(charSet: CharacterSet) {
         var range = (string as NSString).rangeOfCharacter(from: charSet)
 
@@ -183,7 +182,7 @@ internal extension NSMutableAttributedString {
 }
 
 extension NSMutableParagraphStyle {
-    
+
     func updateAlignment() {
         if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
             alignment = .right

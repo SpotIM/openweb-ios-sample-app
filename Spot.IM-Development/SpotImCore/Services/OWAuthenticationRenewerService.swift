@@ -15,12 +15,12 @@ class OWAuthenticationRenewerService: OWAuthenticationRenewerServicing {
     fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
     fileprivate let authProvider: SpotImAuthenticationProvider
     fileprivate let disposeBag = DisposeBag()
-    
+
     init(appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle(),
          authProvider: SpotImAuthenticationProvider = SpotIm.authProvider) {
         self.appLifeCycle = appLifeCycle
         self.authProvider = authProvider
-        
+
         setupObservers()
     }
 }

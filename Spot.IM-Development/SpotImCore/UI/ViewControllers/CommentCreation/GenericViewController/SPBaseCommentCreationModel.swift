@@ -9,7 +9,7 @@
 import Foundation
 
 class SPBaseCommentCreationModel: CommentStateable {
-    
+
     var postCompletionHandler: ((SPComment) -> Void)?
     var errorHandler: ((Error) -> Void)?
     var commentText: String = ""
@@ -18,13 +18,13 @@ class SPBaseCommentCreationModel: CommentStateable {
     var selectedLabels: SelectedLabels?
     var commentLabelsSection: String?
     var sectionCommentLabelsConfig: SPCommentLabelsSectionConfiguration?
-    
+
     let imageProvider: SPImageProvider
     let commentService: SPCommentUpdater
     let cacheService: SPCommentsInMemoryCacheService
-    
+
     private var currentUploadingImageId: String?
-    
+
     init(cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
          imageProvider: SPImageProvider,
@@ -36,7 +36,7 @@ class SPBaseCommentCreationModel: CommentStateable {
         self.articleMetadate = articleMetadate
         self.setupCommentLabels()
     }
-    
+
     func post() {}
     func updateCommentText(_ text: String) {}
 
@@ -46,7 +46,7 @@ class SPBaseCommentCreationModel: CommentStateable {
               let commentLabelsConfig = sharedConfig.commentLabels else { return }
         (sectionCommentLabelsConfig, commentLabelsSection) = getLabelsSectionConfig(commentLabelsConfig: commentLabelsConfig)
     }
-    
+
     private func getLabelsSectionConfig(commentLabelsConfig: Dictionary<String, SPCommentLabelsSectionConfiguration>) -> (SPCommentLabelsSectionConfiguration?, String?) {
         var sectionLabelsConfig: SPCommentLabelsSectionConfiguration? = nil
         var commentLabelsSection: String? = nil
@@ -60,7 +60,7 @@ class SPBaseCommentCreationModel: CommentStateable {
         }
         return (sectionLabelsConfig, commentLabelsSection)
     }
-    
+
     func shouldDisplayImageUploadButton() -> Bool {
         if let conversationConfig = SPConfigsDataSource.appConfig?.conversation,
            conversationConfig.disableImageUploadButton == true {
@@ -73,7 +73,7 @@ class SPBaseCommentCreationModel: CommentStateable {
             return true
         }
     }
-    
+
     func updateCommentLabels(labelsIds: [String]) {
         if let commentLabelsSection = commentLabelsSection, !labelsIds.isEmpty {
             selectedLabels = SelectedLabels(section: commentLabelsSection, ids: labelsIds)
@@ -81,25 +81,25 @@ class SPBaseCommentCreationModel: CommentStateable {
             selectedLabels = nil
         }
     }
-    
+
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
         imageProvider.fetchImage(with: SPUserSessionHolder.session.user?.imageURL(size: navigationAvatarSize),
                             size: navigationAvatarSize,
                             completion: completion)
     }
-    
+
     func isValidContent() -> Bool {
         return
             commentText.hasContent ||
             imageContent != nil
     }
-    
+
     func uploadImageToCloudinary(imageData: String, completion: @escaping (Bool) -> Void) {
         self.imageContent = nil
-        
+
         let imageId = UUID().uuidString
         self.currentUploadingImageId = imageId
-        
+
         imageProvider.uploadImage(imageData: imageData, imageId: imageId) { imageContent, err in
             if self.currentUploadingImageId == imageContent?.imageId {
                 self.imageContent = imageContent
@@ -113,22 +113,22 @@ class SPBaseCommentCreationModel: CommentStateable {
             }
         }
     }
-    
+
     func removeImage() {
         self.currentUploadingImageId = nil
         self.imageContent = nil
     }
-    
+
     func getContentRequestParam() -> [[String: Any]] {
         var content: [[String: Any]] = []
-        
+
         if commentText.hasContent {
             content.append([
                 CreateCommentAPIKeys.type: CreateCommentAPIKeys.text,
                 CreateCommentAPIKeys.text: commentText
             ])
         }
-        
+
         if let imageContent = self.imageContent {
             content.append([
                 CreateCommentAPIKeys.type: CreateCommentAPIKeys.image,

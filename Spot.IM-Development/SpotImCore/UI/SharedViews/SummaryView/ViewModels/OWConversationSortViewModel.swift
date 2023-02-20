@@ -27,21 +27,21 @@ class OWConversationSortViewModel: OWConversationSortViewModeling,
                                    OWConversationSortViewModelingOutputs {
     var inputs: OWConversationSortViewModelingInputs { return self }
     var outputs: OWConversationSortViewModelingOutputs { return self }
-          
+
     fileprivate let _selectedSortOption = BehaviorSubject<SPCommentSortMode?>(value: nil)
-    
+
     init (sortOption: SPCommentSortMode? = nil) {
         if let sortOption = sortOption {
             configure(selectedSortOption: sortOption)
         }
     }
-        
+
     var selectedSortOption: Observable<SPCommentSortMode> {
         _selectedSortOption
             .unwrap()
             .map { $0 }
     }
-    
+
     func configure(selectedSortOption: SPCommentSortMode) {
         _selectedSortOption.onNext(selectedSortOption)
     }
