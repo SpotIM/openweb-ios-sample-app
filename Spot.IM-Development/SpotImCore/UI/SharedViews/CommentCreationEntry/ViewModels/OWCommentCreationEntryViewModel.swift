@@ -14,7 +14,7 @@ protocol OWCommentCreationEntryViewModelingInputs {
     func configure(user: SPUser)
     func configure(ctaText: String)
     func configure(delegate: OWCommentCreationEntryViewDelegate?)
-    
+
     var tap: PublishSubject<Void> { get }
 }
 
@@ -31,46 +31,46 @@ protocol OWCommentCreationEntryViewModeling {
 
 // TODO: Old view model, should be deleted once new infra complete
 class OWCommentCreationEntryViewModel: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
-    
+
     var inputs: OWCommentCreationEntryViewModelingInputs { return self }
     var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     internal weak var delegate: OWCommentCreationEntryViewDelegate?
-    
+
     var imageURLProvider: SPImageProvider?
-    
+
     init (imageURLProvider: SPImageProvider?) {
         self.imageURLProvider = imageURLProvider
         setupObservers()
     }
-    
+
     fileprivate let _actionText = BehaviorSubject<String>(value: LocalizationManager.localizedString(key: "What do you think?"))
-    
+
     func configure(delegate: OWCommentCreationEntryViewDelegate?) {
         self.delegate = delegate
     }
-    
+
     var tap = PublishSubject<Void>()
-    
+
     var tapped: Observable<Void> {
         tap
             .asObserver()
     }
-    
+
     lazy var avatarViewVM: OWAvatarViewModeling = {
         return OWAvatarViewModel(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
     }()
-    
+
     func configure(user: SPUser) {
         outputs.avatarViewVM.inputs.configureUser(user: user)
     }
-    
+
     func configure(ctaText: String) {
         _actionText.onNext(ctaText)
     }
-    
+
     var ctaText: Observable<String> {
         _actionText.asObserver()
     }
@@ -82,7 +82,7 @@ fileprivate extension OWCommentCreationEntryViewModel {
             guard let self = self else { return }
             self.delegate?.userAvatarDidTap()
         }).disposed(by: disposeBag)
-        
+
         outputs.tapped.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.delegate?.labelContainerDidTap()
@@ -92,43 +92,43 @@ fileprivate extension OWCommentCreationEntryViewModel {
 
 // TODO: View Model for new infra. Old one should be deleted
 class OWCommentCreationEntryViewModelV2: OWCommentCreationEntryViewModeling, OWCommentCreationEntryViewModelingInputs, OWCommentCreationEntryViewModelingOutputs {
-    
+
     var inputs: OWCommentCreationEntryViewModelingInputs { return self }
     var outputs: OWCommentCreationEntryViewModelingOutputs { return self }
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     var imageURLProvider: OWImageProviding
-    
+
     init (imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageURLProvider = imageURLProvider
         setupObservers()
     }
-    
+
     fileprivate let _actionText = BehaviorSubject<String>(value: LocalizationManager.localizedString(key: "What do you think?"))
-    
+
     var tap = PublishSubject<Void>()
-    
+
     var tapped: Observable<Void> {
         tap
             .asObserver()
     }
-    
+
     lazy var avatarViewVM: OWAvatarViewModeling = {
         return OWAvatarViewModelV2(user: SPUserSessionHolder.session.user, imageURLProvider: imageURLProvider)
     }()
-    
+
     var ctaText: Observable<String> {
         _actionText.asObserver()
     }
-    
+
     // TODO: configure functions should be removed from protocol once refactor complete
     func configure(user: SPUser) {
     }
-    
+
     func configure(ctaText: String) {
     }
-    
+
     func configure(delegate: OWCommentCreationEntryViewDelegate?) {
     }
 }

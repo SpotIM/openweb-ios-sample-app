@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class SwitchSetting: UIView {
-    
+
     fileprivate struct Metrics {
         static let titleFontSize: CGFloat = 20
         static let verticalOffset: CGFloat = 20
@@ -19,10 +19,10 @@ class SwitchSetting: UIView {
         static let switchMinWidth: CGFloat = 50
         static let titleNumberOfLines: Int = 2
     }
-    
+
     fileprivate let title: String
     fileprivate let initialIsOn: Bool
-    
+
     fileprivate lazy var settingTitleLbl: UILabel = {
         return title
             .label
@@ -30,27 +30,27 @@ class SwitchSetting: UIView {
             .numberOfLines(Metrics.titleNumberOfLines)
             .lineBreakMode(.byWordWrapping)
     }()
-    
+
     fileprivate lazy var switchSetting: UISwitch = {
         let aSwitch = UISwitch()
         aSwitch.setOn(initialIsOn, animated: false)
-        
+
         return aSwitch
     }()
-    
+
     init(title: String, accessibilityPrefixId: String, isOn: Bool = false) {
         self.title = title
         self.initialIsOn = isOn
         super.init(frame: .zero)
-        
+
         setupViews()
         applyAccessibility(prefixId: accessibilityPrefixId)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 fileprivate extension SwitchSetting {
@@ -58,14 +58,14 @@ fileprivate extension SwitchSetting {
         settingTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         switchSetting.accessibilityIdentifier = prefixId + "_switch_id"
     }
-    
+
     func setupViews() {
         self.addSubview(settingTitleLbl)
         settingTitleLbl.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
         }
-        
+
         self.addSubview(switchSetting)
         switchSetting.snp.makeConstraints { make in
             make.centerY.equalTo(settingTitleLbl)
@@ -77,7 +77,7 @@ fileprivate extension SwitchSetting {
 }
 
 extension Reactive where Base: SwitchSetting {
-    
+
     var text: Binder<String?> {
         return Binder(self.base.settingTitleLbl) { label, text in
             label.text = text

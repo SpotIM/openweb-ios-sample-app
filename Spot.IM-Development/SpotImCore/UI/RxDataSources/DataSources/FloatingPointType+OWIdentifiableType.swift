@@ -9,13 +9,13 @@
 import Foundation
 
 extension FloatingPoint {
-    typealias identity = Self
+    typealias Identity = Self
 
     var identity: Self {
         return self
     }
 }
 
-extension Float : OWIdentifiableType {}
+extension Float: OWIdentifiableType {}
 
-extension Double : OWIdentifiableType {}
+extension Double: OWIdentifiableType {}

@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentCellViewModelingInputs {
-    
+
 }
 
 protocol OWCommentCellViewModelingOutputs {
@@ -26,17 +26,17 @@ protocol OWCommentCellViewModeling: OWCellViewModel {
 class OWCommentCellViewModel: OWCommentCellViewModeling, OWCommentCellViewModelingInputs, OWCommentCellViewModelingOutputs {
     var inputs: OWCommentCellViewModelingInputs { return self }
     var outputs: OWCommentCellViewModelingOutputs { return self }
-    
+
     let commentVM: OWCommentViewModeling
-    
+
     var id: String = ""
-    
+
     init(data: OWCommentRequiredData) {
         self.id = data.comment.id ?? ""
-    
+
         self.commentVM = OWCommentViewModel(data: data)
     }
-    
+
     init() {
         self.commentVM = OWCommentViewModel()
     }

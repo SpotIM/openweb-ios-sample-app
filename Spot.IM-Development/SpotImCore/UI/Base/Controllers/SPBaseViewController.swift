@@ -6,9 +6,9 @@
 import UIKit
 
 internal class SPBaseViewController: UIViewController {
-    
+
     internal weak var customUIDelegate: OWCustomUIDelegate?
-    
+
     var userRightBarItem: UIBarButtonItem?
     var userIcon: OWBaseButton = {
         let button = OWBaseButton(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
@@ -16,10 +16,10 @@ internal class SPBaseViewController: UIViewController {
         button.makeViewRound()
         button.contentMode = .scaleAspectFill
         button.setImage(UIImage(spNamed: "userIcon", supportDarkMode: true), for: .normal)
-        
+
         return button
     }()
-    
+
     init(customUIDelegate: OWCustomUIDelegate?) {
         super.init(nibName: nil, bundle: nil)
         self.customUIDelegate = customUIDelegate
@@ -27,18 +27,18 @@ internal class SPBaseViewController: UIViewController {
         ?? view.semanticContentAttribute
         overrideInterfaceStyleIfNeeded()
     }
-    
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .spBackground0
-        
+
         NotificationCenter.default.addObserver(
                    self,
                    selector: #selector(overrideUserInterfaceStyleDidChange),
                    name: Notification.Name(SpotIm.OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION),
                    object: nil)
     }
-    
+
     var runtimeSource: SPViewSourceType {
         var source: SPViewSourceType = .preConversation
         switch self {
@@ -53,11 +53,11 @@ internal class SPBaseViewController: UIViewController {
         }
         return source
     }
-    
+
     @objc func overrideUserInterfaceStyleDidChange() {
         self.updateColorsAccordingToStyle()
     }
-    
+
     override func viewWillLayoutSubviews() {
         self.updateViewWindowFrameIfChanged()
     }
@@ -70,10 +70,10 @@ internal class SPBaseViewController: UIViewController {
             if let backButton = self.navigationItem.leftBarButtonItem?.customView as? UIButton {
                 backButton.setImage(UIImage(spNamed: "backButton", supportDarkMode: true), for: .normal)
             }
-            
+
             // title view
             navigationItemTitleView?.textColor = UIColor.spForeground0
-        
+
             // nav bar
             let navBarAppearance = UINavigationBarAppearance()
             navBarAppearance.configureWithOpaqueBackground()
@@ -83,20 +83,20 @@ internal class SPBaseViewController: UIViewController {
             self.navigationController?.navigationBar.standardAppearance = navBarAppearance
             self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
         }
-        
+
         if let navigationItemTitleView = navigationItemTitleView {
-            
+
             customUIDelegate?.customizeView(.navigationItemTitle(label: navigationItemTitleView), source: runtimeSource)
         }
     }
-    
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(alongsideTransition: nil) { _ in
             self.updateViewWindowFrameIfChanged()
         }
     }
-    
+
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init is not implemented")
@@ -106,7 +106,7 @@ internal class SPBaseViewController: UIViewController {
         guard #available(iOS 13.0, *), let style = SpotIm.overrideUserInterfaceStyle else { return }
         overrideUserInterfaceStyle = style.nativeValue
     }
-    
+
     private func updateViewWindowFrameIfChanged() {
         guard let frame = self.view.window?.frame else { return }
         if frame != SPUIWindow.frame {
@@ -114,7 +114,7 @@ internal class SPBaseViewController: UIViewController {
             viewDidChangeWindowSize()
         }
     }
-    
+
     internal func viewDidChangeWindowSize() {
         // To implement in subclasses
     }

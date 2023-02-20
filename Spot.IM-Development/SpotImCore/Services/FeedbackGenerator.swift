@@ -11,11 +11,11 @@ import UIKit
 typealias FeedbackType = UINotificationFeedbackGenerator.FeedbackType
 
 final class FeedbackGenerator {
-    
+
     static func generateFeedback(for feedbackType: FeedbackType) {
         let notificationFeedbackGenerator = UINotificationFeedbackGenerator()
         notificationFeedbackGenerator.prepare()
         notificationFeedbackGenerator.notificationOccurred(feedbackType)
     }
-    
+
 }

@@ -22,18 +22,18 @@ protocol OWKeychainRxProtocol {
     func setValues<T>(key: OWKeychain.OWKey<T>) -> Binder<T>
 }
 
-class OWKeychain : ReactiveCompatible, OWKeychainProtocol {
+class OWKeychain: ReactiveCompatible, OWKeychainProtocol {
     fileprivate struct Metrics {
         static let kSecAttrService = "com.open-web.sdk"
     }
-    
+
     var rxProtocol: OWKeychainRxProtocol { return self }
     fileprivate var rxHelper: OWPersistenceRxHelperProtocol
-    
+
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let encoder: JSONEncoder
     fileprivate let decoder: JSONDecoder
-    
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
          encoder: JSONEncoder = JSONEncoder(),
          decoder: JSONDecoder = JSONDecoder()) {
@@ -42,7 +42,7 @@ class OWKeychain : ReactiveCompatible, OWKeychainProtocol {
         self.decoder = decoder
         self.rxHelper = OWPersistenceRxHelper(decoder: decoder, encoder: encoder)
     }
-    
+
     enum OWKey<T: Codable>: String, OWRawableKey {
         case guestSessionUserId = "session.guest.userId"
         case loggedInUserSession = "session.user"
@@ -51,31 +51,31 @@ class OWKeychain : ReactiveCompatible, OWKeychainProtocol {
         case reportedCommentsSession = "session.reported.comments"
         case isMigratedToKeychain = "keychain.data.migration"
     }
-    
+
     func save<T>(value: T, forKey key: OWKey<T>) {
         guard let encodedData = try? encoder.encode(value) else {
             servicesProvider.logger().log(level: .error, "Failed to encode data for key: \(key.rawValue) before writing to Keychain")
             return
         }
-        
+
         rxHelper.onNext(key: OWRxHelperKey<T>(key: key), data: encodedData)
-        
+
         _save(data: encodedData, forKey: key)
     }
-    
+
     func get<T>(key: OWKey<T>) -> T? {
         guard let data = _get(key: key) else {
             return nil
         }
-        
+
         guard let valueToReturn = try? decoder.decode(T.self, from: data) else {
             servicesProvider.logger().log(level: .error, "Failed to decode data for key: \(key.rawValue) to class: \(T.self) after retrieving from Keychain")
             return nil
         }
-        
+
         return valueToReturn
     }
-    
+
     func remove<T>(key: OWKey<T>) {
         _remove(key: key)
     }
@@ -112,11 +112,11 @@ fileprivate extension OWKeychain {
 
         return query
     }
-    
+
     func _save<T>(data: Data, forKey key: OWKey<T>) {
         var query = query(forKey: key)
         query[String(kSecMatchLimit)] = kSecMatchLimitOne
-        
+
         let searchStatus = SecItemCopyMatching(query as CFDictionary, nil)
         // Remove the match limit as we are using the same query for writing
         query.removeValue(forKey: String(kSecMatchLimit))
@@ -136,37 +136,39 @@ fileprivate extension OWKeychain {
                 servicesProvider.logger().log(level: .error, "Failed to write to Keychain using SecItemAdd with key: \(key.rawValue)")
             }
         default:
-            servicesProvider.logger().log(level: .error, "Failed to write to Keychain with key: \(key.rawValue), got status: \(searchStatus.description) when using SecItemCopyMatching")
+            let message = "Failed to write to Keychain with key: \(key.rawValue), got status: \(searchStatus.description) when using SecItemCopyMatching"
+            servicesProvider.logger().log(level: .error, message)
         }
     }
-    
+
     func _get<T>(key: OWKey<T>) -> Data? {
         var query = query(forKey: key)
         query[String(kSecMatchLimit)] = kSecMatchLimitOne
         query[String(kSecReturnAttributes)] = kCFBooleanTrue
         query[String(kSecReturnData)] = kCFBooleanTrue
-        
+
         var queryResult: AnyObject?
         let searchStatus = SecItemCopyMatching(query as CFDictionary, &queryResult)
         switch searchStatus {
         case errSecSuccess:
             guard let queriedItem = queryResult as? [String: Any],
                   let data = queriedItem [String(kSecValueData)] as? Data else {
-                      servicesProvider.logger().log(level: .error, "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue)")
-                      return nil
+                servicesProvider.logger().log(level: .error, "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue)")
+                return nil
             }
             return data
         case errSecItemNotFound:
             return nil
         default:
-            servicesProvider.logger().log(level: .error, "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue), got status: \(searchStatus.description)")
+            let message = "Failed to get value from Keychain using SecItemCopyMatching with key: \(key.rawValue), got status: \(searchStatus.description)"
+            servicesProvider.logger().log(level: .error, message)
             return nil
         }
     }
-    
+
     func _remove<T>(key: OWKey<T>) {
         let query = query(forKey: key)
-        
+
         let removeStatus = SecItemDelete(query as CFDictionary)
         if removeStatus != errSecSuccess && removeStatus != errSecItemNotFound {
             servicesProvider.logger().log(level: .error, "Failed to remove data from Keychain using SecItemDelete with key: \(key.rawValue)")
@@ -178,11 +180,11 @@ extension OWKeychain {
     func values<T>(key: OWKeychain.OWKey<T>) -> Observable<T> {
         return rx.values(key: key, defaultValue: nil)
     }
-    
+
     func values<T>(key: OWKeychain.OWKey<T>, defaultValue: T? = nil) -> Observable<T> {
         return rx.values(key: key, defaultValue: defaultValue)
     }
-    
+
     func setValues<T>(key: OWKeychain.OWKey<T>) -> Binder<T> {
         return rx.setValues(key: key)
     }

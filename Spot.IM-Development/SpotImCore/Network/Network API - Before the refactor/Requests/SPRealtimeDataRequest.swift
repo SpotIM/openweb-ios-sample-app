@@ -9,7 +9,7 @@
 import Foundation
 
 internal enum SPRealtimeDataRequest: SPRequest {
-    
+
     case read
 
     internal var method: OWNetworkHTTPMethod {

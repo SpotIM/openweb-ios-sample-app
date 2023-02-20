@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIBarButtonItem {
-    
+
     convenience init(
         image: UIImage,
         highlightedImage: UIImage? = nil,
@@ -17,7 +17,7 @@ extension UIBarButtonItem {
         target: Any,
         selector: Selector
         ) {
-        
+
         let button = UIButton(type: .custom)
         button.setImage(image, for: UIControl.State())
         button.setImage(highlightedImage, for: .highlighted)
@@ -28,7 +28,7 @@ extension UIBarButtonItem {
             width: image.size.width * imageScale,
             height: image.size.height * imageScale
         )
-        
+
         self.init(customView: button)
     }
 }

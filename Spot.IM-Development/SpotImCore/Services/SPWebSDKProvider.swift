@@ -9,22 +9,22 @@
 import Foundation
 
 internal final class SPWebSDKProvider {
-    
+
     fileprivate struct Settings {
-        static let helpers: OWHelpersLayer = OpenWeb.manager.helpers as! OWHelpersLayer
+        static let helpers: OWHelpersLayer = OpenWeb.manager.helpers as! OWHelpersLayer // swiftlint:disable:this force_cast
         static let tenantConfigCommentsFilter: String = "tenant_config.user-profile.keys_to_filter_comments"
     }
-    
+
     enum WebModule: String {
         case profile = "user-profile"
     }
-    
+
     internal static func openWebModule(delegate: SPSafariWebPageDelegate?, params: Params) {
         if let urlString = getUrlString(params: params) {
             delegate?.openWebPage(with: urlString)
         }
     }
-    
+
     private static func getUrlString(params: Params) -> String? {
         let baseUrl = URL(string: "https://sdk.openweb.com/index.html")
         guard var url = baseUrl else { return nil }
@@ -37,16 +37,16 @@ internal final class SPWebSDKProvider {
         }
 
         url = urlWithDarkModeParam(url: url)
-        
+
         if Settings.helpers.shouldSuppressFinmbFilter {
             // Current way for Yahoo internal testing for suppress finmb
             // We will remove this noize from the code soon
             url.appendQueryParam(name: Settings.tenantConfigCommentsFilter, value: "")
         }
-        
+
         return url.absoluteString
     }
-    
+
     public static func urlWithDarkModeParam(url: URL) -> URL {
         var urlWithDarkModeParam = url
         urlWithDarkModeParam.appendQueryParam(name: "theme", value: SPUserInterfaceStyle.isDarkMode ? "dark" : "light")
@@ -61,13 +61,13 @@ extension SPWebSDKProvider {
         var postId: String = "default"
         var userId: String?
         var singleUseTicket: String?
-        
+
         init(module: WebModule, spotId: String, postId: String) {
             self.module = module
             self.spotId = spotId
             self.postId = postId
         }
-        
+
         convenience init(module: WebModule, spotId: String, postId: String, userId: String) {
             self.init(module: module, spotId: spotId, postId: postId)
             self.userId = userId

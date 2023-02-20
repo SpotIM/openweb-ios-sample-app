@@ -166,12 +166,12 @@ extension OWNetworkDataRequest {
     ///
     /// - Returns: The `DataTask`.
     func serializingData(automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
-                                dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
-                                emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
-                                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataTask<Data> {
+                         dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
+                         emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
+                         emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataTask<Data> {
         serializingResponse(using: OWNetworkDataResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                          emptyResponseCodes: emptyResponseCodes,
-                                                          emptyRequestMethods: emptyRequestMethods),
+                                                                   emptyResponseCodes: emptyResponseCodes,
+                                                                   emptyRequestMethods: emptyRequestMethods),
                             automaticallyCancelling: shouldAutomaticallyCancel)
     }
 
@@ -190,15 +190,16 @@ extension OWNetworkDataRequest {
     ///
     /// - Returns: The `DataTask`.
     func serializingDecodable<Value: Decodable>(_ type: Value.Type = Value.self,
-                                                       automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
-                                                       dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<Value>.defaultDataPreprocessor,
-                                                       decoder: OWNetworkDataDecoder = JSONDecoder(),
-                                                       emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyResponseCodes,
-                                                       emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyRequestMethods) -> OWNetworkDataTask<Value> {
+                                                automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
+                                                dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<Value>.defaultDataPreprocessor,
+                                                decoder: OWNetworkDataDecoder = JSONDecoder(),
+                                                emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyResponseCodes,
+                                                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyRequestMethods)
+    -> OWNetworkDataTask<Value> {
         serializingResponse(using: OWNetworkDecodableResponseSerializer<Value>(dataPreprocessor: dataPreprocessor,
-                                                                      decoder: decoder,
-                                                                      emptyResponseCodes: emptyResponseCodes,
-                                                                      emptyRequestMethods: emptyRequestMethods),
+                                                                               decoder: decoder,
+                                                                               emptyResponseCodes: emptyResponseCodes,
+                                                                               emptyRequestMethods: emptyRequestMethods),
                             automaticallyCancelling: shouldAutomaticallyCancel)
     }
 
@@ -218,14 +219,14 @@ extension OWNetworkDataRequest {
     ///
     /// - Returns: The `DataTask`.
     func serializingString(automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
-                                  dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
-                                  encoding: String.Encoding? = nil,
-                                  emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
-                                  emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataTask<String> {
+                           dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
+                           encoding: String.Encoding? = nil,
+                           emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
+                           emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDataTask<String> {
         serializingResponse(using: OWNetworkStringResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                            encoding: encoding,
-                                                            emptyResponseCodes: emptyResponseCodes,
-                                                            emptyRequestMethods: emptyRequestMethods),
+                                                                     encoding: encoding,
+                                                                     emptyResponseCodes: emptyResponseCodes,
+                                                                     emptyRequestMethods: emptyRequestMethods),
                             automaticallyCancelling: shouldAutomaticallyCancel)
     }
 
@@ -239,8 +240,8 @@ extension OWNetworkDataRequest {
     ///
     /// - Returns: The `DataTask`.
     func serializingResponse<Serializer: OWNetworkResponseSerializer>(using serializer: Serializer,
-                                                                    automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> OWNetworkDataTask<Serializer.SerializedObject> {
+                                                                      automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
+    -> OWNetworkDataTask<Serializer.SerializedObject> {
         dataTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -259,8 +260,8 @@ extension OWNetworkDataRequest {
     ///
     /// - Returns: The `DataTask`.
     func serializingResponse<Serializer: OWNetworkDataResponseSerializerProtocol>(using serializer: Serializer,
-                                                                                automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> OWNetworkDataTask<Serializer.SerializedObject> {
+                                                                                  automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
+    -> OWNetworkDataTask<Serializer.SerializedObject> {
         dataTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -270,7 +271,7 @@ extension OWNetworkDataRequest {
 
     private func dataTask<Value>(automaticallyCancelling shouldAutomaticallyCancel: Bool,
                                  forResponse onResponse: @escaping (@escaping (OWNetworkDataResponse<Value, OWNetworkError>) -> Void) -> Void)
-        -> OWNetworkDataTask<Value> {
+    -> OWNetworkDataTask<Value> {
         let task = Task {
             await withTaskCancellationHandler {
                 self.cancel()
@@ -359,12 +360,13 @@ extension OWNetworkDownloadRequest {
     ///
     /// - Returns:                   The `DownloadTask`.
     func serializingData(automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
-                                dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
-                                emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
-                                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDownloadTask<Data> {
+                         dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDataResponseSerializer.defaultDataPreprocessor,
+                         emptyResponseCodes: Set<Int> = OWNetworkDataResponseSerializer.defaultEmptyResponseCodes,
+                         emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDataResponseSerializer.defaultEmptyRequestMethods)
+    -> OWNetworkDownloadTask<Data> {
         serializingDownload(using: OWNetworkDataResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                          emptyResponseCodes: emptyResponseCodes,
-                                                          emptyRequestMethods: emptyRequestMethods),
+                                                                   emptyResponseCodes: emptyResponseCodes,
+                                                                   emptyRequestMethods: emptyRequestMethods),
                             automaticallyCancelling: shouldAutomaticallyCancel)
     }
 
@@ -385,15 +387,16 @@ extension OWNetworkDownloadRequest {
     ///
     /// - Returns:                   The `DownloadTask`.
     func serializingDecodable<Value: Decodable>(_ type: Value.Type = Value.self,
-                                                       automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
-                                                       dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<Value>.defaultDataPreprocessor,
-                                                       decoder: OWNetworkDataDecoder = JSONDecoder(),
-                                                       emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyResponseCodes,
-                                                       emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyRequestMethods) -> OWNetworkDownloadTask<Value> {
+                                                automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
+                                                dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkDecodableResponseSerializer<Value>.defaultDataPreprocessor,
+                                                decoder: OWNetworkDataDecoder = JSONDecoder(),
+                                                emptyResponseCodes: Set<Int> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyResponseCodes,
+                                                emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkDecodableResponseSerializer<Value>.defaultEmptyRequestMethods)
+    -> OWNetworkDownloadTask<Value> {
         serializingDownload(using: OWNetworkDecodableResponseSerializer<Value>(dataPreprocessor: dataPreprocessor,
-                                                                      decoder: decoder,
-                                                                      emptyResponseCodes: emptyResponseCodes,
-                                                                      emptyRequestMethods: emptyRequestMethods),
+                                                                               decoder: decoder,
+                                                                               emptyResponseCodes: emptyResponseCodes,
+                                                                               emptyRequestMethods: emptyRequestMethods),
                             automaticallyCancelling: shouldAutomaticallyCancel)
     }
 
@@ -426,14 +429,15 @@ extension OWNetworkDownloadRequest {
     ///
     /// - Returns:                   The `DownloadTask`.
     func serializingString(automaticallyCancelling shouldAutomaticallyCancel: Bool = false,
-                                  dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
-                                  encoding: String.Encoding? = nil,
-                                  emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
-                                  emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods) -> OWNetworkDownloadTask<String> {
+                           dataPreprocessor: OWNetworkDataPreprocessor = OWNetworkStringResponseSerializer.defaultDataPreprocessor,
+                           encoding: String.Encoding? = nil,
+                           emptyResponseCodes: Set<Int> = OWNetworkStringResponseSerializer.defaultEmptyResponseCodes,
+                           emptyRequestMethods: Set<OWNetworkHTTPMethod> = OWNetworkStringResponseSerializer.defaultEmptyRequestMethods)
+    -> OWNetworkDownloadTask<String> {
         serializingDownload(using: OWNetworkStringResponseSerializer(dataPreprocessor: dataPreprocessor,
-                                                            encoding: encoding,
-                                                            emptyResponseCodes: emptyResponseCodes,
-                                                            emptyRequestMethods: emptyRequestMethods),
+                                                                     encoding: encoding,
+                                                                     emptyResponseCodes: emptyResponseCodes,
+                                                                     emptyRequestMethods: emptyRequestMethods),
                             automaticallyCancelling: shouldAutomaticallyCancel)
     }
 
@@ -447,8 +451,8 @@ extension OWNetworkDownloadRequest {
     ///
     /// - Returns: The `DownloadTask`.
     func serializingDownload<Serializer: OWNetworkResponseSerializer>(using serializer: Serializer,
-                                                                    automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> OWNetworkDownloadTask<Serializer.SerializedObject> {
+                                                                      automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
+    -> OWNetworkDownloadTask<Serializer.SerializedObject> {
         downloadTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -468,8 +472,8 @@ extension OWNetworkDownloadRequest {
     ///
     /// - Returns: The `DownloadTask`.
     func serializingDownload<Serializer: OWNetworkDownloadResponseSerializerProtocol>(using serializer: Serializer,
-                                                                                    automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
-        -> OWNetworkDownloadTask<Serializer.SerializedObject> {
+                                                                                      automaticallyCancelling shouldAutomaticallyCancel: Bool = false)
+    -> OWNetworkDownloadTask<Serializer.SerializedObject> {
         downloadTask(automaticallyCancelling: shouldAutomaticallyCancel) {
             self.response(queue: .singleEventQueue,
                           responseSerializer: serializer,
@@ -479,7 +483,7 @@ extension OWNetworkDownloadRequest {
 
     private func downloadTask<Value>(automaticallyCancelling shouldAutomaticallyCancel: Bool,
                                      forResponse onResponse: @escaping (@escaping (OWNetworkDownloadResponse<Value, OWNetworkError>) -> Void) -> Void)
-        -> OWNetworkDownloadTask<Value> {
+    -> OWNetworkDownloadTask<Value> {
         let task = Task {
             await withTaskCancellationHandler {
                 self.cancel()
@@ -517,7 +521,8 @@ struct OWNetworkDataStreamTask {
     ///   - bufferingPolicy: `         BufferingPolicy` that determines the stream's buffering behavior.`.unbounded` by default.
     ///
     /// - Returns:                   The `Stream`.
-    func streamingData(automaticallyCancelling shouldAutomaticallyCancel: Bool = true, bufferingPolicy: Stream<Data, Never>.BufferingPolicy = .unbounded) -> Stream<Data, Never> {
+    func streamingData(automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
+                       bufferingPolicy: Stream<Data, Never>.BufferingPolicy = .unbounded) -> Stream<Data, Never> {
         createStream(automaticallyCancelling: shouldAutomaticallyCancel, bufferingPolicy: bufferingPolicy) { onStream in
             self.request.responseStream(on: .streamCompletionQueue(forRequestID: request.id), stream: onStream)
         }
@@ -530,7 +535,8 @@ struct OWNetworkDataStreamTask {
     ///                                which observation of the stream stops. `true` by default.
     ///   - bufferingPolicy: `         BufferingPolicy` that determines the stream's buffering behavior.`.unbounded` by default.
     /// - Returns:
-    func streamingStrings(automaticallyCancelling shouldAutomaticallyCancel: Bool = true, bufferingPolicy: Stream<String, Never>.BufferingPolicy = .unbounded) -> Stream<String, Never> {
+    func streamingStrings(automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
+                          bufferingPolicy: Stream<String, Never>.BufferingPolicy = .unbounded) -> Stream<String, Never> {
         createStream(automaticallyCancelling: shouldAutomaticallyCancel, bufferingPolicy: bufferingPolicy) { onStream in
             self.request.responseStreamString(on: .streamCompletionQueue(forRequestID: request.id), stream: onStream)
         }
@@ -546,9 +552,9 @@ struct OWNetworkDataStreamTask {
     ///
     /// - Returns:            The `Stream`.
     func streamingDecodables<T>(_ type: T.Type = T.self,
-                                       automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
-                                       bufferingPolicy: Stream<T, OWNetworkError>.BufferingPolicy = .unbounded)
-        -> Stream<T, OWNetworkError> where T: Decodable {
+                                automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
+                                bufferingPolicy: Stream<T, OWNetworkError>.BufferingPolicy = .unbounded)
+    -> Stream<T, OWNetworkError> where T: Decodable {
         streamingResponses(serializedUsing: OWNetworkDecodableStreamSerializer<T>(),
                            automaticallyCancelling: shouldAutomaticallyCancel,
                            bufferingPolicy: bufferingPolicy)
@@ -564,9 +570,9 @@ struct OWNetworkDataStreamTask {
     ///
     /// - Returns:           The `Stream`.
     func streamingResponses<Serializer: OWNetworkDataStreamSerializer>(serializedUsing serializer: Serializer,
-                                                                     automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
-                                                                     bufferingPolicy: Stream<Serializer.SerializedObject, OWNetworkError>.BufferingPolicy = .unbounded)
-        -> Stream<Serializer.SerializedObject, OWNetworkError> {
+                                                                       automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
+                                                                       bufferingPolicy: Stream<Serializer.SerializedObject, OWNetworkError>.BufferingPolicy = .unbounded)
+    -> Stream<Serializer.SerializedObject, OWNetworkError> {
         createStream(automaticallyCancelling: shouldAutomaticallyCancel, bufferingPolicy: bufferingPolicy) { onStream in
             self.request.responseStream(using: serializer,
                                         on: .streamCompletionQueue(forRequestID: request.id),
@@ -577,7 +583,7 @@ struct OWNetworkDataStreamTask {
     private func createStream<Success, Failure: Error>(automaticallyCancelling shouldAutomaticallyCancel: Bool = true,
                                                        bufferingPolicy: Stream<Success, Failure>.BufferingPolicy = .unbounded,
                                                        forResponse onResponse: @escaping (@escaping (OWNetworkDataStreamRequest.Stream<Success, Failure>) -> Void) -> Void)
-        -> Stream<Success, Failure> {
+    -> Stream<Success, Failure> {
         OWNetworkStreamOf(bufferingPolicy: bufferingPolicy) {
             guard shouldAutomaticallyCancel,
                   request.isInitialized || request.isResumed || request.isSuspended else { return }
@@ -661,7 +667,7 @@ struct OWNetworkStreamOf<Element>: AsyncSequence {
     }
 
     struct Iterator: AsyncIteratorProtocol {
-        private final class Token {
+        private final class Token { // swiftlint:disable:this nesting
             private let onDeinit: () -> Void
 
             init(onDeinit: @escaping () -> Void) {

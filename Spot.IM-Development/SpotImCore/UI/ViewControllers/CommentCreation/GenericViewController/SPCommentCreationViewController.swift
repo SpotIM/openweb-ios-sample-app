@@ -9,11 +9,11 @@
 import UIKit
 
 protocol CommentReplyViewControllerDelegate: AnyObject {
-    
+
     func commentReplyDidCreate(_ comment: SPComment)
     func commentReplyDidBlock(with commentText: String?)
     func commentReplyDidEdit(with comment: SPComment)
-    
+
 }
 
 class SPCommentCreationViewController: SPBaseViewController,
@@ -45,44 +45,44 @@ class SPCommentCreationViewController: SPBaseViewController,
 
     let activityIndicator: SPLoaderView = SPLoaderView()
     var showsUserAvatarInTextInput: Bool { !showsUsernameInput }
-    
+
     private let mainContainerView: OWBaseView = .init()
-    
+
     private let footerView: SPCommentFooterView = .init()
-    
+
     private lazy var commentReplyCounterLabel: UILabel = {
         let txt = "0/\(model.commentCounter)"
-        
+
         return txt
             .label
             .font(UIFont.preferred(style: .regular, of: Metrics.replyCounterFontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
     }()
-    
+
     private let scrollView: OWBaseScrollView = .init()
     private var commentLabelsContainer: SPCommentLabelsContainerView = .init()
     private var commentLabelsSection: String?
     private var sectionLabels: SPCommentLabelsSectionConfiguration?
-    
+
     private var commentReplyCounterBottomConstraint: OWConstraint?
     private var commentLabelsContainerBottomConstraint: OWConstraint?
     private var commentContentScrollViewBottomConstraint: OWConstraint?
     private var mainContainerBottomConstraint: OWConstraint?
-    
+
     private let closeButton: OWBaseButton = .init()
-    
+
     private lazy var commentHeaderView = SPCommentReplyHeaderView()
     private lazy var commentNewHeaderView = SPCommentCreationNewHeaderView()
     private let commentingContainer: UIView = .init()
     private let commentingOnLabel: OWBaseLabel = .init()
     private lazy var articleView: OWArticleHeader = OWArticleHeader()
-    
+
     private var imagePicker: OWImagePicker?
-    
+
     private var shouldBeAutoPosted: Bool = true
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     // user name input ("nickname") is visible only when commenting as a guest
     // (if user entered nickname in the past it will not be editable)
     var showsUsernameInput: Bool {
@@ -100,11 +100,11 @@ class SPCommentCreationViewController: SPBaseViewController,
         }
         return false
     }
-    
+
     deinit {
         unregisterFromKeyboardNotifications()
     }
-    
+
     init(customUIDelegate: OWCustomUIDelegate?, model: SPCommentCreationModel,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.model = model
@@ -114,42 +114,42 @@ class SPCommentCreationViewController: SPBaseViewController,
         self.updateModelData()
         articleView.configure(with: model.articleHeaderVM)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupUI()
         setupUserIconHandler()
         registerForKeyboardNotifications()
-        
+
         // remove keyboard when tapping outside of textView
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         mainContainerView.addGestureRecognizer(tap)
-        
+
         if model.isCommentAReply() == false {
             topContainerView.bringSubviewToFront(closeButton)
         }
         usernameView.configureAvatarViewModel(with: model.avatarViewVM)
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         view.accessibilityIdentifier = Metrics.identifier
         activityIndicator.accessibilityIdentifier = Metrics.activityIndicatorIdentifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
         commentingOnLabel.accessibilityIdentifier = Metrics.commentingOnLabelIdentifier
     }
-    
+
     @objc override func overrideUserInterfaceStyleDidChange() {
         super.overrideUserInterfaceStyleDidChange()
         self.updateColorsAccordingToStyle()
     }
-    
+
     @objc func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        // Causes the view (or one of its embedded text fields) to resign the first responder status.
         mainContainerView.endEditing(true)
     }
-    
+
     private func setupCommentLabelsContainer() {
         guard showCommentLabels == true, let sectionLabelsConfig = model.sectionCommentLabelsConfig else {
             hideCommentLabelsContainer()
@@ -161,7 +161,7 @@ class SPCommentCreationViewController: SPBaseViewController,
                                                   guidelineText: sectionLabelsConfig.guidelineText, maxLabels: sectionLabelsConfig.maxSelected)
         commentLabelsContainer.setSelectedLabels(selectedLabelIdsInEditedComment: self.model.dataModel.editModel?.commentLabelIds)
     }
-    
+
     private func getCommentLabelsFromSectionConfig(sectionConfig: SPCommentLabelsSectionConfiguration) -> [OWCommentLabelSettings] {
         var commentLabels: [OWCommentLabelSettings] = []
         sectionConfig.labels.forEach { labelConfig in
@@ -172,22 +172,22 @@ class SPCommentCreationViewController: SPBaseViewController,
         }
         return commentLabels
     }
-    
+
     private func setupCommentReplyCounter() {
         if !model.shouldShowCommentCounter {
             hideCommentReplyCounter()
         }
     }
-    
+
     private func hideCommentReplyCounter() {
         commentReplyCounterLabel.isHidden = true
         commentReplyCounterBottomConstraint?.update(offset: 0)
         commentReplyCounterLabel.OWSnp.updateConstraints { make in
             make.height.equalTo(0)
         }
-        
+
     }
-    
+
     private func hideCommentLabelsContainer() {
         commentLabelsContainer.isHidden = true
         commentLabelsContainerBottomConstraint?.update(offset: 0)
@@ -196,26 +196,26 @@ class SPCommentCreationViewController: SPBaseViewController,
             make.height.equalTo(0)
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         navigationController?.setNavigationBarHidden(true, animated: animated)
         updatePostButton()
         setupCommentReplyCounter()
         setupCommentLabelsContainer()
         setFooterViewContentButtons()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
+
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         // delay added for keyboard not to appear earlier than the screen
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) {
             guard !self.imagePreviewView.isUploadingImage else { return }
@@ -226,7 +226,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             }
         }
     }
-    
+
     // Handle dark mode \ light mode change
     override func updateColorsAccordingToStyle() {
         super.updateColorsAccordingToStyle()
@@ -240,27 +240,26 @@ class SPCommentCreationViewController: SPBaseViewController,
         commentLabelsContainer.updateColorsAccordingToStyle()
         usernameView.updateColorsAccordingToStyle()
         footerView.updateColorsAccordingToStyle()
-        
+
         configureCommentDesign(SpotIm.enableCreateCommentNewDesign)
-        
+
         if model.isCommentAReply() == false {
             articleView.updateColorsAccordingToStyle()
         }
-        
+
         updateAvatar() // placeholder is adjusted to theme
-        
-        
+
     }
-    
+
     private func configureCommentDesign(_ shouldEnableCreateCommentNewDesign: Bool) {
-        
+
         if shouldEnableCreateCommentNewDesign {
             commentNewHeaderView.updateColorsAccordingToStyle()
         } else {
             configureCommentOldDesign()
         }
     }
-    
+
     private func configureCommentOldDesign() {
         if model.isCommentAReply() == true {
             commentHeaderView.updateColorsAccordingToStyle()
@@ -272,7 +271,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
         }
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         let state = UIApplication.shared.applicationState
@@ -289,7 +288,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             }
         }
     }
-    
+
     @objc
     func close() {
         if (model.commentText.count) >= commentCacheMinCount {
@@ -308,7 +307,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             dismissController()
         }
     }
-    
+
     func dismissController() {
         servicesProvider.logger().log(level: .verbose, "FirstComment: Dismissing creation view controller")
         let transition = CATransition()
@@ -317,43 +316,42 @@ class SPCommentCreationViewController: SPBaseViewController,
         transition.type = .reveal
         transition.subtype = .fromBottom
         navigationController?.view.layer.add(transition, forKey: nil)
-        
-        
+
         guard let navController = navigationController,
               let currentVCIndex = navController.viewControllers.firstIndex(where: { $0 == self }) else {
                   servicesProvider.logger().log(level: .medium, "Couldn't find the VC before the comment creation VC, recovering by popping the last VC in the navigation controller")
                   navigationController?.popViewController(animated: false) // Just pop the last VC
                   return
               }
-        
+
         let indexOfPreviuosVS = currentVCIndex - 1
         let navigationVCs = navController.viewControllers
-        
+
         guard indexOfPreviuosVS >= 0 else {
             servicesProvider.logger().log(level: .medium, "Couldn't find the VC before the comment creation VC, recovering by popping the last VC in the navigation controller")
             navController.popViewController(animated: false) // Just pop the last VC
             return
         }
-        
+
         let previousVC = navigationVCs[indexOfPreviuosVS]
         servicesProvider.logger().log(level: .verbose, "Popping to the VC before comment creation VC")
         navController.popToViewController(previousVC, animated: false)
     }
-    
+
     func userDidSignInHandler() -> OWAuthenticationHandler? {
         authHandler = OWAuthenticationHandler()
         authHandler?.authHandler = { [weak self] isAuthenticated in
             guard let self = self else { return }
-            
+
             if !isAuthenticated {
                 self.dismissController()
                 return
             }
-            
+
             self.updatePostButton()
             self.updatePostButtonEnabledState()
             self.updateAvatar()
-            
+
             if isAuthenticated && !self.shouldBeAutoPosted {
                 if (self.isValidInput()) {
                     self.post()
@@ -361,16 +359,16 @@ class SPCommentCreationViewController: SPBaseViewController,
                 self.shouldBeAutoPosted = true
             }
         }
-        
+
         return authHandler
     }
-    
+
     func setupUserIconHandler() {
         userRightBarItem = UIBarButtonItem(customView: userIcon)
         userIcon.addTarget(self, action: #selector(showProfile), for: .touchUpInside)
         navigationItem.setRightBarButton(userRightBarItem!, animated: true)
     }
-    
+
     func updateModelData() {
         configureModelHandlers()
         if model.isCommentAReply() == true {
@@ -379,12 +377,11 @@ class SPCommentCreationViewController: SPBaseViewController,
             updateModelDataForComment()
         }
     }
-    
+
     func configureModelHandlers() {
-        model.postCompletionHandler = {
-            [weak self] responseData in
+        model.postCompletionHandler = { [weak self] responseData in
             guard let self = self else { return }
-            
+
             if responseData.edited {
                 self.delegate?.commentReplyDidEdit(with: responseData)
             } else {
@@ -394,7 +391,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             self.hideLoader()
             self.dismissController()
         }
-        
+
         model.errorHandler = { [weak self] error in
             guard let self = self else { return }
 
@@ -405,8 +402,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             )
         }
     }
-    
-    
+
     // MARK: - Comment Related Logic
     func updateModelDataForComment() {
         if SpotIm.enableCreateCommentNewDesign {
@@ -419,24 +415,24 @@ class SPCommentCreationViewController: SPBaseViewController,
         updateImageContainer()
         updateAvatar()
     }
-    
+
     private func setupNewHeader() {
         guard commentNewHeaderView.superview == nil else {
             return
         }
         topContainerStack.insertArrangedSubview(commentNewHeaderView, at: 0)
-        
+
         commentNewHeaderView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-        
+
         commentNewHeaderView.delegate = self
         commentNewHeaderView.configure()
         commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
         commentNewHeaderView.setupHeader(for: self.model.isInEditMode() ? HeaderMode.edit : HeaderMode.add)
     }
-    
+
     private func setupHeader() {
         setupHeaderComponentsIfNeeded()
         if shouldDisplayArticleHeader(), #available(iOS 11.0, *) {
@@ -446,7 +442,7 @@ class SPCommentCreationViewController: SPBaseViewController,
                 make.height.equalTo(85.0)
                 make.width.equalToSuperview()
             }
-            
+
             topContainerStack.setCustomSpacing(16, after: commentingOnLabel)
             commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         } else {
@@ -454,13 +450,13 @@ class SPCommentCreationViewController: SPBaseViewController,
             commentingOnLabel.text = commentHeaderText
         }
     }
-    
+
     private func getHeaderTitleBasedOnUserFlow() -> String {
         return self.model.isInEditMode() ?
         LocalizationManager.localizedString(key: "Edit a Comment") :
         LocalizationManager.localizedString(key: "Add a Comment")
     }
-    
+
     private func setupHeaderComponentsIfNeeded() {
         guard commentingOnLabel.superview == nil, closeButton.superview == nil else {
             return
@@ -471,17 +467,17 @@ class SPCommentCreationViewController: SPBaseViewController,
         topContainerStack.insertArrangedSubview(commentingContainer, at: 0)
 
         topContainerView.addSubview(closeButton)
-        
+
         commentingOnLabel.font = UIFont.preferred(style: .regular, of: 16.0)
         commentingOnLabel.text = LocalizationManager.localizedString(key: "Commenting on")
         commentingOnLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         commentingOnLabel.sizeToFit()
-        
+
         commentingContainer.OWSnp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
             make.height.equalTo(commentingOnLabel.frame.height + 41)
         }
-        
+
         commentingOnLabel.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(25)
             make.leading.equalToSuperview().offset(16)
@@ -489,14 +485,14 @@ class SPCommentCreationViewController: SPBaseViewController,
             make.bottom.equalToSuperview().offset(-16)
 
         }
-        
+
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
         closeButton.OWSnp.makeConstraints { make in
             make.centerY.equalTo(topContainerView.OWSnp.top).offset(35.0)
             make.trailing.equalToSuperview().offset(-5.0)
             make.size.equalTo(40.0)
         }
-        
+
         closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
     }
 
@@ -510,7 +506,6 @@ class SPCommentCreationViewController: SPBaseViewController,
         }
     }
 
-
     // MARK: - Reply Related Logic
     func updateModelDataForReply() {
         let shouldHideCommentText = showCommentLabels && showsUsernameInput
@@ -518,7 +513,7 @@ class SPCommentCreationViewController: SPBaseViewController,
             author: model.dataModel.replyModel?.authorName,
             comment: model.dataModel.replyModel?.commentText
         )
-        
+
         let headerView: UIView
         if SpotIm.enableCreateCommentNewDesign {
             commentNewHeaderView.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
@@ -549,18 +544,17 @@ class SPCommentCreationViewController: SPBaseViewController,
         updateAvatar()
     }
 
-
     func updateTextInputContainer(with type: SPCommentTextInputView.CommentType) {
         textInputViewContainer.configureCommentType(type, showAvatar: SPUserSessionHolder.session.user?.registered ?? false)
         textInputViewContainer.updateText(model.commentText)
     }
-    
+
     func updateImageContainer() {
         guard let imageId = model.imageContent?.imageId else { return }
         let imageUrl = self.model.imageProvider.imageURL(with: imageId, size: nil)
         model.imageProvider.image(from: imageUrl,
                                        size: nil,
-                                       completion:{ image, _ in
+                                       completion: { image, _ in
             self.imagePreviewView.image = image
         })
     }
@@ -609,46 +603,45 @@ class SPCommentCreationViewController: SPBaseViewController,
 
         SPAnalyticsHolder.default.log(event: .loginClicked(.commentSignUp), source: .conversation)
     }
-    
+
     private func updatePostButtonEnabledState() {
         let isEnabled = isValidInput() || self.signupToPostButtonIsActive()
         footerView.setIsPostButtonEnabled(isEnabled)
     }
-    
+
     private func isValidInput() -> Bool {
         var isValidInput = true
-        
+
         // check user name input text
         if showsUsernameInput {
             if usernameView.text == nil || usernameView.text?.hasContent == false {
                 isValidInput = false
             }
         }
-        
+
         if !model.isValidContent() {
             isValidInput = false
         }
-        
+
         // check comment labels minSelected
         if let sectionLabelsConfig = self.sectionLabels,
            sectionLabelsConfig.minSelected > commentLabelsContainer.selectedLabelsIds.count {
             isValidInput = false
         }
-        
+
         return isValidInput
     }
-    
+
     private func signupToPostButtonIsActive() -> Bool {
         if let config = SPConfigsDataSource.appConfig,
            config.initialization?.policyForceRegister == true,
            SPUserSessionHolder.session.user?.registered == false {
             return true
-        }
-        else {
+        } else {
             return false
         }
     }
-    
+
     // on device orientation change
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -664,7 +657,7 @@ class SPCommentCreationViewController: SPBaseViewController,
 }
 
 extension SPCommentCreationViewController {
-    
+
     private func setupUI() {
         view.addSubview(scrollView)
         scrollView.OWSnp.makeConstraints { make in
@@ -678,7 +671,7 @@ extension SPCommentCreationViewController {
         scrollView.addSubview(mainContainerView)
         mainContainerView.addSubviews(topContainerView, commentContentScrollView, commentReplyCounterLabel, commentLabelsContainer, footerView)
         topContainerView.addSubview(topContainerStack)
-        
+
         configureMainContainer()
         configureTopContainerStack()
         configureTopContainer()
@@ -689,7 +682,7 @@ extension SPCommentCreationViewController {
         configureCommentReplyCounter()
         updateColorsAccordingToStyle()
     }
-    
+
     private func configureMainContainer() {
         mainContainerView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -712,7 +705,7 @@ extension SPCommentCreationViewController {
             usernameView.setTextAccess(isEditable: false)
         }
     }
-    
+
     private func configureContentScrollView() {
         commentContentScrollView.OWSnp.makeConstraints { make in
             make.top.equalTo(topContainerView.OWSnp.bottom)
@@ -722,12 +715,12 @@ extension SPCommentCreationViewController {
             make.height.greaterThanOrEqualTo(40.0)
 
         }
-        
+
         commentContentScrollView.addSubviews(textInputViewContainer, imagePreviewView)
         self.configureInputContainerView()
         self.configureImagePreviewView()
     }
-    
+
     private func configureInputContainerView() {
         textInputViewContainer.delegate = self
         textInputViewContainer.OWSnp.makeConstraints { make in
@@ -736,7 +729,7 @@ extension SPCommentCreationViewController {
             make.leading.trailing.equalTo(commentContentScrollView.layoutMarginsGuide)
         }
     }
-    
+
     private func configureImagePreviewView() {
         imagePreviewView.delegate = self
         imagePreviewView.OWSnp.makeConstraints { make in
@@ -744,7 +737,7 @@ extension SPCommentCreationViewController {
             make.leading.trailing.equalTo(commentContentScrollView.layoutMarginsGuide)
         }
     }
-    
+
     private func configureTopContainer() {
         topContainerView.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         topContainerView.OWSnp.makeConstraints { make in
@@ -778,7 +771,7 @@ extension SPCommentCreationViewController {
         }
         footerView.configurePostButton(title: postButtonTitle, action: action)
     }
-    
+
     private func configureFooterView() {
         footerView.delegate = self
         footerView.OWSnp.makeConstraints { make in
@@ -787,7 +780,7 @@ extension SPCommentCreationViewController {
             make.height.equalTo(Theme.footerViewHeight)
         }
     }
-    
+
     private func configureCommentReplyCounter() {
         commentReplyCounterLabel.OWSnp.makeConstraints { make in
             commentReplyCounterBottomConstraint = make.bottom.equalTo(commentLabelsContainer.OWSnp.top).offset(-Metrics.replyCounterTopBottomOffset).constraint
@@ -796,7 +789,7 @@ extension SPCommentCreationViewController {
             make.height.equalTo(Metrics.replyCounterHeight)
         }
     }
-    
+
     private func configureCommentLabelsContainer() {
         commentLabelsContainer.delegate = self
         commentLabelsContainer.OWSnp.makeConstraints { make in
@@ -807,23 +800,23 @@ extension SPCommentCreationViewController {
 
         }
     }
-    
+
     private func setFooterViewContentButtons() {
         var contentButtonTypes: [SPCommentFooterContentButtonType] = []
-        
+
         if model.shouldDisplayImageUploadButton() {
             self.setImagePicker()
             contentButtonTypes.append(.image)
         }
-        
+
         footerView.setContentButtonTypes(contentButtonTypes)
     }
-    
+
     private func setImagePicker() {
         self.imagePicker = OWImagePicker(presentationController: self)
         self.imagePicker?.delegate = self
     }
-    
+
     private func uploadImageToCloudinary(imageData: String) {
         imagePreviewView.isUploadingImage = true
         self.dismissKeyboard()
@@ -835,7 +828,7 @@ extension SPCommentCreationViewController {
             }
         }
     }
-    
+
     private func setImage(image: UIImage?) {
         // clean previous image in the model
         model.removeImage()
@@ -854,7 +847,7 @@ extension SPCommentCreationViewController {
 // MARK: - Extensions
 
 extension SPCommentCreationViewController: OWKeyboardHandable {
-    
+
     func keyboardWillShow(_ notification: Notification) {
         guard
             let expandedKeyboardHeight = notification.keyboardSize?.height,
@@ -862,21 +855,21 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
             else { return }
         let bottomPadding: CGFloat
         if #available(iOS 11.0, *) {
-            bottomPadding = tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows[0].safeAreaInsets.bottom 
+            bottomPadding = tabBarController?.tabBar.frame.height ?? UIApplication.shared.windows[0].safeAreaInsets.bottom
         } else {
             bottomPadding = 0
         }
         updateBottomConstraint(constant: expandedKeyboardHeight - bottomPadding,
                                animationDuration: animationDuration)
     }
-    
+
     func keyboardWillHide(_ notification: Notification) {
         guard let animationDuration = notification.keyboardAnimationDuration else { return }
-        updateBottomConstraint(constant: 0 , animationDuration: animationDuration)
+        updateBottomConstraint(constant: 0, animationDuration: animationDuration)
     }
-    
+
     private func updateBottomConstraint(constant: CGFloat, animationDuration: Double) {
-        
+
         // set bottom margin according to orientations
         if !UIDevice.current.isPortrait() {
             // landscape - keep content behind keyboard and scroll to selected textView
@@ -901,7 +894,7 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
                 self.view.layoutIfNeeded()
             })
     }
-    
+
     // scroll to given view (or to top if toTop is true)
     private func setScrollView(toView: UIView, toTop: Bool) {
         if toTop {
@@ -910,9 +903,9 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
             scrollToView(toView: toView)
         }
     }
-    
+
     // Scroll to a specific view so that it's top is at the top our scrollview
-    private func scrollToView(toView:UIView) {
+    private func scrollToView(toView: UIView) {
         if let origin = toView.superview {
             // Get the Y position of your child view
             let childStartPoint = origin.convert(toView.frame.origin, to: scrollView)
@@ -920,17 +913,17 @@ extension SPCommentCreationViewController: OWKeyboardHandable {
         }
     }
     private func scrollToTop() {
-        let scrollPoint = CGPoint.init(x:0, y: 0)
+        let scrollPoint = CGPoint.init(x: 0, y: 0)
         self.scrollView.setContentOffset(scrollPoint, animated: true)
     }
 }
 
 extension SPCommentCreationViewController: SPTextInputViewDelegate {
-    
+
     func validateInput(lenght: Int) -> Bool {
         return lenght <= model.commentCounter
     }
-    
+
     func input(_ view: SPTextInputView, didChange text: String) {
         if view === textInputViewContainer {
             commentReplyCounterLabel.text = "\(text.count)/\(model.commentCounter)"
@@ -967,7 +960,7 @@ extension SPCommentCreationViewController: SPCommentFooterViewDelegate {
     func clickedOnAddContentButton(type: SPCommentFooterContentButtonType) {
         self.imagePicker?.present(from: self.view)
     }
-    
+
     func updatePostCommentButtonCustomUI(button: OWBaseButton) {
         customUIDelegate?.customizeView(.commentCreationActionButton(button: button), source: .createComment)
     }

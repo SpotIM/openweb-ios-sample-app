@@ -29,7 +29,7 @@ internal protocol SPConversationsDataProvider {
     var imageURLProvider: SPImageProvider? { get set }
 
     func resetOffset()
-    
+
     /// fetch conversation for id
     func conversation(_ id: String,
                       _ mode: SPCommentSortMode,
@@ -63,11 +63,11 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
 
     internal var isLoading = false
     internal var hasNext = defaultHasNext
-    
+
     internal var canLoadNextPage: Bool {
         return !isLoading && hasNext
     }
-    
+
     internal func resetOffset() {
         self.offset = SPConversationsFacade.defaultOffset
     }
@@ -100,7 +100,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
         let currentRequestOffset = page == .first ? 0 : self.offset
 
         let depth = parentId.isEmpty ? 2 : 1
-        
+
         // TODO: (Fedin) make sting constants for this
         let parameters: [String: Any] = [
             "conversation_id": "\(spotKey)_\(id)",
@@ -157,18 +157,18 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                 observer.onError(SPNetworkError.custom(message))
                 return Disposables.create()
             }
-            
+
             let spRequest = SPConversationRequest.commentsCounters
             let parameters: [String: Any] = [
-                "conversation_ids": conversationIds,
+                "conversation_ids": conversationIds
             ]
             let headers = OWNetworkHTTPHeaders.basic(
                 with: spotKey)
-            
+
             let task = self.manager.execute(
                 request: spRequest,
                 parameters: parameters,
-                parser: OWDecodableParser<[String:[String: SPConversationCounters]]>(),
+                parser: OWDecodableParser<[String: [String: SPConversationCounters]]>(),
                 headers: headers
             ) { (result, response) in
                 switch result {
@@ -190,24 +190,24 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create {
                 task.cancel()
             }
         }
     }
-    
+
     internal func conversationAsync(postId: String, articleUrl: String) {
         let spRequest = SPConversationRequest.conversationAsync
         guard let spotKey = SPClientSettings.main.spotKey else {
             return
         }
-        
+
         let parameters: [String: Any] = [
             "host_url": articleUrl
         ]
         let headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: postId)
-        
+
         manager.execute(
             request: spRequest,
             parameters: parameters,
@@ -230,7 +230,7 @@ internal final class SPConversationsFacade: NetworkDataProvider, SPConversations
             }
         }
     }
-    
+
     func copy(modifyingOffset newOffset: Int? = defaultOffset,
               hasNext: Bool? = defaultHasNext) -> SPConversationsDataProvider {
         let copy = SPConversationsFacade(apiManager: manager)

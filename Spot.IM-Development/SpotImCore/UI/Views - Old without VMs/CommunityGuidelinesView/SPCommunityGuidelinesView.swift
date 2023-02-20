@@ -19,32 +19,32 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
         static let identifier = "community_guidelines_id"
         static let titleTextIdentifier = "community_guidelines_title_text_id"
     }
-    
+
     private lazy var titleTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
 
     private var titleBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?
     private var separatorTrailingConstraint: OWConstraint?
-    
+
     var delegate: SPCommunityGuidelinesViewDelegate?
-    
+
     // RX although we don't have a proper View Model
     let heightChanged = PublishSubject<Void>()
 
     // MARK: - Overrides
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         titleTextView.accessibilityIdentifier = Metrics.titleTextIdentifier
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle(source: SPViewSourceType) {
         backgroundColor = .spBackground0
@@ -52,13 +52,13 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
         separatorView.backgroundColor = .spSeparator2
         delegate?.customizeTextView(textView: titleTextView, source: source)
     }
-    
+
     func setSeperatorVisible(isVisible: Bool) {
         separatorView.isHidden = !isVisible
     }
 
     // MARK: - Internal methods
-    
+
     internal func setHtmlText(htmlString: String, source: SPViewSourceType) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -73,31 +73,31 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
             }
         }
     }
-    
+
     internal func setupPreConversationConstraints() {
         separatorLeadingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
         separatorTrailingConstraint?.update(offset: -Theme.separatorHorizontalOffsetPreConversation)
         titleBottomConstraint?.update(offset: -Theme.titleBottomOffsetPreConversation)
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func getTitleTextViewAttributedText(htmlString: String) -> NSMutableAttributedString? {
         if let htmlMutableAttributedString = htmlString.htmlToMutableAttributedString {
             htmlMutableAttributedString.addAttribute(
                 .font,
                 value: UIFont.preferred(style: .medium, of: Theme.titleFontSize),
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(
                 .underlineStyle,
                 value: NSNumber(value: false),
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             htmlMutableAttributedString.addAttribute(
                 .foregroundColor,
                 value: UIColor.spForeground0,
-                range: NSMakeRange(0, htmlMutableAttributedString.length)
+                range: NSRange(location: 0, length: htmlMutableAttributedString.length)
             )
             return htmlMutableAttributedString
         } else {
@@ -110,7 +110,7 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
         setupTitleTextView()
         configureSeparatorView()
     }
-    
+
     private func setupTitleTextView() {
         titleTextView.delegate = self
         titleTextView.isEditable = false
@@ -132,7 +132,7 @@ internal final class SPCommunityGuidelinesView: OWBaseView {
             }
         }
     }
-    
+
     private func configureSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
         separatorView.OWSnp.makeConstraints { make in
@@ -159,7 +159,7 @@ extension SPCommunityGuidelinesView: UITextViewDelegate {
         SPAnalyticsHolder.default.log(event: .communityGuidelinesLinkClicked(targetUrl: URL.absoluteString), source: .conversation)
         return false
     }
-    
+
     // disable selecting text - we need it to allow click on links
     func textViewDidChangeSelection(_ textView: UITextView) {
         textView.selectedTextRange = nil
