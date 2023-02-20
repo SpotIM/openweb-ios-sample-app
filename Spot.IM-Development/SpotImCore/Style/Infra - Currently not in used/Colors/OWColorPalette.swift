@@ -35,9 +35,8 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         for type in OWColor.OWType.allCases {
             colors[type] = type.default
         }
-        colorsMapper.onNext(colors.filter { color in
-            color.key.shouldUpdateRxObservable
-        })
+        let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
+        colorsMapper.onNext(colorsRx)
     }
 
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor {
@@ -53,8 +52,7 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         guard var encapsulateColor = colors[type] else { return }
         encapsulateColor.setColor(color, forThemeStyle: themeStyle)
         colors[type] = encapsulateColor // We are working with structs here, so we need to re set the encapsulated color for this key
-        colorsMapper.onNext(colors.filter { color in
-            color.key.shouldUpdateRxObservable
-        })
+        let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
+        colorsMapper.onNext(colorsRx)
     }
 }
