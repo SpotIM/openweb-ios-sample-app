@@ -255,13 +255,19 @@ fileprivate extension OWCommentHeaderView {
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
-        OWColorPalette.shared.colorObservable(type: .brandColor)
-            .subscribe(onNext: { [weak self] brandColor in
-                guard let self = self else { return }
-                self.badgeTagLabel.textColor = brandColor
-                self.badgeTagContainer.border(width: 1, color: brandColor)
-            })
-            .disposed(by: disposeBag)
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver) { theme, colorsDriver -> UIColor? in
+            guard let brandColorType = colorsDriver[OWColor.OWType.brandColor]
+            else { return nil }
+            
+            return brandColorType.color(forThemeStyle: theme)
+        }
+        .unwrap()
+        .subscribe(onNext: { [weak self] brandColor in
+            guard let self = self else { return }
+            self.badgeTagLabel.textColor = brandColor
+            self.badgeTagContainer.border(width: 1, color: brandColor)
+        })
+        .disposed(by: disposeBag)
     }
 }
 
