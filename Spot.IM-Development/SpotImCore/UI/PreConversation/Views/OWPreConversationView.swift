@@ -216,11 +216,10 @@ fileprivate extension OWPreConversationView {
                                                                    themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
-                
-                
+
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver) { theme, colorsDriver -> UIColor? in
             guard let brandColorType = colorsDriver[OWColor.OWType.brandColor] else { return nil }
-            
+
             return brandColorType.color(forThemeStyle: theme)
         }
         .unwrap()
