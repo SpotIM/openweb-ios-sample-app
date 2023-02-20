@@ -14,7 +14,7 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_creation_view_id"
     }
-    
+
     // TODO: this label is only to show the origin comment user when creating a reply. Should be removed
     fileprivate lazy var replyToLabel: UILabel = {
         let text: String? = {
@@ -22,21 +22,21 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
             case .comment:
                 return nil
             case .replyToComment(let originComment):
-                return "Reply to: \(originComment.userId)"
+                return "Reply to: \(originComment.userId ?? "missing userId")"
             }
         }()
         return UILabel()
             .textColor(.black)
             .text(text)
     }()
-    
+
     fileprivate let viewModel: OWCommentCreationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init(viewModel: OWCommentCreationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -44,7 +44,7 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
         setupObservers()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -53,7 +53,7 @@ class OWCommentCreationView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWCommentCreationView {
     func setupViews() {
         self.useAsThemeStyleInjector()
-        
+
         // TODO: Remove the ugly blue when actually starting to work on the UI, this is only for integration purposes at the moment
         self.backgroundColor = .blue
         self.addSubviews(replyToLabel)
@@ -61,7 +61,7 @@ fileprivate extension OWCommentCreationView {
             make.center.equalToSuperview()
         }
     }
-    
+
     func setupObservers() {
 
     }

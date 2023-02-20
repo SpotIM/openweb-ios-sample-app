@@ -9,29 +9,29 @@
 import UIKit
 
 class OWBaseUIImageView: UIImageView {
-    
+
     init() {
         super.init(frame: .zero)
-        
+
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
 
     }
-    
+
     override init(image: UIImage?) {
         super.init(image: image)
-        
+
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? semanticContentAttribute
     }
-    
+
     @available(*,
     unavailable,
     message: "Loading this view from a nib is unsupported in this project"

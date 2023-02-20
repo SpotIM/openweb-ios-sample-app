@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 enum OWDeepLinkOptions {
     case highlightComment(commentId: String)
     case commentCreation(commentCreationData: OWCommentCreationRequiredData)

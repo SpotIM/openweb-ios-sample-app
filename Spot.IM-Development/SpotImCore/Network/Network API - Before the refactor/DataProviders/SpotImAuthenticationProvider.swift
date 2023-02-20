@@ -39,7 +39,6 @@ struct SSOCompleteResponseInternal: Codable {
     var user: SPUser?
 }
 
-
 class SpotImAuthenticationProvider {
     weak var ssoAuthDelegate: SSOAthenticationDelegate? {
         didSet {
@@ -58,22 +57,22 @@ class SpotImAuthenticationProvider {
             }
         }
     }
-    
+
     // Should be in a protocol like with MVVM, but I will leave it for a bigger refactor
     let renewSSOPublish = PublishSubject<String>()
     fileprivate let renewSSOBehavior = BehaviorSubject<String?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
-    
+
     private let internalAuthProvider: SPInternalAuthProvider
     private let manager: OWApiManager
-    
+
     init(manager: OWApiManager, internalProvider: SPInternalAuthProvider) {
         self.manager = manager
         self.internalAuthProvider = internalProvider
-        
+
         setupObservers()
     }
-    
+
     func startSSO(completion: @escaping AuthStratCompleteionHandler) {
         _ = Observable.just(()) // Begin RX flow
             .flatMapLatest { [weak self] _ -> Observable<Void> in
@@ -103,7 +102,7 @@ class SpotImAuthenticationProvider {
                     completion(.failure(error))
                 })
     }
-    
+
     func sso(withJwtSecret secret: String, completion: @escaping AuthStratCompleteionHandler) {
         ssoAuthDelegate?.ssoFlowStarted()
         SPUserSessionHolder.resetUserSession()
@@ -117,7 +116,7 @@ class SpotImAuthenticationProvider {
                 completion(.failure(error))
             })
     }
-    
+
     private func getCodeA(withGuest ssoParams: SPCodeAParameters?,
                           completion: @escaping AuthStratCompleteionHandler) {
         guard let spotKey = SPClientSettings.main.spotKey else {
@@ -127,11 +126,11 @@ class SpotImAuthenticationProvider {
         }
         let spRequest = SPInternalAuthRequests.ssoStart
         var requestParams: [String: Any] = [APIParamKeysContants.SPOT_ID: spotKey]
-        
+
         if let secret = ssoParams?.secret {
             requestParams[APIParamKeysContants.SECRET] = secret
         }
-        
+
         var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
         headers[APIHeadersConstants.authorization] = ssoParams?.token ?? SPUserSessionHolder.session.token
         manager.execute(
@@ -148,11 +147,11 @@ class SpotImAuthenticationProvider {
                                               success: ssoResponse.success)
                 if ssoResponse.autoComplete {
                     SPUserSessionHolder.updateSession(with: response.response)
-                    
+
                     if let user = ssoResponse.user {
                         SPUserSessionHolder.updateSessionUser(user: user)
                     }
-                    
+
                     self.ssoAuthDelegate?.ssoFlowDidSucceed()
                     completion(.success(result))
                 } else {
@@ -169,7 +168,7 @@ class SpotImAuthenticationProvider {
             }
         }
     }
-    
+
     func completeSSO(with codeB: String?,
                      completion: @escaping AuthCompletionHandler) {
         guard SPUserSessionHolder.isRegister() == false else {
@@ -193,7 +192,7 @@ class SpotImAuthenticationProvider {
         if let token = SPUserSessionHolder.session.token {
             headers[APIHeadersConstants.authorization] = token
         }
-        
+
         self.manager.execute(
             request: spRequest,
             parameters: params,
@@ -212,7 +211,7 @@ class SpotImAuthenticationProvider {
                         completion(.failure(error))
                         return
                     }
-                    
+
                     SPUserSessionHolder.updateSessionUser(user: user)
                     self.ssoAuthDelegate?.ssoFlowDidSucceed()
                     completion(.success(userId))
@@ -226,7 +225,7 @@ class SpotImAuthenticationProvider {
                         errorMessage: error.localizedDescription
                     )
                     SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                    
+
                     self.ssoAuthDelegate?.ssoFlowDidFail(with: error)
                     completion(.failure(error))
                 }
@@ -238,18 +237,18 @@ class SpotImAuthenticationProvider {
                     errorMessage: error.localizedDescription
                 )
                 SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
-                
+
                 self.ssoAuthDelegate?.ssoFlowDidFail(with: SPNetworkError.default)
                 completion(.failure(SPNetworkError.default))
             }
         }
-        
+
     }
-    
+
     func getUser() -> Observable<SPUser> {
         return internalAuthProvider.user()
     }
-    
+
     func logout() -> Observable<Void> {
         return internalAuthProvider.logout()
             .flatMapLatest { [weak self] _ -> Observable<SPUser> in
@@ -271,7 +270,7 @@ extension SpotImAuthenticationProvider {
                 self.ssoAuthDelegate?.renewSSO(userId: userId)
             })
             .disposed(by: disposeBag)
-        
+
         renewSSOPublish
             .bind(to: renewSSOBehavior)
             .disposed(by: disposeBag)

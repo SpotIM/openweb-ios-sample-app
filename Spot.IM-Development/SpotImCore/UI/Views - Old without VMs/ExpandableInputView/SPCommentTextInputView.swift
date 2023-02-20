@@ -10,12 +10,12 @@ import UIKit
 
 internal protocol SPTextInputView: AnyObject {
 
-    var text: String? { set get }
+    var text: String? { get set }
 
 }
 
 internal protocol SPTextInputViewDelegate: AnyObject {
-    
+
     func input(_ view: SPTextInputView, didChange text: String)
     func validateInput(lenght: Int) -> Bool
 }
@@ -28,7 +28,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     enum CommentType {
         case comment, reply
     }
-    
+
     weak var delegate: SPTextInputViewDelegate?
 
     var text: String? { get { textInputView.text }
@@ -36,22 +36,22 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
 
     private let textInputView: OWInputTextView = OWInputTextView()
     private lazy var avatarUserView: SPAvatarView = SPAvatarView()
-    
+
     private var textToAvatarConstraint: OWConstraint?
     private var textToLeadingConstraint: OWConstraint?
     // MARK: - Init
-    
+
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         setupUI()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         textInputView.accessibilityIdentifier = Metrics.textInputViewIdentifier
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -60,7 +60,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         textInputView.autocorrectionType = !UIDevice.current.isPortrait() || UIDevice.current.screenType == .iPhones_5_5s_5c_SE ? .no : .yes
         avatarUserView.updateColorsAccordingToStyle()
     }
-    
+
     func setKeyboardAccordingToDeviceOrientation(isPortrait: Bool) {
         textInputView.setKeyboardAccordingToDeviceOrientation(isPortrait: isPortrait)
     }
@@ -68,7 +68,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
     func makeFirstResponder() {
         textInputView.becomeFirstResponder()
     }
-    
+
     func updateText(_ text: String) {
         textInputView.text = text
         delegate?.input(self, didChange: text)
@@ -78,18 +78,18 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         switch type {
         case .comment:
             textInputView.placeholder = LocalizationManager.localizedString(key: "What do you think?")
-            
+
         case .reply:
             textInputView.placeholder = LocalizationManager.localizedString(key: "Type your reply…")
         }
-        
+
         setShowAvatar(showAvatar: showAvatar)
     }
-    
+
     func configureAvatarViewModel(with model: OWAvatarViewModeling) {
         self.avatarUserView.configure(with: model)
     }
-    
+
     func setShowAvatar(showAvatar: Bool) {
         if showAvatar {
             avatarUserView.isHidden = false
@@ -101,14 +101,14 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
             textToLeadingConstraint?.activate()
         }
     }
-    
+
     private func setupUI() {
         addSubviews(textInputView, avatarUserView)
         configureAvatarView()
         configureTextInputView()
         updateColorsAccordingToStyle()
     }
-    
+
     private func configureAvatarView() {
         avatarUserView.isHidden = true
         avatarUserView.OWSnp.makeConstraints { make in
@@ -117,7 +117,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
             make.size.equalTo(Theme.avatarImageViewSize)
         }
     }
-    
+
     private func configureTextInputView() {
         textInputView.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Theme.textInputViewTopOffset)
@@ -127,14 +127,13 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
         }
         textToLeadingConstraint?.deactivate()
         textToAvatarConstraint?.deactivate()
-        
-        
+
         textInputView.delegate = self
         textInputView.font = UIFont.preferred(style: .regular, of: Theme.commentTextFontSize)
         textInputView.textAlignment = LocalizationManager.getTextAlignment()
         textInputView.isScrollEnabled = false
     }
-    
+
     private func getParentScrollViewOfTextInputView() -> UIScrollView? {
         let parentView = textInputView.superview!
         if let scrollView = parentView.superview as? UIScrollView {
@@ -143,7 +142,7 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
             return nil
         }
     }
-    
+
     private func ensureCursorVisibleOnBottom(textView: UITextView) {
         guard let scrollView = getParentScrollViewOfTextInputView(),
               let range = textView.selectedTextRange,
@@ -155,24 +154,24 @@ final class SPCommentTextInputView: OWBaseView, SPTextInputView {
 }
 
 extension SPCommentTextInputView: UITextViewDelegate {
-    
+
     func textViewDidChange(_ textView: UITextView) {
         delegate?.input(self, didChange: textView.text)
     }
-    
+
     func textViewDidChangeSelection(_ textView: UITextView) {
         ensureCursorVisibleOnBottom(textView: textView)
     }
-    
+
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        
+
         return delegate?.validateInput(lenght: newText.count) ?? true
     }
 }
 
 private enum Theme {
-    
+
     static let commentTextFontSize: CGFloat = 16.0
     static let commentLeadingOffset: CGFloat = 11.0
     static let avatarImageViewSize: CGFloat = 39.0

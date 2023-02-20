@@ -9,13 +9,13 @@
 import Foundation
 
 struct SPLabelConfiguration: Decodable {
-    
+
     let id: String
     let text: String
     let color: String
     let iconName: String
     let iconType: String
-    
+
     func getIconUrl() -> URL? {
         var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryIconParamString)
         result.append("\(SPImageRequestConstants.fontAwesomePathComponent)\(iconType)-\(iconName).png")

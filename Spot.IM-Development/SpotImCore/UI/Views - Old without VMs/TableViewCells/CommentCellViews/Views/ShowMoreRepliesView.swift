@@ -12,7 +12,7 @@ internal final class ShowMoreRepliesView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "show_more_replies_id"
     }
-    
+
     weak var delegate: ShowMoreRepliesViewDelegate?
     var collapsedTitle: String?
     var expandedTitle: String?
@@ -27,7 +27,7 @@ internal final class ShowMoreRepliesView: OWBaseView {
         clipsToBounds = true
         setupUI()
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -35,7 +35,6 @@ internal final class ShowMoreRepliesView: OWBaseView {
         showHideRepliesButton.setTitleColor(.spForeground1, for: .normal)
         disclosureIndicator.image = UIImage(spNamed: "messageDisclosureIndicatorIcon", supportDarkMode: true)
     }
-    
 
     func updateView(with state: RepliesButtonState) {
         switch state {
@@ -82,14 +81,14 @@ internal final class ShowMoreRepliesView: OWBaseView {
         showHideRepliesButton.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
+
         if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
             showHideRepliesButton.contentEdgeInsets.left += activityIndicator.frame.width + Theme.activityOffset
         } else {
             showHideRepliesButton.contentEdgeInsets.right += activityIndicator.frame.width + Theme.activityOffset
         }
     }
-    
+
     private func configureActivityIndicator() {
         activityIndicator.style = SPUserInterfaceStyle.isDarkMode ? .white : .gray
         activityIndicator.OWSnp.makeConstraints { make in
@@ -124,7 +123,7 @@ internal final class ShowMoreRepliesView: OWBaseView {
 
 // MARK: - Delegate
 
-protocol ShowMoreRepliesViewDelegate: class {
+protocol ShowMoreRepliesViewDelegate: AnyObject {
 
     func showHideReplies()
 

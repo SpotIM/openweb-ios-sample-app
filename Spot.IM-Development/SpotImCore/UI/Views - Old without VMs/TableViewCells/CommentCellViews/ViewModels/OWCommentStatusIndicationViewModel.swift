@@ -32,23 +32,23 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
 
     var inputs: OWCommentStatusIndicationViewModelingInputs { return self }
     var outputs: OWCommentStatusIndicationViewModelingOutputs { return self }
-        
+
     fileprivate let _status = BehaviorSubject<SPComment.CommentStatus?>(value: nil)
     fileprivate let _strictMode = BehaviorSubject<Bool?>(value: nil)
     fileprivate let _commentWidth = BehaviorSubject<CGFloat?>(value: nil)
-    
+
     fileprivate var status: Observable<SPComment.CommentStatus> {
         return self._status.unwrap().asObservable()
     }
-    
+
     fileprivate var strictMode: Observable<Bool> {
         return self._strictMode.unwrap().asObservable()
     }
-    
+
     fileprivate var commentWidth: Observable<CGFloat> {
         return self._commentWidth.unwrap().asObservable()
     }
-    
+
     var indicationIcon: Observable<UIImage> {
         self.status
             .map {
@@ -64,7 +64,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
                 return image ?? UIImage()
             }.asObservable()
     }
-    
+
     var indicationText: Observable<String> {
         self.status
             .withLatestFrom(strictMode) { [weak self] status, isStrictMode in
@@ -74,7 +74,7 @@ class OWCommentStatusIndicationViewModel: OWCommentStatusIndicationViewModeling,
     }
 
     var indicationHeight: CGFloat = 0
-    
+
     func configure(with status: SPComment.CommentStatus, isStrictMode: Bool, containerWidth: CGFloat) {
         self._status.onNext(status)
         self._strictMode.onNext(isStrictMode)
@@ -96,14 +96,14 @@ fileprivate extension OWCommentStatusIndicationViewModel {
             return ""
         }
     }
-    
+
     func calculateHeight(containerWidth: CGFloat, text: String) {
         // calculate text width using the comment with reducing all padding & icon
         let width = containerWidth
                     - (OWCommentStatusIndicationView.Metrics.statusTextHorizontalOffset * 2)
                     - OWCommentStatusIndicationView.Metrics.iconSize
                     - OWCommentStatusIndicationView.Metrics.iconLeadingOffset
-        
+
         let attributedMessage = NSAttributedString(
             string: text,
             attributes: [

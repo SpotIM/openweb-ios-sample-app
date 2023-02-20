@@ -11,7 +11,7 @@ import UIKit
 struct OWColor {
     var lightThemeColor: UIColor
     var darkThemeColor: UIColor
-    
+
     enum OWType: CaseIterable {
         case skeletonEncapsulateViewBackgroundColor
         case skeletonColor
@@ -27,7 +27,7 @@ struct OWColor {
         case brandColor
         case buttonTextColor
         case linkColor
-        
+
         var `default`: OWColor {
             switch self {
             case .skeletonEncapsulateViewBackgroundColor:
@@ -73,8 +73,15 @@ struct OWColor {
                                darkThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0))
             }
         }
+
+        var shouldUpdateRxObservable: Bool {
+            switch self {
+            case .brandColor: return true
+            default: return false
+            }
+        }
     }
-    
+
     init(lightThemeColor: UIColor, darkThemeColor: UIColor) {
         self.lightThemeColor = lightThemeColor
         self.darkThemeColor = darkThemeColor
@@ -90,7 +97,7 @@ extension OWColor {
             return darkThemeColor
         }
     }
-    
+
     mutating func setColor(_ color: UIColor, forThemeStyle style: OWThemeStyle) {
         switch style {
         case .light:
@@ -99,11 +106,11 @@ extension OWColor {
             setDarkThemeColor(color)
         }
     }
-    
+
     fileprivate mutating func setLightThemeColor(_ color: UIColor) {
         lightThemeColor = color
     }
-    
+
     fileprivate mutating func setDarkThemeColor(_ color: UIColor) {
         darkThemeColor = color
     }
