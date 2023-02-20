@@ -7,8 +7,16 @@
 //
 
 import Foundation
+import SpotImCore
 
+#if NEW_API
+enum PresentationalModeCompact {
+    case present(style: OWModalPresentationStyle)
+    case push
+}
+#else
 enum PresentationalModeCompact {
     case present
     case push
 }
+#endif

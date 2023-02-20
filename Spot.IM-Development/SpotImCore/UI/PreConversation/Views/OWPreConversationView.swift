@@ -22,7 +22,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let btnFullConversationTopPadding: CGFloat = 13
         static let bottomPadding: CGFloat = 23
 
-        
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
         // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
         // We should later use RX to return a calculated height based on the actual width of the frame
@@ -30,12 +29,11 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         // TODO: Testing - remove later
         static let initialHeight: CGFloat = 800
         static let changedHeight: CGFloat = 700
-        
+
         static let separatorHeight: CGFloat = 1.0
     }
-    
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
-    
+
     fileprivate lazy var header: OWPreConversationHeaderView = {
         return OWPreConversationHeaderView(viewModel: self.viewModel.outputs.preConversationHeaderVM)
     }()
@@ -65,7 +63,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         for option in OWPreConversationCellOption.allCases {
             tableView.register(cellClass: option.cellClass)
         }
-        
+
         return tableView
     }()
     fileprivate lazy var btnCTAConversation: UIButton = {
@@ -84,25 +82,25 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
         let dataSource = OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
-            
+
             let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
             cell.configure(with: item.viewModel)
-            
+
             return cell
         })
-        
+
         let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
         dataSource.animationConfiguration = animationConfiguration
         return dataSource
     }()
-    
+
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init(viewModel: OWPreConversationViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -115,18 +113,18 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWPreConversationView {
     func setupViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
-        
+
         self.useAsThemeStyleInjector()
 
         self.OWSnp.makeConstraints { make in
             make.height.equalTo(Metrics.initialHeight)
         }
-        
+
         self.addSubviews(header)
         header.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
         }
-        
+
         // TODO: Adjust UI correctly according to the style
         // Each component should be added separately
         // DO NOT pass style in the VM, use `shouldShowCommunityGuidelinesAndQuestion` and etc.
@@ -135,13 +133,13 @@ fileprivate extension OWPreConversationView {
             make.top.equalTo(header.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
         }
-        
+
         self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
         }
-        
+
         self.addSubview(separatorView)
         separatorView.OWSnp.makeConstraints { make in
             make.top.equalTo(communityQuestionView.OWSnp.bottom)
@@ -149,14 +147,14 @@ fileprivate extension OWPreConversationView {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(Metrics.separatorHeight)
         }
-        
+
         self.addSubview(commentCreationEntryView)
         commentCreationEntryView.OWSnp.makeConstraints { make in
             make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview()
         }
-        
+
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
@@ -179,14 +177,14 @@ fileprivate extension OWPreConversationView {
             make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
         }
     }
-    
+
     func setupObservers() {
         viewModel.outputs.conversationCTAButtonTitle
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
         
         viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
-        
+
         viewModel.outputs.preConversationDataSourceSections
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] _ in
@@ -194,7 +192,7 @@ fileprivate extension OWPreConversationView {
             })
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
-                
+
         viewModel.outputs.changeSizeAtIndex
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
@@ -219,7 +217,7 @@ fileprivate extension OWPreConversationView {
                 self.btnCTAConversation.backgroundColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
-    
+
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
     private func updateTableViewHeightIfNeeded() {
 //        if (tableView.frame.size.height != tableView.contentSize.height) {

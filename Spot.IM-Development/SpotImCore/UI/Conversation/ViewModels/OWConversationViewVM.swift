@@ -13,7 +13,7 @@ import RxSwift
 typealias ConversationDataSourceModel = OWAnimatableSectionModel<String, OWConversationCellOption>
 
 protocol OWConversationViewViewModelingInputs {
-    
+
 }
 
 protocol OWConversationViewViewModelingOutputs {
@@ -31,7 +31,7 @@ protocol OWConversationViewViewModeling {
 class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversationViewViewModelingInputs, OWConversationViewViewModelingOutputs {
     var inputs: OWConversationViewViewModelingInputs { return self }
     var outputs: OWConversationViewViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let conversationData: OWConversationRequiredData
 
@@ -41,7 +41,7 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
             .rx_elements()
             .asObservable()
     }
-    
+
     var conversationDataSourceSections: Observable<[ConversationDataSourceModel]> {
         return cellsViewModels
             .map { items in
@@ -52,26 +52,25 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
                 return [section]
             }
     }
-    
+
     lazy var summaryViewModel: OWConversationSummaryViewModeling = {
         return OWConversationSummaryViewModel()
     }()
-    
+
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
         return OWCommunityGuidelinesViewModel()
     }()
-    
+
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
         return OWCommunityQuestionViewModel()
     }()
-    
- 
+
     init (conversationData: OWConversationRequiredData,
           servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self.conversationData = conversationData
         setupObservers()
-        
+
         // Testing comment skeleton shimmering cells
         // TODO: Delete once working on the conversation view UI
         let skeletonCellVMs = (0 ..< 50).map { _ in
@@ -84,6 +83,6 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
 
 fileprivate extension OWConversationViewViewModel {
     func setupObservers() {
-        
+
     }
 }

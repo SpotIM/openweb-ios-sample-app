@@ -25,20 +25,20 @@ protocol OWPreConversationHeaderViewModeling {
 }
 
 class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWPreConversationHeaderViewModelingInputs, OWPreConversationHeaderViewModelingOutputs {
-    
+
     var inputs: OWPreConversationHeaderViewModelingInputs { return self }
     var outputs: OWPreConversationHeaderViewModelingOutputs { return self }
-    
+
     var customizeTitleLabelUI = PublishSubject<UILabel>()
     var customizeCounterLabelUI = PublishSubject<UILabel>()
-    
+
     lazy var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling = {
         return OWOnlineViewingUsersCounterViewModelNew()
     }()
-    
+
     var commentsCount: Observable<String> {
         guard let postId = OWManager.manager.postId else { return .empty()}
-        
+
         return OWSharedServicesProvider.shared.realtimeService().realtimeData
             .map { realtimeData in
                 guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(postId)") else {return nil}

@@ -9,7 +9,7 @@
 import Foundation
 
 protocol CommentStateable {
-    
+
     func post()
     func updateCommentText(_ text: String)
     func updateCommentLabels(labelsIds: [String])
@@ -22,9 +22,9 @@ struct SelectedLabels {
 }
 
 final class SPCommentCreationModel: SPBaseCommentCreationModel {
-    
+
     var dataModel: SPCommentCreationDTO
-    
+
     init(commentCreationDTO: SPCommentCreationDTO,
          cacheService: SPCommentsInMemoryCacheService,
          updater: SPCommentUpdater,
@@ -35,35 +35,35 @@ final class SPCommentCreationModel: SPBaseCommentCreationModel {
         super.init(cacheService: cacheService, updater: updater, imageProvider: imageProvider, articleMetadate: articleMetadate)
         commentText = cacheService.comment(for: commentCreationDTO.converstionId)
     }
-    
+
     override func updateCommentText(_ text: String) {
         commentText = text
         cacheService.update(comment: text, with: dataModel.converstionId)
     }
-    
+
     override func post() {
         let displayName = SPUserSessionHolder.session.user?.displayName ?? dataModel.displayName
         var parameters: [String: Any] = [
             CreateCommentAPIKeys.content: self.getContentRequestParam(),
             CreateCommentAPIKeys.metadata: [CreateCommentAPIKeys.displayName: displayName]
         ]
-        
+
         if let selectedLabels = self.selectedLabels, !selectedLabels.ids.isEmpty {
             parameters[CreateCommentAPIKeys.additionalData] = [
                 CreateCommentAPIKeys.labels: [
                     CreateCommentAPIKeys.labelsSection: selectedLabels.section,
-                    CreateCommentAPIKeys.labelsIds: selectedLabels.ids,
+                    CreateCommentAPIKeys.labelsIds: selectedLabels.ids
                 ]
             ]
         }
-        
+
         commentService.createComment(
             parameters: parameters,
             postId: dataModel.postId,
             success: { [weak self] comment in
                 Logger.verbose("FirstComment: post returned with comment \(comment)")
                 guard let self = self else { return }
-                
+
                 var comment = comment
                 comment.writtenAt = Date().timeIntervalSince1970
                 comment.rootComment = comment.id

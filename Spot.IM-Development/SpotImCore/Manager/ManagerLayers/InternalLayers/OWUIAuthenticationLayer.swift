@@ -21,9 +21,9 @@ class OWUIAuthenticationLayer: OWUIAuthentication {
             self._displayLoginFlow = newValue
         }
     }
-    
+
     fileprivate var _displayLoginFlow: OWLoginFlowCallback? = nil
-    
+
     func triggerPublisherDisplayLoginFlow(navController: UINavigationController) {
         guard let callback = _displayLoginFlow else {
             let logger = OWSharedServicesProvider.shared.logger()

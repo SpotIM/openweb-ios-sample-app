@@ -10,16 +10,16 @@ import Foundation
 import UIKit
 
 protocol OWCoordinator: AnyObject {
-    
+
     // should be weak in realization
     var containerViewController: UIViewController? { get set }
-    
+
 }
 
 extension OWCoordinator {
-    
+
     var navigationController: UINavigationController? {
         return containerViewController as? UINavigationController
     }
-    
+
 }

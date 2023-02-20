@@ -8,36 +8,36 @@
 
 import UIKit
 
-struct OWConstraintPriority : ExpressibleByFloatLiteral, Equatable, Strideable {
+struct OWConstraintPriority: ExpressibleByFloatLiteral, Equatable, Strideable {
     typealias OWFloatLiteralType = Float
-    
+
     let value: Float
-    
+
     init(floatLiteral value: Float) {
         self.value = value
     }
-    
+
     init(_ value: Float) {
         self.value = value
     }
-    
+
     static var required: OWConstraintPriority {
         return 1000.0
     }
-    
+
     static var high: OWConstraintPriority {
         return 750.0
     }
-    
+
     static var medium: OWConstraintPriority {
         return 500.0
     }
-    
+
     static var low: OWConstraintPriority {
         return 250.0
     }
-    
-    static func ==(lhs: OWConstraintPriority, rhs: OWConstraintPriority) -> Bool {
+
+    static func == (lhs: OWConstraintPriority, rhs: OWConstraintPriority) -> Bool {
         return lhs.value == rhs.value
     }
 

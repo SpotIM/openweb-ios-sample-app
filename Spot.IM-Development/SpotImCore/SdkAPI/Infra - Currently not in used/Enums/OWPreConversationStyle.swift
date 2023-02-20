@@ -15,7 +15,7 @@ public enum OWPreConversationStyle {
         public static let minNumberOfComments: Int = 1
         public static let maxNumberOfComments: Int = 8 // Before the refactor max was 15, 8 seems enough - TODO: Validate with product
     }
-    
+
     case regular(numberOfComments: Int = Metrics.defaultRegularNumberOfComments)
     case compact
     case ctaButtonOnly // Called "Button only mode" - no title, before the refactor
@@ -29,7 +29,7 @@ enum OWPreConversationStyle {
         static let minNumberOfComments: Int = 1
         static let maxNumberOfComments: Int = 8 // Before the refactor max was 15, 8 seems enough - TODO: Validate with product
     }
-    
+
     case regular(numberOfComments: Int = Metrics.defaultRegularNumberOfComments)
     case compact
     case ctaButtonOnly // Called "Button only mode" - no title, before the refactor

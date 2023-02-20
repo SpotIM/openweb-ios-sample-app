@@ -52,11 +52,13 @@ internal class OWPreConversationFooterView: UIView {
     }()
     
     fileprivate let disposeBag = DisposeBag()
+
     fileprivate let viewModel: OWPreConversationFooterViewModeling
-    
+
     init(with viewModel: OWPreConversationFooterViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+
         self.enforceSemanticAttribute()
             .backgroundColor(.clear)
 
@@ -64,11 +66,11 @@ internal class OWPreConversationFooterView: UIView {
         setupObservers()
         applyAccessibility()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 fileprivate extension OWPreConversationFooterView {

@@ -14,7 +14,7 @@ import SnapKit
 #if NEW_API
 
 class MiscellaneousVC: UIViewController {
-    
+
     fileprivate struct Metrics {
         static let identifier = "miscellaneous_vc_id"
         static let btnConversationCounterIdentifier = "btn_conversation_counter_id"
@@ -22,21 +22,21 @@ class MiscellaneousVC: UIViewController {
         static let horizontalMargin: CGFloat = 50
         static let buttonHeight: CGFloat = 50
     }
-    
+
     fileprivate let viewModel: MiscellaneousViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var scrollView: UIScrollView = {
         var scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
-    
+
     fileprivate lazy var btnConversationCounter: UIButton = {
         return NSLocalizedString("ConversationCounter", comment: "").blueRoundedButton
     }()
-    
+
     init(viewModel: MiscellaneousViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -45,7 +45,7 @@ class MiscellaneousVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func loadView() {
         super.loadView()
         setupViews()
@@ -63,17 +63,17 @@ fileprivate extension MiscellaneousVC {
         view.accessibilityIdentifier = Metrics.identifier
         btnConversationCounter.accessibilityIdentifier = Metrics.btnConversationCounterIdentifier
     }
-    
+
     func setupViews() {
         view.backgroundColor = ColorPalette.shared.color(type: .background)
-        
+
         // Adding scroll view
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         // Adding conversation counter button
         scrollView.addSubview(btnConversationCounter)
         btnConversationCounter.snp.makeConstraints { make in
@@ -81,12 +81,12 @@ fileprivate extension MiscellaneousVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.leading.equalToSuperview().offset(Metrics.horizontalMargin)
             make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalMargin)
-            
-            //Move to last view in scroll view
+
+            // Move to last view in scroll view
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
-    
+
     func setupObservers() {
         title = viewModel.outputs.title
     }
