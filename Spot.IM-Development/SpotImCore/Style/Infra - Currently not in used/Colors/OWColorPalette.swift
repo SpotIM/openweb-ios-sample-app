@@ -22,9 +22,9 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
     fileprivate var colors = [OWColor.OWType: OWColor]()
     fileprivate var colorsBehaviorSubject = [OWColor.OWType: BehaviorSubject<OWColor>]()
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     static let shared: OWColorPaletteProtocol & OWColorPaletteConfigurable = OWColorPalette()
-    
+
     private init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         // Initialize default colors
@@ -44,12 +44,12 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
 
         return color.color(forThemeStyle: themeStyle)
     }
-    
+
     func colorObservable(type: OWColor.OWType) -> Observable<UIColor> {
         guard let color = colorsBehaviorSubject[type] else {
             return .empty()
         }
-        
+
         return Observable
             .combineLatest(color.asObserver(), servicesProvider.themeStyleService().style) { (color, style) in
                 return color.color(forThemeStyle: style)

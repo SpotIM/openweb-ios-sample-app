@@ -254,7 +254,7 @@ fileprivate extension OWCommentHeaderView {
                 self.dateLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
                 self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
-        
+
         OWColorPalette.shared.colorObservable(type: .brandColor)
             .subscribe(onNext: { [weak self] brandColor in
                 guard let self = self else { return }
