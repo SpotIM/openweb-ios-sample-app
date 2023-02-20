@@ -18,7 +18,7 @@ protocol OWCommentContentViewModelingOutputs {
     var gifUrl: Observable<String> { get }
     var image: Observable<OWImageType> { get }
     var mediaSize: Observable<CGSize> { get }
-    
+
     var collapsableLabelViewModel: OWCommentTextViewModeling { get }
 }
 
@@ -44,37 +44,36 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
     fileprivate let lineLimit: Int
     fileprivate let imageProvider: OWImageProviding
-    
+
     var collapsableLabelViewModel: OWCommentTextViewModeling
-    
+
     init(comment: SPComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.lineLimit = lineLimit
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, lineLimit: lineLimit)
         self.imageProvider = imageProvider
         _comment.onNext(comment)
     }
-    
+
     init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         lineLimit = 0
         self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), lineLimit: lineLimit)
         self.imageProvider = imageProvider
     }
-    
+
     var gifUrl: Observable<String> {
         _comment
             .map { $0?.gif?.originalUrl }
             .unwrap()
             .asObservable()
     }
-    
-    
+
     var image: Observable<OWImageType> {
         _comment
             .flatMap { [weak self] comment -> Observable<URL?> in
                 guard let self = self,
                       let imageId = comment?.image?.imageId
                 else { return .empty() }
-                
+
                 return self.imageProvider.imageURL(with: imageId, size: nil)
             }
             .map { url in
@@ -83,7 +82,7 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             }
             .asObservable()
     }
-    
+
     var mediaSize: Observable<CGSize> {
         Observable.combineLatest(_commentMediaOriginalSize, _commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize in
             guard let self = self else { return .zero }
