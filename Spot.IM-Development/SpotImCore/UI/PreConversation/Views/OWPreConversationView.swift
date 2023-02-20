@@ -215,7 +215,7 @@ fileprivate extension OWPreConversationView {
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
             }).disposed(by: disposeBag)
-        
+
         OWColorPalette.shared.colorObservable(type: .brandColor)
             .subscribe(onNext: { [weak self] brandColor in
                 guard let self = self else { return }
