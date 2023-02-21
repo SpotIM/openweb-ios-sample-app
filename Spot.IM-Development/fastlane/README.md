@@ -52,6 +52,14 @@ Build device ipa
 
 Build a release version of the SDK
 
+### ios build_release_ipa
+
+```sh
+[bundle exec] fastlane ios build_release_ipa
+```
+
+Build release ipa
+
 ### ios release_demo_app
 
 ```sh

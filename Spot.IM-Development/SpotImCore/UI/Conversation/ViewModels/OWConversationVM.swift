@@ -31,34 +31,34 @@ protocol OWConversationViewModeling {
 class OWConversationViewModel: OWConversationViewModeling, OWConversationViewModelingInputs, OWConversationViewModelingOutputs {
     var inputs: OWConversationViewModelingInputs { return self }
     var outputs: OWConversationViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let conversationData: OWConversationRequiredData
     fileprivate let disposeBag = DisposeBag()
-    
+
     lazy var conversationViewVM: OWConversationViewViewModeling = {
         return OWConversationViewViewModel(conversationData: conversationData)
     }()
-    
+
     var ctaCommentCreationTapped: Observable<Void> {
         // TODO: Complete
         return .never()
     }
-    
+
     var userInitiatedAuthenticationFlow: Observable<Void> {
         // TODO: Complete
         return .never()
     }
-    
+
     var highlightComment = PublishSubject<String>()
-    
+
     fileprivate var _highlightedComment = BehaviorSubject<String?>(value: nil)
     var highlightedComment: Observable<String> {
         return _highlightedComment
             .unwrap()
             .asObservable()
     }
-    
+
     var viewDidLoad = PublishSubject<Void>()
     var _viewDidLoad = BehaviorSubject<Void?>(value: nil)
     var loadedToScreen: Observable<Void> {
@@ -81,7 +81,7 @@ fileprivate extension OWConversationViewModel {
         highlightComment
             .bind(to: _highlightedComment)
             .disposed(by: disposeBag)
-        
+
         // Same reason
         viewDidLoad
             .bind(to: _viewDidLoad)

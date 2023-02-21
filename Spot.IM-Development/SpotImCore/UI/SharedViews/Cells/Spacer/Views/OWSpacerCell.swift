@@ -11,7 +11,7 @@ import UIKit
 import RxSwift
 
 class OWSpacerCell: UITableViewCell {
-    
+
     fileprivate struct Metrics {
         static let height: CGFloat = 1.0
     }
@@ -21,19 +21,19 @@ class OWSpacerCell: UITableViewCell {
     }()
     fileprivate var viewModel: OWSpacerCellViewModeling!
     fileprivate var disposeBag = DisposeBag()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func configure(with viewModel: OWCellViewModel) {
         guard let vm = viewModel as? OWSpacerCellViewModel else { return }
-        
+
         self.viewModel = vm
         disposeBag = DisposeBag()
         setupObservers()
@@ -44,13 +44,13 @@ fileprivate extension OWSpacerCell {
     func setupUI() {
         self.backgroundColor = .clear
         self.addSubviews(seperatorView)
-        
+
         seperatorView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.height.equalTo(Metrics.height)
         }
     }
-    
+
     func setupObservers() {
         OWSharedServicesProvider.shared.themeStyleService()
             .style

@@ -56,7 +56,7 @@ class OWNetworkJSONParameterEncoder: OWNetworkParameterEncoder {
     }
 
     func encode<Parameters: Encodable>(_ parameters: Parameters?,
-                                            into request: URLRequest) throws -> URLRequest {
+                                       into request: URLRequest) throws -> URLRequest {
         guard let parameters = parameters else { return request }
 
         var request = request
@@ -140,7 +140,7 @@ class OWNetworkURLEncodedFormParameterEncoder: OWNetworkParameterEncoder {
     }
 
     func encode<Parameters: Encodable>(_ parameters: Parameters?,
-                                            into request: URLRequest) throws -> URLRequest {
+                                       into request: URLRequest) throws -> URLRequest {
         guard let parameters = parameters else { return request }
 
         var request = request
@@ -190,7 +190,7 @@ extension OWNetworkParameterEncoder where Self == OWNetworkURLEncodedFormParamet
     ///   - destination: `Destination` to which to encode the parameters. `.methodDependent` by default.
     /// - Returns:       The `URLEncodedFormParameterEncoder`.
     static func urlEncodedForm(encoder: OWNetworkURLEncodedFormEncoder = OWNetworkURLEncodedFormEncoder(),
-                                      destination: OWNetworkURLEncodedFormParameterEncoder.Destination = .methodDependent) -> OWNetworkURLEncodedFormParameterEncoder {
+                               destination: OWNetworkURLEncodedFormParameterEncoder.Destination = .methodDependent) -> OWNetworkURLEncodedFormParameterEncoder {
         OWNetworkURLEncodedFormParameterEncoder(encoder: encoder, destination: destination)
     }
 }

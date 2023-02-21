@@ -13,42 +13,41 @@ internal protocol SPLoginPromptViewDelegate {
 }
 
 internal final class SPLoginPromptView: OWBaseView {
-    
+
     private lazy var titleTextView: OWBaseTextView = .init()
     private lazy var separatorView: OWBaseView = .init()
 
     private var titleBottomConstraint: OWConstraint?
     private var separatorLeadingConstraint: OWConstraint?
     private var separatorTrailingConstraint: OWConstraint?
-    
+
     var delegate: SPLoginPromptViewDelegate?
 
     // MARK: - Overrides
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setup()
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
         titleTextView.backgroundColor = .spBackground0
         separatorView.backgroundColor = .spSeparator2
     }
-    
+
     func getTextView() -> OWBaseTextView {
         return self.titleTextView
     }
 
-    
     internal func setupPreConversationConstraints() {
         separatorLeadingConstraint?.update(offset: Theme.separatorHorizontalOffsetPreConversation)
         separatorTrailingConstraint?.update(offset: -Theme.separatorHorizontalOffsetPreConversation)
         titleBottomConstraint?.update(offset: -Theme.titleBottomOffsetPreConversation)
     }
-    
+
     // MARK: - Private Methods
 
     private func setup() {
@@ -56,11 +55,11 @@ internal final class SPLoginPromptView: OWBaseView {
         setupTitleTextView()
         configureSeparatorView()
     }
-    
+
     private func setupTitleTextView() {
-        let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.userPressedLoginText))
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.userPressedLoginText))
         titleTextView.addGestureRecognizer(gesture)
-        
+
         titleTextView.isEditable = false
         titleTextView.isSelectable = false
         titleTextView.isScrollEnabled = false
@@ -74,13 +73,13 @@ internal final class SPLoginPromptView: OWBaseView {
             make.trailing.equalToSuperview().offset(-Theme.titleHorizontalOffset)
         }
     }
-    
-    @objc func userPressedLoginText(sender : UITapGestureRecognizer) {
+
+    @objc func userPressedLoginText(sender: UITapGestureRecognizer) {
         if let delegate = self.delegate {
             delegate.userTapOnLoginPrompt()
         }
     }
-    
+
     private func configureSeparatorView() {
         separatorView.backgroundColor = .spSeparator2
         separatorView.OWSnp.makeConstraints { make in

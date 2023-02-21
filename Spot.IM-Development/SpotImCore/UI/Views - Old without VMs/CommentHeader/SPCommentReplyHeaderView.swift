@@ -22,16 +22,16 @@ final class SPCommentReplyHeaderView: OWBaseView {
     private let commentAuthorLabel: OWBaseLabel = .init()
     private let commentLabel: OWBaseLabel = .init()
     private let separatorView: OWBaseView = .init()
-    
+
     private var commentLabelTopConstraint: OWConstraint? = nil
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setup()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         closeButton.accessibilityIdentifier = Metrics.closeButtonIdentifier
@@ -39,7 +39,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
         commentAuthorLabel.accessibilityIdentifier = Metrics.commentAuthorLabelIdentifier
         commentLabel.accessibilityIdentifier = Metrics.commentLabelIdentifier
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -53,22 +53,22 @@ final class SPCommentReplyHeaderView: OWBaseView {
         separatorView.backgroundColor = .spSeparator2
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
     }
-    
+
     func hideCommentText() {
         commentLabel.text = ""
         commentLabelTopConstraint?.update(offset: 0)
         commentLabel.isHidden = true
     }
-    
+
     // MARK: - Internal methods
-    
+
     internal func configure(with commentModel: CommentReplyDataModel) {
         commentAuthorLabel.text = commentModel.author
         commentLabel.text = commentModel.comment
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func setup() {
         addSubviews(replyingLabel, commentAuthorLabel, closeButton, commentLabel, separatorView)
         setupReplyingLabel()
@@ -78,7 +78,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
         setupSeparatorView()
         updateColorsAccordingToStyle()
     }
-    
+
     private func setupReplyingLabel() {
         replyingLabel.text = LocalizationManager.localizedString(key: "Replying to ")
         replyingLabel.font = UIFont.preferred(style: .regular, of: Theme.titleFontSize)
@@ -87,7 +87,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
             make.leading.equalToSuperview().offset(Theme.leadingOffset)
         }
     }
-    
+
     private func setupCommentAuthorLabel() {
         commentAuthorLabel.font = UIFont.preferred(style: .bold, of: Theme.titleFontSize)
         commentAuthorLabel.OWSnp.makeConstraints { make in
@@ -97,7 +97,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
             make.trailing.lessThanOrEqualTo(closeButton.OWSnp.leading).offset(-Theme.trailingOffset)
         }
     }
-    
+
     private func setupCloseButton() {
         closeButton.setImage(UIImage(spNamed: "closeCrossIcon", supportDarkMode: true), for: .normal)
         closeButton.OWSnp.makeConstraints { make in
@@ -106,7 +106,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
             make.size.equalTo(Theme.closeButtonSize)
         }
     }
-    
+
     private func setupCommentLabel() {
         commentLabel.numberOfLines = 3
         commentLabel.font = UIFont.preferred(style: .regular, of: Theme.commentFontSize)
@@ -117,7 +117,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
             make.bottom.equalTo(separatorView.OWSnp.top).offset(-Theme.commentBottomOffset)
         }
     }
-    
+
     private func setupSeparatorView() {
         separatorView.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
@@ -127,7 +127,7 @@ final class SPCommentReplyHeaderView: OWBaseView {
 }
 
 private enum Theme {
-    
+
     static let topOffset: CGFloat = 26.0
     static let commentTopOffset: CGFloat = 22.0
     static let commentBottomOffset: CGFloat = 24.0
@@ -138,5 +138,5 @@ private enum Theme {
     static let commentFontSize: CGFloat = 16.0
     static let closeButtonSize: CGFloat = 40.0
     static let closeButtonTrailingOffset: CGFloat = 6.0
-    
+
 }

@@ -81,6 +81,25 @@ orbs:
   slack: circleci/slack@3.4.2
   codecov: codecov/codecov@3.2.2
 
+  swiftlint:
+    steps:
+      - run:
+          name: Install Homebrew
+          command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - run:
+          name: Install SwiftLint
+          command: |
+            brew update
+            brew install swiftlint
+            swiftlint version
+
+      - run:
+          name: Run SwiftLint
+          command: |
+            swiftlint lint --strict --config swiftlint/.swiftlint.yml --reporter xcode || (echo "SwiftLint check failed." && exit 1)
+            echo "SwiftLint check succeeded."
+
 jobs:
   validate_spm_job:
     <<: *ios_config_xcode
@@ -235,6 +254,8 @@ jobs:
           paths:
             - "vendor/bundle"
 
+      - swiftlint
+            
       - run:
           name: Build app and run unit-tests
           command: |
@@ -290,6 +311,8 @@ jobs:
           name: Run Fastlane Release
           command: |
             bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
+
+      - swiftlint
 
       - run:
           name: After Running Fastlane Release
@@ -365,6 +388,8 @@ jobs:
           paths:
             - "vendor/bundle"
 
+      - swiftlint
+
       - run:
           name: Run Fastlane Release Sample App
           command: |
@@ -408,6 +433,8 @@ jobs:
           paths:
             - "vendor/bundle"
 
+      - swiftlint
+
       - run:
           name: Run Fastlane Release Sample App
           command: |
@@ -450,6 +477,8 @@ jobs:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
             - "vendor/bundle"
+
+      - swiftlint
 
       - run:
           name: Run Fastlane Release Sample App

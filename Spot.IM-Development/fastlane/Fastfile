@@ -54,19 +54,6 @@ platform :ios do
     )
   end
 
-  desc "Build device ipa"
-  lane :build_device_ipa do
-    match(type: "development", readonly: true)
-    cocoapods(use_bundle_exec: false)
-    gym(
-        scheme: "Spot-IM.Development",
-        workspace: "Spot-IM.Development.xcworkspace",
-        export_method: "development",
-        destination: "generic/platform=iOS",
-        export_options: { compileBitcode: false}
-    )
-  end
-
   # Excpect parameter `version`
   desc "Build a release version of the SDK"
   lane :build_release_sdk do |options|
@@ -82,6 +69,60 @@ platform :ios do
     )
   end
 
+  desc "Build release ipa"
+  lane :build_release_ipa do | options |
+    scheme = "Spot-IM.Development"
+    type = "app-store"
+
+    if options[:app] == "public"
+      scheme = "Spot-IM.PublicDemoApp"
+    elsif options[:app] == "beta"
+      scheme = "Spot-IM.BetaDevelopment"
+    end
+
+    if options[:type] == "development"
+      type = "development"
+    end
+
+    if type == "app-store"
+      match(
+          type: "appstore",
+          readonly: true,
+          api_key_path: "apple_api_key.json"
+      )
+      cocoapods(use_bundle_exec: false)
+      gym(
+          scheme: scheme,
+          workspace: "Spot-IM.Development.xcworkspace",
+          export_method: "app-store",
+          destination: "generic/platform=iOS",
+          export_options: {
+              signingStyle: "manual",
+              provisioningProfiles: {
+                  "im.spot.demo" => "match AppStore im.spot.demo"
+              }
+          },
+          xcargs: "-allowProvisioningUpdates"
+      )
+    else
+      match(type: "development", readonly: true)
+      cocoapods(use_bundle_exec: false)
+      gym(
+        scheme: scheme,
+        workspace: "Spot-IM.Development.xcworkspace",
+        export_method: "development",
+        destination: "generic/platform=iOS",
+        export_options: {
+            signingStyle: "manual",
+            provisioningProfiles: {
+                "im.spot.demo" => "match Development im.spot.demo"
+            }
+        },
+        xcargs: "-allowProvisioningUpdates"
+    )
+    end
+  end
+
   # Excpect parameter `version`
   desc "Release Sample App (internal preset)"
   lane :release_demo_app do |options|
@@ -91,25 +132,7 @@ platform :ios do
     increment_build_in_range(build_low:internal_sample_app_build_low_threshold, build_high:internal_sample_app_build_high_threshold)
     # Set a specific version number
     set_version(version:options[:version])
-    match(
-        type: "appstore",
-        readonly: true,
-        api_key_path: "apple_api_key.json"
-    )
-    match(type: "development", readonly: true)
-    cocoapods(use_bundle_exec: false)
-    gym(
-        scheme: "Spot-IM.Development",
-        workspace: "Spot-IM.Development.xcworkspace",
-        export_method: "app-store",
-        export_options: {
-            signingStyle: "manual",
-            provisioningProfiles: {
-                "im.spot.demo" => "match AppStore im.spot.demo"
-            }
-        },
-        xcargs: "-allowProvisioningUpdates"
-    )
+    build_release_ipa(app:"internal", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
 
@@ -122,25 +145,7 @@ platform :ios do
     increment_build_in_range(build_low:beta_sample_app_build_low_threshold, build_high:beta_sample_app_build_high_threshold)
     # Set a specific version number
     set_version(version:options[:version])
-    match(
-        type: "appstore",
-        readonly: true,
-        api_key_path: "apple_api_key.json"
-    )
-    match(type: "development", readonly: true)
-    cocoapods(use_bundle_exec: false)
-    gym(
-        scheme: "Spot-IM.BetaDevelopment",
-        workspace: "Spot-IM.Development.xcworkspace",
-        export_method: "app-store",
-        export_options: {
-            signingStyle: "manual",
-            provisioningProfiles: {
-                "im.spot.demo" => "match AppStore im.spot.demo"
-            }
-        },
-        xcargs: "-allowProvisioningUpdates"
-    )
+    build_release_ipa(app:"beta", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
 
@@ -153,25 +158,7 @@ platform :ios do
     increment_build_in_range(build_low:public_sample_app_build_low_threshold, build_high:public_sample_app_build_high_threshold)
     # Set a specific version number
     set_version(version:options[:version])
-    match(
-        type: "appstore",
-        readonly: true,
-        api_key_path: "apple_api_key.json"
-    )
-    match(type: "development", readonly: true)
-    cocoapods(use_bundle_exec: false)
-    gym(
-        scheme: "Spot-IM.PublicDemoApp",
-        workspace: "Spot-IM.Development.xcworkspace",
-        export_method: "app-store",
-        export_options: {
-            signingStyle: "manual",
-            provisioningProfiles: {
-                "im.spot.demo" => "match AppStore im.spot.demo"
-            }
-        },
-        xcargs: "-allowProvisioningUpdates"
-    )
+    build_release_ipa(app:"public", type:"app-store")
     upload_to_testflight(api_key_path: "apple_api_key.json")
   end
 

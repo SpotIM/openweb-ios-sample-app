@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension String : OWIdentifiableType {
+extension String: OWIdentifiableType {
     typealias Identity = String
 
     var identity: String {
