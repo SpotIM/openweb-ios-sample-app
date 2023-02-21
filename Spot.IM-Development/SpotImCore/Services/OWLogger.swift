@@ -29,7 +29,7 @@ enum OWLogMethod {
 #endif
 
 extension OWLogLevel {
-    
+
     // Description exposed for outside use as well
     var description: String {
         switch self {

@@ -12,11 +12,11 @@ class OWLoggerConfigurationLayer: OWLoggerConfiguration {
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate var _logLevel: OWLogLevel = .verbose
     fileprivate var _logMethods: [OWLogMethod] = []
-    
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
     }
-    
+
     var level: OWLogLevel {
         get {
             return _logLevel
@@ -26,7 +26,7 @@ class OWLoggerConfigurationLayer: OWLoggerConfiguration {
             configureLogger()
         }
     }
-    
+
     var methods: [OWLogMethod] {
         get {
             return _logMethods
@@ -45,7 +45,7 @@ fileprivate extension OWLoggerConfigurationLayer {
             servicesProvider.logger().log(level: .error, logMessage)
             return
         }
-        
+
         servicesProviderConfigure.configureLogger(logLevel: _logLevel, logMethods: _logMethods)
     }
 }
