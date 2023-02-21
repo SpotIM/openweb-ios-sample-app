@@ -10,8 +10,8 @@ import Foundation
 
 class OWLoggerConfigurationLayer: OWLoggerConfiguration {
     fileprivate let servicesProvider: OWSharedServicesProviding
-    fileprivate var _logLevel: OWLogLevel = .verbose
-    fileprivate var _logMethods: [OWLogMethod] = []
+    fileprivate var _logLevel: OWLogLevel = OWLogLevel.defaultLevelToUse
+    fileprivate var _logMethods: [OWLogMethod] = OWLogMethod.defaultMethodsToUse
 
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider

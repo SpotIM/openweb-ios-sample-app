@@ -44,6 +44,10 @@ extension OWLogLevel {
         }
     }
 
+    static var defaultLevelToUse: OWLogLevel {
+        return .verbose
+    }
+
     fileprivate var rank: Int {
         switch self {
         case .none:
@@ -68,6 +72,12 @@ extension OWLogLevel {
         case .verbose:
             return .debug
         }
+    }
+}
+
+extension OWLogMethod {
+    static var defaultMethodsToUse: [OWLogMethod] {
+        return [.nsLog, .file(maxFilesNumber: OWLogger.Metrics.defaultLogFilesNumber)]
     }
 }
 
