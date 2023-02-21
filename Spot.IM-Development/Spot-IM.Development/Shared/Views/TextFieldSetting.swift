@@ -18,12 +18,12 @@ class TextFieldSetting: UIView {
         static let titleWidthProportion: CGFloat = 0.33
         static let titleNumberOfLines: Int = 2
     }
-    
+
     fileprivate let title: String
     fileprivate let text = BehaviorSubject<String?>(value: nil)
     fileprivate var font: UIFont
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate lazy var textFieldTitleLbl: UILabel = {
         return title
             .label
@@ -31,7 +31,7 @@ class TextFieldSetting: UIView {
             .numberOfLines(Metrics.titleNumberOfLines)
             .lineBreakMode(.byWordWrapping)
     }()
-    
+
     fileprivate lazy var textFieldControl = {
         let textField = UITextField()
             .corner(radius: Metrics.textFieldCorners)
@@ -40,7 +40,7 @@ class TextFieldSetting: UIView {
             .autocapitalizationType(.none)
         return textField
     }()
-    
+
     init(title: String, accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
         self.title = title
         if let text = text {
@@ -48,16 +48,16 @@ class TextFieldSetting: UIView {
         }
         self.font = font
         super.init(frame: .zero)
-        
+
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: accessibilityPrefixId)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 fileprivate extension TextFieldSetting {
@@ -65,7 +65,7 @@ fileprivate extension TextFieldSetting {
         textFieldTitleLbl.accessibilityIdentifier = prefixId + "_label_id"
         textFieldControl.accessibilityIdentifier = prefixId + "_text_field_id"
     }
-    
+
     func setupViews() {
         let stackView = UIStackView()
         self.addSubview(stackView)
@@ -78,56 +78,63 @@ fileprivate extension TextFieldSetting {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.top.bottom.equalToSuperview()
         }
-        
+
         textFieldTitleLbl.snp.makeConstraints { make in
             make.width.equalTo(self.snp.width).multipliedBy(Metrics.titleWidthProportion)
         }
-        
+
         textFieldControl.snp.makeConstraints { make in
             make.width.equalTo(self.snp.width).multipliedBy(1 - Metrics.titleWidthProportion).priority(250)
         }
     }
-    
+
     func setupObservers() {
         text
             .skip(1) // Skip initialize BehaviorSubject value
             .take(1) // Take first value after initialize
             .bind(to: textFieldControl.rx.value)
             .disposed(by: disposeBag)
-        
+
         textFieldControl.rx.controlEvent([.editingDidEnd, .editingDidEndOnExit])
             .subscribe(onNext: { [weak self] _ in
                 self?.textFieldControl.endEditing(true)
             })
             .disposed(by: disposeBag)
-        
+
         let keyboardShowHeight = NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .map { notification -> CGFloat in
+                // swiftlint:disable line_length
                 let height = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.height
+                // swiftlint:enable line_length
                 return height ?? 0
             }
-        
+
         let keyboardHideHeight = NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
             .map { _ -> CGFloat in
                 0
             }
-        
+
         let keyboardHeight = Observable.from([keyboardShowHeight, keyboardHideHeight])
             .merge()
-            
+
         keyboardHeight
             .subscribe(onNext: { [weak self] keyboardHeight in
                 guard let self = self else { return }
                 if self.textFieldControl.isFirstResponder,
                    let scrollView = self.superview as? UIScrollView {
-                    let insets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight + Metrics.keyboardPadding, right: 0)
+                    let insets = UIEdgeInsets(top: 0,
+                                              left: 0,
+                                              bottom: keyboardHeight + Metrics.keyboardPadding,
+                                              right: 0)
                     scrollView.contentInset = insets
                     scrollView.scrollIndicatorInsets = insets
-                    
+
+                    // swiftlint:disable line_length
                     if scrollView.frame.height - keyboardHeight + scrollView.contentOffset.y < self.frame.origin.y + Metrics.keyboardPadding + self.frame.size.height {
                         let moveTo = self.frame.origin.y - keyboardHeight + self.frame.size.height + Metrics.keyboardPadding
+                        // swiftlint:enable line_length
                         let scrollPoint = CGPoint(x: 0, y: moveTo)
                         scrollView.setContentOffset(scrollPoint, animated: true)
                     }
@@ -147,7 +154,7 @@ extension Reactive where Base: TextFieldSetting {
             textField.text = value
         }
     }
-    
+
     var textFieldText: ControlProperty<String?> {
         return base.textFieldControl.rx.controlProperty(editingEvents: .editingChanged) { textField in
             textField.text

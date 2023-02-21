@@ -26,18 +26,18 @@ protocol UserDefaultsProviderRxProtocol {
 class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
     // Singleton
     static let shared: UserDefaultsProviderProtocol = UserDefaultsProvider()
-    
+
     var rxProtocol: UserDefaultsProviderRxProtocol { return self }
     fileprivate var rxHelper: UserDefaultsProviderRxHelperProtocol
-    
+
     fileprivate struct Metrics {
         static let suiteName = "com.open-web.demo-app"
     }
-    
+
     fileprivate let encoder: JSONEncoder
     fileprivate let decoder: JSONDecoder
     fileprivate let userDefaults: UserDefaults
-    
+
     init(userDefaults: UserDefaults = UserDefaults(suiteName: Metrics.suiteName) ?? UserDefaults.standard,
          encoder: JSONEncoder = JSONEncoder(),
          decoder: JSONDecoder = JSONDecoder()) {
@@ -46,39 +46,41 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         self.decoder = decoder
         self.rxHelper = UserDefaultsProviderRxHelper(decoder: decoder, encoder: encoder)
     }
-        
+
     func save<T>(value: T, forKey key: UDKey<T>) {
         guard let encodedData = try? encoder.encode(value) else {
             DLog("Failed to encode data for key: \(key.rawValue) before writing to UserDefaults")
             return
         }
-        
+
         rxHelper.onNext(key: key, data: encodedData)
-        
+
         _save(data: encodedData, forKey: key)
     }
-    
+
     func get<T>(key: UDKey<T>) -> T? {
         guard let data = _get(key: key) else {
             return nil
         }
-        
+
         guard let valueToReturn = try? decoder.decode(T.self, from: data) else {
+            // swiftlint:disable line_length
             DLog("Failed to decode data for key: \(key.rawValue) to class: \(T.self) after retrieving from UserDefaults")
+            // swiftlint:enable line_length
             return nil
         }
-        
+
         return valueToReturn
     }
-    
+
     func get<T>(key: UDKey<T>, defaultValue: T) -> T {
         return get(key: key) ?? defaultValue
     }
-    
+
     func remove<T>(key: UDKey<T>) {
         _remove(key: key)
     }
-    
+
     enum UDKey<T: Codable>: String {
         case shouldShowOpenFullConversation = "shouldShowOpenFullConversation"
         case shouldPresentInNewNavStack = "shouldPresentInNewNavStack"
@@ -100,11 +102,11 @@ extension UserDefaultsProvider {
     func values<T>(key: UserDefaultsProvider.UDKey<T>) -> Observable<T> {
         return rx.values(key: key, defaultValue: nil)
     }
-    
+
     func values<T>(key: UserDefaultsProvider.UDKey<T>, defaultValue: T? = nil) -> Observable<T> {
         return rx.values(key: key, defaultValue: defaultValue)
     }
-    
+
     func setValues<T>(key: UserDefaultsProvider.UDKey<T>) -> Binder<T> {
         return rx.setValues(key: key)
     }
@@ -149,12 +151,12 @@ fileprivate extension UserDefaultsProvider {
         DLog("Writing data to UserDefaults for key: \(key.rawValue)")
         userDefaults.set(data, forKey: key.rawValue)
     }
-    
+
     func _get<T>(key: UDKey<T>) -> Data? {
         DLog("retrieving data from UserDefaults for key: \(key.rawValue)")
         return userDefaults.data(forKey: key.rawValue)
     }
-    
+
     func _remove<T>(key: UDKey<T>) {
         DLog("Removing data from UserDefaults for key: \(key.rawValue)")
         userDefaults.removeObject(forKey: key.rawValue)

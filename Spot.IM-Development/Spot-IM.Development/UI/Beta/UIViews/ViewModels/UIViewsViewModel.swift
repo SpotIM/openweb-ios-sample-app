@@ -30,20 +30,20 @@ protocol UIViewsViewModeling {
 class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViewsViewModelingInputs {
     var inputs: UIViewsViewModelingInputs { return self }
     var outputs: UIViewsViewModelingOutputs { return self }
-    
+
     fileprivate let dataModel: SDKConversationDataModel
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     let preConversationTapped = PublishSubject<Void>()
     let fullConversationTapped = PublishSubject<Void>()
     let commentCreationTapped = PublishSubject<Void>()
     let independentAdUnitTapped = PublishSubject<Void>()
-    
+
     lazy var title: String = {
         return NSLocalizedString("UIViews", comment: "")
     }()
-    
+
     init(dataModel: SDKConversationDataModel) {
         self.dataModel = dataModel
         setupObservers()
@@ -51,10 +51,9 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
 }
 
 fileprivate extension UIViewsViewModel {
-    
+
     func setupObservers() { }
 }
 
 #endif
-
 

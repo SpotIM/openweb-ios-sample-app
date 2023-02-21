@@ -9,19 +9,19 @@
 import Foundation
 
 final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
-    
+
     typealias Representation = T
-    
+
     let decoder: JSONDecoder
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     init(keyPath: String? = nil, decoder: JSONDecoder = defaultDecoder,
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.decoder = decoder
         self.servicesProvider = servicesProvider
         super.init(keyPath: keyPath)
     }
-    
+
     func parse(data: Data) -> OWResult<Representation> {
         do {
             let item = try decoder.decode(Representation.self, from: data)
@@ -31,7 +31,7 @@ final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
             return .failure(error)
         }
     }
-    
+
     func parse(object: Any) -> OWResult<Representation> {
         do {
             let value = try valueForKeyPath(in: object)
@@ -43,5 +43,5 @@ final class OWDecodableParser<T: Decodable>: OWKeyPathParser, OWResponseParser {
             return .failure(error)
         }
     }
-    
+
 }

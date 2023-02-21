@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 internal protocol SPImageProvider {
-    
+
     var avatarSize: CGSize? { get set }
     func imageURL(with id: String?, size: CGSize?) -> URL?
-    
+
     @discardableResult
     func image(from url: URL?, size: CGSize?, completion: @escaping ImageLoadingCompletion) -> OWNetworkDataRequest?
-    
+
     func uploadImage(imageData: String, imageId: String, completion: @escaping ImageUploadCompletionHandler)
 }
 
@@ -34,21 +34,21 @@ typealias ImageUploadCompletionHandler = (SPComment.Content.Image?, Error?) -> V
 
 internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProvider {
     internal var avatarSize: CGSize?
-    
+
     /// Use prepared url with size here, please
     @discardableResult
     func image(from url: URL?, size: CGSize? = nil,
                completion: @escaping ImageLoadingCompletion) -> OWNetworkDataRequest? {
         guard let url = url else { return nil }
-        
+
         let imageCacheService = OWSharedServicesProvider.shared.imageCacheService()
         if let image = imageCacheService[url.absoluteString] {
             completion(image, nil)
-            
+
             return nil
         } else {
             let request = SPCloudinaryRequests.fetchImage(url: url)
-            
+
             return manager.execute(
                 request: request,
                 encoding: OWNetworkURLEncoding.default,
@@ -74,24 +74,24 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             }
         }
     }
-    
+
     func uploadImage(imageData: String, imageId: String, completion: @escaping ImageUploadCompletionHandler) {
         let timestamp = String(format: "%.3f", NSDate().timeIntervalSince1970)
-        
+
         signToCloudinary(publicId: imageId, timestamp: timestamp) { signature, err in
             guard let signature = signature else {
                 completion(nil, err)
                 return
             }
-            
+
             self.uploadImageToCloudinary(imageData: imageData, publicId: imageId, timestamp: timestamp, signature: signature) { imageData, err in
                 completion(imageData, err)
             }
         }
     }
-    
+
     private func uploadImageToCloudinary(imageData: String, publicId: String, timestamp: String, signature: String, completion: @escaping ImageUploadCompletionHandler) {
-        
+
         let parameters: [String: Any] = [
             "api_key": SPImageRequestConstants.cloudinaryApiKey,
             "signature": signature,
@@ -99,7 +99,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             "timestamp": timestamp,
             "file": SPImageRequestConstants.imageFileJpegBase64Prefix + imageData
         ]
-        
+
         manager.execute(
             request: SPCloudinaryRequests.upload,
             parameters: parameters,
@@ -112,14 +112,14 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
                     imageId: publicId
                 )
                 completion(image, nil)
-                break
+
             case .failure(let err):
                 completion(nil, err)
-                break
+
             }
         }
     }
-    
+
     private func signToCloudinary(publicId: String, timestamp: String, completion: @escaping (String?, Error?) -> Void) {
         guard let spotKey = SPClientSettings.main.spotKey else {
             servicesProvider.logger().log(level: .error, "No spot key for signing")
@@ -129,7 +129,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
         let parameters: [String: Any] = [
             "query": "public_id=\(publicId)&timestamp=\(timestamp)"
         ]
-        
+
         manager.execute(
             request: SPCloudinaryRequests.login,
             parameters: parameters,
@@ -138,17 +138,17 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
             switch result {
             case .success(let response):
                 completion(response.signature, nil)
-                break
+
             case .failure(let err):
                 completion(nil, err)
-                break
+
             }
         }
     }
-    
+
     func imageURL(with id: String?, size: CGSize? = nil) -> URL? {
         guard var id = id else { return nil }
-        
+
         if id.hasPrefix(SPImageRequestConstants.placeholderImagePrefix) {
             id.removeFirst(SPImageRequestConstants.placeholderImagePrefix.count)
             id = SPImageRequestConstants.avatarPathComponent.appending(id)
@@ -158,7 +158,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
 
     private func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
         var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
-        
+
         if let imageSize = imageSize {
             result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
                 "\(Int(imageSize.width))" +
@@ -172,7 +172,7 @@ internal final class SPCloudinaryImageProvider: NetworkDataProvider, SPImageProv
                 "\(Int(avatarSize.height))"
             )
         }
-        
+
         return result.appending("/")
     }
 }
@@ -187,7 +187,7 @@ internal enum SPImageRequestConstants {
     static let imageFileJpegBase64Prefix = "data:image/jpeg;base64,"
     static let cloudinaryIconParamString = "f_png/"
     static let fontAwesomePathComponent = "font-awesome/"
-    static let fontAwesomeVersionPathComponent = "v5.15.2/";
+    static let fontAwesomeVersionPathComponent = "v5.15.2/"
     static let iconsPathComponent = "icons/"
     static let customPathComponent = "custom/"
 }

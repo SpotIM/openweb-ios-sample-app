@@ -16,7 +16,7 @@ internal protocol OWImageProviding {
 }
 
 class OWCloudinaryImageProvider: OWImageProviding {
-    
+
     fileprivate struct Metrics {
         static let placeholderImagePrefix = "#"
         static let avatarPathComponent = "avatars/"
@@ -25,16 +25,16 @@ class OWCloudinaryImageProvider: OWImageProviding {
         static let cloudinaryHeightPrefix = ",h_"
         static let defaultBaseUrl = "https://images.spot.im/image/upload/"
     }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
     }
-    
+
     func imageURL(with id: String, size: CGSize? = nil) -> Observable<URL?> {
         var urlSuffix = id
-        
+
         if urlSuffix.hasPrefix(Metrics.placeholderImagePrefix) {
             urlSuffix.removeFirst(Metrics.placeholderImagePrefix.count)
             urlSuffix = Metrics.avatarPathComponent.appending(urlSuffix)
@@ -48,7 +48,7 @@ class OWCloudinaryImageProvider: OWImageProviding {
             }
             .asObservable()
     }
-    
+
     fileprivate var _fetchImageBaseUrl: Observable<String> {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
@@ -62,7 +62,7 @@ class OWCloudinaryImageProvider: OWImageProviding {
 fileprivate extension OWCloudinaryImageProvider {
     func cloudinaryURLString(_ imageSize: CGSize? = nil, baseUrl: String) -> String {
         var result = baseUrl.appending(Metrics.cloudinaryImageParamString)
-        
+
         if let imageSize = imageSize {
             result.append("\(Metrics.cloudinaryWidthPrefix)" +
                 "\(Int(imageSize.width))" +
@@ -70,7 +70,7 @@ fileprivate extension OWCloudinaryImageProvider {
                 "\(Int(imageSize.height))"
             )
         }
-        
+
         return result.appending("/")
     }
 }

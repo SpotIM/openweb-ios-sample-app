@@ -12,7 +12,7 @@ import Foundation
 public struct OWConversationSettings: OWConversationSettingsProtocol {
     public let selectedCommentId: String?
     public let style: OWConversationStyle
-    
+
     public init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
         self.selectedCommentId = selectedCommentId
         self.style = style
@@ -21,8 +21,8 @@ public struct OWConversationSettings: OWConversationSettingsProtocol {
 #else
 struct OWConversationSettings: OWConversationSettingsProtocol {
     let selectedCommentId: String?
-    public let style: OWConversationStyle
-    
+    let style: OWConversationStyle
+
     init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
         self.selectedCommentId = selectedCommentId
         self.style = style

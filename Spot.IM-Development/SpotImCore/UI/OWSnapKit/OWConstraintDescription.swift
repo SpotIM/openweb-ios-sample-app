@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class OWConstraintDescription {
     let item: OWLayoutConstraintItem
     var attributes: OWConstraintAttributes
@@ -26,7 +25,7 @@ class OWConstraintDescription {
             return nil
         }
         let from = OWConstraintItem(target: self.item, attributes: self.attributes)
-        
+
         return OWConstraint(
             from: from,
             to: related,
@@ -38,7 +37,7 @@ class OWConstraintDescription {
             priority: self.priority
         )
     }()
-    
+
     // MARK: Initialization
     init(item: OWLayoutConstraintItem, attributes: OWConstraintAttributes) {
         self.item = item

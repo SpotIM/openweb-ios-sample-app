@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-protocol OWCommentHeaderViewModelingInputs {    
+protocol OWCommentHeaderViewModelingInputs {
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
@@ -18,7 +18,7 @@ protocol OWCommentHeaderViewModelingInputs {
 protocol OWCommentHeaderViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
     var avatarVM: OWAvatarViewModeling { get }
-    
+
     var shouldShowHiddenCommentMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
     var nameTextStyle: Observable<SPFontStyle> { get }
@@ -26,7 +26,7 @@ protocol OWCommentHeaderViewModelingOutputs {
     var dateText: Observable<String> { get }
     var badgeTitle: Observable<String> { get }
     var hiddenCommentReasonText: Observable<String> { get }
-    
+
     var userNameTapped: Observable<Void> { get }
     var moreTapped: Observable<OWUISource> { get }
 }
@@ -42,23 +42,23 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
 
     var inputs: OWCommentHeaderViewModelingInputs { return self }
     var outputs: OWCommentHeaderViewModelingOutputs { return self }
-    
+
     fileprivate let disposeBag = DisposeBag()
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let userBadgeService: OWUserBadgeServicing
-    
+
     fileprivate let _model = BehaviorSubject<SPComment?>(value: nil)
-    fileprivate var _unwrappedModel: Observable<SPComment>  {
+    fileprivate var _unwrappedModel: Observable<SPComment> {
         _model.unwrap()
     }
 
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    fileprivate var _unwrappedUser: Observable<SPUser>  {
+    fileprivate var _unwrappedUser: Observable<SPUser> {
         _user.unwrap()
     }
-    
+
     fileprivate let _replyToUser = BehaviorSubject<SPUser?>(value: nil)
-    
+
     init(data: OWCommentRequiredData,
          imageProvider: OWImageProviding = OWCloudinaryImageProvider(),
          servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared,
@@ -72,21 +72,21 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
     }
-    
+
     init() {
         servicesProvider = OWSharedServicesProvider.shared
         userBadgeService = OWUserBadgeService()
     }
-    
+
     var avatarVM: OWAvatarViewModeling = {
        return OWAvatarViewModel()
     }()
-    
+
     var tapUserName = PublishSubject<Void>()
     var tapMore = PublishSubject<OWUISource>()
-    
+
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
-    
+
     var subtitleText: Observable<String> {
         _replyToUser
             .unwrap()
@@ -98,7 +98,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 : LocalizationManager.localizedString(key: "To") + " \($0)"
             })
     }
-    
+
     var dateText: Observable<String> {
         _unwrappedModel
             .map({ model in
@@ -107,8 +107,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 return model.isReply ? " · ".appending(timestamp) : timestamp
             })
     }
-    
-    
+
     fileprivate var conversationConfig: Observable<SPConfigurationConversation> {
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
@@ -117,7 +116,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             }
             .unwrap()
     }
-    
+
     fileprivate var _badgeType: Observable<OWUserBadgeType> {
         _unwrappedUser
             .flatMap { [weak self] user -> Observable<OWUserBadgeType> in
@@ -125,7 +124,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 return self.userBadgeService.userBadgeText(user: user)
             }
     }
-    
+
     var badgeTitle: Observable<String> {
         _badgeType
             .map { badgeType in
@@ -135,26 +134,26 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
                 return ""
             }
     }
-    
+
     var nameText: Observable<String> {
         _unwrappedUser
             .map({ user -> String in
                 return user.displayName ?? ""
             })
     }
-    
+
     var nameTextStyle: Observable<SPFontStyle> {
         _unwrappedModel
             .map { $0.isReply ? .medium : .bold }
     }
-    
+
     var hiddenCommentReasonText: Observable<String> {
         Observable.combineLatest(_unwrappedModel, _unwrappedUser) { model, user in
             let localizationKey: String
             if user.isMuted {
                 localizationKey = "This user is muted."
             } else if let id = model.id,
-                      let _ = SPUserSessionHolder.session.reportedComments[id] { // TODO: is reported - should be in new infra?
+                        SPUserSessionHolder.session.reportedComments[id] != nil { // TODO: is reported - should be in new infra?
                 localizationKey = "This message was reported."
             } else if model.deleted {
                 localizationKey = "This message was deleted."
@@ -164,17 +163,17 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             return LocalizationManager.localizedString(key: localizationKey)
         }
     }
-    
+
     var shouldShowHiddenCommentMessage: Observable<Bool> {
         hiddenCommentReasonText
             .map { !$0.isEmpty }
     }
-    
+
     var userNameTapped: Observable<Void> {
         tapUserName
             .asObservable()
     }
-    
+
     var moreTapped: Observable<OWUISource> {
         tapMore
             .asObservable()

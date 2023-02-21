@@ -33,12 +33,12 @@ import RxSwift
 
 class OWSkeletonShimmeringView: UIView, OWSkeletonShimmeringProtocol {
     let disposeBag = DisposeBag()
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         self.updateSkeletonShimmeringFrame()
     }
-    
+
     deinit {
         // Stop shimmering effect
         self.removeSkeletonShimmering()
