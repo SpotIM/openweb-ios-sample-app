@@ -11,12 +11,12 @@ import UIKit
 import RxSwift
 
 struct RankActionDataModel {
-    
+
     let change: SPRankChange
     let commentId: String?
     let parrentId: String?
     let conversationId: String?
-    
+
 }
 
 typealias BooleanCompletion = (Bool, Error?) -> Void
@@ -39,67 +39,67 @@ protocol CommentsCounterDelegate: AnyObject {
 }
 
 final class SPMainConversationModel {
-    
+
     /// MulticastDelegate for events that should be handled simultaneously in different places
     /// Beware of `SPMainConversationDataSource` data changings in this way
     var delegates: OWMulticastDelegate<MainConversationModelDelegate> = .init()
     var commentsCounterDelegates: OWMulticastDelegate<CommentsCounterDelegate> = .init()
     weak var openUserProfileDelegate: OpenUserProfileDelegate?
-    
+
     private let CURRENT_ADS_GROUP_TEST_NAME: String = "33"
     private let typingVisibilityAdditionalTimeInterval: Double = 5.0
-    
+
     private let commentUpdater: SPCommentUpdater
     let imageProvider: SPImageProvider
     private let realTimeService: RealTimeService
-    
+
     private var realTimeTimer: Timer?
     private var realTimeData: RealTimeModel?
     private var realTimeNewMessagesCache = [String: SPComment]()
     private(set) var realtimeViewType: RealTimeViewType?
     private var shouldUserBeNotified: Bool = false
     private let abTestsData: OWAbTests
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     fileprivate let disposeBag = DisposeBag()
     let authorTapped = PublishSubject<(user: SPUser, commentId: String?, isTappedOnAvatar: Bool)>()
     fileprivate let openPublisherUser = PublishSubject<(String, UINavigationController)>()
-    
+
     // This is an ungly soultion until we will split this model to two proper VMs
     // By defualt this model serves the preConversation.
     // Each of the consuming VC will set this variable when presenting on screen
     var currentBindedVC: SPViewSourceType = .preConversation
-    
+
     var actionCallback: Observable<(SPViewActionCallbackType, SPViewSourceType)> {
         let headerTappedObservable: Observable<SPViewActionCallbackType> = articleHeaderVM.outputs.headerTapped
             .map { _ -> SPViewActionCallbackType in
                 return .articleHeaderPressed
             }
-        
+
         let openPublisherUserProfileObservable: Observable<SPViewActionCallbackType> =
         openPublisherUser
             .map { userId, navController -> SPViewActionCallbackType in
                 return .openUserProfile(userId: userId, navigationController: navController)
             }
-        
+
         return Observable.merge([
             headerTappedObservable,
             openPublisherUserProfileObservable
         ]).map { ($0, self.currentBindedVC) }
     }
-    
+
     // Idealy a VM for the whole VC will expose this VM for the little view from it's own outputs protocol
     // Will refactor once we will move to MVVM
     let onlineViewingUsersPreConversationVM: OWOnlineViewingUsersCounterViewModeling = OWOnlineViewingUsersCounterViewModel()
-    
+
     // We need one for the pre conversation and one for the conversation. We should never use the same VM for two separate VCs
     // The whole idea that this model class is being used for both different VCs with the same instance is anti pattern of MVC
     let conversationSummaryVM: OWConversationSummaryViewModeling
     let preConvCommetEntryVM: OWCommentCreationEntryViewModeling
     let convCommetEntryVM: OWCommentCreationEntryViewModeling
     let articleHeaderVM: OWArticleHeaderViewModeling
-    
+
     private(set) var dataSource: SPMainConversationDataSource
     var sortOption: SPCommentSortMode = .best {
         didSet {
@@ -110,9 +110,9 @@ final class SPMainConversationModel {
             }
         }
     }
-    
+
     weak var commentsActionDelegate: CommentsActionDelegate?
-    
+
     var pendingComment: SPComment? {
         didSet {
             if pendingComment != nil {
@@ -120,9 +120,9 @@ final class SPMainConversationModel {
             }
         }
     }
-    
+
     var sortingUpdateHandler: ((Bool) -> Void)?
-    
+
     init(commentUpdater: SPCommentUpdater,
          conversationDataSource: SPMainConversationDataSource,
          imageProvider: SPImageProvider,
@@ -144,29 +144,29 @@ final class SPMainConversationModel {
             self?.commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: count) }
             self?.conversationSummaryVM.inputs.configure(commentsCount: count)
         }
-        
+
         dataSource.sortIsUpdated = { [weak self] in
             if let self = self {
                 self.sortOption = self.dataSource.sortMode ?? .newest
             }
         }
-        
+
         authorTapped
             .subscribe(onNext: { [weak self] user, commentId, isAvatarClicked in
                 guard let self = self,
                       let userId = user.id
                 else { return }
-                
+
                 let isMyProfile = SPPublicSessionInterface.isMe(userId: userId)
-                
+
                 var ssoPublisherId = user.ssoPublisherId
                 if isMyProfile, let currentUser = SPUserSessionHolder.session.user {
                     // take the most updated user.ssoPublisherId
                     ssoPublisherId = currentUser.ssoPublisherId
                 }
-                
+
                 let targetType: SPAnProfileTargetType = isAvatarClicked ? .avatar : .userName
-                
+
                 if SPConfigsDataSource.appConfig?.shared?.usePublisherUserProfile == true,
                    let ssoPublisherId = ssoPublisherId,
                    !ssoPublisherId.isEmpty,
@@ -175,11 +175,11 @@ final class SPMainConversationModel {
                 } else {
                     self.openUserProfileDelegate?.openProfileWebScreen(userId: userId)
                 }
-                
+
                 self.trackProfileClicked(commentId: commentId, authorId: userId, isMyProfile: isMyProfile, targetType: targetType)
             }).disposed(by: disposeBag)
     }
-    
+
     private func trackProfileClicked(commentId: String?, authorId: String, isMyProfile: Bool, targetType: SPAnProfileTargetType) {
         if isMyProfile {
             SPAnalyticsHolder.default.log(event: .myProfileClicked(messageId: commentId, userId: authorId, targetType: targetType), source: .conversation)
@@ -190,38 +190,38 @@ final class SPMainConversationModel {
             )
         }
     }
-    
+
     func startTypingTracking() {
         realTimeService.startRealTimeDataFetching(conversationId: dataSource.postId)
     }
-    
+
     func stopTypingTracking() {
         shouldUserBeNotified = false
         delegates.invoke { $0.stopTypingTrack() }
         realTimeService.stopShowingRealtimeUI(for: dataSource.postId)
     }
-    
+
     func stopRealTimeFetching() {
         realTimeService.stopRealTimeDataFetching()
     }
-    
+
     func setReltime(viewType: RealTimeViewType) {
         realtimeViewType = viewType
         delegates.invoke {$0.realtimeViewTypeDidUpdate()}
     }
-    
+
     func handlePendingComment() {
         guard let comment = pendingComment else { return }
         if !comment.isReply {
             commentsActionDelegate?.localCommentWillBeCreated()
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             self?.dataSource.update(with: comment)
             self?.pendingComment = nil
         }
     }
-    
+
     func handleEditedComment(comment: SPComment) {
         dataSource.update(with: comment)
     }
@@ -229,15 +229,15 @@ final class SPMainConversationModel {
     func handleMessageCreationBlockage(with messageText: String?) {
         commentsActionDelegate?.messageCreationBlocked(with: messageText)
     }
-    
+
     func copyCommentText(at indexPath: IndexPath) {
         UIPasteboard.general.string = dataSource.cellData(for: indexPath).commentText
     }
-    
+
     func areCommentsEmpty() -> Bool {
         return dataSource.messageCount == 0 && pendingComment == nil
     }
-    
+
     func changeRank(with actionModel: RankActionDataModel, completion: @escaping BooleanCompletion) {
         commentUpdater.changeRank(actionModel.change,
                                   for: actionModel.commentId,
@@ -245,7 +245,7 @@ final class SPMainConversationModel {
                                   in: actionModel.conversationId,
                                   completion: completion)
     }
-    
+
     func fetchNavigationAvatar(completion: @escaping ImageLoadingCompletion) {
         let avatarImageURL = self.dataSource.currentUserAvatarUrl
         if let key = avatarImageURL?.absoluteString,
@@ -257,7 +257,7 @@ final class SPMainConversationModel {
                                 completion: completion)
         }
     }
-    
+
     func sortActions() -> [UIAlertAction] {
         var actions: [UIAlertAction] = SPCommentSortMode.allCases.map { [weak self] option in
             switch option {
@@ -266,13 +266,13 @@ final class SPMainConversationModel {
                     SPAnalyticsHolder.default.log(event: .sortByClicked(option), source: .conversation)
                     self?.sortOption = option
                 }
-                
+
             case .newest:
                 return UIAlertAction(title: option.title, style: .default) { _ in
                     SPAnalyticsHolder.default.log(event: .sortByClicked(option), source: .conversation)
                     self?.sortOption = option
                 }
-                
+
             case .oldest:
                 return UIAlertAction(title: option.title, style: .default) { _ in
                     SPAnalyticsHolder.default.log(event: .sortByClicked(option), source: .conversation)
@@ -280,22 +280,22 @@ final class SPMainConversationModel {
                 }
             }
         }
-        
+
         let cancelAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Cancel"),
             style: .cancel
         )
         actions.append(cancelAction)
-        
+
         return actions
     }
-    
+
     func commentAvailableActions(_ commentId: String, sender: OWUISource) -> [UIAlertAction] {
         let viewModel = dataSource.commentViewModel(commentId)
         let availability = commentActionsAvailability(viewModel: viewModel)
         let replyingToID = viewModel?.rootCommentId
         var actions: [UIAlertAction] = []
-        
+
         if availability.isShareable {
         let shareAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Share"),
@@ -304,7 +304,7 @@ final class SPMainConversationModel {
             }
             actions.append(shareAction)
         }
-        
+
         if availability.isMuteable,
            SPUserSessionHolder.session.user?.registered ?? false,
            let authorId = viewModel?.authorId {
@@ -324,7 +324,7 @@ final class SPMainConversationModel {
                 }
             actions.append(reportAction)
         }
-        
+
         if availability.isEditable {
             let editAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Edit"),
@@ -344,56 +344,58 @@ final class SPMainConversationModel {
                 }
             actions.append(deleteAction)
         }
-        
+
         let cancelAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Cancel"),
             style: .cancel
-        ) { action in
+        ) { _ in
             SPAnalyticsHolder.default.log(event: .messageContextMenuClosed(messageId: commentId, relatedMessageId: replyingToID), source: .conversation)
         }
-        
+
         if !actions.isEmpty {
             actions.append(cancelAction)
         }
-        
+
         return actions
     }
-    
+
     func commentActionsAvailability(viewModel: CommentViewModel?) -> CommentActionAvailability {
         guard let viewModel = viewModel else { return (false, false, false, false, false) }
-        
+
         let shouldDisableShareComment = SPConfigsDataSource.appConfig?.conversation?.disableShareComment ?? false
         let shouldDisableEditComment = !(SPConfigsDataSource.appConfig?.conversation?.showCommentEditOption ?? true)
-        
+
         let isDeletable = !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isEditable = !shouldDisableEditComment && !viewModel.isDeleted && viewModel.authorId == SPUserSessionHolder.session.user?.id
         let isReportable = !viewModel.isDeleted && !(viewModel.authorId == SPUserSessionHolder.session.user?.id)
         let isShareable = !shouldDisableShareComment && !viewModel.showStatusIndicator
         let isMuteable = !viewModel.isStaff && (viewModel.authorId != SPUserSessionHolder.session.user?.id)
-        
+
         return (isDeletable, isEditable, isReportable, isMuteable, isShareable)
     }
-    
+
     func adsGroup() -> AdsABGroup {
         if let abGroup = abTestsData.tests
             .first(where: { $0.testName == CURRENT_ADS_GROUP_TEST_NAME })?
             .abTestGroup {
-            return AdsABGroup(abGroup: abGroup, isUserRegistered: SPUserSessionHolder.session.user?.registered ?? false, disableInterstitialOnLogin: SPConfigsDataSource.appConfig?.mobileSdk.disableInterstitialOnLogin ?? false)
+            return AdsABGroup(abGroup: abGroup,
+                              isUserRegistered: SPUserSessionHolder.session.user?.registered ?? false,
+                              disableInterstitialOnLogin: SPConfigsDataSource.appConfig?.mobileSdk.disableInterstitialOnLogin ?? false)
         }
-        
+
         return AdsABGroup()
     }
-    
+
     func isReadOnlyMode() -> Bool {
         let readOnlyMode = dataSource.articleMetadata.readOnlyMode
         return (readOnlyMode == .default && dataSource.isReadOnly) || readOnlyMode == .enable
     }
-    
+
     func getInitialSortMode() -> SPCommentSortMode {
         let configSortMode = SPConfigsDataSource.appConfig?.initialization?.sortBy
         switch (configSortMode, SpotIm.customInitialSortByOption) {
         // client set a custom initial sort option (SpotImSortByOption)
-        case (_ , .some(let sortByOption)):
+        case (_, .some(let sortByOption)):
             return SPCommentSortMode(from: sortByOption)
         // take sort option from config
         case (.some(let sortMode), _):
@@ -406,10 +408,10 @@ final class SPMainConversationModel {
 }
 
 extension SPMainConversationModel {
-    
+
     func deleteComment(with id: String, completion: @escaping (Error?) -> Void) {
         let commentViewModel = dataSource.commentViewModel(id)
-        
+
         var parameters: [String: Any] = [APIKeys.messageId: id]
         if commentViewModel?.hasOffset ?? false {
             parameters[APIKeys.parentId] = commentViewModel?.parentCommentId
@@ -417,7 +419,7 @@ extension SPMainConversationModel {
         commentUpdater.deleteComment(
             parameters: parameters,
             postId: dataSource.postId,
-            success: { [weak self] deletionData in
+            success: { [weak self] _ in
                 self?.dataSource.deleteComment(with: id, isSoft: true)
                 completion(nil)
             },
@@ -426,10 +428,10 @@ extension SPMainConversationModel {
             }
         )
     }
-    
+
     func shareComment(with id: String, completion: @escaping (URL?, Error?) -> Void) {
         let commentViewModel = dataSource.commentViewModel(id)
-        
+
         var parameters: [String: Any] = [APIKeys.messageId: id]
         if commentViewModel?.hasOffset ?? false {
             parameters[APIKeys.parentId] = commentViewModel?.parentCommentId
@@ -445,10 +447,10 @@ extension SPMainConversationModel {
             }
         )
     }
-    
+
     func muteComment(with userId: String, completion: @escaping (Error?) -> Void) {
         let parameters: [String: Any] = [APIKeys.userId: userId]
-        
+
         commentUpdater.muteComment(
             parameters: parameters,
             postId: dataSource.postId,
@@ -461,10 +463,10 @@ extension SPMainConversationModel {
             }
         )
     }
-    
+
     func reportComment(with id: String, completion: @escaping (Error?) -> Void) {
         let commentViewModel = dataSource.commentViewModel(id)
-        
+
         var parameters: [String: Any] = [APIKeys.messageId: id]
         if commentViewModel?.hasOffset ?? false {
             parameters[APIKeys.parentId] = commentViewModel?.parentCommentId
@@ -483,11 +485,11 @@ extension SPMainConversationModel {
             }
         )
     }
-    
+
     func editComment(with id: String) {
-        //edit logic here
+        // edit logic here
     }
-    
+
     private enum APIKeys {
         static let messageId = "message_id"
         static let parentId = "parent_Id"
@@ -498,23 +500,23 @@ extension SPMainConversationModel {
 extension SPMainConversationModel: RealTimeServiceDelegate {
     func realTimeDataDidUpdate(realTimeData: RealTimeModel, shouldUserBeNotified: Bool, timeOffset: Int) {
         guard let spotId = SPClientSettings.main.spotKey, let data = realTimeData.data else { return }
-        
+
         self.shouldUserBeNotified = shouldUserBeNotified
         self.realTimeData = realTimeData
         let fullConversationId = "\(spotId)_\(dataSource.postId)"
-        
+
         do {
             let onlineViewingUsersModel = try data.onlineViewingUsersCount(fullConversationId)
             onlineViewingUsersPreConversationVM.inputs.configureModel(onlineViewingUsersModel)
             let onlineViewingUsersVM = conversationSummaryVM.outputs.onlineViewingUsersVM
             onlineViewingUsersVM.inputs.configureModel(onlineViewingUsersModel)
-            
+
             let totalTypingCount: Int = try data.totalTypingCountForConversation(fullConversationId)
             let totalCommentsCount: Int = try data.totalCommentsCountForConversation(fullConversationId)
             let newComments: [SPComment] = try data.newComments(forConversation: fullConversationId)
-            newComments.forEach{ comment in
+            newComments.forEach { comment in
                 // make sure comment is not reply and not already in conversation
-                if (comment.parentId == nil || comment.parentId == "") && !dataSource.isCommentInConversation(commentId: comment.id ?? ""){
+                if (comment.parentId == nil || comment.parentId == "") && !dataSource.isCommentInConversation(commentId: comment.id ?? "") {
                     self.realTimeNewMessagesCache[comment.id ?? ""] = comment
                 }
             }
@@ -530,7 +532,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
                     commentsCounterDelegates.invoke { $0.commentsCountDidUpdate(count: totalCommentsCount)}
                     conversationSummaryVM.inputs.configure(commentsCount: totalCommentsCount)
                 }
-                
+
                 scheduleTypingCleaningTimer(
                     timeOffset: Double(timeOffset) + typingVisibilityAdditionalTimeInterval
                 )
@@ -543,31 +545,31 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
             }
         }
     }
-    
+
     /// Returns current visible typing count
     func typingCount() throws -> Int {
         guard let spotId = SPClientSettings.main.spotKey, let data = self.realTimeData?.data else { return 0 }
-        
+
         let fullConversationId = "\(spotId)_\(dataSource.postId)"
         let totalTypingCount = try data.totalTypingCountForConversation(fullConversationId)
-        
+
         return shouldUserBeNotified ? totalTypingCount : 0
     }
-    
+
     // Returns current visible new messages count
     func newMessagesCount() -> Int {
         return self.realTimeNewMessagesCache.keys.count
     }
-    
+
     func clearNewMessagesCache() {
         self.realTimeNewMessagesCache.removeAll()
     }
-    
+
     func addNewCommentsToConversation() {
         let comments = Array(self.realTimeNewMessagesCache.values)
         dataSource.addNewComments(comments: comments)
     }
-    
+
     /// Will update current typings count value to `0` after `constant` seconds of server realtime  ''silence''
     private func scheduleTypingCleaningTimer(timeOffset: Double) {
         realTimeTimer?.invalidate()
@@ -582,7 +584,7 @@ extension SPMainConversationModel: RealTimeServiceDelegate {
 }
 
 protocol CommentsActionDelegate: AnyObject {
-    
+
     func prepareFlowForAction(_ type: ActionType, sender: OWUISource)
     func localCommentWasCreated()
     func localCommentWillBeCreated()

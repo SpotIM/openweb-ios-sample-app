@@ -32,7 +32,7 @@ struct OWHTTPHeaderContent {
 
 class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
     func process(request: URLRequest) -> URLRequest {
-        
+
         var headers: OWNetworkHTTPHeaders = [
             OWHTTPHeaderName.contentType: OWHTTPHeaderContent.json,
             OWHTTPHeaderName.spotId: OWManager.manager.spotId,
@@ -46,7 +46,7 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
             OWHTTPHeaderName.userAgent: extendedAgent(),
             OWHTTPHeaderName.pageViewId: SPAnalyticsHolder.default.pageViewId
         ]
-        
+
         if let userId = SPUserSessionHolder.session.guid, !userId.isEmpty {
             headers[OWHTTPHeaderName.guid] = userId
         }
@@ -54,17 +54,17 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
         if let token = SPUserSessionHolder.session.token, !token.isEmpty {
             headers[OWHTTPHeaderName.authorization] = token
         }
-        
+
         if let openwebToken = SPUserSessionHolder.session.openwebToken, !openwebToken.isEmpty {
             headers[OWHTTPHeaderName.openWebToken] = openwebToken
         }
-        
+
         var newRequest = request
-        
+
         headers.dictionary.forEach { header, content in
             newRequest.setValue(content, forHTTPHeaderField: header)
         }
-        
+
         return newRequest
     }
 }

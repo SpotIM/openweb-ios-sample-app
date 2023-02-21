@@ -43,12 +43,12 @@ internal final class SPDefaultAnalyticsSender: NetworkDataProvider, SPAnalyticsS
         parameters[AnalyticsAPIKeys.engineStatusType] = info.engineStatusType
         parameters[AnalyticsAPIKeys.splitName] = info.splitName
         parameters[AnalyticsAPIKeys.publisherCustomData] = info.publisherCustomData
-        
+
         var headers = OWNetworkHTTPHeaders.basic(with: spotKey)
         if let postId = postId {
             headers = OWNetworkHTTPHeaders.basic(with: spotKey, postId: postId)
         }
-        
+
         manager.execute(
             request: spRequest,
             parameters: parameters,

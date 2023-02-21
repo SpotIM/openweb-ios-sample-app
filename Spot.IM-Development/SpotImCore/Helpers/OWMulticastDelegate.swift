@@ -10,17 +10,17 @@ import Foundation
 
 class OWMulticastDelegate<T> {
     private let delegates: NSHashTable<AnyObject> = NSHashTable.weakObjects()
-    
+
     func contains(delegate: T) -> Bool {
         return delegates.contains(delegate as AnyObject)
     }
-    
+
     func add(delegate: T) {
         if !contains(delegate: delegate) {
             delegates.add(delegate as AnyObject)
         }
     }
-    
+
     func remove(delegate: T) {
         for oneDelegate in delegates.allObjects.reversed() {
             if oneDelegate === delegate as AnyObject {
@@ -28,10 +28,10 @@ class OWMulticastDelegate<T> {
             }
         }
     }
-    
-    func invoke(invocation: (T) -> ()) {
+
+    func invoke(invocation: (T) -> Void) {
         for delegate in delegates.allObjects.reversed() {
-            invocation(delegate as! T)
+            invocation(delegate as! T) // swiftlint:disable:this force_cast
         }
     }
 }

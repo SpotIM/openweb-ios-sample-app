@@ -8,39 +8,39 @@
 
 import UIKit
 
-protocol OWUserAuthFlowDelegateContainable: class {
-    
+protocol OWUserAuthFlowDelegateContainable: AnyObject {
+
     var userAuthFlowDelegate: OWUserAuthFlowDelegate? { get set }
-    
+
 }
 
-protocol OWUserAuthFlowDelegate: class {
+protocol OWUserAuthFlowDelegate: AnyObject {
     func presentAuth()
     func shouldDisplayLoginPromptForGuests() -> Bool
 }
 
-protocol OWUserPresentable: class {
-    
+protocol OWUserPresentable: AnyObject {
+
     var userIcon: OWBaseButton { get }
     /// Setup selector and target for `userIcon` here! Call it on the start of the flow.
     func setupUserIconHandler()
 }
 
 extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & OWUserAuthFlowDelegateContainable {
-    
+
     func updateUserIcon(image: UIImage) {
         let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(navigationAvatarSize, false, scale)
         image.draw(in: CGRect(origin: .zero, size: navigationAvatarSize))
         let newIM = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
+
         userIcon.setImage(newIM, for: .normal)
     }
-    
+
     func showProfileActions(sender: UIView) {
         var profileActions: [UIAlertAction] = []
-        
+
         if let user = SPUserSessionHolder.session.user, user.registered {
             let logOutAction = UIAlertAction(
                 title: LocalizationManager.localizedString(key: "Log Out"),
@@ -61,12 +61,12 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
         }
         let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .cancel)
-        
+
         profileActions.append(noAction)
 
         showActionSheet(actions: profileActions, sender: sender)
     }
-    
+
     private func presentLogOutConfirmation() {
         let yesAction = UIAlertAction(
             title: LocalizationManager.localizedString(key: "Log Out"),
@@ -81,7 +81,7 @@ extension OWUserPresentable where Self: UIViewController & OWAlertPresentable & 
                     }
                 }
         }
-        
+
         let noAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
         showAlert(

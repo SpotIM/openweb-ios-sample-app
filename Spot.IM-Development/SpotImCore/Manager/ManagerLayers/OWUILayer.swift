@@ -12,14 +12,14 @@ import RxSwift
 class OWUILayer: OWUI, OWUIFlows, OWUIViews {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
-    var customizations: OWCustomizations { return self._customizations}
+    var customizations: OWCustomizations { return self._customizations }
     var authenticationUI: OWUIAuthentication { return self._authenticationUI }
-    
+
     fileprivate let sdkCoordinator: OWSDKCoordinator
     fileprivate let _customizations: OWCustomizations
     fileprivate let _authenticationUI: OWUIAuthentication
     fileprivate var flowDisposeBag: DisposeBag!
-    
+
     init(sdkCoordinator: OWSDKCoordinator = OWSDKCoordinator(),
          customizations: OWCustomizations = OWCustomizationsLayer(),
          authenticationUI: OWUIAuthentication = OWUIAuthenticationLayer()) {
@@ -27,14 +27,14 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         self._customizations = customizations
         self._authenticationUI = authenticationUI
     }
-    
+
     func preConversation(postId: String, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWViewDynamicSizeCompletion) {
         prepareForNewFlow()
-        
+
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -44,10 +44,10 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                 break
             }
         }
-        
+
         let preConversationData = OWPreConversationRequiredData(article: article,
                                                                 settings: additionalSettings)
-        
+
         sdkCoordinator.startPreConversationFlow(preConversationData: preConversationData,
                                                 presentationalMode: presentationalMode,
                                                 callbacks: callbacks)
@@ -60,14 +60,14 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         })
         .disposed(by: flowDisposeBag)
     }
-    
+
     func conversation(postId: String, article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWConversationSettingsProtocol? = nil,
                       callbacks: OWViewActionsCallbacks? = nil,
                       completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
-        
+
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -77,10 +77,10 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                 break
             }
         }
-        
+
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings)
-        
+
         _ = sdkCoordinator.startConversationFlow(conversationData: conversationData,
                                                  presentationalMode: presentationalMode,
                                                  callbacks: callbacks)
@@ -90,7 +90,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
             case .loadedToScreen:
                 completion(.success(()))
             default:
-                break;
+                break
             }
         }, onError: { err in
             let error: OWError = err as? OWError ?? OWError.conversationFlow
@@ -98,14 +98,14 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         })
         .disposed(by: flowDisposeBag)
     }
-    
+
     func commentCreation(postId: String, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWCommentCreationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
                          completion: @escaping OWDefaultCompletion) {
         prepareForNewFlow()
-        
+
         setPostId(postId: postId) { result in
             switch result {
             case .failure(let error):
@@ -115,11 +115,11 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                 break
             }
         }
-        
+
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings?.conversationSettings)
         let commentCreationData = OWCommentCreationRequiredData(article: article, commentCreationType: .comment)
-        
+
         _ = sdkCoordinator.startCommentCreationFlow(conversationData: conversationData,
                                                     commentCreationData: commentCreationData,
                                                     presentationalMode: presentationalMode,
@@ -130,7 +130,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
             case .loadedToScreen:
                 completion(.success(()))
             default:
-                break;
+                break
             }
         }, onError: { err in
             let error: OWError = err as? OWError ?? OWError.conversationFlow
@@ -147,10 +147,10 @@ fileprivate extension OWUILayer {
             completion(.failure(error))
             return
         }
-        
+
         manager.postId = postId
     }
-    
+
     func prepareForNewFlow() {
         // Discard any previous subscription to other flows
         flowDisposeBag = DisposeBag()

@@ -24,11 +24,11 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
             .unwrap()
             .share(replay: 0) // New subscribers will get only elements which emits after their subscription
     }
-    
+
     init (servicesProvider: OWSharedServicesProviding) {
         self.servicesProvider = servicesProvider
     }
-    
+
     func recoverFromAuthorizationError(userId: String) -> Observable<Void> {
         if let didJustRecovered = didJustRecoveredCache[userId], didJustRecovered {
             // Return cache configuration
@@ -41,7 +41,7 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
                     if !isRecovering {
                         self.startRecovering(userId: userId)
                     }
-                    
+
                     // This way if other calls to this functions are being done before the network request finish, we won't send new requests
                     return self.recoverJustFinished
                         .take(1)
@@ -54,12 +54,12 @@ fileprivate extension OWAuthorizationRecoveryService {
     func startRecovering(userId: String) {
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag
-        
+
         // Due to bad architecture it is not possible to dependency injection the authProvider in the class initializer
         _ = Observable.just(())
             .flatMap { [weak self] _ -> Observable<Bool> in
                 self?.isCurrentlyRecovering.onNext(true)
-                
+
                 // Due to bad architecture it is not possible to dependency injection those classes
                 // Get new user session and reset the old one
                 // Also check if we should renew SSO after the process
@@ -78,7 +78,7 @@ fileprivate extension OWAuthorizationRecoveryService {
                         self.isCurrentlyRecovering.onNext(false)
                         self._recoverJustFinished.onNext(())
                         self.didJustRecoveredCache[userId] = true
-                        
+
                         if shouldRenewSSO {
                             // Will renew SSO with publishers API if a user was logged in before
                             self.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")

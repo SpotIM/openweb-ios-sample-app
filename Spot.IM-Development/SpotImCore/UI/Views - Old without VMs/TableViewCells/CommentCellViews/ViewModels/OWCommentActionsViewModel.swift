@@ -30,9 +30,9 @@ class OWCommentActionsViewModel: OWCommentActionsViewModeling,
 
     var inputs: OWCommentActionsViewModelingInputs { return self }
     var outputs: OWCommentActionsViewModelingOutputs { return self }
-    
+
     let votingVM: OWCommentVotingViewModeling = OWCommentVotingViewModel()
-    
+
     func configure(with model: OWCommentVotingModel) {
         self.votingVM.inputs.configure(with: model)
     }

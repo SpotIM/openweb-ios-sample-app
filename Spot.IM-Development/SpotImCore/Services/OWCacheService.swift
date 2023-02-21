@@ -19,7 +19,6 @@ Examples of using this service:
  let cacheUsers = OWCacheService<Int, SPUser>(expirationStrategy: .none)  // Notice the key can be any Hashable
 */
 
-
 // Defaults
 fileprivate struct DefaultMetrics {
     static let defaultEntryLifetime: TimeInterval = 24 * 60 * 60 // 1 day
@@ -36,14 +35,14 @@ class OWCacheService<Key: Hashable, Value: Any> {
     fileprivate let cache = NSCache<OWWrappedKey, OWWrappedValue>()
     fileprivate let expirationStrategy: OWCacheExpirationStrategy
     fileprivate let dateProvider: () -> Date
-    
+
     init(dateProvider: @escaping () -> Date = Date.init,
          expirationStrategy: OWCacheExpirationStrategy = .time(lifetime: DefaultMetrics.defaultEntryLifetime),
          maxEntryCount: Int = DefaultMetrics.defaultMaxEntryCount) {
         self.dateProvider = dateProvider
         self.expirationStrategy = expirationStrategy
     }
-    
+
     func insert(_ value: Value, forKey key: Key) {
         let valueExpirationStrategy: OWWrappedValueExpirationStrategy
         switch expirationStrategy {
@@ -53,19 +52,19 @@ class OWCacheService<Key: Hashable, Value: Any> {
             let dateThreshold = dateProvider().addingTimeInterval(lifetime)
             valueExpirationStrategy = .expiration(date: dateThreshold)
         }
-        
+
         let wrappedValue = OWWrappedValue(value: value, expiration: valueExpirationStrategy)
         cache.setObject(wrappedValue, forKey: OWWrappedKey(key))
     }
-    
+
     func value(forKey key: Key) -> Value? {
         guard let wrappedValue = cache.object(forKey: OWWrappedKey(key)) else {
             return nil
         }
-        
+
         switch expirationStrategy {
         case .none:
-            break;
+            break
         case .time(_):
             guard case .expiration(let date) = wrappedValue.expiration,
                   dateProvider() < date else {
@@ -75,10 +74,10 @@ class OWCacheService<Key: Hashable, Value: Any> {
                       return nil
                   }
         }
-        
+
         return wrappedValue.value
     }
-    
+
     func remove(forKey key: Key) {
         cache.removeObject(forKey: OWWrappedKey(key))
     }
@@ -96,26 +95,25 @@ extension OWCacheService {
                 remove(forKey: key)
                 return
             }
-            
+
             insert(value, forKey: key)
         }
     }
 }
 
-
 // OWWrappedKey - Key for NSCache must be from NSObject, that's why we use WrappedKey
 fileprivate extension OWCacheService {
     class OWWrappedKey: NSObject {
         let key: Key
-        
+
         init(_ key: Key) {
             self.key = key
         }
-        
+
         override var hash: Int {
             return key.hashValue
         }
-        
+
         override func isEqual(_ object: Any?) -> Bool {
             guard let value = object as? OWWrappedKey else {
                 return false
@@ -130,7 +128,7 @@ fileprivate extension OWCacheService {
     class OWWrappedValue {
         let value: Value
         let expiration: OWWrappedValueExpirationStrategy
-        
+
         init(value: Value, expiration: OWWrappedValueExpirationStrategy) {
             self.value = value
             self.expiration = expiration

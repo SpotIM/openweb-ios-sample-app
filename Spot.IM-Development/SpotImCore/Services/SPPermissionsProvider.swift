@@ -17,55 +17,55 @@ protocol SPPermissionsProviderDelegate: AnyObject {
 }
 
 internal final class SPPermissionsProvider {
-    
+
     internal weak static var delegate: SPPermissionsProviderDelegate?
-    
+
     static func requestPermission(type: SPPermissionType, onAuthorized: @escaping () -> Void) {
         switch type {
         case .camera:
             return requestCameraPermission(onAuthorized: onAuthorized)
         }
     }
-    
+
     private static func openAppSettings() {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(settingsUrl)
     }
-    
+
     private static func getPermissionDeniedMessage(for type: SPPermissionType) -> String {
         switch type {
         case .camera:
             return LocalizationManager.localizedString(key: "Camera permissions are needed")
         }
     }
-    
+
     private static func handlePermissionDenied(for type: SPPermissionType) {
         let alert = UIAlertController(title: nil, message: getPermissionDeniedMessage(for: type), preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"), style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: LocalizationManager.localizedString(key: "Open settings"), style: .default, handler: { _ in
             openAppSettings()
         }))
-        
+
         delegate?.presentAlert(alert)
     }
-    
+
     private static func requestCameraPermission(onAuthorized: @escaping () -> Void) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             onAuthorized()
-            break
+
         case .denied:
             handlePermissionDenied(for: .camera)
-            break
+
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
-                if granted { //access allowed
+                if granted { // access allowed
                     onAuthorized()
-                } else { //access denied
+                } else { // access denied
                     // TODO - Do something?
                 }
             }
-            break
+
         default:
             break
         }
