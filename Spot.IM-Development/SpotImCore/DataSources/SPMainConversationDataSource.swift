@@ -612,7 +612,7 @@ internal final class SPMainConversationDataSource {
                                                 replyingToDisplayName: replyingToDisplayName)
 
             if viewModel.isHiddenComment() && (comment.replies == nil || comment.replies?.isEmpty == true) {
-                // if comment is hidden replies - we filter out this comment
+                // if comment is hidden without any replies - we filter out this comment
                 return
             }
 
@@ -760,7 +760,7 @@ extension SPMainConversationDataSource {
         if isSoft {
             (cellData[indexPath.section])[indexPath.row].setIsDeleted(true)
 
-            if areAllCommentAndRepliesMuted(atSectionIndex: indexPath.section) {
+            if areAllCommentAndRepliesHidden(atSectionIndex: indexPath.section) {
                 cellData.remove(at: indexPath.section)
             }
             delegate?.reload(shouldBeScrolledToTop: false)
@@ -813,7 +813,7 @@ extension SPMainConversationDataSource {
         guard let indexPath = indexPathOfComment(with: id) else { return }
         (cellData[indexPath.section])[indexPath.row].isReported = true
 
-        if areAllCommentAndRepliesMuted(atSectionIndex: indexPath.section) {
+        if areAllCommentAndRepliesHidden(atSectionIndex: indexPath.section) {
             cellData.remove(at: indexPath.section)
         }
         delegate?.reload(shouldBeScrolledToTop: false)
@@ -856,7 +856,7 @@ extension SPMainConversationDataSource {
         let sectionIndexPaths = Set(indexPaths.map { $0.section }).sorted { $0 > $1}
 
         sectionIndexPaths.forEach { sectionIndex in
-            if areAllCommentAndRepliesMuted(atSectionIndex: sectionIndex) {
+            if areAllCommentAndRepliesHidden(atSectionIndex: sectionIndex) {
                 cellData.remove(at: sectionIndex)
             }
         }
@@ -1009,7 +1009,7 @@ fileprivate extension SPMainConversationDataSource {
         }
     }
 
-    func areAllCommentAndRepliesMuted(atSectionIndex sectionIndex: Int) -> Bool {
+    func areAllCommentAndRepliesHidden(atSectionIndex sectionIndex: Int) -> Bool {
         areAllCommentAndRepliesHidden(atCommentVMs: cellData[sectionIndex])
     }
 
