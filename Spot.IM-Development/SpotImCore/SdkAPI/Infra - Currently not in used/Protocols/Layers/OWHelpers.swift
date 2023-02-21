@@ -10,10 +10,16 @@ import Foundation
 
 #if NEW_API
 public protocol OWHelpers {
+    func conversationCounters(forPostIds postIds: [OWPostId],
+                              completion: OWConversationCountersCompletion)
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
+    var loggerConfiguration: OWLoggerConfiguration { get }
 }
 #else
 protocol OWHelpers {
+    func conversationCounters(forPostIds postIds: [OWPostId],
+                              completion: OWConversationCountersCompletion)
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
+    var loggerConfiguration: OWLoggerConfiguration { get }
 }
 #endif
