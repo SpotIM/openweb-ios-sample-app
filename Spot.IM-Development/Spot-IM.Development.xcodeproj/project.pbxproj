@@ -2175,7 +2175,7 @@
 		3D611B7F28C4D85C003960CE /* Beta */ = {
 			isa = PBXGroup;
 			children = (
-				9E53759529784D9100C85983 /* AuthenticationPlayground */,
+				9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */,
 				3D611B7528BFA8B1003960CE /* BetaNewAPI */,
 				3D611B8028C4D88F003960CE /* MockArticle */,
 				8DCBE879294F470F00C8677C /* Settings */,
@@ -3621,13 +3621,13 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		9E53759529784D9100C85983 /* AuthenticationPlayground */ = {
+		9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */ = {
 			isa = PBXGroup;
 			children = (
 				9E5375B129784DD100C85983 /* ViewModels */,
 				9E5375AF29784DD100C85983 /* Views */,
 			);
-			path = AuthenticationPlayground;
+			path = AuthenticationPlaygroundNew;
 			sourceTree = "<group>";
 		};
 		9E5375AF29784DD100C85983 /* Views */ = {
