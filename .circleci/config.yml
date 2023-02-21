@@ -75,7 +75,7 @@ commands:
           command: |
             ls -l Release
             git status
-            
+
   swiftlint:
     steps:
       - run:
@@ -431,7 +431,7 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: 's3://prod-ow-mobile/iOS/version-${RELEASE_VERSION}/Spot-IM.Development.app'
+          to: 's3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app'
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
@@ -446,7 +446,7 @@ jobs:
           to: 's3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa'
           arguments: |
             --region $AWS_REGION \
-            --content-encoding "app"
+            --content-encoding "ipa"
 
 
 workflows:
