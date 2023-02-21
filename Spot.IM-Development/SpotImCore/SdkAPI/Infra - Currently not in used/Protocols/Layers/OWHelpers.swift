@@ -13,6 +13,7 @@ public protocol OWHelpers {
     func conversationCounters(forPostIds postIds: [OWPostId],
                               completion: OWConversationCountersCompletion)
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
+    var loggerConfiguration: OWLoggerConfiguration { get }
 }
 #else
 public protocol OWHelpers {

@@ -10,9 +10,26 @@ import Foundation
 import os.log
 import RxSwift
 
+#if NEW_API
+public enum OWLogLevel {
+    case none, error, medium, verbose
+}
+
+public enum OWLogMethod {
+    case nsLog, osLog, file(maxFilesNumber: Int)
+}
+#else
 enum OWLogLevel {
     case none, error, medium, verbose
+}
 
+enum OWLogMethod {
+    case nsLog, osLog, file(maxFilesNumber: Int)
+}
+#endif
+
+extension OWLogLevel {
+    
     // Description exposed for outside use as well
     var description: String {
         switch self {
@@ -54,10 +71,20 @@ enum OWLogLevel {
     }
 }
 
-enum OWLogMethod {
-    case nsLog, osLog, file(maxFilesNumber: Int)
+#if NEW_API
+extension OWLogMethod: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        switch self {
+        case .nsLog:
+            return hasher.combine(1)
+        case .osLog:
+            return hasher.combine(2)
+        case .file(_):
+            return hasher.combine(3)
+        }
+    }
 }
-
+#else
 extension OWLogMethod: Hashable {
     func hash(into hasher: inout Hasher) {
         switch self {
@@ -70,6 +97,7 @@ extension OWLogMethod: Hashable {
         }
     }
 }
+#endif
 
 class OWLogger {
     struct Metrics {
