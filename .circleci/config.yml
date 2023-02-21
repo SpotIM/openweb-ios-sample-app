@@ -441,12 +441,17 @@ jobs:
           command: |
             bundle exec fastlane build_release_ipa
 
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
       - aws-s3/sync:
-          from: Spot-IM.Development.ipa
+          from: ipa-build
           to: 's3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa'
           arguments: |
-            --region $AWS_REGION \
-            --content-encoding "ipa"
+            --region $AWS_REGION
 
 
 workflows:
