@@ -26,9 +26,9 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 extension OWHelpersLayer {
     func conversationCounters(forPostIds postIds: [OWPostId],
                               completion: OWConversationCountersCompletion) {
-        
+
     }
-    
+
     var additionalConfigurations: [OWAdditionalConfiguration] {
         get {
            return configurations
@@ -37,7 +37,7 @@ extension OWHelpersLayer {
             configurations = Array(Set(newConfigurations))
         }
     }
-    
+
     var loggerConfiguration: OWLoggerConfiguration {
         return loggerConfigurationLayer
     }
