@@ -75,6 +75,25 @@ commands:
           command: |
             ls -l Release
             git status
+            
+  swiftlint:
+    steps:
+      - run:
+          name: Install Homebrew
+          command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - run:
+          name: Install SwiftLint
+          command: |
+            brew update
+            brew install swiftlint
+            swiftlint version
+
+      - run:
+          name: Run SwiftLint
+          command: |
+            swiftlint lint --strict --config swiftlint/.swiftlint.yml --reporter xcode || (echo "SwiftLint check failed." && exit 1)
+            echo "SwiftLint check succeeded."
 
   prepare_release_app:
     steps:
@@ -119,25 +138,6 @@ orbs:
   aws-s3: circleci/aws-s3@3.0.0
   slack: circleci/slack@3.4.2
   codecov: codecov/codecov@3.2.2
-
-  swiftlint:
-    steps:
-      - run:
-          name: Install Homebrew
-          command: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-      - run:
-          name: Install SwiftLint
-          command: |
-            brew update
-            brew install swiftlint
-            swiftlint version
-
-      - run:
-          name: Run SwiftLint
-          command: |
-            swiftlint lint --strict --config swiftlint/.swiftlint.yml --reporter xcode || (echo "SwiftLint check failed." && exit 1)
-            echo "SwiftLint check succeeded."
 
 jobs:
   validate_spm_job:
