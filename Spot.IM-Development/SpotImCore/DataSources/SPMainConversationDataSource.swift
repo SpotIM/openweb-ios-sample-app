@@ -611,8 +611,8 @@ internal final class SPMainConversationDataSource {
                                                 replyingToCommentId: replyingToCommentId,
                                                 replyingToDisplayName: replyingToDisplayName)
 
-            if viewModel.isCommentAuthorMuted && (comment.replies == nil || comment.replies?.isEmpty == true) {
-                // if comment is muted without replies - we filter out this comment
+            if viewModel.isHiddenComment() && (comment.replies == nil || comment.replies?.isEmpty == true) {
+                // if comment is hidden replies - we filter out this comment
                 return
             }
 
@@ -646,8 +646,8 @@ internal final class SPMainConversationDataSource {
                 hiddenData[id]?.reverse()
             }
 
-            if viewModel.isCommentAuthorMuted && areAllCommentAndRepliesMuted(atCommentVMs: section) {
-                // if comment is muted and all it's replies are muted - we filter out this comment and it's replies
+            if viewModel.isHiddenComment() && areAllCommentAndRepliesHidden(atCommentVMs: section) {
+                // if comment is hidden and all it's replies are hidden - we filter out this comment and it's replies
                 return
             }
 
@@ -759,6 +759,10 @@ extension SPMainConversationDataSource {
         handleDeletedCommentReplies(commentId: id, sectionIndexPath: indexPath)
         if isSoft {
             (cellData[indexPath.section])[indexPath.row].setIsDeleted(true)
+
+            if areAllCommentAndRepliesMuted(atSectionIndex: indexPath.section) {
+                cellData.remove(at: indexPath.section)
+            }
             delegate?.reload(shouldBeScrolledToTop: false)
         } else {
             let removeSection = (indexPath.row == 0 && isCascade) || cellData[indexPath.section].count == 1
@@ -808,7 +812,11 @@ extension SPMainConversationDataSource {
     func reportComment(with id: String) {
         guard let indexPath = indexPathOfComment(with: id) else { return }
         (cellData[indexPath.section])[indexPath.row].isReported = true
-        delegate?.reloadAt(indexPath: indexPath)
+
+        if areAllCommentAndRepliesMuted(atSectionIndex: indexPath.section) {
+            cellData.remove(at: indexPath.section)
+        }
+        delegate?.reload(shouldBeScrolledToTop: false)
     }
 
     func isCommentInConversation(commentId: String) -> Bool {
@@ -852,7 +860,6 @@ extension SPMainConversationDataSource {
                 cellData.remove(at: sectionIndex)
             }
         }
-
         delegate?.reload(shouldBeScrolledToTop: false)
     }
 }
@@ -1003,12 +1010,12 @@ fileprivate extension SPMainConversationDataSource {
     }
 
     func areAllCommentAndRepliesMuted(atSectionIndex sectionIndex: Int) -> Bool {
-        areAllCommentAndRepliesMuted(atCommentVMs: cellData[sectionIndex])
+        areAllCommentAndRepliesHidden(atCommentVMs: cellData[sectionIndex])
     }
 
-    func areAllCommentAndRepliesMuted(atCommentVMs commentVMs: [CommentViewModel]) -> Bool {
+    func areAllCommentAndRepliesHidden(atCommentVMs commentVMs: [CommentViewModel]) -> Bool {
         for commentVM in commentVMs {
-            if !commentVM.isCommentAuthorMuted {
+            if !commentVM.isHiddenComment() {
                 return false
             }
         }
