@@ -15,10 +15,10 @@ final class SPLoaderCell: SPBaseTableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         setup()
     }
-    
+
     private func setup() {
         contentView.addSubview(activityIndicator)
 

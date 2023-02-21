@@ -20,13 +20,13 @@ internal protocol SPAnalyticsService {
     var pageViewId: String { get }
     var lastRecordedMainViewedPageViewId: String { get set }
     var postId: String? { get set }
-    func prepareForNewPage(customBIData: [String:String]?)
+    func prepareForNewPage(customBIData: [String: String]?)
     func log(event: SPAnalyticsEvent, source: SPAnSource)
 }
 
 internal final class SPAnalyticsHolder {
     static var abActiveTests: [SPABData] = []
-    
+
     internal static var `default`: SPAnalyticsService = {
         let service = SPDefaultAnalyticsService()
         service.sender = SPDefaultAnalyticsSender(apiManager: OWApiManager())
@@ -58,7 +58,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         SpotIm.analyticsEventDelegate?.trackEvent(type: event.eventType, event: analyticsEventInfo)
     }
 
-    internal func prepareForNewPage(customBIData: [String:String]?) {
+    internal func prepareForNewPage(customBIData: [String: String]?) {
         pageViewId = UUID().uuidString
         isUserRegistered = false
         userId = nil
@@ -66,8 +66,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
         self.customBIData = customBIData
     }
 
-    private func analyticsInfo(from event: SPAnalyticsEvent,
-                               source: SPAnSource) -> SPEventInfo {
+    private func analyticsInfo(from event: SPAnalyticsEvent, source: SPAnSource) -> SPEventInfo { // swiftlint:disable:this function_body_length
 
         var itemType: String?
         var targetType: String?
@@ -161,7 +160,7 @@ internal final class SPDefaultAnalyticsService: SPAnalyticsService {
             splitNames += "\(test.testName):\(test.group)|"
         }
         splitNames = String(splitNames.dropLast())
-        
+
         let publisherCustomData = customBIData
 
         let info = SPEventInfo(eventType: event.kebabValue,

@@ -17,46 +17,46 @@ func indexSet(_ values: [Int]) -> IndexSet {
     return indexSet as IndexSet
 }
 
-extension UITableView : OWSectionedViewType {
-  
+extension UITableView: OWSectionedViewType {
+
     func insertItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation) {
         self.insertRows(at: paths, with: animationStyle)
     }
-    
+
     func deleteItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation) {
         self.deleteRows(at: paths, with: animationStyle)
     }
-    
+
     func moveItemAtIndexPath(_ from: IndexPath, to: IndexPath) {
         self.moveRow(at: from, to: to)
     }
-    
+
     func reloadItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation) {
         self.reloadRows(at: paths, with: animationStyle)
     }
-    
+
     func insertSections(_ sections: [Int], animationStyle: UITableView.RowAnimation) {
         self.insertSections(indexSet(sections), with: animationStyle)
     }
-    
+
     func deleteSections(_ sections: [Int], animationStyle: UITableView.RowAnimation) {
         self.deleteSections(indexSet(sections), with: animationStyle)
     }
-    
+
     func moveSection(_ from: Int, to: Int) {
         self.moveSection(from, toSection: to)
     }
-    
+
     func reloadSections(_ sections: [Int], animationStyle: UITableView.RowAnimation) {
         self.reloadSections(indexSet(sections), with: animationStyle)
     }
 }
 
-extension UICollectionView : OWSectionedViewType {
+extension UICollectionView: OWSectionedViewType {
     func insertItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation) {
         self.insertItems(at: paths)
     }
-    
+
     func deleteItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation) {
         self.deleteItems(at: paths)
     }
@@ -64,23 +64,23 @@ extension UICollectionView : OWSectionedViewType {
     func moveItemAtIndexPath(_ from: IndexPath, to: IndexPath) {
         self.moveItem(at: from, to: to)
     }
-    
+
     func reloadItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation) {
         self.reloadItems(at: paths)
     }
-    
+
     func insertSections(_ sections: [Int], animationStyle: UITableView.RowAnimation) {
         self.insertSections(indexSet(sections))
     }
-    
+
     func deleteSections(_ sections: [Int], animationStyle: UITableView.RowAnimation) {
         self.deleteSections(indexSet(sections))
     }
-    
+
     func moveSection(_ from: Int, to: Int) {
         self.moveSection(from, toSection: to)
     }
-    
+
     func reloadSections(_ sections: [Int], animationStyle: UITableView.RowAnimation) {
         self.reloadSections(indexSet(sections))
     }
@@ -91,7 +91,7 @@ protocol OWSectionedViewType {
     func deleteItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation)
     func moveItemAtIndexPath(_ from: IndexPath, to: IndexPath)
     func reloadItemsAtIndexPaths(_ paths: [IndexPath], animationStyle: UITableView.RowAnimation)
-    
+
     func insertSections(_ sections: [Int], animationStyle: UITableView.RowAnimation)
     func deleteSections(_ sections: [Int], animationStyle: UITableView.RowAnimation)
     func moveSection(_ from: Int, to: Int)
@@ -100,16 +100,15 @@ protocol OWSectionedViewType {
 
 extension OWSectionedViewType {
     func batchUpdates<OWSection>(_ changes: OWChangeset<OWSection>, animationConfiguration: OWAnimationConfiguration) {
-        // swiftlint:disable:next nesting
         typealias OWItem = OWSection.Item
-        
+
         deleteSections(changes.deletedSections, animationStyle: animationConfiguration.deleteAnimation)
-        
+
         insertSections(changes.insertedSections, animationStyle: animationConfiguration.insertAnimation)
         for (from, to) in changes.movedSections {
             moveSection(from, to: to)
         }
-        
+
         deleteItemsAtIndexPaths(
             changes.deletedItems.map { IndexPath(item: $0.itemIndex, section: $0.sectionIndex) },
             animationStyle: animationConfiguration.deleteAnimation
@@ -122,7 +121,7 @@ extension OWSectionedViewType {
             changes.updatedItems.map { IndexPath(item: $0.itemIndex, section: $0.sectionIndex) },
             animationStyle: animationConfiguration.reloadAnimation
         )
-        
+
         for (from, to) in changes.movedItems {
             moveItemAtIndexPath(
                 IndexPath(item: from.itemIndex, section: from.sectionIndex),

@@ -11,7 +11,7 @@ import UIKit
 protocol OWAlertPresentable {}
 
 extension OWAlertPresentable where Self: UIViewController {
-    
+
     func showActionSheet(
         title: String? = nil,
         message: String? = nil,
@@ -29,14 +29,14 @@ extension OWAlertPresentable where Self: UIViewController {
             popover.sourceRect = frame
             popover.sourceView = sender
         }
-        
+
         for action in actions {
             actionSheet.addAction(action)
         }
-        
+
         present(actionSheet, animated: true, completion: completion)
     }
-    
+
     func showAlert(title: String? = nil, message: String? = nil, actions: [UIAlertAction] = [],
                    completion: (() -> Void)? = nil) {
         let alert = UIAlertController(
@@ -54,10 +54,10 @@ extension OWAlertPresentable where Self: UIViewController {
                 style: .default)
             alert.addAction(defaultAction)
         }
-        
+
         present(alert, animated: true, completion: completion)
     }
-    
+
     func showToast(message: String, hideAfter delay: Double) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.view.alpha = 0.6

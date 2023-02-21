@@ -10,7 +10,7 @@ import Foundation
 
 enum OWFailureReportEndpoints: OWEndpoints {
     case error(error: SPError)
-    
+
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
@@ -18,7 +18,7 @@ enum OWFailureReportEndpoints: OWEndpoints {
             return .post
         }
     }
-    
+
     // MARK: - Path
     var path: String {
         switch self {
@@ -26,7 +26,7 @@ enum OWFailureReportEndpoints: OWEndpoints {
             return "/error"
         }
     }
-    
+
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
@@ -43,7 +43,7 @@ protocol OWFailureReportAPI {
 extension OWNetworkAPI: OWFailureReportAPI {
     // Access by .failureReporter for readability
     var failureReporter: OWFailureReportAPI { return self }
-    
+
     func reportError(error: SPError) -> OWNetworkResponse<EmptyDecodable> {
         let endpoint = OWFailureReportEndpoints.error(error: error)
         let requestConfigure = request(for: endpoint)

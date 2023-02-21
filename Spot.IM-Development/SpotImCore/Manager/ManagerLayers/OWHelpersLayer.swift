@@ -13,9 +13,9 @@ protocol OWHelpersInternalProtocol {
 }
 
 class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
-    
+
     fileprivate var configurations: [OWAdditionalConfiguration] = []
-    
+
     var shouldSuppressFinmbFilter: Bool {
         return configurations.contains(.suppressFinmbFilter)
     }

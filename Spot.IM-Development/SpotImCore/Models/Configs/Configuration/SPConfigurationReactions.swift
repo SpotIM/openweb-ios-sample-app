@@ -9,11 +9,11 @@
 import Foundation
 
 struct SPConfigurationReactions: Decodable {
-    
+
     let reactionsAssetsPath: SPConfigurationReactionAssets?
-    
+
     struct SPConfigurationReactionAssets: Decodable {
-        
+
         let baseUrl: String?
     }
 }
