@@ -9,12 +9,12 @@
 import Foundation
 
 struct SPCommentDelete: Decodable {
-    
+
     let id: String?
     let conversationId: String?
     let etag: Int?
     let messagesCount: Int?
     let commentsCount: Int?
     let softDeleted: Bool?
-    
+
 }

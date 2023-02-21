@@ -28,24 +28,24 @@ protocol OWCommentCreationViewModeling {
 class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreationViewModelingInputs, OWCommentCreationViewModelingOutputs {
     var inputs: OWCommentCreationViewModelingInputs { return self }
     var outputs: OWCommentCreationViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let commentCreationData: OWCommentCreationRequiredData
 
     lazy var commentCreationViewVM: OWCommentCreationViewViewModeling = {
         return OWCommentCreationViewViewModel(commentCreationData: commentCreationData)
     }()
-    
+
     var userInitiatedAuthenticationFlow: Observable<Void> {
         // TODO: Complete
         return .never()
     }
-    
+
     var commentCreated: Observable<SPComment> {
         // TODO: Complete
         return .never()
     }
-    
+
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
@@ -61,6 +61,6 @@ class OWCommentCreationViewModel: OWCommentCreationViewModeling, OWCommentCreati
 
 fileprivate extension OWCommentCreationViewModel {
     func setupObservers() {
-        
+
     }
 }

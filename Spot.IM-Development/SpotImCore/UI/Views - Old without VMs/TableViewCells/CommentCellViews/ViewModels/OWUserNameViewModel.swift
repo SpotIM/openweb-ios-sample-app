@@ -12,14 +12,14 @@ import UIKit
 
 protocol OWUserNameViewModelingInputs {
     func configure(with model: CommentViewModel)
-    
+
     var tapUserName: PublishSubject<Void> { get }
     var tapMore: PublishSubject<OWUISource> { get }
 }
 
 protocol OWUserNameViewModelingOutputs {
     var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
-    
+
     var shouldShowDeletedOrReportedMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
     var nameTextStyle: Observable<SPFontStyle> { get }
@@ -28,7 +28,7 @@ protocol OWUserNameViewModelingOutputs {
     var badgeTitle: Observable<String> { get }
     var isUsernameOneRow: Observable<Bool> { get }
     var hiddenCommentReasonText: Observable<String> { get }
-    
+
     var userNameTapped: Observable<Void> { get }
     var moreTapped: Observable<OWUISource> { get }
 }
@@ -44,9 +44,9 @@ class OWUserNameViewModel: OWUserNameViewModeling,
 
     var inputs: OWUserNameViewModelingInputs { return self }
     var outputs: OWUserNameViewModelingOutputs { return self }
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     fileprivate let _model = BehaviorSubject<CommentViewModel?>(value: nil)
 
     init(user: SPUser?) {
@@ -54,12 +54,12 @@ class OWUserNameViewModel: OWUserNameViewModeling,
             subscriberBadgeVM.inputs.configureUser(user: user)
         }
     }
-    
+
     var tapUserName = PublishSubject<Void>()
     var tapMore = PublishSubject<OWUISource>()
-    
+
     let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
-    
+
     var subtitleText: Observable<String> {
         _model
             .unwrap()
@@ -71,7 +71,7 @@ class OWUserNameViewModel: OWUserNameViewModeling,
                 : LocalizationManager.localizedString(key: "To") + " \($0)"
             })
     }
-    
+
     var dateText: Observable<String> {
         _model
             .unwrap()
@@ -81,7 +81,7 @@ class OWUserNameViewModel: OWUserNameViewModeling,
                     ? timestamp : " · ".appending(timestamp)
             })
     }
-    
+
     var badgeTitle: Observable<String> {
         _model
             .unwrap()
@@ -89,7 +89,7 @@ class OWUserNameViewModel: OWUserNameViewModeling,
                 return (model.badgeTitle ?? "")
             })
     }
-    
+
     var nameText: Observable<String> {
         _model
             .unwrap()
@@ -97,19 +97,19 @@ class OWUserNameViewModel: OWUserNameViewModeling,
                 return (model.displayName ?? "")
             })
     }
-    
+
     var nameTextStyle: Observable<SPFontStyle> {
         _model
             .unwrap()
             .map { $0.replyingToCommentId == nil ? .bold : .medium }
     }
-    
+
     var isUsernameOneRow: Observable<Bool> {
         _model
             .unwrap()
             .map { $0.isUsernameOneRow() }
     }
-    
+
     var hiddenCommentReasonText: Observable<String> {
         _model
             .unwrap()
@@ -126,23 +126,23 @@ class OWUserNameViewModel: OWUserNameViewModeling,
                 return LocalizationManager.localizedString(key: localizationKey)
             }
     }
-    
+
     var shouldShowDeletedOrReportedMessage: Observable<Bool> {
         _model
             .unwrap()
             .map { $0.isHiddenComment() }
     }
-    
+
     var userNameTapped: Observable<Void> {
         tapUserName
             .asObservable()
     }
-    
+
     var moreTapped: Observable<OWUISource> {
         tapMore
             .asObservable()
     }
-    
+
     func configure(with model: CommentViewModel) {
         _model.onNext(model)
     }

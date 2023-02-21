@@ -15,18 +15,18 @@ class OWConstraintMakerEditable: OWConstraintMakerPrioritizable {
         self.description.multiplier = amount
         return self
     }
-    
+
     @discardableResult
     func dividedBy(_ amount: OWConstraintMultiplierTarget) -> OWConstraintMakerEditable {
         return self.multipliedBy(1.0 / amount.constraintMultiplierTargetValue)
     }
-    
+
     @discardableResult
     func offset(_ amount: OWConstraintOffsetTarget) -> OWConstraintMakerEditable {
         self.description.constant = amount.constraintOffsetTargetValue
         return self
     }
-    
+
     @discardableResult
     func inset(_ amount: OWConstraintInsetTarget) -> OWConstraintMakerEditable {
         self.description.constant = amount.constraintInsetTargetValue

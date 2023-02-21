@@ -36,10 +36,16 @@ public struct SpotImArticleMetadata {
     let subtitle: String
     let thumbnailUrl: String
     let section: String
-    var customBIData: [String:String]?
+    var customBIData: [String: String]?
     var readOnlyMode: SpotImReadOnlyMode
 
-    public init(url: String, title: String, subtitle: String, thumbnailUrl: String, section: String = "default", customBIData: [String:String]? = nil, readOnlyMode: SpotImReadOnlyMode = .default) {
+    public init(url: String,
+                title: String,
+                subtitle: String,
+                thumbnailUrl: String,
+                section: String = "default",
+                customBIData: [String: String]? = nil,
+                readOnlyMode: SpotImReadOnlyMode = .default) {
         self.url = url
         self.title = title
         self.subtitle = subtitle
@@ -48,11 +54,11 @@ public struct SpotImArticleMetadata {
         self.customBIData = customBIData
         self.readOnlyMode = readOnlyMode
     }
-    
-    public mutating func setCustomBIData(_ data: [String:String]) {
+
+    public mutating func setCustomBIData(_ data: [String: String]) {
         self.customBIData = data
     }
-    
+
     public mutating func setReadOnlymode(_ mode: SpotImReadOnlyMode) {
         self.readOnlyMode = mode
     }
@@ -68,13 +74,12 @@ public enum SpotImButtonOnlyMode {
     case disable
     case withTitle
     case withoutTitle
-    
+
     func isEnabled() -> Bool {
         return self != .disable
     }
 }
 
-    
 public enum SpotImReadOnlyMode {
     case `default`
     case enable
@@ -97,13 +102,14 @@ public typealias InitizlizeCompletionHandler = (Swift.Result<Void, SpotImError>)
 public class SpotIm {
     private static var configuration: SpotConfig?
     private static let apiManager: OWApiManager = OWApiManager()
-    internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager, internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
+    internal static let authProvider: SpotImAuthenticationProvider = SpotImAuthenticationProvider(manager: SpotIm.apiManager,
+                                                                                                  internalProvider: SPDefaultInternalAuthProvider(apiManager: SpotIm.apiManager))
     internal static let profileProvider: SPProfileProvider = SPProfileProvider(apiManager: SpotIm.apiManager)
     private static let conversationDataProvider: SPConversationsFacade = SPConversationsFacade(apiManager: apiManager)
     private static var spotId: String?
     public static var reinit: Bool = false
     public static var googleAdsProvider: AdsProvider?
-    
+
     public static var customFontFamily: String? = nil
     public static var displayArticleHeader: Bool = true
 
@@ -113,19 +119,18 @@ public class SpotIm {
     public static var shouldConversationFooterStartFromBottomAnchor = false
     public static var buttonOnlyMode: SpotImButtonOnlyMode = .disable
     public static var enableCustomNavigationItemTitle: Bool = false
-    
-    internal static var customSortByOptionText: [SpotImSortByOption:String] = [:]
 
-    
+    internal static var customSortByOptionText: [SpotImSortByOption: String] = [:]
+
     public static let OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION: String = "overrideUserInterfaceStyle did change"
-    
+
     internal static var analyticsEventDelegate: SPAnalyticsEventDelegate?
-    
+
     internal static var customInitialSortByOption: SpotImSortByOption? = nil
-    
+
     fileprivate static let openWebManager: OWManagerProtocol = OpenWeb.manager
     fileprivate static let servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared
-    
+
     /**
     Initialize the SDK
 
@@ -138,7 +143,7 @@ public class SpotIm {
     public static func initialize(spotId: String, completion: InitizlizeCompletionHandler? = nil) {
         // Remove this migration within half a year from now
         servicesProvider.keychainMigrationService().migrateToKeychainIfNeeded()
-        
+
         if SpotIm.reinit {
             SpotIm.reinit = false
             SpotIm.spotId = nil
@@ -150,7 +155,7 @@ public class SpotIm {
         if SpotIm.spotId == nil {
             SpotIm.reinit = false
             SpotIm.spotId = spotId
-            
+
             _ = getConfig(spotId: spotId)
                 .take(1) // No need to disposed since we take 1
                 .subscribe(onNext: { _ in
@@ -164,7 +169,7 @@ public class SpotIm {
             completion?(.failure(SpotImError.alreadyInitialized))
         }
     }
-    
+
     public static func setGoogleAdsProvider(googleAdsProvider: AdsProvider) {
         self.googleAdsProvider = googleAdsProvider
     }
@@ -232,7 +237,7 @@ public class SpotIm {
                 completion(.failure(.internalError("Please call init SDK")))
                 return
             }
-            
+
             // googleAdsProviderRequired key is optional in appConfig so first we need to check if exists.
             // if googleAdsProviderRequired exists AND "true" AND publisher didn't provide an adsProvider we will fail
             if let googleAdsProviderRequired = config.appConfig.mobileSdk.googleAdsProviderRequired,
@@ -265,7 +270,7 @@ public class SpotIm {
                         let conversationCounter = SpotImConversationCounters(comments: value.comments, replies: value.replies)
                         return (decodedConversationId, conversationCounter)
                     })
-                    
+
                     completion(.success(counters))
                 }, onError: { error in
                     completion(.failure(.internalError(error.localizedDescription)))
@@ -296,7 +301,7 @@ public class SpotIm {
             NotificationCenter.default.post(name: Notification.Name(OVERRIDE_USER_INTERFACE_STYLE_NOTIFICATION), object: nil)
         }
     }
-    
+
     /**
      Get the current user login status
 
@@ -323,7 +328,7 @@ public class SpotIm {
             completion(.failure(SpotImError.internalError(error.localizedDescription)))
         }
     }
-    
+
     public static func logout(completion: @escaping ((Swift.Result<Void, SpotImError>) -> Void)) {
         execute(call: { _ in
             _ = authProvider.logout()
@@ -337,11 +342,11 @@ public class SpotIm {
             completion(.failure(error))
         }
     }
-    
+
     public static func setCustomSortByOptionText(option: SpotImSortByOption, text: String) {
         customSortByOptionText[option] = text
     }
-    
+
     /**
      Set SPAnalyticsEventDelegate for tracking analytics events
 
@@ -350,7 +355,7 @@ public class SpotIm {
     public static func setAnalyticsEventDelegate(delegate: SPAnalyticsEventDelegate) {
         self.analyticsEventDelegate = delegate
     }
-    
+
     /**
         Set SpotImButtonOnlyMode for pre-conversation button-only mode
 
@@ -359,11 +364,11 @@ public class SpotIm {
     public static func setButtonOnlyMode(mode: SpotImButtonOnlyMode) {
         self.buttonOnlyMode = mode
     }
-    
+
     public static func getButtonOnlyMode() -> SpotImButtonOnlyMode {
         return self.buttonOnlyMode
     }
-    
+
     /**
         Set initial conversation sort option
 
@@ -372,7 +377,7 @@ public class SpotIm {
     public static func setInitialSort(option: SpotImSortByOption) {
         self.customInitialSortByOption = option
     }
-    
+
     /**
         Configure OpenWeb SDK logger
 
@@ -383,7 +388,7 @@ public class SpotIm {
         self.servicesProvider.configure.configureLogger(logLevel: logLevel.toOWPrefix,
                                                         logMethods: logMethods.map {$0.toOWPrefix })
     }
-    
+
     /**
         Set additional configurations
 

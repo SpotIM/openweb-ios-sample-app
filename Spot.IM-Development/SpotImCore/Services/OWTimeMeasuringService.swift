@@ -19,33 +19,33 @@ enum OWTimeMeasuringResult {
 }
 
 class OWTimeMeasuringService: OWTimeMeasuringServicing {
-    
+
     enum OWKeys: String {
         case conversationUIBuildingTime
     }
-    
+
     fileprivate var startTimeDictionary = [String: CFAbsoluteTime]()
-    
+
     func startMeasure(forKey key: OWTimeMeasuringService.OWKeys) {
         startTimeDictionary[key.rawValue] = CFAbsoluteTimeGetCurrent()
     }
-    
+
     func endMeasure(forKey key: OWTimeMeasuringService.OWKeys) -> OWTimeMeasuringResult {
         guard let startTime = startTimeDictionary[key.rawValue] else {
             return .error(message: "Error: start measure must be called before end measure")
         }
-        
+
         let endTime = CFAbsoluteTimeGetCurrent()
         let timeElapsed = (endTime - startTime) * 1000
-        
+
         startTimeDictionary.removeValue(forKey: key.rawValue)
-        
+
         return .time(milliseconds: Int(timeElapsed))
     }
 }
 
 fileprivate extension OWTimeMeasuringService.OWKeys {
-    
+
     var description: String {
         switch self {
         case .conversationUIBuildingTime:

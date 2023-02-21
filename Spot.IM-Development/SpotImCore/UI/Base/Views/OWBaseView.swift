@@ -9,16 +9,16 @@
 import UIKit
 
 public class OWBaseView: UIView {
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
             ?? semanticContentAttribute
         backgroundColor = .spBackground0
         translatesAutoresizingMaskIntoConstraints = false
     }
-    
+
     @available(*,
     unavailable,
     message: "Loading this view from a nib is unsupported in this project"

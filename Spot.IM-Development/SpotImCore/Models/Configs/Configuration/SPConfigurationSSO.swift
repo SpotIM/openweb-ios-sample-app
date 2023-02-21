@@ -9,11 +9,11 @@
 import Foundation
 
 struct SPConfigurationSSO: Decodable {
-    
+
     let login: SPConfigurationLogin?
-    
+
     struct SPConfigurationLogin: Decodable {
-        
+
         let secretVar: String?
         let startEndpoint: String?
         let type: String?
