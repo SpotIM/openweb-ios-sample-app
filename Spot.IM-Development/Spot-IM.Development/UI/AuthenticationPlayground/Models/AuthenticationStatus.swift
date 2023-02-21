@@ -10,7 +10,7 @@ import Foundation
 
 enum AuthenticationStatus {
     case initial, inProgress, successful, failed
-    
+
     var symbol: String {
         switch self {
         case .initial:

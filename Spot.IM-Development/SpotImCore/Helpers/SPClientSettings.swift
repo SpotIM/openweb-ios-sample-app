@@ -10,42 +10,42 @@ import UIKit
 import RxSwift
 
 public class SPClientSettings {
-    
+
     public static let main: SPClientSettings = {
         let settings = SPClientSettings()
         let apiManager = OWApiManager()
         settings.configProvider = SPDefaultConfigProvider(apiManager: apiManager)
-        
+
         return settings
     }()
-    
+
     private(set) var spotKey: String?
     private var configProvider: SPDefaultConfigProvider!
 
     internal func setup(spotId: String) -> Observable<SpotConfig> {
         self.spotKey = spotId
         UIFont.loadAllFonts
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(appMovedToForeground),
             name: UIApplication.willEnterForegroundNotification,
             object: nil)
-        
+
         return configProvider.fetchConfigs()
     }
-    
+
     internal func sendAppInitEvent() {
         SPAnalyticsHolder.default.log(event: .appInit, source: .mainPage)
     }
-    
+
     @objc
     public func appMovedToForeground(notification: Notification) {
         SPAnalyticsHolder.default.log(event: .appOpened, source: .mainPage)
     }
-    
+
     internal static var darkModeBackgroundColor: UIColor = .mineShaft
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

@@ -24,7 +24,7 @@ extension OWEndpoints {
     var overrideBaseURL: URL? {
         return nil
     }
-    
+
     var additionalMiddlewares: [OWRequestMiddleware]? {
         return nil
     }

@@ -14,31 +14,31 @@ final class SPMainConversationFooterView: OWBaseView {
         static let commentCreationEntryIdentifier = "main_conversation_footer_comment_creation_entry_id"
         static let readOnlyLabelIdentifier = "main_conversation_footer_readOnly_label_id"
     }
-    
+
     let commentCreationEntryView: OWCommentCreationEntryView = .init()
-    
+
     private lazy var separatorView: OWBaseView = .init()
     private lazy var bannerContainerView: OWBaseView = .init()
-    
+
     private var bannerView: UIView?
     private var bannerContainerHeight: OWConstraint?
-    
+
     private var readOnlyLabel: OWBaseLabel?
-    
+
     internal var dropsShadow: Bool = false {
         didSet { showSeparatorIfNeeded() }
     }
-    
+
     internal var showsSeparator: Bool = true {
         didSet { separatorView.isHidden = !showsSeparator }
     }
-    
+
     override var bounds: CGRect {
         didSet {
             dropShadowIfNeeded()
         }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = false
@@ -46,26 +46,26 @@ final class SPMainConversationFooterView: OWBaseView {
         updateColorsAccordingToStyle()
         setupAccessibilityIdentifiers()
     }
-    
+
     private func setupAccessibilityIdentifiers() {
         self.accessibilityIdentifier = Metrics.identifier
         commentCreationEntryView.accessibilityIdentifier = Metrics.commentCreationEntryIdentifier
         readOnlyLabel?.accessibilityIdentifier = Metrics.readOnlyLabelIdentifier
     }
-    
+
     func handleUICustomizations(customUIDelegate: OWCustomUIDelegate, isPreConversation: Bool) {
-        
+
         commentCreationEntryView.handleUICustomizations(customUIDelegate: customUIDelegate, isPreConversation: isPreConversation)
 
         if (!isPreConversation) {
             customUIDelegate.customizeView(.footer(view: self), source: .conversation)
         }
-        
+
         if let readOnlyLabel = readOnlyLabel {
             customUIDelegate.customizeView(.readOnlyLabel(label: readOnlyLabel), source: .conversation)
         }
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -74,21 +74,21 @@ final class SPMainConversationFooterView: OWBaseView {
         dropsShadow = !SPUserInterfaceStyle.isDarkMode
         self.readOnlyLabel?.textColor = .spForeground3
     }
-    
+
     private func setupUI() {
         addSubview(bannerContainerView)
         bannerContainerView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             bannerContainerHeight = make.height.equalTo(0.0).constraint
         }
-        
+
         addSubview(separatorView)
         separatorView.backgroundColor = .spSeparator2
         separatorView.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(Theme.separatorHeight)
         }
-        
+
         addSubview(commentCreationEntryView)
         commentCreationEntryView.OWSnp.makeConstraints { make in
             make.top.equalTo(bannerContainerView.OWSnp.bottom).offset(16.0)
@@ -97,16 +97,16 @@ final class SPMainConversationFooterView: OWBaseView {
             make.height.equalTo(48.0)
         }
     }
-    
+
     func setReadOnlyMode(isPreConversation: Bool = false) {
         guard readOnlyLabel == nil else { return }
         commentCreationEntryView.isUserInteractionEnabled = false
         commentCreationEntryView.isHidden = true
-      
+
         readOnlyLabel = OWBaseLabel()
         setupReadOnlyLabel(isPreConversation: isPreConversation)
     }
-    
+
     func setupReadOnlyLabel(isPreConversation: Bool) {
         guard let readOnlyLabel = self.readOnlyLabel else { return }
         addSubview(readOnlyLabel)
@@ -114,7 +114,7 @@ final class SPMainConversationFooterView: OWBaseView {
         readOnlyLabel.font = UIFont.preferred(style: .regular, of: Theme.fontSize)
         readOnlyLabel.textColor = .spForeground3
         readOnlyLabel.text = LocalizationManager.localizedString(key: "Commenting on this article has ended")
-        
+
         readOnlyLabel.OWSnp.makeConstraints { make in
             make.centerY.equalTo(commentCreationEntryView)
             if (isPreConversation) {
@@ -124,7 +124,7 @@ final class SPMainConversationFooterView: OWBaseView {
             }
         }
     }
-    
+
     func updateBannerView(_ bannerView: UIView, height: CGFloat) {
         self.bannerView?.removeFromSuperview()
         self.bannerView = bannerView
@@ -135,13 +135,13 @@ final class SPMainConversationFooterView: OWBaseView {
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-        
+
         bannerContainerHeight?.deactivate()
         bannerContainerView.OWSnp.updateConstraints { make in
             bannerContainerHeight = make.height.equalTo(height + 16.0).constraint
         }
     }
-    
+
     private func dropShadowIfNeeded() {
         guard dropsShadow else {
             layer.shadowPath = nil

@@ -9,7 +9,6 @@
 import Foundation
 import RxSwift
 
-
 protocol OWAnalyticsServicing {
     func sendAnalyticEvent(event: OWAnalyticEvent)
     func sendAnalyticEvents(events: [OWAnalyticEvent])
@@ -19,38 +18,38 @@ class OWAnalyticsService: OWAnalyticsServicing {
     fileprivate struct Metrics {
         static let maxEvents: Int = 10
     }
-    
+
     fileprivate let maxEventsForFlush: Int
     fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
     fileprivate var analyticsEvents = OWObservableArray<OWAnalyticEvent>()
-    
+
     fileprivate let flushEventsQueue = SerialDispatchQueueScheduler(qos: .background, internalSerialQueueName: "OpenWebSDKAnalyticsDispatchQueue")
     fileprivate let disposeBag = DisposeBag()
-    
+
     init(maxEventsForFlush: Int = Metrics.maxEvents,
          appLifeCycle: OWRxAppLifeCycleProtocol = OWSharedServicesProvider.shared.appLifeCycle()) {
         self.maxEventsForFlush = maxEventsForFlush
         self.appLifeCycle = appLifeCycle
-        
+
         setupObservers()
     }
-    
+
     func sendAnalyticEvent(event: OWAnalyticEvent) {
         sendAnalyticEvents(events: [event])
     }
-    
+
     func sendAnalyticEvents(events: [OWAnalyticEvent]) {
         analyticsEvents.append(contentsOf: events)
     }
-    
+
 }
 
 fileprivate extension OWAnalyticsService {
-    
+
     func flushEvents() {
         let api: OWAnalyticsAPI = OWSharedServicesProvider.shared.netwokAPI().analytics
-        
-        Observable.just(())
+
+        _ = Observable.just(())
             .flatMap { [weak self] _ -> Observable<[OWAnalyticEvent]> in
                 guard let self = self else { return .empty()}
                 return self.analyticsEvents
@@ -81,7 +80,7 @@ fileprivate extension OWAnalyticsService {
                 guard let self = self else { return false }
                 return !self.analyticsEvents.isEmpty
             }
-        
+
         let maxEventObservable = analyticsEvents
             .rx_elements()
             .filter { [weak self] events in
@@ -89,7 +88,7 @@ fileprivate extension OWAnalyticsService {
                 return events.count >= self.maxEventsForFlush
             }
             .voidify()
-        
+
         Observable.merge(backgroundObservable, maxEventObservable)
             .observe(on: flushEventsQueue)
             .subscribe(onNext: { [weak self] _ in

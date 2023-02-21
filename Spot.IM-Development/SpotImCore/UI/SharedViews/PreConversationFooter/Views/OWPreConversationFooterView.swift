@@ -11,19 +11,19 @@ import RxSwift
 
 // TODO: complete
 internal class OWPreConversationFooterView: UIView {
-    
+
     fileprivate let viewModel: OWPreConversationFooterViewModeling
-    
+
     init(with viewModel: OWPreConversationFooterViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
-        
+
         self.enforceSemanticAttribute()
             .backgroundColor(.spBackground0)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }

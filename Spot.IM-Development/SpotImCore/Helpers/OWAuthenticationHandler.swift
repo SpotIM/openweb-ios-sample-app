@@ -11,7 +11,7 @@ import Foundation
 typealias AuthHandler = (_ isAuthenticated: Bool) -> Void
 
 final class OWAuthenticationHandler {
-    
+
     var authHandler: AuthHandler?
 
 }
