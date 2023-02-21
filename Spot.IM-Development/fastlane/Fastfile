@@ -42,14 +42,20 @@ platform :ios do
   end
 
   desc "Build development app"
-  lane :build_development_app do
+  lane :build_development_app do |options|
+    scheme = "Spot-IM.Development"
+    if options[:app] == "public"
+      scheme = "Spot-IM.PublicDemoApp"
+    elsif options[:app] == "beta"
+      scheme = "Spot-IM.BetaDevelopment"
+    end
+
     cocoapods(use_bundle_exec: false)
     gym(
         skip_package_ipa: true,
-        scheme: "Spot-IM.Development",
+        scheme: scheme,
         workspace: "Spot-IM.Development.xcworkspace",
         destination: "generic/platform=iOS Simulator",
-        configuration: "Debug",
         build_path: "simulator_build"
     )
   end

@@ -36,14 +36,6 @@ Run unit tests
 
 Build development app
 
-### ios build_device_ipa
-
-```sh
-[bundle exec] fastlane ios build_device_ipa
-```
-
-Build device ipa
-
 ### ios build_release_sdk
 
 ```sh
