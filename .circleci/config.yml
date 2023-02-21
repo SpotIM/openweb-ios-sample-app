@@ -76,6 +76,45 @@ commands:
             ls -l Release
             git status
 
+  prepare_release_app:
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_release_version
+
+      - run:
+          name: start release app
+          command: |
+            echo "Start release app version: $RELEASE_VERSION"
+            pwd
+            ls -l
+
+      - run:
+          name: Configure Apple Key
+          command: |
+            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - "vendor/bundle"
+
+      - swiftlint
+
 orbs:
   aws-s3: circleci/aws-s3@3.0.0
   slack: circleci/slack@3.4.2
@@ -255,7 +294,7 @@ jobs:
             - "vendor/bundle"
 
       - swiftlint
-            
+
       - run:
           name: Build app and run unit-tests
           command: |
@@ -343,7 +382,7 @@ jobs:
   release_tag:
     <<: *ios_config_xcode
     steps:
-      - release_tag
+      - prepare_release_app
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
@@ -353,42 +392,7 @@ jobs:
   release_app_job:
     <<: *ios_config_xcode
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release app
-          command: |
-            echo "Start release app version: $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - run:
-          name: Configure Apple Key
-          command: |
-            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - "vendor/bundle"
-
-      - swiftlint
+      - prepare_release_app
 
       - run:
           name: Run Fastlane Release Sample App
@@ -398,42 +402,7 @@ jobs:
   release_beta_app_job:
     <<: *ios_config_xcode
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release app
-          command: |
-            echo "Start release app with beta preset version: $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - run:
-          name: Configure Apple Key
-          command: |
-            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - "vendor/bundle"
-
-      - swiftlint
+      - prepare_release_app
 
       - run:
           name: Run Fastlane Release Sample App
@@ -443,42 +412,7 @@ jobs:
   release_public_app_job:
     <<: *ios_config_xcode
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release app
-          command: |
-            echo "Start release app with public preset version: $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - run:
-          name: Configure Apple Key
-          command: |
-            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - "vendor/bundle"
-
-      - swiftlint
+      - prepare_release_app
 
       - run:
           name: Run Fastlane Release Sample App
@@ -488,28 +422,7 @@ jobs:
   upload_build_to_s3_job:
     <<: *ios_config_xcode
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - "vendor/bundle"
+      - prepare_release_app
 
       - run:
           name: Run Fastline build .app file
