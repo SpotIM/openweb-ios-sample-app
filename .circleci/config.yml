@@ -429,15 +429,21 @@ jobs:
           command: |
             bundle exec fastlane build_development_app
 
-      - run:
-          name: Verify app file exists
-          command: |
-            cd simulator_build/*/Products/Applications
-            ls
-
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
           to: 's3://prod-ow-mobile/iOS/version-${RELEASE_VERSION}/Spot-IM.Development.app'
+          arguments: |
+            --region $AWS_REGION \
+            --content-encoding "app"
+
+      - run:
+          name: Run Fastline build .ipa file
+          command: |
+            bundle exec fastlane build_release_ipa
+
+      - aws-s3/sync:
+          from: Spot-IM.Development.ipa
+          to: 's3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa'
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
