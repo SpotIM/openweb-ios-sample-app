@@ -23,6 +23,11 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 
 // Will be public extension
 extension OWHelpersLayer {
+    func conversationCounters(forPostIds postIds: [OWPostId],
+                              completion: OWConversationCountersCompletion) {
+        
+    }
+    
     var additionalConfigurations: [OWAdditionalConfiguration] {
         get {
            return configurations
