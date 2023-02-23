@@ -13,7 +13,7 @@ public struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtoco
     public var conversationSettings: OWConversationSettingsProtocol
     public var style: OWCommentCreationStyle
 
-    public init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle) {
+    public init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle = .regular) {
         self.conversationSettings = conversationSettings
         self.style = style
     }
@@ -33,7 +33,7 @@ struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtocol {
     var conversationSettings: OWConversationSettingsProtocol
     var style: OWCommentCreationStyle
 
-    init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle) {
+    init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle = .regular) {
         self.conversationSettings = conversationSettings
         self.style = style
     }
