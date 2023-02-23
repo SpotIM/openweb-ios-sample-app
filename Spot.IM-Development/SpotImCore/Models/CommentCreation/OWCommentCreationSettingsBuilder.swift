@@ -13,17 +13,17 @@ public struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtoco
     public var conversationSettings: OWConversationSettingsProtocol
     public var style: OWCommentCreationStyle
 
-    public init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle) {
+    public init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle = .regular) {
         self.conversationSettings = conversationSettings
         self.style = style
     }
 
-    @discardableResult public mutating func conversationSettings(settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
+    @discardableResult public mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
         self.conversationSettings = settings
         return self
     }
 
-    @discardableResult public mutating func commentCreationStyle(style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
+    @discardableResult public mutating func style(_ style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
         self.style = style
         return self
     }
@@ -33,17 +33,17 @@ struct OWCommentCreationSettingsBuilder: OWCommentCreationSettingsProtocol {
     var conversationSettings: OWConversationSettingsProtocol
     var style: OWCommentCreationStyle
 
-    init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle) {
+    init(conversationSettings: OWConversationSettingsProtocol, style: OWCommentCreationStyle = .regular) {
         self.conversationSettings = conversationSettings
         self.style = style
     }
 
-    @discardableResult mutating func conversationSettings(settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
+    @discardableResult mutating func conversationSettings(_ settings: OWConversationSettingsProtocol) -> OWCommentCreationSettingsProtocol {
         self.conversationSettings = settings
         return self
     }
 
-    @discardableResult mutating func commentCreationStyle(style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
+    @discardableResult mutating func style(_ style: OWCommentCreationStyle) -> OWCommentCreationSettingsProtocol {
         self.style = style
         return self
     }
