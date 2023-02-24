@@ -622,6 +622,7 @@
 		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
 		9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */; };
 		9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */; };
+		9EA0F83629A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
 		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -1312,6 +1313,7 @@
 		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWThemeStyleEnforcement+Extensions.swift"; sourceTree = "<group>"; };
+		9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWInitialSortStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
 		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
 		9EFFE77D297E84F100814648 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
@@ -3651,6 +3653,7 @@
 		9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */,
 				9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */,
 				9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */,
 				9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */,
@@ -4558,6 +4561,7 @@
 				8DCBE87D2950594A00C8677C /* SettingsVC.swift in Sources */,
 				8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */,
 				3D611B7B28BFA91A003960CE /* BetaNewAPIViewModel.swift in Sources */,
+				9EA0F83629A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
 				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
