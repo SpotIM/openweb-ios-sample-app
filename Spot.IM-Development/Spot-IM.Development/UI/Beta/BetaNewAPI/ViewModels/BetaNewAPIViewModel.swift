@@ -229,6 +229,8 @@ fileprivate extension BetaNewAPIViewModel {
         // swiftlint:disable line_length
         customizations.themeEnforcement = .themeFromPersistence(index: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: 0))
         // swiftlint:enable line_length
+        var sorting = customizations.sorting
+        sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: 0))
     }
 }
 

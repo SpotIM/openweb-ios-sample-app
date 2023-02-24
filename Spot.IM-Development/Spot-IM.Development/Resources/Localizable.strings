@@ -58,6 +58,11 @@
 "ModalStyle" = "Modal style";
 "FullScreen" = "Full Screen";
 "PageSheet" = "Page Sheet";
+"Server" = "Server";
+"Best" = "Best";
+"Newest" = "Newest";
+"Oldest" = "Oldest";
+"InitialSortMode" = "Initial sort mode";
 "ArticleAssociatedURL" = "Article associated URL";
 "Light" = "Light";
 "Dark" = "Dark";
