@@ -10,14 +10,14 @@ import Foundation
 import RxSwift
 
 protocol OWLocalizationManagerProtocol {
-//    func localizedString(key: String) -> String
-//    var locale: Locale { get }
+    func localizedString(key: String) -> String
+    var locale: Locale { get }
 }
 
 protocol OWLocalizationManagerConfigurable {
+    func configure(forSpotId spotId: OWSpotId)
     func changeLanguage(strategy: OWLanguageStrategy)
     func changeLocale(strategy: OWLocaleStrategy)
-    func configure(forSpotId spotId: OWSpotId)
 }
 
 class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManagerConfigurable {
@@ -31,6 +31,7 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
     fileprivate var spotId: OWSpotId? = nil
+    fileprivate var _locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
 
     fileprivate let _languageStrategy = BehaviorSubject<OWLanguageStrategy>(value: OWLanguageStrategy.default)
     fileprivate var languageStrategy: Observable<OWLanguageStrategy> {
@@ -85,13 +86,13 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
             })
     }
 
-//    func localizedString(key: String) -> String {
-//
-//    }
-//
-//    var locale: Locale {
-//
-//    }
+    func localizedString(key: String) -> String {
+        return ""
+    }
+
+    var locale: Locale {
+        return _locale
+    }
 }
 
 fileprivate extension OWLocalizationManager {
@@ -215,12 +216,8 @@ fileprivate extension OWLocalizationManager {
                     }
                 case .useDevice:
                     locale = Locale.current
-                case .use(localeIdentifier: let identifier):
-                    if Locale.availableIdentifiers.contains(identifier) {
-                        locale = Locale(identifier: identifier)
-                    } else {
-                        locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
-                    }
+                case .use(locale: let localeToUse):
+                    locale = localeToUse
                 }
 
                 return .just(locale)
@@ -232,6 +229,6 @@ fileprivate extension OWLocalizationManager {
     }
 
     func configure(locale: Locale) {
-
+        _locale = locale
     }
 }
