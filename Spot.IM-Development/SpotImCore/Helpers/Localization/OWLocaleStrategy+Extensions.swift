@@ -23,8 +23,9 @@ extension OWLocaleStrategy: Equatable {
             return true
         case (.useServerConfig, .useServerConfig):
             return true
-        case (.use(localeIdentifier: let lhsIdentifier), .use(localeIdentifier: let rhsIdentifier)):
-            return lhsIdentifier == rhsIdentifier
+        case (.use(locale: _), .use(locale: _)):
+            // Force changing/updating other stuff
+            return false
         default:
             return false
         }
@@ -38,8 +39,9 @@ extension OWLocaleStrategy: Equatable {
             return true
         case (.useServerConfig, .useServerConfig):
             return true
-        case (.use(localeIdentifier: let lhsIdentifier), .use(localeIdentifier: let rhsIdentifier)):
-            return lhsIdentifier == rhsIdentifier
+        case (.use(locale: _), .use(locale: _)):
+            // Force changing/updating other stuff
+            return false
         default:
             return false
         }

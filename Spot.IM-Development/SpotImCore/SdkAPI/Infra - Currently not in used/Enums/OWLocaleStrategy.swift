@@ -12,12 +12,12 @@ import Foundation
 public enum OWLocaleStrategy {
     case useDevice
     case useServerConfig // Will be default "en-US" in case locale can't be generated from server config
-    case use(localeIdentifier: String) // Will be default to "en-US" in case locale can't be generated from the provided identifier
+    case use(locale: Locale)
 }
 #else
 enum OWLocaleStrategy {
     case useDevice
     case useServerConfig // Will be default "en-US" in case locale can't be generated from server config
-    case use(localeIdentifier: String) // Will be default to "en-US" in case locale can't be generated from the provided identifier
+    case use(locale: Locale)
 }
 #endif
