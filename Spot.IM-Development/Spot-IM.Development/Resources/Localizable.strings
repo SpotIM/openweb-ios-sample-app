@@ -46,6 +46,7 @@
 "PreConversation" = "Pre Conversation";
 "FullConversation" = "Full Conversation";
 "CommentCreation" = "Comment Creation";
+"CommentThread" = "Comment Thread";
 "IndependentAdUnit" = "IAU - Independent Ad Unit";
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";
