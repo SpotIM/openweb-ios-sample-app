@@ -53,7 +53,7 @@ enum OWImagesEndpoints: OWEndpoints {
             ]
         }
     }
-    
+
     // MARK: - Base URL
     var overrideBaseURL: URL? {
         switch self {
@@ -73,19 +73,19 @@ protocol OWImagesAPI {
 extension OWNetworkAPI: OWImagesAPI {
     // Access by .images for readability
     var images: OWImagesAPI { return self }
-    
+
     func fetchImage(url: URL) -> OWNetworkResponse<Data> {
         let endpoint = OWImagesEndpoints.fetchImage(url: url)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func login(publicId: String, timestamp: String) -> OWNetworkResponse<SPSignResponse> {
         let endpoint = OWImagesEndpoints.login(publicId: publicId, timestamp: timestamp)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
-    
+
     func upload(signature: String, publicId: String, timestamp: String, imageData: String) -> OWNetworkResponse<SPComment.Content.Image> {
         let endpoint = OWImagesEndpoints.upload(signature: signature, publicId: publicId, timestamp: timestamp, imageData: imageData)
         let requestConfigure = request(for: endpoint)

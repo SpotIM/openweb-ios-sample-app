@@ -11,17 +11,21 @@ import Foundation
 #if NEW_API
 public struct OWConversationSettings: OWConversationSettingsProtocol {
     public let selectedCommentId: String?
-    
-    public init(selectedCommentId: String? = nil) {
+    public let style: OWConversationStyle
+
+    public init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
         self.selectedCommentId = selectedCommentId
+        self.style = style
     }
 }
 #else
 struct OWConversationSettings: OWConversationSettingsProtocol {
     let selectedCommentId: String?
-    
-    init(selectedCommentId: String? = nil) {
+    let style: OWConversationStyle
+
+    init(style: OWConversationStyle = .regular, selectedCommentId: String? = nil) {
         self.selectedCommentId = selectedCommentId
+        self.style = style
     }
 }
 #endif

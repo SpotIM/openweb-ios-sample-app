@@ -18,7 +18,7 @@ class ImageProvider: ImageProviding {
         static let baseURL: String = "https://picsum.photos/id"
         static let maxId: Int = 100
     }
-    
+
     func randomImageUrl() -> URL {
         let id = Int.random(in: 1...Metrics.maxId)
         let urlPath = "\(Metrics.baseURL)/\(id)/\(Metrics.imageSize)/\(Metrics.imageSize)"

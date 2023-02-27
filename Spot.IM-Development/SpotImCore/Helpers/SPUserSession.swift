@@ -15,7 +15,7 @@ internal protocol SPUserSessionType {
     var token: String? { get set }
     var openwebToken: String? { get set }
     var displayNameFrozen: Bool { get set }
-    var reportedComments: [String:Bool] { get set }
+    var reportedComments: [String: Bool] { get set }
 }
 
 final internal class SPUserSession: SPUserSessionType {
@@ -25,7 +25,7 @@ final internal class SPUserSession: SPUserSessionType {
     internal var token: String?
     internal var openwebToken: String?
     var displayNameFrozen: Bool = false
-    var reportedComments: [String:Bool] = [:]
+    var reportedComments: [String: Bool] = [:]
 
 }
 
@@ -36,7 +36,7 @@ internal class SPUserSessionHolder {
         let session = loadOrCreateGuestUserSession()
         return session
     }()
-    
+
     static var session: SPUserSessionType {
         get {
             let result: SPUserSessionType
@@ -51,16 +51,16 @@ internal class SPUserSessionHolder {
             objc_sync_exit(self)
         }
     }
-         
+
     static func updateSessionUser(user: SPUser) {
         // preserving entered username for unregistered user
         session.user = user
         SPAnalyticsHolder.default.userId = user.id
         SPAnalyticsHolder.default.isUserRegistered = user.registered
-        
+
         servicesProvider.keychain().save(value: user, forKey: OWKeychain.OWKey<SPUser>.loggedInUserSession)
     }
-    
+
     static func updateSessionUserSSOPublisherId(_ ssoPublisherId: String) {
         session.user?.ssoPublisherId = ssoPublisherId
     }
@@ -76,7 +76,7 @@ internal class SPUserSessionHolder {
                            )
             SPDefaultFailureReporter.shared.report(error: .networkError(rawReport: rawReport))
         }
-        
+
         if forced {
             session.token = headers?.authorizationHeader
             session.openwebToken = headers?.openwebTokenHeader
@@ -84,7 +84,7 @@ internal class SPUserSessionHolder {
             session.token = headers?.authorizationHeader ?? session.token
             session.openwebToken = headers?.openwebTokenHeader ?? session.openwebToken
         }
-        
+
         let keychain = servicesProvider.keychain()
         if let authToken = session.token {
             keychain.save(value: authToken, forKey: OWKeychain.OWKey<String>.authorizationSessionToken)
@@ -102,7 +102,7 @@ internal class SPUserSessionHolder {
     static func freezeDisplayNameIfNeeded() {
         guard session.user?.registered == false else { return }
         session.displayNameFrozen = true
-        let userInfo = session.user == nil ? nil : ["user" : session.user!]
+        let userInfo = session.user == nil ? nil : ["user": session.user!]
         NotificationCenter.default.post(name: .userDisplayNameFrozen, object: nil, userInfo: userInfo)
     }
 
@@ -120,30 +120,30 @@ internal class SPUserSessionHolder {
     private static func loadOrCreateGuestUserSession() -> SPUserSessionType {
         let session = SPUserSession()
         let keychain = servicesProvider.keychain()
-        
+
         if keychain.get(key: OWKeychain.OWKey<String>.guestSessionUserId) == nil {
             let newUuid = UUID().uuidString
             keychain.save(value: newUuid, forKey: OWKeychain.OWKey<String>.guestSessionUserId)
         }
-        
+
         session.guid = keychain.get(key: OWKeychain.OWKey<String>.guestSessionUserId)
         session.token = keychain.get(key: OWKeychain.OWKey<String>.authorizationSessionToken)
         session.openwebToken = keychain.get(key: OWKeychain.OWKey<String>.openwebSessionToken)
-        
+
         if let reportedComments = keychain.get(key: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession) {
             session.reportedComments = reportedComments
         }
-        
+
         session.user = keychain.get(key: OWKeychain.OWKey<SPUser>.loggedInUserSession)
 
         return session
     }
-    
+
     static func reportComment(commentId: String) {
         session.reportedComments[commentId] = true
         servicesProvider.keychain().save(value: session.reportedComments, forKey: OWKeychain.OWKey<[String: Bool]>.reportedCommentsSession)
     }
-    
+
     static func isRegister() -> Bool {
         if let user = session.user, user.registered {
             return true

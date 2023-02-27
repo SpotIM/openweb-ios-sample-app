@@ -10,14 +10,27 @@ import Foundation
 
 #if NEW_API
 public struct OWPreConversationSettingsBuilder: OWPreConversationSettingsProtocol {
-    public var numberOfComments: Int
-    
-    public init(numberOfComments: Int = 2) {
-        self.numberOfComments = numberOfComments
+    public var style: OWPreConversationStyle
+
+    public init(style: OWPreConversationStyle = .regular()) {
+        self.style = style.validate()
     }
-    
-    @discardableResult public mutating func numberOfComments(num: Int) -> OWPreConversationSettingsBuilder {
-        self.numberOfComments = num
+
+    @discardableResult public mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
+        self.style = style.validate()
+        return self
+    }
+}
+#else
+struct OWPreConversationSettingsBuilder: OWPreConversationSettingsProtocol {
+    var style: OWPreConversationStyle
+
+    init(style: OWPreConversationStyle = .regular()) {
+        self.style = style.validate()
+    }
+
+    @discardableResult mutating func style(_ style: OWPreConversationStyle) -> OWPreConversationSettingsBuilder {
+        self.style = style.validate()
         return self
     }
 }

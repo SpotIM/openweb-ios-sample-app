@@ -47,7 +47,7 @@ internal class OWImagePicker: NSObject {
             }
         }
     }
-    
+
     private func presentPickerController() {
         guard let presentationController = self.presentationController  else { return }
         presentationController.present(self.pickerController, animated: true)

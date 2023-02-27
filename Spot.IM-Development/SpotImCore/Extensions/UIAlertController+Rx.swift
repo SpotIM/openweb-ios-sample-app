@@ -21,7 +21,7 @@ extension Reactive where Base: UIAlertController {
                      title: String,
                      message: String,
                      actions: [UIRxAlertAction]) -> Observable<UIAlertType> {
-        
+
         return Observable.create { observer in
             // Map to regular UIAlertAction
             let alertActions = actions.map { rxAlert in
@@ -31,16 +31,16 @@ extension Reactive where Base: UIAlertController {
                     observer.onCompleted()
                 }
             }
-                      
+
             // Create UIAlertController
             let alertVC = UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
             // Add the actions to the alertVC
             alertActions.forEach { alertVC.addAction($0) }
-            
+
             viewController.present(alertVC, animated: animated) {
                 observer.onNext(.completion)
             }
-            
+
             return Disposables.create()
         }
     }
@@ -53,7 +53,7 @@ struct UIRxAlertAction: Equatable {
 }
 
 extension UIRxAlertAction {
-    static func ==(lhs: UIRxAlertAction, rhs: UIRxAlertAction) -> Bool {
+    static func == (lhs: UIRxAlertAction, rhs: UIRxAlertAction) -> Bool {
         return lhs.uuid == rhs.uuid
     }
 }

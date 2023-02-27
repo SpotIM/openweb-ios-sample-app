@@ -63,9 +63,9 @@ struct OWNetworkRedirector {
 
 extension OWNetworkRedirector: OWNetworkRedirectHandler {
     func task(_ task: URLSessionTask,
-                     willBeRedirectedTo request: URLRequest,
-                     for response: HTTPURLResponse,
-                     completion: @escaping (URLRequest?) -> Void) {
+              willBeRedirectedTo request: URLRequest,
+              for response: HTTPURLResponse,
+              completion: @escaping (URLRequest?) -> Void) {
         switch behavior {
         case .follow:
             completion(request)

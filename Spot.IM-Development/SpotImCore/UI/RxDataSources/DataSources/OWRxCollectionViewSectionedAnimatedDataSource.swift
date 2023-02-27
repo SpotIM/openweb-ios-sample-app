@@ -38,7 +38,7 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
             canMoveItemAtIndexPath: canMoveItemAtIndexPath
         )
     }
-    
+
     // there is no longer limitation to load initial sections with reloadData
     // but it is kept as a feature everyone got used to
     var dataSet = false
@@ -46,7 +46,7 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<Element>) {
         Binder(self) { [weak collectionView] dataSource, newSections in
             guard let collectionView = collectionView else { return }
-            
+
             #if DEBUG
                 dataSource._dataSourceBound = true
             #endif
@@ -54,8 +54,7 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
                 dataSource.dataSet = true
                 dataSource.setSections(newSections)
                 collectionView.reloadData()
-            }
-            else {
+            } else {
                 // if view is not in view hierarchy, performing batch updates will crash the app
                 if collectionView.window == nil {
                     dataSource.setSections(newSections)
@@ -65,7 +64,7 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
                 let oldSections = dataSource.sectionModels
                 do {
                     let differences = try OWDiff.differencesForSectionedView(initialSections: oldSections, finalSections: newSections)
-                    
+
                     switch dataSource.decideViewTransition(dataSource, collectionView, differences) {
                     case .animated:
                         // each difference must be run in a separate 'performBatchUpdates', otherwise it crashes.
@@ -78,14 +77,13 @@ class OWRxCollectionViewSectionedAnimatedDataSource<Section: OWAnimatableSection
                             }
                             collectionView.performBatchUpdates(updateBlock, completion: nil)
                         }
-                        
+
                     case .reload:
                         dataSource.setSections(newSections)
                         collectionView.reloadData()
                         return
                     }
-                }
-                catch let e {
+                } catch let e {
                     rxDebugFatalError(e)
                     dataSource.setSections(newSections)
                     collectionView.reloadData()

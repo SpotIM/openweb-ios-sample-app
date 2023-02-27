@@ -106,7 +106,6 @@
 		249DF291295C70C900F5D69A /* OWSpacerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF290295C70C900F5D69A /* OWSpacerCell.swift */; };
 		249DF2952964140E00F5D69A /* OWCommentCreationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF2942964140E00F5D69A /* OWCommentCreationType.swift */; };
 		249DF2972964182B00F5D69A /* OWCommentRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF2962964182B00F5D69A /* OWCommentRequiredData.swift */; };
-		249DF29929655C5E00F5D69A /* OWCommentSortMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF29829655C5E00F5D69A /* OWCommentSortMode.swift */; };
 		249DF29D296C1E7F00F5D69A /* OWUserBadgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */; };
 		249DF29F296D560E00F5D69A /* OWCommentLabelsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF29E296D560E00F5D69A /* OWCommentLabelsContainerView.swift */; };
 		249DF2A1296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249DF2A0296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift */; };
@@ -277,6 +276,7 @@
 		3D7E3D6B288849EC00DDBE0B /* OWAdditionalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6A288849EC00DDBE0B /* OWAdditionalConfiguration.swift */; };
 		3D7E3D6E28884B7000DDBE0B /* OWHelpersLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6D28884B7000DDBE0B /* OWHelpersLayer.swift */; };
 		3D7E3D7028884D5B00DDBE0B /* SPAdditionalConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7E3D6F28884D5B00DDBE0B /* SPAdditionalConfiguration.swift */; };
+		3D7F28BA2998FA3B00E9E69E /* OWInitialSortStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7F28B92998FA3B00E9E69E /* OWInitialSortStrategy.swift */; };
 		3D894A6F286B081D001A939C /* OWRealtimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A6E286B081D001A939C /* OWRealtimeService.swift */; };
 		3D894A71286B18E7001A939C /* OpenWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A70286B18E7001A939C /* OpenWeb.swift */; };
 		3D894A73286C5222001A939C /* OWRealtimeEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */; };
@@ -317,6 +317,12 @@
 		3DA2647D2951E3B200688FFF /* Result+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA2645E2951E3B200688FFF /* Result+Network.swift */; };
 		3DA2647E2951E3B200688FFF /* DispatchQueue+Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA2645F2951E3B200688FFF /* DispatchQueue+Network.swift */; };
 		3DA264802951F7AD00688FFF /* OWNetworkExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA2647F2951F7AD00688FFF /* OWNetworkExtended.swift */; };
+		3DA57BA729892F680016BF2A /* OWPreConversationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA57BA629892F680016BF2A /* OWPreConversationStyle.swift */; };
+		3DA57BA92989358E0016BF2A /* OWConversationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA57BA82989358E0016BF2A /* OWConversationStyle.swift */; };
+		3DA57BAB29893FCB0016BF2A /* OWCommunityGuidelinesStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA57BAA29893FCB0016BF2A /* OWCommunityGuidelinesStyle.swift */; };
+		3DA57BAD298940620016BF2A /* OWCommunityQuestionsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA57BAC298940620016BF2A /* OWCommunityQuestionsStyle.swift */; };
+		3DA57BAF298949640016BF2A /* OWConversationSpacing+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA57BAE298949640016BF2A /* OWConversationSpacing+Validation.swift */; };
+		3DA57BB1298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA57BB0298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift */; };
 		3DA9A42A284398150033BB8C /* OWNetworkInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */; };
 		3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */; };
 		3DB3D178281FC123008654CF /* SPLogMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D177281FC123008654CF /* SPLogMethod.swift */; };
@@ -337,6 +343,10 @@
 		3DB3D19D282C0433008654CF /* AuthenticationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D19C282C0433008654CF /* AuthenticationError.swift */; };
 		3DB3D19F2831A5E8008654CF /* AuthenticationMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB3D19E2831A5E8008654CF /* AuthenticationMetrics.swift */; };
 		3DBEEDD928C9DDAB0076963E /* OWConversationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBEEDD828C9DDAB0076963E /* OWConversationRequiredData.swift */; };
+		3DC7BD9529A4E71500DF72E4 /* OWConversationCountersCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9429A4E71500DF72E4 /* OWConversationCountersCompletion.swift */; };
+		3DC7BD9829A4E80400DF72E4 /* OWConversationCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */; };
+		3DC7BD9A29A4EA4100DF72E4 /* OWLoggerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */; };
+		3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9C29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
 		3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */; };
@@ -385,8 +395,8 @@
 		3DDA9A792919374C00FE3B86 /* OWUIAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A782919374C00FE3B86 /* OWUIAuthentication.swift */; };
 		3DDA9A7B29196CC200FE3B86 /* OWLoginFlowCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A7A29196CC200FE3B86 /* OWLoginFlowCallback.swift */; };
 		3DDA9A7F291A55BA00FE3B86 /* OWCustomizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A7E291A55BA00FE3B86 /* OWCustomizations.swift */; };
-		3DDA9A81291A565200FE3B86 /* OWSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A80291A565200FE3B86 /* OWSpacing.swift */; };
-		3DDA9A84291A59E200FE3B86 /* OWSortingCustomizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A83291A59E200FE3B86 /* OWSortingCustomizations.swift */; };
+		3DDA9A81291A565200FE3B86 /* OWConversationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A80291A565200FE3B86 /* OWConversationSpacing.swift */; };
+		3DDA9A84291A59E200FE3B86 /* OWSortingCustomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A83291A59E200FE3B86 /* OWSortingCustomizer.swift */; };
 		3DDA9A86291A5A5400FE3B86 /* OWSortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A85291A5A5400FE3B86 /* OWSortOption.swift */; };
 		3DDA9A88291A5E1F00FE3B86 /* OWThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A87291A5E1F00FE3B86 /* OWThemeStyle.swift */; };
 		3DDA9A8A291A5E6100FE3B86 /* OWThemeStyleEnforcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A89291A5E6100FE3B86 /* OWThemeStyleEnforcement.swift */; };
@@ -394,12 +404,21 @@
 		3DDA9A8E291A5FF800FE3B86 /* OWCustomizableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A8D291A5FF800FE3B86 /* OWCustomizableElement.swift */; };
 		3DDA9A90291A7C7300FE3B86 /* OWCustomizationsLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A8F291A7C7300FE3B86 /* OWCustomizationsLayer.swift */; };
 		3DDA9A92291A86A600FE3B86 /* OWOptionalEncapsulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDA9A91291A86A600FE3B86 /* OWOptionalEncapsulation.swift */; };
+		3DDCB29F29952D2900B8ED8E /* OWSortDictateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB29E29952D2900B8ED8E /* OWSortDictateService.swift */; };
+		3DDCB2A22995478700B8ED8E /* OWSortingCustomizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A12995478700B8ED8E /* OWSortingCustomizations.swift */; };
+		3DDCB2A429954CBA00B8ED8E /* OWSortOption+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A329954CBA00B8ED8E /* OWSortOption+Extensions.swift */; };
+		3DDCB2A629954FB000B8ED8E /* OWCustomizedSortTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A529954FB000B8ED8E /* OWCustomizedSortTitle.swift */; };
+		3DDF91C0299FCAB100256C32 /* OWCommentCreationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */; };
 		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
 		3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */; };
 		3DE0FE4127D64AAD0097B17B /* OWCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */; };
 		3DE0FE4327D74EFF0097B17B /* OWThemeStyleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */; };
 		3DE0FE4527D75A9E0097B17B /* OWShowable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE4427D75A9E0097B17B /* OWShowable.swift */; };
+		3DEAA57829A23B5C0043D73E /* OWFontGroupFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */; };
+		3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57929A23D310043D73E /* OWFontBook.swift */; };
+		3DEAA57F29A240670043D73E /* OWFontStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA57E29A240670043D73E /* OWFontStyle.swift */; };
+		3DEAA58129A240910043D73E /* OWFontGroupFamily+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEAA58029A240910043D73E /* OWFontGroupFamily+Extensions.swift */; };
 		3DEDF61628C9D48800F87056 /* OWNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEDF61528C9D48800F87056 /* OWNavigationController.swift */; };
 		3DF116412921801B0064BD41 /* OWManager+Layers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF116402921801B0064BD41 /* OWManager+Layers.swift */; };
 		3DF68720285B387C00A67230 /* UIAlertController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF6871F285B387B00A67230 /* UIAlertController+Rx.swift */; };
@@ -583,6 +602,7 @@
 		7EF03D5AF4BF3A54A8D93201 /* Pods_Shared_Spot_IM_DevelopmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F6D952AC65F8BCF48D3563 /* Pods_Shared_Spot_IM_DevelopmentTests.framework */; };
 		8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */; };
 		8D5D7A602970111C0082A7C6 /* OWTimeMeasuringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */; };
+		8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */ = {isa = PBXBuildFile; fileRef = 8D5D7A63297560FC0082A7C6 /* swiftlint */; };
 		8DCBE85829376A7400C8677C /* OWMuteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85729376A7400C8677C /* OWMuteRequest.swift */; };
 		8DCBE85F293CF00600C8677C /* UIFlowsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */; };
 		8DCBE861293CF02000C8677C /* UIFlowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */; };
@@ -603,6 +623,10 @@
 		9E53759229784D3E00C85983 /* ColorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E53759129784D3E00C85983 /* ColorModel.swift */; };
 		9E5375B329784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */; };
 		9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
+		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
+		9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */; };
+		9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */; };
+		9EA0F83629A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */; };
 		9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */; };
 		9EE2CDED29798919000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		9EE2CDEF297D2FFA000C0E38 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -649,6 +673,7 @@
 
 /* Begin PBXFileReference section */
 		032FF66BD0A4075941B89FB8 /* Pods-Shared-DemoApps-MarketWatch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.debug.xcconfig"; sourceTree = "<group>"; };
+		078331EBB5FC3AC73DDF8667 /* Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig"; sourceTree = "<group>"; };
 		0E1125C823048ED1006B1489 /* ArticlesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesListViewController.swift; sourceTree = "<group>"; };
 		0E1125D223049FAE006B1489 /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 		0E1125D42304A043006B1489 /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
@@ -658,6 +683,8 @@
 		0E7ADC12232D8C4F0019D4BB /* FoxAuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoxAuthenticationViewController.swift; sourceTree = "<group>"; };
 		0EAFED7922E505A900B57E29 /* fastlane */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fastlane; sourceTree = "<group>"; };
 		0EAFED7F22E51ED600B57E29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Spot-IM.Development/Resources/GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		114ABD0938E416B05F040862 /* Pods-Shared-SpotImCore.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.internal.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.internal.xcconfig"; sourceTree = "<group>"; };
+		131F8CE763187B7671AA1AAE /* Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		14539DD1C64F6F1AF9F9ECA8 /* Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		160E42E12988103000EDC5A1 /* OWCommentThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadView.swift; sourceTree = "<group>"; };
 		160E42E32988103D00EDC5A1 /* OWCommentThreadVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentThreadVC.swift; sourceTree = "<group>"; };
@@ -704,6 +731,8 @@
 		16D8D4A928C633F800895FCB /* OWCommentCreationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationVM.swift; sourceTree = "<group>"; };
 		16D8D4B128C645F400895FCB /* OWCommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentViewModel.swift; sourceTree = "<group>"; };
 		16D8D4BC28C88D0600895FCB /* OWCommentContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentContentViewModel.swift; sourceTree = "<group>"; };
+		1A22EE731738D885057978C0 /* Pods-Shared-SpotImCore.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releaseinternal.xcconfig"; sourceTree = "<group>"; };
+		1C328B4A9AE06AE25916F942 /* Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		24000A34268AEADD004C2A78 /* CommentMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentMediaView.swift; sourceTree = "<group>"; };
 		2414F82C27EC682000722D2B /* OWAvatarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAvatarViewModel.swift; sourceTree = "<group>"; };
 		241AF9F2295B381700A941C1 /* OWCommentEngagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentEngagementView.swift; sourceTree = "<group>"; };
@@ -734,7 +763,6 @@
 		249DF290295C70C900F5D69A /* OWSpacerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpacerCell.swift; sourceTree = "<group>"; };
 		249DF2942964140E00F5D69A /* OWCommentCreationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationType.swift; sourceTree = "<group>"; };
 		249DF2962964182B00F5D69A /* OWCommentRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentRequiredData.swift; sourceTree = "<group>"; };
-		249DF29829655C5E00F5D69A /* OWCommentSortMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentSortMode.swift; sourceTree = "<group>"; };
 		249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserBadgeService.swift; sourceTree = "<group>"; };
 		249DF29E296D560E00F5D69A /* OWCommentLabelsContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentLabelsContainerView.swift; sourceTree = "<group>"; };
 		249DF2A0296D562500F5D69A /* OWCommentLabelsContainerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentLabelsContainerViewModel.swift; sourceTree = "<group>"; };
@@ -913,6 +941,7 @@
 		3D7E3D6A288849EC00DDBE0B /* OWAdditionalConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAdditionalConfiguration.swift; sourceTree = "<group>"; };
 		3D7E3D6D28884B7000DDBE0B /* OWHelpersLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWHelpersLayer.swift; sourceTree = "<group>"; };
 		3D7E3D6F28884D5B00DDBE0B /* SPAdditionalConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPAdditionalConfiguration.swift; sourceTree = "<group>"; };
+		3D7F28B92998FA3B00E9E69E /* OWInitialSortStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInitialSortStrategy.swift; sourceTree = "<group>"; };
 		3D894A6E286B081D001A939C /* OWRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeService.swift; sourceTree = "<group>"; };
 		3D894A70286B18E7001A939C /* OpenWeb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeb.swift; sourceTree = "<group>"; };
 		3D894A72286C5222001A939C /* OWRealtimeEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRealtimeEndpoints.swift; sourceTree = "<group>"; };
@@ -953,6 +982,12 @@
 		3DA2645E2951E3B200688FFF /* Result+Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Result+Network.swift"; sourceTree = "<group>"; };
 		3DA2645F2951E3B200688FFF /* DispatchQueue+Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Network.swift"; sourceTree = "<group>"; };
 		3DA2647F2951F7AD00688FFF /* OWNetworkExtended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkExtended.swift; sourceTree = "<group>"; };
+		3DA57BA629892F680016BF2A /* OWPreConversationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationStyle.swift; sourceTree = "<group>"; };
+		3DA57BA82989358E0016BF2A /* OWConversationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationStyle.swift; sourceTree = "<group>"; };
+		3DA57BAA29893FCB0016BF2A /* OWCommunityGuidelinesStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityGuidelinesStyle.swift; sourceTree = "<group>"; };
+		3DA57BAC298940620016BF2A /* OWCommunityQuestionsStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityQuestionsStyle.swift; sourceTree = "<group>"; };
+		3DA57BAE298949640016BF2A /* OWConversationSpacing+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWConversationSpacing+Validation.swift"; sourceTree = "<group>"; };
+		3DA57BB0298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWPreConversationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		3DA9A429284398150033BB8C /* OWNetworkInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkInterceptor.swift; sourceTree = "<group>"; };
 		3DB3D174281E890B008654CF /* OWRxAppLifeCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRxAppLifeCycle.swift; sourceTree = "<group>"; };
 		3DB3D177281FC123008654CF /* SPLogMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPLogMethod.swift; sourceTree = "<group>"; };
@@ -973,6 +1008,10 @@
 		3DB3D19C282C0433008654CF /* AuthenticationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationError.swift; sourceTree = "<group>"; };
 		3DB3D19E2831A5E8008654CF /* AuthenticationMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationMetrics.swift; sourceTree = "<group>"; };
 		3DBEEDD828C9DDAB0076963E /* OWConversationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationRequiredData.swift; sourceTree = "<group>"; };
+		3DC7BD9429A4E71500DF72E4 /* OWConversationCountersCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCountersCompletion.swift; sourceTree = "<group>"; };
+		3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCounter.swift; sourceTree = "<group>"; };
+		3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoggerConfiguration.swift; sourceTree = "<group>"; };
+		3DC7BD9C29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoggerConfigurationLayer.swift; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
 		3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpotImReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
@@ -1021,8 +1060,8 @@
 		3DDA9A782919374C00FE3B86 /* OWUIAuthentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUIAuthentication.swift; sourceTree = "<group>"; };
 		3DDA9A7A29196CC200FE3B86 /* OWLoginFlowCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoginFlowCallback.swift; sourceTree = "<group>"; };
 		3DDA9A7E291A55BA00FE3B86 /* OWCustomizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomizations.swift; sourceTree = "<group>"; };
-		3DDA9A80291A565200FE3B86 /* OWSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpacing.swift; sourceTree = "<group>"; };
-		3DDA9A83291A59E200FE3B86 /* OWSortingCustomizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortingCustomizations.swift; sourceTree = "<group>"; };
+		3DDA9A80291A565200FE3B86 /* OWConversationSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationSpacing.swift; sourceTree = "<group>"; };
+		3DDA9A83291A59E200FE3B86 /* OWSortingCustomizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortingCustomizer.swift; sourceTree = "<group>"; };
 		3DDA9A85291A5A5400FE3B86 /* OWSortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortOption.swift; sourceTree = "<group>"; };
 		3DDA9A87291A5E1F00FE3B86 /* OWThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyle.swift; sourceTree = "<group>"; };
 		3DDA9A89291A5E6100FE3B86 /* OWThemeStyleEnforcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleEnforcement.swift; sourceTree = "<group>"; };
@@ -1030,12 +1069,21 @@
 		3DDA9A8D291A5FF800FE3B86 /* OWCustomizableElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomizableElement.swift; sourceTree = "<group>"; };
 		3DDA9A8F291A7C7300FE3B86 /* OWCustomizationsLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomizationsLayer.swift; sourceTree = "<group>"; };
 		3DDA9A91291A86A600FE3B86 /* OWOptionalEncapsulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWOptionalEncapsulation.swift; sourceTree = "<group>"; };
+		3DDCB29E29952D2900B8ED8E /* OWSortDictateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortDictateService.swift; sourceTree = "<group>"; };
+		3DDCB2A12995478700B8ED8E /* OWSortingCustomizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortingCustomizations.swift; sourceTree = "<group>"; };
+		3DDCB2A329954CBA00B8ED8E /* OWSortOption+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWSortOption+Extensions.swift"; sourceTree = "<group>"; };
+		3DDCB2A529954FB000B8ED8E /* OWCustomizedSortTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomizedSortTitle.swift; sourceTree = "<group>"; };
+		3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationStyle.swift; sourceTree = "<group>"; };
 		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
 		3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSharedServicesProvider.swift; sourceTree = "<group>"; };
 		3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCacheService.swift; sourceTree = "<group>"; };
 		3DE0FE4227D74EFF0097B17B /* OWThemeStyleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWThemeStyleService.swift; sourceTree = "<group>"; };
 		3DE0FE4427D75A9E0097B17B /* OWShowable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWShowable.swift; sourceTree = "<group>"; };
+		3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontGroupFamily.swift; sourceTree = "<group>"; };
+		3DEAA57929A23D310043D73E /* OWFontBook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontBook.swift; sourceTree = "<group>"; };
+		3DEAA57E29A240670043D73E /* OWFontStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWFontStyle.swift; sourceTree = "<group>"; };
+		3DEAA58029A240910043D73E /* OWFontGroupFamily+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWFontGroupFamily+Extensions.swift"; sourceTree = "<group>"; };
 		3DEDF61528C9D48800F87056 /* OWNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNavigationController.swift; sourceTree = "<group>"; };
 		3DF116402921801B0064BD41 /* OWManager+Layers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWManager+Layers.swift"; sourceTree = "<group>"; };
 		3DF6871F285B387B00A67230 /* UIAlertController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Rx.swift"; sourceTree = "<group>"; };
@@ -1057,6 +1105,7 @@
 		3DFC32D728916EA4005F1C5A /* OWCommunityQuestionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommunityQuestionViewModel.swift; sourceTree = "<group>"; };
 		3DFC32E528917942005F1C5A /* OWCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCellViewModel.swift; sourceTree = "<group>"; };
 		413B2255206C3693B4D68FAF /* Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.releasewithads.xcconfig"; sourceTree = "<group>"; };
+		4151E0212097F1EC3902A803 /* Pods-Shared-SpotImCore.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.public.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.public.xcconfig"; sourceTree = "<group>"; };
 		41A5212AF88F30BB35D6468C /* Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig"; sourceTree = "<group>"; };
 		440E0DAF237D518900757554 /* UIImage+AnimationSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AnimationSequence.swift"; sourceTree = "<group>"; };
 		440E0DB2237D7E3200757554 /* TotalTypingIndicationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalTypingIndicationView.swift; sourceTree = "<group>"; };
@@ -1215,6 +1264,7 @@
 		6394E7A86C9ADEE394495AC3 /* Pods-Shared-DemoApps-DailyCaller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.release.xcconfig"; sourceTree = "<group>"; };
 		648D90487BEB7CE57CBAF5C0 /* Pods_Shared_DemoApps_Focus_de.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Focus_de.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65FC1517B655B9E4EB72771F /* Pods_Shared_SpotImCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AF9855F9DF110842B41692F /* Pods-Shared-SpotImCore.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		6D0A3313247D44DC003B11C6 /* ViewVisibilityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewVisibilityTracker.swift; sourceTree = "<group>"; };
 		6D22A40A23AF79D800DCE08A /* SpotIm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotIm.swift; sourceTree = "<group>"; };
 		6D22A46223BA51CA00DCE08A /* SpotImAuthenticationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotImAuthenticationProvider.swift; sourceTree = "<group>"; };
@@ -1239,11 +1289,13 @@
 		7621290A39274FD5E2FA0A64 /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig"; sourceTree = "<group>"; };
 		779908AB0FFA39CA76C63B3B /* Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		7EF1ECFBF7BD810E83B39F98 /* Pods_Shared_DemoApps_YentSpot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_YentSpot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		82E5D19AFE4DC00AC8DD537C /* Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig"; sourceTree = "<group>"; };
 		8402D264041AC683FDDBC35B /* Pods_Shared_DemoApps_DailyCaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_DailyCaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD06A753856558311FC9849 /* Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		8D0936632951E5FA00D71FD8 /* SegmentedControlSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlSetting.swift; sourceTree = "<group>"; };
 		8D50BEF955866E10D93D3985 /* Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWTimeMeasuringService.swift; sourceTree = "<group>"; };
+		8D5D7A63297560FC0082A7C6 /* swiftlint */ = {isa = PBXFileReference; lastKnownFileType = folder; path = swiftlint; sourceTree = "<group>"; };
 		8DCBE85729376A7400C8677C /* OWMuteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWMuteRequest.swift; sourceTree = "<group>"; };
 		8DCBE85E293CF00600C8677C /* UIFlowsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsVC.swift; sourceTree = "<group>"; };
 		8DCBE860293CF02000C8677C /* UIFlowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFlowsViewModel.swift; sourceTree = "<group>"; };
@@ -1256,17 +1308,25 @@
 		8DCBE87C2950594A00C8677C /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		8DCBE87E2950597100C8677C /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		8DCBE882295069B400C8677C /* SwitchSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSetting.swift; sourceTree = "<group>"; };
+		908516EA439B74859BFC244A /* Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig"; sourceTree = "<group>"; };
 		9541D7007EBA5E6CFAA5A7DF /* Pods_Shared_DemoApps_Spot_IM_Development.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_DemoApps_Spot_IM_Development.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		97F61210E7CD6DD5CAB3A8F6 /* Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig"; sourceTree = "<group>"; };
+		9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OWPersistenceRxHelper.swift; sourceTree = "<group>"; };
 		9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProvider.swift; sourceTree = "<group>"; };
 		9E53758F29784D3700C85983 /* ThemeStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		9E53759129784D3E00C85983 /* ColorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorModel.swift; sourceTree = "<group>"; };
 		9E5375B029784DD100C85983 /* AuthenticationPlaygroundNewAPIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIVC.swift; sourceTree = "<group>"; };
 		9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
+		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
+		9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
+		9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWThemeStyleEnforcement+Extensions.swift"; sourceTree = "<group>"; };
+		9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWInitialSortStrategy+Extensions.swift"; sourceTree = "<group>"; };
 		9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsProviderRxHelper.swift; sourceTree = "<group>"; };
 		9EFFE77C297E84F100814648 /* PickerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSetting.swift; sourceTree = "<group>"; };
 		9EFFE77D297E84F100814648 /* TextFieldSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldSetting.swift; sourceTree = "<group>"; };
 		9EFFE780297E851400814648 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		9FDF8F0928ACBD345EF47F2F /* Pods-Shared-Spot-IM.DevelopmentTests.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.releasepublic.xcconfig"; sourceTree = "<group>"; };
 		B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig"; sourceTree = "<group>"; };
 		B80DEE86C6EDABD499D8F4E0 /* Pods-Shared-DemoApps-Focus.de.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.debug.xcconfig"; sourceTree = "<group>"; };
 		BD93F797FEABA3B540FA1DF3 /* Pods-Shared-SpotImCore.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
@@ -1275,9 +1335,11 @@
 		CFF8D88452FA83C53AAA1CB5 /* Pods-Shared-SpotImNoAds.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImNoAds.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImNoAds/Pods-Shared-SpotImNoAds.release.xcconfig"; sourceTree = "<group>"; };
 		D24D7F344001B4E697A4718E /* Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.debugwithads.xcconfig"; sourceTree = "<group>"; };
 		D3B7A6328461B03B5C93257A /* Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-MarketWatch/Pods-Shared-DemoApps-MarketWatch.debugwithads.xcconfig"; sourceTree = "<group>"; };
+		D3D52F869DFDC900B8BAEE56 /* Pods-Shared-Spot-IM.DevelopmentTests.releasebeta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.releasebeta.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.releasebeta.xcconfig"; sourceTree = "<group>"; };
 		D4E3E3D1AB99F359267ECE78 /* Pods-Shared-SpotImCore.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.beta.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.beta.xcconfig"; sourceTree = "<group>"; };
 		D5E5855E5E2B8A5C15F7FEE4 /* Pods-Shared-SpotImCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.release.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.release.xcconfig"; sourceTree = "<group>"; };
 		D84F72C4DB0D4F4F9C3FE2E7 /* Pods-Shared-DemoApps-YentSpot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.debug.xcconfig"; sourceTree = "<group>"; };
+		DAF4043CAD3F71F4DBD608F1 /* Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Spot-IM.Development/Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig"; sourceTree = "<group>"; };
 		E3E01D2E95BE3559589E690E /* Pods-Shared-DemoApps-YentSpot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-YentSpot.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-YentSpot/Pods-Shared-DemoApps-YentSpot.release.xcconfig"; sourceTree = "<group>"; };
 		E685AC2925C97DC4008FECDB /* GoogleAdsV7Provider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAdsV7Provider.swift; sourceTree = "<group>"; };
 		E685ACAB25CAE685008FECDB /* Spot_IM_ConfigApiTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spot_IM_ConfigApiTests.swift; sourceTree = "<group>"; };
@@ -1290,6 +1352,7 @@
 		F47FEEF0E3AC88BAF89C7D65 /* Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-DailyCaller/Pods-Shared-DemoApps-DailyCaller.releasewithads.xcconfig"; sourceTree = "<group>"; };
 		F7BB2C029700C6D16B1640B9 /* Pods-Shared-Spot-IM.DevelopmentTests.publicdemoapp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-Spot-IM.DevelopmentTests.publicdemoapp.xcconfig"; path = "Target Support Files/Pods-Shared-Spot-IM.DevelopmentTests/Pods-Shared-Spot-IM.DevelopmentTests.publicdemoapp.xcconfig"; sourceTree = "<group>"; };
 		FA6BF31548693DB019E7E2E6 /* Pods_Shared_SpotImNoAds.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_SpotImNoAds.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBD4C1ED8C83A232E2DDF25B /* Pods-Shared-SpotImCore.releasepublic.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-SpotImCore.releasepublic.xcconfig"; path = "Target Support Files/Pods-Shared-SpotImCore/Pods-Shared-SpotImCore.releasepublic.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1335,6 +1398,7 @@
 		0E1125DC2304BC48006B1489 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */,
 				9EFFE780297E851400814648 /* UIColor+Extensions.swift */,
 				0E1125D72304BC29006B1489 /* Date+extensions.swift */,
 				0E1125DD2304C127006B1489 /* String+Extensions.swift */,
@@ -1894,13 +1958,20 @@
 				3D611BAC28C746C5003960CE /* OWViewActionCallbackType.swift */,
 				3D611BB028C89B1B003960CE /* OWViewDynamicSizeOption.swift */,
 				3D26B5BD28CE492A00A1DAD2 /* OWModalPresentationStyle.swift */,
-				3DDA9A80291A565200FE3B86 /* OWSpacing.swift */,
+				3D7F28B92998FA3B00E9E69E /* OWInitialSortStrategy.swift */,
 				3DDA9A85291A5A5400FE3B86 /* OWSortOption.swift */,
 				3DDA9A87291A5E1F00FE3B86 /* OWThemeStyle.swift */,
 				3DDA9A89291A5E6100FE3B86 /* OWThemeStyleEnforcement.swift */,
 				3DDA9A8D291A5FF800FE3B86 /* OWCustomizableElement.swift */,
 				3DFA6BA6292170510047E313 /* OWSSOFlowType.swift */,
 				3DFA6BAC29217BC20047E313 /* OWUserAuthenticationStatus.swift */,
+				3DA57BA629892F680016BF2A /* OWPreConversationStyle.swift */,
+				3DA57BAA29893FCB0016BF2A /* OWCommunityGuidelinesStyle.swift */,
+				3DA57BAC298940620016BF2A /* OWCommunityQuestionsStyle.swift */,
+				3DDA9A80291A565200FE3B86 /* OWConversationSpacing.swift */,
+				3DA57BA82989358E0016BF2A /* OWConversationStyle.swift */,
+				3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */,
+				3DEAA57729A23B5C0043D73E /* OWFontGroupFamily.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -2149,7 +2220,7 @@
 		3D611B7F28C4D85C003960CE /* Beta */ = {
 			isa = PBXGroup;
 			children = (
-				9E53759529784D9100C85983 /* AuthenticationPlayground */,
+				9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */,
 				3D611B7528BFA8B1003960CE /* BetaNewAPI */,
 				3D611B8028C4D88F003960CE /* MockArticle */,
 				8DCBE879294F470F00C8677C /* Settings */,
@@ -2217,6 +2288,7 @@
 				3DDA9A782919374C00FE3B86 /* OWUIAuthentication.swift */,
 				3DDA9A7E291A55BA00FE3B86 /* OWCustomizations.swift */,
 				3D08E07B2875E37900E6F1AC /* OWAnalytics.swift */,
+				3DDCB2A02995473400B8ED8E /* SubLayers */,
 			);
 			path = Layers;
 			sourceTree = "<group>";
@@ -2240,6 +2312,7 @@
 				3DFA6BA22921700C0047E313 /* OWSSOJWTHandler.swift */,
 				3DFA6BA4292170280047E313 /* OWSSOCompletionHandler.swift */,
 				3DFA6BAA29217B870047E313 /* OWUserAuthenticationStatusCompletion.swift */,
+				3DC7BD9429A4E71500DF72E4 /* OWConversationCountersCompletion.swift */,
 			);
 			path = Completions;
 			sourceTree = "<group>";
@@ -2250,6 +2323,7 @@
 				3D611B9E28C74469003960CE /* OWConversationSettingsProtocol.swift */,
 				3D611BA028C744E0003960CE /* OWPreConversationSettingsProtocol.swift */,
 				3D611BB428C8AAF4003960CE /* OWCommentCreationSettingsProtocol.swift */,
+				3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */,
 			);
 			path = MiscellaneousSettings;
 			sourceTree = "<group>";
@@ -2257,6 +2331,7 @@
 		3D611BA428C745AA003960CE /* PreConversation */ = {
 			isa = PBXGroup;
 			children = (
+				3DA57BB0298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift */,
 				3D611BA528C745CA003960CE /* OWPreConversationSettings.swift */,
 				3D611BB628C8AB94003960CE /* OWPreConversationSettingsBuilder.swift */,
 				3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */,
@@ -2288,6 +2363,7 @@
 			children = (
 				3DDA9A762919370200FE3B86 /* OWUIAuthenticationLayer.swift */,
 				3DDA9A8F291A7C7300FE3B86 /* OWCustomizationsLayer.swift */,
+				3DC7BD9C29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift */,
 			);
 			path = InternalLayers;
 			sourceTree = "<group>";
@@ -2423,6 +2499,14 @@
 				9E53759129784D3E00C85983 /* ColorModel.swift */,
 			);
 			path = Style;
+			sourceTree = "<group>";
+		};
+		3DC7BD9629A4E7F000DF72E4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		3DD72C63280EF03E00117946 /* New Network API - After the refactor */ = {
@@ -2565,8 +2649,8 @@
 		3DDA9A662913E7EE00FE3B86 /* Infra - Currently not in used */ = {
 			isa = PBXGroup;
 			children = (
-				3DDA9A642913E7E800FE3B86 /* OWColorPalette.swift */,
-				3DDA9A692913EA2600FE3B86 /* OWColor.swift */,
+				3DEAA57C29A2402D0043D73E /* Fonts */,
+				3DEAA57B29A240200043D73E /* Colors */,
 			);
 			path = "Infra - Currently not in used";
 			sourceTree = "<group>";
@@ -2583,10 +2667,19 @@
 		3DDA9A82291A59D700FE3B86 /* Sorting */ = {
 			isa = PBXGroup;
 			children = (
-				3DDA9A83291A59E200FE3B86 /* OWSortingCustomizations.swift */,
-				249DF29829655C5E00F5D69A /* OWCommentSortMode.swift */,
+				3DDCB2A529954FB000B8ED8E /* OWCustomizedSortTitle.swift */,
+				3DDCB2A329954CBA00B8ED8E /* OWSortOption+Extensions.swift */,
+				3DDA9A83291A59E200FE3B86 /* OWSortingCustomizer.swift */,
 			);
 			path = Sorting;
+			sourceTree = "<group>";
+		};
+		3DDCB2A02995473400B8ED8E /* SubLayers */ = {
+			isa = PBXGroup;
+			children = (
+				3DDCB2A12995478700B8ED8E /* OWSortingCustomizations.swift */,
+			);
+			path = SubLayers;
 			sourceTree = "<group>";
 		};
 		3DE0FE3A27D6481B0097B17B /* Infra - Currently not in used */ = {
@@ -2596,8 +2689,28 @@
 				3D08E0642875B9F200E6F1AC /* Protocols */,
 				3D08E07F2875E7DE00E6F1AC /* Typealiases */,
 				3D08E0732875CC1B00E6F1AC /* Enums */,
+				3DC7BD9629A4E7F000DF72E4 /* Models */,
 			);
 			path = "Infra - Currently not in used";
+			sourceTree = "<group>";
+		};
+		3DEAA57B29A240200043D73E /* Colors */ = {
+			isa = PBXGroup;
+			children = (
+				3DDA9A642913E7E800FE3B86 /* OWColorPalette.swift */,
+				3DDA9A692913EA2600FE3B86 /* OWColor.swift */,
+			);
+			path = Colors;
+			sourceTree = "<group>";
+		};
+		3DEAA57C29A2402D0043D73E /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				3DEAA57929A23D310043D73E /* OWFontBook.swift */,
+				3DEAA57E29A240670043D73E /* OWFontStyle.swift */,
+				3DEAA58029A240910043D73E /* OWFontGroupFamily+Extensions.swift */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		3DEDF61428C9D45F00F87056 /* NavigationController */ = {
@@ -3212,6 +3325,7 @@
 				249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */,
 				249DF2A2296D95C500F5D69A /* OWImageProvider.swift */,
 				8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */,
+				3DDCB29E29952D2900B8ED8E /* OWSortDictateService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3242,6 +3356,7 @@
 				4454185323685154001D0ED0 /* SPConversationReadRM.swift */,
 				44689B7C237414850024EFC1 /* SPABData.swift */,
 				6D520D9C23D9E60E00A5418F /* SPConversationCounters.swift */,
+				3DA57BAE298949640016BF2A /* OWConversationSpacing+Validation.swift */,
 				3D611BA228C74569003960CE /* OWConversationSettings.swift */,
 				3D611BB828C8AC3C003960CE /* OWConversationSettingsBuilder.swift */,
 				3DBEEDD828C9DDAB0076963E /* OWConversationRequiredData.swift */,
@@ -3298,6 +3413,7 @@
 		5D697A3222B65106001AD556 = {
 			isa = PBXGroup;
 			children = (
+				8D5D7A63297560FC0082A7C6 /* swiftlint */,
 				0EAFED7922E505A900B57E29 /* fastlane */,
 				5D697A3D22B65106001AD556 /* Spot-IM.Development */,
 				5D697A5222B65108001AD556 /* Spot-IM.DevelopmentTests */,
@@ -3551,13 +3667,13 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		9E53759529784D9100C85983 /* AuthenticationPlayground */ = {
+		9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */ = {
 			isa = PBXGroup;
 			children = (
 				9E5375B129784DD100C85983 /* ViewModels */,
 				9E5375AF29784DD100C85983 /* Views */,
 			);
-			path = AuthenticationPlayground;
+			path = AuthenticationPlaygroundNew;
 			sourceTree = "<group>";
 		};
 		9E5375AF29784DD100C85983 /* Views */ = {
@@ -3577,6 +3693,17 @@
 			name = ViewModels;
 			path = "Spot-IM.Development/UI/Beta/AuthenticationPlaygroundNew/ViewModels";
 			sourceTree = SOURCE_ROOT;
+		};
+		9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */,
+				9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */,
+				9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */,
+				9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */,
+			);
+			path = "OpenWebSDK+Extensions";
+			sourceTree = "<group>";
 		};
 		E666D01E25E39F0A009F04D4 /* Resources */ = {
 			isa = PBXGroup;
@@ -3666,6 +3793,21 @@
 				2C9BF800CBE1B5708054E2BF /* Pods-Shared-DemoApps-Spot-IM.Development.beta.xcconfig */,
 				B0A5ABE67494A3B0209A5D1C /* Pods-Shared-Spot-IM.DevelopmentTests.beta.xcconfig */,
 				D4E3E3D1AB99F359267ECE78 /* Pods-Shared-SpotImCore.beta.xcconfig */,
+				97F61210E7CD6DD5CAB3A8F6 /* Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig */,
+				078331EBB5FC3AC73DDF8667 /* Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig */,
+				DAF4043CAD3F71F4DBD608F1 /* Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig */,
+				1C328B4A9AE06AE25916F942 /* Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig */,
+				131F8CE763187B7671AA1AAE /* Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig */,
+				82E5D19AFE4DC00AC8DD537C /* Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig */,
+				908516EA439B74859BFC244A /* Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig */,
+				9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */,
+				D3D52F869DFDC900B8BAEE56 /* Pods-Shared-Spot-IM.DevelopmentTests.releasebeta.xcconfig */,
+				9FDF8F0928ACBD345EF47F2F /* Pods-Shared-Spot-IM.DevelopmentTests.releasepublic.xcconfig */,
+				114ABD0938E416B05F040862 /* Pods-Shared-SpotImCore.internal.xcconfig */,
+				4151E0212097F1EC3902A803 /* Pods-Shared-SpotImCore.public.xcconfig */,
+				1A22EE731738D885057978C0 /* Pods-Shared-SpotImCore.releaseinternal.xcconfig */,
+				6AF9855F9DF110842B41692F /* Pods-Shared-SpotImCore.releasebeta.xcconfig */,
+				FBD4C1ED8C83A232E2DDF25B /* Pods-Shared-SpotImCore.releasepublic.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -3712,6 +3854,7 @@
 				5D697A3822B65106001AD556 /* Frameworks */,
 				5D697A3922B65106001AD556 /* Resources */,
 				44C8789923608BC100E0E662 /* Embed Frameworks */,
+				8D455ADB296C13CA0091A027 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3818,6 +3961,7 @@
 				0EAFED7A22E505A900B57E29 /* fastlane in Resources */,
 				5D909AB62397E1D400FF51AD /* Demo.storyboard in Resources */,
 				3DDA9A4328F5919600FE3B86 /* Roboto-Light.ttf in Resources */,
+				8D5D7A64297560FC0082A7C6 /* swiftlint in Resources */,
 				3DDA9A4028F5919600FE3B86 /* Roboto-Italic.ttf in Resources */,
 				4416C655237ABDE700D3F7B9 /* LaunchScreen.storyboard in Resources */,
 				3DDA9A4128F5919600FE3B86 /* Roboto-Regular.ttf in Resources */,
@@ -3855,6 +3999,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash -x ./create_xcframework_script.sh    \n\n";
+		};
+		8D455ADB296C13CA0091A027 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n    swiftlint lint --config swiftlint/.swiftlint.yml\n    \nelse\n    echo \"Error: SwiftLint not installed\"\nfi\n";
 		};
 		8EC0B5EED95074D03AAB854D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3930,6 +4091,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4454180523685144001D0ED0 /* OWBaseView.swift in Sources */,
+				3D7F28BA2998FA3B00E9E69E /* OWInitialSortStrategy.swift in Sources */,
 				4454181023685144001D0ED0 /* SPPreConversationViewController.swift in Sources */,
 				16BD5F84270C3FB000066505 /* OWImagePicker.swift in Sources */,
 				24E753622940B01100A74427 /* OWCommentHeaderViewModel.swift in Sources */,
@@ -3963,6 +4125,7 @@
 				3D26B5C028CE499F00A1DAD2 /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				1628A75728EB0D8E0019B5EC /* OWReplyCellViewModel.swift in Sources */,
 				4454189F23685154001D0ED0 /* SPComment.swift in Sources */,
+				3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */,
 				445418B123685154001D0ED0 /* Date+SPExtensions.swift in Sources */,
 				5DBD33E723980D6A003DE0BF /* OWBaseTextField.swift in Sources */,
 				3D20A39927B0243D003F8513 /* Debugging.swift in Sources */,
@@ -3987,6 +4150,7 @@
 				3D08E06C2875BAEC00E6F1AC /* OWUI.swift in Sources */,
 				3D611BB928C8AC3C003960CE /* OWConversationSettingsBuilder.swift in Sources */,
 				3DDA9A7B29196CC200FE3B86 /* OWLoginFlowCallback.swift in Sources */,
+				3DA57BA92989358E0016BF2A /* OWConversationStyle.swift in Sources */,
 				24B885FB261F194500EB7BCB /* SPLabelConfiguration.swift in Sources */,
 				4454188423685154001D0ED0 /* SPDefaultDecoder.swift in Sources */,
 				3D611B9A28C64740003960CE /* OWDefaultCompletion.swift in Sources */,
@@ -3995,6 +4159,7 @@
 				3D08E0832876FFC500E6F1AC /* OWAnimationConfiguration.swift in Sources */,
 				4454181223685144001D0ED0 /* SPMainConversationModel.swift in Sources */,
 				3DD72C69280EF13100117946 /* OWURLRequestConfigure.swift in Sources */,
+				3DC7BD9829A4E80400DF72E4 /* OWConversationCounter.swift in Sources */,
 				249DF28E295C398800F5D69A /* OWCommentRatingViewModel.swift in Sources */,
 				4454189E23685154001D0ED0 /* SPConversationReadRM.swift in Sources */,
 				3DA2646E2951E3B200688FFF /* URLRequest+Network.swift in Sources */,
@@ -4017,6 +4182,8 @@
 				3DF116412921801B0064BD41 /* OWManager+Layers.swift in Sources */,
 				4454189B23685154001D0ED0 /* SPCommentRankUpdateRM.swift in Sources */,
 				3DFC32D828916EA4005F1C5A /* OWCommunityQuestionViewModel.swift in Sources */,
+				3DDCB2A629954FB000B8ED8E /* OWCustomizedSortTitle.swift in Sources */,
+				3DC7BD9A29A4EA4100DF72E4 /* OWLoggerConfiguration.swift in Sources */,
 				249BCDFE27F5B5BF00703CC9 /* OWConversationSummaryViewModel.swift in Sources */,
 				4416C65F237B15A800D3F7B9 /* SPRealtimeDataProvider.swift in Sources */,
 				3D20A36D27B0124F003F8513 /* OWConstraint.swift in Sources */,
@@ -4042,6 +4209,7 @@
 				3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */,
 				445418B523685154001D0ED0 /* SPConstants.swift in Sources */,
 				3D100D95286DD17100AA4F85 /* OWTypealiasesFundamentals.swift in Sources */,
+				3DDCB2A429954CBA00B8ED8E /* OWSortOption+Extensions.swift in Sources */,
 				3D08E0A12877154900E6F1AC /* OWItemPath.swift in Sources */,
 				3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */,
 				9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */,
@@ -4064,6 +4232,7 @@
 				24B88457261DFAC500EB7BCB /* SPConfigurationShared.swift in Sources */,
 				3DA264602951E3B200688FFF /* OWProtected.swift in Sources */,
 				445418BB23685154001D0ED0 /* DefaultAdsProvider.swift in Sources */,
+				3DEAA57F29A240670043D73E /* OWFontStyle.swift in Sources */,
 				44689B7D237414850024EFC1 /* SPABData.swift in Sources */,
 				249DF2972964182B00F5D69A /* OWCommentRequiredData.swift in Sources */,
 				3D20A36F27B0147F003F8513 /* OWConstraintAttributes.swift in Sources */,
@@ -4086,6 +4255,7 @@
 				3D08E0B1287722F700E6F1AC /* UI+OWSectionedViewType.swift in Sources */,
 				4454181B23685144001D0ED0 /* OWCommentActionsView.swift in Sources */,
 				445417FE23685144001D0ED0 /* NSAttributedString+Extensions.swift in Sources */,
+				3DA57BAB29893FCB0016BF2A /* OWCommunityGuidelinesStyle.swift in Sources */,
 				3D611BA128C744E0003960CE /* OWPreConversationSettingsProtocol.swift in Sources */,
 				3D26B5B128CA37E400A1DAD2 /* OWCommentCreationSettings.swift in Sources */,
 				3DD72C7D280F053A00117946 /* OWSession.swift in Sources */,
@@ -4112,7 +4282,9 @@
 				445418B023685154001D0ED0 /* WeakRef+Generic.swift in Sources */,
 				4454188123685154001D0ED0 /* SPAnalyticsFacade.swift in Sources */,
 				3DA264632951E3B200688FFF /* OWNetworkRetryPolicy.swift in Sources */,
+				3DDCB2A22995478700B8ED8E /* OWSortingCustomizations.swift in Sources */,
 				3D08E0A728771B9D00E6F1AC /* OWViewTransition.swift in Sources */,
+				3DA57BAD298940620016BF2A /* OWCommunityQuestionsStyle.swift in Sources */,
 				3D20A36127B00A3D003F8513 /* OWConstraintLayoutSupportDSL.swift in Sources */,
 				3D20A37327B01674003F8513 /* OWConstraintItem.swift in Sources */,
 				3DDA9A86291A5A5400FE3B86 /* OWSortOption.swift in Sources */,
@@ -4126,7 +4298,7 @@
 				3D5561AB29532F220097A6D1 /* OWAuthorizationRecoveryService.swift in Sources */,
 				3DDA9A6E2919164300FE3B86 /* OWMonetizationLayer.swift in Sources */,
 				4454189923685154001D0ED0 /* SPConfigurationSSO.swift in Sources */,
-				3DDA9A81291A565200FE3B86 /* OWSpacing.swift in Sources */,
+				3DDA9A81291A565200FE3B86 /* OWConversationSpacing.swift in Sources */,
 				440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */,
 				3D08E09728770BEC00E6F1AC /* String+OWIdentifiableType.swift in Sources */,
 				160E42E82988105D00EDC5A1 /* OWCommentThreadVM.swift in Sources */,
@@ -4145,6 +4317,7 @@
 				3DD72C76280EF95200117946 /* OWRequestLogger.swift in Sources */,
 				445418A623685154001D0ED0 /* SPShareLink.swift in Sources */,
 				3DD72C7F28159B2E00117946 /* OWAnalyticsEndpoints.swift in Sources */,
+				3DA57BB1298949BD0016BF2A /* OWPreConversationStyle+Extensions.swift in Sources */,
 				24A24A18291BAC7C00D72755 /* OWSafariViewControllerOptions.swift in Sources */,
 				160E42E22988103000EDC5A1 /* OWCommentThreadView.swift in Sources */,
 				3DA2647A2951E3B200688FFF /* OWNetworkRedirectHandler.swift in Sources */,
@@ -4160,6 +4333,7 @@
 				2421B8FF2670ACD400B0C9FF /* SPProfileProvider.swift in Sources */,
 				3DD72C812818297500117946 /* OWLogger.swift in Sources */,
 				3D08E05F2875994300E6F1AC /* OWConversationVC.swift in Sources */,
+				3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */,
 				445418AC23685154001D0ED0 /* UIDevice+Extensions.swift in Sources */,
 				6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */,
 				4454187D23685154001D0ED0 /* OWCoordinator.swift in Sources */,
@@ -4214,10 +4388,12 @@
 				3DDA9A92291A86A600FE3B86 /* OWOptionalEncapsulation.swift in Sources */,
 				44F0FD262369EEBC003525E0 /* SPAdsConfiguration.swift in Sources */,
 				3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */,
+				3DEAA58129A240910043D73E /* OWFontGroupFamily+Extensions.swift in Sources */,
 				3D08E0672875BA5300E6F1AC /* OWManagerProtocol.swift in Sources */,
 				4454181E23685144001D0ED0 /* ShowMoreRepliesView.swift in Sources */,
 				3DDA9A5128FEF9DB00FE3B86 /* OWSkeletonShimmeringProtocol.swift in Sources */,
 				3D08E06A2875BA9A00E6F1AC /* OWUIFlows.swift in Sources */,
+				3DA57BA729892F680016BF2A /* OWPreConversationStyle.swift in Sources */,
 				3D08E09928770C4500E6F1AC /* FloatingPointType+OWIdentifiableType.swift in Sources */,
 				4454189323685154001D0ED0 /* SPConfigurationConversation.swift in Sources */,
 				4454187E23685154001D0ED0 /* SPConversationsFacade.swift in Sources */,
@@ -4239,6 +4415,7 @@
 				445417FB23685144001D0ED0 /* UIColor+Hex.swift in Sources */,
 				4454189623685154001D0ED0 /* SPConfigurationSpotlight.swift in Sources */,
 				4454181D23685144001D0ED0 /* UserNameView.swift in Sources */,
+				3DDCB29F29952D2900B8ED8E /* OWSortDictateService.swift in Sources */,
 				3DB3D175281E890B008654CF /* OWRxAppLifeCycle.swift in Sources */,
 				3D20A37D27B01BA1003F8513 /* OWConstraintMakerExtendable.swift in Sources */,
 				3DE0FE3F27D649B50097B17B /* OWSharedServicesProvider.swift in Sources */,
@@ -4268,6 +4445,7 @@
 				249DF291295C70C900F5D69A /* OWSpacerCell.swift in Sources */,
 				4454180723685144001D0ED0 /* UserFlowPresentable.swift in Sources */,
 				3D08E09F287712A100E6F1AC /* OWRxDataSourceError.swift in Sources */,
+				3DA57BAF298949640016BF2A /* OWConversationSpacing+Validation.swift in Sources */,
 				3D611BB528C8AAF4003960CE /* OWCommentCreationSettingsProtocol.swift in Sources */,
 				4454188E23685154001D0ED0 /* SPNetworkConstants.swift in Sources */,
 				3DA264652951E3B200688FFF /* OWNetworkURLConvertible+URLRequestConvertible.swift in Sources */,
@@ -4292,6 +4470,7 @@
 				246AD83C263010C800D2DD1C /* SPCommentLabelsContainerView.swift in Sources */,
 				24B32BA528BCEB8900FB701C /* OWPreConversationCellOption.swift in Sources */,
 				3DA264682951E3B200688FFF /* OWNetworkResponse.swift in Sources */,
+				3DDF91C0299FCAB100256C32 /* OWCommentCreationStyle.swift in Sources */,
 				44F0FD232369EE04003525E0 /* SPAdsConfigRequest.swift in Sources */,
 				3D611B9F28C74469003960CE /* OWConversationSettingsProtocol.swift in Sources */,
 				4454182223685144001D0ED0 /* SPCommentReplyHeaderView.swift in Sources */,
@@ -4302,6 +4481,7 @@
 				44F247A12379ADC500B36F12 /* OWBaseButton.swift in Sources */,
 				3DFA6BA129216F200047E313 /* OWSSOStartHandler.swift in Sources */,
 				445417F623685144001D0ED0 /* String+Sizes.swift in Sources */,
+				3DEAA57829A23B5C0043D73E /* OWFontGroupFamily.swift in Sources */,
 				445418AF23685154001D0ED0 /* UIColor+SPExtensions.swift in Sources */,
 				445417FF23685144001D0ED0 /* Int+Formatting.swift in Sources */,
 				3D08E0722875C42F00E6F1AC /* OWSDKCoordinator.swift in Sources */,
@@ -4345,13 +4525,13 @@
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
 				3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */,
 				3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */,
-				249DF29929655C5E00F5D69A /* OWCommentSortMode.swift in Sources */,
 				16BD5F7F2709F16000066505 /* SPUIWindow.swift in Sources */,
 				445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */,
 				3DFA6BAD29217BC20047E313 /* OWUserAuthenticationStatus.swift in Sources */,
 				445418A523685154001D0ED0 /* SPUser.swift in Sources */,
 				3DD72C72280EF8A100117946 /* OWMiddleware.swift in Sources */,
 				445418A323685154001D0ED0 /* SPAnalyticsEvent.swift in Sources */,
+				3DC7BD9529A4E71500DF72E4 /* OWConversationCountersCompletion.swift in Sources */,
 				249DF29F296D560E00F5D69A /* OWCommentLabelsContainerView.swift in Sources */,
 				3DFA6B9F29216E8D0047E313 /* OWAuthentication.swift in Sources */,
 				4454181923685144001D0ED0 /* SPReplyCell.swift in Sources */,
@@ -4389,7 +4569,7 @@
 				6D22A46A23BC864100DCE08A /* SpotImRequestLogLevel.swift in Sources */,
 				2459B87F263823A8006A0CF0 /* SPCommentCreationModel.swift in Sources */,
 				3DA264612951E3B200688FFF /* OWNetworkNotifications.swift in Sources */,
-				3DDA9A84291A59E200FE3B86 /* OWSortingCustomizations.swift in Sources */,
+				3DDA9A84291A59E200FE3B86 /* OWSortingCustomizer.swift in Sources */,
 				16A12A8A2608E49500A7B3F6 /* String+SPExtentions.swift in Sources */,
 				3DDA9A652913E7E800FE3B86 /* OWColorPalette.swift in Sources */,
 				24B8845C261DFB3900EB7BCB /* SPCommentLabelsSectionConfiguration.swift in Sources */,
@@ -4429,6 +4609,7 @@
 				8DCBE87D2950594A00C8677C /* SettingsVC.swift in Sources */,
 				8D0936642951E5FA00D71FD8 /* SegmentedControlSetting.swift in Sources */,
 				3D611B7B28BFA91A003960CE /* BetaNewAPIViewModel.swift in Sources */,
+				9EA0F83629A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
 				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
@@ -4463,8 +4644,10 @@
 				3D611B8628C4D934003960CE /* SDKUIFlowActionSettings.swift in Sources */,
 				0E1125C923048ED1006B1489 /* ArticlesListViewController.swift in Sources */,
 				3D611B7928BFA906003960CE /* BetaNewAPIVC.swift in Sources */,
+				9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */,
 				3D3E3AC128B4EB61003B4F05 /* ConversationCounterCellViewModel.swift in Sources */,
 				3D611B7E28C4CF7B003960CE /* PresentationalModeCompact.swift in Sources */,
+				9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */,
 				3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */,
 				9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
 				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
@@ -4480,6 +4663,7 @@
 				6DF3A6F52386BD7200419B30 /* TableViewFooterTesterViewController.swift in Sources */,
 				3DB3D190282A7F7C008654CF /* AuthenticationStatus.swift in Sources */,
 				0E1125D323049FAE006B1489 /* ArticleTableViewCell.swift in Sources */,
+				9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */,
 				3D3E3AC628B4F712003B4F05 /* Shadowable.swift in Sources */,
 				0E1125D52304A043006B1489 /* ArticleModel.swift in Sources */,
 				9EFFE781297E851400814648 /* UIColor+Extensions.swift in Sources */,
@@ -4541,7 +4725,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		3D09249328A9464F00183082 /* PublicDemoApp */ = {
+		3D09249328A9464F00183082 /* Public */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -4606,22 +4790,21 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
-			name = PublicDemoApp;
+			name = Public;
 		};
-		3D09249428A9464F00183082 /* PublicDemoApp */ = {
+		3D09249428A9464F00183082 /* Public */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 30B6E37C443F3D1D9FABA6D3 /* Pods-Shared-DemoApps-Spot-IM.Development.publicdemoapp.xcconfig */;
+			baseConfigurationReference = 078331EBB5FC3AC73DDF8667 /* Pods-Shared-DemoApps-Spot-IM.Development.public.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Resources/Info.plist";
@@ -4631,21 +4814,20 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PUBLIC_DEMO_APP";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
-			name = PublicDemoApp;
+			name = Public;
 		};
-		3D09249528A9464F00183082 /* PublicDemoApp */ = {
+		3D09249528A9464F00183082 /* Public */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F7BB2C029700C6D16B1640B9 /* Pods-Shared-Spot-IM.DevelopmentTests.publicdemoapp.xcconfig */;
+			baseConfigurationReference = 908516EA439B74859BFC244A /* Pods-Shared-Spot-IM.DevelopmentTests.public.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -4659,18 +4841,18 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
 			};
-			name = PublicDemoApp;
+			name = Public;
 		};
-		3D09249628A9464F00183082 /* PublicDemoApp */ = {
+		3D09249628A9464F00183082 /* Public */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BD93F797FEABA3B540FA1DF3 /* Pods-Shared-SpotImCore.publicdemoapp.xcconfig */;
+			baseConfigurationReference = 4151E0212097F1EC3902A803 /* Pods-Shared-SpotImCore.public.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -4698,18 +4880,19 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PUBLIC_DEMO_APP";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = PublicDemoApp;
+			name = Public;
 		};
-		3D09249728A9464F00183082 /* PublicDemoApp */ = {
+		3D09249728A9464F00183082 /* Public */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -4717,7 +4900,7 @@
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = PublicDemoApp;
+			name = Public;
 		};
 		3D611B7028BF8F42003960CE /* Beta */ = {
 			isa = XCBuildConfiguration;
@@ -4793,13 +4976,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Resources/Info.plist";
@@ -4809,11 +4991,10 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "NEW_API DEBUG";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4837,7 +5018,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4876,7 +5057,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4898,9 +5079,128 @@
 			};
 			name = Beta;
 		};
-		44C8789723608BC100E0E662 /* Debug */ = {
+		3D674E01298C54030049960D /* ReleaseBeta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 377DD973617E9820A88EE7A0 /* Pods-Shared-SpotImCore.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME = "";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MAIN_STORY_BOARD = "";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseBeta;
+		};
+		3D674E02298C54030049960D /* ReleaseBeta */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C328B4A9AE06AE25916F942 /* Pods-Shared-DemoApps-Spot-IM.Development.releasebeta.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUNDLE_DISPLAY_NAME = OpenWeb;
+				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 0;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = "Spot-IM.Development/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Main;
+				MARKETING_VERSION = 1.18.2;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NEW_API;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = ReleaseBeta;
+		};
+		3D674E03298C54030049960D /* ReleaseBeta */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3D52F869DFDC900B8BAEE56 /* Pods-Shared-Spot-IM.DevelopmentTests.releasebeta.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.18.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
+			};
+			name = ReleaseBeta;
+		};
+		3D674E04298C54030049960D /* ReleaseBeta */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6AF9855F9DF110842B41692F /* Pods-Shared-SpotImCore.releasebeta.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -4928,20 +5228,150 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NEW_API;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = ReleaseBeta;
 		};
-		44C8789823608BC100E0E662 /* Release */ = {
+		3D674E05298C54030049960D /* ReleaseBeta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D5E5855E5E2B8A5C15F7FEE4 /* Pods-Shared-SpotImCore.release.xcconfig */;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseBeta;
+		};
+		3D674E06298C541A0049960D /* ReleasePublic */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_DISPLAY_NAME = "";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MAIN_STORY_BOARD = "";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleasePublic;
+		};
+		3D674E07298C541A0049960D /* ReleasePublic */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 131F8CE763187B7671AA1AAE /* Pods-Shared-DemoApps-Spot-IM.Development.releasepublic.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				BUNDLE_DISPLAY_NAME = OpenWeb;
+				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 0;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = "$(inherited)/**";
+				INFOPLIST_FILE = "Spot-IM.Development/Resources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MAIN_STORY_BOARD = Main;
+				MARKETING_VERSION = 1.18.2;
+				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PUBLIC_DEMO_APP;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = ReleasePublic;
+		};
+		3D674E08298C541A0049960D /* ReleasePublic */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FDF8F0928ACBD345EF47F2F /* Pods-Shared-Spot-IM.DevelopmentTests.releasepublic.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				INFOPLIST_FILE = "Spot-IM.DevelopmentTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.18.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
+			};
+			name = ReleasePublic;
+		};
+		3D674E09298C541A0049960D /* ReleasePublic */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FBD4C1ED8C83A232E2DDF25B /* Pods-Shared-SpotImCore.releasepublic.xcconfig */;
 			buildSettings = {
 				BITCODE_GENERATION_MODE = bitcode;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -4969,7 +5399,59 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PUBLIC_DEMO_APP;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleasePublic;
+		};
+		3D674E0A298C541A0049960D /* ReleasePublic */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = B88KG2QXHX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleasePublic;
+		};
+		44C8789723608BC100E0E662 /* Internal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 114ABD0938E416B05F040862 /* Pods-Shared-SpotImCore.internal.xcconfig */;
+			buildSettings = {
+				BITCODE_GENERATION_MODE = bitcode;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					GoogleAdsV7Provider.swift,
+					GoogleAdsProvider.swift,
+				);
+				INFOPLIST_FILE = SpotImCore/Resources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -4978,9 +5460,50 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Internal;
 		};
-		5D697A5622B65108001AD556 /* Debug */ = {
+		44C8789823608BC100E0E662 /* ReleaseInternal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A22EE731738D885057978C0 /* Pods-Shared-SpotImCore.releaseinternal.xcconfig */;
+			buildSettings = {
+				BITCODE_GENERATION_MODE = bitcode;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_CODE_COVERAGE = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 0;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					GoogleAdsV7Provider.swift,
+					GoogleAdsProvider.swift,
+				);
+				INFOPLIST_FILE = SpotImCore/Resources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.18.2;
+				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-Core.SpotImCore";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = ReleaseInternal;
+		};
+		5D697A5622B65108001AD556 /* Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -5045,9 +5568,9 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
-			name = Debug;
+			name = Internal;
 		};
-		5D697A5722B65108001AD556 /* Release */ = {
+		5D697A5722B65108001AD556 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -5106,22 +5629,21 @@
 				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = ReleaseInternal;
 		};
-		5D697A5922B65108001AD556 /* Debug */ = {
+		5D697A5922B65108001AD556 /* Internal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 41A5212AF88F30BB35D6468C /* Pods-Shared-DemoApps-Spot-IM.Development.debug.xcconfig */;
+			baseConfigurationReference = 97F61210E7CD6DD5CAB3A8F6 /* Pods-Shared-DemoApps-Spot-IM.Development.internal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Resources/Info.plist";
@@ -5131,31 +5653,28 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
-			name = Debug;
+			name = Internal;
 		};
-		5D697A5A22B65108001AD556 /* Release */ = {
+		5D697A5A22B65108001AD556 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7621290A39274FD5E2FA0A64 /* Pods-Shared-DemoApps-Spot-IM.Development.release.xcconfig */;
+			baseConfigurationReference = DAF4043CAD3F71F4DBD608F1 /* Pods-Shared-DemoApps-Spot-IM.Development.releaseinternal.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				BUNDLE_DISPLAY_NAME = OpenWeb;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Distribution: Spot.IM Ltd (Q2Q7GJNSSL)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 0;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Q2Q7GJNSSL;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Q2Q7GJNSSL;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = "Spot-IM.Development/Resources/Info.plist";
@@ -5165,21 +5684,20 @@
 					"@executable_path/Frameworks",
 				);
 				MAIN_STORY_BOARD = Main;
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = im.spot.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore im.spot.demo";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development im.spot.demo";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
-			name = Release;
+			name = ReleaseInternal;
 		};
-		5D697A5C22B65108001AD556 /* Debug */ = {
+		5D697A5C22B65108001AD556 /* Internal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3BA412CB4B682D95D3929020 /* Pods-Shared-Spot-IM.DevelopmentTests.debug.xcconfig */;
+			baseConfigurationReference = 82E5D19AFE4DC00AC8DD537C /* Pods-Shared-Spot-IM.DevelopmentTests.internal.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -5193,18 +5711,18 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
 			};
-			name = Debug;
+			name = Internal;
 		};
-		5D697A5D22B65108001AD556 /* Release */ = {
+		5D697A5D22B65108001AD556 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F2C56D9BDA1E2E5FBA15F4F8 /* Pods-Shared-Spot-IM.DevelopmentTests.release.xcconfig */;
+			baseConfigurationReference = 9A380ECD0E2FBA632BF5D339 /* Pods-Shared-Spot-IM.DevelopmentTests.releaseinternal.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -5218,16 +5736,16 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.18.1;
+				MARKETING_VERSION = 1.18.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "im.spot.Spot-IM-DevelopmentTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spot-IM.Development.app/Spot-IM.Development";
 			};
-			name = Release;
+			name = ReleaseInternal;
 		};
-		6D5DB15B23CF5D73003F9D46 /* Debug */ = {
+		6D5DB15B23CF5D73003F9D46 /* Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -5235,9 +5753,9 @@
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Debug;
+			name = Internal;
 		};
-		6D5DB15D23CF5D73003F9D46 /* Release */ = {
+		6D5DB15D23CF5D73003F9D46 /* ReleaseInternal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -5245,7 +5763,7 @@
 				DEVELOPMENT_TEAM = B88KG2QXHX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Release;
+			name = ReleaseInternal;
 		};
 /* End XCBuildConfiguration section */
 
@@ -5253,57 +5771,67 @@
 		44C8789623608BC100E0E662 /* Build configuration list for PBXNativeTarget "SpotImCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				44C8789723608BC100E0E662 /* Debug */,
+				44C8789723608BC100E0E662 /* Internal */,
 				3D611B7328BF8F42003960CE /* Beta */,
-				3D09249628A9464F00183082 /* PublicDemoApp */,
-				44C8789823608BC100E0E662 /* Release */,
+				3D09249628A9464F00183082 /* Public */,
+				44C8789823608BC100E0E662 /* ReleaseInternal */,
+				3D674E04298C54030049960D /* ReleaseBeta */,
+				3D674E09298C541A0049960D /* ReleasePublic */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = ReleaseInternal;
 		};
 		5D697A3622B65106001AD556 /* Build configuration list for PBXProject "Spot-IM.Development" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5D697A5622B65108001AD556 /* Debug */,
+				5D697A5622B65108001AD556 /* Internal */,
 				3D611B7028BF8F42003960CE /* Beta */,
-				3D09249328A9464F00183082 /* PublicDemoApp */,
-				5D697A5722B65108001AD556 /* Release */,
+				3D09249328A9464F00183082 /* Public */,
+				5D697A5722B65108001AD556 /* ReleaseInternal */,
+				3D674E01298C54030049960D /* ReleaseBeta */,
+				3D674E06298C541A0049960D /* ReleasePublic */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = ReleaseInternal;
 		};
 		5D697A5822B65108001AD556 /* Build configuration list for PBXNativeTarget "Spot-IM.Development" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5D697A5922B65108001AD556 /* Debug */,
+				5D697A5922B65108001AD556 /* Internal */,
 				3D611B7128BF8F42003960CE /* Beta */,
-				3D09249428A9464F00183082 /* PublicDemoApp */,
-				5D697A5A22B65108001AD556 /* Release */,
+				3D09249428A9464F00183082 /* Public */,
+				5D697A5A22B65108001AD556 /* ReleaseInternal */,
+				3D674E02298C54030049960D /* ReleaseBeta */,
+				3D674E07298C541A0049960D /* ReleasePublic */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = ReleaseInternal;
 		};
 		5D697A5B22B65108001AD556 /* Build configuration list for PBXNativeTarget "Spot-IM.DevelopmentTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5D697A5C22B65108001AD556 /* Debug */,
+				5D697A5C22B65108001AD556 /* Internal */,
 				3D611B7228BF8F42003960CE /* Beta */,
-				3D09249528A9464F00183082 /* PublicDemoApp */,
-				5D697A5D22B65108001AD556 /* Release */,
+				3D09249528A9464F00183082 /* Public */,
+				5D697A5D22B65108001AD556 /* ReleaseInternal */,
+				3D674E03298C54030049960D /* ReleaseBeta */,
+				3D674E08298C541A0049960D /* ReleasePublic */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = ReleaseInternal;
 		};
 		6D5DB15A23CF5D73003F9D46 /* Build configuration list for PBXAggregateTarget "Package SpotImCoreSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6D5DB15B23CF5D73003F9D46 /* Debug */,
+				6D5DB15B23CF5D73003F9D46 /* Internal */,
 				3D611B7428BF8F42003960CE /* Beta */,
-				3D09249728A9464F00183082 /* PublicDemoApp */,
-				6D5DB15D23CF5D73003F9D46 /* Release */,
+				3D09249728A9464F00183082 /* Public */,
+				6D5DB15D23CF5D73003F9D46 /* ReleaseInternal */,
+				3D674E05298C54030049960D /* ReleaseBeta */,
+				3D674E0A298C541A0049960D /* ReleasePublic */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = ReleaseInternal;
 		};
 /* End XCConfigurationList section */
 	};

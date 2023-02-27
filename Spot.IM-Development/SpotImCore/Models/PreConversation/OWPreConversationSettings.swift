@@ -10,18 +10,18 @@ import Foundation
 
 #if NEW_API
 public struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
-    public let numberOfComments: Int
-    
-    public init(numberOfComments: Int = 2) {
-        self.numberOfComments = numberOfComments
+    public let style: OWPreConversationStyle
+
+    public init(style: OWPreConversationStyle = .regular()) {
+        self.style = style.validate()
     }
 }
 #else
 struct OWPreConversationSettings: OWPreConversationSettingsProtocol {
-    let numberOfComments: Int
-    
-    init(numberOfComments: Int = 2) {
-        self.numberOfComments = numberOfComments
+    let style: OWPreConversationStyle
+
+    init(style: OWPreConversationStyle = .regular()) {
+        self.style = style.validate()
     }
 }
 #endif

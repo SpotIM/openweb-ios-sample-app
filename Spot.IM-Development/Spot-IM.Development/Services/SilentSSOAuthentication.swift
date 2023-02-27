@@ -15,7 +15,7 @@ protocol SilentSSOAuthenticationProtocol {
 }
 
 class SilentSSOAuthentication: SilentSSOAuthenticationProtocol {
-    
+
     func silentGenericSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> Observable<String> {
         return Observable.just(()) // Begin RX
             .flatMapLatest { [weak self] _ -> Observable<Void> in
@@ -78,11 +78,11 @@ fileprivate extension SilentSSOAuthentication {
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create()
         }
     }
-    
+
     func completeSSO(codeB: String) -> Observable<String> {
         return Observable.create { observer in
             SpotIm.completeSSO(with: codeB) { result in
@@ -95,11 +95,11 @@ fileprivate extension SilentSSOAuthentication {
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create()
         }
     }
-    
+
     func sso(jwtSecret: String) -> Observable<Void> {
         return Observable.create { observer in
             SpotIm.sso(withJwtSecret: jwtSecret) { result in
@@ -110,7 +110,7 @@ fileprivate extension SilentSSOAuthentication {
                         observer.onError(AuthenticationError.JWTSSOFailed)
                         return
                     }
-                    
+
                     observer.onNext(())
                     observer.onCompleted()
                 case .failure(let error):
@@ -118,11 +118,11 @@ fileprivate extension SilentSSOAuthentication {
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create()
         }
     }
-    
+
     func login(user: UserAuthentication) -> Observable<String> {
         return Observable.create { observer in
             DemoUserAuthentication.logIn(with: user.username, password: user.password) { token, error in
@@ -138,7 +138,7 @@ fileprivate extension SilentSSOAuthentication {
             return Disposables.create()
         }
     }
-    
+
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String> {
         return Observable.create { observer in
             DemoUserAuthentication.getCodeB(with: codeA,
@@ -154,11 +154,11 @@ fileprivate extension SilentSSOAuthentication {
                 observer.onNext(codeB)
                 observer.onCompleted()
             }
-            
+
             return Disposables.create()
         }
     }
-    
+
     func userLoginStatus() -> Observable<SpotImLoginStatus> {
         return Observable.create { observer in
             SpotIm.getUserLoginStatus { loginStatus in
@@ -170,7 +170,7 @@ fileprivate extension SilentSSOAuthentication {
                     observer.onError(error)
                 }
             }
-            
+
             return Disposables.create()
         }
     }

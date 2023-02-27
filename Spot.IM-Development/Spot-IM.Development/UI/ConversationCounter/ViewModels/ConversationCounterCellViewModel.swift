@@ -22,14 +22,16 @@ protocol ConversationCounterCellViewModeling {
     var outputs: ConversationCounterCellViewModelingOutputs { get }
 }
 
-class ConversationCounterCellViewModel: ConversationCounterCellViewModeling, ConversationCounterCellViewModelingInputs, ConversationCounterCellViewModelingOutputs {
+class ConversationCounterCellViewModel: ConversationCounterCellViewModeling,
+                                            ConversationCounterCellViewModelingInputs,
+                                            ConversationCounterCellViewModelingOutputs {
     var inputs: ConversationCounterCellViewModelingInputs { return self }
     var outputs: ConversationCounterCellViewModelingOutputs { return self }
-    
+
     let postId: String
     let comments: Int
     let replies: Int
-    
+
     init(counter: SpotImConversationCounters, postId: String) {
         self.postId = postId
         comments = counter.comments
