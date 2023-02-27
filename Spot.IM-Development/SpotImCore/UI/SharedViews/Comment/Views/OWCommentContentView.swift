@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWCommentContentView: UIView {
-    public struct Metrics {
+    internal struct Metrics {
         static let fontSize: CGFloat = 16.0
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
@@ -68,8 +68,7 @@ fileprivate extension OWCommentContentView {
         viewModel.outputs.image
             .subscribe(onNext: { [weak self] imageType in
                 guard let self = self,
-                      case .custom(let url) = imageType
-                else { return }
+                      case .custom(let url) = imageType else { return }
 
                 self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
             })
@@ -99,8 +98,6 @@ fileprivate extension OWCommentContentView {
             .subscribe(onNext: { [weak self] newHeight in
                 guard let self = self else { return }
                 self.textHeightConstraint?.update(offset: newHeight)
-                self.setNeedsLayout()
-                self.layoutIfNeeded()
             })
             .disposed(by: disposeBag)
     }
