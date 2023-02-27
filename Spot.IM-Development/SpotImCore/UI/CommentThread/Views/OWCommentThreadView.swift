@@ -29,13 +29,13 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         setupObservers()
         applyAccessibility()
     }
-
-    private func applyAccessibility() {
-        self.accessibilityIdentifier = Metrics.identifier
-    }
 }
 
 fileprivate extension OWCommentThreadView {
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+    }
+    
     func setupViews() {
         self.useAsThemeStyleInjector()
 
