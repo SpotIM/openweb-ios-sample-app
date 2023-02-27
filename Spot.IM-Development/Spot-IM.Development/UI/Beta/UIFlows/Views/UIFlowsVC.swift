@@ -65,7 +65,7 @@ class UIFlowsVC: UIViewController {
     fileprivate lazy var btnCommentCreationPresentMode: UIButton = {
         return NSLocalizedString("CommentCreationPresentMode", comment: "").blueRoundedButton
     }()
-    
+
     fileprivate lazy var btnCommentThreadPushMode: UIButton = {
         return NSLocalizedString("CommentThreadPushMode", comment: "").blueRoundedButton
     }()
