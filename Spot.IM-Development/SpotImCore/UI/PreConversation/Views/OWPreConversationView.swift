@@ -27,8 +27,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 800
-        static let changedHeight: CGFloat = 700
+//        static let initialHeight: CGFloat = 800
+//        static let changedHeight: CGFloat = 700
 
         static let separatorHeight: CGFloat = 1.0
     }
@@ -108,11 +108,11 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         setupViews()
         setupObservers()
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
 //        self.updateTableViewHeightIfNeeded()
-        self.viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: self.intrinsicContentSize.width, height: self.intrinsicContentSize.height))
+//        self.viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: self.intrinsicContentSize.width, height: self.intrinsicContentSize.height))
     }
 }
 
@@ -125,7 +125,7 @@ fileprivate extension OWPreConversationView {
 //        self.OWSnp.makeConstraints { make in
 //            make.height.equalTo(Metrics.initialHeight)
 //        }
-        
+
         self.addSubviews(header)
         header.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -191,7 +191,7 @@ fileprivate extension OWPreConversationView {
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
 
-        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
+//        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
 
         viewModel.outputs.preConversationDataSourceSections
             .observe(on: MainScheduler.instance)
@@ -238,7 +238,7 @@ fileprivate extension OWPreConversationView {
                 }
             })
             .disposed(by: disposeBag)
-        
+
         self.tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
     }
 
@@ -253,10 +253,8 @@ fileprivate extension OWPreConversationView {
 //            self.layoutIfNeeded()
 //        }
 //    }
-    
-    
 
-    internal override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    internal override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if let obj = object as? UITableView {
             if obj == self.tableView && keyPath == "contentSize" {
                 if let newSize = change?[NSKeyValueChangeKey.newKey] as? CGSize {
