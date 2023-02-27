@@ -267,7 +267,7 @@ fileprivate extension MockArticleViewModel {
                 })
             })
             .disposed(by: disposeBag)
-        
+
         // Comment creation
         commentThreadButtonTapped
             .withLatestFrom(showCommentThreadButton)
