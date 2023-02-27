@@ -235,6 +235,7 @@ fileprivate extension OWPreConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.updateCellSizeAtIndex
+                .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
                     UIView.performWithoutAnimation {
