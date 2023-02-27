@@ -35,7 +35,7 @@ fileprivate extension OWCommentThreadView {
     func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
-    
+
     func setupViews() {
         self.useAsThemeStyleInjector()
 
