@@ -98,7 +98,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .asObservable()
     }
 
-    fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
+    fileprivate var _textState = BehaviorSubject<OWTextState>(value: .collapsed)
     lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
             .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
@@ -190,7 +190,7 @@ fileprivate extension OWCommentTextViewModel {
         return attributes
     }
 
-    func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: TextState, style: OWThemeStyle) -> NSMutableAttributedString {
+    func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: OWTextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
         guard lines.count > self.collapsableTextLineLimit else { return NSMutableAttributedString(attributedString: attString) }
         switch currentState {
@@ -249,9 +249,4 @@ fileprivate extension OWCommentTextViewModel {
     func isUrlSchemeValid(for url: URL) -> Bool {
         return url.scheme?.lowercased() != "mailto"
     }
-}
-
-fileprivate enum TextState {
-    case collapsed
-    case expanded
 }
