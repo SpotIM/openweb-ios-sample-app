@@ -11,6 +11,8 @@ import RxSwift
 import RxCocoa
 import UIKit
 
+typealias OWRangeURLsMapper = [NSRange: URL]
+
 protocol OWCommentTextViewModelingInputs {
     var width: BehaviorSubject<CGFloat> { get }
     var readMoreTap: PublishSubject<Void> { get }
@@ -22,7 +24,7 @@ protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
     var readMoreText: String { get }
     var readLessText: String { get }
-    var activeURLs: [NSRange: URL] { get }
+    var availableUrlsRange: OWRangeURLsMapper { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
 }
@@ -48,11 +50,11 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
     var readMoreTap = PublishSubject<Void>()
     var readLessTap = PublishSubject<Void>()
-    var activeURLs: [NSRange: URL]
+    var availableUrlsRange: [NSRange: URL]
 
     init(comment: SPComment, collapsableTextLineLimit: Int) {
         self.collapsableTextLineLimit = collapsableTextLineLimit
-        self.activeURLs = [:]
+        self.availableUrlsRange = [:]
         _comment.onNext(comment)
         setupObservers()
     }
@@ -243,7 +245,7 @@ fileprivate extension OWCommentTextViewModel {
                 }
             }
         }
-        self.activeURLs = activeURLs
+        self.availableUrlsRange = activeURLs
     }
 
     func isUrlSchemeValid(for url: URL) -> Bool {
