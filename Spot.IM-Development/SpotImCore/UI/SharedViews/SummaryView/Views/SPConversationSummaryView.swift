@@ -28,43 +28,43 @@ final class SPConversationSummaryView: OWBaseView {
         static let viewShadowOpacity: Float = 0.08
         static let horizontalMarginBetweenSeparator: CGFloat = 9.5
         static let topMarginBetweenSeparator: CGFloat = 15.5
-        
+
         static let identifier = "conversation_summary_id"
         static let commentsCountLabelIdentifier = "conversation_summary_comments_count_label_id"
         static let sortButtonIdentifier = "conversation_summary_sort_button_id"
     }
-    
+
     private lazy var commentsCountLabel: OWBaseLabel = {
         let lbl = OWBaseLabel()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.commentsFontSize)
         return lbl
     }()
-    
+
     private lazy var sortButton: OWBaseButton = {
         let btn = OWBaseButton()
         btn.titleLabel?.font = UIFont.preferred(style: .bold, of: Metrics.sortButtonFontSize)
         let spacing: CGFloat = Metrics.insetTiny
         var inset: CGFloat = spacing / 2
-        
+
         // Update insets in order to make additional space begween title and image
         if LocalizationManager.currentLanguage?.isRightToLeft ?? false {
             inset = -inset
         }
-        
+
         btn.imageEdgeInsets = UIEdgeInsets(top: 0.0, left: -inset, bottom: 0.0, right: inset)
         btn.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: -inset)
         btn.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: inset, bottom: 0.0, right: inset)
-        
+
         // Transform Button in order to put image to the right
         btn.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         btn.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         btn.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        
+
         btn.addTarget(self, action: #selector(selectSorting), for: .touchUpInside)
-        
+
         return btn
     }()
-    
+
     private lazy var onlineViewingUsersView: OWOnlineViewingUsersCounterView = {
        return OWOnlineViewingUsersCounterView()
     }()
@@ -74,41 +74,41 @@ final class SPConversationSummaryView: OWBaseView {
         separator.backgroundColor = .spSeparator2
         return separator
     }()
-    
+
     private lazy var verticalSeparatorBetweenCommentsAndViewingUsers: OWBaseView = {
         let separator = OWBaseView()
         separator.backgroundColor = .spSeparator2
         return separator
     }()
-    
+
     internal var dropsShadow: Bool = false
-    
+
     weak var delegate: SPConversationSummaryViewDelegate?
-    
+
     override var bounds: CGRect {
         didSet {
             dropShadowIfNeeded()
         }
     }
-    
+
     fileprivate var viewModel: OWConversationSummaryViewModeling!
     fileprivate var disposeBag: DisposeBag!
-    
+
     // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         setupUI()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
         commentsCountLabel.accessibilityIdentifier = Metrics.commentsCountLabelIdentifier
         sortButton.accessibilityIdentifier = Metrics.sortButtonIdentifier
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         backgroundColor = .spBackground0
@@ -119,28 +119,28 @@ final class SPConversationSummaryView: OWBaseView {
         bottomHorizontalSeparator.backgroundColor = .spSeparator2
         verticalSeparatorBetweenCommentsAndViewingUsers.backgroundColor = .spSeparator2
     }
-    
+
     func configure(with viewModel: OWConversationSummaryViewModeling) {
         self.viewModel = viewModel
         disposeBag = DisposeBag()
         setupObservers()
     }
-    
+
     // MARK: - Internal methods
-    
+
     private func setupObservers() {
         onlineViewingUsersView.configure(with: viewModel.outputs.onlineViewingUsersVM)
-        
+
         viewModel.outputs.conversationCommentsCountText
             .bind(to: commentsCountLabel.rx.text)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.conversationSortVM.outputs.selectedSortOption
-            .map{ $0.title }
+            .map { $0.title }
             .bind(to: sortButton.rx.title())
             .disposed(by: disposeBag)
     }
-    
+
     // MARK: - Actions
 
     @objc
@@ -150,7 +150,7 @@ final class SPConversationSummaryView: OWBaseView {
 }
 
 extension SPConversationSummaryView {
-    
+
     private func setupUI() {
         // Setup comments label
         self.addSubview(commentsCountLabel)
@@ -163,7 +163,7 @@ extension SPConversationSummaryView {
             }
             make.centerY.equalToSuperview()
         }
-        
+
         // Setup sort button
         self.addSubview(sortButton)
         sortButton.OWSnp.makeConstraints { make in
@@ -175,14 +175,14 @@ extension SPConversationSummaryView {
             }
             make.top.bottom.equalToSuperview()
         }
-        
+
         // Setup bottom horizontal separator
         self.addSubview(bottomHorizontalSeparator)
         bottomHorizontalSeparator.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.height.equalTo(Metrics.separatorHeight)
         }
-        
+
         // Setup vertical separator between comments and viewingUsers
         self.addSubview(verticalSeparatorBetweenCommentsAndViewingUsers)
         verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.makeConstraints { make in
@@ -191,17 +191,17 @@ extension SPConversationSummaryView {
             make.top.equalToSuperview().offset(Metrics.topMarginBetweenSeparator)
             make.width.equalTo(Metrics.separatorWidth)
         }
-        
+
         // Setup online viewing users
         self.addSubview(onlineViewingUsersView)
         onlineViewingUsersView.OWSnp.makeConstraints { make in
             make.leading.equalTo(verticalSeparatorBetweenCommentsAndViewingUsers.OWSnp.trailing).offset(Metrics.horizontalMarginBetweenSeparator)
             make.centerY.equalToSuperview()
         }
-        
+
         updateColorsAccordingToStyle()
     }
-    
+
     private func dropShadowIfNeeded() {
         guard dropsShadow else {
             layer.shadowPath = nil

@@ -12,7 +12,7 @@ extension UIView {
     @discardableResult func enforceSemanticAttribute() -> Self {
         self.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? self.semanticContentAttribute
-        
+
         return self
     }
 }

@@ -63,13 +63,13 @@ struct OWChangeset<Section: OWSectionModelType> {
 }
 
 extension OWItemPath: CustomDebugStringConvertible {
-    var debugDescription : String {
+    var debugDescription: String {
         return "(\(sectionIndex), \(itemIndex))"
     }
 }
 
 extension OWChangeset: CustomDebugStringConvertible {
-    var debugDescription : String {
+    var debugDescription: String {
         let serializedSections = "[\n" + finalSections.map { "\($0)" }.joined(separator: ",\n") + "\n]\n"
         return " >> Final sections"
         + "   \n\(serializedSections)"

@@ -35,70 +35,72 @@ protocol AuthenticationPlaygroundNewAPIViewModeling {
     var outputs: AuthenticationPlaygroundNewAPIViewModelingOutputs { get }
 }
 
-class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIViewModeling, AuthenticationPlaygroundNewAPIViewModelingInputs, AuthenticationPlaygroundNewAPIViewModelingOutputs {
+class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIViewModeling,
+                                                AuthenticationPlaygroundNewAPIViewModelingInputs,
+                                                AuthenticationPlaygroundNewAPIViewModelingOutputs {
     var inputs: AuthenticationPlaygroundNewAPIViewModelingInputs { return self }
     var outputs: AuthenticationPlaygroundNewAPIViewModelingOutputs { return self }
-    
+
     fileprivate struct Metrics {
         static let delayUntilDismissVC = 500 // milliseconds
     }
-    
+
     fileprivate let _selectedGenericSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedGenericSSOOptionIndex = PublishSubject<Int>()
-    
+
     fileprivate let _selectedJWTSSOOptionIndex = BehaviorSubject(value: 0)
     var selectedJWTSSOOptionIndex = PublishSubject<Int>()
-    
+
     fileprivate let shouldInitializeSDK = BehaviorSubject(value: false)
     var initializeSDKToggled = PublishSubject<Bool>()
-    
+
     fileprivate let shouldAutomaticallyDismiss = BehaviorSubject(value: true)
     var automaticallyDismissToggled = PublishSubject<Bool>()
-    
+
     var logoutPressed = PublishSubject<Void>()
-    
+
     var dismissVC = PublishSubject<Void>()
-    
+
     var genericSSOAuthenticatePressed = PublishSubject<Void>()
     var JWTSSOAuthenticatePressed = PublishSubject<Void>()
-    
+
     lazy var title: String = {
         return NSLocalizedString("AuthenticationPlaygroundTitle", comment: "")
     }()
-    
+
     fileprivate let _genericSSOOptions = BehaviorSubject(value: GenericSSOAuthentication.mockModels)
     var genericSSOOptions: Observable<[GenericSSOAuthentication]> {
         return _genericSSOOptions
             .asObservable()
     }
-    
+
     fileprivate let _JWTSSOOptions = BehaviorSubject(value: JWTSSOAuthentication.mockModels)
     var JWTSSOOptions: Observable<[JWTSSOAuthentication]> {
         return _JWTSSOOptions
             .asObservable()
     }
-    
-    
+
     fileprivate let _genericSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _genericSSOAuthenticationStatus
             .asObservable()
     }
-    
+
     fileprivate let _JWTSSOAuthenticationStatus = BehaviorSubject(value: AuthenticationStatus.initial)
     var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _JWTSSOAuthenticationStatus
             .asObservable()
     }
-    
+
     fileprivate let disposeBag = DisposeBag()
-    
+
     init() {
         setupObservers()
     }
 }
 
 fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         // Different generic SSO selected
         selectedGenericSSOOptionIndex
@@ -107,7 +109,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             })
             .bind(to: _selectedGenericSSOOptionIndex)
             .disposed(by: disposeBag)
-        
+
         // Different JWT SSO selected
         selectedJWTSSOOptionIndex
             .do(onNext: { [weak self] _ in
@@ -115,7 +117,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             })
             .bind(to: _selectedJWTSSOOptionIndex)
             .disposed(by: disposeBag)
-        
+
         // Bind SDK initialization toggle
         initializeSDKToggled
             .do(onNext: { [weak self] _ in
@@ -124,7 +126,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             })
             .bind(to: shouldInitializeSDK)
             .disposed(by: disposeBag)
-                
+
         // Bind automatically dismiss toggle (after successful login)
         automaticallyDismissToggled
             .do(onNext: { [weak self] _ in
@@ -133,15 +135,16 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             })
             .bind(to: shouldAutomaticallyDismiss)
             .disposed(by: disposeBag)
-           
+
         // Logout
         logoutPressed
-            .do(onNext: { [weak self] JWTSSO in
+            .do(onNext: { [weak self] _ in
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
             .subscribe(onNext: {
                 // TODO change to new API
+
                 SpotIm.getUserLoginStatus { loginStatus in
                     DLog("Before logout \(loginStatus))")
                     SpotIm.logout { result in
@@ -157,7 +160,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 }
             })
             .disposed(by: disposeBag)
-         
+
         // TODO change to new API
         // Generic SSO authentication started
         genericSSOAuthenticatePressed
@@ -175,7 +178,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 return options[index]
             }
             .unwrap()
-            .do(onNext: { [weak self] genericSSO in
+            .do(onNext: { [weak self] _ in
                 self?._genericSSOAuthenticationStatus.onNext(.inProgress)
                 self?._JWTSSOAuthenticationStatus.onNext(.initial)
             })
@@ -199,7 +202,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                     })
                     .unwrap()
                     .map { ($0, genericSSO) }
-                    
+
             }
             .flatMapLatest { [weak self] token, genericSSO -> Observable<(String, String, GenericSSOAuthentication)> in
                 // 4. Start SSO
@@ -251,7 +254,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             })
             .subscribe()
             .disposed(by: disposeBag)
-       
+
         // TODO change to new API
         // JWT SSO authentication started
         JWTSSOAuthenticatePressed
@@ -269,7 +272,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 return options[index]
             }
             .unwrap()
-            .do(onNext: { [weak self] JWTSSO in
+            .do(onNext: { [weak self] _ in
                 self?._JWTSSOAuthenticationStatus.onNext(.inProgress)
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
@@ -306,27 +309,28 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .subscribe()
             .disposed(by: disposeBag)
     }
-    
+    // swiftlint:enable function_body_length
+
     // TODO add new API
     func startSSO() -> Observable<String?> {
         return .empty()
     }
-    
+
     // TODO add new API
     func completeSSO(codeB: String) -> Observable<String?> {
         return .empty()
     }
-    
+
     // TODO add new API
     func sso(jwtSecret: String) -> Observable<Void?> {
         return .empty()
     }
-    
+
     // TODO add new API
     func login(user: UserAuthentication) -> Observable<String?> {
         return .empty()
     }
-    
+
     // TODO add new API
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String?> {
         return .empty()

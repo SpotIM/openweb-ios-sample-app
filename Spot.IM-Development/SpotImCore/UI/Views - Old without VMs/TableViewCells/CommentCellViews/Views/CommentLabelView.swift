@@ -12,22 +12,22 @@ internal final class CommentLabelView: OWBaseView {
     fileprivate struct Metrics {
         static let identifier = "comment_label_id"
     }
-    
+
     private let labelContainer: OWBaseView = .init()
     private let iconImageView: OWBaseUIImageView = .init()
     private let label: OWBaseLabel = .init()
-    
+
     private var commentLabelColor: UIColor = .clear
-    private var state: OWLabelState = .readOnly 
-        
+    private var state: OWLabelState = .readOnly
+
     var id: String = .init()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.accessibilityIdentifier = Metrics.identifier
         setupUI()
     }
-    
+
     func setLabel(commentLabelIconUrl: URL, labelColor: UIColor, labelText: String, labelId: String, state: OWLabelState) {
         self.id = labelId
         self.commentLabelColor = labelColor
@@ -37,20 +37,20 @@ internal final class CommentLabelView: OWBaseView {
         self.label.text = labelText
         UIImage.load(with: commentLabelIconUrl) { [weak self] image, _ in
             guard let self = self else { return }
-            
+
             var iconHeight = 0.0
             if let image = image {
                 self.iconImageView.image = image.withRenderingMode(.alwaysTemplate)
                 iconHeight = Theme.iconImageHeight
             }
-            
+
             self.iconImageView.OWSnp.updateConstraints { make in
                 make.height.equalTo(iconHeight)
             }
         }
         setState(state: state)
     }
-    
+
     func setState(state: OWLabelState) {
         // set background, border, image and text colors according to state
         switch state {
@@ -60,37 +60,37 @@ internal final class CommentLabelView: OWBaseView {
                 labelContainer.layer.borderColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBorderOpacity).cgColor
                 iconImageView.tintColor = commentLabelColor
                 label.textColor = self.commentLabelColor
-                break
+
             case .selected:
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = .white
                 label.textColor = .white
-                break
+
             case .readOnly:
                 labelContainer.backgroundColor = commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
                 labelContainer.layer.borderWidth = 0
                 iconImageView.tintColor = commentLabelColor
                 label.textColor = commentLabelColor
-                break
+
         }
         self.state = state
     }
-    
+
     func getState() -> OWLabelState {
         return state
     }
-    
+
     // Handle dark mode \ light mode change
     func updateColorsAccordingToStyle() {
         self.backgroundColor = .clear
         switch state {
             case .selected:
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelSelectedBackgroundOpacity)
-                break
+
             case .readOnly:
                 self.labelContainer.backgroundColor = self.commentLabelColor.withAlphaComponent(UIColor.commentLabelBackgroundOpacity)
-                break
+
             case .notSelected:
                 break
         }
@@ -104,7 +104,7 @@ internal final class CommentLabelView: OWBaseView {
         configureLabel()
         configureIconImageView()
     }
-    
+
     private func configureLabelContainer() {
         labelContainer.addSubviews(iconImageView, label)
         labelContainer.layer.cornerRadius = 3
@@ -112,7 +112,7 @@ internal final class CommentLabelView: OWBaseView {
             make.edges.equalToSuperview()
         }
     }
-    
+
     private func configureIconImageView() {
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.backgroundColor = .clear
@@ -126,7 +126,7 @@ internal final class CommentLabelView: OWBaseView {
             make.trailing.equalTo(label.OWSnp.leading).offset(-Theme.iconTrailingOffset)
         }
     }
-    
+
     private func configureLabel() {
         label.font = .preferred(style: .medium, of: Theme.fontSize)
         label.OWSnp.makeConstraints { make in

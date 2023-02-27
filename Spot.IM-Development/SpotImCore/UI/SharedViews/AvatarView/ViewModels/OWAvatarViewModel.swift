@@ -13,14 +13,15 @@ import UIKit
 
 protocol OWAvatarViewModelingInputs {
     func configureUser(user: SPUser)
-    
+    func changeAvatarVisibility(isVisible: Bool)
+
     var tapAvatar: PublishSubject<Void> { get }
 }
 
 protocol OWAvatarViewModelingOutputs {
     var imageType: Observable<OWImageType> { get }
     var showOnlineIndicator: Observable<Bool> { get }
-    
+
     var avatarTapped: Observable<Void> { get }
 }
 
@@ -32,40 +33,45 @@ protocol OWAvatarViewModeling {
 class OWAvatarViewModel: OWAvatarViewModeling,
                          OWAvatarViewModelingInputs,
                          OWAvatarViewModelingOutputs {
-    
+
     var inputs: OWAvatarViewModelingInputs { return self }
     var outputs: OWAvatarViewModelingOutputs { return self }
-    
+
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    
+    fileprivate let _isAvatartVisible = BehaviorSubject<Bool>(value: true)
+
     fileprivate let imageURLProvider: SPImageProvider?
-    
+
     var tapAvatar = PublishSubject<Void>()
-    
+
     init (user: SPUser? = nil, imageURLProvider: SPImageProvider? = nil) {
         self.imageURLProvider = imageURLProvider
-        
+
         if let user = user {
             configureUser(user: user)
         }
     }
-    
+
     fileprivate lazy var user: Observable<SPUser> = {
         self._user
             .unwrap()
     }()
-    
+
+    fileprivate lazy var isAvatartVisible: Observable<Bool> = {
+        self._isAvatartVisible
+    }()
+
     var imageType: Observable<OWImageType> {
-        self.user
-            .map {
-                if ($0.isMuted) { return .defaultImage }
-                if let url = self.imageURLProvider?.imageURL(with: $0.imageId, size: nil) {
+        Observable.combineLatest(user, isAvatartVisible)
+            .map { user, isAvatartVisible in
+                if let url = self.imageURLProvider?.imageURL(with: user.imageId, size: nil),
+                    isAvatartVisible {
                     return .custom(url: url)
                 }
                 return .defaultImage
             }
     }
-    
+
     var showOnlineIndicator: Observable<Bool> {
         let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
         return user
@@ -75,45 +81,49 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                 return isUserOnline && !shouldDisableOnlineIndicator
             }
     }
-    
+
     var avatarTapped: Observable<Void> {
         tapAvatar
             .asObservable()
     }
-    
+
     func configureUser(user: SPUser) {
         self._user.onNext(user)
     }
-}
 
+    func changeAvatarVisibility(isVisible: Bool) {
+        self._isAvatartVisible.onNext(isVisible)
+    }
+}
 
 // TODO: this VM uses the new ImageProvider, once refactor is done old VM should be deleted
 class OWAvatarViewModelV2: OWAvatarViewModeling,
                          OWAvatarViewModelingInputs,
                          OWAvatarViewModelingOutputs {
-    
+
     var inputs: OWAvatarViewModelingInputs { return self }
     var outputs: OWAvatarViewModelingOutputs { return self }
-    
+
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
-    
+    fileprivate let _isAvatartVisible = BehaviorSubject<Bool?>(value: nil)
+
     fileprivate let imageURLProvider: OWImageProviding
-    
+
     var tapAvatar = PublishSubject<Void>()
-    
+
     init (user: SPUser? = nil, imageURLProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.imageURLProvider = imageURLProvider
-        
+
         if let user = user {
             configureUser(user: user)
         }
     }
-    
+
     fileprivate lazy var user: Observable<SPUser> = {
         self._user
             .unwrap()
     }()
-    
+
     var imageType: Observable<OWImageType> {
         self.user
             .flatMap { [weak self] user -> Observable<URL?> in
@@ -121,7 +131,7 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
                       let imageId = user.imageId,
                       !user.isMuted
                 else { return .empty() }
-                
+
                 return self.imageURLProvider.imageURL(with: imageId, size: nil)
             }
             .map { url in
@@ -130,7 +140,7 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
             }
             .asObservable()
     }
-    
+
     var showOnlineIndicator: Observable<Bool> {
         let shouldDisableOnlineIndicator = SPConfigsDataSource.appConfig?.conversation?.disableOnlineDotIndicator ?? false
         return user
@@ -140,14 +150,18 @@ class OWAvatarViewModelV2: OWAvatarViewModeling,
                 return isUserOnline && !shouldDisableOnlineIndicator
             }
     }
-    
+
     var avatarTapped: Observable<Void> {
         tapAvatar
             .asObservable()
     }
-    
+
     func configureUser(user: SPUser) {
         self._user.onNext(user)
+    }
+
+    func changeAvatarVisibility(isVisible: Bool) {
+        self._isAvatartVisible.onNext(isVisible)
     }
 }
 

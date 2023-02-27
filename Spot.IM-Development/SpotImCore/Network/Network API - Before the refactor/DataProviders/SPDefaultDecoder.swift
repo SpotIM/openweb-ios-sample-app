@@ -14,12 +14,12 @@ let defaultDecoder: JSONDecoder = {
 }()
 
 extension JSONDecoder {
-    
+
     /// Setup decoder with all needed default parameters
     func applyingDefaultParameters() -> Self {
         self.keyDecodingStrategy = .convertFromSnakeCase
-        
+
         return self
     }
-    
+
 }
