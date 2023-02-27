@@ -24,14 +24,17 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
 
     fileprivate struct Metrics {
         static let defaultLocaleIdentifier: String = "en-US"
+        static let localizationFileType: String = "lproj"
     }
 
     static let shared: OWLocalizationManagerProtocol & OWLocalizationManagerConfigurable = OWLocalizationManager()
 
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
     fileprivate let disposeBag = DisposeBag()
+
     fileprivate var spotId: OWSpotId? = nil
     fileprivate var _locale = Locale(identifier: Metrics.defaultLocaleIdentifier)
+    fileprivate var localizationBundle: Bundle? = nil
 
     fileprivate let _languageStrategy = BehaviorSubject<OWLanguageStrategy>(value: OWLanguageStrategy.default)
     fileprivate var languageStrategy: Observable<OWLanguageStrategy> {
@@ -87,7 +90,11 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
     }
 
     func localizedString(key: String) -> String {
-        return ""
+        guard let localizationBundle = self.localizationBundle else {
+            return NSLocalizedString(key, comment: "")
+        }
+
+        return localizationBundle.localizedString(forKey: key, value: "", table: nil)
     }
 
     var locale: Locale {
@@ -103,10 +110,10 @@ fileprivate extension OWLocalizationManager {
                 /*
                  Guard will prevent us from immediately trying to dictate the language.
                  This way we allow changing the strategy before or after the `spotId` setup from `OpenWeb.Manager.spotId`
-                */
+                 */
                 guard let self = self,
-                    let spotId = self.spotId,
-                    spotId == OpenWeb.manager.spotId else { return .empty() }
+                      let spotId = self.spotId,
+                      spotId == OpenWeb.manager.spotId else { return .empty() }
 
                 return self.dictateLanguage(forSpotId: spotId)
             }
@@ -121,10 +128,10 @@ fileprivate extension OWLocalizationManager {
                 /*
                  Guard will prevent us from immediately trying to dictate the locale.
                  This way we allow changing the strategy before or after the `spotId` setup from `OpenWeb.Manager.spotId`
-                */
+                 */
                 guard let self = self,
-                    let spotId = self.spotId,
-                    spotId == OpenWeb.manager.spotId else { return .empty() }
+                      let spotId = self.spotId,
+                      spotId == OpenWeb.manager.spotId else { return .empty() }
 
                 return self.dictateLocale(forSpotId: spotId)
             }
@@ -225,7 +232,14 @@ fileprivate extension OWLocalizationManager {
     }
 
     func configure(language: OWSupportedLanguage) {
+        guard let localizationFilePath = Bundle.openWeb.path(forResource: language.stringsFileSuffix,
+                                                             ofType: Metrics.localizationFileType),
+              let localizationBundle = Bundle(path: localizationFilePath) else {
+            self.localizationBundle = nil
+            return
+        }
 
+        self.localizationBundle = localizationBundle
     }
 
     func configure(locale: Locale) {
