@@ -13,9 +13,10 @@ protocol OWHelpersInternalProtocol {
 }
 
 class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
-    
+
     fileprivate var configurations: [OWAdditionalConfiguration] = []
-    
+    fileprivate var loggerConfigurationLayer: OWLoggerConfiguration = OWLoggerConfigurationLayer()
+
     var shouldSuppressFinmbFilter: Bool {
         return configurations.contains(.suppressFinmbFilter)
     }
@@ -23,6 +24,11 @@ class OWHelpersLayer: OWHelpers, OWHelpersInternalProtocol {
 
 // Will be public extension
 extension OWHelpersLayer {
+    func conversationCounters(forPostIds postIds: [OWPostId],
+                              completion: OWConversationCountersCompletion) {
+
+    }
+
     var additionalConfigurations: [OWAdditionalConfiguration] {
         get {
            return configurations
@@ -30,5 +36,9 @@ extension OWHelpersLayer {
         set(newConfigurations) {
             configurations = Array(Set(newConfigurations))
         }
+    }
+
+    var loggerConfiguration: OWLoggerConfiguration {
+        return loggerConfigurationLayer
     }
 }

@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 struct SPCommentCreationDTO {
     let articleMetadata: SpotImArticleMetadata
     let currentUserAvatarUrl: URL?

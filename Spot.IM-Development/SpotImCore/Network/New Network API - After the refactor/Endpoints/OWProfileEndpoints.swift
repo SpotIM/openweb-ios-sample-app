@@ -10,7 +10,7 @@ import Foundation
 
 enum OWProfileEndpoints: OWEndpoints {
     case createSingleUseToken
-    
+
     // MARK: - HTTPMethod
     var method: OWNetworkHTTPMethod {
         switch self {
@@ -18,7 +18,7 @@ enum OWProfileEndpoints: OWEndpoints {
             return .post
         }
     }
-    
+
     // MARK: - Path
     var path: String {
         switch self {
@@ -26,7 +26,7 @@ enum OWProfileEndpoints: OWEndpoints {
             return "/profile/create-single-use-token"
         }
     }
-    
+
     // MARK: - Parameters
     var parameters: OWNetworkParameters? {
         switch self {
@@ -47,7 +47,7 @@ protocol OWProfileAPI {
 extension OWNetworkAPI: OWProfileAPI {
     // Access by .profile for readability
     var profile: OWProfileAPI { return self }
-    
+
     func createSingleUseToken() -> OWNetworkResponse<OWSingleUseTokenResponse> {
         let endpoint = OWProfileEndpoints.createSingleUseToken
         let requestConfigure = request(for: endpoint)

@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWReplyCellViewModelingInputs {
-    
+
 }
 
 protocol OWReplyCellViewModelingOutputs {
@@ -25,7 +25,7 @@ protocol OWReplyCellViewModeling: OWCellViewModel {
 class OWReplyCellViewModel: OWReplyCellViewModeling, OWReplyCellViewModelingInputs, OWReplyCellViewModelingOutputs {
     var inputs: OWReplyCellViewModelingInputs { return self }
     var outputs: OWReplyCellViewModelingOutputs { return self }
-    
+
     var commentVM: OWCommentViewModeling {
         return OWCommentViewModel()
     }
