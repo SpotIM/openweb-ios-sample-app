@@ -49,14 +49,14 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
 
     init(comment: SPComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         self.lineLimit = lineLimit
-        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, lineLimit: lineLimit)
+        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, collapsableTextLineLimit: lineLimit)
         self.imageProvider = imageProvider
         _comment.onNext(comment)
     }
 
     init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         lineLimit = 0
-        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), lineLimit: lineLimit)
+        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), collapsableTextLineLimit: lineLimit)
         self.imageProvider = imageProvider
     }
 
@@ -89,10 +89,8 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
             return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)
         }.asObservable()
     }
-}
 
-fileprivate extension OWCommentContentViewModel {
-    var _commentMediaOriginalSize: Observable<CGSize> {
+    fileprivate lazy var _commentMediaOriginalSize: Observable<CGSize> = {
         _comment
             .map { comment in
                 if let gif = comment?.gif {
@@ -104,9 +102,9 @@ fileprivate extension OWCommentContentViewModel {
                 }
             }
             .asObservable()
-    }
+    }()
 
-    var _commentLeadingOffset: Observable<CGFloat> {
+    fileprivate lazy var _commentLeadingOffset: Observable<CGFloat> = {
         _comment
             .unwrap()
             .map { [weak self] comment in
@@ -114,8 +112,10 @@ fileprivate extension OWCommentContentViewModel {
                 return self.leadingOffset(perCommentDepth: comment.depth ?? 0)
             }
             .asObservable()
-    }
+    }()
+}
 
+fileprivate extension OWCommentContentViewModel {
     func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
         case 0: return Metrics.depth0Offset

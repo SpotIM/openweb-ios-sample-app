@@ -217,7 +217,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 for (index, comment) in comments.enumerated() {
                     // TODO: replies
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
-                    let vm = OWCommentCellViewModel(data:OWCommentRequiredData(
+                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
                         comment: comment,
                         user: user,
                         replyToUser: nil,
@@ -295,7 +295,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
-        
+
         // Responding to comment height change (for updating cell)
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Int> in
