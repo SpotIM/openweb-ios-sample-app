@@ -73,7 +73,7 @@ fileprivate extension OWCommentTextLabel {
 
     func checkURLTap(in point: CGPoint) {
         let index = self.indexOfAttributedTextCharacterAtPoint(point: point)
-        let url = viewModel.outputs.activeURLs.first { $0.key.contains(index) }?.value
+        let url = viewModel.outputs.availableUrlsRange.first { $0.key.contains(index) }?.value
 
         guard let activeUrl = url else { return }
         viewModel.inputs.urlTap.onNext(activeUrl)
