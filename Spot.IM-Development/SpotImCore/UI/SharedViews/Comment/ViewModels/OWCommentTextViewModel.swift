@@ -167,7 +167,7 @@ fileprivate extension OWCommentTextViewModel {
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
-            .font: UIFont.preferred(style: .regular, of: OWCommentContentView.Metrics.fontSize),
+            .font: OWFontBook.shared.font(style: .regular, size: OWCommentContentView.Metrics.fontSize),
             .foregroundColor: OWColorPalette.shared.color(type: .foreground1Color, themeStyle: style),
             .paragraphStyle: paragraphStyle
         ]
@@ -185,7 +185,7 @@ fileprivate extension OWCommentTextViewModel {
     func editedStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
         attributes[.foregroundColor] = UIColor.gray
-        attributes[.font] = UIFont.preferred(style: .italic, of: OWCommentContentView.Metrics.fontSize)
+        attributes[.font] = OWFontBook.shared.font(style: .italic, size: OWCommentContentView.Metrics.fontSize)
 
         return attributes
     }
