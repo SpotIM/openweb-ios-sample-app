@@ -60,6 +60,18 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
                                      callbacks: callbacks,
                                      deepLinkOptions: deepLink)
     }
+
+    func startCommentThreadFlow(conversationData: OWConversationRequiredData,
+                                commentThreadData: OWCommentThreadRequiredData,
+                                presentationalMode: OWPresentationalMode,
+                                callbacks: OWViewActionsCallbacks?) -> Observable<OWConversationCoordinatorResult> {
+
+      let deepLink = OWDeepLinkOptions.commentThread(commentThreadData: commentThreadData)
+      return startConversationFlow(conversationData: conversationData,
+                                   presentationalMode: presentationalMode,
+                                   callbacks: callbacks,
+                                   deepLinkOptions: deepLink)
+  }
 }
 
 fileprivate extension OWSDKCoordinator {

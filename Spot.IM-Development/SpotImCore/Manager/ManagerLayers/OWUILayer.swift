@@ -138,6 +138,46 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         })
         .disposed(by: flowDisposeBag)
     }
+
+    func commentThread(postId: String, article: OWArticleProtocol,
+                       presentationalMode: OWPresentationalMode,
+                       additionalSettings: OWCommentThreadSettingsProtocol? = nil,
+                       callbacks: OWViewActionsCallbacks? = nil,
+                       completion: @escaping OWDefaultCompletion) {
+        prepareForNewFlow()
+
+        setPostId(postId: postId) { result in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+                return
+            case .success(_):
+                break
+            }
+        }
+
+        let conversationData = OWConversationRequiredData(article: article,
+                                                          settings: additionalSettings?.conversationSettings)
+        let commentThreadData = OWCommentThreadRequiredData(article: article)
+
+        _ = sdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
+                                                    commentThreadData: commentThreadData,
+                                                    presentationalMode: presentationalMode,
+                                                    callbacks: callbacks)
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(onNext: { result in
+            switch result {
+            case .loadedToScreen:
+                completion(.success(()))
+            default:
+                break
+            }
+        }, onError: { err in
+            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            completion(.failure(error))
+        })
+        .disposed(by: flowDisposeBag)
+    }
 }
 
 fileprivate extension OWUILayer {
