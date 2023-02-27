@@ -11,5 +11,6 @@ import Foundation
 enum OWDeepLinkOptions {
     case highlightComment(commentId: String)
     case commentCreation(commentCreationData: OWCommentCreationRequiredData)
+    case commentThread(commentThreadData: OWCommentThreadRequiredData)
     case authentication
 }

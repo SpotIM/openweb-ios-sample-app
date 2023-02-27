@@ -45,6 +45,7 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
         setupViewActionsCallbacks(forViewModel: conversationVM)
 
         let deepLinkToCommentCreation = BehaviorSubject<OWCommentCreationRequiredData?>(value: nil)
+        let deepLinkToCommentThread = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
 
         var animated = true
 
@@ -54,6 +55,9 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             case .commentCreation(let commentCreationData):
                 animated = false
                 deepLinkToCommentCreation.onNext(commentCreationData)
+            case .commentThread(let commentThreadData):
+                animated = false
+                deepLinkToCommentThread.onNext(commentThreadData)
             case .highlightComment(let commentId):
                 conversationVM.inputs.highlightComment.onNext(commentId)
             default:
@@ -108,6 +112,28 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
                 return Observable.never()
             }
 
+        // Coordinate to comment thread
+        let coordinateCommentThreadObservable = deepLinkToCommentThread.unwrap().asObservable()
+            .flatMap { [weak self] commentThreadData -> Observable<OWCommentThreadCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let commentThreadCoordinator = OWCommentThreadCoordinator(router: self.router,
+                                                                              commentThreadData: commentThreadData,
+                                                                              actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: commentThreadCoordinator)
+            }
+            .do(onNext: { result in
+                switch result {
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWConversationCoordinatorResult> in
+                return Observable.never()
+            }
+
         let conversationPoppedObservable = conversationPopped
             .map { OWConversationCoordinatorResult.popped }
             .asObservable()
@@ -116,7 +142,12 @@ class OWConversationCoordinator: OWBaseCoordinator<OWConversationCoordinatorResu
             .map { OWConversationCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        return Observable.merge(conversationPoppedObservable, coordinateCommentCreationObservable, conversationLoadedObservable)
+        return Observable.merge(
+            conversationPoppedObservable,
+            coordinateCommentCreationObservable,
+            coordinateCommentThreadObservable,
+            conversationLoadedObservable
+        )
     }
 
     override func showableComponent() -> Observable<OWShowable> {
