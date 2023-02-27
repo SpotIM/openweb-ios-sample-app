@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWCommentThreadViewViewModelingInputs {
-    
+
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -25,9 +25,9 @@ protocol OWCommentThreadViewViewModeling {
 class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentThreadViewViewModelingInputs, OWCommentThreadViewViewModelingOutputs {
     var inputs: OWCommentThreadViewViewModelingInputs { return self }
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
-    
+
     init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
 
@@ -37,6 +37,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
 fileprivate extension OWCommentThreadViewViewModel {
     func setupObservers() {
-        
+
     }
 }

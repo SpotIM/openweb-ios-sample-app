@@ -26,13 +26,13 @@ protocol OWCommentThreadViewModeling {
 class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadViewModelingInputs, OWCommentThreadViewModelingOutputs {
     var inputs: OWCommentThreadViewModelingInputs { return self }
     var outputs: OWCommentThreadViewModelingOutputs { return self }
-    
+
     fileprivate let servicesProvider: OWSharedServicesProviding
 
     lazy var commentThreadViewVM: OWCommentThreadViewViewModeling = {
         return OWCommentThreadViewViewModel()
     }()
-    
+
     var viewDidLoad = PublishSubject<Void>()
     var loadedToScreen: Observable<Void> {
         return viewDidLoad.asObservable()
@@ -46,6 +46,6 @@ class OWCommentThreadViewModel: OWCommentThreadViewModeling, OWCommentThreadView
 
 fileprivate extension OWCommentThreadViewModel {
     func setupObservers() {
-        
+
     }
 }
