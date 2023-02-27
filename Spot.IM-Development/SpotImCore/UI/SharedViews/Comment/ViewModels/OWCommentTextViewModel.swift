@@ -99,7 +99,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 
     fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
-    var attributedString: Observable<NSMutableAttributedString> {
+    lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
             .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
                 guard let self = self else { return nil }
@@ -122,7 +122,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return res
             }
             .asObservable()
-    }
+    }()
 
     var height: Observable<CGFloat> {
         attributedString
