@@ -19,7 +19,6 @@ protocol OWCommentTextViewModelingInputs {
 }
 
 protocol OWCommentTextViewModelingOutputs {
-    var textHeightChange: Observable<Void> { get }
     var attributedString: Observable<NSMutableAttributedString> { get }
     var readMoreText: String { get }
     var readLessText: String { get }
@@ -125,10 +124,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
             .asObservable()
     }
 
-    var textHeightChange: Observable<Void> {
-        Observable.merge(self.heighChange)
-    }
-
     var height: Observable<CGFloat> {
         attributedString
             .withLatestFrom(widthObservable) { attributedString, width in
@@ -139,7 +134,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .distinctUntilChanged()
         .asObservable()
     }
-    var heighChange = PublishSubject<Void>()
 
     var urlTap = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
@@ -159,12 +153,6 @@ fileprivate extension OWCommentTextViewModel {
         readLessTap
             .subscribe(onNext: { [weak self] in
                 self?._textState.onNext(.collapsed)
-            })
-            .disposed(by: disposeBag)
-
-        height
-            .subscribe(onNext: { [weak self] _ in
-                self?.heighChange.onNext()
             })
             .disposed(by: disposeBag)
     }
