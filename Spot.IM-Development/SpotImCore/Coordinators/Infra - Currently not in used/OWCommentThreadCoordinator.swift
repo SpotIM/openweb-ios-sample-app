@@ -25,10 +25,12 @@ enum OWCommentThreadCoordinatorResult: OWCoordinatorResultProtocol {
 
 class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorResult> {
     fileprivate let router: OWRoutering
+    fileprivate let commentThreadData: OWCommentThreadRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
 
-    init(router: OWRoutering, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering, commentThreadData: OWCommentThreadRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
         self.router = router
+        self.commentThreadData = commentThreadData
         self.actionsCallbacks = actionsCallbacks
     }
 
