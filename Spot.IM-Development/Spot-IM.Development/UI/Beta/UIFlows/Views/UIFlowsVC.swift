@@ -24,6 +24,8 @@ class UIFlowsVC: UIViewController {
         static let btnFullConversationPresentModeIdentifier = "btn_full_conversation_present_mode_id"
         static let btnCommentCreationPushModeIdentifier = "btn_comment_creation_push_mode_id"
         static let btnCommentCreationPresentModeIdentifier = "btn_comment_creation_present_mode_id"
+        static let btnCommentThreadPushModeIdentifier = "btn_comment_thread_push_mode_id"
+        static let btnCommentThreadPresentModeIdentifier = "btn_comment_thread_present_mode_id"
         static let verticalMargin: CGFloat = 40
         static let horizontalMargin: CGFloat = 50
         static let buttonVerticalMargin: CGFloat = 20
@@ -63,6 +65,14 @@ class UIFlowsVC: UIViewController {
     fileprivate lazy var btnCommentCreationPresentMode: UIButton = {
         return NSLocalizedString("CommentCreationPresentMode", comment: "").blueRoundedButton
     }()
+    
+    fileprivate lazy var btnCommentThreadPushMode: UIButton = {
+        return NSLocalizedString("CommentThreadPushMode", comment: "").blueRoundedButton
+    }()
+
+    fileprivate lazy var btnCommentThreadPresentMode: UIButton = {
+        return NSLocalizedString("CommentThreadPresentMode", comment: "").blueRoundedButton
+    }()
 
     init(viewModel: UIFlowsViewModeling) {
         self.viewModel = viewModel
@@ -94,6 +104,8 @@ fileprivate extension UIFlowsVC {
         btnFullConversationPresentMode.accessibilityIdentifier = Metrics.btnFullConversationPresentModeIdentifier
         btnCommentCreationPushMode.accessibilityIdentifier = Metrics.btnCommentCreationPushModeIdentifier
         btnCommentCreationPresentMode.accessibilityIdentifier = Metrics.btnCommentCreationPresentModeIdentifier
+        btnCommentThreadPushMode.accessibilityIdentifier = Metrics.btnCommentThreadPushModeIdentifier
+        btnCommentThreadPresentMode.accessibilityIdentifier = Metrics.btnCommentThreadPresentModeIdentifier
     }
 
     func setupViews() {
@@ -156,6 +168,23 @@ fileprivate extension UIFlowsVC {
             make.height.equalTo(Metrics.buttonHeight)
             make.top.equalTo(btnCommentCreationPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
             make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
+        // Adding comment thread buttons
+        scrollView.addSubview(btnCommentThreadPushMode)
+        btnCommentThreadPushMode.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentCreationPresentMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
+        }
+
+        scrollView.addSubview(btnCommentThreadPresentMode)
+        btnCommentThreadPresentMode.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.height.equalTo(Metrics.buttonHeight)
+            make.top.equalTo(btnCommentThreadPushMode.snp.bottom).offset(Metrics.buttonVerticalMargin)
+            make.leading.equalTo(scrollView).offset(Metrics.horizontalMargin)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalMargin)
         }
     }
@@ -192,6 +221,16 @@ fileprivate extension UIFlowsVC {
         btnCommentCreationPresentMode.rx.tap
             .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
             .bind(to: viewModel.inputs.commentCreationTapped)
+            .disposed(by: disposeBag)
+
+        btnCommentThreadPushMode.rx.tap
+            .map { PresentationalModeCompact.push }
+            .bind(to: viewModel.inputs.commentThreadTapped)
+            .disposed(by: disposeBag)
+
+        btnCommentThreadPresentMode.rx.tap
+            .map { PresentationalModeCompact.present(style: self.viewModel.outputs.presentStyle) }
+            .bind(to: viewModel.inputs.commentThreadTapped)
             .disposed(by: disposeBag)
 
         viewModel.outputs.openMockArticleScreen
