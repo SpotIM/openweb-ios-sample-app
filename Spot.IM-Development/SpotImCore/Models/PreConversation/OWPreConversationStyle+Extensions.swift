@@ -14,7 +14,7 @@ extension OWPreConversationStyle {
     }
 
     func validate() -> OWPreConversationStyle {
-        guard case let .regular(numberOfComments) = self else { return self }
+        guard case let .regular(numberOfComments, _) = self else { return self }
         if (numberOfComments > Metrics.maxNumberOfComments) || (numberOfComments < Metrics.minNumberOfComments) {
             return .regular()
         } else {
@@ -24,12 +24,23 @@ extension OWPreConversationStyle {
 
     var numberOfComments: Int {
         switch self {
-        case .regular(let numOfComments):
+        case .regular(let numOfComments, _):
             return numOfComments
         case .compact:
             return InternalMetrics.numberOfCommentsForCompactStyle
         default:
             return 0
+        }
+    }
+    
+    var collapsableTextLineLimit: Int {
+        switch self {
+        case .regular(_, let lineLimit):
+            return lineLimit
+        case .compact(let lineLimit):
+            return lineLimit
+        default:
+            return Metrics.defaultCollapsableTextLineLimit
         }
     }
 }
