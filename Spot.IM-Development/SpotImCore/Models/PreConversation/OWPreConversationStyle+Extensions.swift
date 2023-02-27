@@ -32,7 +32,7 @@ extension OWPreConversationStyle {
             return 0
         }
     }
-    
+
     var collapsableTextLineLimit: Int {
         switch self {
         case .regular(_, let lineLimit):

@@ -20,7 +20,7 @@ protocol OWCommentTextViewModelingInputs {
 
 protocol OWCommentTextViewModelingOutputs {
     var textHeightChange: Observable<Void> { get }
-    var attributedString: Observable<NSMutableAttributedString?> { get }
+    var attributedString: Observable<NSMutableAttributedString> { get }
     var readMoreText: String { get }
     var readLessText: String { get }
     var activeURLs: [NSRange: URL] { get }
@@ -40,8 +40,8 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var inputs: OWCommentTextViewModelingInputs { return self }
     var outputs: OWCommentTextViewModelingOutputs { return self }
 
-    fileprivate var lineLimit: Int = 0
-    fileprivate var disposeBag = DisposeBag()
+    fileprivate let collapsableTextLineLimit: Int
+    fileprivate let disposeBag = DisposeBag()
 
     var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
     var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
@@ -51,23 +51,25 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var readLessTap = PublishSubject<Void>()
     var activeURLs: [NSRange: URL]
 
-    init(comment: SPComment, lineLimit: Int) {
-        self.lineLimit = lineLimit
+    init(comment: SPComment, collapsableTextLineLimit: Int) {
+        self.collapsableTextLineLimit = collapsableTextLineLimit
         self.activeURLs = [:]
         _comment.onNext(comment)
         setupObservers()
     }
 
-    fileprivate var _themeStyleObservable: Observable<OWThemeStyle> = OWSharedServicesProvider.shared.themeStyleService().style
+    fileprivate lazy var _themeStyleObservable: Observable<OWThemeStyle> = {
+        OWSharedServicesProvider.shared.themeStyleService().style
+    }()
 
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
-    fileprivate var _commentUnwraped: Observable<SPComment> {
+    fileprivate var comment: Observable<SPComment> {
         _comment.unwrap()
     }
 
-    fileprivate var fullAttributedString: Observable<NSMutableAttributedString> {
+    fileprivate lazy var fullAttributedString: Observable<NSMutableAttributedString> = {
         _themeStyleObservable
-            .withLatestFrom(_commentUnwraped) { style, comment -> (OWThemeStyle, String)? in
+            .withLatestFrom(comment) { style, comment -> (OWThemeStyle, String)? in
                 guard let text = comment.text?.text else { return nil }
                 return (style, text)
             }
@@ -80,7 +82,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 )
             }
             .unwrap()
-    }
+    }()
 
     var width = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
@@ -98,7 +100,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     }
 
     fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
-    var attributedString: Observable<NSMutableAttributedString?> {
+    var attributedString: Observable<NSMutableAttributedString> {
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
             .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
                 guard let self = self else { return nil }
@@ -106,7 +108,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return (attString, style)
             }
             .unwrap()
-            .withLatestFrom(_commentUnwraped) { [weak self] res, comment -> (NSMutableAttributedString, OWThemeStyle) in
+            .withLatestFrom(comment) { [weak self] res, comment -> (NSMutableAttributedString, OWThemeStyle) in
                 let (attString, style) = res
                 guard let self = self,
                       comment.edited == true
@@ -130,7 +132,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var height: Observable<CGFloat> {
         attributedString
             .withLatestFrom(widthObservable) { attributedString, width in
-                let newHeight = attributedString?.height(withConstrainedWidth: width)
+                let newHeight = attributedString.height(withConstrainedWidth: width)
                 return newHeight
         }
         .unwrap()
@@ -202,10 +204,10 @@ fileprivate extension OWCommentTextViewModel {
 
     func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: TextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
-        guard lines.count > self.lineLimit else { return NSMutableAttributedString(attributedString: attString) }
+        guard lines.count > self.collapsableTextLineLimit else { return NSMutableAttributedString(attributedString: attString) }
         switch currentState {
         case .collapsed:
-            let visibleLines = lines[0...lineLimit - 1]
+            let visibleLines = lines[0...collapsableTextLineLimit - 1]
             let ellipsis = NSAttributedString(
                 string: " ... ",
                 attributes: messageStringAttributes(with: style))
