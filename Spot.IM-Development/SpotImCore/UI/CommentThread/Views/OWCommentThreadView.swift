@@ -14,14 +14,14 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
         static let identifier = "comment_thread_view_id"
     }
-    
+
     fileprivate let viewModel: OWCommentThreadViewViewModeling
     fileprivate let disposeBag = DisposeBag()
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     init(viewModel: OWCommentThreadViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -29,7 +29,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
         setupObservers()
         applyAccessibility()
     }
-    
+
     private func applyAccessibility() {
         self.accessibilityIdentifier = Metrics.identifier
     }
@@ -38,11 +38,11 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWCommentThreadView {
     func setupViews() {
         self.useAsThemeStyleInjector()
-        
+
         // TODO: Remove the ugly green when actually starting to work on the UI, this is only for integration purposes at the moment
         self.backgroundColor = .green
     }
-    
+
     func setupObservers() {
 
     }
