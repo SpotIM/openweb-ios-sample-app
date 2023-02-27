@@ -146,6 +146,7 @@ fileprivate extension MockArticleVC {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 
