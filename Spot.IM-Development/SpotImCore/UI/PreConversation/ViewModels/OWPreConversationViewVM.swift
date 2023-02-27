@@ -303,8 +303,8 @@ fileprivate extension OWPreConversationViewViewModel {
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
                         return commentVM.outputs.contentVM
-                            .outputs.collapsableLabelViewModel.outputs.textHeightChange
-                            .map { index }
+                            .outputs.collapsableLabelViewModel.outputs.height
+                            .map { _ in index }
                     } else {
                         return nil
                     }
