@@ -24,7 +24,7 @@ class OWPreConversationHeaderView: UIView {
         lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
         lbl.textColor = OWColorPalette.shared.color(type: .foreground0Color,
                                                     themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        lbl.text = LocalizationManager.localizedString(key: "Conversation")
+        lbl.text = OWLocalizationManager.shared.localizedString(key: "Conversation")
         return lbl
     }()
 

@@ -87,6 +87,7 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
             .do(onNext: { [weak self] locale in
                 self?._currentLocale.onNext(locale)
             })
+            .subscribe()
     }
 
     func localizedString(key: String) -> String {
