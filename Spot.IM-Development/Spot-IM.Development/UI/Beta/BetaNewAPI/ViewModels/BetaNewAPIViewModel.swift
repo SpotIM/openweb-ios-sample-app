@@ -231,6 +231,9 @@ fileprivate extension BetaNewAPIViewModel {
         // swiftlint:enable line_length
         var sorting = customizations.sorting
         sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: 0))
+        // Intentional commented code - Once we will have a setting for that in the UI, connect to here
+//        var helpers = OpenWeb.manager.helpers
+//        helpers.languageStrategy = .use(language: .hebrew)
     }
 }
 
