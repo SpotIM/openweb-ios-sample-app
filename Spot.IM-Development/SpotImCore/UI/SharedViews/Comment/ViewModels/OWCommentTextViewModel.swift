@@ -16,14 +16,12 @@ typealias OWRangeURLsMapper = [NSRange: URL]
 protocol OWCommentTextViewModelingInputs {
     var width: BehaviorSubject<CGFloat> { get }
     var readMoreTap: PublishSubject<Void> { get }
-    var readLessTap: PublishSubject<Void> { get }
     var urlTap: PublishSubject<URL> { get }
 }
 
 protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
     var readMoreText: String { get }
-    var readLessText: String { get }
     var availableUrlsRange: OWRangeURLsMapper { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
@@ -45,11 +43,9 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate let disposeBag = DisposeBag()
 
     var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
-    var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
     var editedText: String = LocalizationManager.localizedString(key: "Edited")
 
     var readMoreTap = PublishSubject<Void>()
-    var readLessTap = PublishSubject<Void>()
     var availableUrlsRange: [NSRange: URL]
 
     init(comment: SPComment, collapsableTextLineLimit: Int) {
@@ -151,12 +147,6 @@ fileprivate extension OWCommentTextViewModel {
                 self?._textState.onNext(.expanded)
             })
             .disposed(by: disposeBag)
-
-        readLessTap
-            .subscribe(onNext: { [weak self] in
-                self?._textState.onNext(.collapsed)
-            })
-            .disposed(by: disposeBag)
     }
 }
 
@@ -177,9 +167,9 @@ fileprivate extension OWCommentTextViewModel {
         return attributes
     }
 
-    func actionStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
+    func readMoreStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
-        attributes[.foregroundColor] = OWColorPalette.shared.color(type: .buttonTextColor, themeStyle: style)
+        attributes[.font] = OWFontBook.shared.font(style: .bold, size: OWCommentContentView.Metrics.fontSize)
 
         return attributes
     }
@@ -187,7 +177,7 @@ fileprivate extension OWCommentTextViewModel {
     func editedStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
         attributes[.foregroundColor] = UIColor.gray
-        attributes[.font] = OWFontBook.shared.font(style: .italic, size: OWCommentContentView.Metrics.fontSize)
+        attributes[.font] = OWFontBook.shared.font(style: .italic, size: OWCommentContentView.Metrics.editedFontSize)
 
         return attributes
     }
@@ -199,7 +189,7 @@ fileprivate extension OWCommentTextViewModel {
         case .collapsed:
             let visibleLines = lines[0...collapsableTextLineLimit - 1]
             let ellipsis = NSAttributedString(
-                string: " ... ",
+                string: "... ",
                 attributes: messageStringAttributes(with: style))
             var visibleString = ""
             for line in visibleLines {
@@ -211,19 +201,14 @@ fileprivate extension OWCommentTextViewModel {
             var res = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes(with: style))
             let readMore = NSMutableAttributedString(
                 string: self.readMoreText,
-                attributes: actionStringAttributes(with: style))
+                attributes: readMoreStringAttributes(with: style))
             let trimmedRes = res.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
             res = trimmedRes.mutableCopy() as? NSMutableAttributedString ?? res
             res.append(ellipsis)
             res.append(readMore)
             return res
         case .expanded:
-            let readLess = NSMutableAttributedString(
-                string: self.readLessText,
-                attributes: actionStringAttributes(with: style))
-            let res = NSMutableAttributedString(attributedString: attString)
-            res.append(readLess)
-            return res
+            return NSMutableAttributedString(attributedString: attString)
         }
     }
 

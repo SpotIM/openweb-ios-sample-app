@@ -42,8 +42,6 @@ extension OWCommentTextLabel: UIGestureRecognizerDelegate {
     func handleTap(gesture: UITapGestureRecognizer) {
         if isTarget(substring: viewModel.outputs.readMoreText, destinationOf: gesture) {
             viewModel.inputs.readMoreTap.onNext()
-        } else if isTarget(substring: viewModel.outputs.readLessText, destinationOf: gesture) {
-            viewModel.inputs.readLessTap.onNext()
         } else {
             checkURLTap(in: gesture.location(in: self))
         }
