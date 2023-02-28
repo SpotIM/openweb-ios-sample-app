@@ -21,7 +21,7 @@ internal class SPBaseConversationViewController: SPBaseViewController, OWAlertPr
 
     internal lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
-            .enforceSemanticAttribute()
+            .enforceSemanticAttributeOldAPI()
             .backgroundColor(.spBackground0)
             .separatorStyle(.none)
             .dataSource(self)

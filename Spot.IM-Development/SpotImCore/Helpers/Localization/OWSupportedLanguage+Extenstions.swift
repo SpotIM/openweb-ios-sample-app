@@ -32,7 +32,7 @@ extension OWSupportedLanguage {
         }
     }
 
-    var customSemanticAttribute: UISemanticContentAttribute {
+    var semanticAttribute: UISemanticContentAttribute {
         switch self {
         case .hebrew, .arabic:
             return .forceRightToLeft
