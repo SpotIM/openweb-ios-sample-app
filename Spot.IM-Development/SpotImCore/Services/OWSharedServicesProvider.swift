@@ -191,11 +191,11 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     }
 
     func set(spotId: OWSpotId) {
-        fetchConfig(spotId: spotId)
+        configure(forSpotId: spotId)
     }
 
     func change(spotId: OWSpotId) {
-        fetchConfig(spotId: spotId)
+        configure(forSpotId: spotId)
 
         // Stop / re-create services which depend on spot id
         _realtimeService.stopFetchingData()
@@ -205,13 +205,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
 }
 
 fileprivate extension OWSharedServicesProvider {
-    func fetchConfig(spotId: OWSpotId) {
-        // TODO: Replace it with new network API - create a dedicated class which do initialization stuff for new spotId
-        _ = SPClientSettings.main.setup(spotId: spotId)
-            .take(1)
-            .do(onNext: { config in
-                LocalizationManager.setLocale(config.appConfig.mobileSdk.locale ?? "en")
-            })
-            .subscribe()
+    func configure(forSpotId spotId: OWSpotId) {
+        OWLocalizationManager.shared.configure(forSpotId: spotId)
     }
 }
