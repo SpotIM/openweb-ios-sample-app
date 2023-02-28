@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import UIKit
 import RxSwift
 
 protocol OWLocalizationManagerProtocol {
     func localizedString(key: String) -> String
     var locale: Locale { get }
+    var semanticAttribute: UISemanticContentAttribute { get }
 }
 
 protocol OWLocalizationManagerConfigurable {
@@ -48,6 +50,7 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
             .distinctUntilChanged()
     }
 
+    fileprivate var _currentLanguageNonRx: OWSupportedLanguage = OWSupportedLanguage.default
     fileprivate let _currentLanguage = BehaviorSubject<OWSupportedLanguage?>(value: nil)
     fileprivate var currentLanguage: Observable<OWSupportedLanguage> {
         return _currentLanguage
@@ -100,6 +103,10 @@ class OWLocalizationManager: OWLocalizationManagerProtocol, OWLocalizationManage
 
     var locale: Locale {
         return _locale
+    }
+
+    var semanticAttribute: UISemanticContentAttribute {
+        return _currentLanguageNonRx.semanticAttribute
     }
 }
 
@@ -233,6 +240,8 @@ fileprivate extension OWLocalizationManager {
     }
 
     func configure(language: OWSupportedLanguage) {
+        _currentLanguageNonRx = language
+
         guard let localizationFilePath = Bundle.openWeb.path(forResource: language.stringsFileSuffix,
                                                              ofType: Metrics.localizationFileType),
               let localizationBundle = Bundle(path: localizationFilePath) else {
