@@ -21,15 +21,17 @@ class OWPreConversationHeaderView: UIView {
 
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
+            .enforceSemanticAttribute()
         lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
         lbl.textColor = OWColorPalette.shared.color(type: .foreground0Color,
                                                     themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        lbl.text = LocalizationManager.localizedString(key: "Conversation")
+        lbl.text = OWLocalizationManager.shared.localizedString(key: "Conversation")
         return lbl
     }()
 
     private lazy var counterLabel: UILabel = {
         let lbl = UILabel()
+            .enforceSemanticAttribute()
         lbl.font = UIFont.preferred(style: .regular, of: Metrics.counterFontSize)
         lbl.textColor = OWColorPalette.shared.color(type: .foreground1Color,
                                                     themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
@@ -63,6 +65,8 @@ class OWPreConversationHeaderView: UIView {
 
 fileprivate extension OWPreConversationHeaderView {
     func setupUI() {
+        self.enforceSemanticAttribute()
+
         self.addSubview(titleLabel)
         titleLabel.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
