@@ -12,7 +12,8 @@ import RxCocoa
 
 class OWCommentContentView: UIView {
     internal struct Metrics {
-        static let fontSize: CGFloat = 16.0
+        static let fontSize: CGFloat = 15.0
+        static let editedFontSize: CGFloat = 13.0
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
     }
