@@ -225,10 +225,8 @@ fileprivate extension MockArticleVC {
 
         // Adding pre conversation
         viewModel.outputs.showPreConversation
-            .subscribe(onNext: { [weak self] tuple in
+            .subscribe(onNext: { [weak self] preConversationView in
                 guard let self = self else { return }
-
-                let preConversationView = tuple.0
 
                 self.articleView.removeFromSuperview()
                 self.articleScrollView.addSubview(self.articleView)
