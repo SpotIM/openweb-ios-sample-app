@@ -261,19 +261,19 @@ fileprivate extension OWPreConversationView {
 //        }
 //    }
 
-    internal override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        if let obj = object as? UITableView {
-            if obj == self.tableView && keyPath == "contentSize" {
-                if let newSize = change?[NSKeyValueChangeKey.newKey] as? CGSize {
-                    print("NOGAH: table new contentSize height: \(newSize.height)")
-//                    self.tableView.frame.size.height = newSize.height
-                    tableView.OWSnp.updateConstraints { make in
-                        make.height.equalTo(newSize.height)
-                    }
-//                    tableView.setNeedsLayout()
-//                    tableView.layoutIfNeeded()
-                }
-            }
-        }
-    }
+//    internal override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+//        if let obj = object as? UITableView {
+//            if obj == self.tableView && keyPath == "contentSize" {
+//                if let newSize = change?[NSKeyValueChangeKey.newKey] as? CGSize {
+//                    print("NOGAH: table new contentSize height: \(newSize.height)")
+////                    self.tableView.frame.size.height = newSize.height
+//                    tableView.OWSnp.updateConstraints { make in
+//                        make.height.equalTo(newSize.height)
+//                    }
+////                    tableView.setNeedsLayout()
+////                    tableView.layoutIfNeeded()
+//                }
+//            }
+//        }
+//    }
 }
