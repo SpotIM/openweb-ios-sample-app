@@ -27,8 +27,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-//        static let initialHeight: CGFloat = 800
-//        static let changedHeight: CGFloat = 700
+        static let initialHeight: CGFloat = 800
+        static let changedHeight: CGFloat = 700
 
         static let separatorHeight: CGFloat = 1.0
     }
@@ -96,6 +96,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
+    fileprivate var observation: NSKeyValueObservation?
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -112,7 +113,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     override func layoutSubviews() {
         super.layoutSubviews()
 //        self.updateTableViewHeightIfNeeded()
-//        self.viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: self.intrinsicContentSize.width, height: self.intrinsicContentSize.height))
+        self.viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: self.intrinsicContentSize.width, height: self.intrinsicContentSize.height))
     }
 }
 
@@ -166,7 +167,7 @@ fileprivate extension OWPreConversationView {
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.height.equalTo(0)
+            make.height.equalTo(200)
         }
 
         self.addSubview(btnCTAConversation)
@@ -191,7 +192,7 @@ fileprivate extension OWPreConversationView {
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
 
-//        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
+        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
 
         viewModel.outputs.preConversationDataSourceSections
             .observe(on: MainScheduler.instance)
@@ -240,13 +241,14 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        _ = tableView.observe(\UITableView.contentSize, changeHandler: { table, newSize in
-            guard let newHeight = newSize.newValue?.height else { return }
-
+        observation = tableView.observe(\UITableView.contentSize, changeHandler: { table, _ in
+            let newHeight = table.contentSize.height
             table.OWSnp.updateConstraints { make in
                 make.height.equalTo(newHeight)
             }
         })
+//                self.tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+
     }
 
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
