@@ -73,7 +73,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
             .withPadding(Metrics.btnFullConversationTextPadding)
-            .font(UIFont.preferred(style: .medium, of: Metrics.btnFullConversationFontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.btnFullConversationFontSize))
     }()
     fileprivate lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
@@ -201,7 +201,8 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
 
-        viewModel.outputs.changeSizeAtIndex
+        viewModel.outputs.updateCellSizeAtIndex
+                .observe(on: MainScheduler.instance)
                 .subscribe(onNext: { [weak self] index in
                     guard let self = self else { return }
                     UIView.performWithoutAnimation {
