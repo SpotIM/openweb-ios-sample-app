@@ -240,7 +240,13 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        self.tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+        _ = tableView.observe(\UITableView.contentSize, changeHandler: { table, newSize in
+            guard let newHeight = newSize.newValue?.height else { return }
+
+            table.OWSnp.updateConstraints { make in
+                make.height.equalTo(newHeight)
+            }
+        })
     }
 
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
