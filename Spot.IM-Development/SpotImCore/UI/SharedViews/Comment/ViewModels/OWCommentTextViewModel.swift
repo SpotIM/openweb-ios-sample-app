@@ -15,14 +15,11 @@ typealias OWRangeURLsMapper = [NSRange: URL]
 
 protocol OWCommentTextViewModelingInputs {
     var width: BehaviorSubject<CGFloat> { get }
-    var readMoreTap: PublishSubject<Void> { get }
-    var urlTap: PublishSubject<URL> { get }
+    var labelClickIndex: PublishSubject<Int> { get }
 }
 
 protocol OWCommentTextViewModelingOutputs {
     var attributedString: Observable<NSMutableAttributedString> { get }
-    var readMoreText: String { get }
-    var availableUrlsRange: OWRangeURLsMapper { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
 }
@@ -42,11 +39,13 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate let collapsableTextLineLimit: Int
     fileprivate let disposeBag = DisposeBag()
 
-    var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
-    var editedText: String = LocalizationManager.localizedString(key: "Edited")
+    fileprivate var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
+    fileprivate var editedText: String = LocalizationManager.localizedString(key: "Edited")
 
-    var readMoreTap = PublishSubject<Void>()
-    var availableUrlsRange: [NSRange: URL]
+    var labelClickIndex = PublishSubject<Int>()
+
+    fileprivate var readMoreRange: NSRange? = nil
+    fileprivate var availableUrlsRange: [NSRange: URL]
 
     init(comment: SPComment, collapsableTextLineLimit: Int) {
         self.collapsableTextLineLimit = collapsableTextLineLimit
@@ -142,9 +141,19 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
 fileprivate extension OWCommentTextViewModel {
     func setupObservers() {
-        readMoreTap
-            .subscribe(onNext: { [weak self] in
-                self?._textState.onNext(.expanded)
+        labelClickIndex
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self,
+                      let range = self.readMoreRange else { return }
+
+                if range.contains(index) {
+                    self._textState.onNext(.expanded)
+                } else {
+                    let url = self.availableUrlsRange.first { $0.key.contains(index) }?.value
+
+                    guard let activeUrl = url else { return }
+                    self.urlTap.onNext(activeUrl)
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -184,7 +193,10 @@ fileprivate extension OWCommentTextViewModel {
 
     func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: OWTextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
-        guard lines.count > self.collapsableTextLineLimit else { return NSMutableAttributedString(attributedString: attString) }
+        guard lines.count > self.collapsableTextLineLimit else {
+            self.readMoreRange = nil
+            return NSMutableAttributedString(attributedString: attString)
+        }
         switch currentState {
         case .collapsed:
             let visibleLines = lines[0...collapsableTextLineLimit - 1]
@@ -205,9 +217,11 @@ fileprivate extension OWCommentTextViewModel {
             let trimmedRes = res.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
             res = trimmedRes.mutableCopy() as? NSMutableAttributedString ?? res
             res.append(ellipsis)
+            self.readMoreRange = NSRange(location: res.length, length: readMore.length)
             res.append(readMore)
             return res
         case .expanded:
+            self.readMoreRange = nil
             return NSMutableAttributedString(attributedString: attString)
         }
     }
