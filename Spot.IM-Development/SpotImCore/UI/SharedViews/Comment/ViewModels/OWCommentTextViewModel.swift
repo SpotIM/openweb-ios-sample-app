@@ -11,19 +11,15 @@ import RxSwift
 import RxCocoa
 import UIKit
 
+typealias OWRangeURLsMapper = [NSRange: URL]
+
 protocol OWCommentTextViewModelingInputs {
     var width: BehaviorSubject<CGFloat> { get }
-    var readMoreTap: PublishSubject<Void> { get }
-    var readLessTap: PublishSubject<Void> { get }
-    var urlTap: PublishSubject<URL> { get }
+    var labelClickIndex: PublishSubject<Int> { get }
 }
 
 protocol OWCommentTextViewModelingOutputs {
-    var textHeightChange: Observable<Void> { get }
-    var attributedString: Observable<NSMutableAttributedString?> { get }
-    var readMoreText: String { get }
-    var readLessText: String { get }
-    var activeURLs: [NSRange: URL] { get }
+    var attributedString: Observable<NSMutableAttributedString> { get }
     var urlClickedOutput: Observable<URL> { get }
     var height: Observable<CGFloat> { get }
 }
@@ -40,34 +36,36 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var inputs: OWCommentTextViewModelingInputs { return self }
     var outputs: OWCommentTextViewModelingOutputs { return self }
 
-    fileprivate var lineLimit: Int = 0
-    fileprivate var disposeBag = DisposeBag()
+    fileprivate let collapsableTextLineLimit: Int
+    fileprivate let disposeBag = DisposeBag()
 
-    var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
-    var readLessText: String = LocalizationManager.localizedString(key: "Read Less")
-    var editedText: String = LocalizationManager.localizedString(key: "Edited")
+    fileprivate var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
+    fileprivate var editedText: String = LocalizationManager.localizedString(key: "Edited")
 
-    var readMoreTap = PublishSubject<Void>()
-    var readLessTap = PublishSubject<Void>()
-    var activeURLs: [NSRange: URL]
+    var labelClickIndex = PublishSubject<Int>()
 
-    init(comment: SPComment, lineLimit: Int) {
-        self.lineLimit = lineLimit
-        self.activeURLs = [:]
+    fileprivate var readMoreRange: NSRange? = nil
+    fileprivate var availableUrlsRange: [NSRange: URL]
+
+    init(comment: SPComment, collapsableTextLineLimit: Int) {
+        self.collapsableTextLineLimit = collapsableTextLineLimit
+        self.availableUrlsRange = [:]
         _comment.onNext(comment)
         setupObservers()
     }
 
-    fileprivate var _themeStyleObservable: Observable<OWThemeStyle> = OWSharedServicesProvider.shared.themeStyleService().style
+    fileprivate lazy var _themeStyleObservable: Observable<OWThemeStyle> = {
+        OWSharedServicesProvider.shared.themeStyleService().style
+    }()
 
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
-    fileprivate var _commentUnwraped: Observable<SPComment> {
+    fileprivate var comment: Observable<SPComment> {
         _comment.unwrap()
     }
 
-    fileprivate var fullAttributedString: Observable<NSMutableAttributedString> {
+    fileprivate lazy var fullAttributedString: Observable<NSMutableAttributedString> = {
         _themeStyleObservable
-            .withLatestFrom(_commentUnwraped) { style, comment -> (OWThemeStyle, String)? in
+            .withLatestFrom(comment) { style, comment -> (OWThemeStyle, String)? in
                 guard let text = comment.text?.text else { return nil }
                 return (style, text)
             }
@@ -80,7 +78,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 )
             }
             .unwrap()
-    }
+    }()
 
     var width = BehaviorSubject<CGFloat>(value: 0)
     fileprivate var widthObservable: Observable<CGFloat> {
@@ -97,16 +95,16 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         .asObservable()
     }
 
-    fileprivate var _textState = BehaviorSubject<TextState>(value: .collapsed)
-    var attributedString: Observable<NSMutableAttributedString?> {
+    fileprivate var _textState = BehaviorSubject<OWTextState>(value: .collapsed)
+    lazy var attributedString: Observable<NSMutableAttributedString> = {
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
             .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
                 guard let self = self else { return nil }
-                let attString = self.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState, style: style)
+                let attString = self.appendReadMoreIfNeeded(fullAttributedString, lines: lines, currentState: currentState, style: style)
                 return (attString, style)
             }
             .unwrap()
-            .withLatestFrom(_commentUnwraped) { [weak self] res, comment -> (NSMutableAttributedString, OWThemeStyle) in
+            .withLatestFrom(comment) { [weak self] res, comment -> (NSMutableAttributedString, OWThemeStyle) in
                 let (attString, style) = res
                 guard let self = self,
                       comment.edited == true
@@ -121,23 +119,18 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return res
             }
             .asObservable()
-    }
-
-    var textHeightChange: Observable<Void> {
-        Observable.merge(self.heighChange)
-    }
+    }()
 
     var height: Observable<CGFloat> {
         attributedString
             .withLatestFrom(widthObservable) { attributedString, width in
-                let newHeight = attributedString?.height(withConstrainedWidth: width)
+                let newHeight = attributedString.height(withConstrainedWidth: width)
                 return newHeight
         }
         .unwrap()
         .distinctUntilChanged()
         .asObservable()
     }
-    var heighChange = PublishSubject<Void>()
 
     var urlTap = PublishSubject<URL>()
     var urlClickedOutput: Observable<URL> {
@@ -148,21 +141,19 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
 
 fileprivate extension OWCommentTextViewModel {
     func setupObservers() {
-        readMoreTap
-            .subscribe(onNext: { [weak self] in
-                self?._textState.onNext(.expanded)
-            })
-            .disposed(by: disposeBag)
+        labelClickIndex
+            .subscribe(onNext: { [weak self] index in
+                guard let self = self,
+                      let range = self.readMoreRange else { return }
 
-        readLessTap
-            .subscribe(onNext: { [weak self] in
-                self?._textState.onNext(.collapsed)
-            })
-            .disposed(by: disposeBag)
+                if range.contains(index) {
+                    self._textState.onNext(.expanded)
+                } else {
+                    let url = self.availableUrlsRange.first { $0.key.contains(index) }?.value
 
-        height
-            .subscribe(onNext: { [weak self] _ in
-                self?.heighChange.onNext()
+                    guard let activeUrl = url else { return }
+                    self.urlTap.onNext(activeUrl)
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -177,7 +168,7 @@ fileprivate extension OWCommentTextViewModel {
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
-            .font: UIFont.preferred(style: .regular, of: OWCommentContentView.Metrics.fontSize),
+            .font: OWFontBook.shared.font(style: .regular, size: OWCommentContentView.Metrics.fontSize),
             .foregroundColor: OWColorPalette.shared.color(type: .foreground1Color, themeStyle: style),
             .paragraphStyle: paragraphStyle
         ]
@@ -185,9 +176,9 @@ fileprivate extension OWCommentTextViewModel {
         return attributes
     }
 
-    func actionStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
+    func readMoreStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
-        attributes[.foregroundColor] = OWColorPalette.shared.color(type: .buttonTextColor, themeStyle: style)
+        attributes[.font] = OWFontBook.shared.font(style: .bold, size: OWCommentContentView.Metrics.fontSize)
 
         return attributes
     }
@@ -195,19 +186,22 @@ fileprivate extension OWCommentTextViewModel {
     func editedStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
         attributes[.foregroundColor] = UIColor.gray
-        attributes[.font] = UIFont.preferred(style: .italic, of: OWCommentContentView.Metrics.fontSize)
+        attributes[.font] = OWFontBook.shared.font(style: .italic, size: OWCommentContentView.Metrics.editedFontSize)
 
         return attributes
     }
 
-    func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: TextState, style: OWThemeStyle) -> NSMutableAttributedString {
+    func appendReadMoreIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: OWTextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
-        guard lines.count > self.lineLimit else { return NSMutableAttributedString(attributedString: attString) }
+        guard lines.count > self.collapsableTextLineLimit else {
+            self.readMoreRange = nil
+            return NSMutableAttributedString(attributedString: attString)
+        }
         switch currentState {
         case .collapsed:
-            let visibleLines = lines[0...lineLimit - 1]
+            let visibleLines = lines[0...collapsableTextLineLimit - 1]
             let ellipsis = NSAttributedString(
-                string: " ... ",
+                string: "... ",
                 attributes: messageStringAttributes(with: style))
             var visibleString = ""
             for line in visibleLines {
@@ -219,19 +213,16 @@ fileprivate extension OWCommentTextViewModel {
             var res = NSMutableAttributedString(string: visibleString, attributes: messageStringAttributes(with: style))
             let readMore = NSMutableAttributedString(
                 string: self.readMoreText,
-                attributes: actionStringAttributes(with: style))
+                attributes: readMoreStringAttributes(with: style))
             let trimmedRes = res.attributedStringByTrimming(charSet: .whitespacesAndNewlines)
             res = trimmedRes.mutableCopy() as? NSMutableAttributedString ?? res
             res.append(ellipsis)
+            self.readMoreRange = NSRange(location: res.length, length: readMore.length)
             res.append(readMore)
             return res
         case .expanded:
-            let readLess = NSMutableAttributedString(
-                string: self.readLessText,
-                attributes: actionStringAttributes(with: style))
-            let res = NSMutableAttributedString(attributedString: attString)
-            res.append(readLess)
-            return res
+            self.readMoreRange = nil
+            return NSMutableAttributedString(attributedString: attString)
         }
     }
 
@@ -253,15 +244,10 @@ fileprivate extension OWCommentTextViewModel {
                 }
             }
         }
-        self.activeURLs = activeURLs
+        self.availableUrlsRange = activeURLs
     }
 
     func isUrlSchemeValid(for url: URL) -> Bool {
         return url.scheme?.lowercased() != "mailto"
     }
-}
-
-fileprivate enum TextState {
-    case collapsed
-    case expanded
 }

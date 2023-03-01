@@ -14,9 +14,15 @@ class OWCommentTextLabel: UILabel {
     fileprivate var viewModel: OWCommentTextViewModeling!
     fileprivate var disposeBag: DisposeBag!
 
+    fileprivate lazy var tapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        self.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
+        return tap
+    }()
+
     init() {
         super.init(frame: .zero)
-        setupGestureRecognizer()
     }
 
     func configure(with viewModel: OWCommentTextViewModeling) {
@@ -37,19 +43,6 @@ class OWCommentTextLabel: UILabel {
     }
 }
 
-extension OWCommentTextLabel: UIGestureRecognizerDelegate {
-    @objc
-    func handleTap(gesture: UITapGestureRecognizer) {
-        if isTarget(substring: viewModel.outputs.readMoreText, destinationOf: gesture) {
-            viewModel.inputs.readMoreTap.onNext()
-        } else if isTarget(substring: viewModel.outputs.readLessText, destinationOf: gesture) {
-            viewModel.inputs.readLessTap.onNext()
-        } else {
-            checkURLTap(in: gesture.location(in: self))
-        }
-    }
-}
-
 fileprivate extension OWCommentTextLabel {
 
     func setupObservers() {
@@ -59,30 +52,14 @@ fileprivate extension OWCommentTextLabel {
                 self.attributedText = attString
             })
             .disposed(by: disposeBag)
-    }
 
-    func isTarget(substring: String, destinationOf gesture: UIGestureRecognizer) -> Bool {
-        guard let string = self.attributedText?.string else { return false }
-        guard let range = string.range(of: substring, options: [.backwards, .literal]) else { return false }
-
-        let tapLocation = gesture.location(in: self)
-        let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
-
-        return range.contains(string.utf16.index(string.utf16.startIndex, offsetBy: index))
-    }
-
-    func checkURLTap(in point: CGPoint) {
-        let index = self.indexOfAttributedTextCharacterAtPoint(point: point)
-        let url = viewModel.outputs.activeURLs.first { $0.key.contains(index) }?.value
-
-        guard let activeUrl = url else { return }
-        viewModel.inputs.urlTap.onNext(activeUrl)
-    }
-
-    func setupGestureRecognizer() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        tap.delegate = self
-        self.addGestureRecognizer(tap)
-        self.isUserInteractionEnabled = true
+        tapGesture.rx.event
+            .subscribe(onNext: { [weak self] tap in
+                guard let self = self else { return }
+                let tapLocation = tap.location(in: self)
+                let index = self.indexOfAttributedTextCharacterAtPoint(point: tapLocation)
+                self.viewModel.inputs.labelClickIndex.onNext(index)
+            })
+            .disposed(by: disposeBag)
     }
 }
