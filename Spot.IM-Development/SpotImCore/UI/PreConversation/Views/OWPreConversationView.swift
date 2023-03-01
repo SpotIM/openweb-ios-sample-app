@@ -27,8 +27,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 800
-        static let changedHeight: CGFloat = 700
+//        static let initialHeight: CGFloat = 800
+//        static let changedHeight: CGFloat = 700
 
         static let separatorHeight: CGFloat = 1.0
     }
@@ -167,7 +167,7 @@ fileprivate extension OWPreConversationView {
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.height.equalTo(200)
+            make.height.equalTo(0)
         }
 
         self.addSubview(btnCTAConversation)
@@ -192,7 +192,7 @@ fileprivate extension OWPreConversationView {
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
 
-        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
+        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: tableView.contentSize.height))
 
         viewModel.outputs.preConversationDataSourceSections
             .observe(on: MainScheduler.instance)
