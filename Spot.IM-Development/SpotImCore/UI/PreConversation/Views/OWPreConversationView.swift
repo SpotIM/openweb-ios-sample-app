@@ -73,7 +73,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
             .textColor(.white)
             .corner(radius: Metrics.btnFullConversationCornerRadius)
             .withPadding(Metrics.btnFullConversationTextPadding)
-            .font(UIFont.preferred(style: .medium, of: Metrics.btnFullConversationFontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.btnFullConversationFontSize))
     }()
     fileprivate lazy var footerView: OWPreConversationFooterView = {
         return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
