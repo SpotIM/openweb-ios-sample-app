@@ -31,7 +31,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
-    var changeSizeAtIndex: Observable<Int> { get }
+    var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
     var shouldShowComments: Bool { get }
@@ -145,7 +145,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
-    var changeSizeAtIndex: Observable<Int> {
+    var updateCellSizeAtIndex: Observable<Int> {
         return _changeSizeAtIndex
             .asObservable()
     }
@@ -245,7 +245,11 @@ fileprivate extension OWPreConversationViewViewModel {
                 for (index, comment) in comments.enumerated() {
                     // TODO: replies
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
-                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, lineLimit: 4))
+                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
+                        comment: comment,
+                        user: user,
+                        replyToUser: nil,
+                        collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
@@ -320,14 +324,15 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Responding to comment height change (for updating cell)
         cellsViewModels
             .flatMapLatest { cellsVms -> Observable<Int> in
                 let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
                     if case.comment(let commentCellViewModel) = vm {
                         let commentVM = commentCellViewModel.outputs.commentVM
                         return commentVM.outputs.contentVM
-                            .outputs.collapsableLabelViewModel.outputs.textHeightChange
-                            .map { index }
+                            .outputs.collapsableLabelViewModel.outputs.height
+                            .map { _ in index }
                     } else {
                         return nil
                     }
@@ -340,6 +345,7 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Subscribe to URL click in comment text
         commentCellsVmsObservable
             .flatMap { commentCellsVms -> Observable<URL> in
                 let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
