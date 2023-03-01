@@ -100,7 +100,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
         Observable.combineLatest(_lines, _textState, fullAttributedString, _themeStyleObservable)
             .map { [weak self] lines, currentState, fullAttributedString, style -> (NSMutableAttributedString, OWThemeStyle)? in
                 guard let self = self else { return nil }
-                let attString = self.appendActionStringIfNeeded(fullAttributedString, lines: lines, currentState: currentState, style: style)
+                let attString = self.appendReadMoreIfNeeded(fullAttributedString, lines: lines, currentState: currentState, style: style)
                 return (attString, style)
             }
             .unwrap()
@@ -191,7 +191,7 @@ fileprivate extension OWCommentTextViewModel {
         return attributes
     }
 
-    func appendActionStringIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: OWTextState, style: OWThemeStyle) -> NSMutableAttributedString {
+    func appendReadMoreIfNeeded(_ attString: NSAttributedString, lines: [CTLine], currentState: OWTextState, style: OWThemeStyle) -> NSMutableAttributedString {
         // In case short message - add nothing here
         guard lines.count > self.collapsableTextLineLimit else {
             self.readMoreRange = nil
