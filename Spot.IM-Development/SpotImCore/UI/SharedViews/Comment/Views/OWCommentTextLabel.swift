@@ -13,7 +13,7 @@ import RxSwift
 class OWCommentTextLabel: UILabel {
     fileprivate var viewModel: OWCommentTextViewModeling!
     fileprivate var disposeBag: DisposeBag!
-    
+
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
         self.addGestureRecognizer(tap)
@@ -52,7 +52,7 @@ fileprivate extension OWCommentTextLabel {
                 self.attributedText = attString
             })
             .disposed(by: disposeBag)
-        
+
         tapGesture.rx.event
             .subscribe(onNext: { [weak self] tap in
                 guard let self = self else { return }
