@@ -70,6 +70,10 @@ final class SPAvatarView: OWBaseView {
         backgroundColor = .spBackground0
     }
 
+    func prepareForReuse() {
+        updateAvatar(avatarImageType: .defaultImage)
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 
