@@ -25,6 +25,7 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     init(viewModel: OWCommentThreadViewViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        viewModel.inputs.viewInitialized.onNext()
         setupViews()
         setupObservers()
         applyAccessibility()

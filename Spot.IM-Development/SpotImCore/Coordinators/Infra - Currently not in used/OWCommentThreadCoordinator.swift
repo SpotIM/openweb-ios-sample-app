@@ -35,7 +35,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWCommentThreadCoordinatorResult> {
-        let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel()
+        let commentThreadVM: OWCommentThreadViewModeling = OWCommentThreadViewModel(commentThreadData: commentThreadData)
         let commentThreadVC = OWCommentThreadVC(viewModel: commentThreadVM)
 
         let commentThreadPopped = PublishSubject<Void>()
@@ -60,7 +60,7 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
     }
 
     override func showableComponent() -> Observable<OWShowable> {
-        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel()
+        let commentThreadViewVM: OWCommentThreadViewViewModeling = OWCommentThreadViewViewModel(commentThreadData: commentThreadData)
         let commentThreadView = OWCommentThreadView(viewModel: commentThreadViewVM)
         return .just(commentThreadView)
     }
