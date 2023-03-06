@@ -582,6 +582,7 @@ workflows:
               ignore:
                 - /^release/.*/
                 - /^validate/.*/
+                - /^upload_s3/.*/
           xcode: "14.0.0"
 
       - release_sdk_job:
