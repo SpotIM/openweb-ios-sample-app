@@ -15,6 +15,7 @@ protocol UIViewsViewModelingInputs {
     var preConversationTapped: PublishSubject<Void> { get }
     var fullConversationTapped: PublishSubject<Void> { get }
     var commentCreationTapped: PublishSubject<Void> { get }
+    var commentThreadTapped: PublishSubject<Void> { get }
     var independentAdUnitTapped: PublishSubject<Void> { get }
 }
 
@@ -38,6 +39,7 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let preConversationTapped = PublishSubject<Void>()
     let fullConversationTapped = PublishSubject<Void>()
     let commentCreationTapped = PublishSubject<Void>()
+    let commentThreadTapped = PublishSubject<Void>()
     let independentAdUnitTapped = PublishSubject<Void>()
 
     lazy var title: String = {
