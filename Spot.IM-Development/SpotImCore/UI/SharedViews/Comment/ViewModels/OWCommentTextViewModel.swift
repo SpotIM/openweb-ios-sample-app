@@ -32,7 +32,7 @@ protocol OWCommentTextViewModeling {
 class OWCommentTextViewModel: OWCommentTextViewModeling,
                                    OWCommentTextViewModelingInputs,
                                    OWCommentTextViewModelingOutputs {
-    
+
     fileprivate struct Metrics {
         static let invalidURLSchemes: [String] = ["mailto"]
     }
