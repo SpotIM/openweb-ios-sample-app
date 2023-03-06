@@ -179,7 +179,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 return self.servicesProvider
                 .netwokAPI()
                 .conversation
-                .conversationRead(mode: sortOption, page: OWPaginationPage.first, parentId: "", offset: 0)
+                .conversationRead(mode: sortOption, page: OWPaginationPage.first)
                 .response
             }
 
