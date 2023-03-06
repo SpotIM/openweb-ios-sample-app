@@ -70,6 +70,7 @@ class OWAvatarViewModel: OWAvatarViewModeling,
                 }
                 return .defaultImage
             }
+            .distinctUntilChanged()
     }
 
     var showOnlineIndicator: Observable<Bool> {
