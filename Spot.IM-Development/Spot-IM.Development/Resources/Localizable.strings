@@ -35,6 +35,8 @@
 "FullConversationPresentMode" = "Full Conversation - Present Mode";
 "CommentCreationPushMode" = "Comment Creation - Push Mode";
 "CommentCreationPresentMode" = "Comment Creation - Present Mode";
+"CommentThreadPushMode" = "Comment Thread - Push Mode";
+"CommentThreadPresentMode" = "Comment Thread - Present Mode";
 "ConversationCounter" = "Conversation Counter";
 "UIFlows" = "UI Flows";
 "UIViews" = "UI Views";
@@ -44,6 +46,7 @@
 "PreConversation" = "Pre Conversation";
 "FullConversation" = "Full Conversation";
 "CommentCreation" = "Comment Creation";
+"CommentThread" = "Comment Thread";
 "IndependentAdUnit" = "IAU - Independent Ad Unit";
 "Done" = "Done";
 "PresetSelection" = "Preset Selection";

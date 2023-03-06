@@ -16,6 +16,7 @@ protocol UIFlowsViewModelingInputs {
     var preConversationTapped: PublishSubject<PresentationalModeCompact> { get }
     var fullConversationTapped: PublishSubject<PresentationalModeCompact> { get }
     var commentCreationTapped: PublishSubject<PresentationalModeCompact> { get }
+    var commentThreadTapped: PublishSubject<PresentationalModeCompact> { get }
 }
 
 protocol UIFlowsViewModelingOutputs {
@@ -41,6 +42,7 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
     let preConversationTapped = PublishSubject<PresentationalModeCompact>()
     let fullConversationTapped = PublishSubject<PresentationalModeCompact>()
     let commentCreationTapped = PublishSubject<PresentationalModeCompact>()
+    let commentThreadTapped = PublishSubject<PresentationalModeCompact>()
 
     fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIFlowActionSettings?>(value: nil)
     var openMockArticleScreen: Observable<SDKUIFlowActionSettings> {
@@ -84,6 +86,13 @@ fileprivate extension UIFlowsViewModel {
                 return model
             }
 
+        let commentThreadTappedModel = commentThreadTapped
+            .map { mode -> SDKUIFlowActionSettings in
+                let action = SDKUIFlowActionType.commentThread(presentationalMode: mode)
+                let model = SDKUIFlowActionSettings(postId: postId, actionType: action)
+                return model
+            }
+
         let preConversationTappedModel = preConversationTapped
             .map { mode -> SDKUIFlowActionSettings in
                 let action = SDKUIFlowActionType.preConversation(presentationalMode: mode)
@@ -91,7 +100,7 @@ fileprivate extension UIFlowsViewModel {
                 return model
             }
 
-        Observable.merge(fullConversationTappedModel, commentCreationTappedModel, preConversationTappedModel)
+        Observable.merge(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel)
             .map { return $0 }
             .bind(to: _openMockArticleScreen)
             .disposed(by: disposeBag)
