@@ -139,7 +139,9 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         .disposed(by: flowDisposeBag)
     }
 
-    func commentThread(postId: String, article: OWArticleProtocol,
+    func commentThread(postId: OWPostId,
+                       article: OWArticleProtocol,
+                       commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
                        additionalSettings: OWCommentThreadSettingsProtocol? = nil,
                        callbacks: OWViewActionsCallbacks? = nil,
@@ -158,7 +160,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings?.conversationSettings)
-        let commentThreadData = OWCommentThreadRequiredData(article: article)
+        let commentThreadData = OWCommentThreadRequiredData(commentId: commentId)
 
         _ = sdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,

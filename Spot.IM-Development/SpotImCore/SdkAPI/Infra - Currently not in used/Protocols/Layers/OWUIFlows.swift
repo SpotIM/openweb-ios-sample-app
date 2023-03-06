@@ -31,8 +31,9 @@ public protocol OWUIFlows {
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWDefaultCompletion)
 
-    func commentThread(postId: String,
+    func commentThread(postId: OWPostId,
                        article: OWArticleProtocol,
+                       commentId: OWCommentId,
                        presentationalMode: OWPresentationalMode,
                        additionalSettings: OWCommentThreadSettingsProtocol?,
                        callbacks: OWViewActionsCallbacks?,

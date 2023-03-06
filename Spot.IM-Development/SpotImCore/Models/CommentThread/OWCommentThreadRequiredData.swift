@@ -9,5 +9,5 @@
 import Foundation
 
 struct OWCommentThreadRequiredData {
-    let article: OWArticleProtocol
+    let commentId: OWCommentId
 }
