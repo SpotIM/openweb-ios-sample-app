@@ -399,6 +399,18 @@ jobs:
           command: |
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
 
+      - run:
+          name: Copy ipa file to folder ipa-build to upload to S3
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
   release_beta_app_job:
     <<: *ios_config_xcode
     steps:
@@ -409,6 +421,18 @@ jobs:
           command: |
             bundle exec fastlane release_beta_demo_app version:$RELEASE_VERSION
 
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
   release_public_app_job:
     <<: *ios_config_xcode
     steps:
@@ -418,6 +442,18 @@ jobs:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_public_demo_app version:$RELEASE_VERSION
+
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
 
   upload_app_build_to_s3_job:
     <<: *ios_config_xcode
@@ -431,10 +467,15 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: 's3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app'
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app"
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
+
+  upload_app_ipa_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
 
       - run:
           name: Run Fastline build .ipa file
@@ -449,7 +490,7 @@ jobs:
 
       - aws-s3/sync:
           from: ipa-build
-          to: 's3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa'
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -465,10 +506,15 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: 's3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app'
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app"
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
+
+  upload_beta_app_ipa_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
 
       - run:
           name: Run Fastline build .ipa file
@@ -483,7 +529,7 @@ jobs:
 
       - aws-s3/sync:
           from: ipa-build
-          to: 's3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa'
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -499,10 +545,15 @@ jobs:
 
       - aws-s3/sync:
           from: simulator_build/*/Products/Applications/Spot-IM.Development.app
-          to: 's3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app'
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app"
           arguments: |
             --region $AWS_REGION \
             --content-encoding "app"
+
+  upload_public_app_ipa_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
 
       - run:
           name: Run Fastline build .ipa file
@@ -517,7 +568,7 @@ jobs:
 
       - aws-s3/sync:
           from: ipa-build
-          to: 's3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa'
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
           arguments: |
             --region $AWS_REGION
 
@@ -555,6 +606,7 @@ workflows:
           xcode: "14.2.0"
 
       - release_app_job:
+          context: mobile-automation
           filters:
             branches:
               only:
@@ -562,6 +614,7 @@ workflows:
           xcode: "14.0.0"
 
       - release_beta_app_job:
+          context: mobile-automation
           filters:
             branches:
               only:
@@ -569,6 +622,7 @@ workflows:
           xcode: "14.0.0"
 
       - release_public_app_job:
+          context: mobile-automation
           filters:
             branches:
               only:
@@ -577,26 +631,20 @@ workflows:
 
       - upload_app_build_to_s3_job:
           context: mobile-automation
-          filters:
-            branches:
-              only:
-                - /^upload_s3/app/.*/
+          requires:
+            - "release_app_job"
           xcode: "14.0.0"
 
       - upload_beta_app_build_to_s3_job:
           context: mobile-automation
-          filters:
-            branches:
-              only:
-                - /^upload_s3/beta_app/.*/
+          requires:
+            - "release_beta_app_job"
           xcode: "14.0.0"
 
       - upload_public_app_build_to_s3_job:
           context: mobile-automation
-          filters:
-            branches:
-              only:
-                - /^upload_s3/public_app/.*/
+          requires:
+            - "release_public_app_job"
           xcode: "14.0.0"
 
   release_multi_workflow:
@@ -617,6 +665,60 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.2.0"
+
+  upload_app_to_s3_workflow:
+    jobs:
+      - upload_app_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/app/.*/
+          xcode: "14.0.0"
+
+      - upload_app_ipa_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/app/.*/
+          xcode: "14.0.0"
+
+  upload_beta_app_to_s3_workflow:
+    jobs:
+      - upload_beta_app_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/beta_app/.*/
+          xcode: "14.0.0"
+
+      - upload_beta_app_ipa_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/beta_app/.*/
+          xcode: "14.0.0"
+
+  upload_public_app_to_s3_workflow:
+    jobs:
+      - upload_public_app_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/public_app/.*/
+          xcode: "14.0.0"
+
+      - upload_public_app_ipa_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/public_app/.*/
+          xcode: "14.0.0"
 
   validate_workflow:
     jobs:
