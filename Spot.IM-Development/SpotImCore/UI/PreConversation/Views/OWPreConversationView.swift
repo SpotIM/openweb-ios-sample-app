@@ -105,9 +105,24 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
 fileprivate extension OWPreConversationView {
     func setupViews() {
-        self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
         self.useAsThemeStyleInjector()
+        if (viewModel.outputs.isCompactMode) {
+            setupCompactModeViews()
+        } else {
+            setupPreConvViews()
+        }
+    }
 
+    func setupCompactModeViews() {
+        self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light)
+        self.addSubviews(header)
+        header.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+
+    func setupPreConvViews() {
+        self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
         self.addSubviews(header)
         header.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -196,7 +211,7 @@ fileprivate extension OWPreConversationView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: currentStyle)
+                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactMode ? .compactBackground : .background0Color, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
             })
