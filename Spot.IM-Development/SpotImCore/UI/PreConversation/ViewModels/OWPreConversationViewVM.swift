@@ -35,6 +35,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowComments: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
     var isCompactMode: Bool { get }
+    var compactCommentVM: Observable<OWCompactCommentViewModeling> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -98,6 +99,21 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             return true
         }
         return false
+    }()
+    
+    fileprivate var _bestComment = BehaviorSubject<(SPComment, SPUser)?>(value: nil)
+    fileprivate var bestComment: Observable<(SPComment, SPUser)> {
+        _bestComment
+            .asObserver()
+            .unwrap()
+    }
+    lazy var compactCommentVM: Observable<OWCompactCommentViewModeling> = {
+        bestComment
+            .map { (comment, user) in
+                let requireData = OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit)
+                return OWCompactCommentViewModel(data: requireData, imageProvider: self.imageProvider)
+            }
+            .asObservable()
     }()
 
     fileprivate lazy var commentsCountObservable: Observable<String> = {
@@ -251,6 +267,21 @@ fileprivate extension OWPreConversationViewViewModel {
                 }
                 self._cellsViewModels.removeAll()
                 self._cellsViewModels.append(contentsOf: viewModels)
+            })
+            .disposed(by: disposeBag)
+        
+        // Set the best comment for compact mode
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self,
+                      let responseComments = response.conversation?.comments,
+                      !responseComments.isEmpty
+                else { return }
+                
+                let comment = responseComments[0]
+                guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
+                
+                self._bestComment.onNext((comment, user))
             })
             .disposed(by: disposeBag)
 
