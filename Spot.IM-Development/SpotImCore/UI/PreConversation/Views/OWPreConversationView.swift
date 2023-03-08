@@ -106,11 +106,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         setupViews()
         setupObservers()
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: self.intrinsicContentSize.width, height: self.intrinsicContentSize.height))
-    }
 }
 
 fileprivate extension OWPreConversationView {
@@ -181,8 +176,6 @@ fileprivate extension OWPreConversationView {
         viewModel.outputs.conversationCTAButtonTitle
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
-
-        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: tableView.contentSize.height))
 
         viewModel.outputs.preConversationDataSourceSections
             .observe(on: MainScheduler.instance)
