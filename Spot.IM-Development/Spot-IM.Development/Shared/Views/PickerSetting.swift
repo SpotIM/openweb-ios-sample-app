@@ -37,14 +37,15 @@ class PickerSetting: UIView {
 
     init(title: String, accessibilityPrefixId: String, items: [String]? = nil) {
         self.title = title
-        if let items = items {
-            self.items.onNext(items)
-        }
         super.init(frame: .zero)
-
         setupViews()
         setupObservers()
         applyAccessibility(prefixId: accessibilityPrefixId)
+
+        // Add items if exist after setupObservers since there is a skip(1) for skipping initial BehaviorSubject value
+        if let items = items {
+            self.items.onNext(items)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -110,5 +111,11 @@ extension Reactive where Base: PickerSetting {
 
     var setPickerTitles: BehaviorSubject<[String]> {
         return base.items
+    }
+
+    var isHidden: Binder<Bool> {
+        return Binder(self.base) { _, value in
+            base.isHidden = value
+        }
     }
 }

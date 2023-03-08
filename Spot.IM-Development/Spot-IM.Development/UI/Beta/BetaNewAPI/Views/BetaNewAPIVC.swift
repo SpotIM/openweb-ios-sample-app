@@ -337,7 +337,7 @@ fileprivate extension BetaNewAPIVC {
         viewModel.outputs.openSettings
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                let settingsVM = SettingsViewModel()
+                let settingsVM = SettingsViewModel(settingViewTypes: SettingsGroupType.all)
                 let settingsVC = SettingsVC(viewModel: settingsVM)
                 self.navigationController?.pushViewController(settingsVC, animated: true)
             })
