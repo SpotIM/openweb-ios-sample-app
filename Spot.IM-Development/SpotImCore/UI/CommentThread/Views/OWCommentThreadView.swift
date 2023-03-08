@@ -12,8 +12,39 @@ import RxCocoa
 
 class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate struct Metrics {
+        static let horizontalOffset: CGFloat = 16.0
+
         static let identifier = "comment_thread_view_id"
     }
+
+    fileprivate lazy var commentThreadDataSource: OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel> = {
+        let dataSource = OWRxTableViewSectionedAnimatedDataSource<CommentThreadDataSourceModel>(configureCell: { [weak self] _, tableView, indexPath, item -> UITableViewCell in
+            guard let self = self else { return UITableViewCell() }
+
+            let cell = tableView.dequeueReusableCellAndReigsterIfNeeded(cellClass: item.cellClass, for: indexPath)
+            cell.configure(with: item.viewModel)
+
+            return cell
+        })
+
+        let animationConfiguration = OWAnimationConfiguration(insertAnimation: .top, reloadAnimation: .none, deleteAnimation: .fade)
+        dataSource.animationConfiguration = animationConfiguration
+        return dataSource
+    }()
+
+    fileprivate lazy var tableView: UITableView = {
+        let tableView = UITableView()
+            .enforceSemanticAttribute()
+            .backgroundColor(UIColor.clear)
+            .separatorStyle(.none)
+
+        // Register cells
+        for option in OWCommentThreadCellOption.allCases {
+            tableView.register(cellClass: option.cellClass)
+        }
+
+        return tableView
+    }()
 
     fileprivate let viewModel: OWCommentThreadViewViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -40,11 +71,20 @@ fileprivate extension OWCommentThreadView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-        // TODO: Remove the ugly green when actually starting to work on the UI, this is only for integration purposes at the moment
-        self.backgroundColor = .green
+        self.backgroundColor = .cyan
+
+        self.useAsThemeStyleInjector()
+
+        self.addSubview(tableView)
+        tableView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 
     func setupObservers() {
-
+        viewModel.outputs.commentThreadDataSourceSections
+            .observe(on: MainScheduler.instance)
+            .bind(to: tableView.rx.items(dataSource: commentThreadDataSource))
+            .disposed(by: disposeBag)
     }
 }

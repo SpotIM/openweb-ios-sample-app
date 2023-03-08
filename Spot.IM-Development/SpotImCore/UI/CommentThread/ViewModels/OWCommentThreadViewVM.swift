@@ -9,12 +9,14 @@
 import Foundation
 import RxSwift
 
+typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWCommentThreadCellOption>
+
 protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
-
+    var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -30,12 +32,31 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
     fileprivate let disposeBag = DisposeBag()
 
+    var _cellsViewModels = OWObservableArray<OWCommentThreadCellOption>()
+    fileprivate var cellsViewModels: Observable<[OWCommentThreadCellOption]> {
+        return _cellsViewModels
+            .rx_elements()
+            .asObservable()
+    }
+
+    var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> {
+        return cellsViewModels
+            .map { items in
+                // TODO: We might decide to work with few sections in the future.
+                // Current implementation will be one section.
+                // The String can be the `postId` which we will add once the VM will be ready.
+                let section = CommentThreadDataSourceModel(model: "postId", items: items)
+                return [section]
+            }
+    }
+
     var viewInitialized = PublishSubject<Void>()
 
     init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self._commentThreadData.onNext(commentThreadData)
-        setupObservers()
+        self.populateInitialUI()
+        self.setupObservers()
     }
 }
 
@@ -65,5 +86,12 @@ fileprivate extension OWCommentThreadViewViewModel {
                 print(responseComments)
             })
             .disposed(by: disposeBag)
+    }
+
+    func populateInitialUI() {
+        let numberOfComments = 10
+        let skeletonCellVMs = (0 ..< numberOfComments).map { _ in OWCommentSkeletonShimmeringCellViewModel() }
+        let skeletonCells = skeletonCellVMs.map { OWCommentThreadCellOption.commentSkeletonShimmering(viewModel: $0) }
+        _cellsViewModels.append(contentsOf: skeletonCells)
     }
 }
