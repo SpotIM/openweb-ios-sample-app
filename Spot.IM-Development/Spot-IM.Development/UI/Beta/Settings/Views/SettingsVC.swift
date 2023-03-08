@@ -20,6 +20,7 @@ class SettingsVC: UIViewController {
         static let segmentedReadOnlyModeIdentifier = "read_only_mode"
         static let segmentedThemeModeIdentifier = "theme_mode"
         static let segmentedModalStyleIdentifier = "modal_style"
+        static let segmentedInitialSortIdentifier = "initial_sort"
         static let textFieldArticleURLIdentifier = "article_url"
         static let verticalOffset: CGFloat = 50
         static let horizontalOffset: CGFloat = 10
@@ -66,6 +67,15 @@ class SettingsVC: UIViewController {
 
         return SegmentedControlSetting(title: title,
                                        accessibilityPrefixId: Metrics.segmentedModalStyleIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var segmentedInitialSort: SegmentedControlSetting = {
+        let title = viewModel.outputs.initialSortTitle
+        let items = viewModel.outputs.initialSortSettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedInitialSortIdentifier,
                                        items: items)
     }()
 
@@ -148,9 +158,15 @@ fileprivate extension SettingsVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
         }
 
+        scrollView.addSubview(segmentedInitialSort)
+        segmentedInitialSort.snp.makeConstraints { make in
+            make.top.equalTo(segmentedModalStyle.snp.bottom).offset(Metrics.verticalOffset)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
+        }
+
         scrollView.addSubview(textFieldArticleURL)
         textFieldArticleURL.snp.makeConstraints { make in
-            make.top.equalTo(segmentedModalStyle.snp.bottom).offset(Metrics.verticalOffset)
+            make.top.equalTo(segmentedInitialSort.snp.bottom).offset(Metrics.verticalOffset)
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
             make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalOffset)
         }
@@ -178,6 +194,10 @@ fileprivate extension SettingsVC {
             .bind(to: segmentedModalStyle.rx.selectedSegmentIndex)
             .disposed(by: disposeBag)
 
+        viewModel.outputs.initialSortIndex
+            .bind(to: segmentedInitialSort.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.articleAssociatedURL
             .bind(to: textFieldArticleURL.rx.textFieldText)
             .disposed(by: disposeBag)
@@ -200,6 +220,10 @@ fileprivate extension SettingsVC {
 
         segmentedModalStyle.rx.selectedSegmentIndex
             .bind(to: viewModel.inputs.modalStyleSelectedIndex)
+            .disposed(by: disposeBag)
+
+        segmentedInitialSort.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.initialSortSelectedIndex)
             .disposed(by: disposeBag)
 
         textFieldArticleURL.rx.textFieldText

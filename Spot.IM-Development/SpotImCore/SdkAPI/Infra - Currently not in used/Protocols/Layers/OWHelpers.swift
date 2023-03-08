@@ -10,10 +10,20 @@ import Foundation
 
 #if NEW_API
 public protocol OWHelpers {
+    func conversationCounters(forPostIds postIds: [OWPostId],
+                              completion: OWConversationCountersCompletion)
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
+    var loggerConfiguration: OWLoggerConfiguration { get }
+    var languageStrategy: OWLanguageStrategy { get set }
+    var localeStrategy: OWLocaleStrategy { get set } // Will be use for Dates and Numbers format
 }
 #else
 protocol OWHelpers {
+    func conversationCounters(forPostIds postIds: [OWPostId],
+                              completion: OWConversationCountersCompletion)
     var additionalConfigurations: [OWAdditionalConfiguration] { get set }
+    var loggerConfiguration: OWLoggerConfiguration { get }
+    var languageStrategy: OWLanguageStrategy { get set }
+    var localeStrategy: OWLocaleStrategy { get set } // Will be use for Dates and Numbers format
 }
 #endif

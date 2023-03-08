@@ -17,6 +17,7 @@ protocol MockArticleViewModelingInputs {
     func setPresentationalVC(_ viewController: UIViewController)
     var fullConversationButtonTapped: PublishSubject<Void> { get }
     var commentCreationButtonTapped: PublishSubject<Void> { get }
+    var commentThreadButtonTapped: PublishSubject<Void> { get }
 }
 
 protocol MockArticleViewModelingOutputs {
@@ -25,6 +26,7 @@ protocol MockArticleViewModelingOutputs {
     var showCommentCreationButton: Observable<PresentationalModeCompact> { get }
     var showPreConversation: Observable<UIView> { get }
     var updatePreConversationSize: Observable<UIView> { get }
+    var showCommentThreadButton: Observable<PresentationalModeCompact> { get }
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
 }
@@ -78,7 +80,8 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
     }
 
     let fullConversationButtonTapped = PublishSubject<Void>()
-    var commentCreationButtonTapped = PublishSubject<Void>()
+    let commentCreationButtonTapped = PublishSubject<Void>()
+    let commentThreadButtonTapped = PublishSubject<Void>()
 
     var showFullConversationButton: Observable<PresentationalModeCompact> {
         return actionSettings
@@ -99,6 +102,19 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
             // Map here is also like a filter
             .map { settings in
                 if case .commentCreation(let mode) = settings.actionType {
+                    return mode
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
+    }
+
+    var showCommentThreadButton: Observable<PresentationalModeCompact> {
+        return actionSettings
+            // Map here is also like a filter
+            .map { settings in
+                if case .commentThread(let mode) = settings.actionType {
                     return mode
                 } else {
                     return nil
@@ -240,6 +256,43 @@ fileprivate extension MockArticleViewModel {
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.commentCreation error: \(message)")
+                        self._showError.onNext(message)
+                    }
+                })
+            })
+            .disposed(by: disposeBag)
+
+        // Comment creation
+        commentThreadButtonTapped
+            .withLatestFrom(showCommentThreadButton)
+            .withLatestFrom(actionSettings) { mode, settings -> (PresentationalModeCompact, String) in
+                return (mode, settings.postId)
+            }
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self else { return }
+                let mode = result.0
+                let postId = result.1
+
+                guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
+
+                let manager = OpenWeb.manager
+                let flows = manager.ui.flows
+
+                flows.commentThread(postId: postId,
+                                    article: self.createMockArticle(),
+                                    commentId: "TODO - Comment ID",
+                                    presentationalMode: presentationalMode,
+                                    additionalSettings: nil,
+                                    callbacks: nil,
+                                    completion: { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(_):
+                        // All good
+                        break
+                    case .failure(let error):
+                        let message = error.description
+                        DLog("Calling flows.commentThread error: \(message)")
                         self._showError.onNext(message)
                     }
                 })
