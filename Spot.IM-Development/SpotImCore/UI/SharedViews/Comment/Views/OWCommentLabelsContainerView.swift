@@ -14,12 +14,14 @@ class OWCommentLabelsContainerView: UIView {
         static let identifier = "comment_labels_container_id"
 
         static let labelsContainerStackViewSpacing: CGFloat = 10.0
+        static let commentLabelViewHeight: CGFloat = 28.0
     }
 
     fileprivate lazy var labelsContainerStackView: UIStackView = {
         return UIStackView()
             .spacing(Metrics.labelsContainerStackViewSpacing)
     }()
+    fileprivate var heightConstraint: OWConstraint?
 
     fileprivate var viewModel: OWCommentLabelsContainerViewModeling!
     fileprivate var disposeBag: DisposeBag!
@@ -39,6 +41,14 @@ class OWCommentLabelsContainerView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    func prepareForReuse() {
+        // clean stackview if needed
+        self.labelsContainerStackView.subviews.forEach { view in
+            view.removeFromSuperview()
+        }
+        self.heightConstraint?.update(offset: 0)
+    }
 }
 
 fileprivate extension OWCommentLabelsContainerView {
@@ -46,6 +56,7 @@ fileprivate extension OWCommentLabelsContainerView {
         addSubview(labelsContainerStackView)
         labelsContainerStackView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
+            heightConstraint = make.height.equalTo(0).constraint
         }
     }
 
@@ -55,6 +66,10 @@ fileprivate extension OWCommentLabelsContainerView {
                 guard let self = self else { return }
                 // clean stackview if needed
                 self.labelsContainerStackView.subviews.forEach { $0.removeFromSuperview() }
+
+                if viewModels.count > 0 {
+                    self.heightConstraint?.update(offset: Metrics.commentLabelViewHeight)
+                }
 
                 let commentLabelsViews: [OWCommentLabelView] = viewModels.map { vm in
                     let commentLabel = OWCommentLabelView()

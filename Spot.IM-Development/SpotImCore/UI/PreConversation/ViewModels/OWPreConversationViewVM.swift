@@ -31,8 +31,11 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var preConversationPreferredSize: Observable<CGSize> { get }
+    var updateCellSizeAtIndex: Observable<Int> { get }
+    var urlClickedOutput: Observable<URL> { get }
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
     var shouldShowComments: Bool { get }
+    var conversationCTAButtonTitle: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -91,6 +94,35 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
 
+    fileprivate lazy var commentsCountObservable: Observable<String> = {
+        return OWSharedServicesProvider.shared.realtimeService().realtimeData
+            .map { realtimeData in
+                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(self.postId)") else {return nil}
+                return count
+            }
+            .unwrap()
+            .map { count in
+                return count > 0 ? "(\(count))" : ""
+            }
+            .asObservable()
+    }()
+
+    var conversationCTAButtonTitle: Observable<String> {
+        commentsCountObservable
+            .map { [weak self] count in
+                guard let self = self else { return nil }
+                switch(self.preConversationStyle) {
+                case .ctaButtonOnly:
+                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
+                case .ctaWithSummary:
+                    return LocalizationManager.localizedString(key: "Post a Comment")
+                default:
+                    return LocalizationManager.localizedString(key: "Show more comments")
+                }
+            }
+            .unwrap()
+    }
+
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
         return fullConversationTap
@@ -109,6 +141,18 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var preConversationPreferredSize: Observable<CGSize> {
         return _preConversationChangedSize
             .unwrap()
+            .asObservable()
+    }
+
+    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
+    var updateCellSizeAtIndex: Observable<Int> {
+        return _changeSizeAtIndex
+            .asObservable()
+    }
+
+    fileprivate var _urlClick = PublishSubject<URL>()
+    var urlClickedOutput: Observable<URL> {
+        return _urlClick
             .asObservable()
     }
 
@@ -151,6 +195,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 }
 
 fileprivate extension OWPreConversationViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         preConversationChangedSize
             .bind(to: _preConversationChangedSize)
@@ -159,11 +204,9 @@ fileprivate extension OWPreConversationViewViewModel {
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
-                guard let self = self,
-                      let postId = OWManager.manager.postId
-                else { return }
+                guard let self = self else { return }
 
-                self.servicesProvider.realtimeService().startFetchingData(postId: postId)
+                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
 
@@ -202,7 +245,11 @@ fileprivate extension OWPreConversationViewViewModel {
                 for (index, comment) in comments.enumerated() {
                     // TODO: replies
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
-                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
+                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(
+                        comment: comment,
+                        user: user,
+                        replyToUser: nil,
+                        collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit))
                     viewModels.append(OWPreConversationCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1) {
                         viewModels.append(OWPreConversationCellOption.spacer(viewModel: OWSpacerCellViewModel()))
@@ -276,7 +323,44 @@ fileprivate extension OWPreConversationViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
+
+        // Responding to comment height change (for updating cell)
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<Int> in
+                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+                    if case.comment(let commentCellViewModel) = vm {
+                        let commentVM = commentCellViewModel.outputs.commentVM
+                        return commentVM.outputs.contentVM
+                            .outputs.collapsableLabelViewModel.outputs.height
+                            .map { _ in index }
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+                return Observable.merge(sizeChangeObservable)
+            }
+            .subscribe(onNext: { [weak self] commentIndex in
+                self?._changeSizeAtIndex.onNext(commentIndex)
+            })
+            .disposed(by: disposeBag)
+
+        // Subscribe to URL click in comment text
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<URL> in
+                let urlClickObservable: [Observable<URL>] = commentCellsVms.map { commentCellVm -> Observable<URL> in
+                    let commentTextVm = commentCellVm.outputs.commentVM.outputs.contentVM.outputs.collapsableLabelViewModel
+
+                    return commentTextVm.outputs.urlClickedOutput
+                }
+                return Observable.merge(urlClickObservable)
+            }
+            .subscribe(onNext: { [weak self] url in
+                self?._urlClick.onNext(url)
+            })
+            .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 
     func populateInitialUI() {
         if self.shouldShowComments {

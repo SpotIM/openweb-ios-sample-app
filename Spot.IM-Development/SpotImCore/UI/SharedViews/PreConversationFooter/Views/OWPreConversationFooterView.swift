@@ -9,8 +9,49 @@
 import UIKit
 import RxSwift
 
-// TODO: complete
 internal class OWPreConversationFooterView: UIView {
+    fileprivate struct Metrics {
+        static let identifier = "pre_conversation_footer_id"
+        static let termsButtonIdentifier = "pre_conversation_footer_show_terms_button_id"
+        static let privacyButtonIdentifier = "pre_conversation_footer_show_privacy_button_id"
+        static let poweredByOWButtonIdentifier = "pre_conversation_footer_powered_by_ow_button_id"
+
+        static let fontSize: CGFloat = 13
+        static let iconSize: CGFloat = 13
+        static let iconTrailingPadding: CGFloat = 5
+        static let dotPadding: CGFloat = 5
+    }
+
+    private lazy var termsButton: UIButton = {
+        return LocalizationManager.localizedString(key: "Terms")
+            .button
+            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .font(.openSans(style: .regular, of: Metrics.fontSize))
+    }()
+    private lazy var dotLabel: UILabel = {
+        "·"
+            .label
+            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .font(.openSans(style: .regular, of: Metrics.fontSize))
+    }()
+    private lazy var privacyButton: UIButton = {
+        return LocalizationManager.localizedString(key: "Privacy")
+            .button
+            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .font(.openSans(style: .regular, of: Metrics.fontSize))
+    }()
+    private lazy var openWebIconImageView: UIImageView = {
+        return UIImageView(image: UIImage(spNamed: "openwebIconSimple", supportDarkMode: true))
+    }()
+    private lazy var poweredByOWButton: UIButton = {
+        let btn = LocalizationManager.localizedString(key: "Powered by OpenWeb")
+            .button
+            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .font(.openSans(style: .regular, of: Metrics.fontSize))
+        return btn
+    }()
+
+    fileprivate let disposeBag = DisposeBag()
 
     fileprivate let viewModel: OWPreConversationFooterViewModeling
 
@@ -19,11 +60,82 @@ internal class OWPreConversationFooterView: UIView {
         super.init(frame: .zero)
 
         self.enforceSemanticAttribute()
-            .backgroundColor(.spBackground0)
+            .backgroundColor(.clear)
+
+        setupUI()
+        setupObservers()
+        applyAccessibility()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+}
+
+fileprivate extension OWPreConversationFooterView {
+    func setupUI() {
+        self.addSubview(termsButton)
+        termsButton.OWSnp.makeConstraints { make in
+            make.leading.centerY.equalToSuperview()
+        }
+
+        self.addSubview(dotLabel)
+        dotLabel.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(termsButton.OWSnp.trailing).offset(Metrics.dotPadding)
+        }
+
+        self.addSubview(privacyButton)
+        privacyButton.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(dotLabel.OWSnp.trailing).offset(Metrics.dotPadding)
+        }
+
+        self.addSubview(poweredByOWButton)
+        poweredByOWButton.OWSnp.makeConstraints { make in
+            make.top.bottom.trailing.equalToSuperview()
+        }
+
+        poweredByOWButton.addSubview(openWebIconImageView)
+        openWebIconImageView.OWSnp.makeConstraints { make in
+            make.size.equalTo(Metrics.iconSize)
+            make.top.bottom.leading.equalToSuperview()
+            if let buttonTextLeading = poweredByOWButton.titleLabel?.OWSnp.leading {
+                make.trailing.equalTo(buttonTextLeading).offset(-Metrics.iconTrailingPadding)
+            }
+        }
+    }
+
+    func setupObservers() {
+        termsButton.rx.tap
+            .bind(to: viewModel.inputs.termsTapped)
+            .disposed(by: disposeBag)
+
+        privacyButton.rx.tap
+            .bind(to: viewModel.inputs.privacyTapped)
+            .disposed(by: disposeBag)
+
+        poweredByOWButton.rx.tap
+            .bind(to: viewModel.inputs.poweredByOWTapped)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.termsButton.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
+                self.dotLabel.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
+                self.privacyButton.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
+                self.openWebIconImageView.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    func applyAccessibility() {
+        self.accessibilityIdentifier = Metrics.identifier
+        termsButton.accessibilityIdentifier = Metrics.termsButtonIdentifier
+        privacyButton.accessibilityIdentifier = Metrics.privacyButtonIdentifier
+        poweredByOWButton.accessibilityIdentifier = Metrics.poweredByOWButtonIdentifier
+    }
 }

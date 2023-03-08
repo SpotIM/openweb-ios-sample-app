@@ -84,7 +84,7 @@ fileprivate extension OWSpotConfigurationService {
                         self.cacheConfigService[spotId] = config
                         self.setAdditionalStuff(forConfig: config)
                     }, onError: {[weak self] error in
-                        guard let self = self else { return  }
+                        guard let self = self else { return }
                         self.isCurrentlyFetching.onNext(false)
                         self._configWhichJustFetched.onError(error)
                     })
@@ -94,9 +94,14 @@ fileprivate extension OWSpotConfigurationService {
     }
 
     func setAdditionalStuff(forConfig config: SPSpotConfiguration) {
+        // Brand color
         if let color = UIColor.color(with: config.initialization?.brandColor) {
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .light)
             OWColorPalette.shared.setColor(color, forType: .brandColor, forThemeStyle: .dark)
         }
+        // Locale
+        let locale = config.mobileSdk.locale ?? "en"
+        LocalizationManager.reset()
+        LocalizationManager.setLocale(locale)
     }
 }
