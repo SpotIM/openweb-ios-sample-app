@@ -86,9 +86,17 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         dataSource.animationConfiguration = animationConfiguration
         return dataSource
     }()
-    
+
     fileprivate lazy var compactCommentView: OWCompactCommentView = {
         return OWCompactCommentView()
+    }()
+    fileprivate lazy var compactTapGesture: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        if (viewModel.outputs.isCompactMode) {
+            self.addGestureRecognizer(tap)
+            self.isUserInteractionEnabled = true
+        }
+        return tap
     }()
 
     fileprivate let viewModel: OWPreConversationViewViewModeling
@@ -221,6 +229,11 @@ fileprivate extension OWPreConversationView {
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
 
+        compactTapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.fullConversationTap)
+            .disposed(by: disposeBag)
+
         viewModel.outputs.compactCommentVM
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] vm in
@@ -228,7 +241,7 @@ fileprivate extension OWPreConversationView {
                 self.compactCommentView.configure(with: vm)
             })
             .disposed(by: disposeBag)
-        
+
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in

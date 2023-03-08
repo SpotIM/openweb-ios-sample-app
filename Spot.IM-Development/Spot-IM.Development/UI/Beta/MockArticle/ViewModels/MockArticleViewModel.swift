@@ -162,12 +162,15 @@ fileprivate extension MockArticleViewModel {
                 var manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
+                let preConversationStyle = OWPreConversationStyle.compact
+                let additionalSettings: OWPreConversationSettingsBuilder = .init(style: preConversationStyle)
+
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
                 flows.preConversation(postId: postId,
                                    article: self.createMockArticle(),
                                    presentationalMode: presentationalMode,
-                                   additionalSettings: nil,
+                                   additionalSettings: additionalSettings,
                                    callbacks: nil,
                                    completion: { [weak self] result in
                     guard let self = self else { return }
