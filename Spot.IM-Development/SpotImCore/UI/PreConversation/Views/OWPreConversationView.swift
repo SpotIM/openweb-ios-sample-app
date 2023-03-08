@@ -16,40 +16,22 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let whatYouThinkHeight: CGFloat = 64
         static let commentCreationVerticalPadding: CGFloat = 16
         static let horizontalOffset: CGFloat = 16.0
+        static let btnFullConversationCornerRadius: CGFloat = 4
+        static let btnFullConversationFontSize: CGFloat = 14
+        static let btnFullConversationTextPadding: CGFloat = 13
+        static let btnFullConversationTopPadding: CGFloat = 13
+        static let bottomPadding: CGFloat = 23
 
         // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
         // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
         // We should later use RX to return a calculated height based on the actual width of the frame
         static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
         // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 1200
+        static let initialHeight: CGFloat = 800
         static let changedHeight: CGFloat = 700
 
         static let separatorHeight: CGFloat = 1.0
     }
-
-    // TODO: Testing - remove later (hard coded cause only for testing)
-    fileprivate lazy var btnFullConversation: UIButton = {
-        return "Full Conversation - testing"
-            .button
-            .backgroundColor(.orange)
-            .textColor(.white)
-            .corner(radius: 12.0)
-            .withPadding(20)
-            .font(OWFontBook.shared.font(style: .regular, size: 20))
-    }()
-
-    // TODO: Testing - remove later (hard coded cause only for testing)
-    fileprivate lazy var btnCommentCreation: UIButton = {
-        return "Comment Creation - testing"
-            .button
-            .backgroundColor(.orange)
-            .textColor(.white)
-            .corner(radius: 12.0)
-            .withPadding(20)
-            .font(OWFontBook.shared.font(style: .regular, size: 20))
-    }()
-
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
     fileprivate lazy var header: OWPreConversationHeaderView = {
@@ -70,10 +52,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
         return view
     }()
-    fileprivate lazy var footerView: OWPreConversationFooterView = {
-        return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
-    }()
-
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -87,6 +65,18 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         }
 
         return tableView
+    }()
+    fileprivate lazy var btnCTAConversation: UIButton = {
+        return LocalizationManager.localizedString(key: "Show more comments")
+            .button
+            .backgroundColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
+            .textColor(.white)
+            .corner(radius: Metrics.btnFullConversationCornerRadius)
+            .withPadding(Metrics.btnFullConversationTextPadding)
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.btnFullConversationFontSize))
+    }()
+    fileprivate lazy var footerView: OWPreConversationFooterView = {
+        return OWPreConversationFooterView(with: self.viewModel.outputs.footerViewViewModel)
     }()
 
     fileprivate lazy var preConversationDataSource: OWRxTableViewSectionedAnimatedDataSource<PreConversationDataSourceModel> = {
@@ -170,60 +160,29 @@ fileprivate extension OWPreConversationView {
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.bottom.equalToSuperview() // TODO: bottom constraint
         }
 
-        self.addSubview(btnCommentCreation)
-        btnCommentCreation.OWSnp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-20)
+        self.addSubview(btnCTAConversation)
+        btnCTAConversation.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
 
-        self.addSubview(btnFullConversation)
-        btnFullConversation.OWSnp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.bottom.equalTo(btnCommentCreation.OWSnp.top).offset(-20)
+        self.addSubview(footerView)
+        footerView.OWSnp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
         }
-
-        // After building the other views, position the table view in the appropriate place
-        //        self.addSubviews(tableView, footerView)
-        //        if SpotIm.buttonOnlyMode != .withoutTitle {
-        //            self.addSubview(header)
-        //            header.OWSnp.makeConstraints { make in
-        //                make.top.equalToSuperview()
-        //                make.leading.trailing.equalToSuperview()
-        //                make.height.equalTo(Metrics.headerHeight)
-        //            }
-        //        }
-        //        if !viewModel.outputs.isButtonOnlyModeEnabled {
-        //            self.addSubviews(communityGuidelinesView, communityQuestionView, commentCreationEntryView)
-        //            communityGuidelinesView.OWSnp.makeConstraints { make in
-        //                make.top.equalTo(header.OWSnp.bottom)
-        //                make.leading.trailing.equalToSuperview()
-        //            }
-        //            communityQuestionView.OWSnp.makeConstraints { make in
-        //                make.top.equalTo(communityGuidelinesView.OWSnp.bottom)
-        //                make.leading.trailing.equalToSuperview()
-        //            }
-        //            commentCreationEntryView.OWSnp.makeConstraints { make in
-        //                make.top.equalTo(communityQuestionView.OWSnp.bottom)
-        //                make.leading.trailing.equalToSuperview()
-        //                make.height.equalTo(Metrics.whatYouThinkHeight)
-        //            }
-        //        }
-        //        tableView.OWSnp.makeConstraints { make in
-        //            make.top.equalTo(commentCreationEntryView.OWSnp.bottom)
-        //            make.leading.trailing.equalToSuperview()
-        //            make.height.equalTo(0.0)
-        //        }
-        //        let footerViewTopConstraint = viewModel.outputs.isButtonOnlyModeEnabled && SpotIm.buttonOnlyMode == .withoutTitle ? header.OWSnp.bottom :  tableView.OWSnp.bottom
-        //        footerView.OWSnp.makeConstraints { make in
-        //            make.top.equalTo(footerViewTopConstraint)
-        //            make.leading.trailing.equalToSuperview()
-        //        }
     }
 
     func setupObservers() {
+        viewModel.outputs.conversationCTAButtonTitle
+            .bind(to: btnCTAConversation.rx.title())
+            .disposed(by: disposeBag)
+
         viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
 
         viewModel.outputs.preConversationDataSourceSections
@@ -234,17 +193,20 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
 
-        btnFullConversation.rx.tap
+        viewModel.outputs.updateCellSizeAtIndex
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] index in
+                    guard let self = self else { return }
+                    UIView.performWithoutAnimation {
+                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                    }
+                })
+                .disposed(by: disposeBag)
+
+        btnCTAConversation.rx.tap
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
-
-        btnCommentCreation.rx.tap
-                .voidify()
-                .bind(onNext: { [weak self] in
-                    self?.viewModel.inputs.commentCreationTap.onNext(.comment)
-                })
-                .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
@@ -253,7 +215,19 @@ fileprivate extension OWPreConversationView {
                 self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
-            }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
+
+        Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
+            .subscribe(onNext: { [weak self] (style, colorMapper) -> Void in
+                guard let self = self else { return }
+
+                if let owBrandColor = colorMapper[.brandColor] {
+                    let brandColor = owBrandColor.color(forThemeStyle: style)
+                    self.btnCTAConversation.backgroundColor = brandColor
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
