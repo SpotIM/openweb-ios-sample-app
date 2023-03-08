@@ -25,7 +25,6 @@ protocol MockArticleViewModelingOutputs {
     var showFullConversationButton: Observable<PresentationalModeCompact> { get }
     var showCommentCreationButton: Observable<PresentationalModeCompact> { get }
     var showPreConversation: Observable<UIView> { get }
-    var updatePreConversationSize: Observable<UIView> { get }
     var showCommentThreadButton: Observable<PresentationalModeCompact> { get }
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
@@ -70,12 +69,6 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
     fileprivate let _showPreConversation = PublishSubject<UIView>()
     var showPreConversation: Observable<UIView> {
         return _showPreConversation
-            .asObservable()
-    }
-
-    fileprivate let _updatePreConversationSize = PublishSubject<UIView>()
-    var updatePreConversationSize: Observable<UIView> {
-        return _updatePreConversationSize
             .asObservable()
     }
 
