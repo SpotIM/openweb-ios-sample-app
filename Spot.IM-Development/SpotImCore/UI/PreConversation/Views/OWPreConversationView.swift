@@ -22,11 +22,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let btnFullConversationTopPadding: CGFloat = 13
         static let bottomPadding: CGFloat = 23
 
-        // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
-        // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
-        // We should later use RX to return a calculated height based on the actual width of the frame
-        static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
-
         static let separatorHeight: CGFloat = 1.0
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
