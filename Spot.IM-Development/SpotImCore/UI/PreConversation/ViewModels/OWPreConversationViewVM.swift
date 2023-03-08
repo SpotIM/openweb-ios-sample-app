@@ -35,6 +35,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
     var shouldShowComments: Bool { get }
+    var conversationCTAButtonTitle: Observable<String> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -92,6 +93,35 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
+
+    fileprivate lazy var commentsCountObservable: Observable<String> = {
+        return OWSharedServicesProvider.shared.realtimeService().realtimeData
+            .map { realtimeData in
+                guard let count = try? realtimeData.data?.totalCommentsCountForConversation("\(OWManager.manager.spotId)_\(self.postId)") else {return nil}
+                return count
+            }
+            .unwrap()
+            .map { count in
+                return count > 0 ? "(\(count))" : ""
+            }
+            .asObservable()
+    }()
+
+    var conversationCTAButtonTitle: Observable<String> {
+        commentsCountObservable
+            .map { [weak self] count in
+                guard let self = self else { return nil }
+                switch(self.preConversationStyle) {
+                case .ctaButtonOnly:
+                    return LocalizationManager.localizedString(key: "Show Comments") + " \(count)"
+                case .ctaWithSummary:
+                    return LocalizationManager.localizedString(key: "Post a Comment")
+                default:
+                    return LocalizationManager.localizedString(key: "Show more comments")
+                }
+            }
+            .unwrap()
+    }
 
     var fullConversationTap = PublishSubject<Void>()
     var openFullConversation: Observable<Void> {
@@ -174,11 +204,9 @@ fileprivate extension OWPreConversationViewViewModel {
         // Subscribing to start realtime service
         viewInitialized
             .subscribe(onNext: { [weak self] in
-                guard let self = self,
-                      let postId = OWManager.manager.postId
-                else { return }
+                guard let self = self else { return }
 
-                self.servicesProvider.realtimeService().startFetchingData(postId: postId)
+                self.servicesProvider.realtimeService().startFetchingData(postId: self.postId)
             })
             .disposed(by: disposeBag)
 

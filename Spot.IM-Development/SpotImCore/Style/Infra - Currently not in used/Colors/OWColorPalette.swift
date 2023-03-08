@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import RxSwift
 
 protocol OWColorPaletteProtocol {
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor
+    var colorDriver: Observable<[OWColor.OWType: OWColor]> { get }
 }
 
 protocol OWColorPaletteConfigurable {
@@ -17,7 +19,14 @@ protocol OWColorPaletteConfigurable {
 }
 
 class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
-    var colors = [OWColor.OWType: OWColor]()
+    fileprivate var colors = [OWColor.OWType: OWColor]()
+    fileprivate var colorsMapper = BehaviorSubject<[OWColor.OWType: OWColor]>(value: [:])
+    var colorDriver: Observable<[OWColor.OWType: OWColor]> {
+        return colorsMapper
+            .asObservable()
+            .observe(on: MainScheduler.instance)
+            .share(replay: 1)
+    }
 
     static let shared: OWColorPaletteProtocol & OWColorPaletteConfigurable = OWColorPalette()
 
@@ -26,6 +35,8 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         for type in OWColor.OWType.allCases {
             colors[type] = type.default
         }
+        let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
+        colorsMapper.onNext(colorsRx)
     }
 
     func color(type: OWColor.OWType, themeStyle: OWThemeStyle) -> UIColor {
@@ -41,5 +52,9 @@ class OWColorPalette: OWColorPaletteProtocol, OWColorPaletteConfigurable {
         guard var encapsulateColor = colors[type] else { return }
         encapsulateColor.setColor(color, forThemeStyle: themeStyle)
         colors[type] = encapsulateColor // We are working with structs here, so we need to re set the encapsulated color for this key
+        if (type.shouldUpdateRxObservable) {
+            let colorsRx = colors.filter { $0.key.shouldUpdateRxObservable }
+            colorsMapper.onNext(colorsRx)
+        }
     }
 }
