@@ -152,6 +152,21 @@ extension OWObservableArray: MutableCollection {
         }
         return e
     }
+
+    mutating func replaceAll(with newElements: [Element]) {
+        let originalElements = elements
+        elements.removeAll(keepingCapacity: true)
+        elements.insert(contentsOf: newElements, at: 0)
+        if (originalElements.count < newElements.count) {
+            arrayDidChange(OWArrayChangeEvent(updated: Array(0..<originalElements.count)))
+            arrayDidChange(OWArrayChangeEvent(inserted: Array(originalElements.count..<newElements.count)))
+        } else {
+            arrayDidChange(OWArrayChangeEvent(updated: Array(0..<newElements.count)))
+            if (newElements.count != originalElements.count) {
+                arrayDidChange(OWArrayChangeEvent(deleted: Array(newElements.count..<originalElements.count)))
+            }
+        }
+    }
 }
 
 extension OWObservableArray: RangeReplaceableCollection {
