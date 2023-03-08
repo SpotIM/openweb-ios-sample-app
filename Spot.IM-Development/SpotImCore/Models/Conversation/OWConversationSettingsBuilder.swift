@@ -18,7 +18,7 @@ public struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
         self.style = style
     }
 
-    @discardableResult public mutating func selectedCommentId(id: String?) -> OWConversationSettingsBuilder {
+    @discardableResult public mutating func selectedCommentId(_ id: String?) -> OWConversationSettingsBuilder {
         self.selectedCommentId = id
         return self
     }
@@ -38,7 +38,7 @@ struct OWConversationSettingsBuilder: OWConversationSettingsProtocol {
         self.style = style
     }
 
-    @discardableResult mutating func selectedCommentId(id: String?) -> OWConversationSettingsBuilder {
+    @discardableResult mutating func selectedCommentId(_ id: String?) -> OWConversationSettingsBuilder {
         self.selectedCommentId = id
         return self
     }
