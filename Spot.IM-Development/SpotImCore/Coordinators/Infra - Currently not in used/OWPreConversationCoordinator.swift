@@ -44,38 +44,10 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
 
         let viewObservable: Observable<OWShowable> = Observable.just(preConversationView)
-            .share(replay: 1)
             .map { $0 as OWShowable}
             .asObservable()
 
         return viewObservable
-    }
-
-    override func showableComponentDynamicSize() -> Observable<OWViewDynamicSizeOption> {
-        let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData)
-        let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
-
-        setupObservers(forViewModel: preConversationViewVM)
-        setupViewActionsCallbacks(forViewModel: preConversationViewVM)
-
-        let viewDynamicSizeObservable: Observable<(UIView, CGSize)> = Observable.just(preConversationView)
-            .flatMap { [weak preConversationViewVM] view -> Observable<(UIView, CGSize)> in
-                guard let viewModel = preConversationViewVM else { return .never() }
-                return viewModel.outputs.preConversationPreferredSize
-                    .map { (view, $0) }
-            }
-            .share(replay: 1)
-            .asObservable()
-
-        let initial = viewDynamicSizeObservable
-            .take(1)
-            .map { OWViewDynamicSizeOption.viewInitialSize(view: $0.0, initialSize: $0.1) }
-
-        let updateSize = viewDynamicSizeObservable
-            .skip(1)
-            .map { OWViewDynamicSizeOption.updateSize(view: $0.0, newSize: $0.1) }
-
-        return Observable.merge(initial, updateSize)
     }
 }
 

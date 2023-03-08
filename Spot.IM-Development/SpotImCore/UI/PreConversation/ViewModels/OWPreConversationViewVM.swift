@@ -16,7 +16,6 @@ protocol OWPreConversationViewViewModelingInputs {
     // TODO: Testing - remove later and connect the actual views/actions
     var fullConversationTap: PublishSubject<Void> { get }
     var commentCreationTap: PublishSubject<OWCommentCreationType> { get }
-    var preConversationChangedSize: PublishSubject<CGSize> { get }
 
     var viewInitialized: PublishSubject<Void> { get }
 }
@@ -30,7 +29,6 @@ protocol OWPreConversationViewViewModelingOutputs {
     var preConversationDataSourceSections: Observable<[PreConversationDataSourceModel]> { get }
     var openFullConversation: Observable<Void> { get }
     var openCommentConversation: Observable<OWCommentCreationType> { get }
-    var preConversationPreferredSize: Observable<CGSize> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
@@ -135,16 +133,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObservable()
     }
 
-    var preConversationChangedSize = PublishSubject<CGSize>()
-    // BehaviorSubject required since the size set immediately before subscribers establish
-    fileprivate var _preConversationChangedSize = BehaviorSubject<CGSize?>(value: nil)
-    var preConversationPreferredSize: Observable<CGSize> {
-        return _preConversationChangedSize
-            .unwrap()
-            .asObservable()
-            .distinctUntilChanged()
-    }
-
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var updateCellSizeAtIndex: Observable<Int> {
         return _changeSizeAtIndex
@@ -198,9 +186,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
-        preConversationChangedSize
-            .bind(to: _preConversationChangedSize)
-            .disposed(by: disposeBag)
 
         // Subscribing to start realtime service
         viewInitialized
