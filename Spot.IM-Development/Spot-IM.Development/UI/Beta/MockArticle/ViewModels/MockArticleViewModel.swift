@@ -166,15 +166,18 @@ fileprivate extension MockArticleViewModel {
                 let mode = result.0
                 let postId = result.1
 
-                var manager = OpenWeb.manager
+                let manager = OpenWeb.manager
                 let flows = manager.ui.flows
+
+                let preConversationStyle =  OWPreConversationStyle.preConversationStyle(fromData: UserDefaultsProvider.shared.get(key: .preConversationCustomStyle, defaultValue: Data()))
+                let additionalSettings: OWPreConversationSettingsBuilder = .init(style: preConversationStyle)
 
                 guard let presentationalMode = self.presentationalMode(fromCompactMode: mode) else { return }
 
                 flows.preConversation(postId: postId,
                                    article: self.createMockArticle(),
                                    presentationalMode: presentationalMode,
-                                   additionalSettings: nil,
+                                   additionalSettings: additionalSettings,
                                    callbacks: nil,
                                    completion: { [weak self] result in
                     guard let self = self else { return }
@@ -212,10 +215,14 @@ fileprivate extension MockArticleViewModel {
                 let manager = OpenWeb.manager
                 let flows = manager.ui.flows
 
+                let styleIndexFromPersistence = UserDefaultsProvider.shared.get(key: .conversationCustomStyleIndex, defaultValue: OWConversationStyle.defaultIndex)
+                let style = OWConversationStyle.conversationStyle(fromIndex: styleIndexFromPersistence)
+                let additionalSettings: OWConversationSettingsBuilder = .init(style: style)
+
                 flows.conversation(postId: postId,
                                    article: self.createMockArticle(),
                                    presentationalMode: presentationalMode,
-                                   additionalSettings: nil,
+                                   additionalSettings: additionalSettings,
                                    callbacks: nil,
                                    completion: { [weak self] result in
                     guard let self = self else { return }
@@ -311,7 +318,7 @@ fileprivate extension MockArticleViewModel {
         let articleStub = OWArticle.stub()
 
         // swiftlint:disable line_length
-        let persistenceReadOnlyMode = OWReadOnlyMode.modeFromPersistence(index: UserDefaultsProvider.shared.get(key: .readOnlyModeIndex, defaultValue: 0))
+        let persistenceReadOnlyMode = OWReadOnlyMode.readOnlyMode(fromIndex: UserDefaultsProvider.shared.get(key: .readOnlyModeIndex, defaultValue: OWReadOnlyMode.defaultIndex))
         // swiftlint:enable line_length
         let settings = OWArticleSettings(section: articleStub.additionalSettings.section,
                                          readOnlyMode: persistenceReadOnlyMode)

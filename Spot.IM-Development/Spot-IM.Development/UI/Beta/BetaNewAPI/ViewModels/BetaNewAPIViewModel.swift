@@ -227,10 +227,11 @@ fileprivate extension BetaNewAPIViewModel {
         manager.spotId = spotId
         var customizations = manager.ui.customizations
         // swiftlint:disable line_length
-        customizations.themeEnforcement = .themeFromPersistence(index: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: 0))
+        customizations.themeEnforcement = .themeStyle(fromIndex: UserDefaultsProvider.shared.get(key: .themeModeIndex, defaultValue: 0))
         // swiftlint:enable line_length
         var sorting = customizations.sorting
         sorting.initialOption = .initialSort(fromIndex: UserDefaultsProvider.shared.get(key: .initialSortIndex, defaultValue: 0))
+        customizations.fontFamily = .fontGroupFamily(fromData: UserDefaultsProvider.shared.get(key: .fontGroupType, defaultValue: Data()))
         // Intentional commented code - Once we will have a setting for that in the UI, connect to here
 //        var helpers = OpenWeb.manager.helpers
 //        helpers.languageStrategy = .use(language: .hebrew)
