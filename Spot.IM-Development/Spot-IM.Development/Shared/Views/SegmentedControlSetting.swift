@@ -62,15 +62,15 @@ fileprivate extension SegmentedControlSetting {
     func setupViews() {
         self.addSubview(segmentTitleLbl)
         segmentTitleLbl.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
         }
 
         self.addSubview(segmentedControl)
         segmentedControl.snp.makeConstraints { make in
-            make.centerY.equalTo(segmentTitleLbl)
-            make.leading.greaterThanOrEqualTo(segmentTitleLbl.snp.trailing).offset(Metrics.verticalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.top.equalTo(segmentTitleLbl.snp.bottom).offset(Metrics.verticalOffset)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
             make.width.greaterThanOrEqualTo(Metrics.segmentMinWidth)
         }
     }
@@ -86,6 +86,12 @@ extension Reactive where Base: SegmentedControlSetting {
 
     var selectedSegmentIndex: ControlProperty<Int> {
         return value
+    }
+
+    var isHidden: Binder<Bool> {
+        return Binder(self.base) { _, value in
+            base.isHidden = value
+        }
     }
 
     fileprivate var value: ControlProperty<Int> {

@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-public enum OWPreConversationStyle {
+public enum OWPreConversationStyle: Codable {
     public struct Metrics {
         public static let defaultRegularNumberOfComments: Int = 2
         public static let minNumberOfComments: Int = 1
@@ -23,7 +23,7 @@ public enum OWPreConversationStyle {
 }
 
 #else
-enum OWPreConversationStyle {
+enum OWPreConversationStyle: Codable {
     struct Metrics {
         static let defaultRegularNumberOfComments: Int = 2
         static let minNumberOfComments: Int = 1
@@ -36,3 +36,12 @@ enum OWPreConversationStyle {
     case ctaWithSummary // Called "Button only mode" - title, before the refactor
 }
 #endif
+
+extension OWPreConversationStyle {
+    enum CodingKeys: String, CodingKey {
+        case regular
+        case compact
+        case ctaButtonOnly
+        case ctaWithSummary
+    }
+}

@@ -53,7 +53,7 @@ class UIFlowsViewModel: UIFlowsViewModeling, UIFlowsViewModelingOutputs, UIFlows
 
     var presentStyle: OWModalPresentationStyle {
         // swiftlint:disable line_length
-        return OWModalPresentationStyle.styleFromPersistence(index: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: 0))
+        return OWModalPresentationStyle.presentationStyle(fromIndex: UserDefaultsProvider.shared.get(key: .modalStyleIndex, defaultValue: 0))
         // swiftlint:enable line_length
     }
 

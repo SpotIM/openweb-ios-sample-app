@@ -15,15 +15,7 @@ class SettingsVC: UIViewController {
 
     fileprivate struct Metrics {
         static let identifier = "settings_vc_id"
-        static let switchHideArticleHeaderIdentifier = "hide_article_header"
-        static let switchCommentCreationNewDesignIdentifier = "comment_creation_new_design"
-        static let segmentedReadOnlyModeIdentifier = "read_only_mode"
-        static let segmentedThemeModeIdentifier = "theme_mode"
-        static let segmentedModalStyleIdentifier = "modal_style"
-        static let segmentedInitialSortIdentifier = "initial_sort"
-        static let textFieldArticleURLIdentifier = "article_url"
-        static let verticalOffset: CGFloat = 50
-        static let horizontalOffset: CGFloat = 10
+        static let verticalOffset: CGFloat = 40
     }
 
     fileprivate lazy var scrollView: UIScrollView = {
@@ -33,57 +25,9 @@ class SettingsVC: UIViewController {
         return scrollView
     }()
 
-    fileprivate lazy var switchHideArticleHeader: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.hideArticleHeaderTitle,
-                             accessibilityPrefixId: Metrics.switchHideArticleHeaderIdentifier)
-    }()
-
-    fileprivate lazy var switchCommentCreationNewDesign: SwitchSetting = {
-        return SwitchSetting(title: viewModel.outputs.commentCreationNewDesignTitle,
-                             accessibilityPrefixId: Metrics.switchCommentCreationNewDesignIdentifier)
-    }()
-
-    fileprivate lazy var segmentedReadOnlyMode: SegmentedControlSetting = {
-        let title = viewModel.outputs.readOnlyTitle
-        let items = viewModel.outputs.readOnlySettings
-
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedReadOnlyModeIdentifier,
-                                       items: items)
-    }()
-
-    fileprivate lazy var segmentedThemeMode: SegmentedControlSetting = {
-        let title = viewModel.outputs.themeModeTitle
-        let items = viewModel.outputs.themeModeSettings
-
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedThemeModeIdentifier,
-                                       items: items)
-    }()
-
-    fileprivate lazy var segmentedModalStyle: SegmentedControlSetting = {
-        let title = viewModel.outputs.modalStyleTitle
-        let items = viewModel.outputs.modalStyleSettings
-
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedModalStyleIdentifier,
-                                       items: items)
-    }()
-
-    fileprivate lazy var segmentedInitialSort: SegmentedControlSetting = {
-        let title = viewModel.outputs.initialSortTitle
-        let items = viewModel.outputs.initialSortSettings
-
-        return SegmentedControlSetting(title: title,
-                                       accessibilityPrefixId: Metrics.segmentedInitialSortIdentifier,
-                                       items: items)
-    }()
-
-    fileprivate lazy var textFieldArticleURL: TextFieldSetting = {
-        let txtField = TextFieldSetting(title: viewModel.outputs.articleURLTitle,
-                                        accessibilityPrefixId: Metrics.textFieldArticleURLIdentifier,
-                                        font: FontBook.paragraph)
-        return txtField
+    fileprivate lazy var settingViews: [UIView] = {
+        let views = viewModel.outputs.settingsVMs.map { SettingsViewsFactory.factor(from: ($0)) }.unwrap()
+        return views
     }()
 
     fileprivate let viewModel: SettingsViewModeling
@@ -91,7 +35,6 @@ class SettingsVC: UIViewController {
 
     init(viewModel: SettingsViewModeling) {
         self.viewModel = viewModel
-
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -107,7 +50,6 @@ class SettingsVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupObservers()
     }
 }
 
@@ -128,108 +70,42 @@ fileprivate extension SettingsVC {
             make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
-        scrollView.addSubview(switchHideArticleHeader)
-        switchHideArticleHeader.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-            make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
-        }
-
-        scrollView.addSubview(switchCommentCreationNewDesign)
-        switchCommentCreationNewDesign.snp.makeConstraints { make in
-            make.top.equalTo(switchHideArticleHeader.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-        }
-
-        scrollView.addSubview(segmentedReadOnlyMode)
-        segmentedReadOnlyMode.snp.makeConstraints { make in
-            make.top.equalTo(switchCommentCreationNewDesign.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-        }
-
-        scrollView.addSubview(segmentedThemeMode)
-        segmentedThemeMode.snp.makeConstraints { make in
-            make.top.equalTo(segmentedReadOnlyMode.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-        }
-
-        scrollView.addSubview(segmentedModalStyle)
-        segmentedModalStyle.snp.makeConstraints { make in
-            make.top.equalTo(segmentedThemeMode.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-        }
-
-        scrollView.addSubview(segmentedInitialSort)
-        segmentedInitialSort.snp.makeConstraints { make in
-            make.top.equalTo(segmentedModalStyle.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-        }
-
-        scrollView.addSubview(textFieldArticleURL)
-        textFieldArticleURL.snp.makeConstraints { make in
-            make.top.equalTo(segmentedInitialSort.snp.bottom).offset(Metrics.verticalOffset)
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(Metrics.horizontalOffset)
-            make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalOffset)
+        var previousView: UIView? = nil
+        for (index, settingsView) in settingViews.enumerated() {
+            scrollView.addSubview(settingsView)
+            settingsView.snp.makeConstraints { make in
+                make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+                if let topView = previousView {
+                    // This is an intermidiate settingsView, Set the top constraint to previous settingsView
+                    make.top.equalTo(topView.snp.bottom).offset(Metrics.verticalOffset)
+                } else {
+                    // Telling the scroll view that this is the first settingsView
+                    make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
+                }
+                if index == settingViews.count - 1 {
+                    // Telling the scroll view that this is the last settingsView
+                    make.bottom.equalTo(scrollView.contentLayoutGuide).offset(-Metrics.verticalOffset)
+                }
+                previousView = settingsView
+            }
         }
     }
 
-    func setupObservers() {
-
-        viewModel.outputs.shouldHideArticleHeader
-            .bind(to: switchHideArticleHeader.rx.isOn)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.shouldCommentCreationNewDesign
-            .bind(to: switchCommentCreationNewDesign.rx.isOn)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.readOnlyModeIndex
-            .bind(to: segmentedReadOnlyMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.themeModeIndex
-            .bind(to: segmentedThemeMode.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.modalStyleIndex
-            .bind(to: segmentedModalStyle.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.initialSortIndex
-            .bind(to: segmentedInitialSort.rx.selectedSegmentIndex)
-            .disposed(by: disposeBag)
-
-        viewModel.outputs.articleAssociatedURL
-            .bind(to: textFieldArticleURL.rx.textFieldText)
-            .disposed(by: disposeBag)
-
-        switchHideArticleHeader.rx.isOn
-            .bind(to: viewModel.inputs.hideArticleHeaderToggled)
-            .disposed(by: disposeBag)
-
-        switchCommentCreationNewDesign.rx.isOn
-            .bind(to: viewModel.inputs.commentCreationNewDesignToggled)
-            .disposed(by: disposeBag)
-
-        segmentedReadOnlyMode.rx.selectedSegmentIndex
-            .bind(to: viewModel.inputs.readOnlyModeSelectedIndex)
-            .disposed(by: disposeBag)
-
-        segmentedThemeMode.rx.selectedSegmentIndex
-            .bind(to: viewModel.inputs.themeModeSelectedIndex)
-            .disposed(by: disposeBag)
-
-        segmentedModalStyle.rx.selectedSegmentIndex
-            .bind(to: viewModel.inputs.modalStyleSelectedIndex)
-            .disposed(by: disposeBag)
-
-        segmentedInitialSort.rx.selectedSegmentIndex
-            .bind(to: viewModel.inputs.initialSortSelectedIndex)
-            .disposed(by: disposeBag)
-
-        textFieldArticleURL.rx.textFieldText
-            .bind(to: viewModel.inputs.articleAssociatedSelectedURL)
-            .disposed(by: disposeBag)
-    }
+//    func view(forType type: SettingsGroupType) -> UIView {
+//        let userDefaultsProvider = viewModel.outputs.userDefaultsProvider
+//        let manager = viewModel.outputs.manager
+//        switch type {
+//        case .general:
+//            return GeneralSettingsView(viewModel: GeneralSettingsVM(userDefaultsProvider: userDefaultsProvider, manager: manager))
+//        case .preConversation:
+//            return PreConversationSettingsView(viewModel: PreConversationSettingsVM(userDefaultsProvider: userDefaultsProvider))
+//        case .conversation:
+//            return ConversationSettingsView(viewModel: ConversationSettingsVM(userDefaultsProvider: userDefaultsProvider))
+//        case .commentCreation:
+//            return CommentCreationSettingsView(viewModel: CommentCreationSettingsVM(userDefaultsProvider: userDefaultsProvider))
+//        case .iau:
+//            return IAUSettingsView(viewModel: IAUSettingsVM(userDefaultsProvider: userDefaultsProvider))
+//        }
+//    }
 }
-
 #endif
