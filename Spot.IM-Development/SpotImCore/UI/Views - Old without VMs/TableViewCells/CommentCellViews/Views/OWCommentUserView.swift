@@ -60,6 +60,10 @@ final class OWCommentUserView: OWBaseView {
         userNameView.updateColorsAccordingToStyle()
         avatarImageView.updateColorsAccordingToStyle()
     }
+
+    func prepareForReuse() {
+        avatarImageView.prepareForReuse()
+    }
 }
 
 fileprivate extension OWCommentUserView {

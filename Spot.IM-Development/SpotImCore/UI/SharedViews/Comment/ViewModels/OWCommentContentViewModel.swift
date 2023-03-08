@@ -15,11 +15,11 @@ protocol OWCommentContentViewModelingInputs {
 }
 
 protocol OWCommentContentViewModelingOutputs {
-    var text: Observable<String?> { get }
-    var attributedString: Observable<NSMutableAttributedString?> { get }
-    var gifUrl: Observable<String?> { get }
-    var imageUrl: Observable<URL?> { get }
-    var mediaSize: Observable<CGSize?> { get }
+    var gifUrl: Observable<String> { get }
+    var image: Observable<OWImageType> { get }
+    var mediaSize: Observable<CGSize> { get }
+
+    var collapsableLabelViewModel: OWCommentTextViewModeling { get }
 }
 
 protocol OWCommentContentViewModeling {
@@ -42,54 +42,55 @@ class OWCommentContentViewModel: OWCommentContentViewModeling,
     var outputs: OWCommentContentViewModelingOutputs { return self }
 
     fileprivate let _comment = BehaviorSubject<SPComment?>(value: nil)
+    fileprivate let lineLimit: Int
+    fileprivate let imageProvider: OWImageProviding
 
-    init(comment: SPComment) {
+    var collapsableLabelViewModel: OWCommentTextViewModeling
+
+    init(comment: SPComment, lineLimit: Int, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+        self.lineLimit = lineLimit
+        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: comment, collapsableTextLineLimit: lineLimit)
+        self.imageProvider = imageProvider
         _comment.onNext(comment)
     }
-    init() {}
 
-    var text: Observable<String?> {
-        _comment
-            .map {$0?.text?.text}
-            .asObservable()
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+        lineLimit = 0
+        self.collapsableLabelViewModel = OWCommentTextViewModel(comment: SPComment(), collapsableTextLineLimit: lineLimit)
+        self.imageProvider = imageProvider
     }
 
-    var attributedString: Observable<NSMutableAttributedString?> {
-        _comment
-            .map { $0?.text?.text }
-            .unwrap()
-            .map {
-                NSMutableAttributedString(string: $0, attributes: [
-                    :
-                ]) // TODO: build with read more/less, links, edited etc
-            }
-            .asObservable()
-    }
-
-    var gifUrl: Observable<String?> {
+    var gifUrl: Observable<String> {
         _comment
             .map { $0?.gif?.originalUrl }
+            .unwrap()
             .asObservable()
     }
 
-    var imageUrl: Observable<URL?> {
+    var image: Observable<OWImageType> {
         _comment
-            .map { [weak self] comment in
-                return self?.imageURL(with: comment?.image?.imageId, size: nil)
+            .flatMap { [weak self] comment -> Observable<URL?> in
+                guard let self = self,
+                      let imageId = comment?.image?.imageId
+                else { return .empty() }
+
+                return self.imageProvider.imageURL(with: imageId, size: nil)
+            }
+            .map { url in
+                guard let url = url else { return .defaultImage }
+                return .custom(url: url)
             }
             .asObservable()
     }
 
-    var mediaSize: Observable<CGSize?> {
+    var mediaSize: Observable<CGSize> {
         Observable.combineLatest(_commentMediaOriginalSize, _commentLeadingOffset) { [weak self] mediaOriginalSize, leadingOffset -> CGSize in
             guard let self = self else { return .zero }
             return self.getMediaSize(originalSize: mediaOriginalSize, leadingOffset: leadingOffset)
         }.asObservable()
     }
-}
 
-fileprivate extension OWCommentContentViewModel {
-    var _commentMediaOriginalSize: Observable<CGSize> {
+    fileprivate lazy var _commentMediaOriginalSize: Observable<CGSize> = {
         _comment
             .map { comment in
                 if let gif = comment?.gif {
@@ -101,9 +102,9 @@ fileprivate extension OWCommentContentViewModel {
                 }
             }
             .asObservable()
-    }
+    }()
 
-    var _commentLeadingOffset: Observable<CGFloat> {
+    fileprivate lazy var _commentLeadingOffset: Observable<CGFloat> = {
         _comment
             .unwrap()
             .map { [weak self] comment in
@@ -111,8 +112,10 @@ fileprivate extension OWCommentContentViewModel {
                 return self.leadingOffset(perCommentDepth: comment.depth ?? 0)
             }
             .asObservable()
-    }
+    }()
+}
 
+fileprivate extension OWCommentContentViewModel {
     func leadingOffset(perCommentDepth depth: Int) -> CGFloat {
         switch depth {
         case 0: return Metrics.depth0Offset
@@ -138,30 +141,5 @@ fileprivate extension OWCommentContentViewModel {
         }
 
         return CGSize(width: CGFloat(width), height: CGFloat(height))
-    }
-
-    // TODO: should be in some imageprovider
-    func imageURL(with id: String?, size: CGSize? = nil) -> URL? {
-        guard var id = id else { return nil }
-
-        if id.hasPrefix(SPImageRequestConstants.placeholderImagePrefix) {
-            id.removeFirst(SPImageRequestConstants.placeholderImagePrefix.count)
-            id = SPImageRequestConstants.avatarPathComponent.appending(id)
-        }
-        return URL(string: cloudinaryURLString(size).appending(id))
-    }
-
-    func cloudinaryURLString(_ imageSize: CGSize? = nil) -> String {
-        var result = APIConstants.fetchImageBaseURL.appending(SPImageRequestConstants.cloudinaryImageParamString)
-
-        if let imageSize = imageSize {
-            result.append("\(SPImageRequestConstants.cloudinaryWidthPrefix)" +
-                "\(Int(imageSize.width))" +
-                "\(SPImageRequestConstants.cloudinaryHeightPrefix)" +
-                "\(Int(imageSize.height))"
-            )
-        }
-
-        return result.appending("/")
     }
 }

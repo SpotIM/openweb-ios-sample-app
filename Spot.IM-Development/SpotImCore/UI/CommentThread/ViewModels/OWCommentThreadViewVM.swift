@@ -89,7 +89,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                 for (index, comment) in comments.enumerated() {
                     // TODO: replies
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
-                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil))
+                    let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: 4))
                     viewModels.append(OWCommentThreadCellOption.comment(viewModel: vm))
                     if (index < comments.count - 1 && comment.replies == nil) {
                         viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
@@ -98,7 +98,7 @@ fileprivate extension OWCommentThreadViewViewModel {
                     if let replies = comment.replies {
                         for (index, reply) in replies.enumerated() {
                             guard let replyUser = response.conversation?.users?[reply.userId ?? ""] else { return }
-                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: reply, user: replyUser, replyToUser: nil))
+                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: reply, user: replyUser, replyToUser: nil, collapsableTextLineLimit: 4))
                             viewModels.append(OWCommentThreadCellOption.comment(viewModel: vm))
                             if (index < replies.count - 1) {
                                 viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
