@@ -89,8 +89,10 @@ fileprivate extension OWCommentThreadViewViewModel {
     }
 
     func populateInitialUI() {
-        let numberOfComments = 10
-        let skeletonCellVMs = (0 ..< numberOfComments).map { _ in OWCommentSkeletonShimmeringCellViewModel() }
+        let numberOfComments = 4
+        let skeletonCellVMs = (0 ..< numberOfComments).map { index in
+            OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
+        }
         let skeletonCells = skeletonCellVMs.map { OWCommentThreadCellOption.commentSkeletonShimmering(viewModel: $0) }
         _cellsViewModels.append(contentsOf: skeletonCells)
     }

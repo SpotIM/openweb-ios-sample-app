@@ -22,6 +22,7 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
         static let spaceBetweenMessageLines: CGFloat = 5
         static let verticalOffset: CGFloat = 20
         static let horizontalOffset: CGFloat = 20
+        static let depthOffset: CGFloat = 23
     }
 
     fileprivate var viewModel: OWCommentSkeletonShimmeringCellViewModeling!
@@ -128,7 +129,6 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.setupUI()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -137,8 +137,9 @@ class OWCommentSkeletonShimmeringCell: UITableViewCell {
 
     override func configure(with viewModel: OWCellViewModel) {
         guard let vm = viewModel as? OWCommentSkeletonShimmeringCellViewModeling else { return }
-        // In this skeleton shimmering cell we will probably won't do anything with view model, but still let's save it
         self.viewModel = vm
+
+        self.setupUI()
 
         // Start shimmering effect
         mainSkeletonShimmeringView.addSkeletonShimmering()
@@ -157,7 +158,8 @@ fileprivate extension OWCommentSkeletonShimmeringCell {
 
         self.addSubview(mainSkeletonShimmeringView)
         mainSkeletonShimmeringView.OWSnp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview().inset(Metrics.horizontalOffset + CGFloat(viewModel.outputs.depth) * Metrics.depthOffset)
+            make.leading.equalToSuperview().inset(Metrics.horizontalOffset)
             make.top.bottom.equalToSuperview().inset(Metrics.verticalOffset)
         }
     }
