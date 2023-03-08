@@ -12,11 +12,13 @@ import RxCocoa
 import UIKit
 
 protocol OWCompactCommentViewModelingInputs {
+    
 }
 
 protocol OWCompactCommentViewModelingOutputs {
     var avatarVM: OWAvatarViewModeling { get }
     var commentType: OWCompactCommentType { get }
+    var numberOfLines: Int { get }
 }
 
 protocol OWCompactCommentViewModeling {
@@ -34,11 +36,13 @@ class OWCompactCommentViewModel: OWCompactCommentViewModeling,
     init(data: OWCommentRequiredData, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         comment = data.comment
         avatarVM = OWAvatarViewModelV2(user: data.user, imageURLProvider: imageProvider)
+        numberOfLines = data.collapsableTextLineLimit
     }
 
     var avatarVM: OWAvatarViewModeling
     fileprivate var comment: SPComment
-    
+
+    var numberOfLines: Int
     lazy var commentType: OWCompactCommentType = {
         if let commentText = comment.text?.text {
             return .text(string: commentText)

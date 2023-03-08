@@ -21,6 +21,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let btnFullConversationTextPadding: CGFloat = 13
         static let btnFullConversationTopPadding: CGFloat = 13
         static let bottomPadding: CGFloat = 23
+        static let compactModePadding: CGFloat = 16
 
         static let separatorHeight: CGFloat = 1.0
     }
@@ -119,15 +120,18 @@ fileprivate extension OWPreConversationView {
 
     func setupCompactModeViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light)
-        self.addSubviews(header)
+        self.addSubview(header)
         header.OWSnp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.compactModePadding)
+            make.leading.trailing.equalToSuperview()
         }
 
         self.addSubview(compactCommentView)
         compactCommentView.OWSnp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(header.OWSnp.bottom).offset(8)
+            make.leading.equalToSuperview().offset(Metrics.compactModePadding)
+            make.trailing.equalToSuperview().offset(-Metrics.compactModePadding)
+            make.bottom.equalToSuperview().offset(-Metrics.compactModePadding)
         }
     }
 
@@ -216,14 +220,15 @@ fileprivate extension OWPreConversationView {
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.compactCommentVM
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] vm in
                 guard let self = self else { return }
                 self.compactCommentView.configure(with: vm)
             })
             .disposed(by: disposeBag)
-
+        
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
