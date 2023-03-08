@@ -47,7 +47,7 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
             .share(replay: 1)
             .map { $0 as OWShowable}
             .asObservable()
-        
+
         return viewObservable
     }
 
