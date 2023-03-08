@@ -37,7 +37,7 @@ class OWCommentCell: UITableViewCell {
 
         if let depth = self.viewModel.outputs.commentVM.outputs.comment.depth {
             commentView.OWSnp.updateConstraints { make in
-                make.trailing.equalToSuperview().inset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
+                make.leading.equalToSuperview().inset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
             }
         }
     }
@@ -55,8 +55,8 @@ fileprivate extension OWCommentCell {
 
         commentView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
-            make.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
-            make.leading.equalToSuperview()
+            make.leading.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.trailing.equalToSuperview()
         }
     }
 }
