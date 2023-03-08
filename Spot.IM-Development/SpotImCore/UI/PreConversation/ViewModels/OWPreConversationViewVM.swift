@@ -100,7 +100,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         }
         return false
     }()
-    
+
     fileprivate var _bestComment = BehaviorSubject<(SPComment, SPUser)?>(value: nil)
     fileprivate var bestComment: Observable<(SPComment, SPUser)> {
         _bestComment
