@@ -27,6 +27,7 @@ struct OWColor {
         case brandColor
         case buttonTextColor
         case linkColor
+        case compactBackground
 
         var `default`: OWColor {
             switch self {
@@ -71,6 +72,9 @@ struct OWColor {
             case .linkColor:
                 return OWColor(lightThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0))
+            case .compactBackground:
+                return OWColor(lightThemeColor: UIColor(red: 7.0/255.0, green: 7.0/255.0, blue: 7.0/255.0, alpha: 0.05),
+                               darkThemeColor: UIColor(red: 31.0/255.0, green: 31.0/255.0, blue: 31.0/255.0, alpha: 1.0))
             }
         }
 
