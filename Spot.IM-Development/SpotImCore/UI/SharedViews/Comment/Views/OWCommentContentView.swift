@@ -11,16 +11,17 @@ import RxSwift
 import RxCocoa
 
 class OWCommentContentView: UIView {
-    fileprivate struct Metrics {
-        static let fontSize: CGFloat = 16.0
+    internal struct Metrics {
+        static let fontSize: CGFloat = 15.0
+        static let editedFontSize: CGFloat = 13.0
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
+        static let paragraphLineSpacing: CGFloat = 3.5
     }
 
-    fileprivate lazy var textLabel: UILabel = {
-       return UILabel()
+    fileprivate lazy var textLabel: OWCommentTextLabel = {
+       return OWCommentTextLabel()
             .numberOfLines(0)
-            .font(.preferred(style: .regular, of: Metrics.fontSize))
     }()
 
     fileprivate lazy var mediaView: CommentMediaView = {
@@ -29,6 +30,7 @@ class OWCommentContentView: UIView {
 
     fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate var disposeBag: DisposeBag!
+    fileprivate var textHeightConstraint: OWConstraint?
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -41,6 +43,7 @@ class OWCommentContentView: UIView {
 
     func configure(with viewModel: OWCommentContentViewModeling) {
         self.viewModel = viewModel
+        textLabel.configure(with: viewModel.outputs.collapsableLabelViewModel)
         self.disposeBag = DisposeBag()
         setupObservers()
     }
@@ -52,6 +55,7 @@ fileprivate extension OWCommentContentView {
 
         textLabel.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
+            textHeightConstraint = make.height.equalTo(0).constraint
         }
 
         mediaView.OWSnp.makeConstraints { make in
@@ -63,22 +67,16 @@ fileprivate extension OWCommentContentView {
     }
 
     func setupObservers() {
-        viewModel.outputs.attributedString
-            .subscribe(onNext: { [weak self] attributedString in
-                self?.textLabel.attributedText = attributedString
-            })
-            .disposed(by: disposeBag)
+        viewModel.outputs.image
+            .subscribe(onNext: { [weak self] imageType in
+                guard let self = self,
+                      case .custom(let url) = imageType else { return }
 
-        viewModel.outputs.imageUrl
-            .unwrap()
-            .subscribe(onNext: { [weak self] url in
-                guard let self = self else { return }
                 self.mediaView.configureMedia(imageUrl: url, gifUrl: nil)
             })
             .disposed(by: disposeBag)
 
         viewModel.outputs.gifUrl
-            .unwrap()
             .subscribe(onNext: { [weak self] url in
                 guard let self = self else { return }
                 self.mediaView.configureMedia(imageUrl: nil, gifUrl: url)
@@ -89,11 +87,19 @@ fileprivate extension OWCommentContentView {
             .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
                 self.mediaView.OWSnp.updateConstraints { make in
-                    make.size.equalTo(size ?? 0)
+                    make.size.equalTo(size)
                     make.top.equalTo(self.textLabel.OWSnp.bottom).offset(
-                        size != nil && size != CGSize.zero ? Metrics.commentMediaTopPadding : Metrics.emptyCommentMediaTopPadding
+                        size != CGSize.zero ? Metrics.commentMediaTopPadding : Metrics.emptyCommentMediaTopPadding
                     )
                 }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.collapsableLabelViewModel
+            .outputs.height
+            .subscribe(onNext: { [weak self] newHeight in
+                guard let self = self else { return }
+                self.textHeightConstraint?.update(offset: newHeight)
             })
             .disposed(by: disposeBag)
     }
