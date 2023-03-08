@@ -17,6 +17,9 @@ protocol OWPreConversationHeaderViewModelingInputs {
 protocol OWPreConversationHeaderViewModelingOutputs {
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
     var commentsCount: Observable<String> { get }
+    var titleFontSize: CGFloat { get }
+    var counterFontSize: CGFloat { get }
+    var showNextArrow: Bool { get }
 }
 
 protocol OWPreConversationHeaderViewModeling {
@@ -25,6 +28,12 @@ protocol OWPreConversationHeaderViewModeling {
 }
 
 class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWPreConversationHeaderViewModelingInputs, OWPreConversationHeaderViewModelingOutputs {
+    fileprivate struct Metrics {
+        static let titleFontSize: CGFloat = 24
+        static let titleFontSizeCompact: CGFloat = 15
+        static let counterFontSize: CGFloat = 15
+        static let counterFontSizeCompact: CGFloat = 13
+    }
 
     var inputs: OWPreConversationHeaderViewModelingInputs { return self }
     var outputs: OWPreConversationHeaderViewModelingOutputs { return self }
@@ -46,8 +55,26 @@ class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWP
             }
             .unwrap()
             .map { count in
-                return count > 0 ? "(\(count.decimalFormatted))" : ""
+                return count > 0 ? count.kmFormatted : ""
             }
             .asObservable()
+    }
+
+    lazy var titleFontSize: CGFloat = {
+        return isCompactMode ? Metrics.titleFontSizeCompact : Metrics.titleFontSize
+    }()
+
+    lazy var counterFontSize: CGFloat = {
+        return isCompactMode ? Metrics.counterFontSizeCompact : Metrics.counterFontSize
+    }()
+
+    lazy var showNextArrow: Bool = {
+       return isCompactMode
+    }()
+
+    fileprivate let isCompactMode: Bool
+
+    init(isCompactMode: Bool) {
+        self.isCompactMode = isCompactMode
     }
 }

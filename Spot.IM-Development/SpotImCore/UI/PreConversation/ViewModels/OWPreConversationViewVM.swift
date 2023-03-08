@@ -34,6 +34,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
     var shouldShowComments: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
+    var isCompactMode: Bool { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -69,7 +70,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     lazy var preConversationHeaderVM: OWPreConversationHeaderViewModeling = {
-        return OWPreConversationHeaderViewModel()
+        return OWPreConversationHeaderViewModel(isCompactMode: self.isCompactMode)
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
@@ -90,6 +91,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     fileprivate lazy var preConversationStyle: OWPreConversationStyle = {
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
+    }()
+
+    lazy var isCompactMode: Bool = {
+        if case .compact = preConversationStyle {
+            return true
+        }
+        return false
     }()
 
     fileprivate lazy var commentsCountObservable: Observable<String> = {
