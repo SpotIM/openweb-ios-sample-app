@@ -35,8 +35,10 @@ class OWCommentThreadView: UIView, OWThemeStyleInjectorProtocol {
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
-            .backgroundColor(UIColor.clear)
+            .backgroundColor(UIColor.white)
             .separatorStyle(.none)
+
+        tableView.allowsSelection = false
 
         // Register cells
         for option in OWCommentThreadCellOption.allCases {

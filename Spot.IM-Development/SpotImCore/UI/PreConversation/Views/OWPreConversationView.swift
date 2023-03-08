@@ -168,8 +168,7 @@ fileprivate extension OWPreConversationView {
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
+            make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview() // TODO: bottom constraint
         }
 
