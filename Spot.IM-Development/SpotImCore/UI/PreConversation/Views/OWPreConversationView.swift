@@ -234,6 +234,16 @@ fileprivate extension OWPreConversationView {
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
 
+        viewModel.outputs.updateCellSizeAtIndex
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] index in
+                    guard let self = self else { return }
+                    UIView.performWithoutAnimation {
+                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                    }
+                })
+                .disposed(by: disposeBag)
+
         btnFullConversation.rx.tap
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)

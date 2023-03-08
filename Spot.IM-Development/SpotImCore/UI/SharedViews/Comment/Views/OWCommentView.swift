@@ -52,6 +52,7 @@ class OWCommentView: UIView {
 
     func prepareForReuse() {
         commentHeaderView.prepareForReuse()
+        commentLabelsContainerView.prepareForReuse()
         commentEngagementView.prepareForReuse()
     }
 }
