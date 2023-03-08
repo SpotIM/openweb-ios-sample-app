@@ -287,6 +287,15 @@ final class SPReplyCell: SPBaseTableViewCell, MessageItemContainable {
 
 // MARK: - Extensions
 
+// Cell life cycle
+extension SPReplyCell {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        replyActionsView.prepareForReuse()
+        userView.prepareForReuse()
+    }
+}
+
 extension SPReplyCell: CommentActionsDelegate {
 
     func reply() {

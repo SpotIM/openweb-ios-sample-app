@@ -10,6 +10,12 @@ import UIKit
 
 extension UIView {
     @discardableResult func enforceSemanticAttribute() -> Self {
+        self.semanticContentAttribute = OWLocalizationManager.shared.semanticAttribute
+
+        return self
+    }
+
+    @discardableResult func enforceSemanticAttributeOldAPI() -> Self {
         self.semanticContentAttribute = LocalizationManager.currentLanguage?.customSemanticAttribute
         ?? self.semanticContentAttribute
 

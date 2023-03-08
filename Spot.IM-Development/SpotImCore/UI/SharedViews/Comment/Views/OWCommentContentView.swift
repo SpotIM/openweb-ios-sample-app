@@ -16,6 +16,7 @@ class OWCommentContentView: UIView {
         static let editedFontSize: CGFloat = 13.0
         static let commentMediaTopPadding: CGFloat = 12.0
         static let emptyCommentMediaTopPadding: CGFloat = 10.0
+        static let paragraphLineSpacing: CGFloat = 3.5
     }
 
     fileprivate lazy var textLabel: OWCommentTextLabel = {
