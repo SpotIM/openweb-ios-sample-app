@@ -161,7 +161,7 @@ internal final class SPPreConversationFooter: OWBaseView {
             make.height.equalTo(1.0)
         }
 
-        let title = LocalizationManager.localizedString(key: "SHOW MORE COMMENTS")
+        let title = LocalizationManager.localizedString(key: "Show more comments")
 
         showMoreCommentsButton.backgroundColor = .brandColor
         showMoreCommentsButton.setTitle(title, for: .normal)
