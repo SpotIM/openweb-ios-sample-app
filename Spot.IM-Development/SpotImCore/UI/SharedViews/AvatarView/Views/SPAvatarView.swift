@@ -32,7 +32,10 @@ final class SPAvatarView: OWBaseView {
     private let onlineIndicatorView: OWBaseView = .init()
     private let avatarButton: OWBaseButton = .init()
 
-    private var defaultAvatar: UIImage? { UIImage(spNamed: "defaultAvatar", supportDarkMode: true) }
+    fileprivate lazy var defaultAvatar: UIImage = {
+        let image = UIImage(spNamed: "defaultAvatar", supportDarkMode: true)!
+        return image
+    }()
 
     fileprivate var viewModel: OWAvatarViewModeling!
     fileprivate var disposeBag: DisposeBag!
@@ -70,6 +73,10 @@ final class SPAvatarView: OWBaseView {
         backgroundColor = .spBackground0
     }
 
+    func prepareForReuse() {
+        updateAvatar(avatarImageType: .defaultImage)
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -82,6 +89,7 @@ final class SPAvatarView: OWBaseView {
         setupAvatarButton()
         setupAvatarImageView()
         setupOnlineIndicatorView()
+        updateAvatar(avatarImageType: .defaultImage)
     }
 
     private func setupAvatarButton() {

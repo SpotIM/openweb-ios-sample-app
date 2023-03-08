@@ -59,7 +59,7 @@ class OWCommentViewModel: OWCommentViewModeling,
         commentUserVM = OWCommentUserViewModel(user: data.user, imageProvider: nil)
         commentHeaderVM = OWCommentHeaderViewModel(data: data)
         commentLabelsContainerVM = OWCommentLabelsContainerViewModel(comment: data.comment)
-        contentVM = OWCommentContentViewModel(comment: data.comment)
+        contentVM = OWCommentContentViewModel(comment: data.comment, lineLimit: data.collapsableTextLineLimit)
         commentEngagementVM = OWCommentEngagementViewModel(replies: data.comment.repliesCount ?? 0, rank: data.comment.rank ?? SPComment.Rank())
         comment = data.comment
     }

@@ -436,8 +436,9 @@ extension SPCommentCell: MessageContainerViewDelegate {
 // Cell life cycle
 extension SPCommentCell {
     override func prepareForReuse() {
-        replyActionsView.prepareForReuse()
         super.prepareForReuse()
+        replyActionsView.prepareForReuse()
+        userView.prepareForReuse()
     }
 }
 
