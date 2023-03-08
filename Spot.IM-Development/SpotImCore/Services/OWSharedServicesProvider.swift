@@ -201,6 +201,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
         _realtimeService.stopFetchingData()
         _skeletonShimmeringService.removeAllSkeletons()
         _sortDictateService.invalidateCache()
+        _spotConfigurationService.spotChanged(spotId: spotId)
     }
 }
 

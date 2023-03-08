@@ -11,6 +11,8 @@ import Foundation
 extension OWPreConversationStyle {
     struct InternalMetrics {
         static let numberOfCommentsForCompactStyle: Int = 1
+        static let collapsableTextLineLimit: Int = 4
+        static let collapsableTextLineLimitCompactMode: Int = 2
     }
 
     func validate() -> OWPreConversationStyle {
@@ -30,6 +32,17 @@ extension OWPreConversationStyle {
             return InternalMetrics.numberOfCommentsForCompactStyle
         default:
             return 0
+        }
+    }
+
+    var collapsableTextLineLimit: Int {
+        switch self {
+        case .regular:
+            return InternalMetrics.collapsableTextLineLimit
+        case .compact:
+            return InternalMetrics.collapsableTextLineLimitCompactMode
+        default:
+            return InternalMetrics.collapsableTextLineLimit
         }
     }
 }
