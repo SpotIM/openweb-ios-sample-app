@@ -69,8 +69,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
     }()
 
     fileprivate lazy var _logger: OWLogger = {
-        var methods: [OWLogMethod] = [.nsLog, .file(maxFilesNumber: OWLogger.Metrics.defaultLogFilesNumber)]
-        let logger = OWLogger(logLevel: .verbose, logMethods: methods)
+        let logger = OWLogger(logLevel: OWLogLevel.defaultLevelToUse, logMethods: OWLogMethod.defaultMethodsToUse)
         logger.log(level: .verbose, "Logger initialized")
         return logger
     }()
@@ -192,11 +191,11 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
     }
 
     func set(spotId: OWSpotId) {
-        fetchConfig(spotId: spotId)
+        configure(forSpotId: spotId)
     }
 
     func change(spotId: OWSpotId) {
-        fetchConfig(spotId: spotId)
+        configure(forSpotId: spotId)
 
         // Stop / re-create services which depend on spot id
         _realtimeService.stopFetchingData()
@@ -207,10 +206,7 @@ extension OWSharedServicesProvider: OWSharedServicesProviderConfigure {
 }
 
 fileprivate extension OWSharedServicesProvider {
-    func fetchConfig(spotId: OWSpotId) {
-        // TODO: Replace it with new network API - create a dedicated class which do initialization stuff for new spotId
-        _ = SPClientSettings.main.setup(spotId: spotId)
-            .take(1)
-            .subscribe()
+    func configure(forSpotId spotId: OWSpotId) {
+        OWLocalizationManager.shared.configure(forSpotId: spotId)
     }
 }

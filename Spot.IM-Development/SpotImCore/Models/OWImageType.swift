@@ -11,3 +11,16 @@ enum OWImageType {
     case defaultImage
     case custom(url: URL)
 }
+
+extension OWImageType: Equatable {
+    static func == (lhs: OWImageType, rhs: OWImageType) -> Bool {
+        switch (lhs, rhs) {
+        case (.defaultImage, .defaultImage):
+            return true
+        case (.custom(let lUrl), .custom(let rUrl)):
+            return lUrl.absoluteString == rUrl.absoluteString
+        default:
+            return false
+        }
+    }
+}

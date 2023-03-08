@@ -18,6 +18,7 @@ protocol SettingsViewModelingInputs {
     var readOnlyModeSelectedIndex: PublishSubject<Int> { get }
     var themeModeSelectedIndex: PublishSubject<Int> { get }
     var modalStyleSelectedIndex: PublishSubject<Int> { get }
+    var initialSortSelectedIndex: PublishSubject<Int> { get }
     var articleAssociatedSelectedURL: PublishSubject<String?> { get }
 }
 
@@ -32,11 +33,14 @@ protocol SettingsViewModelingOutputs {
     var themeModeSettings: [String] { get }
     var modalStyleTitle: String { get }
     var modalStyleSettings: [String] { get }
+    var initialSortTitle: String { get }
+    var initialSortSettings: [String] { get }
     var shouldHideArticleHeader: Observable<Bool> { get }
     var shouldCommentCreationNewDesign: Observable<Bool> { get }
     var readOnlyModeIndex: Observable<Int> { get }
     var themeModeIndex: Observable<Int> { get }
     var modalStyleIndex: Observable<Int> { get }
+    var initialSortIndex: Observable<Int> { get }
     var articleAssociatedURL: Observable<String> { get }
 }
 
@@ -54,6 +58,7 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
     var readOnlyModeSelectedIndex = PublishSubject<Int>()
     var themeModeSelectedIndex = PublishSubject<Int>()
     var modalStyleSelectedIndex = PublishSubject<Int>()
+    var initialSortSelectedIndex = PublishSubject<Int>()
     var articleAssociatedSelectedURL = PublishSubject<String?>()
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
@@ -77,6 +82,10 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
 
     var modalStyleIndex: Observable<Int> {
         return userDefaultsProvider.values(key: .modalStyleIndex, defaultValue: 0)
+    }
+
+    var initialSortIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .initialSortIndex, defaultValue: 0)
     }
 
     var articleAssociatedURL: Observable<String> {
@@ -136,6 +145,19 @@ class SettingsViewModel: SettingsViewModeling, SettingsViewModelingInputs, Setti
         return [_fullScreen, _pageSheet]
     }()
 
+    lazy var initialSortTitle: String = {
+        return NSLocalizedString("InitialSortMode", comment: "")
+    }()
+
+    lazy var initialSortSettings: [String] = {
+        let _server = NSLocalizedString("Server", comment: "")
+        let _best = NSLocalizedString("Best", comment: "")
+        let _newest = NSLocalizedString("Newest", comment: "")
+        let _oldest = NSLocalizedString("Oldest", comment: "")
+
+        return [_server, _best, _newest, _oldest]
+    }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          manager: OWManagerProtocol = OpenWeb.manager) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -174,6 +196,12 @@ extension SettingsViewModel {
             .skip(1)
             .bind(to: userDefaultsProvider.rxProtocol
             .setValues(key: UserDefaultsProvider.UDKey<Int>.modalStyleIndex))
+            .disposed(by: disposeBag)
+
+        initialSortSelectedIndex
+            .skip(1)
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Int>.initialSortIndex))
             .disposed(by: disposeBag)
 
         articleAssociatedSelectedURL

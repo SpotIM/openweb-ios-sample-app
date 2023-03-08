@@ -102,6 +102,15 @@ class MockArticleVC: UIViewController {
             .font(FontBook.paragraphBold)
     }()
 
+    fileprivate lazy var btnCommentThread: UIButton = {
+        return UIButton()
+            .backgroundColor(ColorPalette.shared.color(type: .blue))
+            .textColor(ColorPalette.shared.color(type: .extraLightGrey))
+            .corner(radius: Metrics.buttonCorners)
+            .withHorizontalPadding(Metrics.buttonPadding)
+            .font(FontBook.paragraphBold)
+    }()
+
     init(viewModel: MockArticleViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -137,6 +146,7 @@ fileprivate extension MockArticleVC {
         }
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
         title = viewModel.outputs.title
 
@@ -151,6 +161,10 @@ fileprivate extension MockArticleVC {
 
         btnCommentCreation.rx.tap
             .bind(to: viewModel.inputs.commentCreationButtonTapped)
+            .disposed(by: disposeBag)
+
+        btnCommentThread.rx.tap
+            .bind(to: viewModel.inputs.commentThreadButtonTapped)
             .disposed(by: disposeBag)
 
         // Setup article image
@@ -202,7 +216,28 @@ fileprivate extension MockArticleVC {
             }
             .unwrap()
 
-        Observable.merge(btnFullConversationObservable, btnCommentCreationObservable)
+        // Adding comment thread button if needed
+        let btnCommentThreadObservable = viewModel.outputs.showCommentThreadButton
+            .take(1)
+            .do(onNext: { [weak self] mode in
+                guard let self = self else { return }
+                let btnTitle: String
+                switch mode {
+                case .push:
+                    btnTitle = NSLocalizedString("CommentThreadPushMode", comment: "")
+                case .present:
+                    btnTitle = NSLocalizedString("CommentThreadPresentMode", comment: "")
+                }
+
+                self.btnCommentThread.setTitle(btnTitle, for: .normal)
+            })
+            .map { [weak self] _ -> UIButton? in
+                guard let self = self else { return nil }
+                return self.btnCommentThread
+            }
+            .unwrap()
+
+        Observable.merge(btnFullConversationObservable, btnCommentCreationObservable, btnCommentThreadObservable)
             .subscribe(onNext: { [weak self] btn in
                 guard let self = self else { return }
 
