@@ -85,6 +85,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         dataSource.animationConfiguration = animationConfiguration
         return dataSource
     }()
+    
+    fileprivate lazy var compactCommentView: OWCompactCommentView = {
+        return OWCompactCommentView()
+    }()
 
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
@@ -117,7 +121,13 @@ fileprivate extension OWPreConversationView {
         self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light)
         self.addSubviews(header)
         header.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.top.equalToSuperview()
+        }
+
+        self.addSubview(compactCommentView)
+        compactCommentView.OWSnp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(header.OWSnp.bottom).offset(8)
         }
     }
 
@@ -205,6 +215,13 @@ fileprivate extension OWPreConversationView {
         btnCTAConversation.rx.tap
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.compactCommentVM
+            .subscribe(onNext: { [weak self] vm in
+                guard let self = self else { return }
+                self.compactCommentView.configure(with: vm)
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
