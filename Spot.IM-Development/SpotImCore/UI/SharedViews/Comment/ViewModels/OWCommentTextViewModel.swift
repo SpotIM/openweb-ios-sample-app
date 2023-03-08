@@ -33,6 +33,10 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                                    OWCommentTextViewModelingInputs,
                                    OWCommentTextViewModelingOutputs {
 
+    fileprivate struct Metrics {
+        static let invalidURLSchemes: [String] = ["mailto"]
+    }
+
     var inputs: OWCommentTextViewModelingInputs { return self }
     var outputs: OWCommentTextViewModelingOutputs { return self }
 
@@ -45,7 +49,7 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     var labelClickIndex = PublishSubject<Int>()
 
     fileprivate var readMoreRange: NSRange? = nil
-    fileprivate var availableUrlsRange: [NSRange: URL]
+    fileprivate var availableUrlsRange: OWRangeURLsMapper
 
     init(comment: SPComment, collapsableTextLineLimit: Int) {
         self.collapsableTextLineLimit = collapsableTextLineLimit
@@ -143,15 +147,11 @@ fileprivate extension OWCommentTextViewModel {
     func setupObservers() {
         labelClickIndex
             .subscribe(onNext: { [weak self] index in
-                guard let self = self,
-                      let range = self.readMoreRange else { return }
+                guard let self = self else { return }
 
-                if range.contains(index) {
+                if let range = self.readMoreRange, range.contains(index) {
                     self._textState.onNext(.expanded)
-                } else {
-                    let url = self.availableUrlsRange.first { $0.key.contains(index) }?.value
-
-                    guard let activeUrl = url else { return }
+                } else if let activeUrl = self.availableUrlsRange.first { $0.key.contains(index) }?.value {
                     self.urlTap.onNext(activeUrl)
                 }
             })
@@ -164,7 +164,7 @@ fileprivate extension OWCommentTextViewModel {
     func messageStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.firstLineHeadIndent = 0
-        paragraphStyle.lineSpacing = 3.5
+        paragraphStyle.lineSpacing = OWCommentContentView.Metrics.paragraphLineSpacing
 
         var attributes: [NSAttributedString.Key: Any]
         attributes = [
@@ -228,7 +228,7 @@ fileprivate extension OWCommentTextViewModel {
 
     func locateURLsInText(text: inout NSMutableAttributedString, style: OWThemeStyle) {
         let linkType: NSTextCheckingResult.CheckingType = [.link]
-        var activeURLs: [NSRange: URL] = [:]
+        var activeURLs: OWRangeURLsMapper = [:]
         if let detector = try? NSDataDetector(types: linkType.rawValue) {
             let rawText = text.string
             let matches = detector.matches(
@@ -248,6 +248,10 @@ fileprivate extension OWCommentTextViewModel {
     }
 
     func isUrlSchemeValid(for url: URL) -> Bool {
-        return url.scheme?.lowercased() != "mailto"
+        guard let urlScheme = url.scheme?.lowercased() else {
+            return true
+        }
+
+        return !Metrics.invalidURLSchemes.contains(urlScheme)
     }
 }
