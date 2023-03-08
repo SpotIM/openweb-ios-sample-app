@@ -65,7 +65,6 @@ fileprivate extension OWCommentEngagementView {
 
         replyButton.OWSnp.makeConstraints { make in
             make.centerY.leading.equalToSuperview()
-            make.height.equalTo(replyButton.intrinsicContentSize.height)
         }
 
         votingView.OWSnp.makeConstraints { make in

@@ -114,6 +114,7 @@ fileprivate extension OWCommentRatingView {
         // stackView
         stackView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
+            make.height.equalTo(34)
         }
     }
 
