@@ -10,6 +10,11 @@ import Foundation
 import UIKit
 
 class OWCommentCell: UITableViewCell {
+    fileprivate struct Metrics {
+        static let horizontalOffset: CGFloat = 16
+        static let depthOffset: CGFloat = 23
+    }
+
     fileprivate lazy var commentView: OWCommentView = {
        return OWCommentView()
     }()
@@ -29,6 +34,12 @@ class OWCommentCell: UITableViewCell {
 
         self.viewModel = vm
         self.commentView.configure(with: self.viewModel.outputs.commentVM)
+
+        if let depth = self.viewModel.outputs.commentVM.outputs.comment.depth {
+            commentView.OWSnp.updateConstraints { make in
+                make.trailing.equalToSuperview().inset(CGFloat(depth) * Metrics.depthOffset + Metrics.horizontalOffset)
+            }
+        }
     }
 
     override func prepareForReuse() {
@@ -43,7 +54,9 @@ fileprivate extension OWCommentCell {
         self.contentView.addSubviews(commentView)
 
         commentView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.equalToSuperview()
+            make.trailing.equalToSuperview().inset(Metrics.horizontalOffset)
+            make.leading.equalToSuperview()
         }
     }
 }
