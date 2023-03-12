@@ -1,0 +1,118 @@
+//
+//  OWAuthenticationManager.swift
+//  SpotImCore
+//
+//  Created by Alon Haiut on 12/03/2023.
+//  Copyright © 2023 Spot.IM. All rights reserved.
+//
+
+import Foundation
+import RxSwift
+
+protocol OWAuthenticationManagerProtocol {
+    var userAuthenticationStatus: Observable<OWInternalUserAuthenticationStatus> { get }
+    var currentAuthenticationLevelAvailability: Observable<OWAuthenticationLevelAvailability> { get }
+
+    func shouldShowAuthenticationUI(for action: OWUserActions) -> Observable<Bool>
+    func waitForAuthenticationLevel(aboveOrEqual requiredAuthenticationLevel: OWAuthenticationLevel) -> Observable<OWAuthenticationLevel>
+}
+
+class OWAuthenticationManager: OWAuthenticationManagerProtocol {
+
+    fileprivate unowned let manager: OWManagerInternalProtocol
+    fileprivate unowned let servicesProvider: OWSharedServicesProviding
+
+    init (manager: OWManagerInternalProtocol = OWManager.manager,
+          servicesProvider: OWSharedServicesProviding) {
+        self.manager = manager
+        self.servicesProvider = servicesProvider
+    }
+
+    fileprivate let _userAuthenticationStatus = BehaviorSubject<OWInternalUserAuthenticationStatus>(value: .notAutenticated)
+    var userAuthenticationStatus: Observable<OWInternalUserAuthenticationStatus> {
+        return _userAuthenticationStatus
+            .share(replay: 1)
+    }
+
+    var currentAuthenticationLevelAvailability: Observable<OWAuthenticationLevelAvailability> {
+        return userAuthenticationStatus
+            .map { $0.authenticationLevelAvailability }
+    }
+
+    func shouldShowAuthenticationUI(for action: OWUserActions) -> Observable<Bool> {
+        return self.requiredAuthenticationLevel(for: action)
+            .flatMap { [weak self] requiredlevel -> Observable<(OWAuthenticationLevel, OWAuthenticationLevel)> in
+                guard let self = self else { return .empty() }
+                return self.waitForAuthenticationLevel()
+                    .take(1)
+                    .map { ($0, requiredlevel) }
+            }
+            .map { tuple in
+                let currentlevel = tuple.0
+                let requiredlevel = tuple.1
+
+                return currentlevel.level < requiredlevel.level
+            }
+    }
+
+    func waitForAuthenticationLevel(aboveOrEqual requiredAuthenticationLevel: OWAuthenticationLevel) -> Observable<OWAuthenticationLevel> {
+        return self.waitForAuthenticationLevel()
+            .filter { level in
+                return level.level >= requiredAuthenticationLevel.level
+            }
+            .take(1)
+    }
+}
+
+fileprivate extension OWAuthenticationManager {
+    func waitForAuthenticationLevel() -> Observable<OWAuthenticationLevel> {
+        return currentAuthenticationLevelAvailability
+            .map { availability -> OWAuthenticationLevel? in
+                guard case .level(let level) = availability else { return nil }
+                return level
+            }
+            .unwrap()
+    }
+
+    func requiredAuthenticationLevel(for action: OWUserActions) -> Observable<OWAuthenticationLevel> {
+        return manager.currentSpotId
+            .take(1)
+            .flatMap { [weak self] spotId -> Observable<SPSpotConfiguration> in
+                guard let self = self else { return .empty()}
+                return self.servicesProvider.spotConfigurationService().config(spotId: spotId)
+                    .take(1)
+            }
+            .map { [weak self] config -> OWAuthenticationLevel? in
+                guard let self = self else { return nil }
+                return self.requiredAuthenticationLevel(for: action, accordingToConfig: config)
+            }
+            .unwrap()
+    }
+
+    func requiredAuthenticationLevel(for action: OWUserActions, accordingToConfig config: SPSpotConfiguration) -> OWAuthenticationLevel {
+        let allowGuestsToLike = config.initialization?.policyAllowGuestsToLike ?? false
+        let forceRegister = config.initialization?.policyForceRegister ?? true
+        let levelAccordingToRegistration: OWAuthenticationLevel = forceRegister ? .loggedIn : .guest
+
+        switch action {
+        case .commenting:
+            return levelAccordingToRegistration
+        case .mutingUser:
+            return levelAccordingToRegistration
+        case .votingComment:
+            return allowGuestsToLike ? .guest : .loggedIn
+        case .reportingComment:
+            return .loggedIn
+        case .sharingComment:
+            return .guest
+        case .editingComment:
+            return levelAccordingToRegistration
+        case .deletingComment:
+            return levelAccordingToRegistration
+        case .viewingProfile:
+            return .guest
+        case .viewingSelfProfile:
+            return levelAccordingToRegistration
+        }
+    }
+}
