@@ -638,6 +638,8 @@
 		9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
 		9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283529B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift */; };
 		9E7F283829B8AACE007AD2D6 /* SettingsViewsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */; };
+		9E7F283C29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */; };
+		9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */; };
 		9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */; };
 		9E9F772929814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */; };
 		9E9F772A29814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */; };
@@ -1363,6 +1365,8 @@
 		9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
 		9E7F283529B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGroupVMProtocol.swift; sourceTree = "<group>"; };
 		9E7F283729B8AACE007AD2D6 /* SettingsViewsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewsFactory.swift; sourceTree = "<group>"; };
+		9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWLanguageStrategy+Extensions.swift"; sourceTree = "<group>"; };
+		9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWSupportedLanguage+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWModalPresentationStyle+Extensions.swift"; sourceTree = "<group>"; };
 		9E9F772729814E5E00E48BCA /* OWThemeStyleEnforcement+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OWThemeStyleEnforcement+Extensions.swift"; sourceTree = "<group>"; };
@@ -3806,6 +3810,8 @@
 		9E9F772429814E5E00E48BCA /* OpenWebSDK+Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				9E7F283D29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift */,
+				9E7F283A29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift */,
 				9EA0F83529A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift */,
 				9E9F772529814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift */,
 				9E9F772629814E5E00E48BCA /* OWModalPresentationStyle+Extensions.swift */,
@@ -4802,6 +4808,7 @@
 				9EFFE77F297E84F100814648 /* TextFieldSetting.swift in Sources */,
 				3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */,
 				3D6A4C062852482D007420AD /* UIImageView+URL.swift in Sources */,
+				9E7F283E29B9F401007AD2D6 /* OWSupportedLanguage+Extensions.swift in Sources */,
 				9EBE5C2829AE082C001150DA /* IAUSettingsView.swift in Sources */,
 				9EA0F84529AD12E2008FD7A6 /* ConversationSettingsView.swift in Sources */,
 				9E7F283629B8A84B007AD2D6 /* SettingsGroupVMProtocol.swift in Sources */,
@@ -4825,6 +4832,7 @@
 				3DB3D180282A4A70008654CF /* UserAuthentication.swift in Sources */,
 				9E53759229784D3E00C85983 /* ColorModel.swift in Sources */,
 				3DB3D196282AFBCB008654CF /* EasyViews.swift in Sources */,
+				9E7F283C29B9ED6F007AD2D6 /* OWLanguageStrategy+Extensions.swift in Sources */,
 				8DCBE8702940D98B00C8677C /* UIViewsVC.swift in Sources */,
 				3DB3D186282A5029008654CF /* AuthenticationPlaygroundVC.swift in Sources */,
 				5D00B74422E9B7A600EFC1B0 /* DemoUserAuthentication.swift in Sources */,

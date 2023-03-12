@@ -76,11 +76,15 @@
 "IAUSettings" = "IAU:";
 "Regular" = "Regular";
 "Compact" = "Compact";
-"CTAButtonOnly" = "ButtonOnly";
+"CTAButtonOnly" = "Button Only";
 "CTAWithSummary" = "Summary";
 "CustomStyleModeTitle" = "Custom style mode";
 "CustomStyleLinesTitle" = "Number of lines";
-"FloatingKeyboard" = "FloatingKeyboard";
+"FloatingKeyboard" = "Floating";
 "FontGroupType" = "Font group type";
 "Custom" = "Custom";
 "CustomFontGroupTypeName" = "Custom font name";
+"LanguageStrategy" = "Language strategy";
+"SupportedLanguages" = "Supported languages";
+"Device" = "Device";
+"SetLanguage" = "Set Language";

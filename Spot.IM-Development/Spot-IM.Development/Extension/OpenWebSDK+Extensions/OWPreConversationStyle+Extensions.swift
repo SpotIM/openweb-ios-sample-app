@@ -43,6 +43,13 @@ extension OWPreConversationStyle {
         }
         return Data()
     }
+
+    enum CodingKeys: String, CodingKey {
+        case regular
+        case compact
+        case ctaButtonOnly
+        case ctaWithSummary
+    }
 }
 
 #endif
