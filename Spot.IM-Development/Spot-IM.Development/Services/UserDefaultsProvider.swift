@@ -100,6 +100,7 @@ class UserDefaultsProvider: ReactiveCompatible, UserDefaultsProviderProtocol {
         case preConversationCustomStyle = "preConversationCustomStyle"
         case conversationCustomStyleIndex = "conversationCustomStyleModeSelectedIndex"
         case commentCreationCustomStyleIndex = "commentCreationCustomStyleModeSelectedIndex"
+        case languageStrategy = "languageStrategy"
     }
 }
 
@@ -157,6 +158,8 @@ fileprivate extension UserDefaultsProvider.UDKey {
             return "Key which stores comment creation's custom style index"
         case .fontGroupType:
             return "Key which stores general setting's font type"
+        case .languageStrategy:
+                    return "Key which stores general setting's language strategy"
         }
     }
 }

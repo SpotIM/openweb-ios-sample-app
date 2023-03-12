@@ -22,6 +22,8 @@ protocol GeneralSettingsViewModelingInputs {
     var fontGroupTypeSelectedIndex: BehaviorSubject<Int> { get }
     var customFontGroupSelectedName: BehaviorSubject<String> { get }
     var articleAssociatedSelectedURL: PublishSubject<String> { get }
+    var languageStrategySelectedIndex: BehaviorSubject<Int> { get }
+    var languageSelectedName: BehaviorSubject<String> { get }
 }
 
 protocol GeneralSettingsViewModelingOutputs {
@@ -50,6 +52,13 @@ protocol GeneralSettingsViewModelingOutputs {
     var customFontGroupTypeName: Observable<String> { get }
     var showCustomFontName: Observable<Bool> { get }
     var articleAssociatedURL: Observable<String> { get }
+    var shouldShowSetLanguage: Observable<Bool> { get }
+    var supportedLanguageItems: [String] { get }
+    var supportedLanguageTitle: String { get }
+    var languageStrategyTitle: String { get }
+    var languageStrategyIndex: Observable<Int> { get }
+    var languageName: Observable<String> { get }
+    var languageStrategySettings: [String] { get }
 }
 
 protocol GeneralSettingsViewModeling {
@@ -70,6 +79,8 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     var fontGroupTypeSelectedIndex = BehaviorSubject<Int>(value: 0)
     var customFontGroupSelectedName = BehaviorSubject<String>(value: "")
     var articleAssociatedSelectedURL = PublishSubject<String>()
+    var languageStrategySelectedIndex = BehaviorSubject<Int>(value: OWLanguageStrategy.defaultStrategyIndex)
+    var languageSelectedName = BehaviorSubject<String>(value: OWSupportedLanguage.defaultLanguage.languageName)
 
     fileprivate var userDefaultsProvider: UserDefaultsProviderProtocol
     fileprivate var manager: OWManagerProtocol
@@ -77,6 +88,13 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
     fileprivate lazy var fontGroupTypeObservable =
     Observable.combineLatest(fontGroupTypeSelectedIndex, customFontGroupSelectedName) { index, name -> OWFontGroupFamily in
         return OWFontGroupFamily.fontGroupFamily(fromIndex: index, name: name)
+    }
+    .skip(2)
+    .asObservable()
+
+    fileprivate lazy var languageStrategyObservable =
+    Observable.combineLatest(languageStrategySelectedIndex, languageSelectedName) { index, languageName -> OWLanguageStrategy in
+        return OWLanguageStrategy.languageStrategy(fromIndex: index, language: OWSupportedLanguage(languageName: languageName))
     }
     .skip(2)
     .asObservable()
@@ -150,6 +168,44 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
                     return false
                 }
             }
+            .asObservable()
+    }
+
+    var languageStrategyIndex: Observable<Int> {
+        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: Data())
+            .map {
+                let languageStrategy = OWLanguageStrategy.languageStrategy(fromData: $0)
+                switch languageStrategy {
+                case .useDevice:
+                    return 0
+                case .useServerConfig:
+                    return 1
+                case .use(language: _):
+                    return 2
+                default:
+                    return OWLanguageStrategy.defaultStrategyIndex
+                }
+            }
+            .asObservable()
+    }
+
+    var languageName: Observable<String> {
+        return userDefaultsProvider.values(key: .languageStrategy, defaultValue: Data())
+            .map {
+                let languageStrategy = OWLanguageStrategy.languageStrategy(fromData: $0)
+                switch languageStrategy {
+                case .use(language: let language):
+                    return language.languageName
+                default:
+                    return OWSupportedLanguage.defaultLanguage.languageName
+                }
+            }
+            .asObservable()
+    }
+
+    var shouldShowSetLanguage: Observable<Bool> {
+        return languageStrategyIndex
+            .map { $0 == 2 }// Set language
             .asObservable()
     }
 
@@ -234,6 +290,25 @@ class GeneralSettingsVM: GeneralSettingsViewModeling, GeneralSettingsViewModelin
         return NSLocalizedString("CustomFontGroupTypeName", comment: "")
     }()
 
+    lazy var languageStrategySettings: [String] = {
+            let _useDevice = NSLocalizedString("Device", comment: "")
+            let _useServerConfig = NSLocalizedString("Server", comment: "")
+            let _useLanguage = NSLocalizedString("SetLanguage", comment: "")
+            return [_useDevice, _useServerConfig, _useLanguage]
+        }()
+
+        lazy var languageStrategyTitle: String = {
+            return NSLocalizedString("LanguageStrategy", comment: "")
+        }()
+
+        lazy var supportedLanguageTitle: String = {
+            return NSLocalizedString("SupportedLanguages", comment: "")
+        }()
+
+        lazy var supportedLanguageItems: [String] = {
+            return OWSupportedLanguage.allCases.map { $0.languageName }
+        }()
+
     init(userDefaultsProvider: UserDefaultsProviderProtocol = UserDefaultsProvider.shared,
          manager: OWManagerProtocol = OpenWeb.manager) {
         self.userDefaultsProvider = userDefaultsProvider
@@ -306,6 +381,12 @@ extension GeneralSettingsVM {
                 var customizations = self.manager.ui.customizations
                 customizations.fontFamily = fontGroupType
             })
+            .disposed(by: disposeBag)
+
+        languageStrategyObservable
+            .map { $0.data }
+            .bind(to: userDefaultsProvider.rxProtocol
+            .setValues(key: UserDefaultsProvider.UDKey<Data>.languageStrategy))
             .disposed(by: disposeBag)
     }
 }
