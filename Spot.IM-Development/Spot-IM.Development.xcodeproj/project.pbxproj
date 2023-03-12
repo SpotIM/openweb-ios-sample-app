@@ -224,6 +224,10 @@
 		3D20A39727B022D7003F8513 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39627B022D7003F8513 /* UIView+Extensions.swift */; };
 		3D20A39927B0243D003F8513 /* Debugging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39827B0243D003F8513 /* Debugging.swift */; };
 		3D20A39B27B0258D003F8513 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A39A27B0258D003F8513 /* Typealiases.swift */; };
+		3D263CE429BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CE329BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift */; };
+		3D263CE629BDE59A0013C532 /* OWUserActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CE529BDE59A0013C532 /* OWUserActions.swift */; };
+		3D263CE829BDE6D90013C532 /* OWAuthenticationLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */; };
+		3D263CEB29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */; };
 		3D26B5AF28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5AE28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift */; };
 		3D26B5B128CA37E400A1DAD2 /* OWCommentCreationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B028CA37E400A1DAD2 /* OWCommentCreationSettings.swift */; };
 		3D26B5B428CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */; };
@@ -917,6 +921,10 @@
 		3D20A39627B022D7003F8513 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		3D20A39827B0243D003F8513 /* Debugging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debugging.swift; sourceTree = "<group>"; };
 		3D20A39A27B0258D003F8513 /* Typealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
+		3D263CE329BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWInternalUserAuthenticationStatus.swift; sourceTree = "<group>"; };
+		3D263CE529BDE59A0013C532 /* OWUserActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserActions.swift; sourceTree = "<group>"; };
+		3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationLevel.swift; sourceTree = "<group>"; };
+		3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationLevelAvailability.swift; sourceTree = "<group>"; };
 		3D26B5AE28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationRequiredData.swift; sourceTree = "<group>"; };
 		3D26B5B028CA37E400A1DAD2 /* OWCommentCreationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSettings.swift; sourceTree = "<group>"; };
 		3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationRequiredData.swift; sourceTree = "<group>"; };
@@ -2180,6 +2188,25 @@
 			path = OWSnapKit;
 			sourceTree = "<group>";
 		};
+		3D263CE229BDE31A0013C532 /* AuthenticationManager */ = {
+			isa = PBXGroup;
+			children = (
+				3D263CE929BDFCC00013C532 /* Models */,
+			);
+			path = AuthenticationManager;
+			sourceTree = "<group>";
+		};
+		3D263CE929BDFCC00013C532 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3D263CE329BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift */,
+				3D263CE529BDE59A0013C532 /* OWUserActions.swift */,
+				3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */,
+				3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		3D26B5AD28CA36B100A1DAD2 /* CommentCreation */ = {
 			isa = PBXGroup;
 			children = (
@@ -3385,6 +3412,7 @@
 		4454187123685154001D0ED0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D263CE229BDE31A0013C532 /* AuthenticationManager */,
 				3DDA9A4428F851ED00FE3B86 /* SkeletonShimmering */,
 				3D33C0E829460C760062BFC9 /* ThemeStyleService */,
 				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
@@ -4369,6 +4397,7 @@
 				3D20A38727B01F2E003F8513 /* OWConstraintMultiplierTarget.swift in Sources */,
 				3DFA6B9B29216DAE0047E313 /* OWAuthenticationLayer.swift in Sources */,
 				4454188223685154001D0ED0 /* SPFailureReporter.swift in Sources */,
+				3D263CEB29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift in Sources */,
 				3D611BAF28C89AEB003960CE /* OWViewDynamicSizeCompletion.swift in Sources */,
 				3DA264752951E3B200688FFF /* OWNetworkRequestInterceptor.swift in Sources */,
 				3D08E07C2875E37900E6F1AC /* OWAnalytics.swift in Sources */,
@@ -4405,6 +4434,7 @@
 				1628A75628EB0D8E0019B5EC /* OWSpacerCellViewModel.swift in Sources */,
 				3DA2646B2951E3B200688FFF /* OWNetworkMultipartFormData.swift in Sources */,
 				3D08E08F287708FC00E6F1AC /* OWAnimatableSectionModelType+ItemPath.swift in Sources */,
+				3D263CE429BDE3780013C532 /* OWInternalUserAuthenticationStatus.swift in Sources */,
 				16670C7025E68EEE00822D2D /* SPSSOData.swift in Sources */,
 				24993F8C28CF094200452AF8 /* OWAnalyticEvent.swift in Sources */,
 				445418B023685154001D0ED0 /* WeakRef+Generic.swift in Sources */,
@@ -4579,6 +4609,7 @@
 				3DA57BAF298949640016BF2A /* OWConversationSpacing+Validation.swift in Sources */,
 				3D611BB528C8AAF4003960CE /* OWCommentCreationSettingsProtocol.swift in Sources */,
 				4454188E23685154001D0ED0 /* SPNetworkConstants.swift in Sources */,
+				3D263CE829BDE6D90013C532 /* OWAuthenticationLevel.swift in Sources */,
 				3DA264652951E3B200688FFF /* OWNetworkURLConvertible+URLRequestConvertible.swift in Sources */,
 				4454181823685144001D0ED0 /* SPBaseTableViewCell.swift in Sources */,
 				3D31FB8C29AB645B002B88E0 /* OWLanguageStrategy.swift in Sources */,
@@ -4607,6 +4638,7 @@
 				3D611B9F28C74469003960CE /* OWConversationSettingsProtocol.swift in Sources */,
 				4454182223685144001D0ED0 /* SPCommentReplyHeaderView.swift in Sources */,
 				1628A75928EB0E220019B5EC /* OWCommentContentView.swift in Sources */,
+				3D263CE629BDE59A0013C532 /* OWUserActions.swift in Sources */,
 				24B32BAE28C8697600FB701C /* OWPreConversationFooterView.swift in Sources */,
 				445417F923685144001D0ED0 /* UIView+Roundings.swift in Sources */,
 				3D26B5B628CDDFBA00A1DAD2 /* OWCommentCreationSettingsBuilder.swift in Sources */,
