@@ -18,6 +18,7 @@ protocol OWCommentThreadViewViewModelingInputs {
 protocol OWCommentThreadViewViewModelingOutputs {
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
+    var openCommentCreation: Observable<OWCommentCreationType> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -37,6 +38,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     fileprivate var cellsViewModels: Observable<[OWCommentThreadCellOption]> {
         return _cellsViewModels
             .rx_elements()
+            .asObservable()
+    }
+
+    var commentCreationTap = PublishSubject<OWCommentCreationType>()
+    var openCommentCreation: Observable<OWCommentCreationType> {
+        return commentCreationTap
             .asObservable()
     }
 
@@ -111,9 +118,11 @@ fileprivate extension OWCommentThreadViewViewModel {
                             }
                         }
                     }
-
                 }
-                self._cellsViewModels.replaceAll(with: viewModels)
+                // TODO - Check why using replaceAll causing issues when click on "reply" - upen comment creation screen twice
+//                self._cellsViewModels.replaceAll(with: viewModels)
+                self._cellsViewModels.removeAll()
+                self._cellsViewModels.append(contentsOf: viewModels)
             })
             .disposed(by: disposeBag)
 
@@ -135,6 +144,38 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .subscribe(onNext: { [weak self] commentIndex in
                 self?._changeSizeAtIndex.onNext(commentIndex)
+            })
+            .disposed(by: disposeBag)
+
+        // Observable of the comment cell VMs
+        let commentCellsVmsObservable: Observable<[OWCommentCellViewModeling]> = cellsViewModels
+                    .flatMapLatest { viewModels -> Observable<[OWCommentCellViewModeling]> in
+                        let commentCellsVms: [OWCommentCellViewModeling] = viewModels.map { vm in
+                            if case.comment(let commentCellViewModel) = vm {
+                                return commentCellViewModel
+                            } else {
+                                return nil
+                            }
+                        }
+                        .unwrap()
+
+                         return Observable.just(commentCellsVms)
+                    }
+                    .share()
+
+        // Responding to reply click from comment cells VMs
+        commentCellsVmsObservable
+            .flatMap { commentCellsVms -> Observable<SPComment> in
+                let replyClickOutputObservable: [Observable<SPComment>] = commentCellsVms.map { commentCellVm in
+                    let commentVM = commentCellVm.outputs.commentVM
+                    return commentVM.outputs.commentEngagementVM
+                        .outputs.replyClickedOutput
+                        .map { commentVM.outputs.comment }
+                }
+                return Observable.merge(replyClickOutputObservable)
+            }
+            .subscribe(onNext: { [weak self] comment in
+                self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
     }
