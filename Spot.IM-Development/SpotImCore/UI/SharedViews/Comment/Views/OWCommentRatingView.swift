@@ -16,6 +16,7 @@ class OWCommentRatingView: UIView {
         static let voteButtonSize: CGFloat = 32.0
         static let voteButtonInset: CGFloat = 4.0
         static let fontSize: CGFloat = 16.0
+        static let stackviewHeight: CGFloat = 34.0
         static let identifier = "comment_voting_view_id"
         static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
         static let rankDownButtonIdentifier = "comment_voting_view_rank_down_button_id"
@@ -114,7 +115,7 @@ fileprivate extension OWCommentRatingView {
         // stackView
         stackView.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.height.equalTo(34)
+            make.height.equalTo(Metrics.stackviewHeight)
         }
     }
 
