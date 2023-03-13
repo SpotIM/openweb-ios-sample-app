@@ -88,5 +88,15 @@ fileprivate extension OWCommentThreadView {
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(dataSource: commentThreadDataSource))
             .disposed(by: disposeBag)
+
+        viewModel.outputs.updateCellSizeAtIndex
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] index in
+                    guard let self = self else { return }
+                    UIView.performWithoutAnimation {
+                        self.tableView.reloadItemsAtIndexPaths([IndexPath(row: index, section: 0)], animationStyle: .none)
+                    }
+                })
+                .disposed(by: disposeBag)
     }
 }

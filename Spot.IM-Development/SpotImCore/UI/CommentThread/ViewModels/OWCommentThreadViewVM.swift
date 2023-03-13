@@ -17,6 +17,7 @@ protocol OWCommentThreadViewViewModelingInputs {
 
 protocol OWCommentThreadViewViewModelingOutputs {
     var commentThreadDataSourceSections: Observable<[CommentThreadDataSourceModel]> { get }
+    var updateCellSizeAtIndex: Observable<Int> { get }
 }
 
 protocol OWCommentThreadViewViewModeling {
@@ -52,6 +53,12 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 
     var viewInitialized = PublishSubject<Void>()
 
+    fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
+    var updateCellSizeAtIndex: Observable<Int> {
+        return _changeSizeAtIndex
+            .asObservable()
+    }
+
     init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self._commentThreadData.onNext(commentThreadData)
@@ -86,16 +93,15 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 let comments: [SPComment] = Array(responseComments)
 
-                for (index, comment) in comments.enumerated() {
+                for comment in comments {
                     // TODO: replies
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: 4))
                     viewModels.append(OWCommentThreadCellOption.comment(viewModel: vm))
-                    if (index < comments.count - 1 && comment.replies == nil) {
-                        viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                    }
-
                     if let replies = comment.replies {
+
+                        viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+
                         for (index, reply) in replies.enumerated() {
                             guard let replyUser = response.conversation?.users?[reply.userId ?? ""] else { return }
                             let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: reply, user: replyUser, replyToUser: nil, collapsableTextLineLimit: 4))
@@ -108,6 +114,27 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 }
                 self._cellsViewModels.replaceAll(with: viewModels)
+            })
+            .disposed(by: disposeBag)
+
+        // Responding to comment height change (for updating cell)
+        cellsViewModels
+            .flatMapLatest { cellsVms -> Observable<Int> in
+                let sizeChangeObservable: [Observable<Int>] = cellsVms.enumerated().map { (index, vm) in
+                    if case.comment(let commentCellViewModel) = vm {
+                        let commentVM = commentCellViewModel.outputs.commentVM
+                        return commentVM.outputs.contentVM
+                            .outputs.collapsableLabelViewModel.outputs.height
+                            .map { _ in index }
+                    } else {
+                        return nil
+                    }
+                }
+                .unwrap()
+                return Observable.merge(sizeChangeObservable)
+            }
+            .subscribe(onNext: { [weak self] commentIndex in
+                self?._changeSizeAtIndex.onNext(commentIndex)
             })
             .disposed(by: disposeBag)
     }
