@@ -56,7 +56,32 @@ class OWCommentThreadCoordinator: OWBaseCoordinator<OWCommentThreadCoordinatorRe
             .map { OWCommentThreadCoordinatorResult.loadedToScreen }
             .asObservable()
 
-        return Observable.merge(commentThreadPoppedObservable, commentThreadLoadedToScreenObservable)
+        let coordinateCommentCreationObservable = commentThreadVM.outputs.commentThreadViewVM.outputs.openCommentCreation
+            .flatMap { [weak self] commentCreationType -> Observable<OWCommentCreationCoordinatorResult> in
+                guard let self = self else { return .empty() }
+                let commentCreationData = OWCommentCreationRequiredData(article: self.commentThreadData.article, commentCreationType: commentCreationType)
+                let commentCreationCoordinator = OWCommentCreationCoordinator(router: self.router,
+                                                                              commentCreationData: commentCreationData,
+                                                                              actionsCallbacks: self.actionsCallbacks)
+                return self.coordinate(to: commentCreationCoordinator)
+            }
+            .do(onNext: { result in
+                switch result {
+                case .commentCreated(_):
+                    // TODO: We will probably would like to push this comment to the table view with a nice highlight animation
+                    break
+                case .loadedToScreen:
+                    break
+                    // Nothing
+                case .popped:
+                    break
+                }
+            })
+            .flatMap { _ -> Observable<OWCommentThreadCoordinatorResult> in
+                return Observable.never()
+            }
+
+        return Observable.merge(commentThreadPoppedObservable, commentThreadLoadedToScreenObservable, coordinateCommentCreationObservable)
     }
 
     override func showableComponent() -> Observable<OWShowable> {
