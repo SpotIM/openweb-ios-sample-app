@@ -212,7 +212,7 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        tableView.rx.observe(CGSize.self, "contentSize")
+        tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
             .subscribe(onNext: { [weak self] size in
                 guard let self = self else { return }
