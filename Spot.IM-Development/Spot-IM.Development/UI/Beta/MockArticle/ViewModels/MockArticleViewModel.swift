@@ -24,9 +24,8 @@ protocol MockArticleViewModelingOutputs {
     var title: String { get }
     var showFullConversationButton: Observable<PresentationalModeCompact> { get }
     var showCommentCreationButton: Observable<PresentationalModeCompact> { get }
+    var showPreConversation: Observable<UIView> { get }
     var showCommentThreadButton: Observable<PresentationalModeCompact> { get }
-    var showPreConversation: Observable<(UIView, CGSize)> { get }
-    var updatePreConversationSize: Observable<(UIView, CGSize)> { get }
     var articleImageURL: Observable<URL> { get }
     var showError: Observable<String> { get }
 }
@@ -67,15 +66,9 @@ class MockArticleViewModel: MockArticleViewModeling, MockArticleViewModelingInpu
             .asObservable()
     }
 
-    fileprivate let _showPreConversation = PublishSubject<(UIView, CGSize)>()
-    var showPreConversation: Observable<(UIView, CGSize)> {
+    fileprivate let _showPreConversation = PublishSubject<UIView>()
+    var showPreConversation: Observable<UIView> {
         return _showPreConversation
-            .asObservable()
-    }
-
-    fileprivate let _updatePreConversationSize = PublishSubject<(UIView, CGSize)>()
-    var updatePreConversationSize: Observable<(UIView, CGSize)> {
-        return _updatePreConversationSize
             .asObservable()
     }
 
@@ -182,14 +175,8 @@ fileprivate extension MockArticleViewModel {
                                    completion: { [weak self] result in
                     guard let self = self else { return }
                     switch result {
-                    case .success(let viewDynamicSizeOption):
-                        switch viewDynamicSizeOption {
-                        case .viewInitialSize(let preConversationView, let initialSize):
-                            self._showPreConversation.onNext((preConversationView, initialSize))
-                        case .updateSize(let preConversationView, let newSize):
-                            break
-                            self._updatePreConversationSize.onNext((preConversationView, newSize))
-                        }
+                    case .success(let preConversationView):
+                        self._showPreConversation.onNext(preConversationView)
                     case .failure(let error):
                         let message = error.description
                         DLog("Calling flows.preConversation error: \(error)")
