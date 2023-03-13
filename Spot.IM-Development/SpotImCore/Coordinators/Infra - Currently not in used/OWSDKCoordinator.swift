@@ -14,7 +14,7 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
 
     func startPreConversationFlow(preConversationData: OWPreConversationRequiredData,
                                   presentationalMode: OWPresentationalMode,
-                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWViewDynamicSizeOption> {
+                                  callbacks: OWViewActionsCallbacks?) -> Observable<OWShowable> {
 
         return Observable.just(())
             .observe(on: MainScheduler.instance)
@@ -23,14 +23,14 @@ class OWSDKCoordinator: OWBaseCoordinator<Void> {
                 self.invalidateExistingFlows()
                 self.prepareRouter(presentationalMode: presentationalMode, presentAnimated: true)
             })
-            .flatMap { [ weak self] _ -> Observable<OWViewDynamicSizeOption> in
+            .flatMap { [ weak self] _ -> Observable<OWShowable> in
                 guard let self = self else { return .empty() }
                 let preConversationCoordinator = OWPreConversationCoordinator(router: self.router,
                                                                         preConversationData: preConversationData,
                                                                         actionsCallbacks: callbacks)
 
                 self.store(coordinator: preConversationCoordinator)
-                return preConversationCoordinator.showableComponentDynamicSize()
+                return preConversationCoordinator.showableComponent()
             }
     }
 
