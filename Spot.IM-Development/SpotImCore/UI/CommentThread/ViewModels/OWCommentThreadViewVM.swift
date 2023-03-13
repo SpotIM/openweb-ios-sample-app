@@ -27,6 +27,10 @@ protocol OWCommentThreadViewViewModeling {
 class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentThreadViewViewModelingInputs, OWCommentThreadViewViewModelingOutputs {
     var inputs: OWCommentThreadViewViewModelingInputs { return self }
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
+    
+    fileprivate struct Metrics {
+        static let numberOfCommentsInSkeleton: Int = 4
+    }
 
     fileprivate let servicesProvider: OWSharedServicesProviding
     fileprivate let _commentThreadData = BehaviorSubject<OWCommentThreadRequiredData?>(value: nil)
@@ -89,7 +93,7 @@ fileprivate extension OWCommentThreadViewViewModel {
     }
 
     func populateInitialUI() {
-        let numberOfComments = 4
+        let numberOfComments = Metrics.numberOfCommentsInSkeleton
         let skeletonCellVMs = (0 ..< numberOfComments).map { index in
             OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
         }
