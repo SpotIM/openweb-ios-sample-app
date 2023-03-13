@@ -8,7 +8,7 @@ references:
   ios_config_xcode: &ios_config_xcode
     parameters:
       xcode:
-       type: string
+        type: string
     macos:
       xcode: << parameters.xcode >>
     working_directory: ~/project/Spot.IM-Development
@@ -19,7 +19,7 @@ references:
       command: |
         echo "export RELEASE_VERSION=$(cut -d '/' -f3 \<<< $CIRCLE_BRANCH)" \>> $BASH_ENV
         echo $RELEASE_VERSION
-  
+
   define_var_core_version: &define_var_core_version
     run:
       name: Export core version number to environment variable
@@ -58,12 +58,12 @@ commands:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
-         name: Before Running Fastlane Build Release
-         command: |
-             git status
+          name: Before Running Fastlane Build Release
+          command: |
+            git status
 
       - run:
           name: Run Fastlane Build Release
@@ -71,10 +71,10 @@ commands:
             bundle exec fastlane build_release_sdk version:$RELEASE_VERSION
 
       - run:
-         name: After Running Fastlane Release
-         command: |
-             ls -l Release
-             git status
+          name: After Running Fastlane Release
+          command: |
+            ls -l Release
+            git status
 
   swiftlint:
     steps:
@@ -95,6 +95,50 @@ commands:
             swiftlint lint --strict --config swiftlint/.swiftlint.yml --reporter xcode || (echo "SwiftLint check failed." && exit 1)
             echo "SwiftLint check succeeded."
 
+  prepare_release_app:
+    steps:
+      - checkout:
+          path: ~/project
+
+      - *define_var_release_version
+
+      - run:
+          name: start release app
+          command: |
+            echo "Start release app version: $RELEASE_VERSION"
+            pwd
+            ls -l
+
+      - run:
+          name: Configure Apple Key
+          command: |
+            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
+
+      - restore_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
+
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set --local path 'vendor/bundle'
+            bundle install
+            bundle info fastlane
+
+      - save_cache:
+          key: bundler_cache_{{ checksum "Gemfile.lock" }}
+          paths:
+            - "vendor/bundle"
+
+      - swiftlint
+
+orbs:
+  aws-s3: circleci/aws-s3@3.0.0
+  slack: circleci/slack@3.4.2
+  codecov: codecov/codecov@3.2.2
+
 jobs:
   validate_spm_job:
     <<: *ios_config_xcode
@@ -103,7 +147,7 @@ jobs:
           path: ~/project
 
       - *define_var_core_version
-      
+
       - run:
           name: Clone SPM integration repo
           command: |
@@ -151,7 +195,7 @@ jobs:
       - store_artifacts:
           path: fastlane
           destination: scan-output
-          
+
   validate_cocoapods_job:
     <<: *ios_config_xcode
     steps:
@@ -159,7 +203,7 @@ jobs:
           path: ~/project
 
       - *define_var_core_version
-      
+
       - run:
           name: Clone cocoapods integration repo
           command: |
@@ -213,7 +257,7 @@ jobs:
       - store_artifacts:
           path: fastlane
           destination: scan-output
-          
+
   default_job:
     <<: *ios_config_xcode
     steps:
@@ -247,10 +291,10 @@ jobs:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - swiftlint
-            
+
       - run:
           name: Build app and run unit-tests
           command: |
@@ -263,7 +307,7 @@ jobs:
       - store_artifacts:
           path: test_output
           destination: scan-output
-    
+
   release_sdk_job:
     <<: *ios_config_xcode
     steps:
@@ -295,12 +339,12 @@ jobs:
       - save_cache:
           key: bundler_cache_{{ checksum "Gemfile.lock" }}
           paths:
-            - 'vendor/bundle'
+            - "vendor/bundle"
 
       - run:
-         name: Before Running Fastlane Release
-         command: |
-             git status
+          name: Before Running Fastlane Release
+          command: |
+            git status
 
       - run:
           name: Run Fastlane Release
@@ -310,10 +354,10 @@ jobs:
       - swiftlint
 
       - run:
-         name: After Running Fastlane Release
-         command: |
-             ls -l Release
-             git status
+          name: After Running Fastlane Release
+          command: |
+            ls -l Release
+            git status
 
       - run:
           name: Update Github repo with new SDK version
@@ -334,11 +378,11 @@ jobs:
           name: Create a "Github Release" on public Github repo SpotIM/spotim-ios-sdk-pod
           command: |
             bash -x ./create_new_github_release_via_api.sh $RELEASE_VERSION
-            
+
   release_tag:
     <<: *ios_config_xcode
     steps:
-      - release_tag
+      - prepare_release_app
 
       - run:
           name: Create a tag on public Github repo SpotIM/spotim-ios-sdk-pod
@@ -348,137 +392,185 @@ jobs:
   release_app_job:
     <<: *ios_config_xcode
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release app
-          command: |
-            echo "Start release app version: $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - run:
-          name: Configure Apple Key
-          command: |
-            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - 'vendor/bundle'
-
-      - swiftlint
+      - prepare_release_app
 
       - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_demo_app version:$RELEASE_VERSION
-            
+
+      - run:
+          name: Copy ipa file to folder ipa-build to upload to S3
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
   release_beta_app_job:
     <<: *ios_config_xcode
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release app
-          command: |
-            echo "Start release app with beta preset version: $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - run:
-          name: Configure Apple Key
-          command: |
-            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - 'vendor/bundle'
-
-      - swiftlint
+      - prepare_release_app
 
       - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_beta_demo_app version:$RELEASE_VERSION
-            
+
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
   release_public_app_job:
     <<: *ios_config_xcode
     steps:
-      - checkout:
-          path: ~/project
-
-      - *define_var_release_version
-
-      - run:
-          name: start release app
-          command: |
-            echo "Start release app with public preset version: $RELEASE_VERSION"
-            pwd
-            ls -l
-
-      - run:
-          name: Configure Apple Key
-          command: |
-            sed -i '' -e "s/@@@@/${APPLE_KEY}/g" apple_api_key.json
-
-      - restore_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-
-      - restore_cache:
-          key: bundler_cache_tamBiFKNEwk5ZF1vK4zAgATUGFUqItRwE1YYO8v9szM=
-
-      - run:
-          name: Bundle Install
-          command: |
-            bundle config set --local path 'vendor/bundle'
-            bundle install
-            bundle info fastlane
-
-      - save_cache:
-          key: bundler_cache_{{ checksum "Gemfile.lock" }}
-          paths:
-            - 'vendor/bundle'
-
-      - swiftlint
+      - prepare_release_app
 
       - run:
           name: Run Fastlane Release Sample App
           command: |
             bundle exec fastlane release_public_demo_app version:$RELEASE_VERSION
+
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+  upload_app_build_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - run:
+          name: Run Fastline build .app file
+          command: |
+            bundle exec fastlane build_development_app
+
+      - aws-s3/sync:
+          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.app"
+          arguments: |
+            --region $AWS_REGION \
+            --content-encoding "app"
+
+  upload_app_ipa_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - run:
+          name: Run Fastline build .ipa file
+          command: |
+            bundle exec fastlane build_release_ipa
+
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/internal-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+  upload_beta_app_build_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - run:
+          name: Run Fastline build .app file
+          command: |
+            bundle exec fastlane build_development_app app:beta
+
+      - aws-s3/sync:
+          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.app"
+          arguments: |
+            --region $AWS_REGION \
+            --content-encoding "app"
+
+  upload_beta_app_ipa_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - run:
+          name: Run Fastline build .ipa file
+          command: |
+            bundle exec fastlane build_release_ipa app:beta
+
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/beta-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
+
+  upload_public_app_build_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - run:
+          name: Run Fastline build .app file
+          command: |
+            bundle exec fastlane build_development_app app:public
+
+      - aws-s3/sync:
+          from: simulator_build/*/Products/Applications/Spot-IM.Development.app
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.app"
+          arguments: |
+            --region $AWS_REGION \
+            --content-encoding "app"
+
+  upload_public_app_ipa_to_s3_job:
+    <<: *ios_config_xcode
+    steps:
+      - prepare_release_app
+
+      - run:
+          name: Run Fastline build .ipa file
+          command: |
+            bundle exec fastlane build_release_ipa app:public
+
+      - run:
+          name: Copy ipa file to folder ipa-build
+          command: |
+            mkdir ipa-build
+            cp Spot-IM.Development.ipa ipa-build
+
+      - aws-s3/sync:
+          from: ipa-build
+          to: "s3://prod-ow-mobile/iOS/public-${RELEASE_VERSION}/Spot-IM.Development.ipa"
+          arguments: |
+            --region $AWS_REGION
 
 workflows:
   version: 2
@@ -490,6 +582,7 @@ workflows:
               ignore:
                 - /^release/.*/
                 - /^validate/.*/
+                - /^upload_s3/.*/
           xcode: "14.0.0"
 
       - release_sdk_job:
@@ -498,14 +591,14 @@ workflows:
               only:
                 - /^release/sdk/.*/
           xcode: "14.0.0"
-                
+
       - release_tag:
           filters:
             branches:
               only:
                 - /^release/tag13.4/.*/
           xcode: "13.4.0"
-                
+
       - release_tag:
           filters:
             branches:
@@ -514,26 +607,47 @@ workflows:
           xcode: "14.2.0"
 
       - release_app_job:
+          context: mobile-automation
           filters:
             branches:
               only:
                 - /^release/app/.*/
           xcode: "14.0.0"
-                
+
       - release_beta_app_job:
+          context: mobile-automation
           filters:
             branches:
               only:
                 - /^release/beta_app/.*/
           xcode: "14.0.0"
-          
+
       - release_public_app_job:
+          context: mobile-automation
           filters:
             branches:
               only:
                 - /^release/public_app/.*/
           xcode: "14.0.0"
-                
+
+      - upload_app_build_to_s3_job:
+          context: mobile-automation
+          requires:
+            - "release_app_job"
+          xcode: "14.0.0"
+
+      - upload_beta_app_build_to_s3_job:
+          context: mobile-automation
+          requires:
+            - "release_beta_app_job"
+          xcode: "14.0.0"
+
+      - upload_public_app_build_to_s3_job:
+          context: mobile-automation
+          requires:
+            - "release_public_app_job"
+          xcode: "14.0.0"
+
   release_multi_workflow:
     jobs:
       - release_sdk_job:
@@ -552,7 +666,61 @@ workflows:
           requires:
             - "release_sdk_job"
           xcode: "14.2.0"
-  
+
+  upload_app_to_s3_workflow:
+    jobs:
+      - upload_app_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/app/.*/
+          xcode: "14.0.0"
+
+      - upload_app_ipa_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/app/.*/
+          xcode: "14.0.0"
+
+  upload_beta_app_to_s3_workflow:
+    jobs:
+      - upload_beta_app_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/beta_app/.*/
+          xcode: "14.0.0"
+
+      - upload_beta_app_ipa_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/beta_app/.*/
+          xcode: "14.0.0"
+
+  upload_public_app_to_s3_workflow:
+    jobs:
+      - upload_public_app_build_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/public_app/.*/
+          xcode: "14.0.0"
+
+      - upload_public_app_ipa_to_s3_job:
+          context: mobile-automation
+          filters:
+            branches:
+              only:
+                - /^upload_s3/public_app/.*/
+          xcode: "14.0.0"
+
   validate_workflow:
     jobs:
       - validate_cocoapods_job:
