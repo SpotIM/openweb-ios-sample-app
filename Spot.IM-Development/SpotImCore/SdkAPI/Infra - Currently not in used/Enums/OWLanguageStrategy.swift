@@ -9,13 +9,13 @@
 import Foundation
 
 #if NEW_API
-public enum OWLanguageStrategy {
+public enum OWLanguageStrategy: Codable {
     case useDevice // Will be default to English if we don't have translation for this language
     case useServerConfig // Will be default to English if we don't have translation for this language
     case use(language: OWSupportedLanguage)
 }
 #else
-enum OWLanguageStrategy {
+enum OWLanguageStrategy: Codable {
     case useDevice // Will be default to English if we don't have translation for this language
     case useServerConfig // Will be default to English if we don't have translation for this language
     case use(language: OWSupportedLanguage)
