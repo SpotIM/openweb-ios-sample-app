@@ -12,7 +12,6 @@ import RxCocoa
 import UIKit
 
 protocol OWCompactCommentViewModelingInputs {
-    
 }
 
 protocol OWCompactCommentViewModelingOutputs {
