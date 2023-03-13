@@ -160,7 +160,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
 
         let conversationData = OWConversationRequiredData(article: article,
                                                           settings: additionalSettings?.conversationSettings)
-        let commentThreadData = OWCommentThreadRequiredData(commentId: commentId)
+        let commentThreadData = OWCommentThreadRequiredData(article: article, commentId: commentId)
 
         _ = sdkCoordinator.startCommentThreadFlow(conversationData: conversationData,
                                                     commentThreadData: commentThreadData,
