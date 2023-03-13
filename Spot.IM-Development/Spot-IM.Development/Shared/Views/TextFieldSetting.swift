@@ -20,6 +20,7 @@ class TextFieldSetting: UIView {
     }
 
     fileprivate let title: String
+    fileprivate let placeholder: String
     fileprivate let text = BehaviorSubject<String?>(value: nil)
     fileprivate var font: UIFont
     fileprivate let disposeBag = DisposeBag()
@@ -38,11 +39,13 @@ class TextFieldSetting: UIView {
             .border(width: 1.0, color: ColorPalette.shared.color(type: .blackish))
             .borderStyle(.roundedRect)
             .autocapitalizationType(.none)
+            .placeholder(placeholder)
         return textField
     }()
 
-    init(title: String, accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
+    init(title: String, placeholder: String = "", accessibilityPrefixId: String, text: String? = nil, font: UIFont = FontBook.mainHeading) {
         self.title = title
+        self.placeholder = placeholder
         if let text = text {
             self.text.onNext(text)
         }
@@ -160,6 +163,12 @@ extension Reactive where Base: TextFieldSetting {
             textField.text
         } setter: { textField, value in
             textField.text = value
+        }
+    }
+
+    var isHidden: Binder<Bool> {
+        return Binder(self.base) { _, value in
+            base.isHidden = value
         }
     }
 }
