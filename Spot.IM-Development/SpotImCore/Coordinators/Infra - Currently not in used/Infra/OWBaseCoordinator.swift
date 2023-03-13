@@ -67,11 +67,6 @@ class OWBaseCoordinator<ResultType> {
         fatalError("Method should be implemented.")
     }
 
-    // Used for retriving a component with a preferred dynamic size we create for publishers & partners (i.e SDK consumers) to show. Can be used when a router is NOT available
-    func showableComponentDynamicSize() -> Observable<OWViewDynamicSizeOption> {
-        fatalError("Method should be implemented.")
-    }
-
     // A callback once the publishers & partners (i.e SDK consumers) removed a component from their UI . Should be used when a router is NOT available
     func showableComponentRemoved() -> Observable<Void> {
         fatalError("Method should be implemented.")

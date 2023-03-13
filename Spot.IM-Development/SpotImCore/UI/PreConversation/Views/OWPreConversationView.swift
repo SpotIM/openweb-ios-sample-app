@@ -22,14 +22,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let btnFullConversationTopPadding: CGFloat = 13
         static let bottomPadding: CGFloat = 23
 
-        // Usually the publisher will pin the pre conversation view to the leading and trainling of the encapsulation VC/View,
-        // However we are using a callback with CGSize so we will return the screen width or 400 in case for some reason we couldn't get a referance to the window.
-        // We should later use RX to return a calculated height based on the actual width of the frame
-        static let assumedWidth: CGFloat = (UIApplication.shared.delegate?.window??.screen.bounds.width ?? 400)
-        // TODO: Testing - remove later
-        static let initialHeight: CGFloat = 800
-        static let changedHeight: CGFloat = 700
-
         static let separatorHeight: CGFloat = 1.0
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
@@ -113,12 +105,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWPreConversationView {
     func setupViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
-
         self.useAsThemeStyleInjector()
-
-        self.OWSnp.makeConstraints { make in
-            make.height.equalTo(Metrics.initialHeight)
-        }
 
         self.addSubviews(header)
         header.OWSnp.makeConstraints { make in
@@ -159,6 +146,7 @@ fileprivate extension OWPreConversationView {
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.trailing.equalToSuperview()
+            make.height.equalTo(0)
         }
 
         self.addSubview(btnCTAConversation)
@@ -182,13 +170,8 @@ fileprivate extension OWPreConversationView {
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
 
-        viewModel.inputs.preConversationChangedSize.onNext(CGSize(width: Metrics.assumedWidth, height: Metrics.initialHeight))
-
         viewModel.outputs.preConversationDataSourceSections
             .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] _ in
-                self?.updateTableViewHeightIfNeeded()
-            })
             .bind(to: tableView.rx.items(dataSource: preConversationDataSource))
             .disposed(by: disposeBag)
 
@@ -227,15 +210,15 @@ fileprivate extension OWPreConversationView {
                 }
             })
             .disposed(by: disposeBag)
-    }
 
-    // TODO: after moving to table cells defined with constraints and not numbered height, we might not need this function and the tableview height constraint
-    private func updateTableViewHeightIfNeeded() {
-//        if (tableView.frame.size.height != tableView.contentSize.height) {
-//            tableView.OWSnp.updateConstraints { make in
-//                make.height.equalTo(tableView.contentSize.height)
-//            }
-//            self.layoutIfNeeded()
-//        }
+        tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
+            .unwrap()
+            .subscribe(onNext: { [weak self] size in
+                guard let self = self else { return }
+                self.tableView.OWSnp.updateConstraints { make in
+                    make.height.equalTo(size.height)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
