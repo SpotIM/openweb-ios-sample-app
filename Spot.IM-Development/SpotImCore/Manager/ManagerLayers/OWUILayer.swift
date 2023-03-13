@@ -53,7 +53,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .subscribe(onNext: { result in
-            completion(.success(result as? UIView ?? UIView()))
+            completion(.success(result.toShowable()))
         }, onError: { err in
             let error: OWError = err as? OWError ?? OWError.conversationFlow
             completion(.failure(error))
