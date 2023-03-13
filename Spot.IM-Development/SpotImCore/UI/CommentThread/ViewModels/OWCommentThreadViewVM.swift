@@ -27,7 +27,7 @@ protocol OWCommentThreadViewViewModeling {
 class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentThreadViewViewModelingInputs, OWCommentThreadViewViewModelingOutputs {
     var inputs: OWCommentThreadViewViewModelingInputs { return self }
     var outputs: OWCommentThreadViewViewModelingOutputs { return self }
-    
+
     fileprivate struct Metrics {
         static let numberOfCommentsInSkeleton: Int = 4
     }
