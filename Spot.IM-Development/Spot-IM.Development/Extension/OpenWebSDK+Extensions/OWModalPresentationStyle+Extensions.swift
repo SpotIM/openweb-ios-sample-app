@@ -12,7 +12,7 @@ import SpotImCore
 #if NEW_API
 
 extension OWModalPresentationStyle {
-    static func styleFromPersistence(index: Int) -> OWModalPresentationStyle {
+    static func presentationStyle(fromIndex index: Int) -> OWModalPresentationStyle {
         switch index {
         case 0: return .fullScreen
         case 1: return .pageSheet

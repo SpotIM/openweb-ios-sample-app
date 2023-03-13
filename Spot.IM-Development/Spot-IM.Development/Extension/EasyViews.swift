@@ -69,6 +69,11 @@ extension UITextField {
         self.autocapitalizationType = autocapitalizationType
         return self
     }
+
+    @discardableResult func placeholder(_ placeholder: String) -> Self {
+        self.placeholder = placeholder
+        return self
+    }
 }
 
 extension UILabel {
