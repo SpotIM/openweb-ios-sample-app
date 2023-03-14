@@ -35,6 +35,7 @@ protocol OWSharedServicesProviding: AnyObject {
     func authorizationRecoveryService() -> OWAuthorizationRecoveryServicing
     func timeMeasuringService() -> OWTimeMeasuringServicing
     func sortDictateService() -> OWSortDictateServicing
+    func authenticationManager() -> OWAuthenticationManagerProtocol
 }
 
 class OWSharedServicesProvider: OWSharedServicesProviding {
@@ -118,6 +119,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
         return OWSortDictateService(servicesProvider: self)
     }()
 
+    fileprivate lazy var _authenticationManager: OWAuthenticationManagerProtocol = {
+        return OWAuthenticationManager(servicesProvider: self)
+    }()
+
     func themeStyleService() -> OWThemeStyleServicing {
         return _themeStyleService
     }
@@ -180,6 +185,10 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func sortDictateService() -> OWSortDictateServicing {
         return _sortDictateService
+    }
+
+    func authenticationManager() -> OWAuthenticationManagerProtocol {
+        return _authenticationManager
     }
 }
 

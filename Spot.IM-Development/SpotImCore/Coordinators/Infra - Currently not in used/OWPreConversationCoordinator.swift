@@ -22,11 +22,16 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate let router: OWRoutering
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
 
-    init(router: OWRoutering, preConversationData: OWPreConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering,
+         preConversationData: OWPreConversationRequiredData,
+         actionsCallbacks: OWViewActionsCallbacks?,
+         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
         self.router = router
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
+        self.authenticationManager = authenticationManager
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWPreConversationCoordinatorResult> {
@@ -73,7 +78,21 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         let openCommentConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentConversation
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.ifNeededTriggerAuthenticationUI(for: .commenting)
+                    .map { _ in type }
+            }
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 2. Waiting for authentication required for commenting
+                // Can be immediately if anyone can comment in the active spotId, or the user already connected
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.waitForAuthentication(for: .commenting)
+                    .map { _ in type }
+            }
             .map { [weak self] type -> OWDeepLinkOptions? in
+                // 3. Perform deeplink to comment creation screen
                 guard let self = self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, commentCreationType: type)
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
