@@ -49,6 +49,7 @@ class OWCommunityQuestionView: UIView {
 
 fileprivate extension OWCommunityQuestionView {
     func setupViews() {
+        self.isHidden = !viewModel.outputs.shouldShowView
         self.backgroundColor = .clear
         self.addSubviews(questionTextView)
 

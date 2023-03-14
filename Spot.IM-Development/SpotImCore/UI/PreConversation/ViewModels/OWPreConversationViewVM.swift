@@ -84,7 +84,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
-        return OWCommunityQuestionViewModel()
+        return OWCommunityQuestionViewModel(style: preConversationStyle.communityQuestionStyle)
     }()
 
     lazy var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling = {
