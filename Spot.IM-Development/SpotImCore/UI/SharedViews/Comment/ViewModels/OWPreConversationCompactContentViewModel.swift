@@ -12,12 +12,14 @@ import RxCocoa
 import UIKit
 
 protocol OWPreConversationCompactContentViewModelingInputs {
+    var commentData: PublishSubject<OWCommentRequiredData> { get }
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
-    var avatarVM: OWAvatarViewModeling { get }
-    var commentType: OWCompactCommentType { get }
-    var numberOfLines: Int { get }
+//    var avatarVM: OWAvatarViewModeling { get }
+//    var commentType: OWCompactCommentType { get }
+//    var numberOfLines: Int { get }
+    var contentType: Observable<OWCompactContentType> { get }
 }
 
 protocol OWPreConversationCompactContentViewModeling {
@@ -32,26 +34,38 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
-    init(data: OWCommentRequiredData, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
-        comment = data.comment
-        avatarVM = OWAvatarViewModelV2(user: data.user, imageURLProvider: imageProvider)
-        numberOfLines = data.collapsableTextLineLimit
+    var commentData = PublishSubject<OWCommentRequiredData>()
+    
+    fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skelaton)
+    lazy var contentType: Observable<OWCompactContentType> = {
+        return _contentType
+            .asObservable()
+    }()
+    
+    init(imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
+        
     }
 
-    var avatarVM: OWAvatarViewModeling
-    fileprivate var comment: SPComment
+//    var avatarVM: OWAvatarViewModeling
 
-    var numberOfLines: Int
-    lazy var commentType: OWCompactCommentType = {
-        if let commentText = comment.text?.text {
-            return .text(string: commentText)
-        }
-        return .media
-    }()
+//    var numberOfLines: Int
+//    lazy var commentType: OWCompactCommentType = {
+//        if let commentText = comment.text?.text {
+//            return .text(string: commentText)
+//        }
+//        return .media
+//    }()
 }
 
 enum OWCompactCommentType {
     case text(string: String)
     case media
+}
+
+enum OWCompactContentType {
+    case comment(type: OWCompactCommentType)
+    case emptyConversation
+    case closedAndEmpty
+    case skelaton
 }
 
