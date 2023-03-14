@@ -13,16 +13,16 @@ protocol OWUIAuthenticationInternalProtocol {
 }
 
 class OWUIAuthenticationLayer: OWUIAuthentication {
-    var displayLoginFlow: OWLoginFlowCallback? {
+    var displayAuthenticationFlow: OWLoginFlowCallback? {
         get {
-            return self._displayLoginFlow
+            return self._displayAuthenticationFlow
         }
         set(newValue) {
-            self._displayLoginFlow = newValue
+            self._displayAuthenticationFlow = newValue
         }
     }
 
-    fileprivate var _displayLoginFlow: OWLoginFlowCallback? = nil
+    fileprivate var _displayAuthenticationFlow: OWLoginFlowCallback? = nil
 
     func triggerPublisherDisplayLoginFlow(navController: UINavigationController) {
         guard let callback = _displayLoginFlow else {
