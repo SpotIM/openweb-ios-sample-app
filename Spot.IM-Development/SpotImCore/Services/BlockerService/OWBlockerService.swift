@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWBlockerServicing {
-    func add(blocker: OWBlockerActionProtocol, perType blockerType: OWBlockerActionType)
+    func add(blocker: OWBlockerActionProtocol)
     func removeBlocker(perType blockerType: OWBlockerActionType)
     func waitForNonBlocker(for blockersTypes: [OWBlockerActionType]) -> Observable<Void>
 }
@@ -28,12 +28,12 @@ class OWBlockerService: OWBlockerServicing {
             .asObservable()
     }
 
-    func add(blocker: OWBlockerActionProtocol, perType blockerType: OWBlockerActionType) {
+    func add(blocker: OWBlockerActionProtocol) {
         _ = blockersMapper
             .take(1)
             .subscribe(onNext: { [weak self] mapper in
                 var newMapper = mapper
-                newMapper[blockerType] = blocker
+                newMapper[blocker.blockerType] = blocker
                 self?._blockersMapper.onNext(newMapper)
             })
     }

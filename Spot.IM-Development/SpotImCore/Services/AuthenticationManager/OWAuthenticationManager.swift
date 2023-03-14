@@ -54,6 +54,7 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
                       let authenticationUILayer = self.manager.ui.authenticationUI as? OWUIAuthenticationInternalProtocol else { return }
                 let blockerService = self.servicesProvider.blockerServicing()
                 let blockerAction = OWDefaultBlockerAction(blockerType: .authentication)
+                blockerService.add(blocker: blockerAction)
                 authenticationUILayer.triggerPublisherDisplayLoginFlow(navController: navController, completion: blockerAction.completion)
             })
     }
