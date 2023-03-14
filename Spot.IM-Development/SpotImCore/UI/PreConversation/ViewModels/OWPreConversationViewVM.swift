@@ -40,7 +40,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowComapctView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
     var isCompactMode: Bool { get }
-    var compactCommentVM: Observable<OWCompactCommentViewModeling> { get }
+    var compactCommentVM: Observable<OWPreConversationCompactContentViewModeling> { get }
 }
 
 protocol OWPreConversationViewViewModeling: AnyObject {
@@ -112,11 +112,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .asObserver()
             .unwrap()
     }
-    lazy var compactCommentVM: Observable<OWCompactCommentViewModeling> = {
+    lazy var compactCommentVM: Observable<OWPreConversationCompactContentViewModeling> = {
         bestComment
             .map { (comment, user) in
                 let requireData = OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: self.preConversationStyle.collapsableTextLineLimit)
-                return OWCompactCommentViewModel(data: requireData, imageProvider: self.imageProvider)
+                return OWPreConversationCompactContentViewModel(data: requireData, imageProvider: self.imageProvider)
             }
             .asObservable()
     }()
