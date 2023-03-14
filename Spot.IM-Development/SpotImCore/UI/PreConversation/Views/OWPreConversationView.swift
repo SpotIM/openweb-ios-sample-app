@@ -101,7 +101,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 
     fileprivate let viewModel: OWPreConversationViewViewModeling
     fileprivate let disposeBag = DisposeBag()
-    fileprivate var observation: NSKeyValueObservation?
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -263,11 +262,14 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        observation = tableView.observe(\UITableView.contentSize, changeHandler: { table, _ in
-            let newHeight = table.contentSize.height
-            table.OWSnp.updateConstraints { make in
-                make.height.equalTo(newHeight)
-            }
-        })
+        tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
+            .unwrap()
+            .subscribe(onNext: { [weak self] size in
+                guard let self = self else { return }
+                self.tableView.OWSnp.updateConstraints { make in
+                    make.height.equalTo(size.height)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }

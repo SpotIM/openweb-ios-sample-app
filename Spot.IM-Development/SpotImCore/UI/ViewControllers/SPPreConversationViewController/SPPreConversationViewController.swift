@@ -517,6 +517,7 @@ internal final class SPPreConversationViewController: SPBaseConversationViewCont
 
     override func handleConversationReloaded(success: Bool, error: SPNetworkError?) {
         self.updateTableViewData()
+        self.hideLoader()
     }
 
     @objc
