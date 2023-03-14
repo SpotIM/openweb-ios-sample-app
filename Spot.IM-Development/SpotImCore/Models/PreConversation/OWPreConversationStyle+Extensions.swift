@@ -54,4 +54,13 @@ extension OWPreConversationStyle {
             return .regular
         }
     }
+    
+    var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
+        switch self {
+        case .regular, .ctaWithSummary:
+            return .regular // TODO
+        case .compact, .ctaButtonOnly:
+            return .none
+        }
+    }
 }
