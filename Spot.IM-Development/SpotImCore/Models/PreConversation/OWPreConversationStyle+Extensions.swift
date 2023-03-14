@@ -14,7 +14,7 @@ extension OWPreConversationStyle {
         static let collapsableTextLineLimit: Int = 4
         static let collapsableTextLineLimitCompactMode: Int = 2
     }
-    
+
     func validate() -> OWPreConversationStyle {
         guard case let .regular(numberOfComments) = self else { return self }
         if (numberOfComments > Metrics.maxNumberOfComments) || (numberOfComments < Metrics.minNumberOfComments) {
@@ -23,7 +23,7 @@ extension OWPreConversationStyle {
             return self
         }
     }
-    
+
     var numberOfComments: Int {
         switch self {
         case .regular(let numOfComments):
@@ -34,7 +34,7 @@ extension OWPreConversationStyle {
             return 0
         }
     }
-    
+
     var collapsableTextLineLimit: Int {
         switch self {
         case .regular:
@@ -45,7 +45,7 @@ extension OWPreConversationStyle {
             return InternalMetrics.collapsableTextLineLimit
         }
     }
-    
+
     var preConversationSummaryStyle: OWPreConversationSummaryStyle {
         switch self {
         case .compact:
@@ -54,7 +54,7 @@ extension OWPreConversationStyle {
             return .regular
         }
     }
-    
+
     var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
         switch self {
         case .regular, .ctaWithSummary:
@@ -63,7 +63,7 @@ extension OWPreConversationStyle {
             return .none
         }
     }
-    
+
     var communityQuestionStyle: OWCommunityQuestionsStyle {
         switch self {
         case .regular, .ctaWithSummary:
