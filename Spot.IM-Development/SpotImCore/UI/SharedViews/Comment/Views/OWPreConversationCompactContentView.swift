@@ -10,13 +10,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWCompactCommentView: UIView {
+class OWPreConversationCompactContentView: UIView {
     fileprivate struct Metrics {
         static let avatarSize: CGFloat = 36
         static let fontSize: CGFloat = 13
     }
 
-    fileprivate var viewModel: OWCompactCommentViewModeling!
+    fileprivate var viewModel: OWPreConversationCompactContentViewModeling!
     fileprivate lazy var avatarImageView: SPAvatarView = {
         return SPAvatarView()
             .backgroundColor(.clear)
@@ -43,7 +43,7 @@ class OWCompactCommentView: UIView {
         setupViews()
     }
 
-    func configure(with viewModel: OWCompactCommentViewModeling) {
+    func configure(with viewModel: OWPreConversationCompactContentViewModeling) {
         self.viewModel = viewModel
         avatarImageView.configure(with: viewModel.outputs.avatarVM)
         setupObservers() // ?
@@ -54,7 +54,7 @@ class OWCompactCommentView: UIView {
     }
 }
 
-fileprivate extension OWCompactCommentView {
+fileprivate extension OWPreConversationCompactContentView {
     func setupViews() {
         self.addSubview(avatarImageView)
         avatarImageView.OWSnp.makeConstraints { make in
