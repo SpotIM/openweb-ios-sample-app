@@ -39,7 +39,7 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
         }
         return true
     }
-    
+
     fileprivate let style: OWCommunityQuestionsStyle
     init(style: OWCommunityQuestionsStyle) {
         self.style = style

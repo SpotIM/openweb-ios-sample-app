@@ -84,7 +84,7 @@ class OWPreConversationCompactContentView: UIView {
         let color = OWColorPalette.shared.color(type: .skeletonColor,
                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
-        let numOfLines = 2 //TODO
+        let numOfLines = 2 // TODO
         let views = (0 ..< numOfLines).map { _ in
             return UIView().backgroundColor(color)
         }
@@ -96,7 +96,7 @@ class OWPreConversationCompactContentView: UIView {
     init(viewModel: OWPreConversationCompactContentViewModeling) {
         super.init(frame: .zero)
         self.viewModel = viewModel
-        
+
         setupViews()
         setupObservers()
     }
@@ -126,7 +126,7 @@ fileprivate extension OWPreConversationCompactContentView {
 //            make.size.equalTo(Metrics.avatarSize)
 //        }
 //        avatarImageView.isHidden = true
-        
+
         self.addSubview(rightImageView)
         rightImageView.OWSnp.makeConstraints { make in
             make.leading.top.bottom.equalToSuperview()
