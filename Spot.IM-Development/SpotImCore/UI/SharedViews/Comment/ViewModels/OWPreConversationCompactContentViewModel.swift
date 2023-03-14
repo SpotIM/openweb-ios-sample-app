@@ -45,7 +45,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
         return _contentType
             .asObservable()
     }()
-    
+
     lazy var isSkelatonHidden: Observable<Bool> = {
         contentType
             .map { type in
@@ -56,7 +56,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             }
             .asObservable()
     }()
-    
+
     lazy var isCommentHidden: Observable<Bool> = {
         contentType
             .map { type in
@@ -67,7 +67,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             }
             .asObservable()
     }()
-    
+
     lazy var showImagePlaceholder: Observable<Bool> = {
         contentType
             .map { type in
@@ -128,7 +128,7 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                 guard let self = self else { return }
                 self.avatarVM.inputs.configureUser(user: requiredData.user)
 
-                var commentType: OWCompactCommentType = {
+                let commentType: OWCompactCommentType = {
                     if let commentText = requiredData.comment.text?.text {
                         return .text(string: commentText)
                     }
