@@ -9,12 +9,12 @@
 import Foundation
 import RxSwift
 
-protocol OWPreConversationHeaderViewModelingInputs {
+protocol OWPreConversationSummaryViewModelingInputs {
     var customizeTitleLabelUI: PublishSubject<UILabel> { get }
     var customizeCounterLabelUI: PublishSubject<UILabel> { get }
 }
 
-protocol OWPreConversationHeaderViewModelingOutputs {
+protocol OWPreConversationSummaryViewModelingOutputs {
     var onlineViewingUsersVM: OWOnlineViewingUsersCounterViewModeling { get }
     var commentsCount: Observable<String> { get }
     var titleFontSize: CGFloat { get }
@@ -22,12 +22,12 @@ protocol OWPreConversationHeaderViewModelingOutputs {
     var showNextArrow: Bool { get }
 }
 
-protocol OWPreConversationHeaderViewModeling {
-    var inputs: OWPreConversationHeaderViewModelingInputs { get }
-    var outputs: OWPreConversationHeaderViewModelingOutputs { get }
+protocol OWPreConversationSummaryViewModeling {
+    var inputs: OWPreConversationSummaryViewModelingInputs { get }
+    var outputs: OWPreConversationSummaryViewModelingOutputs { get }
 }
 
-class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWPreConversationHeaderViewModelingInputs, OWPreConversationHeaderViewModelingOutputs {
+class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, OWPreConversationSummaryViewModelingInputs, OWPreConversationSummaryViewModelingOutputs {
     fileprivate struct Metrics {
         static let titleFontSize: CGFloat = 24
         static let titleFontSizeCompact: CGFloat = 15
@@ -35,8 +35,8 @@ class OWPreConversationHeaderViewModel: OWPreConversationHeaderViewModeling, OWP
         static let counterFontSizeCompact: CGFloat = 13
     }
 
-    var inputs: OWPreConversationHeaderViewModelingInputs { return self }
-    var outputs: OWPreConversationHeaderViewModelingOutputs { return self }
+    var inputs: OWPreConversationSummaryViewModelingInputs { return self }
+    var outputs: OWPreConversationSummaryViewModelingOutputs { return self }
 
     var customizeTitleLabelUI = PublishSubject<UILabel>()
     var customizeCounterLabelUI = PublishSubject<UILabel>()

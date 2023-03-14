@@ -27,8 +27,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
-    fileprivate lazy var header: OWPreConversationHeaderView = {
-        return OWPreConversationHeaderView(viewModel: self.viewModel.outputs.preConversationHeaderVM)
+    fileprivate lazy var preConversationSummary: OWPreConversationSummeryView = {
+        return OWPreConversationSummeryView(viewModel: self.viewModel.outputs.preConversationSummaryVM)
     }()
     fileprivate lazy var communityGuidelinesView: OWCommunityGuidelinesView = {
         return OWCommunityGuidelinesView(with: self.viewModel.outputs.communityGuidelinesViewModel)
@@ -128,15 +128,15 @@ fileprivate extension OWPreConversationView {
 
     func setupCompactModeViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light)
-        self.addSubview(header)
-        header.OWSnp.makeConstraints { make in
+        self.addSubview(preConversationSummary)
+        preConversationSummary.OWSnp.makeConstraints { make in
             make.top.equalToSuperview().offset(Metrics.compactModePadding)
             make.leading.trailing.equalToSuperview()
         }
 
         self.addSubview(compactCommentView)
         compactCommentView.OWSnp.makeConstraints { make in
-            make.top.equalTo(header.OWSnp.bottom).offset(8)
+            make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(8)
             make.leading.equalToSuperview().offset(Metrics.compactModePadding)
             make.trailing.equalToSuperview().offset(-Metrics.compactModePadding)
             make.bottom.equalToSuperview().offset(-Metrics.compactModePadding)
@@ -145,8 +145,8 @@ fileprivate extension OWPreConversationView {
 
     func setupPreConvViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
-        self.addSubviews(header)
-        header.OWSnp.makeConstraints { make in
+        self.addSubviews(preConversationSummary)
+        preConversationSummary.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
         }
 
@@ -155,7 +155,7 @@ fileprivate extension OWPreConversationView {
         // DO NOT pass style in the VM, use `shouldShowCommunityGuidelinesAndQuestion` and etc.
         self.addSubview(communityGuidelinesView)
         communityGuidelinesView.OWSnp.makeConstraints { make in
-            make.top.equalTo(header.OWSnp.bottom)
+            make.top.equalTo(preConversationSummary.OWSnp.bottom)
             make.leading.trailing.equalToSuperview()
         }
 
