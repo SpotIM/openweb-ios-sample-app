@@ -45,7 +45,7 @@ extension OWPreConversationStyle {
             return InternalMetrics.collapsableTextLineLimit
         }
     }
-    
+
     var preConversationSummaryStyle: OWPreConversationSummaryStyle {
         switch self {
         case .compact:
