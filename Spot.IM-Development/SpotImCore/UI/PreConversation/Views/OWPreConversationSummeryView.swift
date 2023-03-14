@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationHeaderView: UIView {
+class OWPreConversationSummeryView: UIView {
     fileprivate struct Metrics {
         static let counterLeading: CGFloat = 8
         static let nextArrowLeading: CGFloat = 10
@@ -47,10 +47,10 @@ class OWPreConversationHeaderView: UIView {
         return imageView
     }()
 
-    fileprivate var viewModel: OWPreConversationHeaderViewModeling
+    fileprivate var viewModel: OWPreConversationSummaryViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWPreConversationHeaderViewModeling) {
+    init(viewModel: OWPreConversationSummaryViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         self.accessibilityIdentifier = Metrics.identifier
@@ -68,7 +68,7 @@ class OWPreConversationHeaderView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationHeaderView {
+fileprivate extension OWPreConversationSummeryView {
     func setupUI() {
         self.enforceSemanticAttribute()
 

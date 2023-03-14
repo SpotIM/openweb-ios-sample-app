@@ -21,7 +21,7 @@ protocol OWPreConversationViewViewModelingInputs {
 }
 
 protocol OWPreConversationViewViewModelingOutputs {
-    var preConversationHeaderVM: OWPreConversationHeaderViewModeling { get }
+    var preConversationSummaryVM: OWPreConversationSummaryViewModeling { get }
     var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling { get }
     var communityQuestionViewModel: OWCommunityQuestionViewModeling { get }
     var commentCreationEntryViewModel: OWCommentCreationEntryViewModeling { get }
@@ -70,8 +70,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             }
     }
 
-    lazy var preConversationHeaderVM: OWPreConversationHeaderViewModeling = {
-        return OWPreConversationHeaderViewModel(isCompactMode: self.isCompactMode)
+    lazy var preConversationSummaryVM: OWPreConversationSummaryViewModeling = {
+        return OWPreConversationSummaryViewModel(isCompactMode: self.isCompactMode)
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
@@ -301,8 +301,8 @@ fileprivate extension OWPreConversationViewViewModel {
 
         // Subscribing to customize UI related stuff
         Observable.merge(
-            preConversationHeaderVM.inputs.customizeCounterLabelUI.asObservable(),
-            preConversationHeaderVM.inputs.customizeTitleLabelUI.asObservable()
+            preConversationSummaryVM.inputs.customizeCounterLabelUI.asObservable(),
+            preConversationSummaryVM.inputs.customizeTitleLabelUI.asObservable()
             )
             .subscribe(onNext: { _ in
 //            TODO: custom UI
