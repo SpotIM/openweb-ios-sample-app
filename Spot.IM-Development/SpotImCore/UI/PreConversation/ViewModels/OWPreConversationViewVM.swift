@@ -32,7 +32,12 @@ protocol OWPreConversationViewViewModelingOutputs {
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
+    var shouldShowSeparatorView: Bool { get }
+    var shouldCommentCreationEntryView: Bool { get }
     var shouldShowComments: Bool { get }
+    var shouldShowCTA: Bool { get }
+    var shouldShowFooter: Bool { get }
+    var shouldShowComapctView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
     var isCompactMode: Bool { get }
     var compactCommentVM: Observable<OWCompactCommentViewModeling> { get }
@@ -180,15 +185,46 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         }
     }
 
+    var shouldShowSeparatorView: Bool {
+        if case .regular = self.preConversationStyle {
+            return true
+        }
+        return false
+    }
+
+    var shouldCommentCreationEntryView: Bool {
+        if case .regular = self.preConversationStyle {
+            return true
+        }
+        return false
+    }
+
     var shouldShowComments: Bool {
-        switch self.preConversationStyle {
-        case .regular(_):
-            return true
-        case .compact:
-            return true
-        default:
+        if case .compact = self.preConversationStyle {
             return false
         }
+        return true
+    }
+
+    var shouldShowComapctView: Bool {
+        if case .compact = self.preConversationStyle {
+            return true
+        }
+        return false
+    }
+
+    var shouldShowCTA: Bool {
+        if case .compact = self.preConversationStyle {
+            return false
+        }
+        return true
+    }
+
+    var shouldShowFooter: Bool {
+        if case .compact = self.preConversationStyle {
+            return false
+        }
+        return true
     }
 
     fileprivate var postId: OWPostId {
