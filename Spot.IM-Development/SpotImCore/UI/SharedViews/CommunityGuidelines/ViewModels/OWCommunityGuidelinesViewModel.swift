@@ -56,14 +56,14 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             .observe(on: MainScheduler.instance)
             .asObservable()
     }
-    
+
     var shouldBeHidden: Bool {
         if case .none = self.style {
             return true
         }
         return false
     }
-    
+
     fileprivate let style: OWCommunityGuidelinesStyle
     init(style: OWCommunityGuidelinesStyle) {
         self.style = style
