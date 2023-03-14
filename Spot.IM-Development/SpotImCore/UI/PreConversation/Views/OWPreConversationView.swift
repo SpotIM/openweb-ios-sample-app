@@ -87,8 +87,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return dataSource
     }()
 
-    fileprivate lazy var compactCommentView: OWCompactCommentView = {
-        return OWCompactCommentView()
+    fileprivate lazy var compactCommentView: OWPreConversationCompactContentView = {
+        return OWPreConversationCompactContentView()
     }()
     fileprivate lazy var compactTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
@@ -213,8 +213,6 @@ fileprivate extension OWPreConversationView {
             make.bottom.equalToSuperview().offset(viewModel.outputs.shouldShowFooter ? -Metrics.bottomPadding : 0)
         }
         footerView.isHidden = !viewModel.outputs.shouldShowFooter
-
-//        self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light) // TODO: background on compact/regular
     }
 
     func setupObservers() {

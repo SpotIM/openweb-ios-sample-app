@@ -11,26 +11,26 @@ import RxSwift
 import RxCocoa
 import UIKit
 
-protocol OWCompactCommentViewModelingInputs {
+protocol OWPreConversationCompactContentViewModelingInputs {
 }
 
-protocol OWCompactCommentViewModelingOutputs {
+protocol OWPreConversationCompactContentViewModelingOutputs {
     var avatarVM: OWAvatarViewModeling { get }
     var commentType: OWCompactCommentType { get }
     var numberOfLines: Int { get }
 }
 
-protocol OWCompactCommentViewModeling {
-    var inputs: OWCompactCommentViewModelingInputs { get }
-    var outputs: OWCompactCommentViewModelingOutputs { get }
+protocol OWPreConversationCompactContentViewModeling {
+    var inputs: OWPreConversationCompactContentViewModelingInputs { get }
+    var outputs: OWPreConversationCompactContentViewModelingOutputs { get }
 }
 
-class OWCompactCommentViewModel: OWCompactCommentViewModeling,
-                                 OWCompactCommentViewModelingInputs,
-                                 OWCompactCommentViewModelingOutputs {
+class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentViewModeling,
+                                 OWPreConversationCompactContentViewModelingInputs,
+                                 OWPreConversationCompactContentViewModelingOutputs {
 
-    var inputs: OWCompactCommentViewModelingInputs { return self }
-    var outputs: OWCompactCommentViewModelingOutputs { return self }
+    var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
+    var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
     init(data: OWCommentRequiredData, imageProvider: OWImageProviding = OWCloudinaryImageProvider()) {
         comment = data.comment
