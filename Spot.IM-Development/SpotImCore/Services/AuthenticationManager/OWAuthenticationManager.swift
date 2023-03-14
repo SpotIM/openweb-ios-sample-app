@@ -52,7 +52,9 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
                       let routeringCompatible = self.manager.ui.authenticationUI as? OWRouteringCompatible,
                       let navController = routeringCompatible.routering.navigationController,
                       let authenticationUILayer = self.manager.ui.authenticationUI as? OWUIAuthenticationInternalProtocol else { return }
-                authenticationUILayer.triggerPublisherDisplayLoginFlow(navController: navController)
+                let blockerService = self.servicesProvider.blockerServicing()
+                let blockerAction = OWDefaultBlockerAction(blockerType: .authentication)
+                authenticationUILayer.triggerPublisherDisplayLoginFlow(navController: navController, completion: blockerAction.completion)
             })
     }
 
@@ -63,6 +65,14 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
                 return self.waitForAuthenticationLevel(aboveOrEqual: requiredlevel)
                     .take(1)
                     .voidify()
+            }
+            .flatMap { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                if waitForBlockingCompletions {
+                    return self.servicesProvider.blockerServicing().waitForNonBlocker()
+                } else {
+                    return .just(())
+                }
             }
     }
 
