@@ -61,6 +61,8 @@ extension OWCommunityGuidelinesView {
                 make.trailing.equalToSuperview().offset(-Metrics.titleHorizontalOffset)
             }
         }
+        
+        self.isHidden = viewModel.outputs.shouldBeHidden
     }
 
     fileprivate func setupObservers() {
