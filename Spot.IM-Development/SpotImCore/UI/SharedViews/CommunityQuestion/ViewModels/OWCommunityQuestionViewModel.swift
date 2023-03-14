@@ -16,6 +16,7 @@ protocol OWCommunityQuestionViewModelingInputs {
 
 protocol OWCommunityQuestionViewModelingOutputs {
     var communityQuestionOutput: Observable<String?> { get }
+    var shouldShowView: Bool { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -30,5 +31,17 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
     var communityQuestionString = PublishSubject<String?>()
     var communityQuestionOutput: Observable<String?> {
         communityQuestionString.asObservable()
+    }
+
+    var shouldShowView: Bool {
+        if case .none = self.style {
+            return false
+        }
+        return true
+    }
+    
+    fileprivate let style: OWCommunityQuestionsStyle
+    init(style: OWCommunityQuestionsStyle) {
+        self.style = style
     }
 }
