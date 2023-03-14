@@ -118,12 +118,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
 fileprivate extension OWPreConversationView {
     func setupViews() {
         self.useAsThemeStyleInjector()
-//        if (viewModel.outputs.isCompactMode) {
-//            setupCompactModeViews()
-//        } else {
-            setupPreConvViews()
-//        }
-    }
 
 //    func setupCompactModeViews() {
 //        self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light)
@@ -141,12 +135,21 @@ fileprivate extension OWPreConversationView {
 //            make.bottom.equalToSuperview().offset(-Metrics.compactModePadding)
 //        }
 //    }
-
-    func setupPreConvViews() {
         self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
         self.addSubviews(preConversationSummary)
         preConversationSummary.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
+        }
+
+        if (viewModel.outputs.shouldShowComapctView) {
+            self.addSubview(compactCommentView)
+            compactCommentView.OWSnp.makeConstraints { make in
+                make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(8)
+                make.leading.equalToSuperview().offset(Metrics.compactModePadding)
+                make.trailing.equalToSuperview().offset(-Metrics.compactModePadding)
+                make.bottom.equalToSuperview().offset(-Metrics.compactModePadding)
+            }
+            return
         }
 
         // TODO: Adjust UI correctly according to the style
@@ -171,19 +174,23 @@ fileprivate extension OWPreConversationView {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(viewModel.outputs.shouldShowSeparatorView ? Metrics.separatorHeight : 0)
         }
+        separatorView.isHidden = !viewModel.outputs.shouldShowSeparatorView
 
         self.addSubview(commentCreationEntryView)
         commentCreationEntryView.OWSnp.makeConstraints { make in
-            make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
+            make.top.equalTo(separatorView.OWSnp.bottom).offset(viewModel.outputs.shouldCommentCreationEntryView ? Metrics.commentCreationVerticalPadding : 0)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview()
+            if(!viewModel.outputs.shouldCommentCreationEntryView) {
+                make.height.equalTo(0)
+            }
         }
         commentCreationEntryView.isHidden = !viewModel.outputs.shouldCommentCreationEntryView
 
         // TODO: separate to new component
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
+            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(viewModel.outputs.shouldShowComments ? Metrics.commentCreationVerticalPadding : 0)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(0)
@@ -194,7 +201,7 @@ fileprivate extension OWPreConversationView {
         btnCTAConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.top.equalTo(tableView.OWSnp.bottom).offset(viewModel.outputs.shouldShowCTA ? Metrics.btnFullConversationTopPadding : 0)
         }
         btnCTAConversation.isHidden = !viewModel.outputs.shouldShowCTA
 
@@ -202,20 +209,12 @@ fileprivate extension OWPreConversationView {
         footerView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
-            make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
+            make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(viewModel.outputs.shouldShowFooter ? Metrics.btnFullConversationTopPadding : 0)
+            make.bottom.equalToSuperview().offset(viewModel.outputs.shouldShowFooter ? -Metrics.bottomPadding : 0)
         }
         footerView.isHidden = !viewModel.outputs.shouldShowFooter
 
 //        self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light) // TODO: background on compact/regular
-//        self.addSubview(compactCommentView)
-//        compactCommentView.OWSnp.makeConstraints { make in
-//            make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(8)
-//            make.leading.equalToSuperview().offset(Metrics.compactModePadding)
-//            make.trailing.equalToSuperview().offset(-Metrics.compactModePadding)
-//            make.bottom.equalToSuperview().offset(-Metrics.compactModePadding)
-//        }
-//        compactCommentView.isHidden = !viewModel.outputs.shouldShowComapctView
     }
 
     func setupObservers() {
