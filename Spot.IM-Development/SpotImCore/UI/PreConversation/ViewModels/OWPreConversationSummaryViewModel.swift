@@ -61,20 +61,20 @@ class OWPreConversationSummaryViewModel: OWPreConversationSummaryViewModeling, O
     }
 
     lazy var titleFontSize: CGFloat = {
-        return isCompactMode ? Metrics.titleFontSizeCompact : Metrics.titleFontSize
+        return style == .compact ? Metrics.titleFontSizeCompact : Metrics.titleFontSize
     }()
 
     lazy var counterFontSize: CGFloat = {
-        return isCompactMode ? Metrics.counterFontSizeCompact : Metrics.counterFontSize
+        return style == .compact ? Metrics.counterFontSizeCompact : Metrics.counterFontSize
     }()
 
     lazy var showNextArrow: Bool = {
-       return isCompactMode
+        return style == .compact
     }()
 
-    fileprivate let isCompactMode: Bool
+    fileprivate let style: OWPreConversationSummaryStyle
 
-    init(isCompactMode: Bool) {
-        self.isCompactMode = isCompactMode
+    init(style: OWPreConversationSummaryStyle) {
+        self.style = style
     }
 }
