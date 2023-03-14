@@ -80,7 +80,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
-        return OWCommunityGuidelinesViewModel()
+        return OWCommunityGuidelinesViewModel(style: preConversationStyle.communityGuidelinesStyle)
     }()
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {

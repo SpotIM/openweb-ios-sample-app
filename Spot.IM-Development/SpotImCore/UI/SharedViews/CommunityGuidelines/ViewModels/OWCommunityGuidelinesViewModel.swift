@@ -16,6 +16,7 @@ protocol OWCommunityGuidelinesViewModelingInputs {
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
+    var shouldBeHidden: Bool { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -54,6 +55,19 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             }
             .observe(on: MainScheduler.instance)
             .asObservable()
+    }
+    
+    var shouldBeHidden: Bool {
+        if case .none = self.style {
+            return true
+        }
+        return false
+    }
+    
+    fileprivate let style: OWCommunityGuidelinesStyle
+    init(style: OWCommunityGuidelinesStyle) {
+        self.style = style
+        // TODO: support compact style
     }
 }
 
