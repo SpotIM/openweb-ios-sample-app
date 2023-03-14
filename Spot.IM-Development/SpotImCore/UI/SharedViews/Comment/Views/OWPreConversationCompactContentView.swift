@@ -21,7 +21,7 @@ class OWPreConversationCompactContentView: UIView {
         return SPAvatarView()
             .backgroundColor(.clear)
     }()
-    fileprivate lazy var commentTextLabel: UILabel = {
+    fileprivate lazy var textLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
 //            .textColor(<#T##color: UIColor##UIColor#>) // TODO: text color
@@ -37,17 +37,62 @@ class OWPreConversationCompactContentView: UIView {
             .text("Camera") // TODO: string
 //            .textColor(<#T##color: UIColor##UIColor#>) // TODO: text color
     }()
+    fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
+        let view = OWSkeletonShimmeringView()
 
-    init() {
+        view.addSubview(avatarSkeleton)
+        avatarSkeleton.OWSnp.makeConstraints { make in
+            make.top.leading.bottom.equalToSuperview()
+            make.size.equalTo(Metrics.avatarSize)
+        }
+        let firstLine = messageLinesSkeleton[0]
+        view.addSubview(firstLine)
+        firstLine.OWSnp.makeConstraints { make in
+            make.top.trailing.equalToSuperview().offset(5)
+            make.height.equalTo(8)
+            make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(12)
+        }
+        let secondLine = messageLinesSkeleton[1]
+        view.addSubview(secondLine)
+        secondLine.OWSnp.makeConstraints { make in
+            make.top.equalTo(firstLine.OWSnp.bottom).offset(8)
+            make.height.equalTo(8)
+            make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(12)
+            make.trailing.equalToSuperview()
+        }
+        return view
+    }()
+    fileprivate lazy var avatarSkeleton: UIView = {
+        let view = UIView()
+            .corner(radius: Metrics.avatarSize / 2)
+            .backgroundColor(OWColorPalette.shared.color(type: .skeletonColor,
+                                                         themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+
+        return view
+    }()
+    fileprivate lazy var messageLinesSkeleton: [UIView] = {
+        let color = OWColorPalette.shared.color(type: .skeletonColor,
+                                                     themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+
+        let numOfLines = 2 //TODO
+        let views = (0 ..< numOfLines).map { _ in
+            return UIView().backgroundColor(color)
+        }
+
+        return views
+    }()
+
+    init(viewModel: OWPreConversationCompactContentViewModeling) {
         super.init(frame: .zero)
+        self.viewModel = viewModel
         setupViews()
     }
 
-    func configure(with viewModel: OWPreConversationCompactContentViewModeling) {
-        self.viewModel = viewModel
-        avatarImageView.configure(with: viewModel.outputs.avatarVM)
-        setupObservers() // ?
-    }
+//    func configure(with viewModel: OWPreConversationCompactContentViewModeling) {
+//        self.viewModel = viewModel
+//        avatarImageView.configure(with: viewModel.outputs.avatarVM)
+//        setupObservers() // ?
+//    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -56,45 +101,51 @@ class OWPreConversationCompactContentView: UIView {
 
 fileprivate extension OWPreConversationCompactContentView {
     func setupViews() {
-        self.addSubview(avatarImageView)
-        avatarImageView.OWSnp.makeConstraints { make in
-            make.leading.top.bottom.equalToSuperview()
-            make.size.equalTo(Metrics.avatarSize)
+        self.addSubview(skelatonView)
+        skelatonView.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
-
-        self.addSubview(commentTextLabel)
-        commentTextLabel.OWSnp.makeConstraints { make in
-            make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(12)
-        }
-
-        self.addSubview(imageIcon)
-        imageIcon.OWSnp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.size.equalTo(24)
-            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(12)
-        }
-        self.addSubview(imagePlaceholderLabel)
-        imagePlaceholderLabel.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.trailing.lessThanOrEqualToSuperview()
-            make.leading.equalTo(imageIcon.OWSnp.trailing)
-        }
+        skelatonView.addSkeletonShimmering()
+        
+//        self.addSubview(avatarImageView)
+//        avatarImageView.OWSnp.makeConstraints { make in
+//            make.leading.top.bottom.equalToSuperview()
+//            make.size.equalTo(Metrics.avatarSize)
+//        }
+//
+//        self.addSubview(textLabel)
+//        textLabel.OWSnp.makeConstraints { make in
+//            make.top.bottom.trailing.equalToSuperview()
+//            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(12)
+//        }
+//
+//        self.addSubview(imageIcon)
+//        imageIcon.OWSnp.makeConstraints { make in
+//            make.centerY.equalToSuperview()
+//            make.size.equalTo(24)
+//            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(12)
+//        }
+//        self.addSubview(imagePlaceholderLabel)
+//        imagePlaceholderLabel.OWSnp.makeConstraints { make in
+//            make.top.bottom.equalToSuperview()
+//            make.trailing.lessThanOrEqualToSuperview()
+//            make.leading.equalTo(imageIcon.OWSnp.trailing)
+//        }
     }
 
     func setupObservers() {
-        switch(viewModel.outputs.commentType) {
-        case .text(let text):
-            commentTextLabel.text = text
-            commentTextLabel.numberOfLines = viewModel.outputs.numberOfLines
-            imageIcon.isHidden = true
-            imagePlaceholderLabel.isHidden = true
-            commentTextLabel.isHidden = false
-        case .media:
-            imageIcon.isHidden = false
-            imagePlaceholderLabel.isHidden = false
-            commentTextLabel.isHidden = true
-        }
+//        switch(viewModel.outputs.commentType) {
+//        case .text(let text):
+//            commentTextLabel.text = text
+//            commentTextLabel.numberOfLines = viewModel.outputs.numberOfLines
+//            imageIcon.isHidden = true
+//            imagePlaceholderLabel.isHidden = true
+//            textLabel.isHidden = false
+//        case .media:
+//            imageIcon.isHidden = false
+//            imagePlaceholderLabel.isHidden = false
+//            textLabel.isHidden = true
+//        }
 //        if case .text(let text) = viewModel.outputs.commentType {
 //            commentTextLabel.text = text
 //            commentTextLabel.numberOfLines = viewModel.outputs.numberOfLines
