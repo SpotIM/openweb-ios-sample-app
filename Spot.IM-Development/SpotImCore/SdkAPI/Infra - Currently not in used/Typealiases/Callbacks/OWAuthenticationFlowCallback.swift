@@ -9,7 +9,7 @@
 import UIKit
 
 #if NEW_API
-public typealias OWAuthenticationFlowCallback = (UINavigationController) -> Void
+public typealias OWAuthenticationFlowCallback = (UINavigationController, OWBasicCompletion) -> Void
 #else
-typealias OWAuthenticationFlowCallback = (UINavigationController) -> Void
+typealias OWAuthenticationFlowCallback = (UINavigationController, OWBasicCompletion) -> Void
 #endif
