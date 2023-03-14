@@ -71,7 +71,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     lazy var preConversationSummaryVM: OWPreConversationSummaryViewModeling = {
-        return OWPreConversationSummaryViewModel(isCompactMode: self.isCompactMode)
+        return OWPreConversationSummaryViewModel(style: preConversationStyle.preConversationSummaryStyle)
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
