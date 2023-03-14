@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWUserActions {
+enum OWUserAction {
     case mutingUser
     case commenting
     case votingComment

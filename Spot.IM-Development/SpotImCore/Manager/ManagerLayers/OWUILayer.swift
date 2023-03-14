@@ -9,11 +9,15 @@
 import Foundation
 import RxSwift
 
-class OWUILayer: OWUI, OWUIFlows, OWUIViews {
+class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
     var customizations: OWCustomizations { return self._customizations }
     var authenticationUI: OWUIAuthentication { return self._authenticationUI }
+
+    var routering: OWRoutering {
+        return sdkCoordinator.routering
+    }
 
     fileprivate let sdkCoordinator: OWSDKCoordinator
     fileprivate let _customizations: OWCustomizations
