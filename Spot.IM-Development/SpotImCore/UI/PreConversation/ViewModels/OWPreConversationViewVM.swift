@@ -269,7 +269,7 @@ fileprivate extension OWPreConversationViewViewModel {
                 self._cellsViewModels.append(contentsOf: viewModels)
             })
             .disposed(by: disposeBag)
-        
+
         // Set the best comment for compact mode
         conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
@@ -277,10 +277,10 @@ fileprivate extension OWPreConversationViewViewModel {
                       let responseComments = response.conversation?.comments,
                       !responseComments.isEmpty
                 else { return }
-                
+
                 let comment = responseComments[0]
                 guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
-                
+
                 self._bestComment.onNext((comment, user))
             })
             .disposed(by: disposeBag)
