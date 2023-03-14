@@ -311,7 +311,7 @@ fileprivate extension OWPreConversationViewViewModel {
 
                 let comment = responseComments[0]
                 guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
-
+                
                 self.compactCommentVM.inputs.commentData.onNext(OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: 2))
             })
             .disposed(by: disposeBag)

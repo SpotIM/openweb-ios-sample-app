@@ -145,7 +145,7 @@ fileprivate extension OWPreConversationCompactContentView {
         self.addSubview(textLabel)
         textLabel.OWSnp.makeConstraints { make in
             make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(imageIcon.OWSnp.trailing).offset(12)
+            make.leading.equalTo(imageIcon.OWSnp.trailing).offset(2)
         }
         textLabel.isHidden = true
     }
@@ -201,11 +201,12 @@ fileprivate extension OWPreConversationCompactContentView {
 
         // Set image placeholder if needed
         viewModel.outputs.showImagePlaceholder
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showImage in
                 guard let self = self else { return }
                 self.imageIcon.OWSnp.updateConstraints { make in
                     make.size.equalTo(showImage ? 24 : 0)
-                    make.leading.equalTo(self.rightImageView.OWSnp.trailing).offset(showImage ? 12 : 0)
+                    make.leading.equalTo(self.rightImageView.OWSnp.trailing).offset(showImage ? 12 : 10)
                 }
             })
             .disposed(by: disposeBag)
