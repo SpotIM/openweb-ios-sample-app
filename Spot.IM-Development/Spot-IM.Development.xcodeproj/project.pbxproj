@@ -230,6 +230,11 @@
 		3D263CEB29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */; };
 		3D263CED29BDFEFE0013C532 /* OWAuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CEC29BDFEFE0013C532 /* OWAuthenticationManager.swift */; };
 		3D263CEF29C0EACB0013C532 /* OWRouteringCompatible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CEE29C0EACB0013C532 /* OWRouteringCompatible.swift */; };
+		3D263CF329C0FD7C0013C532 /* OWBlockerActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CF229C0FD7C0013C532 /* OWBlockerActionType.swift */; };
+		3D263CF529C0FDB80013C532 /* OWBlockerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CF429C0FDB80013C532 /* OWBlockerService.swift */; };
+		3D263CF729C0FF260013C532 /* OWBlockerActionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CF629C0FF260013C532 /* OWBlockerActionProtocol.swift */; };
+		3D263CF929C106040013C532 /* OWDefaultBlockerAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CF829C106040013C532 /* OWDefaultBlockerAction.swift */; };
+		3D263CFB29C1074B0013C532 /* OWBasicCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CFA29C1074B0013C532 /* OWBasicCompletion.swift */; };
 		3D26B5AF28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5AE28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift */; };
 		3D26B5B128CA37E400A1DAD2 /* OWCommentCreationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B028CA37E400A1DAD2 /* OWCommentCreationSettings.swift */; };
 		3D26B5B428CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */; };
@@ -929,6 +934,11 @@
 		3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationLevelAvailability.swift; sourceTree = "<group>"; };
 		3D263CEC29BDFEFE0013C532 /* OWAuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationManager.swift; sourceTree = "<group>"; };
 		3D263CEE29C0EACB0013C532 /* OWRouteringCompatible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouteringCompatible.swift; sourceTree = "<group>"; };
+		3D263CF229C0FD7C0013C532 /* OWBlockerActionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBlockerActionType.swift; sourceTree = "<group>"; };
+		3D263CF429C0FDB80013C532 /* OWBlockerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBlockerService.swift; sourceTree = "<group>"; };
+		3D263CF629C0FF260013C532 /* OWBlockerActionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBlockerActionProtocol.swift; sourceTree = "<group>"; };
+		3D263CF829C106040013C532 /* OWDefaultBlockerAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWDefaultBlockerAction.swift; sourceTree = "<group>"; };
+		3D263CFA29C1074B0013C532 /* OWBasicCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBasicCompletion.swift; sourceTree = "<group>"; };
 		3D26B5AE28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationRequiredData.swift; sourceTree = "<group>"; };
 		3D26B5B028CA37E400A1DAD2 /* OWCommentCreationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSettings.swift; sourceTree = "<group>"; };
 		3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationRequiredData.swift; sourceTree = "<group>"; };
@@ -2213,6 +2223,25 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		3D263CF029C0FD200013C532 /* BlockerService */ = {
+			isa = PBXGroup;
+			children = (
+				3D263CF129C0FD5D0013C532 /* Models */,
+				3D263CF429C0FDB80013C532 /* OWBlockerService.swift */,
+			);
+			path = BlockerService;
+			sourceTree = "<group>";
+		};
+		3D263CF129C0FD5D0013C532 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3D263CF829C106040013C532 /* OWDefaultBlockerAction.swift */,
+				3D263CF229C0FD7C0013C532 /* OWBlockerActionType.swift */,
+				3D263CF629C0FF260013C532 /* OWBlockerActionProtocol.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		3D26B5AD28CA36B100A1DAD2 /* CommentCreation */ = {
 			isa = PBXGroup;
 			children = (
@@ -2422,6 +2451,7 @@
 		3D611B9828C64729003960CE /* Completions */ = {
 			isa = PBXGroup;
 			children = (
+				3D263CFA29C1074B0013C532 /* OWBasicCompletion.swift */,
 				3D611B9928C64740003960CE /* OWDefaultCompletion.swift */,
 				3D611BAE28C89AEB003960CE /* OWViewDynamicSizeCompletion.swift */,
 				3D611BB228C89BB8003960CE /* OWViewCompletion.swift */,
@@ -3418,6 +3448,7 @@
 		4454187123685154001D0ED0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3D263CF029C0FD200013C532 /* BlockerService */,
 				3D263CE229BDE31A0013C532 /* AuthenticationManager */,
 				3DDA9A4428F851ED00FE3B86 /* SkeletonShimmering */,
 				3D33C0E829460C760062BFC9 /* ThemeStyleService */,
@@ -4354,6 +4385,7 @@
 				3DDA9A592906CFAE00FE3B86 /* OWCommentSkeletonShimmeringCellViewModel.swift in Sources */,
 				3D20A38527B01ED2003F8513 /* OWConstraintMakerRelatable+Extensions.swift in Sources */,
 				3DA264022951E32E00688FFF /* OWNetworkCachedResponseHandler.swift in Sources */,
+				3D263CF529C0FDB80013C532 /* OWBlockerService.swift in Sources */,
 				3D20A36527B00CAC003F8513 /* OWConstraintDSL.swift in Sources */,
 				3DD72C66280EF07B00117946 /* OWEnvironment.swift in Sources */,
 				3D08E09D28770FFD00E6F1AC /* OWTableViewSectionedDataSource.swift in Sources */,
@@ -4503,6 +4535,7 @@
 				241AF9F1295B22A900A941C1 /* OWCommentTextViewModel.swift in Sources */,
 				3DEAA57A29A23D310043D73E /* OWFontBook.swift in Sources */,
 				445418AC23685154001D0ED0 /* UIDevice+Extensions.swift in Sources */,
+				3D263CF929C106040013C532 /* OWDefaultBlockerAction.swift in Sources */,
 				6D22A46323BA51CA00DCE08A /* SpotImAuthenticationProvider.swift in Sources */,
 				4454187D23685154001D0ED0 /* OWCoordinator.swift in Sources */,
 				3D08E05D287598F800E6F1AC /* OWConversationView.swift in Sources */,
@@ -4657,6 +4690,7 @@
 				445418AF23685154001D0ED0 /* UIColor+SPExtensions.swift in Sources */,
 				445417FF23685144001D0ED0 /* Int+Formatting.swift in Sources */,
 				3D08E0722875C42F00E6F1AC /* OWSDKCoordinator.swift in Sources */,
+				3D263CF329C0FD7C0013C532 /* OWBlockerActionType.swift in Sources */,
 				3D08E0912877095C00E6F1AC /* OWAnimatableSectionModel.swift in Sources */,
 				3D20A37127B015D4003F8513 /* OWConstraintInsetTarget.swift in Sources */,
 				3D33C0EE294624060062BFC9 /* OWThemeStyleUpdaterProtocol.swift in Sources */,
@@ -4738,6 +4772,7 @@
 				4454188523685154001D0ED0 /* SPConfigProvider.swift in Sources */,
 				3D7E3D7028884D5B00DDBE0B /* SPAdditionalConfiguration.swift in Sources */,
 				4454188823685154001D0ED0 /* SPAnalyticsRequest.swift in Sources */,
+				3D263CFB29C1074B0013C532 /* OWBasicCompletion.swift in Sources */,
 				3D611BB728C8AB94003960CE /* OWPreConversationSettingsBuilder.swift in Sources */,
 				241AF9EF295B215600A941C1 /* OWCommentTextLabel.swift in Sources */,
 				6D0A3314247D44DC003B11C6 /* ViewVisibilityTracker.swift in Sources */,
@@ -4758,6 +4793,7 @@
 				166F796D281012BE009F45CE /* SPViewActionsCallbacks.swift in Sources */,
 				3D894A71286B18E7001A939C /* OpenWeb.swift in Sources */,
 				441165A92379720500B781F3 /* SPCloudinaryRequests.swift in Sources */,
+				3D263CF729C0FF260013C532 /* OWBlockerActionProtocol.swift in Sources */,
 				44689B72237185090024EFC1 /* LocalizationManager.swift in Sources */,
 				6D4E56B123A178DF005B79B6 /* UIView+Animations.swift in Sources */,
 				3DDA9A63290808F600FE3B86 /* OWSkeletonShimmeringView.swift in Sources */,
