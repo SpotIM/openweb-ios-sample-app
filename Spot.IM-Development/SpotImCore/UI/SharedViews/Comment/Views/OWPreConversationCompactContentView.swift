@@ -18,12 +18,27 @@ class OWPreConversationCompactContentView: UIView {
 
     fileprivate var viewModel: OWPreConversationCompactContentViewModeling!
     fileprivate lazy var avatarImageView: SPAvatarView = {
-        return SPAvatarView()
-            .backgroundColor(.clear)
+        let avatar = SPAvatarView().backgroundColor(.clear)
+        avatar.configure(with: self.viewModel.outputs.avatarVM)
+        return avatar
+    }()
+    fileprivate lazy var closedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(spNamed: "pendingIcon", supportDarkMode: true) // TODO: icon
+        return imageView
+    }()
+    fileprivate lazy var emptyConversationImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true) // TODO: icon
+        return imageView
+    }()
+    fileprivate lazy var rightImageView: UIView = {
+        return UIView()
     }()
     fileprivate lazy var textLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
+            .numberOfLines(2)
 //            .textColor(<#T##color: UIColor##UIColor#>) // TODO: text color
     }()
     fileprivate lazy var imageIcon: UIImageView = {
@@ -31,12 +46,7 @@ class OWPreConversationCompactContentView: UIView {
         imageView.image = UIImage(spNamed: "camera_icon", supportDarkMode: true)
         return imageView
     }()
-    fileprivate lazy var imagePlaceholderLabel: UILabel = {
-        return UILabel()
-            .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
-            .text("Camera") // TODO: string
-//            .textColor(<#T##color: UIColor##UIColor#>) // TODO: text color
-    }()
+
     fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
 
@@ -82,10 +92,13 @@ class OWPreConversationCompactContentView: UIView {
         return views
     }()
 
+    let disposeBag = DisposeBag()
     init(viewModel: OWPreConversationCompactContentViewModeling) {
         super.init(frame: .zero)
         self.viewModel = viewModel
+        
         setupViews()
+        setupObservers()
     }
 
 //    func configure(with viewModel: OWPreConversationCompactContentViewModeling) {
@@ -106,53 +119,96 @@ fileprivate extension OWPreConversationCompactContentView {
             make.edges.equalToSuperview()
         }
         skelatonView.addSkeletonShimmering()
-        
+
 //        self.addSubview(avatarImageView)
 //        avatarImageView.OWSnp.makeConstraints { make in
 //            make.leading.top.bottom.equalToSuperview()
 //            make.size.equalTo(Metrics.avatarSize)
 //        }
-//
-//        self.addSubview(textLabel)
-//        textLabel.OWSnp.makeConstraints { make in
-//            make.top.bottom.trailing.equalToSuperview()
-//            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(12)
-//        }
-//
-//        self.addSubview(imageIcon)
-//        imageIcon.OWSnp.makeConstraints { make in
-//            make.centerY.equalToSuperview()
-//            make.size.equalTo(24)
-//            make.leading.equalTo(avatarImageView.OWSnp.trailing).offset(12)
-//        }
-//        self.addSubview(imagePlaceholderLabel)
-//        imagePlaceholderLabel.OWSnp.makeConstraints { make in
-//            make.top.bottom.equalToSuperview()
-//            make.trailing.lessThanOrEqualToSuperview()
-//            make.leading.equalTo(imageIcon.OWSnp.trailing)
-//        }
+//        avatarImageView.isHidden = true
+        
+        self.addSubview(rightImageView)
+        rightImageView.OWSnp.makeConstraints { make in
+            make.leading.top.bottom.equalToSuperview()
+            make.size.equalTo(Metrics.avatarSize)
+        }
+        rightImageView.isHidden = true
+
+        self.addSubview(imageIcon)
+        imageIcon.OWSnp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.size.equalTo(24)
+            make.leading.equalTo(rightImageView.OWSnp.trailing).offset(12)
+        }
+        imageIcon.isHidden = true
+
+        self.addSubview(textLabel)
+        textLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.trailing.equalToSuperview()
+            make.leading.equalTo(imageIcon.OWSnp.trailing).offset(12)
+        }
+        textLabel.isHidden = true
     }
 
     func setupObservers() {
-//        switch(viewModel.outputs.commentType) {
-//        case .text(let text):
-//            commentTextLabel.text = text
-//            commentTextLabel.numberOfLines = viewModel.outputs.numberOfLines
-//            imageIcon.isHidden = true
-//            imagePlaceholderLabel.isHidden = true
-//            textLabel.isHidden = false
-//        case .media:
-//            imageIcon.isHidden = false
-//            imagePlaceholderLabel.isHidden = false
-//            textLabel.isHidden = true
-//        }
-//        if case .text(let text) = viewModel.outputs.commentType {
-//            commentTextLabel.text = text
-//            commentTextLabel.numberOfLines = viewModel.outputs.numberOfLines
-//            imageIcon.isHidden = true
-//            imagePlaceholderLabel.isHidden = true
-//            commentTextLabel.isHidden = false
-//        }
+        viewModel.outputs.isSkelatonHidden
+            .bind(to: skelatonView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.text
+            .bind(to: textLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isSkelatonHidden
+            .map { !$0 }
+            .bind(to: textLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isSkelatonHidden
+            .map { !$0 }
+            .bind(to: rightImageView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.showImagePlaceholder
+            .map { !$0 }
+            .bind(to: imageIcon.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        // Show avatar/empty/close icons according to content
+        viewModel.outputs.contentType
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] type in
+                guard let self = self else { return }
+
+                self.rightImageView.subviews.forEach { $0.removeFromSuperview() }
+                var view: UIView = UIView()
+                switch type {
+                case .comment:
+                    view = self.avatarImageView
+                case .emptyConversation:
+                    view = self.emptyConversationImageView
+                case .closedAndEmpty:
+                    view = self.closedImageView
+                default:
+                    break
+                }
+                self.rightImageView.addSubview(view)
+                view.OWSnp.makeConstraints { make in
+                    make.edges.equalToSuperview()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // Set image placeholder if needed
+        viewModel.outputs.showImagePlaceholder
+            .subscribe(onNext: { [weak self] showImage in
+                guard let self = self else { return }
+                self.imageIcon.OWSnp.updateConstraints { make in
+                    make.size.equalTo(showImage ? 24 : 0)
+                    make.leading.equalTo(self.rightImageView.OWSnp.trailing).offset(showImage ? 12 : 0)
+                }
+            })
+            .disposed(by: disposeBag)
 
         // TODO: colors
     }
