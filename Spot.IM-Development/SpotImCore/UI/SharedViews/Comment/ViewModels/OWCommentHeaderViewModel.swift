@@ -21,7 +21,6 @@ protocol OWCommentHeaderViewModelingOutputs {
 
     var shouldShowHiddenCommentMessage: Observable<Bool> { get }
     var nameText: Observable<String> { get }
-    var nameTextStyle: Observable<SPFontStyle> { get }
     var subtitleText: Observable<String> { get }
     var dateText: Observable<String> { get }
     var badgeTitle: Observable<String> { get }
@@ -140,11 +139,6 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
             .map({ user -> String in
                 return user.displayName ?? ""
             })
-    }
-
-    var nameTextStyle: Observable<SPFontStyle> {
-        _unwrappedModel
-            .map { $0.isReply ? .medium : .bold }
     }
 
     var hiddenCommentReasonText: Observable<String> {
