@@ -60,6 +60,9 @@ extension OWCommunityGuidelinesView {
                 make.leading.equalToSuperview().offset(Metrics.titleHorizontalOffset)
                 make.trailing.equalToSuperview().offset(-Metrics.titleHorizontalOffset)
             }
+            if (viewModel.outputs.shouldBeHidden) {
+                make.height.equalTo(0)
+            }
         }
 
         self.isHidden = viewModel.outputs.shouldBeHidden
