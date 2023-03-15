@@ -14,6 +14,15 @@ class OWPreConversationCompactContentView: UIView {
     fileprivate struct Metrics {
         static let avatarSize: CGFloat = 36
         static let fontSize: CGFloat = 13
+        static let numberOfLines: Int = 2
+        static let imageIconSize: CGFloat = 24
+        static let imageLeftPadding: CGFloat = 12
+        static let textLeftPadding: CGFloat = 2
+        
+        static let skelatonLineHeight: CGFloat = 8
+        static let skelatonLinesTopPaddig: CGFloat = 5
+        static let skelatonSpaceBetweenLines: CGFloat = 8
+        static let skelatonLinesLeadingPaddig: CGFloat = 12
     }
 
     fileprivate var viewModel: OWPreConversationCompactContentViewModeling!
@@ -32,13 +41,13 @@ class OWPreConversationCompactContentView: UIView {
         imageView.image = UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true) // TODO: icon
         return imageView
     }()
-    fileprivate lazy var rightImageView: UIView = {
+    fileprivate lazy var leftViewContainer: UIView = {
         return UIView()
     }()
     fileprivate lazy var textLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
-            .numberOfLines(2)
+            .numberOfLines(Metrics.numberOfLines)
 //            .textColor(<#T##color: UIColor##UIColor#>) // TODO: text color
     }()
     fileprivate lazy var imageIcon: UIImageView = {
@@ -58,16 +67,17 @@ class OWPreConversationCompactContentView: UIView {
         let firstLine = messageLinesSkeleton[0]
         view.addSubview(firstLine)
         firstLine.OWSnp.makeConstraints { make in
-            make.top.trailing.equalToSuperview().offset(5)
-            make.height.equalTo(8)
-            make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(12)
+            make.top.equalToSuperview().offset(Metrics.skelatonLinesTopPaddig)
+            make.trailing.equalToSuperview()
+            make.height.equalTo(Metrics.skelatonLineHeight)
+            make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(Metrics.skelatonLinesLeadingPaddig)
         }
         let secondLine = messageLinesSkeleton[1]
         view.addSubview(secondLine)
         secondLine.OWSnp.makeConstraints { make in
-            make.top.equalTo(firstLine.OWSnp.bottom).offset(8)
-            make.height.equalTo(8)
-            make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(12)
+            make.top.equalTo(firstLine.OWSnp.bottom).offset(Metrics.skelatonSpaceBetweenLines)
+            make.height.equalTo(Metrics.skelatonLineHeight)
+            make.leading.equalTo(avatarSkeleton.OWSnp.trailing).offset(Metrics.skelatonLinesLeadingPaddig)
             make.trailing.equalToSuperview()
         }
         return view
@@ -84,7 +94,7 @@ class OWPreConversationCompactContentView: UIView {
         let color = OWColorPalette.shared.color(type: .skeletonColor,
                                                      themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
 
-        let numOfLines = 2 // TODO
+        let numOfLines = Metrics.numberOfLines
         let views = (0 ..< numOfLines).map { _ in
             return UIView().backgroundColor(color)
         }
@@ -101,12 +111,6 @@ class OWPreConversationCompactContentView: UIView {
         setupObservers()
     }
 
-//    func configure(with viewModel: OWPreConversationCompactContentViewModeling) {
-//        self.viewModel = viewModel
-//        avatarImageView.configure(with: viewModel.outputs.avatarVM)
-//        setupObservers() // ?
-//    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -120,32 +124,25 @@ fileprivate extension OWPreConversationCompactContentView {
         }
         skelatonView.addSkeletonShimmering()
 
-//        self.addSubview(avatarImageView)
-//        avatarImageView.OWSnp.makeConstraints { make in
-//            make.leading.top.bottom.equalToSuperview()
-//            make.size.equalTo(Metrics.avatarSize)
-//        }
-//        avatarImageView.isHidden = true
-
-        self.addSubview(rightImageView)
-        rightImageView.OWSnp.makeConstraints { make in
+        self.addSubview(leftViewContainer)
+        leftViewContainer.OWSnp.makeConstraints { make in
             make.leading.top.bottom.equalToSuperview()
             make.size.equalTo(Metrics.avatarSize)
         }
-        rightImageView.isHidden = true
+        leftViewContainer.isHidden = true
 
         self.addSubview(imageIcon)
         imageIcon.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.size.equalTo(24)
-            make.leading.equalTo(rightImageView.OWSnp.trailing).offset(12)
+            make.size.equalTo(Metrics.imageIconSize)
+            make.leading.equalTo(leftViewContainer.OWSnp.trailing).offset(Metrics.imageLeftPadding)
         }
         imageIcon.isHidden = true
 
         self.addSubview(textLabel)
         textLabel.OWSnp.makeConstraints { make in
             make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(imageIcon.OWSnp.trailing).offset(2)
+            make.leading.equalTo(imageIcon.OWSnp.trailing).offset(Metrics.textLeftPadding)
         }
         textLabel.isHidden = true
     }
@@ -166,7 +163,7 @@ fileprivate extension OWPreConversationCompactContentView {
 
         viewModel.outputs.isSkelatonHidden
             .map { !$0 }
-            .bind(to: rightImageView.rx.isHidden)
+            .bind(to: leftViewContainer.rx.isHidden)
             .disposed(by: disposeBag)
 
         viewModel.outputs.showImagePlaceholder
@@ -180,19 +177,9 @@ fileprivate extension OWPreConversationCompactContentView {
             .subscribe(onNext: { [weak self] type in
                 guard let self = self else { return }
 
-                self.rightImageView.subviews.forEach { $0.removeFromSuperview() }
-                var view: UIView = UIView()
-                switch type {
-                case .comment:
-                    view = self.avatarImageView
-                case .emptyConversation:
-                    view = self.emptyConversationImageView
-                case .closedAndEmpty:
-                    view = self.closedImageView
-                default:
-                    break
-                }
-                self.rightImageView.addSubview(view)
+                self.leftViewContainer.subviews.forEach { $0.removeFromSuperview() }
+                var view: UIView = self.getViewForContent(type: type)
+                self.leftViewContainer.addSubview(view)
                 view.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }
@@ -205,12 +192,25 @@ fileprivate extension OWPreConversationCompactContentView {
             .subscribe(onNext: { [weak self] showImage in
                 guard let self = self else { return }
                 self.imageIcon.OWSnp.updateConstraints { make in
-                    make.size.equalTo(showImage ? 24 : 0)
-                    make.leading.equalTo(self.rightImageView.OWSnp.trailing).offset(showImage ? 12 : 10)
+                    make.size.equalTo(showImage ? Metrics.imageIconSize : 0)
+                    make.leading.equalTo(self.leftViewContainer.OWSnp.trailing).offset(showImage ? Metrics.imageLeftPadding : 10)
                 }
             })
             .disposed(by: disposeBag)
 
         // TODO: colors
+    }
+    
+    func getViewForContent(type: OWCompactContentType) -> UIView {
+        switch type {
+        case .comment:
+            return self.avatarImageView
+        case .emptyConversation:
+            return self.emptyConversationImageView
+        case .closedAndEmpty:
+            return self.closedImageView
+        default:
+            return UIView()
+        }
     }
 }
