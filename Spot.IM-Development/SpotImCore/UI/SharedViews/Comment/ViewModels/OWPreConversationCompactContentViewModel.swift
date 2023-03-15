@@ -140,7 +140,7 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                 self._contentType.onNext(.comment(type: commentType))
             })
             .disposed(by: disposeBag)
-        
+
         emptyConversation
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }

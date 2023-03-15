@@ -18,7 +18,6 @@ class OWPreConversationCompactContentView: UIView {
         static let imageIconSize: CGFloat = 24
         static let imageLeftPadding: CGFloat = 12
         static let textLeftPadding: CGFloat = 2
-        
         static let skelatonLineHeight: CGFloat = 8
         static let skelatonLinesTopPaddig: CGFloat = 5
         static let skelatonSpaceBetweenLines: CGFloat = 8
@@ -33,12 +32,12 @@ class OWPreConversationCompactContentView: UIView {
     }()
     fileprivate lazy var closedImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(spNamed: "pendingIcon", supportDarkMode: true) // TODO: icon
+        imageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
         return imageView
     }()
     fileprivate lazy var emptyConversationImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(spNamed: "emptyCommentsIcon", supportDarkMode: true) // TODO: icon
+        imageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
         return imageView
     }()
     fileprivate lazy var leftViewContainer: UIView = {
@@ -48,11 +47,12 @@ class OWPreConversationCompactContentView: UIView {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.fontSize))
             .numberOfLines(Metrics.numberOfLines)
-//            .textColor(<#T##color: UIColor##UIColor#>) // TODO: text color
+            .textColor(OWColorPalette.shared.color(type: .compactText,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
     fileprivate lazy var imageIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(spNamed: "camera_icon", supportDarkMode: true)
+        imageView.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
         return imageView
     }()
 
@@ -178,7 +178,7 @@ fileprivate extension OWPreConversationCompactContentView {
                 guard let self = self else { return }
 
                 self.leftViewContainer.subviews.forEach { $0.removeFromSuperview() }
-                var view: UIView = self.getViewForContent(type: type)
+                let view = self.getViewForContent(type: type)
                 self.leftViewContainer.addSubview(view)
                 view.OWSnp.makeConstraints { make in
                     make.edges.equalToSuperview()
@@ -198,9 +198,20 @@ fileprivate extension OWPreConversationCompactContentView {
             })
             .disposed(by: disposeBag)
 
-        // TODO: colors
+        // Colors for dark/light mode
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+
+                self.textLabel.textColor = OWColorPalette.shared.color(type: .compactText, themeStyle: currentStyle)
+                self.emptyConversationImageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
+                self.closedImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
+                self.imageIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
+            })
+            .disposed(by: disposeBag)
     }
-    
+
     func getViewForContent(type: OWCompactContentType) -> UIView {
         switch type {
         case .comment:
