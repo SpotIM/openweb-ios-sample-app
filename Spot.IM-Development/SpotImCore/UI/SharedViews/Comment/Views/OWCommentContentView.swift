@@ -27,6 +27,13 @@ class OWCommentContentView: UIView {
     fileprivate lazy var mediaView: CommentMediaView = {
         return CommentMediaView()
     }()
+    
+    fileprivate lazy var editedLabel: UILabel = {
+       return UILabel()
+            .font(OWFontBook.shared.font(style: .italic, size: Metrics.editedFontSize))
+            .text(LocalizationManager.localizedString(key: "Edited"))
+            .textColor(OWColorPalette.shared.color(type: .compactText, themeStyle: .light))
+    }()
 
     fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate var disposeBag: DisposeBag!
@@ -61,8 +68,14 @@ fileprivate extension OWCommentContentView {
         mediaView.OWSnp.makeConstraints { make in
             make.top.equalTo(textLabel.OWSnp.bottom).offset(Metrics.emptyCommentMediaTopPadding)
             make.trailing.lessThanOrEqualToSuperview()
-            make.leading.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
             make.size.equalTo(0)
+        }
+        
+        self.addSubview(editedLabel)
+        editedLabel.OWSnp.makeConstraints { make in
+            make.leading.bottom.equalToSuperview()
+            make.top.equalTo(mediaView.OWSnp.bottom)
         }
     }
 
@@ -102,5 +115,17 @@ fileprivate extension OWCommentContentView {
                 self.textHeightConstraint?.update(offset: newHeight)
             })
             .disposed(by: disposeBag)
+
+        viewModel.outputs.isEdited
+            .map { !$0 }
+            .bind(to: editedLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.editedLabel.textColor = OWColorPalette.shared.color(type: .compactText, themeStyle: currentStyle)
+            }).disposed(by: disposeBag)
     }
 }

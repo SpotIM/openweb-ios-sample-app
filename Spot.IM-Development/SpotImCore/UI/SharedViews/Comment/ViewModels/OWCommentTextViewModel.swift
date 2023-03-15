@@ -44,7 +44,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate var readMoreText: String = LocalizationManager.localizedString(key: "Read More")
-    fileprivate var editedText: String = LocalizationManager.localizedString(key: "Edited")
 
     var labelClickIndex = PublishSubject<Int>()
 
@@ -108,15 +107,6 @@ class OWCommentTextViewModel: OWCommentTextViewModeling,
                 return (attString, style)
             }
             .unwrap()
-            .withLatestFrom(comment) { [weak self] res, comment -> (NSMutableAttributedString, OWThemeStyle) in
-                let (attString, style) = res
-                guard let self = self,
-                      comment.edited == true
-                else { return (attString, style) }
-
-                attString.append(NSAttributedString(string: self.editedText, attributes: self.editedStringAttributes(with: style)))
-                return (attString, style)
-            }
             .map { [weak self] (attString, style) in
                 guard var res = attString.mutableCopy() as? NSMutableAttributedString else { return attString }
                 self?.locateURLsInText(text: &res, style: style)
@@ -179,14 +169,6 @@ fileprivate extension OWCommentTextViewModel {
     func readMoreStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
         attributes[.font] = OWFontBook.shared.font(style: .bold, size: OWCommentContentView.Metrics.fontSize)
-
-        return attributes
-    }
-
-    func editedStringAttributes(with style: OWThemeStyle) -> [NSAttributedString.Key: Any] {
-        var attributes: [NSAttributedString.Key: Any] = messageStringAttributes(with: style)
-        attributes[.foregroundColor] = UIColor.gray
-        attributes[.font] = OWFontBook.shared.font(style: .italic, size: OWCommentContentView.Metrics.editedFontSize)
 
         return attributes
     }
