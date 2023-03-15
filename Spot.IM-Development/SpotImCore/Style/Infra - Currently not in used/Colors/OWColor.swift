@@ -55,7 +55,7 @@ struct OWColor {
                                darkThemeColor: UIColor(red: 182.0/255.0, green: 185.0/255.0, blue: 187.0/255.0, alpha: 1.0))
             case .background0Color:
                 return OWColor(lightThemeColor: UIColor.white,
-                               darkThemeColor: UIColor(red: 35.0/255.0, green: 35.0/255.0, blue: 35.0/255.0, alpha: 1.0))
+                               darkThemeColor: UIColor(red: 7/255.0, green: 7/255.0, blue: 7/255.0, alpha: 1.0))
             case .background1Color:
                 return OWColor(lightThemeColor: UIColor.white,
                                darkThemeColor: UIColor.white.withAlphaComponent(0.15))
