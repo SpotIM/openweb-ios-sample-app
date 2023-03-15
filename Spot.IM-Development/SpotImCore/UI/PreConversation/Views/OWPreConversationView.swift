@@ -119,23 +119,6 @@ fileprivate extension OWPreConversationView {
     func setupViews() {
         self.useAsThemeStyleInjector()
 
-//    func setupCompactModeViews() {
-//        self.backgroundColor = OWColorPalette.shared.color(type: .compactBackground, themeStyle: .light)
-//        self.addSubview(preConversationSummary)
-//        preConversationSummary.OWSnp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(Metrics.compactModePadding)
-//            make.leading.trailing.equalToSuperview()
-//        }
-//
-//        self.addSubview(compactCommentView)
-//        compactCommentView.OWSnp.makeConstraints { make in
-//            make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(8)
-//            make.leading.equalToSuperview().offset(Metrics.compactModePadding)
-//            make.trailing.equalToSuperview().offset(-Metrics.compactModePadding)
-//            make.bottom.equalToSuperview().offset(-Metrics.compactModePadding)
-//        }
-//    }
-        self.backgroundColor = OWColorPalette.shared.color(type: .background0Color, themeStyle: .light)
         self.addSubviews(preConversationSummary)
         preConversationSummary.OWSnp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -187,7 +170,6 @@ fileprivate extension OWPreConversationView {
         }
         commentCreationEntryView.isHidden = !viewModel.outputs.shouldCommentCreationEntryView
 
-        // TODO: separate to new component
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
             make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(viewModel.outputs.shouldShowComments ? Metrics.commentCreationVerticalPadding : 0)
