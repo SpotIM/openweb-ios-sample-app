@@ -316,6 +316,17 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // Set empty conversation for compact mode
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self,
+                      response.conversation?.messagesCount == 0
+                else { return }
+
+                self.compactCommentVM.inputs.emptyConversation.onNext()
+            })
+            .disposed(by: disposeBag)
+
         // Binding to community question component
         conversationFetchedObservable
             .map { conversationRead -> SPConversationReadRM? in

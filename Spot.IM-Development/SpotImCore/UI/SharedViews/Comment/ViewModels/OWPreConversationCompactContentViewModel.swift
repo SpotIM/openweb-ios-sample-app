@@ -13,6 +13,7 @@ import UIKit
 
 protocol OWPreConversationCompactContentViewModelingInputs {
     var commentData: PublishSubject<OWCommentRequiredData> { get }
+    var emptyConversation: PublishSubject<Void> { get }
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
@@ -39,6 +40,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
     var commentData = PublishSubject<OWCommentRequiredData>()
+    var emptyConversation = PublishSubject<Void>()
 
     fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skelaton)
     lazy var contentType: Observable<OWCompactContentType> = {
@@ -136,6 +138,13 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                 }()
 
                 self._contentType.onNext(.comment(type: commentType))
+            })
+            .disposed(by: disposeBag)
+        
+        emptyConversation
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self._contentType.onNext(.emptyConversation)
             })
             .disposed(by: disposeBag)
     }
