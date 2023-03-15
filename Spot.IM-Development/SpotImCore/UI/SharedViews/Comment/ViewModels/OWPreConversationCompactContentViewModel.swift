@@ -18,8 +18,6 @@ protocol OWPreConversationCompactContentViewModelingInputs {
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
     var avatarVM: OWAvatarViewModeling { get }
-//    var commentType: OWCompactCommentType { get }
-//    var numberOfLines: Int { get }
     var contentType: Observable<OWCompactContentType> { get }
     var isSkelatonHidden: Observable<Bool> { get }
     var isCommentHidden: Observable<Bool> { get }
@@ -88,9 +86,9 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                 case .skelaton:
                     return ""
                 case .emptyConversation:
-                    return "empty placeolder TODO"
+                    return "empty placeolder TODO" // TODO: String
                 case .closedAndEmpty:
-                    return "closedAndEmpty TODO"
+                    return "closedAndEmpty TODO" // TODO: String
                 case .comment(let commentType):
                     switch commentType {
                     case .media:
@@ -113,22 +111,22 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     lazy var avatarVM: OWAvatarViewModeling = {
         return OWAvatarViewModelV2(imageURLProvider: self.imageProvider)
     }()
-
-//    var numberOfLines: Int
-//    lazy var commentType: OWCompactCommentType = {
-//        if let commentText = comment.text?.text {
-//            return .text(string: commentText)
-//        }
-//        return .media
-//    }()
 }
 
 fileprivate extension OWPreConversationCompactContentViewModel {
     func setupObservers() {
+        // Set user (avatar)
         commentData
             .subscribe(onNext: { [weak self] requiredData in
                 guard let self = self else { return }
                 self.avatarVM.inputs.configureUser(user: requiredData.user)
+            })
+            .disposed(by: disposeBag)
+        
+        // Set comment
+        commentData
+            .subscribe(onNext: { [weak self] requiredData in
+                guard let self = self else { return }
 
                 let commentType: OWCompactCommentType = {
                     if let commentText = requiredData.comment.text?.text {
@@ -141,6 +139,7 @@ fileprivate extension OWPreConversationCompactContentViewModel {
             })
             .disposed(by: disposeBag)
 
+        // TODO: support empty + read only
         emptyConversation
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
