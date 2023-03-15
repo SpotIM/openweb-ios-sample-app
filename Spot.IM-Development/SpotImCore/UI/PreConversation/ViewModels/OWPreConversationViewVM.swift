@@ -105,7 +105,7 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         }
         return false
     }()
-    
+
     // TODO: support read only in pre conversation
     fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
 
@@ -343,7 +343,7 @@ fileprivate extension OWPreConversationViewViewModel {
             }
             .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
             .disposed(by: disposeBag)
-        
+
         // Set read only mode
         conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
