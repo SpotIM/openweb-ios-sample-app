@@ -105,6 +105,9 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         }
         return false
     }()
+    
+    // TODO: support read only in pre conversation
+    fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
 
     fileprivate var _bestComment = BehaviorSubject<(SPComment, SPUser)?>(value: nil)
     fileprivate var bestComment: Observable<(SPComment, SPUser)> {
@@ -339,6 +342,23 @@ fileprivate extension OWPreConversationViewViewModel {
                 conversation.conversation?.communityQuestion
             }
             .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
+            .disposed(by: disposeBag)
+        
+        // Set read only mode
+        conversationFetchedObservable
+            .subscribe(onNext: { [weak self] response in
+                guard let self = self else { return }
+                var isReadOnly: Bool = response.conversation?.readOnly ?? false
+                switch self.preConversationData.article.additionalSettings.readOnlyMode {
+                case .disable:
+                    isReadOnly = false
+                case .enable:
+                    isReadOnly = true
+                case .default:
+                    break
+                }
+                self.isReadOnly.onNext(isReadOnly)
+            })
             .disposed(by: disposeBag)
 
         // Subscribing to customize UI related stuff

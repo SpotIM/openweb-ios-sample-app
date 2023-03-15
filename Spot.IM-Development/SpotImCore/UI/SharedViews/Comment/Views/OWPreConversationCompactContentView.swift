@@ -24,7 +24,6 @@ class OWPreConversationCompactContentView: UIView {
         static let skelatonLinesLeadingPaddig: CGFloat = 12
     }
 
-    fileprivate var viewModel: OWPreConversationCompactContentViewModeling!
     fileprivate lazy var avatarImageView: SPAvatarView = {
         let avatar = SPAvatarView().backgroundColor(.clear)
         avatar.configure(with: self.viewModel.outputs.avatarVM)
@@ -55,7 +54,6 @@ class OWPreConversationCompactContentView: UIView {
         imageView.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
         return imageView
     }()
-
     fileprivate lazy var skelatonView: OWSkeletonShimmeringView = {
         let view = OWSkeletonShimmeringView()
 
@@ -102,7 +100,9 @@ class OWPreConversationCompactContentView: UIView {
         return views
     }()
 
-    let disposeBag = DisposeBag()
+    fileprivate var viewModel: OWPreConversationCompactContentViewModeling!
+    fileprivate let disposeBag = DisposeBag()
+
     init(viewModel: OWPreConversationCompactContentViewModeling) {
         super.init(frame: .zero)
         self.viewModel = viewModel
