@@ -49,7 +49,7 @@ class OWPreConversationCompactContentView: UIView {
             .textColor(OWColorPalette.shared.color(type: .compactText,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
-    fileprivate lazy var imageIcon: UIImageView = {
+    fileprivate lazy var cameraIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
         return imageView
@@ -131,18 +131,18 @@ fileprivate extension OWPreConversationCompactContentView {
         }
         leftViewContainer.isHidden = true
 
-        self.addSubview(imageIcon)
-        imageIcon.OWSnp.makeConstraints { make in
+        self.addSubview(cameraIcon)
+        cameraIcon.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.size.equalTo(Metrics.imageIconSize)
             make.leading.equalTo(leftViewContainer.OWSnp.trailing).offset(Metrics.imageLeftPadding)
         }
-        imageIcon.isHidden = true
+        cameraIcon.isHidden = true
 
         self.addSubview(textLabel)
         textLabel.OWSnp.makeConstraints { make in
             make.top.bottom.trailing.equalToSuperview()
-            make.leading.equalTo(imageIcon.OWSnp.trailing).offset(Metrics.textLeftPadding)
+            make.leading.equalTo(cameraIcon.OWSnp.trailing).offset(Metrics.textLeftPadding)
         }
         textLabel.isHidden = true
     }
@@ -168,7 +168,7 @@ fileprivate extension OWPreConversationCompactContentView {
 
         viewModel.outputs.showImagePlaceholder
             .map { !$0 }
-            .bind(to: imageIcon.rx.isHidden)
+            .bind(to: cameraIcon.rx.isHidden)
             .disposed(by: disposeBag)
 
         // Show avatar/empty/close icons according to content
@@ -191,7 +191,7 @@ fileprivate extension OWPreConversationCompactContentView {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showImage in
                 guard let self = self else { return }
-                self.imageIcon.OWSnp.updateConstraints { make in
+                self.cameraIcon.OWSnp.updateConstraints { make in
                     make.size.equalTo(showImage ? Metrics.imageIconSize : 0)
                     make.leading.equalTo(self.leftViewContainer.OWSnp.trailing).offset(showImage ? Metrics.imageLeftPadding : 10)
                 }
@@ -207,7 +207,7 @@ fileprivate extension OWPreConversationCompactContentView {
                 self.textLabel.textColor = OWColorPalette.shared.color(type: .compactText, themeStyle: currentStyle)
                 self.emptyConversationImageView.image = UIImage(spNamed: "empty-conversation", supportDarkMode: true)
                 self.closedImageView.image = UIImage(spNamed: "time-icon", supportDarkMode: true)
-                self.imageIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
+                self.cameraIcon.image = UIImage(spNamed: "camera-icon", supportDarkMode: true)
             })
             .disposed(by: disposeBag)
     }
