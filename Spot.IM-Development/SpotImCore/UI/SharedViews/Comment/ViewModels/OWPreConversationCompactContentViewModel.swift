@@ -122,7 +122,7 @@ fileprivate extension OWPreConversationCompactContentViewModel {
                 self.avatarVM.inputs.configureUser(user: requiredData.user)
             })
             .disposed(by: disposeBag)
-        
+
         // Set comment
         commentData
             .subscribe(onNext: { [weak self] requiredData in
