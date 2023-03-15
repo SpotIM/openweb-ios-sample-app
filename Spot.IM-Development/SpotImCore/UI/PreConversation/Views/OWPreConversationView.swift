@@ -87,7 +87,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return dataSource
     }()
 
-    fileprivate lazy var compactCommentView: OWPreConversationCompactContentView = {
+    fileprivate lazy var compactContentView: OWPreConversationCompactContentView = {
         return OWPreConversationCompactContentView(viewModel: viewModel.outputs.compactCommentVM)
     }()
     fileprivate lazy var compactTapGesture: UITapGestureRecognizer = {
@@ -142,8 +142,8 @@ fileprivate extension OWPreConversationView {
         }
 
         if (viewModel.outputs.shouldShowComapctView) {
-            self.addSubview(compactCommentView)
-            compactCommentView.OWSnp.makeConstraints { make in
+            self.addSubview(compactContentView)
+            compactContentView.OWSnp.makeConstraints { make in
                 make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(8)
                 make.leading.equalToSuperview().offset(Metrics.compactModePadding)
                 make.trailing.equalToSuperview().offset(-Metrics.compactModePadding)
@@ -245,14 +245,6 @@ fileprivate extension OWPreConversationView {
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
 
-//        viewModel.outputs.compactCommentVM
-//            .observe(on: MainScheduler.instance)
-//            .subscribe(onNext: { [weak self] vm in
-//                guard let self = self else { return }
-//                self.compactCommentView.configure(with: vm)
-//            })
-//            .disposed(by: disposeBag)
-
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
@@ -277,7 +269,7 @@ fileprivate extension OWPreConversationView {
         tableView.rx.observe(CGSize.self, #keyPath(UITableView.contentSize))
             .unwrap()
             .subscribe(onNext: { [weak self] size in
-                guard let self = self, self.viewModel.outputs.shouldShowComments else { return }
+                guard let self = self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
                     make.height.equalTo(size.height)
                 }
