@@ -13,15 +13,14 @@ import RxCocoa
 class OWCommentHeaderView: UIView {
 
     fileprivate struct Metrics {
-        static let avatarSideSize: CGFloat = 39.0
-        static let avatarImageViewTrailingOffset: CGFloat = 11.0
-        static let fontSize: CGFloat = 16.0
-        static let badgeLabelFontSize: CGFloat = 12.0
-        static let badgeLeadingPadding: CGFloat = 4
-        static let subtitleTopPadding: CGFloat = 6
-        static let optionButtonSize: CGFloat = 44
+        static let avatarSideSize: CGFloat = 36.0
+        static let avatarImageViewTrailingOffset: CGFloat = 8.0
+        static let subtitleFontSize: CGFloat = 12.0
+        static let usernameFontSize: CGFloat = 13.0
+        static let badgeLabelFontSize: CGFloat = 10.0
+        static let badgeLeadingPadding: CGFloat = 7
+        static let optionButtonSize: CGFloat = 28
         static let badgeHorizontalInset: CGFloat = 4
-        static let badgeVerticalInset: CGFloat = 2
 
         static let identifier = "comment_header_view_id"
         static let userNameLabelIdentifier = "comment_header_user_name_label_id"
@@ -44,6 +43,7 @@ class OWCommentHeaderView: UIView {
         return UILabel()
             .userInteractionEnabled(false)
             .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
+            .font(OWFontBook.shared.font(style: .bold, size: Metrics.usernameFontSize))
     }()
 
     fileprivate lazy var badgeTagContainer: UIView = {
@@ -55,7 +55,7 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var badgeTagLabel: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.badgeLabelFontSize))
+            .font(OWFontBook.shared.font(style: .medium, size: Metrics.badgeLabelFontSize))
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
@@ -65,14 +65,14 @@ class OWCommentHeaderView: UIView {
 
     fileprivate lazy var subtitleLabel: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
 
     fileprivate lazy var dateLabel: UILabel = {
         return UILabel()
-            .font(.preferred(style: .medium, of: Metrics.fontSize))
+            .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
@@ -147,8 +147,7 @@ fileprivate extension OWCommentHeaderView {
 
         badgeTagContainer.addSubview(badgeTagLabel)
         badgeTagLabel.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(Metrics.badgeVerticalInset)
-            make.bottom.equalToSuperview().offset(-Metrics.badgeVerticalInset)
+            make.top.bottom.equalToSuperview()
             make.left.equalToSuperview().offset(Metrics.badgeHorizontalInset)
             make.right.equalToSuperview().offset(-Metrics.badgeHorizontalInset)
         }
@@ -169,7 +168,7 @@ fileprivate extension OWCommentHeaderView {
 
         addSubview(subtitleLabel)
         subtitleLabel.OWSnp.makeConstraints { make in
-            make.top.equalTo(userNameLabel.OWSnp.bottom).offset(Metrics.subtitleTopPadding)
+            make.top.equalTo(userNameLabel.OWSnp.bottom)
             make.leading.equalTo(userNameLabel)
             make.bottom.equalToSuperview()
         }
@@ -193,14 +192,6 @@ fileprivate extension OWCommentHeaderView {
         viewModel.outputs.nameText
             .bind(to: userNameLabel.rx.text)
             .disposed(by: disposeBag)
-
-        viewModel.outputs.nameTextStyle
-            .subscribe(onNext: { [weak self] style in
-                guard let self = self else { return }
-                self.userNameLabel.font(
-                    .preferred(style: style, of: Metrics.fontSize)
-                )
-            }).disposed(by: disposeBag)
 
         viewModel.outputs.badgeTitle
             .bind(to: badgeTagLabel.rx.text)
