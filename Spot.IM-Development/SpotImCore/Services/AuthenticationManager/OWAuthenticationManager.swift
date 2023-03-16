@@ -13,6 +13,8 @@ protocol OWAuthenticationManagerProtocol {
     var userAuthenticationStatus: Observable<OWInternalUserAuthenticationStatus> { get }
     var currentAuthenticationLevelAvailability: Observable<OWAuthenticationLevelAvailability> { get }
 
+    var networkCredentials: OWNetworkSessionCredentials { get }
+
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool>
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
 }
@@ -32,6 +34,13 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
           servicesProvider: OWSharedServicesProviding) {
         self.manager = manager
         self.servicesProvider = servicesProvider
+
+        loadPersistence()
+    }
+
+    fileprivate var _networkCredentials = OWNetworkSessionCredentials.none
+    var networkCredentials: OWNetworkSessionCredentials {
+        return _networkCredentials
     }
 
     fileprivate let _userAuthenticationStatus = BehaviorSubject<OWInternalUserAuthenticationStatus>(value: .notAutenticated)
@@ -79,6 +88,14 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
 
 }
 
+// Persistence related methods
+fileprivate extension OWAuthenticationManager {
+    func loadPersistence() {
+
+    }
+}
+
+// Helper methods
 fileprivate extension OWAuthenticationManager {
     func shouldShowAuthenticationUI(for action: OWUserAction) -> Observable<Bool> {
         return self.requiredAuthenticationLevel(for: action)
