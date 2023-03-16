@@ -21,9 +21,10 @@ class OWNetworkAuthorizationRecoveryInterceptor: OWNetworkRequestInterceptor {
     func adapt(_ urlRequest: URLRequest, for session: OWNetworkSession, completion: @escaping (Result<URLRequest, Error>) -> Void) {
         var request = urlRequest
 
-        // Update token - required because retry requests with old token will need to be updated with new token when called for a retry
-        if let token = SPUserSessionHolder.session.token, !token.isEmpty {
-            request.setValue(token, forHTTPHeaderField: APIHeadersConstants.authorization)
+        // Update Authorization - required because retry requests with old `Authorization` will need to be updated with new `Authorization` when called for a retry
+        let authenticationManager = servicesProvider.authenticationManager()
+        if let authorization = authenticationManager.networkCredentials.authorization, !authorization.isEmpty {
+            request.setValue(authorization, forHTTPHeaderField: OWHTTPHeaderType.authorization.rawValue)
         }
 
         completion(.success(request))
