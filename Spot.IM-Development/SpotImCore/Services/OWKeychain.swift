@@ -52,6 +52,7 @@ class OWKeychain: ReactiveCompatible, OWKeychainProtocol {
 
         // New keys - after the rafactor and new API
         case networkCredentials = "networkCredentialsKey"
+        case activeUser = "activeUserKey"
     }
 
     func save<T>(value: T, forKey key: OWKey<T>) {
@@ -99,6 +100,8 @@ fileprivate extension OWKeychain.OWKey {
             return "Reported comments"
         case .networkCredentials:
             return "The credentials information for the active user/openweb BE required credentials"
+        case .activeUser:
+            return "The current active user"
         }
     }
 }
