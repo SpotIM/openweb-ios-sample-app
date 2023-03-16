@@ -36,6 +36,7 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
 
         let authenticationManager = servicesProvider.authenticationManager()
         return authenticationManager.activeUserAvailability
+            .take(1)
             .observe(on: scheduler)
             .flatMap { [weak self] userAvailability -> Observable<Void> in
                 guard let self = self else { return .empty() }
@@ -52,6 +53,7 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
                        .flatMap { [weak self] isRecovering -> Observable<Void> in
                            guard let self = self else { return .empty() }
                            if !isRecovering {
+                               self.isCurrentlyRecovering.onNext(true)
                                self.startRecovering(userAvailability: userAvailability)
                            }
 
@@ -75,7 +77,6 @@ fileprivate extension OWAuthorizationRecoveryService {
             .take(1)
             .flatMap { [weak self] config -> Observable<Bool> in
                 guard let self = self else { return .empty() }
-                self.isCurrentlyRecovering.onNext(true)
 
                 // Get new user session and reset the old one
                 // Also check if we should renew SSO after the process
