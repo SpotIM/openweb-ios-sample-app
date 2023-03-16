@@ -115,7 +115,7 @@ extension OWInternalAuthenticationEndpoints {
         }
         func process(request: URLRequest) -> URLRequest {
             var newRequest = request
-            newRequest.setValue(self.token, forHTTPHeaderField: OWHTTPHeaderName.authorization)
+            newRequest.setValue(self.token, forHTTPHeaderField: OWHTTPHeaderType.authorization.rawValue)
             return newRequest
         }
     }

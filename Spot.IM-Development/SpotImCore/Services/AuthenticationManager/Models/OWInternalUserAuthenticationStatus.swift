@@ -42,3 +42,24 @@ extension OWInternalUserAuthenticationStatus {
         }
     }
 }
+
+extension OWInternalUserAuthenticationStatus: Equatable {
+    static func == (lhs: OWInternalUserAuthenticationStatus, rhs: OWInternalUserAuthenticationStatus) -> Bool {
+        switch (lhs, rhs) {
+        case (.notAutenticated, .notAutenticated):
+            return true
+        case (let .guest(lhsId), let .guest(rhsId)):
+            return lhsId == rhsId
+        case (let .ssoLoggedIn(lhsId), let .ssoLoggedIn(rhsId)):
+            return lhsId == rhsId
+        case (let .ssoRecovering(lhsId), let .ssoRecovering(rhsId)):
+            return lhsId == rhsId
+        case (let .ssoRecoveredSuccessfully(lhsId), let .ssoRecoveredSuccessfully(rhsId)):
+            return lhsId == rhsId
+        case (let .ssoFailedRecover(lhsId), let .ssoFailedRecover(rhsId)):
+            return lhsId == rhsId
+        default:
+            return false
+        }
+    }
+}
