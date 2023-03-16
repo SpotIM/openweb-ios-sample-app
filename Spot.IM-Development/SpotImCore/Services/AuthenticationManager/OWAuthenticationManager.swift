@@ -91,7 +91,10 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
 // Persistence related methods
 fileprivate extension OWAuthenticationManager {
     func loadPersistence() {
+        let keychain = servicesProvider.keychain()
 
+        guard let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) else { return }
+        self._networkCredentials = credentials
     }
 }
 
