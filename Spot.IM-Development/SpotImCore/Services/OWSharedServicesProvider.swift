@@ -26,8 +26,6 @@ protocol OWSharedServicesProviding: AnyObject {
     func appLifeCycle() -> OWRxAppLifeCycleProtocol
     func keychain() -> OWKeychainProtocol
     func analyticsService() -> OWAnalyticsServicing
-    // Remove this migration service within half a year from now
-    func keychainMigrationService() -> OWKeychainMigrationServicing
     func userDefaults() -> OWUserDefaultsProtocol
     func realtimeService() -> OWRealtimeServicing
     func spotConfigurationService() -> OWSpotConfigurationServicing
@@ -86,10 +84,6 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     fileprivate lazy var _analyticsService: OWAnalyticsServicing = {
         return OWAnalyticsService()
-    }()
-
-    fileprivate lazy var _keychainMigration: OWKeychainMigrationServicing = {
-        return OWKeychainMigrationService(servicesProvider: self)
     }()
 
     fileprivate lazy var _userDefaults: OWUserDefaultsProtocol = {
@@ -154,11 +148,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func keychain() -> OWKeychainProtocol {
         return _keychain
-    }
-
-    func keychainMigrationService() -> OWKeychainMigrationServicing {
-        return _keychainMigration
-    }
+    }keychainMigrationService
 
     func userDefaults() -> OWUserDefaultsProtocol {
         return _userDefaults
