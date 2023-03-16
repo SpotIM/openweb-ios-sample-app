@@ -49,7 +49,9 @@ class OWKeychain: ReactiveCompatible, OWKeychainProtocol {
         case authorizationSessionToken = "session.authorization.token"
         case openwebSessionToken = "session.openweb.toekn"
         case reportedCommentsSession = "session.reported.comments"
-        case isMigratedToKeychain = "keychain.data.migration"
+
+        // New keys - after the rafactor and new API
+        case networkCredentials = "networkCredentialsKey"
     }
 
     func save<T>(value: T, forKey key: OWKey<T>) {
@@ -95,8 +97,8 @@ fileprivate extension OWKeychain.OWKey {
             return "The token which arrived in x-openweb-token"
         case .reportedCommentsSession:
             return "Reported comments"
-        case .isMigratedToKeychain:
-            return "Is a migration from user defaults to keychain was done"
+        case .networkCredentials:
+            return "The credentials information for the active user/openweb BE required credentials"
         }
     }
 }
