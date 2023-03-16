@@ -187,7 +187,6 @@
 		3D100D97286DDB6900AA4F85 /* OWSpotConfigurationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */; };
 		3D100D99286DDE9300AA4F85 /* OWConfigurationEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoints.swift */; };
 		3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EA8284E475500FF8360 /* OWKeychain.swift */; };
-		3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */; };
 		3D199EAD2850D9BA00FF8360 /* OWUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */; };
 		3D20A2D827A805BE003F8513 /* EasyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A2D727A805BE003F8513 /* EasyViews.swift */; };
 		3D20A35827A968F8003F8513 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */; };
@@ -235,6 +234,7 @@
 		3D263CF729C0FF260013C532 /* OWBlockerActionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CF629C0FF260013C532 /* OWBlockerActionProtocol.swift */; };
 		3D263CF929C106040013C532 /* OWDefaultBlockerAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CF829C106040013C532 /* OWDefaultBlockerAction.swift */; };
 		3D263CFB29C1074B0013C532 /* OWBasicCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CFA29C1074B0013C532 /* OWBasicCompletion.swift */; };
+		3D263CFD29C340F90013C532 /* OWNetworkSessionCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D263CFC29C340F90013C532 /* OWNetworkSessionCredentials.swift */; };
 		3D26B5AF28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5AE28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift */; };
 		3D26B5B128CA37E400A1DAD2 /* OWCommentCreationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B028CA37E400A1DAD2 /* OWCommentCreationSettings.swift */; };
 		3D26B5B428CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */; };
@@ -891,7 +891,6 @@
 		3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSpotConfigurationService.swift; sourceTree = "<group>"; };
 		3D100D98286DDE9300AA4F85 /* OWConfigurationEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConfigurationEndpoints.swift; sourceTree = "<group>"; };
 		3D199EA8284E475500FF8360 /* OWKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychain.swift; sourceTree = "<group>"; };
-		3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWKeychainMigrationService.swift; sourceTree = "<group>"; };
 		3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWUserDefaults.swift; sourceTree = "<group>"; };
 		3D20A2D727A805BE003F8513 /* EasyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyViews.swift; sourceTree = "<group>"; };
 		3D20A35727A968F8003F8513 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
@@ -939,6 +938,7 @@
 		3D263CF629C0FF260013C532 /* OWBlockerActionProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBlockerActionProtocol.swift; sourceTree = "<group>"; };
 		3D263CF829C106040013C532 /* OWDefaultBlockerAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWDefaultBlockerAction.swift; sourceTree = "<group>"; };
 		3D263CFA29C1074B0013C532 /* OWBasicCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWBasicCompletion.swift; sourceTree = "<group>"; };
+		3D263CFC29C340F90013C532 /* OWNetworkSessionCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkSessionCredentials.swift; sourceTree = "<group>"; };
 		3D26B5AE28CA36CB00A1DAD2 /* OWCommentCreationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationRequiredData.swift; sourceTree = "<group>"; };
 		3D26B5B028CA37E400A1DAD2 /* OWCommentCreationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationSettings.swift; sourceTree = "<group>"; };
 		3D26B5B328CDDF7B00A1DAD2 /* OWPreConversationRequiredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWPreConversationRequiredData.swift; sourceTree = "<group>"; };
@@ -2219,6 +2219,7 @@
 				3D263CE529BDE59A0013C532 /* OWUserAction.swift */,
 				3D263CE729BDE6D90013C532 /* OWAuthenticationLevel.swift */,
 				3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */,
+				3D263CFC29C340F90013C532 /* OWNetworkSessionCredentials.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3448,11 +3449,12 @@
 		4454187123685154001D0ED0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
 				3D263CF029C0FD200013C532 /* BlockerService */,
 				3D263CE229BDE31A0013C532 /* AuthenticationManager */,
 				3DDA9A4428F851ED00FE3B86 /* SkeletonShimmering */,
 				3D33C0E829460C760062BFC9 /* ThemeStyleService */,
-				3DE0FE3E27D649B50097B17B /* OWSharedServicesProvider.swift */,
+				4454187323685154001D0ED0 /* Ads */,
 				24993F8D28CF0CC000452AF8 /* OWAnalyticsService.swift */,
 				3DE0FE4027D64AAD0097B17B /* OWCacheService.swift */,
 				3DD72C802818297500117946 /* OWLogger.swift */,
@@ -3461,10 +3463,10 @@
 				9E12E819296C112900DBF388 /* OWPersistenceRxHelper.swift */,
 				3D199EA8284E475500FF8360 /* OWKeychain.swift */,
 				3D199EAC2850D9BA00FF8360 /* OWUserDefaults.swift */,
-				3D199EAA284FB4FC00FF8360 /* OWKeychainMigrationService.swift */,
 				3D100D96286DDB6900AA4F85 /* OWSpotConfigurationService.swift */,
 				3D894A6E286B081D001A939C /* OWRealtimeService.swift */,
-				4454187323685154001D0ED0 /* Ads */,
+				8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */,
+				3DDCB29E29952D2900B8ED8E /* OWSortDictateService.swift */,
 				4454187723685154001D0ED0 /* SPAnalyticsService.swift */,
 				4454187823685154001D0ED0 /* SPReadingTracker.swift */,
 				448E1115236C53BE0005C9F9 /* FeedbackGenerator.swift */,
@@ -3477,8 +3479,6 @@
 				3D5561AA29532F220097A6D1 /* OWAuthorizationRecoveryService.swift */,
 				249DF29C296C1E7F00F5D69A /* OWUserBadgeService.swift */,
 				249DF2A2296D95C500F5D69A /* OWImageProvider.swift */,
-				8D5D7A5F2970111C0082A7C6 /* OWTimeMeasuringService.swift */,
-				3DDCB29E29952D2900B8ED8E /* OWSortDictateService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -4407,6 +4407,7 @@
 				3D199EA9284E475500FF8360 /* OWKeychain.swift in Sources */,
 				9E12E81A296C112A00DBF388 /* OWPersistenceRxHelper.swift in Sources */,
 				16103F78267A081400114A3E /* SPCommentCreationNewHeaderView.swift in Sources */,
+				3D263CFD29C340F90013C532 /* OWNetworkSessionCredentials.swift in Sources */,
 				3DA263FE2951BE6500688FFF /* OWNetworkError.swift in Sources */,
 				4454181123685144001D0ED0 /* SPMainConversationViewController.swift in Sources */,
 				4454180D23685144001D0ED0 /* SPCommentCreationViewController.swift in Sources */,
@@ -4730,7 +4731,6 @@
 				445418AE23685154001D0ED0 /* JSONDecoder+SPExtensions.swift in Sources */,
 				6D22A46623BBA26700DCE08A /* DataRequest+Logging.swift in Sources */,
 				445418B323685154001D0ED0 /* Bundle+SPExtensions.swift in Sources */,
-				3D199EAB284FB4FC00FF8360 /* OWKeychainMigrationService.swift in Sources */,
 				3D611B9328C644B7003960CE /* OWArticleSettingsProtocol.swift in Sources */,
 				16BD5F7F2709F16000066505 /* SPUIWindow.swift in Sources */,
 				445418BD23685154001D0ED0 /* SPAnalyticsService.swift in Sources */,
