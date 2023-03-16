@@ -12,11 +12,14 @@ import RxSwift
 protocol OWAuthenticationManagerProtocol {
     var userAuthenticationStatus: Observable<OWInternalUserAuthenticationStatus> { get }
     var currentAuthenticationLevelAvailability: Observable<OWAuthenticationLevelAvailability> { get }
+    var activeUserAvailability: Observable<OWUserAvailability> { get }
 
     var networkCredentials: OWNetworkSessionCredentials { get }
 
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool>
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
+
+    func updateNetworkCredentials(from response: HTTPURLResponse, forceUpdate: Bool)
 }
 
 extension OWAuthenticationManagerProtocol {
@@ -43,9 +46,17 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
         return _networkCredentials
     }
 
+    fileprivate let _activeUserAvailability = BehaviorSubject<OWUserAvailability>(value: .notAvailable)
+    var activeUserAvailability: Observable<OWUserAvailability> {
+        return _activeUserAvailability
+            .distinctUntilChanged()
+            .share(replay: 1)
+    }
+
     fileprivate let _userAuthenticationStatus = BehaviorSubject<OWInternalUserAuthenticationStatus>(value: .notAutenticated)
     var userAuthenticationStatus: Observable<OWInternalUserAuthenticationStatus> {
         return _userAuthenticationStatus
+            .distinctUntilChanged()
             .share(replay: 1)
     }
 
@@ -93,8 +104,61 @@ fileprivate extension OWAuthenticationManager {
     func loadPersistence() {
         let keychain = servicesProvider.keychain()
 
-        guard let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) else { return }
-        self._networkCredentials = credentials
+        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
+            self._networkCredentials = credentials
+        }
+
+        // Generating guid if needed
+        if _networkCredentials.guid == nil {
+            let randomGUID = self.generateGUID()
+            let credentials = OWNetworkSessionCredentials(guid: randomGUID,
+                                                             openwebToken: _networkCredentials.openwebToken,
+                                                             authorization: _networkCredentials.authorization)
+            self._networkCredentials = credentials
+            update(credentials: credentials)
+        }
+
+        if let userAvailability = keychain.get(key: OWKeychain.OWKey<OWUserAvailability>.networkCredentials) {
+            self._activeUserAvailability.onNext(userAvailability)
+        }
+    }
+
+    func update(credentials: OWNetworkSessionCredentials) {
+        let keychain = servicesProvider.keychain()
+        keychain.save(value: credentials, forKey: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials)
+    }
+}
+
+// Network related methods
+extension OWAuthenticationManager {
+    func updateNetworkCredentials(from response: HTTPURLResponse, forceUpdate: Bool) {
+        let headers = response.allHeaderFields
+
+        var extractedGUID = OWHeaderExtractor.default.extract(headerType: .guid, from: headers)
+        var extractedAuthorization = OWHeaderExtractor.default.extract(headerType: .authorization, from: headers)
+        var extractedOpenWebToken = OWHeaderExtractor.default.extract(headerType: .openWebToken, from: headers)
+
+        // 1. Log an error if the returned guid from the server is different than what we have
+        if let serverGUID = extractedGUID, let localGUID = _networkCredentials.guid, serverGUID != localGUID {
+            // TODO: We should also report an error here once we will have an error reporting or event for this
+            let logger = servicesProvider.logger()
+            let logMessage = "Returned GUID from server: \(serverGUID) is different from local GUID: \(localGUID)"
+        }
+
+        // 2. Create new `Authorization` and `OpenWebToken` if exist and force change if we should force
+        var newAuthorization = forceUpdate ? extractedAuthorization : (extractedAuthorization ?? _networkCredentials.authorization)
+        var newOpenWebToken = forceUpdate ? extractedOpenWebToken : (extractedOpenWebToken ?? _networkCredentials.openwebToken)
+
+        // 3. Update and save `Authorization` and `OpenWebToken` if they are actually different than what we previously had
+        if (newAuthorization != _networkCredentials.authorization) || (newOpenWebToken != _networkCredentials.openwebToken) {
+            // Update credentials and persistence only if needed
+            let newCredentials = OWNetworkSessionCredentials(guid: _networkCredentials.guid,
+                                                             openwebToken: newOpenWebToken,
+                                                             authorization: newAuthorization)
+
+            self._networkCredentials = newCredentials
+            update(credentials: newCredentials)
+        }
     }
 }
 
@@ -173,5 +237,11 @@ fileprivate extension OWAuthenticationManager {
         case .viewingSelfProfile:
             return levelAccordingToRegistration
         }
+    }
+
+    func generateGUID() -> String {
+        // Returning a simple uuid string, however when looking on hundreds of milion guid, this might be not "randomised" enough.
+        // We should think of adding some "seed" by the date interval for example
+        return UUID().uuidString
     }
 }
