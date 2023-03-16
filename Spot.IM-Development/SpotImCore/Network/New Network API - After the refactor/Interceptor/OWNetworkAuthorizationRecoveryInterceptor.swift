@@ -1,15 +1,15 @@
 //
-//  OWNetworkInterceptor.swift
+//  OWNetworkAuthorizationRecoveryInterceptor.swift
 //  SpotImCore
 //
-//  Created by Alon Haiut on 29/05/2022.
-//  Copyright © 2022 Spot.IM. All rights reserved.
+//  Created by Alon Haiut on 16/03/2023.
+//  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
 import Foundation
 import RxSwift
 
-class OWNetworkInterceptorLayer: OWNetworkRequestInterceptor {
+class OWNetworkAuthorizationRecoveryInterceptor: OWNetworkRequestInterceptor {
     fileprivate let retryLimit: Int
     fileprivate let servicesProvider: OWSharedServicesProviding
 
@@ -53,12 +53,11 @@ class OWNetworkInterceptorLayer: OWNetworkRequestInterceptor {
     }
 }
 
-fileprivate extension OWNetworkInterceptorLayer {
+fileprivate extension OWNetworkAuthorizationRecoveryInterceptor {
     func recoverFromAuthorizationError(completion: @escaping (OWNetworkRetryResult) -> Void, requestURLPath: String) {
-        let userId = SPUserSessionHolder.session.user?.userId ?? ""
-        let authorizationRecoveryService = servicesProvider.authorizationRecoveryServiceOldAPI()
+        let authorizationRecoveryService = servicesProvider.authorizationRecoveryService()
 
-        _ = authorizationRecoveryService.recoverFromAuthorizationError(userId: userId)
+        _ = authorizationRecoveryService.recoverAuthorization()
             .take(1) // No need to dispose
             .subscribe(onNext: { [weak self] _ in
                 let log = "Request: \(requestURLPath) going to retry after generating a new authorization token after network 403 error code"
@@ -67,9 +66,10 @@ fileprivate extension OWNetworkInterceptorLayer {
                 // 'adapt' function will inject the new auth token
                 completion(.retry)
             }, onError: { [weak self] _ in
-                let log = "Failed to get `user/data` after clearing authorization header for recovering from 403 error code.\nRequest: \(requestURLPath) failed because of that"
+                let log = "Failed to get recover after clearing authorization header to try recover from 403 error code.\nRequest: \(requestURLPath) failed because of that"
                 self?.servicesProvider.logger().log(level: .error, log)
                 completion(.doNotRetry)
             })
     }
 }
+
