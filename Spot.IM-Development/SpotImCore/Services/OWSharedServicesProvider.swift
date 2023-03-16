@@ -148,7 +148,7 @@ class OWSharedServicesProvider: OWSharedServicesProviding {
 
     func keychain() -> OWKeychainProtocol {
         return _keychain
-    }keychainMigrationService
+    }
 
     func userDefaults() -> OWUserDefaultsProtocol {
         return _userDefaults

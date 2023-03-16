@@ -31,6 +31,13 @@ struct OWHTTPHeaderContent {
 }
 
 class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+
+    init(servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+    }
+
     func process(request: URLRequest) -> URLRequest {
 
         var headers: OWNetworkHTTPHeaders = [
@@ -47,15 +54,18 @@ class OWHTTPHeaderRequestMiddleware: OWRequestMiddleware {
             OWHTTPHeaderName.pageViewId: SPAnalyticsHolder.default.pageViewId
         ]
 
-        if let userId = SPUserSessionHolder.session.guid, !userId.isEmpty {
-            headers[OWHTTPHeaderName.guid] = userId
+        let authenticationManager = servicesProvider.authenticationManager()
+        let cerdentials = authenticationManager.networkCredentials
+
+        if let guid = cerdentials.guid, !guid.isEmpty {
+            headers[OWHTTPHeaderName.guid] = guid
         }
 
-        if let token = SPUserSessionHolder.session.token, !token.isEmpty {
-            headers[OWHTTPHeaderName.authorization] = token
+        if let authorization = cerdentials.authorization, !authorization.isEmpty {
+            headers[OWHTTPHeaderName.authorization] = authorization
         }
 
-        if let openwebToken = SPUserSessionHolder.session.openwebToken, !openwebToken.isEmpty {
+        if let openwebToken = cerdentials.openwebToken, !openwebToken.isEmpty {
             headers[OWHTTPHeaderName.openWebToken] = openwebToken
         }
 

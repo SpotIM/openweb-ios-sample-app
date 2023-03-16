@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct OWNetworkSessionCredentials {
+struct OWNetworkSessionCredentials: Codable {
     let guid: String?
     let openwebToken: String?
     let authorization: String?
