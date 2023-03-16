@@ -19,7 +19,8 @@ protocol OWAuthenticationManagerProtocol {
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool>
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
 
-    func updateNetworkCredentials(from response: HTTPURLResponse, forceUpdate: Bool)
+    func updateNetworkCredentials(from response: HTTPURLResponse)
+    func enterAuthenticationRecoveryState()
 }
 
 extension OWAuthenticationManagerProtocol {
@@ -131,23 +132,24 @@ fileprivate extension OWAuthenticationManager {
 
 // Network related methods
 extension OWAuthenticationManager {
-    func updateNetworkCredentials(from response: HTTPURLResponse, forceUpdate: Bool) {
+    func updateNetworkCredentials(from response: HTTPURLResponse) {
         let headers = response.allHeaderFields
 
-        var extractedGUID = OWHeaderExtractor.default.extract(headerType: .guid, from: headers)
-        var extractedAuthorization = OWHeaderExtractor.default.extract(headerType: .authorization, from: headers)
-        var extractedOpenWebToken = OWHeaderExtractor.default.extract(headerType: .openWebToken, from: headers)
+        let extractedGUID = OWHeaderExtractor.default.extract(headerType: .guid, from: headers)
+        let extractedAuthorization = OWHeaderExtractor.default.extract(headerType: .authorization, from: headers)
+        let extractedOpenWebToken = OWHeaderExtractor.default.extract(headerType: .openWebToken, from: headers)
 
         // 1. Log an error if the returned guid from the server is different than what we have
         if let serverGUID = extractedGUID, let localGUID = _networkCredentials.guid, serverGUID != localGUID {
             // TODO: We should also report an error here once we will have an error reporting or event for this
             let logger = servicesProvider.logger()
             let logMessage = "Returned GUID from server: \(serverGUID) is different from local GUID: \(localGUID)"
+            logger.log(level: .error, logMessage)
         }
 
-        // 2. Create new `Authorization` and `OpenWebToken` if exist and force change if we should force
-        var newAuthorization = forceUpdate ? extractedAuthorization : (extractedAuthorization ?? _networkCredentials.authorization)
-        var newOpenWebToken = forceUpdate ? extractedOpenWebToken : (extractedOpenWebToken ?? _networkCredentials.openwebToken)
+        // 2. Create new `Authorization` and `OpenWebToken` if returned from server
+        let newAuthorization = extractedAuthorization ?? _networkCredentials.authorization
+        let newOpenWebToken = extractedOpenWebToken ?? _networkCredentials.openwebToken
 
         // 3. Update and save `Authorization` and `OpenWebToken` if they are actually different than what we previously had
         if (newAuthorization != _networkCredentials.authorization) || (newOpenWebToken != _networkCredentials.openwebToken) {
@@ -159,6 +161,25 @@ extension OWAuthenticationManager {
             self._networkCredentials = newCredentials
             update(credentials: newCredentials)
         }
+    }
+
+    func enterAuthenticationRecoveryState() {
+        // Remove `Authorization` header first
+        let newCredentials = OWNetworkSessionCredentials(guid: _networkCredentials.guid,
+                                                         openwebToken: _networkCredentials.openwebToken,
+                                                         authorization: nil)
+        self._networkCredentials = newCredentials
+        update(credentials: newCredentials)
+
+        _ = userAuthenticationStatus
+            .take(1)
+            .subscribe(onNext: { [weak self] status in
+                guard let self = self else { return }
+                if case OWInternalUserAuthenticationStatus.ssoLoggedIn(userId: let userId) = status {
+                    // Entering SSO recovering status
+                    self._userAuthenticationStatus.onNext(.ssoRecovering(userId: userId))
+                }
+            })
     }
 }
 

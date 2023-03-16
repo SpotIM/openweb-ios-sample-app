@@ -15,7 +15,11 @@ protocol OWNetworkAPIProtocol {
     var analytics: OWAnalyticsAPI { get }
     var realtime: OWRealtimeAPI { get }
     var configuration: OWConfigurationAPI { get }
+    var profile: OWProfileAPI { get }
+    var images: OWImagesAPI { get }
+    var authentication: OWAuthenticationAPI { get }
     var conversation: OWConversationAPI { get }
+    var failureReporter: OWFailureReportAPI { get }
 }
 
 struct OWNetworkResponse<T> {
@@ -27,7 +31,8 @@ struct EmptyDecodable: Decodable {}
 
 private let defaultMiddlewares: [OWMiddleware] = [OWRequestLogger(),
                                                   OWResponseLogger(),
-                                                  OWHTTPHeaderRequestMiddleware()]
+                                                  OWHTTPHeaderRequestMiddleware(),
+                                                  OWCredentialsUpdaterResponseMiddleware()]
 
 /*
  OWNetworkAPI purpose is to handle network requests.
@@ -92,6 +97,7 @@ class OWNetworkAPI: OWNetworkAPIProtocol {
 
         let response = Observable<T>.create { observer in
             let task = self.session.afSession.request(request)
+                .validate()
                 .downloadProgress(closure: { prog in
                     progress.onNext(prog)
                 })

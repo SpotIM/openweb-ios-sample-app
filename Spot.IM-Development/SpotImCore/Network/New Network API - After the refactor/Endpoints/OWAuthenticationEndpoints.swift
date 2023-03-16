@@ -1,5 +1,5 @@
 //
-//  OWInternalAuthenticationEndpoint.swift
+//  OWAuthenticationEndpoints.swift
 //  SpotImCore
 //
 //  Created by  Nogah Melamed on 25/07/2022.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OWInternalAuthenticationEndpoints: OWEndpoints {
+enum OWAuthenticationEndpoints: OWEndpoints {
     case guest
     case ssoStart(secret: String?, token: String?)
     case ssoComplete(codeB: String)
@@ -54,17 +54,9 @@ enum OWInternalAuthenticationEndpoints: OWEndpoints {
             return nil
         }
     }
-
-    var additionalMiddlewares: [OWRequestMiddleware]? {
-        switch self {
-        case .ssoStart(let secret, let token):
-            return [OWHTTPAuthHeaderRequestMiddleware(token: token)]
-        default: return nil
-        }
-    }
 }
 
-protocol OWInternalAuthenticationAPI {
+protocol OWAuthenticationAPI {
     func loginGuest() -> OWNetworkResponse<SPUser>
     func ssoStart(secret: String?, token: String?) -> OWNetworkResponse<SSOStartResponseInternal>
     func ssoComplete(codeB: String) -> OWNetworkResponse<SSOCompleteResponseInternal>
@@ -72,51 +64,37 @@ protocol OWInternalAuthenticationAPI {
     func user() -> OWNetworkResponse<SPUser>
 }
 
-extension OWNetworkAPI: OWInternalAuthenticationAPI {
-    // Access by .internalAuthentication for readability
-    var internalAuthentication: OWInternalAuthenticationAPI { return self }
+extension OWNetworkAPI: OWAuthenticationAPI {
+    // Access by .authentication for readability
+    var authentication: OWAuthenticationAPI { return self }
 
     func loginGuest() -> OWNetworkResponse<SPUser> {
-        let endpoint = OWInternalAuthenticationEndpoints.guest
+        let endpoint = OWAuthenticationEndpoints.guest
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
 
     func ssoStart(secret: String?, token: String?) -> OWNetworkResponse<SSOStartResponseInternal> {
-        let endpoint = OWInternalAuthenticationEndpoints.ssoStart(secret: secret, token: token)
+        let endpoint = OWAuthenticationEndpoints.ssoStart(secret: secret, token: token)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
 
     func ssoComplete(codeB: String) -> OWNetworkResponse<SSOCompleteResponseInternal> {
-        let endpoint = OWInternalAuthenticationEndpoints.ssoComplete(codeB: codeB)
+        let endpoint = OWAuthenticationEndpoints.ssoComplete(codeB: codeB)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
 
     func logout() -> OWNetworkResponse<EmptyDecodable> {
-        let endpoint = OWInternalAuthenticationEndpoints.logout
+        let endpoint = OWAuthenticationEndpoints.logout
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }
 
     func user() -> OWNetworkResponse<SPUser> {
-        let endpoint = OWInternalAuthenticationEndpoints.user
+        let endpoint = OWAuthenticationEndpoints.user
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
-    }
-}
-
-extension OWInternalAuthenticationEndpoints {
-    class OWHTTPAuthHeaderRequestMiddleware: OWRequestMiddleware {
-        private var token = SPUserSessionHolder.session.token
-        init(token: String?) {
-            self.token = token ?? SPUserSessionHolder.session.token
-        }
-        func process(request: URLRequest) -> URLRequest {
-            var newRequest = request
-            newRequest.setValue(self.token, forHTTPHeaderField: OWHTTPHeaderType.authorization.rawValue)
-            return newRequest
-        }
     }
 }
