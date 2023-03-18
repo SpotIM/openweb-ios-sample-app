@@ -160,7 +160,11 @@ extension OWAuthenticationManager {
     }
 
     func activateRenewSSO(userId: String) {
-
+        guard let authenticationLayer = self.manager.authentication as? OWAuthenticationInternalProtocol else { return }
+        let blockerService = self.servicesProvider.blockerServicing()
+        let blockerAction = OWDefaultBlockerAction(blockerType: .renewAuthentication)
+        blockerService.add(blocker: blockerAction)
+        authenticationLayer.triggerRenewSSO(userId: userId, completion: blockerAction.completion)
     }
 }
 
