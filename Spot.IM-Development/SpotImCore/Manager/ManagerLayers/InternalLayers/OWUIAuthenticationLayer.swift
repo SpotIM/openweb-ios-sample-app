@@ -13,6 +13,13 @@ protocol OWUIAuthenticationInternalProtocol {
 }
 
 class OWUIAuthenticationLayer: OWUIAuthentication {
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+    }
+
     var displayAuthenticationFlow: OWAuthenticationFlowCallback? {
         get {
             return self._displayAuthenticationFlow
@@ -26,7 +33,7 @@ class OWUIAuthenticationLayer: OWUIAuthentication {
 
     func triggerPublisherDisplayAuthenticationFlow(navController: UINavigationController, completion: OWBasicCompletion) {
         guard let callback = _displayAuthenticationFlow else {
-            let logger = OWSharedServicesProvider.shared.logger()
+            let logger = servicesProvider.logger()
             logger.log(level: .error, "`displayAuthenticationFlow` callback should be provided to `manager.ui.authentication` in order to display login flow.\nPlease provide this callback.")
             return
         }

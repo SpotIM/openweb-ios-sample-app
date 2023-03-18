@@ -59,7 +59,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
         .subscribe(onNext: { result in
             completion(.success(result))
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            let error: OWError = err as? OWError ?? OWError.preConversationFlow
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
@@ -137,7 +137,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
                 break
             }
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            let error: OWError = err as? OWError ?? OWError.commentCreationFlow
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
@@ -179,7 +179,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
                 break
             }
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            let error: OWError = err as? OWError ?? OWError.commentThreadFlow
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
