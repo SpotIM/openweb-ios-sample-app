@@ -108,12 +108,12 @@ fileprivate extension OWAuthorizationRecoveryService {
                         if case OWUserAvailability.user(let user) = userAvailability,
                            let userId = user.userId {
                             self.didJustRecoveredCache[userId] = true
-                        }
-
-                        if shouldRenewSSO {
-                            // Will renew SSO with publishers API if a user was logged in before
-                            self.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
-//                            SpotIm.authProvider.renewSSOPublish.onNext(userId)
+                            if shouldRenewSSO {
+                                // Will renew SSO with publishers API if a user was logged in before
+                                self.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
+                                let authenticationManager = self.servicesProvider.authenticationManager()
+                                authenticationManager.activateRenewSSO(userId: userId)
+                            }
                         }
                     }, onError: {[weak self] error in
                         guard let self = self else { return  }
