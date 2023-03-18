@@ -60,5 +60,13 @@ protocol OWUIFlows {
                          additionalSettings: OWCommentCreationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
                          completion: @escaping OWDefaultCompletion)
+
+    func commentThread(postId: OWPostId,
+                       article: OWArticleProtocol,
+                       commentId: OWCommentId,
+                       presentationalMode: OWPresentationalMode,
+                       additionalSettings: OWCommentThreadSettingsProtocol?,
+                       callbacks: OWViewActionsCallbacks?,
+                       completion: @escaping OWDefaultCompletion)
 }
 #endif
