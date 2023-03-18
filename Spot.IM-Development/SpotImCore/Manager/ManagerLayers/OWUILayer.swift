@@ -32,7 +32,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
         self._authenticationUI = authenticationUI
     }
 
-    func preConversation(postId: String, article: OWArticleProtocol,
+    func preConversation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -65,7 +65,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
         .disposed(by: flowDisposeBag)
     }
 
-    func conversation(postId: String, article: OWArticleProtocol,
+    func conversation(postId: OWPostId, article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWConversationSettingsProtocol? = nil,
                       callbacks: OWViewActionsCallbacks? = nil,
@@ -103,7 +103,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
         .disposed(by: flowDisposeBag)
     }
 
-    func commentCreation(postId: String, article: OWArticleProtocol,
+    func commentCreation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWCommentCreationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -187,7 +187,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
 }
 
 fileprivate extension OWUILayer {
-    func setPostId(postId: String, completion: @escaping OWDefaultCompletion) {
+    func setPostId(postId: OWPostId, completion: @escaping OWDefaultCompletion) {
         guard let manager = OpenWeb.manager as? OWManagerInternalProtocol else {
             let error = OWError.castingError(description: "OpenWeb.manager casting to OWManagerInternalProtocol failed")
             completion(.failure(error))
