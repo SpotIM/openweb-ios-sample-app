@@ -21,6 +21,7 @@ protocol OWAuthenticationManagerProtocol {
 
     func updateNetworkCredentials(from response: HTTPURLResponse)
     func enterAuthenticationRecoveryState()
+    func activateRenewSSO(userId: String)
 }
 
 extension OWAuthenticationManagerProtocol {
@@ -65,7 +66,10 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
         return userAuthenticationStatus
             .map { $0.authenticationLevelAvailability }
     }
+}
 
+// Authentication by actions (OWUserAction) related methods
+extension OWAuthenticationManager {
     func ifNeededTriggerAuthenticationUI(for action: OWUserAction) -> Observable<Bool> {
         return self.shouldShowAuthenticationUI(for: action)
             .do(onNext: { [weak self] shouldShow in
@@ -100,36 +104,6 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
 
 }
 
-// Persistence related methods
-fileprivate extension OWAuthenticationManager {
-    func loadPersistence() {
-        let keychain = servicesProvider.keychain()
-
-        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
-            self._networkCredentials = credentials
-        }
-
-        // Generating guid if needed
-        if _networkCredentials.guid == nil {
-            let randomGUID = self.generateGUID()
-            let credentials = OWNetworkSessionCredentials(guid: randomGUID,
-                                                             openwebToken: _networkCredentials.openwebToken,
-                                                             authorization: _networkCredentials.authorization)
-            self._networkCredentials = credentials
-            update(credentials: credentials)
-        }
-
-        if let userAvailability = keychain.get(key: OWKeychain.OWKey<OWUserAvailability>.networkCredentials) {
-            self._activeUserAvailability.onNext(userAvailability)
-        }
-    }
-
-    func update(credentials: OWNetworkSessionCredentials) {
-        let keychain = servicesProvider.keychain()
-        keychain.save(value: credentials, forKey: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials)
-    }
-}
-
 // Network related methods
 extension OWAuthenticationManager {
     func updateNetworkCredentials(from response: HTTPURLResponse) {
@@ -162,7 +136,10 @@ extension OWAuthenticationManager {
             update(credentials: newCredentials)
         }
     }
+}
 
+// Renew SSO related methods
+extension OWAuthenticationManager {
     func enterAuthenticationRecoveryState() {
         // Remove `Authorization` header first
         let newCredentials = OWNetworkSessionCredentials(guid: _networkCredentials.guid,
@@ -180,6 +157,40 @@ extension OWAuthenticationManager {
                     self._userAuthenticationStatus.onNext(.ssoRecovering(userId: userId))
                 }
             })
+    }
+
+    func activateRenewSSO(userId: String) {
+
+    }
+}
+
+// Persistence related methods
+fileprivate extension OWAuthenticationManager {
+    func loadPersistence() {
+        let keychain = servicesProvider.keychain()
+
+        if let credentials = keychain.get(key: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials) {
+            self._networkCredentials = credentials
+        }
+
+        // Generating guid if needed
+        if _networkCredentials.guid == nil {
+            let randomGUID = self.generateGUID()
+            let credentials = OWNetworkSessionCredentials(guid: randomGUID,
+                                                             openwebToken: _networkCredentials.openwebToken,
+                                                             authorization: _networkCredentials.authorization)
+            self._networkCredentials = credentials
+            update(credentials: credentials)
+        }
+
+        if let userAvailability = keychain.get(key: OWKeychain.OWKey<OWUserAvailability>.networkCredentials) {
+            self._activeUserAvailability.onNext(userAvailability)
+        }
+    }
+
+    func update(credentials: OWNetworkSessionCredentials) {
+        let keychain = servicesProvider.keychain()
+        keychain.save(value: credentials, forKey: OWKeychain.OWKey<OWNetworkSessionCredentials>.networkCredentials)
     }
 }
 
