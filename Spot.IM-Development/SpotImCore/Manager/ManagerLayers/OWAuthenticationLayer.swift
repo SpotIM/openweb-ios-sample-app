@@ -7,22 +7,52 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol OWAuthenticationInternalProtocol {
     func triggerRenewSSO(userId: String, completion: OWBasicCompletion)
 }
 
 class OWAuthenticationLayer: OWAuthentication {
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+    }
+
     func sso(_ flowType: OWSSOFlowType) {
         // TODO: Complete
     }
 
     func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion) {
-        // TODO: Complete
+        let authenticationManager = servicesProvider.authenticationManager()
+
+        _ = authenticationManager
+            .userAuthenticationStatus
+            .map { $0.toOWUserAuthenticationStatus() }
+            .unwrap()
+            .take(1)
+            .subscribe(onNext: { status in
+                completion(.success(status))
+            }, onError: { err in
+                let error: OWError = err as? OWError ?? OWError.userStatus
+                completion(.failure(error))
+            })
     }
 
     func logout(completion: @escaping OWDefaultCompletion) {
-        // TODO: Complete
+        let authenticationManager = servicesProvider.authenticationManager()
+
+        _ = authenticationManager
+            .logout()
+            .take(1)
+            .subscribe(onNext: { _ in
+                completion(.success(()))
+            }, onError: { err in
+                let error: OWError = err as? OWError ?? OWError.logout
+                completion(.failure(error))
+            })
     }
 
     var renewSSO: OWRenewSSOCallback? {
@@ -48,7 +78,7 @@ class OWAuthenticationLayer: OWAuthentication {
 
     func triggerRenewSSO(userId: String, completion: OWBasicCompletion) {
         guard let callback = _renewSSOCallback else {
-            let logger = OWSharedServicesProvider.shared.logger()
+            let logger = servicesProvider.logger()
             logger.log(level: .error, "`renewSSO` callback should be provided to `manager.authentication` in order to trigger renew SSO flow.\nPlease provide this callback.")
             return
         }
