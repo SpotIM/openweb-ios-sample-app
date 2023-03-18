@@ -14,6 +14,10 @@ public enum OWError: Error {
     case conversationFlow
     case preConversationFlow
     case commentCreationFlow
+    case commentThreadFlow
+    case logout
+    case userStatus
+
     public var description: String {
         switch self {
         case .castingError(let des):
@@ -24,6 +28,12 @@ public enum OWError: Error {
             return "Error in the process of starting pre conversation flow"
         case .commentCreationFlow:
             return "Error in the process of starting comment creation flow"
+        case .commentThreadFlow:
+            return "Error in the process of starting comment thread flow"
+        case .logout:
+            return "Error in the process of logout"
+        case .userStatus:
+            return "Error in the process of getting userStatus"
         }
     }
 }
@@ -33,6 +43,10 @@ enum OWError: Error {
     case conversationFlow
     case preConversationFlow
     case commentCreationFlow
+    case commentThreadFlow
+    case logout
+    case userStatus
+
     var description: String {
         switch self {
         case .castingError(let des):
@@ -43,6 +57,12 @@ enum OWError: Error {
             return "Error in the process of starting pre conversation flow"
         case .commentCreationFlow:
             return "Error in the process of starting comment creation flow"
+        case .commentThreadFlow:
+            return "Error in the process of starting comment thread flow"
+        case .logout:
+            return "Error in the process of logout"
+        case .userStatus:
+            return "Error in the process of getting userStatus"
         }
     }
 }
