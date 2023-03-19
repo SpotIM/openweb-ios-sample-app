@@ -21,7 +21,7 @@ protocol OWAuthenticationManagerProtocol {
     func waitForAuthentication(for action: OWUserAction, waitForBlockingCompletions: Bool) -> Observable<Void>
 
     func enterAuthenticationRecoveryState()
-    func activateRenewSSO(userId: String)
+    func finishAuthenticationRecovery(with authenticationRecovery: OWAuthenticationRecoveryResult)
     func logout() -> Observable<Void>
     func startSSO() -> Observable<OWSSOStartModel>
     func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel>
@@ -157,16 +157,27 @@ extension OWAuthenticationManager {
                 if case OWInternalUserAuthenticationStatus.ssoLoggedIn(userId: let userId) = status {
                     // Entering SSO recovering status
                     self._userAuthenticationStatus.onNext(.ssoRecovering(userId: userId))
+                } else {
+                    // Clear any user if there was
+                    self._userAuthenticationStatus.onNext(.notAutenticated)
+                    self._activeUserAvailability.onNext(.notAvailable)
                 }
             })
     }
 
-    func activateRenewSSO(userId: String) {
-        guard let authenticationLayer = self.manager.authentication as? OWAuthenticationInternalProtocol else { return }
-        let blockerService = self.servicesProvider.blockerServicing()
-        let blockerAction = OWDefaultBlockerAction(blockerType: .renewAuthentication)
-        blockerService.add(blocker: blockerAction)
-        authenticationLayer.triggerRenewSSO(userId: userId, completion: blockerAction.completion)
+    func finishAuthenticationRecovery(with authenticationRecovery: OWAuthenticationRecoveryResult) {
+        switch authenticationRecovery {
+        case .AuthenticationRenewed(user: let user):
+            guard let authenticationLayer = self.manager.authentication as? OWAuthenticationInternalProtocol,
+                  let userId = user.userId else { return }
+            let blockerService = self.servicesProvider.blockerServicing()
+            let blockerAction = OWDefaultBlockerAction(blockerType: .renewAuthentication)
+            blockerService.add(blocker: blockerAction)
+            authenticationLayer.triggerRenewSSO(userId: userId, completion: blockerAction.completion)
+        case .newAuthentication(user: let user):
+            self._userAuthenticationStatus.onNext(.guest(userId: user.userId ?? ""))
+            self._activeUserAvailability.onNext(.user(user))
+        }
     }
 
     func logout() -> Observable<Void> {

@@ -277,6 +277,7 @@
 		3D3E3AC828B50CC9003B4F05 /* TableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC728B50CC9003B4F05 /* TableView+Registration.swift */; };
 		3D3E3ACA28B50CF9003B4F05 /* Reusable+IndentifierName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */; };
 		3D45EA85283C104900FC4D9F /* OWAuthenticationRenewerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */; };
+		3D4A949F29C74C050087D143 /* OWAuthenticationRecoveryResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4A949E29C74C050087D143 /* OWAuthenticationRecoveryResult.swift */; };
 		3D5561A9295313FC0097A6D1 /* OWNetworkStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5561A8295313FC0097A6D1 /* OWNetworkStatusCode.swift */; };
 		3D5561AB29532F220097A6D1 /* OWAuthorizationRecoveryServiceOldAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5561AA29532F220097A6D1 /* OWAuthorizationRecoveryServiceOldAPI.swift */; };
 		3D611B7928BFA906003960CE /* BetaNewAPIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D611B7828BFA906003960CE /* BetaNewAPIVC.swift */; };
@@ -996,6 +997,7 @@
 		3D3E3AC928B50CF9003B4F05 /* Reusable+IndentifierName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reusable+IndentifierName.swift"; sourceTree = "<group>"; };
 		3D4567ACBB85097EC95E16CE /* Pods-Shared-DemoApps-Focus.de.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-DemoApps-Focus.de.release.xcconfig"; path = "Target Support Files/Pods-Shared-DemoApps-Focus.de/Pods-Shared-DemoApps-Focus.de.release.xcconfig"; sourceTree = "<group>"; };
 		3D45EA84283C104900FC4D9F /* OWAuthenticationRenewerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRenewerService.swift; sourceTree = "<group>"; };
+		3D4A949E29C74C050087D143 /* OWAuthenticationRecoveryResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthenticationRecoveryResult.swift; sourceTree = "<group>"; };
 		3D5561A8295313FC0097A6D1 /* OWNetworkStatusCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWNetworkStatusCode.swift; sourceTree = "<group>"; };
 		3D5561AA29532F220097A6D1 /* OWAuthorizationRecoveryServiceOldAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWAuthorizationRecoveryServiceOldAPI.swift; sourceTree = "<group>"; };
 		3D611B7828BFA906003960CE /* BetaNewAPIVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetaNewAPIVC.swift; sourceTree = "<group>"; };
@@ -2260,6 +2262,7 @@
 				3D263CEA29BDFD3D0013C532 /* OWAuthenticationLevelAvailability.swift */,
 				3D263CFE29C377690013C532 /* OWUserAvailability.swift */,
 				3D263CFC29C340F90013C532 /* OWNetworkSessionCredentials.swift */,
+				3D4A949E29C74C050087D143 /* OWAuthenticationRecoveryResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4570,6 +4573,7 @@
 				4454189923685154001D0ED0 /* SPConfigurationSSO.swift in Sources */,
 				3DDA9A81291A565200FE3B86 /* OWConversationSpacing.swift in Sources */,
 				440E0DB0237D518900757554 /* UIImage+AnimationSequence.swift in Sources */,
+				3D4A949F29C74C050087D143 /* OWAuthenticationRecoveryResult.swift in Sources */,
 				3D08E09728770BEC00E6F1AC /* String+OWIdentifiableType.swift in Sources */,
 				160E42E82988105D00EDC5A1 /* OWCommentThreadVM.swift in Sources */,
 				4454181C23685144001D0ED0 /* MessageContainerView.swift in Sources */,
