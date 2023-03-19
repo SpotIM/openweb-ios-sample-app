@@ -9,10 +9,10 @@
 import UIKit
 
 protocol OWUIAuthenticationInternalProtocol {
-    func triggerPublisherDisplayLoginFlow(navController: UINavigationController, completion: OWBasicCompletion)
+    func triggerPublisherDisplayAuthenticationFlow(routeringMode: OWRouteringMode, completion: @escaping OWBasicCompletion)
 }
 
-class OWUIAuthenticationLayer: OWUIAuthentication {
+class OWUIAuthenticationLayer: OWUIAuthentication, OWUIAuthenticationInternalProtocol {
 
     fileprivate let servicesProvider: OWSharedServicesProviding
 
@@ -31,12 +31,12 @@ class OWUIAuthenticationLayer: OWUIAuthentication {
 
     fileprivate var _displayAuthenticationFlow: OWAuthenticationFlowCallback? = nil
 
-    func triggerPublisherDisplayAuthenticationFlow(navController: UINavigationController, completion: OWBasicCompletion) {
+    func triggerPublisherDisplayAuthenticationFlow(routeringMode: OWRouteringMode, completion: @escaping OWBasicCompletion) {
         guard let callback = _displayAuthenticationFlow else {
             let logger = servicesProvider.logger()
             logger.log(level: .error, "`displayAuthenticationFlow` callback should be provided to `manager.ui.authentication` in order to display login flow.\nPlease provide this callback.")
             return
         }
-        callback(navController, completion)
+        callback(routeringMode, completion)
     }
 }
