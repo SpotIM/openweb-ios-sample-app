@@ -11,13 +11,13 @@ import Foundation
 #if NEW_API
 public enum OWSSOFlowType {
     case start(completion: OWSSOStartHandler)
-    case jwt(secret: String, completion: OWSSOJWTHandler)
     case complete(codeB: String, completion: OWSSOCompletionHandler)
+    case usingProvider(privder: OWSSOProvider, token: String, completion: OWProviderSSOHandler)
 }
 #else
 enum OWSSOFlowType {
     case start(completion: OWSSOStartHandler)
-    case jwt(secret: String, completion: OWSSOJWTHandler)
     case complete(codeB: String, completion: OWSSOCompletionHandler)
+    case usingProvider(privder: OWSSOProvider, token: String, completion: OWProviderSSOHandler)
 }
 #endif
