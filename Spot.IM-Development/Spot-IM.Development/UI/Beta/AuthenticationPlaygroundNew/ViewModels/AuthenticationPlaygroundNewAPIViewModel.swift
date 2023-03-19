@@ -19,6 +19,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
     var JWTSSOAuthenticatePressed: PublishSubject<Void> { get }
     var initializeSDKToggled: PublishSubject<Bool> { get }
     var automaticallyDismissToggled: PublishSubject<Bool> { get }
+    var dismissing: PublishSubject<Void> { get }
 }
 
 protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
@@ -28,6 +29,7 @@ protocol AuthenticationPlaygroundNewAPIViewModelingOutputs {
     var genericSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> { get }
     var dismissVC: PublishSubject<Void> { get }
+    var dismissed: Observable<Void> { get }
 }
 
 protocol AuthenticationPlaygroundNewAPIViewModeling {
@@ -90,6 +92,12 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
     var JWTSSOAuthenticationStatus: Observable<AuthenticationStatus> {
         return _JWTSSOAuthenticationStatus
             .asObservable()
+    }
+
+    var dismissing = PublishSubject<Void>()
+    var dismissed: Observable<Void>  {
+        return dismissing
+            .delay(.milliseconds(250), scheduler: MainScheduler.instance) // Allow some time for dismissing animation
     }
 
     fileprivate let disposeBag = DisposeBag()
@@ -193,6 +201,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 // 3. Login user if needed
                 guard let self = self else { return.just(("", genericSSO)) }
                 return self.login(user: genericSSO.user)
+                    .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
                         if value == nil {
@@ -207,6 +216,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 // 4. Start SSO
                 guard let self = self else { return Observable.empty() }
                 return self.startSSO()
+                    .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
                         if value == nil {
@@ -220,6 +230,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             // 5. Retrieving Code B
             guard let self = self else { return Observable.empty() }
                 return self.codeB(codeA: codeA, token: token, genericSSO: genericSSO)
+                    .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
                         if value == nil {
@@ -232,6 +243,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 // 6. Complete SSO
                 guard let self = self else { return Observable.empty() }
                 return self.completeSSO(codeB: codeB)
+                    .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil)
                     .do(onNext: { [weak self] value in
                         if value == nil {
@@ -287,6 +299,7 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 // 4. Perform SSO with JWT secret
                 guard let self = self else { return Observable.empty() }
                 return self.sso(jwtSecret: JWTSSO.JWTSecret)
+                    .observe(on: MainScheduler.instance)
                     .catchAndReturn(nil) // Keep the main subscription in case of an error
                     .do(onNext: { [weak self] value in
                         if value == nil {

@@ -9,7 +9,7 @@
 import Foundation
 
 #if NEW_API
-public typealias OWRenewSSOCallback = (String, OWBasicCompletion) -> Void
+public typealias OWRenewSSOCallback = (String, @escaping OWBasicCompletion) -> Void
 #else
-typealias OWRenewSSOCallback = (String, OWBasicCompletion) -> Void
+typealias OWRenewSSOCallback = (String, @escaping OWBasicCompletion) -> Void
 #endif

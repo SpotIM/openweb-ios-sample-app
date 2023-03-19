@@ -280,6 +280,8 @@ fileprivate extension AuthenticationPlaygroundNewAPIVC {
                 } else {
                     self.dismiss(animated: true, completion: nil)
                 }
+
+                self.viewModel.inputs.dismissing.onNext(())
             })
             .disposed(by: disposeBag)
     }

@@ -77,13 +77,24 @@ extension OWAuthenticationManager {
         return self.shouldShowAuthenticationUI(for: action)
             .do(onNext: { [weak self] shouldShow in
                 guard shouldShow, let self = self,
-                      let routeringCompatible = self.manager.ui.authenticationUI as? OWRouteringCompatible,
-                      let navController = routeringCompatible.routering.navigationController,
+                      let routeringCompatible = self.manager.ui as? OWRouteringCompatible,
                       let authenticationUILayer = self.manager.ui.authenticationUI as? OWUIAuthenticationInternalProtocol else { return }
                 let blockerService = self.servicesProvider.blockerServicing()
                 let blockerAction = OWDefaultBlockerAction(blockerType: .authentication)
                 blockerService.add(blocker: blockerAction)
-                authenticationUILayer.triggerPublisherDisplayLoginFlow(navController: navController, completion: blockerAction.completion)
+
+                /*
+                 TODO: We need a better way to distinguish whether we are in a flow mode or standalone component.
+                 Will be done once we will actually work with standalone components
+                */
+
+                let routeringMode: OWRouteringMode
+                if let navController = routeringCompatible.routering.navigationController {
+                    routeringMode = .flow(navigationController: navController)
+                } else {
+                   routeringMode = .none
+                }
+                authenticationUILayer.triggerPublisherDisplayAuthenticationFlow(routeringMode: routeringMode, completion: blockerAction.completion)
             })
     }
 
@@ -228,9 +239,10 @@ extension OWAuthenticationManager {
             .flatMap { [weak self] _ -> Observable<OWSSOStartResponse> in
                 guard let self = self else { return .empty() }
                 // 2. Start SSO
+                guard let authorization = self._networkCredentials.authorization else { return .error(OWError.ssoStart)}
                 let networkAuthentication = self.servicesProvider.netwokAPI().authentication
                 return networkAuthentication
-                    .ssoStart()
+                    .ssoStart(secret: authorization)
                     .response
             }
             .map { $0.toSSOStartModel() }
