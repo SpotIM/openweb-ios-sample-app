@@ -143,14 +143,13 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
                 self?._genericSSOAuthenticationStatus.onNext(.initial)
             })
             .subscribe(onNext: {
-                // TODO change to new API
-
-                SpotIm.getUserLoginStatus { loginStatus in
+                let authentication = OpenWeb.manager.authentication
+                authentication.userStatus { loginStatus in
                     DLog("Before logout \(loginStatus))")
-                    SpotIm.logout { result in
+                    authentication.logout { result in
                         switch result {
                         case .success(_):
-                            SpotIm.getUserLoginStatus { loginStatus in
+                            authentication.userStatus { loginStatus in
                                 DLog("After logout \(loginStatus))")
                             }
                         case .failure(let error):
@@ -185,8 +184,8 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .withLatestFrom(shouldInitializeSDK) { genericSSO, shouldInitializeSDK -> GenericSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if (shouldInitializeSDK) {
-                    SpotIm.reinit = true
-                    SpotIm.initialize(spotId: genericSSO.spotId)
+                    var manager = OpenWeb.manager
+                    manager.spotId = genericSSO.spotId
                 }
                 return genericSSO
             }
@@ -279,8 +278,8 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
             .withLatestFrom(shouldInitializeSDK) { JWTSSO, shouldInitializeSDK -> JWTSSOAuthentication in
                 // 2. Initialize SDK with appropriate spotId if needed
                 if (shouldInitializeSDK) {
-                    SpotIm.reinit = true
-                    SpotIm.initialize(spotId: JWTSSO.spotId)
+                    var manager = OpenWeb.manager
+                    manager.spotId = JWTSSO.spotId
                 }
                 return JWTSSO
             }
@@ -311,14 +310,40 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
     }
     // swiftlint:enable function_body_length
 
-    // TODO add new API
     func startSSO() -> Observable<String?> {
-        return .empty()
+        return Observable.create { observer in
+            let authentication = OpenWeb.manager.authentication
+            authentication.sso(.start(completion: { result in
+                switch result {
+                case .success(let startSSOModel):
+                    observer.onNext(startSSOModel.codeA)
+                    observer.onCompleted()
+                case .failure(let error):
+                    DLog("Failed in 'startSSO' with error: \(error)")
+                    observer.onError(error)
+                }
+            }))
+
+            return Disposables.create()
+        }
     }
 
-    // TODO add new API
     func completeSSO(codeB: String) -> Observable<String?> {
-        return .empty()
+        return Observable.create { observer in
+            let authentication = OpenWeb.manager.authentication
+            authentication.sso(.complete(codeB: codeB, completion: { result in
+                switch result {
+                case .success(let completeSSOModel):
+                    observer.onNext(completeSSOModel.userId)
+                    observer.onCompleted()
+                case .failure(let error):
+                    DLog("Failed in 'completeSSO(codeB:)' with error: \(error)")
+                    observer.onError(error)
+                }
+            }))
+
+            return Disposables.create()
+        }
     }
 
     // TODO add new API
@@ -326,13 +351,39 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
         return .empty()
     }
 
-    // TODO add new API
     func login(user: UserAuthentication) -> Observable<String?> {
-        return .empty()
+        return Observable.create { observer in
+            DemoUserAuthentication.logIn(with: user.username, password: user.password) { token, error in
+                guard let token = token else {
+                    let loginError = error != nil ? error! : AuthenticationError.userLoginFailed
+                    DLog("Failed in 'login(user:)' with error: \(loginError)")
+                    observer.onError(loginError)
+                    return
+                }
+                observer.onNext(token)
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        }
     }
 
-    // TODO add new API
     func codeB(codeA: String, token: String, genericSSO: GenericSSOAuthentication) -> Observable<String?> {
-        return .empty()
+        return Observable.create { observer in
+            DemoUserAuthentication.getCodeB(with: codeA,
+                                            accessToken: token,
+                                            username: genericSSO.user.username,
+                                            accessTokenNetwork: genericSSO.ssoToken) { codeB, error in
+                guard let codeB = codeB else {
+                    let codeBError = error != nil ? error! : AuthenticationError.codeBFailed
+                    DLog("Failed in 'codeB(codeA:token:user:)' with error: \(codeBError)")
+                    observer.onError(codeBError)
+                    return
+                }
+                observer.onNext(codeB)
+                observer.onCompleted()
+            }
+
+            return Disposables.create()
+        }
     }
 }
