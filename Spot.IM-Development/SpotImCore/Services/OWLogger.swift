@@ -123,7 +123,11 @@ class OWLogger {
         static let minAllowedLogFilesNumber = 1
     }
 
-    fileprivate let logLevel: OWLogLevel
+    var logLevel: OWLogLevel {
+        return _logLevel
+    }
+
+    fileprivate let _logLevel: OWLogLevel
     fileprivate let logMethods: [OWLogMethod]
     fileprivate let queue: DispatchQueue
     fileprivate let appLifeCycle: OWRxAppLifeCycleProtocol
@@ -153,7 +157,7 @@ class OWLogger {
          prefix: String = "OpenWebSDKLogger", sdkVer: String = (OWSettingsWrapper.sdkVersion() ?? "na"),
          hostBundleName: String = Bundle.main.bundleName ?? "",
          maxItemsPerLogFile: Int = 100) {
-        self.logLevel = logLevel
+        self._logLevel = logLevel
         self.logMethods = Array(Set(logMethods))
         self.queue = queue
         self.prefix = prefix
@@ -190,8 +194,8 @@ class OWLogger {
 
         runQueue.async { [weak self] in
             guard let self = self else { return }
-            guard level != .none && self.logLevel != .none else { return } // Continue only if the log level is different than none
-            guard level.rank <= self.logLevel.rank else { return } // Continue only if the log level rank appropriate
+            guard level != .none && self._logLevel != .none else { return } // Continue only if the log level is different than none
+            guard level.rank <= self._logLevel.rank else { return } // Continue only if the log level rank appropriate
 
             let loggerPrefix = prefix ?? self.prefix
             self.log(level: level, text, prefix: loggerPrefix, file: file, line: line)
