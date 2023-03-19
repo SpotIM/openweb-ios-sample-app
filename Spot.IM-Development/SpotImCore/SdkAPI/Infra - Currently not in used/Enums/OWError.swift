@@ -10,6 +10,7 @@ import Foundation
 
 #if NEW_API
 public enum OWError: Error {
+    case missingSpotId
     case castingError(description: String)
     case conversationFlow
     case preConversationFlow
@@ -23,6 +24,8 @@ public enum OWError: Error {
 
     public var description: String {
         switch self {
+        case .missingSpotId:
+            return "Error - spotId must be set first under `OpenWeb.manager`"
         case .castingError(let des):
             return des
         case .conversationFlow:
@@ -48,6 +51,7 @@ public enum OWError: Error {
 }
 #else
 enum OWError: Error {
+    case missingSpotId
     case castingError(description: String)
     case conversationFlow
     case preConversationFlow
@@ -61,6 +65,8 @@ enum OWError: Error {
 
     var description: String {
         switch self {
+        case .missingSpotId:
+            return "Error - spotId must be set first under `OpenWeb.manager`"
         case .castingError(let des):
             return des
         case .conversationFlow:

@@ -10,11 +10,11 @@ import Foundation
 
 #if NEW_API
 public struct OWSSOStartModel {
-    public let codeB: String
+    public let codeA: String
 }
 
 #else
 struct OWSSOStartModel {
-    let codeB: String
+    let codeA: String
 }
 #endif
