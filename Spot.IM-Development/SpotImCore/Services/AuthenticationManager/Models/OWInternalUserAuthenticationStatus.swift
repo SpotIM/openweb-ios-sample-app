@@ -33,6 +33,8 @@ extension OWInternalUserAuthenticationStatus {
 
     func toOWUserAuthenticationStatus() -> OWUserAuthenticationStatus? {
         switch self {
+        case .notAutenticated:
+            return .notAutenticated
         case .guest(_):
             return .guest
         case .ssoLoggedIn(let userId):

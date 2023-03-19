@@ -33,8 +33,9 @@ class OWAuthenticationLayer: OWAuthentication {
     }
 
     func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion) {
-        let authenticationManager = servicesProvider.authenticationManager()
+        guard validateSpotIdExist(completion: completion) else { return }
 
+        let authenticationManager = servicesProvider.authenticationManager()
         _ = authenticationManager
             .userAuthenticationStatus
             .map { $0.toOWUserAuthenticationStatus() }
@@ -49,8 +50,9 @@ class OWAuthenticationLayer: OWAuthentication {
     }
 
     func logout(completion: @escaping OWDefaultCompletion) {
-        let authenticationManager = servicesProvider.authenticationManager()
+        guard validateSpotIdExist(completion: completion) else { return }
 
+        let authenticationManager = servicesProvider.authenticationManager()
         _ = authenticationManager
             .logout()
             .take(1)
@@ -95,8 +97,9 @@ class OWAuthenticationLayer: OWAuthentication {
 
 fileprivate extension OWAuthenticationLayer {
     func handleSSOStart(completion: @escaping OWSSOStartHandler) {
-        let authenticationManager = servicesProvider.authenticationManager()
+        guard validateSpotIdExist(completion: completion) else { return }
 
+        let authenticationManager = servicesProvider.authenticationManager()
         _ = authenticationManager
             .startSSO()
             .take(1)
@@ -109,8 +112,9 @@ fileprivate extension OWAuthenticationLayer {
     }
 
     func handleSSOComplete(codeB: String, completion: @escaping OWSSOCompletionHandler) {
-        let authenticationManager = servicesProvider.authenticationManager()
+        guard validateSpotIdExist(completion: completion) else { return }
 
+        let authenticationManager = servicesProvider.authenticationManager()
         _ = authenticationManager
             .completeSSO(codeB: codeB)
             .take(1)
@@ -123,6 +127,17 @@ fileprivate extension OWAuthenticationLayer {
     }
 
     func handleSSOUsingProvider(privder: OWSSOProvider, token: String, completion: @escaping OWProviderSSOHandler) {
+        guard validateSpotIdExist(completion: completion) else { return }
 
+    }
+
+    func validateSpotIdExist<T: Any>(completion: @escaping (Result<T, OWError>) -> Void) -> Bool {
+        let spotId = OpenWeb.manager.spotId
+        guard !spotId.isEmpty else {
+            completion(.failure(.missingSpotId))
+            return false
+        }
+
+        return true
     }
 }

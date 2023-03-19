@@ -9,11 +9,11 @@
 import Foundation
 
 struct OWSSOStartResponse: Codable {
-    let codeB: String
+    let codeA: String
 }
 
 extension OWSSOStartResponse {
     func toSSOStartModel() -> OWSSOStartModel {
-        return OWSSOStartModel(codeB: codeB)
+        return OWSSOStartModel(codeA: codeA)
     }
 }
