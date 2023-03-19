@@ -29,10 +29,10 @@ struct OWNetworkResponse<T> {
 
 struct EmptyDecodable: Decodable {}
 
-private let defaultMiddlewares: [OWMiddleware] = [OWRequestLogger(),
-                                                  OWResponseLogger(),
-                                                  OWHTTPHeaderRequestMiddleware(),
-                                                  OWCredentialsUpdaterResponseMiddleware()]
+private let defaultMiddlewares: [OWMiddleware] = [OWHTTPHeaderRequestMiddleware(),
+                                                  OWCredentialsUpdaterResponseMiddleware(),
+                                                  OWRequestLogger(),
+                                                  OWResponseLogger()]
 
 /*
  OWNetworkAPI purpose is to handle network requests.
