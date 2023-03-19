@@ -10,7 +10,7 @@ import Foundation
 
 enum OWAuthenticationEndpoints: OWEndpoints {
     case login
-    case ssoStart
+    case ssoStart(secret: String)
     case ssoComplete(codeB: String)
     case logout
     case user
@@ -39,13 +39,8 @@ enum OWAuthenticationEndpoints: OWEndpoints {
         switch self {
         case .login:
             return nil
-        case .ssoStart:
-//            let spotKey = SPClientSettings.main.spotKey
-//            var requestParams: [String: Any] = ["spot_id": spotKey]
-//            requestParams["secret"] = secret
-//            return requestParams
-//            return ["secret": secret]
-            return nil
+        case .ssoStart(let secret):
+            return ["secret": secret]
         case .ssoComplete(let codeB):
             return ["code_b": codeB]
         case .logout:
@@ -58,7 +53,7 @@ enum OWAuthenticationEndpoints: OWEndpoints {
 
 protocol OWAuthenticationAPI {
     func login() -> OWNetworkResponse<SPUser>
-    func ssoStart() -> OWNetworkResponse<OWSSOStartResponse>
+    func ssoStart(secret: String) -> OWNetworkResponse<OWSSOStartResponse>
     func ssoComplete(codeB: String) -> OWNetworkResponse<OWSSOCompletionResponse>
     func logout() -> OWNetworkResponse<EmptyDecodable>
     func user() -> OWNetworkResponse<SPUser>
@@ -74,8 +69,8 @@ extension OWNetworkAPI: OWAuthenticationAPI {
         return performRequest(route: requestConfigure)
     }
 
-    func ssoStart() -> OWNetworkResponse<OWSSOStartResponse> {
-        let endpoint = OWAuthenticationEndpoints.ssoStart
+    func ssoStart(secret: String) -> OWNetworkResponse<OWSSOStartResponse> {
+        let endpoint = OWAuthenticationEndpoints.ssoStart(secret: secret)
         let requestConfigure = request(for: endpoint)
         return performRequest(route: requestConfigure)
     }

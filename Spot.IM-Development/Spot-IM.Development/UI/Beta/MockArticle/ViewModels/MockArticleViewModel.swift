@@ -311,6 +311,30 @@ fileprivate extension MockArticleViewModel {
                 })
             })
             .disposed(by: disposeBag)
+
+        let authenticationFlowCallback: OWAuthenticationFlowCallback = { [weak self] routeringMode, completion in
+            guard let self = self else { return }
+            let authenticationVM = AuthenticationPlaygroundNewAPIViewModel()
+            let authenticationVC = AuthenticationPlaygroundNewAPIVC(viewModel: authenticationVM)
+
+            switch routeringMode {
+            case .flow(let navController):
+                navController.pushViewController(authenticationVC, animated: true)
+            case .none:
+                self.navController?.pushViewController(authenticationVC, animated: true)
+            default:
+                break
+            }
+
+            _ = authenticationVM.outputs.dismissed
+                .take(1)
+                .subscribe(onNext: { [completion] _ in
+                    completion()
+                })
+        }
+
+        var authenticationUI = OpenWeb.manager.ui.authenticationUI
+        authenticationUI.displayAuthenticationFlow = authenticationFlowCallback
     }
     // swiftlint:enable function_body_length
 

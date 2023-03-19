@@ -91,6 +91,7 @@ fileprivate extension OWPreConversationCoordinator {
                 return self.authenticationManager.waitForAuthentication(for: .commenting)
                     .map { _ in type }
             }
+            .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWDeepLinkOptions? in
                 // 3. Perform deeplink to comment creation screen
                 guard let self = self else { return nil }

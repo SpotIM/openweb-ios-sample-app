@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol OWAuthenticationInternalProtocol {
-    func triggerRenewSSO(userId: String, completion: OWBasicCompletion)
+    func triggerRenewSSO(userId: String, completion: @escaping OWBasicCompletion)
 }
 
 class OWAuthenticationLayer: OWAuthentication {
@@ -85,7 +85,7 @@ class OWAuthenticationLayer: OWAuthentication {
     fileprivate var _shouldDisplayLoginPrompt: Bool = false
     fileprivate var _renewSSOCallback: OWRenewSSOCallback? = nil
 
-    func triggerRenewSSO(userId: String, completion: OWBasicCompletion) {
+    func triggerRenewSSO(userId: String, completion: @escaping OWBasicCompletion) {
         guard let callback = _renewSSOCallback else {
             let logger = servicesProvider.logger()
             logger.log(level: .error, "`renewSSO` callback should be provided to `manager.authentication` in order to trigger renew SSO flow.\nPlease provide this callback.")
