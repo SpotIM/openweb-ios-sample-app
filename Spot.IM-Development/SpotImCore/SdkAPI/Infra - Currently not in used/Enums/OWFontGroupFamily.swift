@@ -20,10 +20,3 @@ enum OWFontGroupFamily: Codable {
     case custom(fontFamily: String)
 }
 #endif
-
-extension OWFontGroupFamily {
-    enum CodingKeys: String, CodingKey {
-        case `default`
-        case custom
-    }
-}

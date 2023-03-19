@@ -64,12 +64,13 @@ fileprivate extension OWCommentEngagementView {
         self.addSubviews(replyButton, votingView)
 
         replyButton.OWSnp.makeConstraints { make in
-            make.top.bottom.leading.equalToSuperview()
+            make.centerY.leading.equalToSuperview()
         }
 
         votingView.OWSnp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.leading.equalTo(replyButton.OWSnp.trailing).offset(Metrics.baseOffset)
+            make.trailing.lessThanOrEqualToSuperview()
         }
     }
 

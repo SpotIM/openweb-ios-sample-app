@@ -105,4 +105,4 @@
 "No available options" = "No available options";
 "Mute" = "Mute";
 "Mute User" = "Mute User";
-"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings";
+"MuteUserMessage" = "After muting this user, you will no longer see their activity. To manage your muted users, go to your profile > Privacy settings";
