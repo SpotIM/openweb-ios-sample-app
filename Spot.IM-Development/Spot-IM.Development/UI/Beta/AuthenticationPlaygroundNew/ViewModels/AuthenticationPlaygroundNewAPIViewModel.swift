@@ -95,7 +95,7 @@ class AuthenticationPlaygroundNewAPIViewModel: AuthenticationPlaygroundNewAPIVie
     }
 
     var dismissing = PublishSubject<Void>()
-    var dismissed: Observable<Void>  {
+    var dismissed: Observable<Void> {
         return dismissing
             .delay(.milliseconds(250), scheduler: MainScheduler.instance) // Allow some time for dismissing animation
     }
