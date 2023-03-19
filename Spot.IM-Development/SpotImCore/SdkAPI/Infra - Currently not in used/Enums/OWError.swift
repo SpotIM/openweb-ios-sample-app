@@ -17,6 +17,9 @@ public enum OWError: Error {
     case commentThreadFlow
     case logout
     case userStatus
+    case ssoStart
+    case ssoComplete
+    case alreadyLoggedIn
 
     public var description: String {
         switch self {
@@ -34,6 +37,12 @@ public enum OWError: Error {
             return "Error in the process of logout"
         case .userStatus:
             return "Error in the process of getting userStatus"
+        case .ssoStart:
+            return "Error in the process of SSO start"
+        case .ssoComplete:
+            return "Error in the process of SSO complete"
+        case .alreadyLoggedIn:
+            return "Error - a user is already logged in"
         }
     }
 }
@@ -46,6 +55,9 @@ enum OWError: Error {
     case commentThreadFlow
     case logout
     case userStatus
+    case ssoStart
+    case ssoComplete
+    case alreadyLoggedIn
 
     var description: String {
         switch self {
@@ -63,6 +75,12 @@ enum OWError: Error {
             return "Error in the process of logout"
         case .userStatus:
             return "Error in the process of getting userStatus"
+        case .ssoStart:
+            return "Error in the process of SSO start"
+        case .ssoComplete:
+            return "Error in the process of SSO complete"
+        case .alreadyLoggedIn:
+            return "Error - a user is already logged in"
         }
     }
 }

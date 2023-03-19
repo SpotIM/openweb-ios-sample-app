@@ -23,6 +23,8 @@ protocol OWAuthenticationManagerProtocol {
     func enterAuthenticationRecoveryState()
     func activateRenewSSO(userId: String)
     func logout() -> Observable<Void>
+    func startSSO() -> Observable<OWSSOStartModel>
+    func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel>
 }
 
 extension OWAuthenticationManagerProtocol {
@@ -184,6 +186,76 @@ extension OWAuthenticationManager {
                 self._userAuthenticationStatus.onNext(.notAutenticated)
             })
             .voidify()
+    }
+
+    func startSSO() -> Observable<OWSSOStartModel> {
+        return _activeUserAvailability
+            .take(1)
+            .flatMap { [weak self] userAvailablity -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                // 1. Logout current user if needed
+                if case .user(_) = userAvailablity {
+                    return self.logout()
+                } else {
+                    return .just(())
+                }
+            }
+            .flatMap { [weak self] _ -> Observable<Void> in
+                guard let self = self else { return .empty() }
+                // 2. Login (usually will provide a guest user))
+                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                return networkAuthentication
+                    .login()
+                    .response
+                    .do(onNext: { [weak self] user in
+                        guard let self = self else { return }
+                        self.update(userAvailability: .user(user))
+                        self._userAuthenticationStatus.onNext(.guest(userId: user.userId ?? ""))
+                    })
+                    .voidify()
+            }
+            .flatMap { [weak self] _ -> Observable<OWSSOStartResponse> in
+                guard let self = self else { return .empty() }
+                // 2. Start SSO
+                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                return networkAuthentication
+                    .ssoStart()
+                    .response
+            }
+            .map { $0.toSSOStartModel() }
+    }
+
+    func completeSSO(codeB: String) -> Observable<OWSSOCompletionModel> {
+        return userAuthenticationStatus
+            .take(1)
+            .flatMap { authenticationStatus -> Observable<Void> in
+                // 1. Make sure not already logged in
+                if case .guest(_) = authenticationStatus {
+                    return .just(())
+                } else if authenticationStatus == .notAutenticated {
+                    return .just(())
+                }
+
+                return .error(OWError.alreadyLoggedIn)
+            }
+            .flatMap { [weak self] _ -> Observable<OWSSOCompletionResponse> in
+                guard let self = self else { return .empty() }
+                // 2. Proceed with SSO complete
+                let networkAuthentication = self.servicesProvider.netwokAPI().authentication
+                return networkAuthentication
+                    .ssoComplete(codeB: codeB)
+                    .response
+                    .do(onNext: { [weak self] ssoCompletionResponse  in
+                        guard let self = self else { return }
+                        let user = ssoCompletionResponse.user
+                        self.update(userAvailability: .user(user))
+                        self._userAuthenticationStatus.onNext(.ssoLoggedIn(userId: user.userId ?? ""))
+                    })
+            }
+            .map { response -> OWSSOCompletionModel? in
+                return response.toSSOCompletionModel()
+            }
+            .unwrap()
     }
 }
 

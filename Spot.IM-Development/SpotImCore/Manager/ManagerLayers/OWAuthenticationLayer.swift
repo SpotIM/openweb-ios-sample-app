@@ -22,7 +22,14 @@ class OWAuthenticationLayer: OWAuthentication {
     }
 
     func sso(_ flowType: OWSSOFlowType) {
-        // TODO: Complete
+        switch flowType {
+        case .start(let completion):
+            self.handleSSOStart(completion: completion)
+        case .complete(let codeB, let completion):
+            self.handleSSOComplete(codeB: codeB, completion: completion)
+        case .usingProvider(let provider, let token, let completion):
+            self.handleSSOUsingProvider(privder: provider, token: token, completion: completion)
+        }
     }
 
     func userStatus(completion: @escaping OWUserAuthenticationStatusCompletion) {
@@ -83,5 +90,39 @@ class OWAuthenticationLayer: OWAuthentication {
             return
         }
         callback(userId, completion)
+    }
+}
+
+fileprivate extension OWAuthenticationLayer {
+    func handleSSOStart(completion: @escaping OWSSOStartHandler) {
+        let authenticationManager = servicesProvider.authenticationManager()
+
+        _ = authenticationManager
+            .startSSO()
+            .take(1)
+            .subscribe(onNext: { ssoStartModel in
+                completion(.success(ssoStartModel))
+            }, onError: { err in
+                let error: OWError = err as? OWError ?? OWError.ssoStart
+                completion(.failure(error))
+            })
+    }
+
+    func handleSSOComplete(codeB: String, completion: @escaping OWSSOCompletionHandler) {
+        let authenticationManager = servicesProvider.authenticationManager()
+
+        _ = authenticationManager
+            .completeSSO(codeB: codeB)
+            .take(1)
+            .subscribe(onNext: { ssoCompleteModel in
+                completion(.success(ssoCompleteModel))
+            }, onError: { err in
+                let error: OWError = err as? OWError ?? OWError.ssoComplete
+                completion(.failure(error))
+            })
+    }
+
+    func handleSSOUsingProvider(privder: OWSSOProvider, token: String, completion: @escaping OWProviderSSOHandler) {
+
     }
 }
