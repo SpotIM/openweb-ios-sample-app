@@ -24,6 +24,8 @@ class GeneralSettingsView: UIView {
         static let segmentedFontGroupTypeIdentifier = "font_group_type"
         static let textFieldCustomFontNameIdentifier = "custom_font_name"
         static let textFieldArticleURLIdentifier = "article_url"
+        static let segmentedLanguageStrategyIdentifier = "language_strategy"
+        static let pickerLanguageCodeIdentifier = "language_code"
         static let verticalOffset: CGFloat = 40
         static let horizontalOffset: CGFloat = 10
     }
@@ -111,6 +113,24 @@ class GeneralSettingsView: UIView {
         return txtField
     }()
 
+    fileprivate lazy var segmentedLanguageStrategy: SegmentedControlSetting = {
+        let title = viewModel.outputs.languageStrategyTitle
+        let items = viewModel.outputs.languageStrategySettings
+
+        return SegmentedControlSetting(title: title,
+                                       accessibilityPrefixId: Metrics.segmentedLanguageStrategyIdentifier,
+                                       items: items)
+    }()
+
+    fileprivate lazy var pickerLanguageCode: PickerSetting = {
+        let title = viewModel.outputs.supportedLanguageTitle
+        let items = viewModel.outputs.supportedLanguageItems
+        let picker = PickerSetting(title: title,
+                                   accessibilityPrefixId: Metrics.pickerLanguageCodeIdentifier,
+                                   items: items)
+        return picker
+    }()
+
     fileprivate let viewModel: GeneralSettingsViewModeling
     fileprivate let disposeBag = DisposeBag()
 
@@ -152,6 +172,8 @@ fileprivate extension GeneralSettingsView {
         stackView.addArrangedSubview(segmentedInitialSort)
         stackView.addArrangedSubview(segmentedFontGroupType)
         stackView.addArrangedSubview(textFieldCustomFontName)
+        stackView.addArrangedSubview(segmentedLanguageStrategy)
+        stackView.addArrangedSubview(pickerLanguageCode)
         stackView.addArrangedSubview(textFieldArticleURL)
     }
 
@@ -234,6 +256,39 @@ fileprivate extension GeneralSettingsView {
         textFieldArticleURL.rx.textFieldText
             .unwrap()
             .bind(to: viewModel.inputs.articleAssociatedSelectedURL)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.languageStrategyIndex
+            .bind(to: segmentedLanguageStrategy.rx.selectedSegmentIndex)
+            .disposed(by: disposeBag)
+
+        segmentedLanguageStrategy.rx.selectedSegmentIndex
+            .bind(to: viewModel.inputs.languageStrategySelectedIndex)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.languageName
+            .map { [weak self] in
+                guard let self = self, let index = self.viewModel.outputs.supportedLanguageItems.firstIndex(of: $0)
+                else { return nil }
+                return (index, 0)
+            }
+            .unwrap()
+            .bind(to: pickerLanguageCode.rx.setSelectedPickerIndex)
+            .disposed(by: disposeBag)
+
+        pickerLanguageCode.rx.selectedPickerIndex
+            .map { [weak self] in
+                guard let self = self else { return nil }
+                return self.viewModel.outputs.supportedLanguageItems[$0.row]
+            }
+            .unwrap()
+            .distinctUntilChanged()
+            .bind(to: viewModel.inputs.languageSelectedName)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowSetLanguage
+            .map { !$0 }
+            .bind(to: pickerLanguageCode.rx.isHidden)
             .disposed(by: disposeBag)
     }
 }

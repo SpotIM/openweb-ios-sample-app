@@ -15,7 +15,7 @@ public protocol OWUIFlows {
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
-                         completion: @escaping OWViewDynamicSizeCompletion)
+                         completion: @escaping OWViewCompletion)
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,
@@ -46,7 +46,7 @@ protocol OWUIFlows {
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol?,
                          callbacks: OWViewActionsCallbacks?,
-                         completion: @escaping OWViewDynamicSizeCompletion)
+                         completion: @escaping OWViewCompletion)
 
     func conversation(postId: OWPostId,
                       article: OWArticleProtocol,

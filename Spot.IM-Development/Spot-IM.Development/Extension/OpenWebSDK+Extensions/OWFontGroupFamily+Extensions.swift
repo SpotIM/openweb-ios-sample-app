@@ -23,10 +23,9 @@ extension OWFontGroupFamily {
     static func fontGroupFamily(fromData data: Data) -> OWFontGroupFamily {
         do {
             let decoded = try JSONDecoder().decode(OWFontGroupFamily.self, from: data)
-            print("decoded:", decoded)
             return decoded
         } catch {
-            print(error)
+            DLog("Failed to decode fontGroupFamily \(error.localizedDescription)")
         }
         return .default
     }
@@ -38,9 +37,14 @@ extension OWFontGroupFamily {
             let data = try encoder.encode(self)
             return data
         } catch {
-            print(error.localizedDescription)
+            DLog("Failed to encode fontGroupFamily \(error.localizedDescription)")
         }
         return Data()
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case `default`
+        case custom
     }
 }
 

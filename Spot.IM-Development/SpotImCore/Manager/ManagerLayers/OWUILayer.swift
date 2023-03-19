@@ -36,7 +36,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
-                         completion: @escaping OWViewDynamicSizeCompletion) {
+                         completion: @escaping OWViewCompletion) {
         prepareForNewFlow()
 
         setPostId(postId: postId) { result in
@@ -57,7 +57,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
                                                 callbacks: callbacks)
         .observe(on: MainScheduler.asyncInstance)
         .subscribe(onNext: { result in
-            completion(.success(result))
+            completion(.success(result.toShowable()))
         }, onError: { err in
             let error: OWError = err as? OWError ?? OWError.preConversationFlow
             completion(.failure(error))

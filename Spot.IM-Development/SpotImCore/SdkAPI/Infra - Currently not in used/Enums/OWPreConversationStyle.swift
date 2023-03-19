@@ -36,12 +36,3 @@ enum OWPreConversationStyle: Codable {
     case ctaWithSummary // Called "Button only mode" - title, before the refactor
 }
 #endif
-
-extension OWPreConversationStyle {
-    enum CodingKeys: String, CodingKey {
-        case regular
-        case compact
-        case ctaButtonOnly
-        case ctaWithSummary
-    }
-}
