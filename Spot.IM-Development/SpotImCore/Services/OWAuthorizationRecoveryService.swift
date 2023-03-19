@@ -100,21 +100,28 @@ fileprivate extension OWAuthorizationRecoveryService {
                     .response
                     .observe(on: self.scheduler)
                     .take(1) // No need to dispose
-                    .do(onNext: { [weak self] _ in
+                    .do(onNext: { [weak self] newUser in
                         guard let self = self else { return }
                         self.isCurrentlyRecovering.onNext(false)
                         self._recoverJustFinished.onNext(())
 
+                        let authenticationRecoveryResult: OWAuthenticationRecoveryResult
                         if case OWUserAvailability.user(let user) = userAvailability,
                            let userId = user.userId {
                             self.didJustRecoveredCache[userId] = true
                             if shouldRenewSSO {
                                 // Will renew SSO with publishers API if a user was logged in before
                                 self.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
-                                let authenticationManager = self.servicesProvider.authenticationManager()
-                                authenticationManager.activateRenewSSO(userId: userId)
+                                authenticationRecoveryResult = .AuthenticationRenewed(user: user)
+                            } else {
+                                authenticationRecoveryResult = .newAuthentication(user: newUser)
                             }
+                        } else {
+                            authenticationRecoveryResult = .newAuthentication(user: newUser)
                         }
+
+                        let authenticationManager = self.servicesProvider.authenticationManager()
+                        authenticationManager.finishAuthenticationRecovery(with: authenticationRecoveryResult)
                     }, onError: {[weak self] error in
                         guard let self = self else { return  }
                         self.isCurrentlyRecovering.onNext(false)
