@@ -11,6 +11,8 @@ import RxSwift
 import Alamofire
 import SpotImCore
 
+#if NEW_API
+
 protocol AuthenticationPlaygroundNewAPIViewModelingInputs {
     var selectedGenericSSOOptionIndex: PublishSubject<Int> { get }
     var selectedJWTSSOOptionIndex: PublishSubject<Int> { get }
@@ -400,3 +402,5 @@ fileprivate extension AuthenticationPlaygroundNewAPIViewModel {
         }
     }
 }
+
+#endif
