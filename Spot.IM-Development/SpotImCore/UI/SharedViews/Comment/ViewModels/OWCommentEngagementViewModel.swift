@@ -17,7 +17,6 @@ protocol OWCommentEngagementViewModelingInputs {
 
 protocol OWCommentEngagementViewModelingOutputs {
     var votingVM: OWCommentRatingViewModeling { get }
-    var repliesText: Observable<String> { get }
     var replyClickedOutput: Observable<Void> { get }
 }
 
@@ -35,18 +34,6 @@ class OWCommentEngagementViewModel: OWCommentEngagementViewModeling,
 
     let votingVM: OWCommentRatingViewModeling
     fileprivate let disposeBag = DisposeBag()
-
-    // TODO: handle disabled (disable button, change text, disable voting?) - on read only + comment deleted/reported etc
-    // TODO: handle when HIDING replies button
-    var repliesText: Observable<String> {
-        _replies
-            .map {
-                $0 > 0 ?
-                "\(LocalizationManager.localizedString(key: "Reply")) (\($0))" :
-                LocalizationManager.localizedString(key: "Reply")
-            }
-            .asObservable()
-    }
 
     var replyClicked = PublishSubject<Void>()
     var replyClickedOutput: Observable<Void> {
