@@ -25,7 +25,7 @@ class OWCommentEngagementView: UIView {
     fileprivate lazy var replyButton: UIButton = {
         return UIButton()
             .setTitle(LocalizationManager.localizedString(key: "Reply"), state: .normal)
-            .setTitleColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light), state: .normal) // TODO: color
+            .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
             .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
     }()
 
@@ -36,7 +36,7 @@ class OWCommentEngagementView: UIView {
     fileprivate lazy var shareButton: UIButton = {
         return UIButton()
             .setTitle(LocalizationManager.localizedString(key: "Share"), state: .normal)
-            .setTitleColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light), state: .normal) // TODO: color
+            .setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light), state: .normal)
             .setTitleFont(.preferred(style: .regular, of: Metrics.fontSize))
     }()
 
@@ -97,7 +97,8 @@ fileprivate extension OWCommentEngagementView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle), for: .normal)
+                self.replyButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
+                self.shareButton.setTitleColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle), for: .normal)
             }).disposed(by: disposeBag)
     }
 }
