@@ -16,11 +16,11 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let whatYouThinkHeight: CGFloat = 64
         static let commentCreationVerticalPadding: CGFloat = 16
         static let horizontalOffset: CGFloat = 16.0
-        static let btnFullConversationCornerRadius: CGFloat = 4
-        static let btnFullConversationFontSize: CGFloat = 14
-        static let btnFullConversationTextPadding: CGFloat = 13
+        static let btnFullConversationCornerRadius: CGFloat = 6
+        static let btnFullConversationFontSize: CGFloat = 15
+        static let btnFullConversationTextPadding: CGFloat = 12
         static let btnFullConversationTopPadding: CGFloat = 13
-        static let bottomPadding: CGFloat = 23
+        static let bottomPadding: CGFloat = 24
         static let compactModePadding: CGFloat = 16
 
         static let separatorHeight: CGFloat = 1.0
