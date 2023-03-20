@@ -27,7 +27,7 @@ class OWCommentContentView: UIView {
     fileprivate lazy var mediaView: CommentMediaView = {
         return CommentMediaView()
     }()
-    
+
     fileprivate lazy var editedLabel: UILabel = {
        return UILabel()
             .font(OWFontBook.shared.font(style: .italic, size: Metrics.editedFontSize))
@@ -71,7 +71,7 @@ fileprivate extension OWCommentContentView {
             make.leading.equalToSuperview()
             make.size.equalTo(0)
         }
-        
+
         self.addSubview(editedLabel)
         editedLabel.OWSnp.makeConstraints { make in
             make.leading.bottom.equalToSuperview()
