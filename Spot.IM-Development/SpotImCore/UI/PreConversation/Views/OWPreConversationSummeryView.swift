@@ -22,7 +22,7 @@ class OWPreConversationSummeryView: UIView {
         let lbl = UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .bold, size: viewModel.outputs.titleFontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground0Color,
+            .textColor(OWColorPalette.shared.color(type: .textColor1,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
         return lbl
@@ -32,7 +32,7 @@ class OWPreConversationSummeryView: UIView {
         let lbl = UILabel()
             .enforceSemanticAttribute()
             .font(OWFontBook.shared.font(style: .regular, size: viewModel.outputs.counterFontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground1Color,
+            .textColor(OWColorPalette.shared.color(type: .textColor2,
                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         return lbl
     }()
@@ -115,9 +115,9 @@ fileprivate extension OWPreConversationSummeryView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
 
-                self.titleLabel.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                self.titleLabel.textColor = OWColorPalette.shared.color(type: .textColor1,
                                                                         themeStyle: currentStyle)
-                self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color,
+                self.counterLabel.textColor = OWColorPalette.shared.color(type: .textColor2,
                                                                           themeStyle: currentStyle)
                 self.nextArrow.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
                 self.updateCustomUI()
