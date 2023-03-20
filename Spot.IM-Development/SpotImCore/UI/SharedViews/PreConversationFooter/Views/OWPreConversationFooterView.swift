@@ -17,27 +17,28 @@ internal class OWPreConversationFooterView: UIView {
         static let poweredByOWButtonIdentifier = "pre_conversation_footer_powered_by_ow_button_id"
 
         static let fontSize: CGFloat = 13
+        static let poweredByFontSize: CGFloat = 11
         static let iconSize: CGFloat = 13
         static let iconTrailingPadding: CGFloat = 5
-        static let dotPadding: CGFloat = 5
+        static let separatorPadding: CGFloat = 10
     }
 
     private lazy var termsButton: UIButton = {
         return LocalizationManager.localizedString(key: "Terms")
             .button
-            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.openSans(style: .regular, of: Metrics.fontSize))
     }()
-    private lazy var dotLabel: UILabel = {
-        "·"
+    private lazy var separator: UILabel = {
+        "|"
             .label
-            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.openSans(style: .regular, of: Metrics.fontSize))
     }()
     private lazy var privacyButton: UIButton = {
         return LocalizationManager.localizedString(key: "Privacy")
             .button
-            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.openSans(style: .regular, of: Metrics.fontSize))
     }()
     private lazy var openWebIconImageView: UIImageView = {
@@ -46,8 +47,8 @@ internal class OWPreConversationFooterView: UIView {
     private lazy var poweredByOWButton: UIButton = {
         let btn = LocalizationManager.localizedString(key: "Powered by OpenWeb")
             .button
-            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
-            .font(.openSans(style: .regular, of: Metrics.fontSize))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
+            .font(.openSans(style: .regular, of: Metrics.poweredByFontSize))
         return btn
     }()
 
@@ -80,16 +81,16 @@ fileprivate extension OWPreConversationFooterView {
             make.leading.centerY.equalToSuperview()
         }
 
-        self.addSubview(dotLabel)
-        dotLabel.OWSnp.makeConstraints { make in
+        self.addSubview(separator)
+        separator.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(termsButton.OWSnp.trailing).offset(Metrics.dotPadding)
+            make.leading.equalTo(termsButton.OWSnp.trailing).offset(Metrics.separatorPadding)
         }
 
         self.addSubview(privacyButton)
         privacyButton.OWSnp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(dotLabel.OWSnp.trailing).offset(Metrics.dotPadding)
+            make.leading.equalTo(separator.OWSnp.trailing).offset(Metrics.separatorPadding)
         }
 
         self.addSubview(poweredByOWButton)
@@ -124,10 +125,11 @@ fileprivate extension OWPreConversationFooterView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.termsButton.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
-                self.dotLabel.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
-                self.privacyButton.textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle))
+                self.termsButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
+                self.separator.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
+                self.privacyButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.openWebIconImageView.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true)
+                self.poweredByOWButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
     }
