@@ -23,6 +23,8 @@ struct OWColor {
         case background0Color
         case background1Color
         case separatorColor
+        case textColor1
+        case textColor2
         case borderColor
         case brandColor
         case buttonTextColor
@@ -59,9 +61,17 @@ struct OWColor {
             case .background1Color:
                 return OWColor(lightThemeColor: UIColor.white,
                                darkThemeColor: UIColor.white.withAlphaComponent(0.15))
+
             case .separatorColor:
-                return OWColor(lightThemeColor: UIColor(red: 240.0/255.0, green: 241.0/255.0, blue: 241.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor(red: 255.0/255.0, green: 255.0/255.0, blue: 255.0/255.0, alpha: 0.15))
+                return OWColor(lightThemeColor: DesignSystemColors.L3,
+                               darkThemeColor: DesignSystemColors.D2)
+            case .textColor1:
+                return OWColor(lightThemeColor: DesignSystemColors.L6,
+                               darkThemeColor: DesignSystemColors.G1)
+            case .textColor2:
+                return OWColor(lightThemeColor: DesignSystemColors.L5,
+                               darkThemeColor: DesignSystemColors.D3)
+                
             case .borderColor:
                 return OWColor(lightThemeColor: UIColor(red: 212.0/255.0, green: 214.0/255.0, blue: 215.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor.clear)
@@ -122,4 +132,24 @@ extension OWColor {
     fileprivate mutating func setDarkThemeColor(_ color: UIColor) {
         darkThemeColor = color
     }
+}
+
+// TODO: New file ?
+struct DesignSystemColors {
+    static let G1: UIColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+    static let G2: UIColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
+    static let G3: UIColor = UIColor(red: 53/255, green: 185/255, blue: 64/255, alpha: 1)
+    static let G4: UIColor = UIColor(red: 219/255, green: 55/255, blue: 55/255, alpha: 1)
+    static let G5: UIColor = UIColor(red: 57/255, green: 104/255, blue: 255/255, alpha: 1)
+    static let G6: UIColor = UIColor(red: 250/255, green: 187/255, blue: 9/255, alpha: 1)
+    static let L1: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.05)
+    static let L2: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.10)
+    static let L3: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.20)
+    static let L4: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.30)
+    static let L5: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 0.65)
+    static let L6: UIColor = UIColor(red: 7/255, green: 7/255, blue: 7/255, alpha: 1)
+    static let D1: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.20)
+    static let D2: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.30)
+    static let D3: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 0.65)
+    static let D4: UIColor = UIColor(red: 242/255, green: 242/255, blue: 242/255, alpha: 1)
 }
