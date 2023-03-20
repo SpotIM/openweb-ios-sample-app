@@ -22,15 +22,15 @@ class OWCommunityQuestionView: UIView {
     fileprivate lazy var questionLabel: UILabel = {
         return UILabel()
             .font(UIFont.preferred(style: .italic, of: Metrics.fontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground0Color,
+            .textColor(OWColorPalette.shared.color(type: .textColor3,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate lazy var questionContainer: UIView = {
         return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .compactBackground, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)) // TODO: color
+            .backgroundColor(OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
             .corner(radius: Metrics.containerCorderRadius)
-            .border(width: 1, color: UIColor.black) // TODO: color
+            .border(width: 1, color: OWColorPalette.shared.color(type: .borderColor1, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
     }()
 
     fileprivate var heightConstraint: OWConstraint?
@@ -90,8 +90,10 @@ fileprivate extension OWCommunityQuestionView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.questionLabel.textColor = OWColorPalette.shared.color(type: .foreground0Color,
-                                                                              themeStyle: currentStyle)
+                self.questionLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.questionContainer.backgroundColor = OWColorPalette.shared.color(type: .backgroundColor1, themeStyle: currentStyle)
+                self.questionContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor1, themeStyle: currentStyle).cgColor
+
                 // TODO: custon UI
             }).disposed(by: disposeBag)
     }

@@ -22,9 +22,14 @@ struct OWColor {
         case foreground3Color
         case background0Color
         case background1Color
+        
         case separatorColor
         case textColor1
         case textColor2
+        case textColor3
+        case backgroundColor1
+        case borderColor1
+        
         case borderColor
         case brandColor
         case buttonTextColor
@@ -71,6 +76,15 @@ struct OWColor {
             case .textColor2:
                 return OWColor(lightThemeColor: DesignSystemColors.L5,
                                darkThemeColor: DesignSystemColors.D3)
+            case .textColor3:
+                return OWColor(lightThemeColor: DesignSystemColors.L6,
+                               darkThemeColor: DesignSystemColors.D4)
+            case .backgroundColor1:
+                return OWColor(lightThemeColor: DesignSystemColors.L1.withAlphaComponent(0.03),
+                               darkThemeColor: DesignSystemColors.D1.withAlphaComponent(0.1))
+            case .borderColor1:
+                return OWColor(lightThemeColor: DesignSystemColors.L1,
+                               darkThemeColor: DesignSystemColors.D1)
                 
             case .borderColor:
                 return OWColor(lightThemeColor: UIColor(red: 212.0/255.0, green: 214.0/255.0, blue: 215.0/255.0, alpha: 1.0),
