@@ -42,7 +42,7 @@ class OWCommentHeaderView: UIView {
     fileprivate lazy var userNameLabel: UILabel = {
         return UILabel()
             .userInteractionEnabled(false)
-            .textColor(OWColorPalette.shared.color(type: .foreground1Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor3, themeStyle: .light))
             .font(OWFontBook.shared.font(style: .bold, size: Metrics.usernameFontSize))
     }()
 
@@ -66,14 +66,14 @@ class OWCommentHeaderView: UIView {
     fileprivate lazy var subtitleLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
 
     fileprivate lazy var dateLabel: UILabel = {
         return UILabel()
             .font(OWFontBook.shared.font(style: .regular, size: Metrics.subtitleFontSize))
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .userInteractionEnabled(false)
     }()
 
@@ -87,7 +87,7 @@ class OWCommentHeaderView: UIView {
     fileprivate lazy var hiddenCommentReasonLabel: UILabel = {
         return UILabel()
             .isHidden(true)
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.preferred(style: .italic, of: 17))
             .lineSpacing(3.5)
     }()
@@ -240,10 +240,10 @@ fileprivate extension OWCommentHeaderView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.userNameLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color, themeStyle: currentStyle)
-                self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.dateLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
+                self.userNameLabel.textColor = OWColorPalette.shared.color(type: .textColor3, themeStyle: currentStyle)
+                self.subtitleLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.dateLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.hiddenCommentReasonLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
 
         Observable.combineLatest(OWSharedServicesProvider.shared.themeStyleService().style, OWColorPalette.shared.colorDriver)
