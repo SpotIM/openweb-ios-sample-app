@@ -23,6 +23,7 @@ class OWCommentTextLabel: UILabel {
 
     init() {
         super.init(frame: .zero)
+        self.textColor = OWColorPalette.shared.color(type: .textColor4, themeStyle: .light)
     }
 
     func configure(with viewModel: OWCommentTextViewModeling) {
@@ -61,5 +62,12 @@ fileprivate extension OWCommentTextLabel {
                 self.viewModel.inputs.labelClickIndex.onNext(index)
             })
             .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.textColor = OWColorPalette.shared.color(type: .textColor4, themeStyle: currentStyle)
+            }).disposed(by: disposeBag)
     }
 }
