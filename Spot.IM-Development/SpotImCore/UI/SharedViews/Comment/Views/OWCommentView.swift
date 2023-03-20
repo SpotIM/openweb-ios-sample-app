@@ -16,7 +16,7 @@ class OWCommentView: UIView {
         static let bottomOffset: CGFloat = 16.0
         static let topOffset: CGFloat = 38.0
         static let commentLabelTopPadding: CGFloat = 10.0
-        static let messageContainerTopOffset: CGFloat = 5.0
+        static let messageContainerTopOffset: CGFloat = 4.0
     }
 
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
