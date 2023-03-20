@@ -18,8 +18,8 @@ internal class OWPreConversationFooterView: UIView {
 
         static let fontSize: CGFloat = 13
         static let poweredByFontSize: CGFloat = 11
-        static let iconSize: CGFloat = 13
-        static let iconTrailingPadding: CGFloat = 5
+        static let iconSize: CGSize = CGSize(width: 76.5, height: 17)
+        static let iconLeadingPadding: CGFloat = 5
         static let separatorPadding: CGFloat = 10
     }
 
@@ -42,10 +42,10 @@ internal class OWPreConversationFooterView: UIView {
             .font(.openSans(style: .regular, of: Metrics.fontSize))
     }()
     private lazy var openWebIconImageView: UIImageView = {
-        return UIImageView(image: UIImage(spNamed: "openwebIconSimple", supportDarkMode: true))
+        return UIImageView(image: UIImage(spNamed: "OpenWeb-logo", supportDarkMode: true))
     }()
     private lazy var poweredByOWButton: UIButton = {
-        let btn = LocalizationManager.localizedString(key: "Powered by OpenWeb")
+        let btn = LocalizationManager.localizedString(key: "Powered by")
             .button
             .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
             .font(.openSans(style: .regular, of: Metrics.poweredByFontSize))
@@ -101,9 +101,9 @@ fileprivate extension OWPreConversationFooterView {
         poweredByOWButton.addSubview(openWebIconImageView)
         openWebIconImageView.OWSnp.makeConstraints { make in
             make.size.equalTo(Metrics.iconSize)
-            make.top.bottom.leading.equalToSuperview()
-            if let buttonTextLeading = poweredByOWButton.titleLabel?.OWSnp.leading {
-                make.trailing.equalTo(buttonTextLeading).offset(-Metrics.iconTrailingPadding)
+            make.top.bottom.trailing.equalToSuperview()
+            if let buttonTextTrailing = poweredByOWButton.titleLabel?.OWSnp.trailing {
+                make.leading.equalTo(buttonTextTrailing).offset(Metrics.iconLeadingPadding)
             }
         }
     }
@@ -128,7 +128,7 @@ fileprivate extension OWPreConversationFooterView {
                 self.termsButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.separator.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
                 self.privacyButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
-                self.openWebIconImageView.image = UIImage(spNamed: "openwebIconSimple", supportDarkMode: true)
+                self.openWebIconImageView.image = UIImage(spNamed: "OpenWeb-logo", supportDarkMode: true)
                 self.poweredByOWButton.textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle))
             })
             .disposed(by: disposeBag)
