@@ -33,7 +33,7 @@ class OWCommentContentView: UIView {
        return UILabel()
             .font(OWFontBook.shared.font(style: .italic, size: Metrics.editedFontSize))
             .text(LocalizationManager.localizedString(key: "Edited"))
-            .textColor(OWColorPalette.shared.color(type: .compactText, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
 
     fileprivate var viewModel: OWCommentContentViewModeling!
@@ -140,7 +140,7 @@ fileprivate extension OWCommentContentView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.editedLabel.textColor = OWColorPalette.shared.color(type: .compactText, themeStyle: currentStyle)
+                self.editedLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
 }
