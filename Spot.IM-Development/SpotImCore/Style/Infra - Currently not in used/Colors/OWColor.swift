@@ -27,6 +27,7 @@ struct OWColor {
         case textColor1
         case textColor2
         case textColor3
+        case textColor4
         case backgroundColor1
         case borderColor1
         
@@ -79,6 +80,9 @@ struct OWColor {
             case .textColor3:
                 return OWColor(lightThemeColor: DesignSystemColors.L6,
                                darkThemeColor: DesignSystemColors.D4)
+            case .textColor4:
+                return OWColor(lightThemeColor: DesignSystemColors.G2,
+                               darkThemeColor: DesignSystemColors.G1)
             case .backgroundColor1:
                 return OWColor(lightThemeColor: DesignSystemColors.L1.withAlphaComponent(0.03),
                                darkThemeColor: DesignSystemColors.D1.withAlphaComponent(0.1))
