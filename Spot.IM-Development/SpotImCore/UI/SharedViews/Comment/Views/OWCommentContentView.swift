@@ -108,7 +108,7 @@ fileprivate extension OWCommentContentView {
                 }
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.mediaSize
             .map { $0 == .zero }
             .bind(to: mediaView.rx.isHidden)
