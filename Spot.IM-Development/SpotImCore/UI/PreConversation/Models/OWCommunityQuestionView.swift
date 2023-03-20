@@ -13,20 +13,24 @@ import RxSwift
 class OWCommunityQuestionView: UIView {
     fileprivate struct Metrics {
         static let identifier = "community_question_id"
-        static let fontSize: CGFloat = 20.0
-        static let questionHorizontalOffset: CGFloat = 16.0
+        static let fontSize: CGFloat = 15.0
+        static let questionHorizontalOffset: CGFloat = 12.0
+        static let questionVerticalOffset: CGFloat = 8.0
+        static let containerCorderRadius: CGFloat = 8.0
     }
 
-    fileprivate lazy var questionTextView: UITextView = {
-        let textView = UITextView()
-            .isEditable(false)
-            .isScrollEnabled(false)
-            .isSelectable(false)
-            .backgroundColor(.clear)
-            .font(UIFont.preferred(style: .bold, of: Metrics.fontSize))
+    fileprivate lazy var questionLabel: UILabel = {
+        return UILabel()
+            .font(UIFont.preferred(style: .italic, of: Metrics.fontSize))
             .textColor(OWColorPalette.shared.color(type: .foreground0Color,
                                                          themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
-        return textView
+    }()
+
+    fileprivate lazy var questionContainer: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .compactBackground, themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)) // TODO: color
+            .corner(radius: Metrics.containerCorderRadius)
+            .border(width: 1, color: UIColor.black) // TODO: color
     }()
 
     fileprivate var heightConstraint: OWConstraint?
@@ -49,15 +53,19 @@ class OWCommunityQuestionView: UIView {
 
 fileprivate extension OWCommunityQuestionView {
     func setupViews() {
-        self.isHidden = !viewModel.outputs.shouldShowView
         self.backgroundColor = .clear
-        self.addSubviews(questionTextView)
 
-        questionTextView.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+        self.addSubview(questionContainer)
+        questionContainer.OWSnp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        questionContainer.addSubviews(questionLabel)
+        questionLabel.OWSnp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Metrics.questionVerticalOffset)
+            make.bottom.equalToSuperview().offset(-Metrics.questionVerticalOffset)
             make.leading.equalToSuperview().offset(Metrics.questionHorizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.questionHorizontalOffset)
-            heightConstraint = make.height.equalTo(0).constraint
         }
     }
 
@@ -68,25 +76,20 @@ fileprivate extension OWCommunityQuestionView {
                     .share(replay: 0)
 
         communityQuestionObservable
-            .bind(to: questionTextView.rx.text)
+            .bind(to: questionLabel.rx.text)
             .disposed(by: disposeBag)
 
-        communityQuestionObservable
-            .subscribe(onNext: { [weak self] question in
-                guard let self = self else { return }
-                if let questionString = question, !questionString.isEmpty, self.viewModel.outputs.shouldShowView {
-                    self.heightConstraint?.deactivate()
-                } else {
-                    self.heightConstraint?.activate()
-                }
-            })
+        viewModel.outputs.shouldShowView
+            .map { !$0 }
+            .bind(to: self.rx.isHidden)
             .disposed(by: disposeBag)
 
+        // TODO: colors
         OWSharedServicesProvider.shared.themeStyleService()
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.questionTextView.textColor = OWColorPalette.shared.color(type: .foreground0Color,
+                self.questionLabel.textColor = OWColorPalette.shared.color(type: .foreground0Color,
                                                                               themeStyle: currentStyle)
                 // TODO: custon UI
             }).disposed(by: disposeBag)
