@@ -32,7 +32,7 @@ class OWCommentEngagementView: UIView {
     fileprivate lazy var votingView: OWCommentRatingView = {
         return OWCommentRatingView()
     }()
-    
+
     fileprivate lazy var shareButton: UIButton = {
         return UIButton()
             .setTitle(LocalizationManager.localizedString(key: "Share"), state: .normal)
