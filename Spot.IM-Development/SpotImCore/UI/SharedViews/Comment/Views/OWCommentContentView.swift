@@ -14,9 +14,10 @@ class OWCommentContentView: UIView {
     internal struct Metrics {
         static let fontSize: CGFloat = 15.0
         static let editedFontSize: CGFloat = 13.0
-        static let commentMediaTopPadding: CGFloat = 12.0
-        static let emptyCommentMediaTopPadding: CGFloat = 10.0
+        static let commentMediaTopPadding: CGFloat = 4.0
+        static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
+        static let editedTopPadding: CGFloat = 4.0
     }
 
     fileprivate lazy var textLabel: OWCommentTextLabel = {
@@ -74,8 +75,8 @@ fileprivate extension OWCommentContentView {
 
         self.addSubview(editedLabel)
         editedLabel.OWSnp.makeConstraints { make in
-            make.leading.bottom.equalToSuperview()
-            make.top.equalTo(mediaView.OWSnp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(mediaView.OWSnp.bottom).offset(Metrics.editedTopPadding)
         }
     }
 
@@ -107,6 +108,11 @@ fileprivate extension OWCommentContentView {
                 }
             })
             .disposed(by: disposeBag)
+        
+        viewModel.outputs.mediaSize
+            .map { $0 == .zero }
+            .bind(to: mediaView.rx.isHidden)
+            .disposed(by: disposeBag)
 
         viewModel.outputs.collapsableLabelViewModel
             .outputs.height
@@ -119,6 +125,15 @@ fileprivate extension OWCommentContentView {
         viewModel.outputs.isEdited
             .map { !$0 }
             .bind(to: editedLabel.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isEdited
+            .subscribe(onNext: { [weak self] isEdited in
+                guard let self = self else { return }
+                self.editedLabel.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.mediaView.OWSnp.bottom).offset(isEdited ? Metrics.editedTopPadding : 0)
+                }
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()

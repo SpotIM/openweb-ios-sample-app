@@ -54,6 +54,7 @@ class OWCommunityQuestionView: UIView {
 fileprivate extension OWCommunityQuestionView {
     func setupViews() {
         self.backgroundColor = .clear
+        self.isHidden = true
 
         self.addSubview(questionContainer)
         questionContainer.OWSnp.makeConstraints { make in
