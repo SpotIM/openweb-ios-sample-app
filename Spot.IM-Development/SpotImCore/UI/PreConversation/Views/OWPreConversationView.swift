@@ -155,9 +155,8 @@ fileprivate extension OWPreConversationView {
             make.top.equalTo(communityQuestionView.OWSnp.bottom)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.height.equalTo(viewModel.outputs.shouldShowSeparatorView ? Metrics.separatorHeight : 0)
+            make.height.equalTo(Metrics.separatorHeight)
         }
-        separatorView.isHidden = !viewModel.outputs.shouldShowSeparatorView
 
         self.addSubview(commentCreationEntryView)
         commentCreationEntryView.OWSnp.makeConstraints { make in
@@ -225,6 +224,21 @@ fileprivate extension OWPreConversationView {
         compactTapGesture.rx.event
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldShowSeparatorView
+            .map { !$0 }
+            .bind(to: self.separatorView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldShowSeparatorView
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.separatorView.OWSnp.updateConstraints { make in
+                    make.height.equalTo(isVisible ? Metrics.separatorHeight : 0)
+                }
+            })
             .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
