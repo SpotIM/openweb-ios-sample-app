@@ -16,6 +16,7 @@ class SettingsVC: UIViewController {
     fileprivate struct Metrics {
         static let identifier = "settings_vc_id"
         static let verticalOffset: CGFloat = 40
+        static let verticalBetweenSettingViewsOffset: CGFloat = 80
     }
 
     fileprivate lazy var scrollView: UIScrollView = {
@@ -77,7 +78,7 @@ fileprivate extension SettingsVC {
                 make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
                 if let topView = previousView {
                     // This is an intermidiate settingsView, Set the top constraint to previous settingsView
-                    make.top.equalTo(topView.snp.bottom).offset(Metrics.verticalOffset)
+                    make.top.equalTo(topView.snp.bottom).offset(Metrics.verticalBetweenSettingViewsOffset)
                 } else {
                     // Telling the scroll view that this is the first settingsView
                     make.top.equalTo(scrollView.contentLayoutGuide).offset(Metrics.verticalOffset)
@@ -90,22 +91,6 @@ fileprivate extension SettingsVC {
             }
         }
     }
-
-//    func view(forType type: SettingsGroupType) -> UIView {
-//        let userDefaultsProvider = viewModel.outputs.userDefaultsProvider
-//        let manager = viewModel.outputs.manager
-//        switch type {
-//        case .general:
-//            return GeneralSettingsView(viewModel: GeneralSettingsVM(userDefaultsProvider: userDefaultsProvider, manager: manager))
-//        case .preConversation:
-//            return PreConversationSettingsView(viewModel: PreConversationSettingsVM(userDefaultsProvider: userDefaultsProvider))
-//        case .conversation:
-//            return ConversationSettingsView(viewModel: ConversationSettingsVM(userDefaultsProvider: userDefaultsProvider))
-//        case .commentCreation:
-//            return CommentCreationSettingsView(viewModel: CommentCreationSettingsVM(userDefaultsProvider: userDefaultsProvider))
-//        case .iau:
-//            return IAUSettingsView(viewModel: IAUSettingsVM(userDefaultsProvider: userDefaultsProvider))
-//        }
-//    }
 }
+
 #endif
