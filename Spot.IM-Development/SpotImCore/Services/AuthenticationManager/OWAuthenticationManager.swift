@@ -38,6 +38,10 @@ class OWAuthenticationManager: OWAuthenticationManagerProtocol {
     fileprivate unowned let manager: OWManagerProtocol & OWManagerInternalProtocol
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
 
+    fileprivate struct Metrics {
+        static let maxSSORecoveryTime: Int = 30 // In seconds
+    }
+
     init (manager: OWManagerProtocol & OWManagerInternalProtocol = OWManager.manager,
           servicesProvider: OWSharedServicesProviding) {
         self.manager = manager
@@ -168,6 +172,7 @@ extension OWAuthenticationManager {
                 if case OWInternalUserAuthenticationStatus.ssoLoggedIn(userId: let userId) = status {
                     // Entering SSO recovering status
                     self._userAuthenticationStatus.onNext(.ssoRecovering(userId: userId))
+                    self.ensureSSORecoveryStatus(for: userId)
                 } else {
                     // Clear any user if there was
                     self._userAuthenticationStatus.onNext(.notAutenticated)
@@ -178,7 +183,7 @@ extension OWAuthenticationManager {
 
     func finishAuthenticationRecovery(with authenticationRecovery: OWAuthenticationRecoveryResult) {
         switch authenticationRecovery {
-        case .AuthenticationRenewed(user: let user):
+        case .authenticationShouldRenew(user: let user):
             guard let authenticationLayer = self.manager.authentication as? OWAuthenticationInternalProtocol,
                   let userId = user.userId else { return }
             let blockerService = self.servicesProvider.blockerServicing()
@@ -400,5 +405,52 @@ fileprivate extension OWAuthenticationManager {
         // Returning a simple uuid string, however when looking on hundreds of milion guid, this might be not "randomised" enough.
         // We should think of adding some "seed" by the date interval for example
         return UUID().uuidString
+    }
+
+    func ensureSSORecoveryStatus(for originalUserId: String) {
+        let statusObservable = userAuthenticationStatus
+            .map { status -> OWInternalUserAuthenticationStatus? in
+                if case .ssoLoggedIn(_) = status {
+                    return status
+                } else {
+                    return nil
+                }
+            }
+            .unwrap()
+            .do(onNext: { [weak self] status in
+                guard let self = self,
+                        case .ssoLoggedIn(let userId) = status else { return }
+                // Signal if the recovery was succesfull or not
+                if userId == originalUserId {
+                    self._userAuthenticationStatus.onNext(.ssoRecoveredSuccessfully(userId: originalUserId))
+                } else {
+                    self._userAuthenticationStatus.onNext(.ssoFailedRecover(userId: originalUserId))
+                }
+
+                // Back to the previous status
+                self._userAuthenticationStatus.onNext(status)
+            })
+            .voidify()
+
+        let timeoutObservable = Observable.just(())
+            .delay(.seconds(Metrics.maxSSORecoveryTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .utility))
+            .flatMap { [weak self] _ -> Observable<OWInternalUserAuthenticationStatus> in
+                guard let self = self else { return .empty() }
+                return self.userAuthenticationStatus
+            }
+            .do(onNext: { [weak self] status in
+                guard let self = self else { return }
+                // Signal recovery failed due to timeout
+                self._userAuthenticationStatus.onNext(.ssoFailedRecover(userId: originalUserId))
+
+                // Back to the previous status
+                self._userAuthenticationStatus.onNext(status)
+            })
+            .voidify()
+
+        // Merge both observables and taking only the first one to return
+        _ = Observable.merge(statusObservable, timeoutObservable)
+            .take(1)
+            .subscribe()
     }
 }
