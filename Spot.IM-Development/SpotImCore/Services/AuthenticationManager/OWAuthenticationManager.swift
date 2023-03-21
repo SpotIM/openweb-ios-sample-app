@@ -175,8 +175,8 @@ extension OWAuthenticationManager {
                     self.ensureSSORecoveryStatus(for: userId)
                 } else {
                     // Clear any user if there was
+                    self.update(userAvailability: .notAvailable)
                     self._userAuthenticationStatus.onNext(.notAutenticated)
-                    self._activeUserAvailability.onNext(.notAvailable)
                 }
             })
     }
@@ -191,8 +191,8 @@ extension OWAuthenticationManager {
             blockerService.add(blocker: blockerAction)
             authenticationLayer.triggerRenewSSO(userId: userId, completion: blockerAction.completion)
         case .newAuthentication(user: let user):
+            self.update(userAvailability: .user(user))
             self._userAuthenticationStatus.onNext(.guest(userId: user.userId ?? ""))
-            self._activeUserAvailability.onNext(.user(user))
         }
     }
 
@@ -308,6 +308,18 @@ fileprivate extension OWAuthenticationManager {
 
         if let userAvailability = keychain.get(key: OWKeychain.OWKey<OWUserAvailability>.activeUser) {
             self._activeUserAvailability.onNext(userAvailability)
+
+            // Assuming user authentication status accordingly - renew SSO will take care of the actual `Authorization` header if needed to renew
+            let status: OWInternalUserAuthenticationStatus
+            switch userAvailability {
+            case .user(let user):
+                let userId = user.userId ?? ""
+                status = user.registered ? .ssoLoggedIn(userId: userId) : .guest(userId: userId)
+            case .notAvailable:
+                status = .notAutenticated
+            }
+
+            self._userAuthenticationStatus.onNext(status)
         }
     }
 
