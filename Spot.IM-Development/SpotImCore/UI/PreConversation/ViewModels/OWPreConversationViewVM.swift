@@ -198,11 +198,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var shouldShowFooter: Observable<Bool> { // TODO: will get from config
         Observable.just(!isCompactMode)
     }
-    
+
     lazy var shouldAddContentTapRecognizer: Bool = {
         return isCompactMode
     }()
-    
+
     lazy var isCompactBackground: Bool = {
         return isCompactMode
     }()
