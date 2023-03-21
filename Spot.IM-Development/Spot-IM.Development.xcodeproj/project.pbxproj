@@ -446,6 +446,7 @@
 		3DDCB2A22995478700B8ED8E /* OWSortingCustomizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A12995478700B8ED8E /* OWSortingCustomizations.swift */; };
 		3DDCB2A429954CBA00B8ED8E /* OWSortOption+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A329954CBA00B8ED8E /* OWSortOption+Extensions.swift */; };
 		3DDCB2A629954FB000B8ED8E /* OWCustomizedSortTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCB2A529954FB000B8ED8E /* OWCustomizedSortTitle.swift */; };
+		3DDE1D8729C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDE1D8629C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift */; };
 		3DDF91C0299FCAB100256C32 /* OWCommentCreationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */; };
 		3DE0FE3927D618840097B17B /* OWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3827D618840097B17B /* OWRouter.swift */; };
 		3DE0FE3C27D648330097B17B /* OWManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE0FE3B27D648330097B17B /* OWManager.swift */; };
@@ -1168,6 +1169,7 @@
 		3DDCB2A12995478700B8ED8E /* OWSortingCustomizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWSortingCustomizations.swift; sourceTree = "<group>"; };
 		3DDCB2A329954CBA00B8ED8E /* OWSortOption+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OWSortOption+Extensions.swift"; sourceTree = "<group>"; };
 		3DDCB2A529954FB000B8ED8E /* OWCustomizedSortTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCustomizedSortTitle.swift; sourceTree = "<group>"; };
+		3DDE1D8629C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentSSOAuthenticationNewAPI.swift; sourceTree = "<group>"; };
 		3DDF91BF299FCAB100256C32 /* OWCommentCreationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWCommentCreationStyle.swift; sourceTree = "<group>"; };
 		3DE0FE3827D618840097B17B /* OWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWRouter.swift; sourceTree = "<group>"; };
 		3DE0FE3B27D648330097B17B /* OWManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWManager.swift; sourceTree = "<group>"; };
@@ -2328,6 +2330,7 @@
 			children = (
 				5D00B74322E9B7A600EFC1B0 /* DemoUserAuthentication.swift */,
 				3D29A2DB283BA544002BE318 /* SilentSSOAuthentication.swift */,
+				3DDE1D8629C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift */,
 				9E1589BB2941E65100A050CA /* UserDefaultsProvider.swift */,
 				9ECDEE712966D5D0001286EB /* UserDefaultsProviderRxHelper.swift */,
 			);
@@ -4913,6 +4916,7 @@
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
 				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
+				3DDE1D8729C9913F00F7F8D5 /* SilentSSOAuthenticationNewAPI.swift in Sources */,
 				3DB3D182282A4B94008654CF /* GenericSSOAuthentication.swift in Sources */,
 				3DB3D184282A4F85008654CF /* JWTSSOAuthentication.swift in Sources */,
 				9ECDEE722966D5D0001286EB /* UserDefaultsProviderRxHelper.swift in Sources */,
