@@ -33,7 +33,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowSeparatorView: Observable<Bool> { get }
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
-    var shouldShowComments: Bool { get }
+    var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTA: Bool { get }
     var shouldShowFooter: Bool { get }
     var shouldShowComapctView: Bool { get }
@@ -181,11 +181,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         Observable.just(isRegularStyle)
     }
 
-    var shouldShowComments: Bool {
-        if case .compact = self.preConversationStyle {
-            return false
-        }
-        return true
+    var shouldShowComments: Observable<Bool> {
+        Observable.just(!isCompactMode)
     }
 
     var shouldShowComapctView: Bool {
@@ -415,7 +412,7 @@ fileprivate extension OWPreConversationViewViewModel {
     // swiftlint:enable function_body_length
 
     func populateInitialUI() {
-        if self.shouldShowComments {
+        if !self.isCompactMode {
             let numberOfComments = self.preConversationStyle.numberOfComments
             let skeletonCellVMs = (0 ..< numberOfComments).map { _ in OWCommentSkeletonShimmeringCellViewModel() }
             let skeletonCells = skeletonCellVMs.map { OWPreConversationCellOption.commentSkeletonShimmering(viewModel: $0) }
