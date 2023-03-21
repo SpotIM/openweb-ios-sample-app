@@ -179,9 +179,8 @@ fileprivate extension OWPreConversationView {
         btnCTAConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(tableView.OWSnp.bottom).offset(viewModel.outputs.shouldShowCTA ? Metrics.btnFullConversationTopPadding : 0)
+            make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
-        btnCTAConversation.isHidden = !viewModel.outputs.shouldShowCTA
 
         self.addSubview(footerView)
         footerView.OWSnp.makeConstraints { make in
@@ -193,7 +192,25 @@ fileprivate extension OWPreConversationView {
         footerView.isHidden = !viewModel.outputs.shouldShowFooter
     }
 
+    // swiftlint:disable function_body_length
     func setupObservers() {
+        compactTapGesture.rx.event
+            .voidify()
+            .bind(to: viewModel.inputs.fullConversationTap)
+            .disposed(by: disposeBag)
+
+        OWSharedServicesProvider.shared.themeStyleService()
+            .style
+            .subscribe(onNext: { [weak self] currentStyle in
+                guard let self = self else { return }
+                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactMode ? .compactBackground : .background0Color, themeStyle: currentStyle)
+                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
+                                                                   themeStyle: currentStyle)
+            })
+            .disposed(by: disposeBag)
+
+        guard !viewModel.outputs.shouldShowComapctView else { return }
+
         viewModel.outputs.conversationCTAButtonTitle
             .bind(to: btnCTAConversation.rx.title())
             .disposed(by: disposeBag)
@@ -218,16 +235,11 @@ fileprivate extension OWPreConversationView {
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
 
-        compactTapGesture.rx.event
-            .voidify()
-            .bind(to: viewModel.inputs.fullConversationTap)
-            .disposed(by: disposeBag)
-
         viewModel.outputs.shouldShowCommentCreationEntryView
             .map { !$0 }
             .bind(to: commentCreationEntryView.rx.isHidden)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.shouldShowCommentCreationEntryView
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] shouldShow in
@@ -257,12 +269,12 @@ fileprivate extension OWPreConversationView {
                 }
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.shouldShowComments
-            .map { $0 }
+            .map { !$0 }
             .bind(to: tableView.rx.isHidden)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.shouldShowComments
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
@@ -273,13 +285,18 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
 
-        OWSharedServicesProvider.shared.themeStyleService()
-            .style
-            .subscribe(onNext: { [weak self] currentStyle in
+        viewModel.outputs.shouldShowCTA
+            .map { !$0 }
+            .bind(to: btnCTAConversation.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowCTA
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactMode ? .compactBackground : .background0Color, themeStyle: currentStyle)
-                self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
-                                                                   themeStyle: currentStyle)
+                self.btnCTAConversation.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -304,4 +321,5 @@ fileprivate extension OWPreConversationView {
             })
             .disposed(by: disposeBag)
     }
+    // swiftlint:enable function_body_length
 }
