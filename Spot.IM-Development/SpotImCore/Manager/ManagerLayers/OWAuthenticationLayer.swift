@@ -13,7 +13,7 @@ protocol OWAuthenticationInternalProtocol {
     func triggerRenewSSO(userId: String, completion: @escaping OWBasicCompletion)
 }
 
-class OWAuthenticationLayer: OWAuthentication {
+class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol {
 
     fileprivate let servicesProvider: OWSharedServicesProviding
 
