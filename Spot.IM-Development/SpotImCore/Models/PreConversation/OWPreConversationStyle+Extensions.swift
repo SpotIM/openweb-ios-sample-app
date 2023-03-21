@@ -58,7 +58,7 @@ extension OWPreConversationStyle {
     var communityGuidelinesStyle: OWCommunityGuidelinesStyle {
         switch self {
         case .regular, .ctaWithSummary:
-            return .regular // TODO
+            return .regular // TODO - support guidelines regular/compact modes configuration
         case .compact, .ctaButtonOnly:
             return .none
         }
@@ -67,7 +67,7 @@ extension OWPreConversationStyle {
     var communityQuestionStyle: OWCommunityQuestionsStyle {
         switch self {
         case .regular, .ctaWithSummary:
-            return .regular // TODO
+            return .regular
         case .compact, .ctaButtonOnly:
             return .none
         }

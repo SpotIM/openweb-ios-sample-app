@@ -166,7 +166,7 @@ fileprivate extension OWPreConversationCompactContentView {
             .bind(to: leftViewContainer.rx.isHidden)
             .disposed(by: disposeBag)
 
-        viewModel.outputs.showImagePlaceholder
+        viewModel.outputs.shouldShowImagePlaceholder
             .map { !$0 }
             .bind(to: cameraIcon.rx.isHidden)
             .disposed(by: disposeBag)
@@ -187,7 +187,7 @@ fileprivate extension OWPreConversationCompactContentView {
             .disposed(by: disposeBag)
 
         // Set image placeholder if needed
-        viewModel.outputs.showImagePlaceholder
+        viewModel.outputs.shouldShowImagePlaceholder
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] showImage in
                 guard let self = self else { return }
