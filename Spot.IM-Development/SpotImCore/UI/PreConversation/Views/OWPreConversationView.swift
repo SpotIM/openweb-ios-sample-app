@@ -186,10 +186,9 @@ fileprivate extension OWPreConversationView {
         footerView.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(viewModel.outputs.shouldShowFooter ? Metrics.btnFullConversationTopPadding : 0)
-            make.bottom.equalToSuperview().offset(viewModel.outputs.shouldShowFooter ? -Metrics.bottomPadding : 0)
+            make.top.equalTo(btnCTAConversation.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.bottom.equalToSuperview().offset(-Metrics.bottomPadding)
         }
-        footerView.isHidden = !viewModel.outputs.shouldShowFooter
     }
 
     // swiftlint:disable function_body_length
@@ -296,6 +295,22 @@ fileprivate extension OWPreConversationView {
                 guard let self = self else { return }
                 self.btnCTAConversation.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldShowFooter
+            .map { !$0 }
+            .bind(to: footerView.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowFooter
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.footerView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.btnCTAConversation.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
+                    make.bottom.equalToSuperview().offset(isVisible ? -Metrics.bottomPadding : 0)
                 }
             })
             .disposed(by: disposeBag)
