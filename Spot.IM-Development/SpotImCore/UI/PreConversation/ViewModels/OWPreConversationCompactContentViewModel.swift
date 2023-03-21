@@ -21,7 +21,7 @@ protocol OWPreConversationCompactContentViewModelingOutputs {
     var isSkelatonHidden: Observable<Bool> { get }
     var isCommentHidden: Observable<Bool> { get }
     var text: Observable<String> { get }
-    var showImagePlaceholder: Observable<Bool> { get }
+    var shouldShowImagePlaceholder: Observable<Bool> { get }
 }
 
 protocol OWPreConversationCompactContentViewModeling {
@@ -68,7 +68,7 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
             .asObservable()
     }()
 
-    lazy var showImagePlaceholder: Observable<Bool> = {
+    lazy var shouldShowImagePlaceholder: Observable<Bool> = {
         contentType
             .map { type in
                 if case .comment(let commentType) = type,
