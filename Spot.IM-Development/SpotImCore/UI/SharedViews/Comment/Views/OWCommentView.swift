@@ -17,6 +17,7 @@ class OWCommentView: UIView {
         static let topOffset: CGFloat = 38.0
         static let commentLabelTopPadding: CGFloat = 10.0
         static let messageContainerTopOffset: CGFloat = 4.0
+        static let commentActionsTopPadding: CGFloat = 15.0
     }
 
     fileprivate lazy var commentHeaderView: OWCommentHeaderView = {
@@ -83,7 +84,7 @@ fileprivate extension OWCommentView {
         self.addSubview(commentEngagementView)
         commentEngagementView.OWSnp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(commentContentView.OWSnp.bottom)
+            make.top.equalTo(commentContentView.OWSnp.bottom).offset(Metrics.commentActionsTopPadding)
             make.bottom.equalToSuperview().offset(-Metrics.bottomOffset)
         }
     }

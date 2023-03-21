@@ -39,6 +39,7 @@ class OWCommentContentView: UIView {
     fileprivate var viewModel: OWCommentContentViewModeling!
     fileprivate var disposeBag: DisposeBag!
     fileprivate var textHeightConstraint: OWConstraint?
+    fileprivate var editedLabelHeightConstraint: OWConstraint?
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -77,6 +78,7 @@ fileprivate extension OWCommentContentView {
         editedLabel.OWSnp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(mediaView.OWSnp.bottom).offset(Metrics.editedTopPadding)
+            editedLabelHeightConstraint = make.height.equalTo(0).constraint
         }
     }
 
@@ -132,6 +134,11 @@ fileprivate extension OWCommentContentView {
                 guard let self = self else { return }
                 self.editedLabel.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.mediaView.OWSnp.bottom).offset(isEdited ? Metrics.editedTopPadding : 0)
+                }
+                if isEdited {
+                    self.editedLabelHeightConstraint?.deactivate()
+                } else {
+                    self.editedLabelHeightConstraint?.activate()
                 }
             })
             .disposed(by: disposeBag)
