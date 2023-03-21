@@ -119,6 +119,19 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             .share(replay: 1)
     }()
 
+    fileprivate lazy var _isCompactStyle: BehaviorSubject<Bool> = {
+        var isCompact = false
+        if case .compact = preConversationStyle {
+            isCompact = true
+        }
+        return BehaviorSubject<Bool>(value: isCompact)
+    }()
+
+    fileprivate lazy var isCompactStyle: Observable<Bool> = {
+        return _isCompactStyle
+            .share(replay: 1)
+    }()
+
     // TODO: support read only in pre conversation
     fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
 
@@ -190,7 +203,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowComments: Observable<Bool> {
-        Observable.just(!isCompactMode)
+        isCompactStyle
+            .map { !$0 }
     }
 
     var shouldShowComapactView: Bool {
@@ -198,11 +212,13 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var shouldShowCTA: Observable<Bool> {
-        Observable.just(!isCompactMode)
+        isCompactStyle
+            .map { !$0 }
     }
 
     var shouldShowFooter: Observable<Bool> { // TODO: will get from config
-        Observable.just(!isCompactMode)
+        isCompactStyle
+            .map { !$0 }
     }
 
     lazy var shouldAddContentTapRecognizer: Bool = {
