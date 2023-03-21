@@ -91,7 +91,9 @@ class OWAuthenticationLayer: OWAuthentication, OWAuthenticationInternalProtocol 
             logger.log(level: .error, "`renewSSO` callback should be provided to `manager.authentication` in order to trigger renew SSO flow.\nPlease provide this callback.")
             return
         }
-        callback(userId, completion)
+        DispatchQueue.main.async {
+            callback(userId, completion)
+        }
     }
 }
 
