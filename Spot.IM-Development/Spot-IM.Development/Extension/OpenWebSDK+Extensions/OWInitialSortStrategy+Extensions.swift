@@ -17,7 +17,7 @@ extension OWInitialSortStrategy {
         case 0: return .useServerConfig
         case 1: return .use(sortOption: .best)
         case 2: return .use(sortOption: .newest)
-        case 4: return .use(sortOption: .oldest)
+        case 3: return .use(sortOption: .oldest)
         default: return .useServerConfig
         }
     }
