@@ -59,6 +59,7 @@ fileprivate extension OWCommunityQuestionView {
         self.addSubview(questionContainer)
         questionContainer.OWSnp.makeConstraints { make in
             make.edges.equalToSuperview()
+            heightConstraint = make.height.equalTo(0).constraint
         }
 
         questionContainer.addSubviews(questionLabel)
@@ -83,6 +84,18 @@ fileprivate extension OWCommunityQuestionView {
         viewModel.outputs.shouldShowView
             .map { !$0 }
             .bind(to: self.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowView
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                if isVisible {
+                    self.heightConstraint?.deactivate()
+                } else {
+                    self.heightConstraint?.activate()
+                }
+            })
             .disposed(by: disposeBag)
 
         // TODO: colors
