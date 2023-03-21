@@ -35,7 +35,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTA: Observable<Bool> { get }
-    var shouldShowFooter: Bool { get }
+    var shouldShowFooter: Observable<Bool> { get }
     var shouldShowComapctView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
     var isCompactMode: Bool { get }
@@ -196,11 +196,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         Observable.just(!isCompactMode)
     }
 
-    var shouldShowFooter: Bool {
-        if case .compact = self.preConversationStyle {
-            return false
-        }
-        return true
+    var shouldShowFooter: Observable<Bool> { // TODO: will get from config
+        Observable.just(!isCompactMode)
     }
 
     fileprivate var postId: OWPostId {
