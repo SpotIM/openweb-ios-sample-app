@@ -14,8 +14,3 @@ enum OWCompactContentType {
     case closedAndEmpty
     case skelaton
 }
-
-enum OWCompactCommentType {
-    case text(string: String)
-    case media
-}
