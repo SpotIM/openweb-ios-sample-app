@@ -34,7 +34,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowSeparatorView: Observable<Bool> { get }
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
-    var shouldShowCTA: Bool { get }
+    var shouldShowCTA: Observable<Bool> { get }
     var shouldShowFooter: Bool { get }
     var shouldShowComapctView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
@@ -192,11 +192,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return false
     }
 
-    var shouldShowCTA: Bool {
-        if case .compact = self.preConversationStyle {
-            return false
-        }
-        return true
+    var shouldShowCTA: Observable<Bool> {
+        Observable.just(!isCompactMode)
     }
 
     var shouldShowFooter: Bool {
