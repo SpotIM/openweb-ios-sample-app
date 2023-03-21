@@ -287,24 +287,12 @@ fileprivate extension OWPreConversationViewViewModel {
             .disposed(by: disposeBag)
 
         conversationFetchedObservable
-            .subscribe(onNext: { [weak self] response in
-                guard let self = self else { return }
-                self.compactCommentVM.inputs.conversationFetched.onNext(response)
-            })
+            .bind(to: compactCommentVM.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
         // Binding to community question component
         conversationFetchedObservable
-            .map { conversationRead -> SPConversationReadRM? in
-                return conversationRead
-            }
-            .asDriver(onErrorJustReturn: nil)
-            .asObservable()
-            .unwrap()
-            .map { conversation in
-                conversation.conversation?.communityQuestion
-            }
-            .bind(to: communityQuestionViewModel.inputs.communityQuestionString)
+            .bind(to: communityQuestionViewModel.inputs.conversationFetched)
             .disposed(by: disposeBag)
 
         // Set read only mode
