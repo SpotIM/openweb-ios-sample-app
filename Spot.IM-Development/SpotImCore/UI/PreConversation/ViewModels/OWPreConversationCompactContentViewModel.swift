@@ -86,9 +86,9 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
                 case .skelaton:
                     return ""
                 case .emptyConversation:
-                    return "empty placeolder TODO" // TODO: String
+                    return "Start the conversation and share your thoughts and ideas with the community." // TODO: String
                 case .closedAndEmpty:
-                    return "closedAndEmpty TODO" // TODO: String
+                    return "This conversation has ended and comments are no longer being accepted." // TODO: String
                 case .comment(let commentType):
                     switch commentType {
                     case .media:
