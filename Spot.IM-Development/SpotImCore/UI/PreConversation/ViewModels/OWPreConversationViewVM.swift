@@ -36,9 +36,10 @@ protocol OWPreConversationViewViewModelingOutputs {
     var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTA: Observable<Bool> { get }
     var shouldShowFooter: Observable<Bool> { get }
-    var shouldShowComapctView: Bool { get }
+    var shouldShowComapactView: Bool { get }
     var conversationCTAButtonTitle: Observable<String> { get }
-    var isCompactMode: Bool { get }
+    var shouldAddContentTapRecognizer: Bool { get }
+    var isCompactBackground: Bool { get }
     var compactCommentVM: OWPreConversationCompactContentViewModeling { get }
 }
 
@@ -98,13 +99,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return self.preConversationData.settings?.style ?? OWPreConversationStyle.regular()
     }()
 
-    lazy var isCompactMode: Bool = {
+    fileprivate lazy var isCompactMode: Bool = {
         if case .compact = preConversationStyle {
             return true
         }
         return false
     }()
-    lazy var isRegularStyle: Bool = {
+
+    fileprivate lazy var isRegularStyle: Bool = {
         if case .regular = preConversationStyle {
             return true
         }
@@ -185,11 +187,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         Observable.just(!isCompactMode)
     }
 
-    var shouldShowComapctView: Bool {
-        if case .compact = self.preConversationStyle {
-            return true
-        }
-        return false
+    var shouldShowComapactView: Bool {
+        return isCompactMode
     }
 
     var shouldShowCTA: Observable<Bool> {
@@ -199,6 +198,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var shouldShowFooter: Observable<Bool> { // TODO: will get from config
         Observable.just(!isCompactMode)
     }
+    
+    lazy var shouldAddContentTapRecognizer: Bool = {
+        return isCompactMode
+    }()
+    
+    lazy var isCompactBackground: Bool = {
+        return isCompactMode
+    }()
 
     fileprivate var postId: OWPostId {
         return OWManager.manager.postId ?? ""
