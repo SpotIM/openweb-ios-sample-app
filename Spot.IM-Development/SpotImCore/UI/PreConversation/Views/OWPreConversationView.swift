@@ -169,12 +169,11 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(viewModel.outputs.shouldShowComments ? Metrics.commentCreationVerticalPadding : 0)
+            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(0)
         }
-        tableView.isHidden = !viewModel.outputs.shouldShowComments
 
         self.addSubview(btnCTAConversation)
         btnCTAConversation.OWSnp.makeConstraints { make in
@@ -255,6 +254,21 @@ fileprivate extension OWPreConversationView {
                 guard let self = self else { return }
                 self.separatorView.OWSnp.updateConstraints { make in
                     make.height.equalTo(isVisible ? Metrics.separatorHeight : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldShowComments
+            .map { $0 }
+            .bind(to: tableView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        viewModel.outputs.shouldShowComments
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.tableView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationVerticalPadding : 0)
                 }
             })
             .disposed(by: disposeBag)
