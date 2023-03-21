@@ -32,7 +32,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
     var shouldShowSeparatorView: Observable<Bool> { get }
-    var shouldCommentCreationEntryView: Bool { get }
+    var shouldShowCommentCreationEntryView: Observable<Bool> { get }
     var shouldShowComments: Bool { get }
     var shouldShowCTA: Bool { get }
     var shouldShowFooter: Bool { get }
@@ -177,11 +177,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         Observable.just(isRegularStyle)
     }
 
-    var shouldCommentCreationEntryView: Bool {
-        if case .regular = self.preConversationStyle {
-            return true
-        }
-        return false
+    var shouldShowCommentCreationEntryView: Observable<Bool> {
+        Observable.just(isRegularStyle)
     }
 
     var shouldShowComments: Bool {

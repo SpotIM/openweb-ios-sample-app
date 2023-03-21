@@ -45,6 +45,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         let view = OWCommentCreationEntryView(with: self.viewModel.outputs.commentCreationEntryViewModel)
         return view
     }()
+    fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -160,14 +161,11 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(commentCreationEntryView)
         commentCreationEntryView.OWSnp.makeConstraints { make in
-            make.top.equalTo(separatorView.OWSnp.bottom).offset(viewModel.outputs.shouldCommentCreationEntryView ? Metrics.commentCreationVerticalPadding : 0)
+            make.top.equalTo(separatorView.OWSnp.bottom).offset(Metrics.commentCreationVerticalPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview()
-            if(!viewModel.outputs.shouldCommentCreationEntryView) {
-                make.height.equalTo(0)
-            }
+            commentCreationZeroHeightConstraint = make.height.equalTo(0).constraint
         }
-        commentCreationEntryView.isHidden = !viewModel.outputs.shouldCommentCreationEntryView
 
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
@@ -225,12 +223,32 @@ fileprivate extension OWPreConversationView {
             .voidify()
             .bind(to: viewModel.inputs.fullConversationTap)
             .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowCommentCreationEntryView
+            .map { !$0 }
+            .bind(to: commentCreationEntryView.rx.isHidden)
+            .disposed(by: disposeBag)
         
+        viewModel.outputs.shouldShowCommentCreationEntryView
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] shouldShow in
+                guard let self = self else { return }
+                if (shouldShow) {
+                    self.commentCreationZeroHeightConstraint?.deactivate()
+                } else {
+                    self.commentCreationZeroHeightConstraint?.activate()
+                }
+                self.commentCreationEntryView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.separatorView.OWSnp.bottom).offset(shouldShow ? Metrics.commentCreationVerticalPadding : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+
         viewModel.outputs.shouldShowSeparatorView
             .map { !$0 }
             .bind(to: self.separatorView.rx.isHidden)
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.shouldShowSeparatorView
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
