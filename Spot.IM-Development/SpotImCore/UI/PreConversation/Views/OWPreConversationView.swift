@@ -22,7 +22,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let btnFullConversationTopPadding: CGFloat = 13
         static let bottomPadding: CGFloat = 24
         static let compactModePadding: CGFloat = 16
-        static let communityQuestionTopPadding: CGFloat = 16
+        static let communityQuestionTopPadding: CGFloat = 8
         static let separatorHeight: CGFloat = 1.0
         static let summaryTopPadding: CGFloat = 24
         static let compactSummaryTopPadding: CGFloat = 16
@@ -145,7 +145,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubview(communityQuestionView)
         communityQuestionView.OWSnp.makeConstraints { make in
-            make.top.equalTo(preConversationSummary.OWSnp.bottom)
+            make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(Metrics.communityQuestionTopPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
         }
@@ -214,6 +214,18 @@ fileprivate extension OWPreConversationView {
             .disposed(by: disposeBag)
 
         guard !viewModel.outputs.shouldShowComapactView else { return }
+
+        viewModel.outputs
+            .communityQuestionViewModel.outputs
+            .shouldShowView
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.communityQuestionView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.preConversationSummary.OWSnp.bottom).offset(isVisible ? Metrics.communityQuestionTopPadding : 0)
+                }
+            })
+            .disposed(by: disposeBag)
 
         viewModel.outputs.conversationCTAButtonTitle
             .bind(to: btnCTAConversation.rx.title())
