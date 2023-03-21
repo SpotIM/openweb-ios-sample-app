@@ -16,13 +16,7 @@ struct OWColor {
         case skeletonEncapsulateViewBackgroundColor
         case skeletonColor
         case skeletonShimmeringColor
-        case foreground0Color
-        case foreground1Color
         case foreground2Color
-        case foreground3Color
-        case background0Color
-        case background1Color
-
         case separatorColor
         case textColor1
         case textColor2
@@ -30,14 +24,11 @@ struct OWColor {
         case textColor4
         case backgroundColor1
         case backgroundColor2
+        case backgroundColor3
         case borderColor1
-
-        case borderColor
+        case borderColor2
         case brandColor
-        case buttonTextColor
         case linkColor
-        case compactBackground
-        case compactText
 
         var `default`: OWColor {
             switch self {
@@ -50,25 +41,9 @@ struct OWColor {
             case .skeletonShimmeringColor:
                 return OWColor(lightThemeColor: UIColor(red: 235.0/255.0, green: 235.0/255.0, blue: 235.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 110.0/255.0, green: 110.0/255.0, blue: 110.0/255.0, alpha: 1.0))
-            case .foreground0Color:
-                return OWColor(lightThemeColor: UIColor(red: 35.0/255.0, green: 35.0/255.0, blue: 35.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor(red: 247.0/255.0, green: 247.0/255.0, blue: 247.0/255.0, alpha: 1.0))
-            case .foreground1Color:
-                return OWColor(lightThemeColor: UIColor(red: 55.0/255.0, green: 62.0/255.0, blue: 68.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor(red: 247.0/255.0, green: 247.0/255.0, blue: 247.0/255.0, alpha: 1.0))
             case .foreground2Color:
                 return OWColor(lightThemeColor: UIColor(red: 168.0/255.0, green: 171.0/255.0, blue: 174.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 182.0/255.0, green: 185.0/255.0, blue: 187.0/255.0, alpha: 1.0))
-            case .foreground3Color:
-                return OWColor(lightThemeColor: UIColor(red: 123.0/255.0, green: 127.0/255.0, blue: 131.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor(red: 182.0/255.0, green: 185.0/255.0, blue: 187.0/255.0, alpha: 1.0))
-            case .background0Color:
-                return OWColor(lightThemeColor: UIColor.white,
-                               darkThemeColor: UIColor(red: 7/255.0, green: 7/255.0, blue: 7/255.0, alpha: 1.0))
-            case .background1Color:
-                return OWColor(lightThemeColor: UIColor.white,
-                               darkThemeColor: UIColor.white.withAlphaComponent(0.15))
-
             case .separatorColor:
                 return OWColor(lightThemeColor: DesignSystemColors.L3,
                                darkThemeColor: DesignSystemColors.D2)
@@ -90,27 +65,20 @@ struct OWColor {
             case .backgroundColor2:
                 return OWColor(lightThemeColor: DesignSystemColors.G1,
                                darkThemeColor: DesignSystemColors.L6)
+            case .backgroundColor3:
+                return OWColor(lightThemeColor: DesignSystemColors.L1,
+                               darkThemeColor: UIColor(red: 31.0/255.0, green: 31.0/255.0, blue: 31.0/255.0, alpha: 1.0))
             case .borderColor1:
                 return OWColor(lightThemeColor: DesignSystemColors.L1,
                                darkThemeColor: DesignSystemColors.D1)
-
-            case .borderColor:
-                return OWColor(lightThemeColor: UIColor(red: 212.0/255.0, green: 214.0/255.0, blue: 215.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor.clear)
+            case .borderColor2:
+                return OWColor(lightThemeColor: DesignSystemColors.L2,
+                               darkThemeColor: DesignSystemColors.D1)
             case .brandColor:
                 return OWColor(lightThemeColor: .black, darkThemeColor: .white)
-            case .buttonTextColor:
-                return OWColor(lightThemeColor: UIColor(red: 48.0/255.0, green: 127.0/255.0, blue: 226.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor(red: 48.0/255.0, green: 127.0/255.0, blue: 226.0/255.0, alpha: 1.0))
             case .linkColor:
                 return OWColor(lightThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0))
-            case .compactBackground:
-                return OWColor(lightThemeColor: UIColor(red: 7.0/255.0, green: 7.0/255.0, blue: 7.0/255.0, alpha: 0.05),
-                               darkThemeColor: UIColor(red: 31.0/255.0, green: 31.0/255.0, blue: 31.0/255.0, alpha: 1.0))
-            case .compactText:
-                return OWColor(lightThemeColor: UIColor(red: 7.0/255.0, green: 7.0/255.0, blue: 7.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1.0))
             }
         }
 

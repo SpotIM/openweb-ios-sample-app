@@ -233,7 +233,7 @@ fileprivate extension OWPreConversationView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactMode ? .compactBackground : .backgroundColor2, themeStyle: currentStyle)
+                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactMode ? .backgroundColor3 : .backgroundColor2, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
             })
