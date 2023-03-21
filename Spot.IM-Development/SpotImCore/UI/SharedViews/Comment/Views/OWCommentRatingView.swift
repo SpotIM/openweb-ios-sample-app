@@ -14,9 +14,8 @@ class OWCommentRatingView: UIView {
 
     fileprivate struct Metrics {
         static let voteButtonSize: CGFloat = 24.0
-        static let voteButtonInset: CGFloat = 4.0
         static let fontSize: CGFloat = 12.0
-        static let stackviewHeight: CGFloat = 34.0
+        static let stackviewHeight: CGFloat = 24.0
         static let identifier = "comment_voting_view_id"
         static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
         static let rankDownButtonIdentifier = "comment_voting_view_rank_down_button_id"
@@ -35,14 +34,8 @@ class OWCommentRatingView: UIView {
     }()
 
     fileprivate lazy var rankUpButton: SPAnimatedButton = {
-        let insets = UIEdgeInsets(
-            top: Metrics.voteButtonInset,
-            left: Metrics.voteButtonInset,
-            bottom: Metrics.voteButtonInset,
-            right: Metrics.voteButtonInset
-        )
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
-        let button = SPAnimatedButton(frame: frame, buttonInset: insets)
+        let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
         button.imageColorOff = OWColorPalette.shared.color(type: .textColor2, themeStyle: .light)
         button.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)
@@ -50,14 +43,8 @@ class OWCommentRatingView: UIView {
     }()
 
     fileprivate lazy var rankDownButton: SPAnimatedButton = {
-        let insets = UIEdgeInsets(
-            top: Metrics.voteButtonInset,
-            left: Metrics.voteButtonInset,
-            bottom: Metrics.voteButtonInset,
-            right: Metrics.voteButtonInset
-        )
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
-        let button = SPAnimatedButton(frame: frame, buttonInset: insets)
+        let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
         button.imageColorOff = OWColorPalette.shared.color(type: .textColor2, themeStyle: .light)
         button.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)
