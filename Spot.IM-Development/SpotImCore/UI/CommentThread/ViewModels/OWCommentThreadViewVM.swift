@@ -41,6 +41,9 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             .asObservable()
     }
 
+    fileprivate var _commentsPresentationData = BehaviorSubject<[OWCommentPresentationData]?>(value: nil)
+    fileprivate var _commentIdToCommentCellVM: [String: OWCommentCellViewModel] = [:]
+
     var commentCreationTap = PublishSubject<OWCommentCreationType>()
     var openCommentCreation: Observable<OWCommentCreationType> {
         return commentCreationTap
@@ -75,14 +78,15 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
 }
 
 fileprivate extension OWCommentThreadViewViewModel {
+    // swiftlint:disable function_body_length
     func setupObservers() {
         // Observable for the conversation network API
-        let conversationThreadReadObservable = _commentThreadData.unwrap().flatMap { [weak self] data -> Observable<SPConversationReadRM> in
+        let conversationThreadReadObservable = _commentThreadData.unwrap().flatMap { [weak self] _ -> Observable<SPConversationReadRM> in
             guard let self = self else { return .empty() }
             return self.servicesProvider
             .netwokAPI()
             .conversation
-            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
+            .conversationRead(mode: .best, page: OWPaginationPage.first)
             .response
         }
 
@@ -96,29 +100,80 @@ fileprivate extension OWCommentThreadViewViewModel {
         commentThreadFetchedObservable
             .subscribe(onNext: { [weak self] response in
                 guard let self = self, let responseComments = response.conversation?.comments else { return }
-                var viewModels = [OWCommentThreadCellOption]()
 
                 let comments: [SPComment] = Array(responseComments)
 
+                var commentsPresentationData = [OWCommentPresentationData]()
+                var repliesPresentationData = [OWCommentPresentationData]()
+
                 for comment in comments {
-                    // TODO: replies
+                    guard let commentId = comment.id else { return }
                     guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
+
                     let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: 4))
-                    viewModels.append(OWCommentThreadCellOption.comment(viewModel: vm))
+                    self._commentIdToCommentCellVM[commentId] = vm
+
                     if let replies = comment.replies {
 
-                        viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-
-                        for (index, reply) in replies.enumerated() {
+                        for reply in replies {
+                            guard let replyId = reply.id else { return }
                             guard let replyUser = response.conversation?.users?[reply.userId ?? ""] else { return }
-                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: reply, user: replyUser, replyToUser: nil, collapsableTextLineLimit: 4))
-                            viewModels.append(OWCommentThreadCellOption.comment(viewModel: vm))
-                            if (index < replies.count - 1) {
-                                viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
-                            }
+                            let vm = OWCommentCellViewModel(data: OWCommentRequiredData(comment: reply, user: replyUser, replyToUser: user, collapsableTextLineLimit: 4))
+                            self._commentIdToCommentCellVM[replyId] = vm
+
+                            repliesPresentationData.append(
+                                OWCommentPresentationData(
+                                    id: replyId,
+                                    shouldShowReplies: false,
+                                    repliesIds: reply.replies?.map { $0.id! } ?? [],
+                                    repliesCount: reply.repliesCount ?? 0,
+                                    repliesOffset: reply.offset ?? 0, repliesPresentation: []
+                                )
+                            )
                         }
                     }
+
+                    commentsPresentationData.append(
+                        OWCommentPresentationData(
+                            id: commentId,
+                            shouldShowReplies: true,
+                            repliesIds: comment.replies?.map { $0.id! } ?? [],
+                            repliesCount: comment.repliesCount ?? 0,
+                            repliesOffset: comment.offset ?? 0,
+                            repliesPresentation: repliesPresentationData
+                        )
+                    )
                 }
+
+                self._commentsPresentationData.onNext(commentsPresentationData)
+            })
+            .disposed(by: disposeBag)
+
+        _commentsPresentationData
+            .unwrap()
+            .subscribe(onNext: { commentsPresentationData in
+                var viewModels = [OWCommentThreadCellOption]()
+
+                for commentPresentationData in commentsPresentationData {
+                    if let commentCellVM = self._commentIdToCommentCellVM[commentPresentationData.id] {
+                        viewModels.append(OWCommentThreadCellOption.comment(viewModel: commentCellVM))
+
+                        if commentPresentationData.repliesCount > 0 {
+                            if commentPresentationData.shouldShowReplies {
+                                viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                                for replyId in commentPresentationData.repliesIds {
+
+                                    if let replyCellVM = self._commentIdToCommentCellVM[replyId] {
+                                        viewModels.append(OWCommentThreadCellOption.comment(viewModel: replyCellVM))
+                                        viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                                    }
+                                }
+                            }
+                        }
+                        viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                    }
+                }
+
                 // TODO - Check why using replaceAll causing issues when click on "reply" - upen comment creation screen twice
 //                self._cellsViewModels.replaceAll(with: viewModels)
                 self._cellsViewModels.removeAll()
