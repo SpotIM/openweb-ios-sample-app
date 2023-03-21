@@ -31,8 +31,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldShowCommunityGuidelinesAndQuestion: Bool { get }
-    var shouldShowSeparatorView: Bool { get }
+    var shouldShowSeparatorView: Observable<Bool> { get }
     var shouldCommentCreationEntryView: Bool { get }
     var shouldShowComments: Bool { get }
     var shouldShowCTA: Bool { get }
@@ -105,6 +104,12 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         }
         return false
     }()
+    lazy var isRegularStyle: Bool = {
+        if case .regular = preConversationStyle {
+            return true
+        }
+        return false
+    }()
 
     // TODO: support read only in pre conversation
     fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
@@ -168,20 +173,8 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     var viewInitialized = PublishSubject<Void>()
 
-    var shouldShowCommunityGuidelinesAndQuestion: Bool {
-        switch self.preConversationStyle {
-        case .regular(_):
-            return true
-        default:
-            return false
-        }
-    }
-
-    var shouldShowSeparatorView: Bool {
-        if case .regular = self.preConversationStyle {
-            return true
-        }
-        return false
+    var shouldShowSeparatorView: Observable<Bool> {
+        Observable.just(isRegularStyle)
     }
 
     var shouldCommentCreationEntryView: Bool {

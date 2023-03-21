@@ -12,13 +12,11 @@ import Foundation
 public enum OWCommunityQuestionsStyle {
     case none
     case regular
-    case compact
 }
 
 #else
 enum OWCommunityQuestionsStyle {
     case none
     case regular
-    case compact
 }
 #endif
