@@ -16,7 +16,7 @@ protocol OWCommunityGuidelinesViewModelingInputs {
 protocol OWCommunityGuidelinesViewModelingOutputs {
     var communityGuidelinesHtmlAttributedString: Observable<NSAttributedString?> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldBeHidden: Bool { get }
+    var shouldBeHidden: Observable<Bool> { get }
 }
 
 protocol OWCommunityGuidelinesViewModeling {
@@ -57,11 +57,16 @@ class OWCommunityGuidelinesViewModel: OWCommunityGuidelinesViewModeling, OWCommu
             .asObservable()
     }
 
-    var shouldBeHidden: Bool {
-        if case .none = self.style {
-            return true
-        }
-        return false
+    var shouldBeHidden: Observable<Bool> {
+        communityGuidelinesHtmlAttributedString
+            .map { [weak self] htmlString in
+                guard let self = self else { return true }
+                if htmlString != nil {
+                    return self.style == .none
+                }
+                return true
+            }
+            .asObservable()
     }
 
     fileprivate let style: OWCommunityGuidelinesStyle
