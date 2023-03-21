@@ -58,11 +58,11 @@ class OWConversationViewViewModel: OWConversationViewViewModeling, OWConversatio
     }()
 
     lazy var communityGuidelinesViewModel: OWCommunityGuidelinesViewModeling = {
-        return OWCommunityGuidelinesViewModel()
+        return OWCommunityGuidelinesViewModel(style: .regular)
     }()
 
     lazy var communityQuestionViewModel: OWCommunityQuestionViewModeling = {
-        return OWCommunityQuestionViewModel()
+        return OWCommunityQuestionViewModel(style: .regular)
     }()
 
     init (conversationData: OWConversationRequiredData,
