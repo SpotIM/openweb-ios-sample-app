@@ -109,12 +109,6 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     // TODO: support read only in pre conversation
     fileprivate lazy var isReadOnly = BehaviorSubject<Bool>(value: preConversationData.article.additionalSettings.readOnlyMode == .enable)
 
-    fileprivate var _bestComment = BehaviorSubject<(SPComment, SPUser)?>(value: nil)
-    fileprivate var bestComment: Observable<(SPComment, SPUser)> {
-        _bestComment
-            .asObserver()
-            .unwrap()
-    }
     lazy var compactCommentVM: OWPreConversationCompactContentViewModeling = {
         return OWPreConversationCompactContentViewModel(imageProvider: self.imageProvider)
     }()
@@ -304,29 +298,10 @@ fileprivate extension OWPreConversationViewViewModel {
             })
             .disposed(by: disposeBag)
 
-        // Set the best comment for compact mode
         conversationFetchedObservable
             .subscribe(onNext: { [weak self] response in
-                guard let self = self,
-                      let responseComments = response.conversation?.comments,
-                      !responseComments.isEmpty
-                else { return }
-
-                let comment = responseComments[0]
-                guard let user = response.conversation?.users?[comment.userId ?? ""] else { return }
-
-                self.compactCommentVM.inputs.commentData.onNext(OWCommentRequiredData(comment: comment, user: user, replyToUser: nil, collapsableTextLineLimit: 2))
-            })
-            .disposed(by: disposeBag)
-
-        // Set empty conversation for compact mode
-        conversationFetchedObservable
-            .subscribe(onNext: { [weak self] response in
-                guard let self = self,
-                      response.conversation?.messagesCount == 0
-                else { return }
-
-                self.compactCommentVM.inputs.emptyConversation.onNext()
+                guard let self = self else { return }
+                self.compactCommentVM.inputs.conversationFetched.onNext(response)
             })
             .disposed(by: disposeBag)
 

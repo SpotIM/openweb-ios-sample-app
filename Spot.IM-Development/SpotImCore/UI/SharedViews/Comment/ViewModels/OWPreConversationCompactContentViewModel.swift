@@ -12,8 +12,7 @@ import RxCocoa
 import UIKit
 
 protocol OWPreConversationCompactContentViewModelingInputs {
-    var commentData: PublishSubject<OWCommentRequiredData> { get }
-    var emptyConversation: PublishSubject<Void> { get }
+    var conversationFetched: PublishSubject<SPConversationReadRM> { get }
 }
 
 protocol OWPreConversationCompactContentViewModelingOutputs {
@@ -37,8 +36,9 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
     var inputs: OWPreConversationCompactContentViewModelingInputs { return self }
     var outputs: OWPreConversationCompactContentViewModelingOutputs { return self }
 
-    var commentData = PublishSubject<OWCommentRequiredData>()
-    var emptyConversation = PublishSubject<Void>()
+    var conversationFetched = PublishSubject<SPConversationReadRM>()
+    fileprivate var emptyConversation = PublishSubject<Void>()
+    fileprivate var comment = PublishSubject<SPComment>()
 
     fileprivate let _contentType = BehaviorSubject<OWCompactContentType>(value: .skelaton)
     lazy var contentType: Observable<OWCompactContentType> = {
@@ -115,35 +115,48 @@ class OWPreConversationCompactContentViewModel: OWPreConversationCompactContentV
 
 fileprivate extension OWPreConversationCompactContentViewModel {
     func setupObservers() {
-        // Set user (avatar)
-        commentData
-            .subscribe(onNext: { [weak self] requiredData in
-                guard let self = self else { return }
-                self.avatarVM.inputs.configureUser(user: requiredData.user)
+        conversationFetched
+            .subscribe(onNext: { [weak self] conversationResponse in
+                guard let self = self,
+                      let responseComments = conversationResponse.conversation?.comments,
+                      !responseComments.isEmpty
+                else { return }
+
+                let comment = responseComments[0]
+                // Set comment
+                self.comment.onNext(comment)
+                // Set user (avatar)
+                guard let user = conversationResponse.conversation?.users?[comment.userId ?? ""] else { return }
+                self.avatarVM.inputs.configureUser(user: user)
             })
             .disposed(by: disposeBag)
 
-        // Set comment
-        commentData
-            .subscribe(onNext: { [weak self] requiredData in
+        // Set empty if needed
+        // TODO: support empty + read only
+        conversationFetched
+            .subscribe(onNext: { [weak self] conversationResponse in
+                guard let self = self,
+                      conversationResponse.conversation?.messagesCount == 0 else { return }
+                if conversationResponse.conversation?.readOnly == true {
+                    self._contentType.onNext(.closedAndEmpty)
+                } else {
+                    self._contentType.onNext(.emptyConversation)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        // Set comment type
+        comment
+            .subscribe(onNext: { [weak self] commentData in
                 guard let self = self else { return }
 
                 let commentType: OWCompactCommentType = {
-                    if let commentText = requiredData.comment.text?.text {
+                    if let commentText = commentData.text?.text {
                         return .text(string: commentText)
                     }
                     return .media
                 }()
-
                 self._contentType.onNext(.comment(type: commentType))
-            })
-            .disposed(by: disposeBag)
-
-        // TODO: support empty + read only
-        emptyConversation
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self._contentType.onNext(.emptyConversation)
             })
             .disposed(by: disposeBag)
     }
