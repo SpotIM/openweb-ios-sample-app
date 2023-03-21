@@ -93,7 +93,7 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
     }()
     fileprivate lazy var compactTapGesture: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
-        if (viewModel.outputs.isCompactMode) {
+        if (viewModel.outputs.shouldAddContentTapRecognizer) {
             self.addGestureRecognizer(tap)
             self.isUserInteractionEnabled = true
         }
@@ -125,7 +125,7 @@ fileprivate extension OWPreConversationView {
             make.top.leading.trailing.equalToSuperview()
         }
 
-        if (viewModel.outputs.shouldShowComapctView) {
+        if (viewModel.outputs.shouldShowComapactView) {
             self.addSubview(compactContentView)
             compactContentView.OWSnp.makeConstraints { make in
                 make.top.equalTo(preConversationSummary.OWSnp.bottom).offset(8)
@@ -202,13 +202,13 @@ fileprivate extension OWPreConversationView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactMode ? .compactBackground : .background0Color, themeStyle: currentStyle)
+                self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .compactBackground : .background0Color, themeStyle: currentStyle)
                 self.separatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor,
                                                                    themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
-        guard !viewModel.outputs.shouldShowComapctView else { return }
+        guard !viewModel.outputs.shouldShowComapactView else { return }
 
         viewModel.outputs.conversationCTAButtonTitle
             .bind(to: btnCTAConversation.rx.title())
