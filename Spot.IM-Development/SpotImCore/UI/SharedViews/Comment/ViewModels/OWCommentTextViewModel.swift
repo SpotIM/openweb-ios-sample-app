@@ -221,7 +221,9 @@ fileprivate extension OWCommentTextViewModel {
 
             for match in matches {
                 if let urlMatch = match.url, isUrlSchemeValid(for: urlMatch) {
-                    text.addAttributes([.foregroundColor: OWColorPalette.shared.color(type: .linkColor, themeStyle: style)], range: match.range)
+                    text.addAttributes([
+                        .foregroundColor: OWColorPalette.shared.color(type: .brandColor, themeStyle: style),
+                        .underlineStyle: NSUnderlineStyle.single.rawValue], range: match.range)
                         activeURLs[match.range] = urlMatch
                 }
             }
