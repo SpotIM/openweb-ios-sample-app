@@ -106,11 +106,17 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
         return false
     }()
 
-    fileprivate lazy var isRegularStyle: Bool = {
+    fileprivate lazy var _isRegularStyle: BehaviorSubject<Bool> = {
+        var isRegular = false
         if case .regular = preConversationStyle {
-            return true
+            isRegular = true
         }
-        return false
+        return BehaviorSubject<Bool>(value: isRegular)
+    }()
+
+    fileprivate lazy var isRegularStyle: Observable<Bool> = {
+        return _isRegularStyle
+            .share(replay: 1)
     }()
 
     // TODO: support read only in pre conversation
@@ -176,11 +182,11 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     var viewInitialized = PublishSubject<Void>()
 
     var shouldShowSeparatorView: Observable<Bool> {
-        Observable.just(isRegularStyle)
+        isRegularStyle
     }
 
     var shouldShowCommentCreationEntryView: Observable<Bool> {
-        Observable.just(isRegularStyle)
+        isRegularStyle
     }
 
     var shouldShowComments: Observable<Bool> {
