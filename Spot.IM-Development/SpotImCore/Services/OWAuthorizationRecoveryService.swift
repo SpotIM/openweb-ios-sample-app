@@ -112,7 +112,7 @@ fileprivate extension OWAuthorizationRecoveryService {
                             if shouldRenewSSO {
                                 // Will renew SSO with publishers API if a user was logged in before
                                 self.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
-                                authenticationRecoveryResult = .AuthenticationRenewed(user: user)
+                                authenticationRecoveryResult = .authenticationShouldRenew(user: user)
                             } else {
                                 authenticationRecoveryResult = .newAuthentication(user: newUser)
                             }

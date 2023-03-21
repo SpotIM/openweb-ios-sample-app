@@ -10,5 +10,5 @@ import Foundation
 
 enum OWAuthenticationRecoveryResult {
     case newAuthentication(user: SPUser)
-    case AuthenticationRenewed(user: SPUser)
+    case authenticationShouldRenew(user: SPUser)
 }
