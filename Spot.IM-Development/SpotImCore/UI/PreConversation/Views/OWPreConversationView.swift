@@ -24,6 +24,8 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let compactModePadding: CGFloat = 16
         static let communityQuestionTopPadding: CGFloat = 16
         static let separatorHeight: CGFloat = 1.0
+        static let summaryTopPadding: CGFloat = 24
+        static let compactSummaryTopPadding: CGFloat = 16
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
@@ -122,7 +124,8 @@ fileprivate extension OWPreConversationView {
 
         self.addSubviews(preConversationSummary)
         preConversationSummary.OWSnp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(viewModel.outputs.shouldShowComapactView ? Metrics.compactSummaryTopPadding : Metrics.summaryTopPadding)
+            make.leading.trailing.equalToSuperview()
         }
 
         if (viewModel.outputs.shouldShowComapactView) {
