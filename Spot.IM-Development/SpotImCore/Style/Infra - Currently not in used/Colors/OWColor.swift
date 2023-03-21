@@ -28,7 +28,6 @@ struct OWColor {
         case borderColor1
         case borderColor2
         case brandColor
-        case linkColor
 
         var `default`: OWColor {
             switch self {
@@ -76,9 +75,6 @@ struct OWColor {
                                darkThemeColor: DesignSystemColors.D1)
             case .brandColor:
                 return OWColor(lightThemeColor: .black, darkThemeColor: .white)
-            case .linkColor:
-                return OWColor(lightThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0),
-                               darkThemeColor: UIColor(red: 140.0/255.0, green: 190.0/255.0, blue: 214.0/255.0, alpha: 1.0))
             }
         }
 
