@@ -37,6 +37,8 @@ class OWUIAuthenticationLayer: OWUIAuthentication, OWUIAuthenticationInternalPro
             logger.log(level: .error, "`displayAuthenticationFlow` callback should be provided to `manager.ui.authentication` in order to display login flow.\nPlease provide this callback.")
             return
         }
-        callback(routeringMode, completion)
+        DispatchQueue.main.async {
+            callback(routeringMode, completion)
+        }
     }
 }
