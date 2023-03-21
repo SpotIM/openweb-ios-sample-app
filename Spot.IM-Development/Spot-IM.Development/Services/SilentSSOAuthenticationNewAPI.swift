@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 import SpotImCore
 
+#if NEW_API
+
 protocol SilentSSOAuthenticationNewAPIProtocol {
     func silentSSO(for genericSSO: GenericSSOAuthentication, ignoreLoginStatus: Bool) -> Observable<String>
 }
@@ -149,3 +151,5 @@ fileprivate extension SilentSSOAuthenticationNewAPI {
         }
     }
 }
+
+#endif
