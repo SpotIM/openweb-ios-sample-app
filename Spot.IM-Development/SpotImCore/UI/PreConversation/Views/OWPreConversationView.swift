@@ -298,7 +298,7 @@ fileprivate extension OWPreConversationView {
                 }
             })
             .disposed(by: disposeBag)
-        
+
         viewModel.outputs.shouldShowFooter
             .map { !$0 }
             .bind(to: footerView.rx.isHidden)
