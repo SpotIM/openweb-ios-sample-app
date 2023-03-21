@@ -417,6 +417,7 @@ fileprivate extension OWAuthenticationManager {
                 }
             }
             .unwrap()
+            .take(1)
             .do(onNext: { [weak self] status in
                 guard let self = self,
                         case .ssoLoggedIn(let userId) = status else { return }
@@ -438,6 +439,7 @@ fileprivate extension OWAuthenticationManager {
                 guard let self = self else { return .empty() }
                 return self.userAuthenticationStatus
             }
+            .take(1)
             .do(onNext: { [weak self] status in
                 guard let self = self else { return }
                 // Signal recovery failed due to timeout
