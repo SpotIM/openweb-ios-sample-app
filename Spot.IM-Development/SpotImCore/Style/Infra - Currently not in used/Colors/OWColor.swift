@@ -17,7 +17,8 @@ struct OWColor {
         case skeletonColor
         case skeletonShimmeringColor
         case foreground2Color
-        case separatorColor
+        case separatorColor1
+        case separatorColor2
         case textColor1
         case textColor2
         case textColor3
@@ -43,8 +44,11 @@ struct OWColor {
             case .foreground2Color:
                 return OWColor(lightThemeColor: UIColor(red: 168.0/255.0, green: 171.0/255.0, blue: 174.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 182.0/255.0, green: 185.0/255.0, blue: 187.0/255.0, alpha: 1.0))
-            case .separatorColor:
+            case .separatorColor1:
                 return OWColor(lightThemeColor: DesignSystemColors.L3,
+                               darkThemeColor: DesignSystemColors.D2)
+            case .separatorColor2:
+                return OWColor(lightThemeColor: DesignSystemColors.L2,
                                darkThemeColor: DesignSystemColors.D2)
             case .textColor1:
                 return OWColor(lightThemeColor: DesignSystemColors.L6,
