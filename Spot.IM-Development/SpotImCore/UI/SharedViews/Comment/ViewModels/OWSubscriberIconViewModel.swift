@@ -51,7 +51,7 @@ class OWSubscriberIconViewModel: OWSubscriberIconViewModeling,
         servicesProvider.spotConfigurationService()
             .config(spotId: OWManager.manager.spotId)
             .map { config in
-                config.conversation?.subscriberBadgeConfig // TODO: v2?
+                config.conversation?.subscriberBadgeConfig
             }
             .unwrap()
     }()
