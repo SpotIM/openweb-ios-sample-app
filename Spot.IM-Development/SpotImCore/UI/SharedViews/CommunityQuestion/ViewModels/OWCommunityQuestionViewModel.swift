@@ -11,11 +11,12 @@ import RxSwift
 
 // TODO: complete
 protocol OWCommunityQuestionViewModelingInputs {
-    var communityQuestionString: PublishSubject<String?> { get }
+    var conversationFetched: PublishSubject<SPConversationReadRM> { get }
 }
 
 protocol OWCommunityQuestionViewModelingOutputs {
     var communityQuestionOutput: Observable<String?> { get }
+    var shouldShowView: Bool { get }
 }
 
 protocol OWCommunityQuestionViewModeling {
@@ -27,8 +28,22 @@ class OWCommunityQuestionViewModel: OWCommunityQuestionViewModeling, OWCommunity
     var inputs: OWCommunityQuestionViewModelingInputs { return self }
     var outputs: OWCommunityQuestionViewModelingOutputs { return self }
 
-    var communityQuestionString = PublishSubject<String?>()
+    var conversationFetched = PublishSubject<SPConversationReadRM>()
+
     var communityQuestionOutput: Observable<String?> {
-        communityQuestionString.asObservable()
+        conversationFetched
+            .map { $0.conversation?.communityQuestion }
+    }
+
+    var shouldShowView: Bool {
+        if case .none = self.style {
+            return false
+        }
+        return true
+    }
+
+    fileprivate let style: OWCommunityQuestionsStyle
+    init(style: OWCommunityQuestionsStyle) {
+        self.style = style
     }
 }
