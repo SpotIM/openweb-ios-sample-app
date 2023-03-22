@@ -170,7 +170,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                         if commentPresentationData.repliesCount > 0 {
                             if commentPresentationData.shouldShowReplies {
-                                viewModels.append(OWCommentThreadCellOption.spacer(viewModel: OWSpacerCellViewModel()))
+                                viewModels.append(OWCommentThreadCellOption.commentThreadAction(viewModel: OWCommentThreadActionsCellViewModel()))
                                 for replyId in commentPresentationData.repliesIds {
 
                                     if let replyCellVM = self._commentIdToCommentCellVM[replyId] {
@@ -186,7 +186,7 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 // TODO - Check why using replaceAll causing issues when click on "reply" - upen comment creation screen twice
 //                self._cellsViewModels.replaceAll(with: viewModels)
-                
+
                 // TODO - We should update and not remove it. how can we know what items were updated in _commentsPresentationData?
                 self._cellsViewModels.removeAll()
                 self._cellsViewModels.append(contentsOf: viewModels)
