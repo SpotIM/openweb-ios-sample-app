@@ -14,7 +14,7 @@ class OWCommentContentView: UIView {
     internal struct Metrics {
         static let fontSize: CGFloat = 15.0
         static let editedFontSize: CGFloat = 13.0
-        static let commentMediaTopPadding: CGFloat = 4.0
+        static let commentMediaTopPadding: CGFloat = 6.0
         static let emptyCommentMediaTopPadding: CGFloat = 0
         static let paragraphLineSpacing: CGFloat = 3.5
         static let editedTopPadding: CGFloat = 4.0
