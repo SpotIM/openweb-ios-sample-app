@@ -235,7 +235,7 @@ fileprivate extension OWCommentHeaderView {
 
                 self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
             }).disposed(by: disposeBag)
-        
+
         viewModel.outputs.subscriberBadgeVM
             .outputs.isSubscriber
             .observe(on: MainScheduler.instance)
