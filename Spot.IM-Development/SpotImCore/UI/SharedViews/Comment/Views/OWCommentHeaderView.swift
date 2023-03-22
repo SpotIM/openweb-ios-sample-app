@@ -59,8 +59,8 @@ class OWCommentHeaderView: UIView {
             .textColor(OWColorPalette.shared.color(type: .brandColor, themeStyle: .light))
     }()
 
-    fileprivate lazy var subscriberBadgeView: OWUserSubscriberBadgeView = {
-        return OWUserSubscriberBadgeView()
+    fileprivate lazy var subscriberBadgeView: OWSubscriberIconView = {
+        return OWSubscriberIconView()
     }()
 
     fileprivate lazy var subtitleLabel: UILabel = {
@@ -139,17 +139,10 @@ fileprivate extension OWCommentHeaderView {
             make.size.equalTo(Metrics.avatarSideSize)
         }
 
-        addSubview(badgeTagContainer)
-        badgeTagContainer.OWSnp.makeConstraints { make in
+        addSubview(subscriberBadgeView)
+        subscriberBadgeView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
             make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.badgeLeadingPadding)
-        }
-
-        badgeTagContainer.addSubview(badgeTagLabel)
-        badgeTagLabel.OWSnp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
-            make.left.equalToSuperview().offset(Metrics.badgeHorizontalInset)
-            make.right.equalToSuperview().offset(-Metrics.badgeHorizontalInset)
         }
 
         addSubview(optionButton)
@@ -159,11 +152,18 @@ fileprivate extension OWCommentHeaderView {
             make.trailing.equalToSuperview()
         }
 
-        addSubview(subscriberBadgeView)
-        subscriberBadgeView.OWSnp.makeConstraints { make in
+        addSubview(badgeTagContainer)
+        badgeTagContainer.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(badgeTagContainer.OWSnp.trailing).offset(5.0)
+            make.leading.equalTo(subscriberBadgeView.OWSnp.trailing).offset(5.0)
             make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
+        }
+
+        badgeTagContainer.addSubview(badgeTagLabel)
+        badgeTagLabel.OWSnp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.left.equalToSuperview().offset(Metrics.badgeHorizontalInset)
+            make.right.equalToSuperview().offset(-Metrics.badgeHorizontalInset)
         }
 
         addSubview(subtitleLabel)
