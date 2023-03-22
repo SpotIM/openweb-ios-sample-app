@@ -14,7 +14,7 @@ class OWCommentView: UIView {
     fileprivate struct Metrics {
         static let leadingOffset: CGFloat = 16.0
         static let bottomOffset: CGFloat = 16.0
-        static let topOffset: CGFloat = 28.0
+        static let topOffset: CGFloat = 12.0
         static let commentLabelTopPadding: CGFloat = 10.0
         static let messageContainerTopOffset: CGFloat = 4.0
         static let commentActionsTopPadding: CGFloat = 15.0
