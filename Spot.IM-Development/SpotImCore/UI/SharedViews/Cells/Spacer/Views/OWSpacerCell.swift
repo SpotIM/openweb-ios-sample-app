@@ -14,6 +14,7 @@ class OWSpacerCell: UITableViewCell {
 
     fileprivate struct Metrics {
         static let height: CGFloat = 1.0
+        static let verticalPadding: CGFloat = 16
     }
     fileprivate lazy var seperatorView: UIView = {
        return UIView()
@@ -46,7 +47,9 @@ fileprivate extension OWSpacerCell {
         self.addSubviews(seperatorView)
 
         seperatorView.OWSnp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(Metrics.verticalPadding)
+            make.bottom.equalToSuperview().offset(-Metrics.verticalPadding)
             make.height.equalTo(Metrics.height)
         }
     }
