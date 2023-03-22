@@ -19,13 +19,14 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         static let btnFullConversationCornerRadius: CGFloat = 6
         static let btnFullConversationFontSize: CGFloat = 15
         static let btnFullConversationTextPadding: CGFloat = 12
-        static let btnFullConversationTopPadding: CGFloat = 13
+        static let btnFullConversationTopPadding: CGFloat = 24
         static let bottomPadding: CGFloat = 24
         static let compactModePadding: CGFloat = 16
         static let communityQuestionTopPadding: CGFloat = 8
         static let separatorHeight: CGFloat = 1.0
         static let summaryTopPadding: CGFloat = 24
         static let compactSummaryTopPadding: CGFloat = 16
+        static let tableDeviderTopPadding: CGFloat = 64
     }
     // TODO: fileprivate lazy var adBannerView: SPAdBannerView
 
@@ -56,6 +57,10 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         }
 
         return tableView
+    }()
+    fileprivate lazy var tableBottomDevider: UIView = {
+        return UIView()
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
     }()
     fileprivate lazy var btnCTAConversation: UIButton = {
         return LocalizationManager.localizedString(key: "Show more comments")
@@ -166,12 +171,19 @@ fileprivate extension OWPreConversationView {
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(0)
         }
+        
+        self.addSubview(tableBottomDevider)
+        tableBottomDevider.OWSnp.makeConstraints { make in
+            make.height.equalTo(Metrics.separatorHeight)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.tableDeviderTopPadding)
+        }
 
         self.addSubview(btnCTAConversation)
         btnCTAConversation.OWSnp.makeConstraints { make in
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(tableView.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
+            make.top.equalTo(tableBottomDevider.OWSnp.bottom).offset(Metrics.btnFullConversationTopPadding)
         }
 
         self.addSubview(footerView)
@@ -195,6 +207,7 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor3 : .backgroundColor2, themeStyle: currentStyle)
+                self.tableBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 
@@ -262,11 +275,19 @@ fileprivate extension OWPreConversationView {
             .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowComments
+            .map { !$0 }
+            .bind(to: tableBottomDevider.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.shouldShowComments
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationTopPadding : 0)
+                }
+                self.tableBottomDevider.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.tableDeviderTopPadding : 0)
                 }
             })
             .disposed(by: disposeBag)
@@ -281,7 +302,7 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.btnCTAConversation.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
+                    make.top.equalTo(self.tableBottomDevider.OWSnp.bottom).offset(isVisible ? Metrics.btnFullConversationTopPadding : 0)
                 }
             })
             .disposed(by: disposeBag)

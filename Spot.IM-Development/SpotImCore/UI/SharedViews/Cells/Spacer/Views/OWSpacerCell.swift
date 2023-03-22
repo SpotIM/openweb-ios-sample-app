@@ -17,7 +17,7 @@ class OWSpacerCell: UITableViewCell {
     }
     fileprivate lazy var seperatorView: UIView = {
        return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor, themeStyle: .light))
+            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor1, themeStyle: .light))
     }()
     fileprivate var viewModel: OWSpacerCellViewModeling!
     fileprivate var disposeBag = DisposeBag()
@@ -56,7 +56,7 @@ fileprivate extension OWSpacerCell {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor, themeStyle: currentStyle)
+                self.seperatorView.backgroundColor = OWColorPalette.shared.color(type: .separatorColor1, themeStyle: currentStyle)
             }).disposed(by: disposeBag)
     }
 }
