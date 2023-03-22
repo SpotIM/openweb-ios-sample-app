@@ -14,7 +14,7 @@ import RxCocoa
 class OWSubscriberIconView: UIView {
 
     fileprivate struct Metrics {
-        static let subscriberBadgeIconSize: CGFloat = 18
+        static let subscriberBadgeIconSize: CGFloat = 12
         static let identifier = "subscriber_badge_view_id"
     }
 
@@ -59,6 +59,16 @@ fileprivate extension OWSubscriberIconView {
         viewModel.outputs.isSubscriber
             .map { !$0 } // Reverse
             .bind(to: imgViewIcon.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs.isSubscriber
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.imgViewIcon.OWSnp.updateConstraints { make in
+                    make.size.equalTo(isVisible ? Metrics.subscriberBadgeIconSize : 0)
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.outputs.image
