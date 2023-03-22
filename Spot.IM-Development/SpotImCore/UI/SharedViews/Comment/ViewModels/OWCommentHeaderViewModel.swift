@@ -16,7 +16,7 @@ protocol OWCommentHeaderViewModelingInputs {
 }
 
 protocol OWCommentHeaderViewModelingOutputs {
-    var subscriberBadgeVM: OWUserSubscriberBadgeViewModeling { get }
+    var subscriberBadgeVM: OWSubscriberIconViewModeling { get }
     var avatarVM: OWAvatarViewModeling { get }
 
     var shouldShowHiddenCommentMessage: Observable<Bool> { get }
@@ -51,6 +51,7 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
         _model.unwrap()
     }
 
+    fileprivate var user: SPUser? = nil
     fileprivate let _user = BehaviorSubject<SPUser?>(value: nil)
     fileprivate var _unwrappedUser: Observable<SPUser> {
         _user.unwrap()
@@ -65,8 +66,8 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     ) {
         self.servicesProvider = servicesProvider
         self.userBadgeService = userBadgeService
+        self.user = data.user
         avatarVM = OWAvatarViewModelV2(user: data.user, imageURLProvider: imageProvider)
-        subscriberBadgeVM.inputs.configureUser(user: data.user)
         _model.onNext(data.comment)
         _user.onNext(data.user)
         _replyToUser.onNext(data.replyToUser)
@@ -84,7 +85,9 @@ class OWCommentHeaderViewModel: OWCommentHeaderViewModeling,
     var tapUserName = PublishSubject<Void>()
     var tapMore = PublishSubject<OWUISource>()
 
-    let subscriberBadgeVM: OWUserSubscriberBadgeViewModeling = OWUserSubscriberBadgeViewModel()
+    lazy var subscriberBadgeVM: OWSubscriberIconViewModeling = {
+        return OWSubscriberIconViewModel(user: user!, servicesProvider: servicesProvider, subscriberBadgeService: OWSubscriberBadgeService())
+    }()
 
     var subtitleText: Observable<String> {
         _replyToUser

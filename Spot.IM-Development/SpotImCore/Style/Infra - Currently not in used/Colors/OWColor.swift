@@ -45,38 +45,38 @@ struct OWColor {
                 return OWColor(lightThemeColor: UIColor(red: 168.0/255.0, green: 171.0/255.0, blue: 174.0/255.0, alpha: 1.0),
                                darkThemeColor: UIColor(red: 182.0/255.0, green: 185.0/255.0, blue: 187.0/255.0, alpha: 1.0))
             case .separatorColor1:
-                return OWColor(lightThemeColor: DesignSystemColors.L3,
-                               darkThemeColor: DesignSystemColors.D2)
+                return OWColor(lightThemeColor: OWDesignColors.L3,
+                               darkThemeColor: OWDesignColors.D2)
             case .separatorColor2:
-                return OWColor(lightThemeColor: DesignSystemColors.L2,
-                               darkThemeColor: DesignSystemColors.D2)
+                return OWColor(lightThemeColor: OWDesignColors.L2,
+                               darkThemeColor: OWDesignColors.D2)
             case .textColor1:
-                return OWColor(lightThemeColor: DesignSystemColors.L6,
-                               darkThemeColor: DesignSystemColors.G1)
+                return OWColor(lightThemeColor: OWDesignColors.L6,
+                               darkThemeColor: OWDesignColors.G1)
             case .textColor2:
-                return OWColor(lightThemeColor: DesignSystemColors.L5,
-                               darkThemeColor: DesignSystemColors.D3)
+                return OWColor(lightThemeColor: OWDesignColors.L5,
+                               darkThemeColor: OWDesignColors.D3)
             case .textColor3:
-                return OWColor(lightThemeColor: DesignSystemColors.L6,
-                               darkThemeColor: DesignSystemColors.D4)
+                return OWColor(lightThemeColor: OWDesignColors.L6,
+                               darkThemeColor: OWDesignColors.D4)
             case .textColor4:
-                return OWColor(lightThemeColor: DesignSystemColors.G2,
-                               darkThemeColor: DesignSystemColors.G1)
+                return OWColor(lightThemeColor: OWDesignColors.G2,
+                               darkThemeColor: OWDesignColors.G1)
             case .backgroundColor1:
-                return OWColor(lightThemeColor: DesignSystemColors.L1.withAlphaComponent(0.03),
-                               darkThemeColor: DesignSystemColors.D1.withAlphaComponent(0.1))
+                return OWColor(lightThemeColor: OWDesignColors.L1.withAlphaComponent(0.03),
+                               darkThemeColor: OWDesignColors.D1.withAlphaComponent(0.1))
             case .backgroundColor2:
-                return OWColor(lightThemeColor: DesignSystemColors.G1,
-                               darkThemeColor: DesignSystemColors.L6)
+                return OWColor(lightThemeColor: OWDesignColors.G1,
+                               darkThemeColor: OWDesignColors.L6)
             case .backgroundColor3:
-                return OWColor(lightThemeColor: DesignSystemColors.L1,
+                return OWColor(lightThemeColor: OWDesignColors.L1,
                                darkThemeColor: UIColor(red: 31.0/255.0, green: 31.0/255.0, blue: 31.0/255.0, alpha: 1.0))
             case .borderColor1:
-                return OWColor(lightThemeColor: DesignSystemColors.L1,
-                               darkThemeColor: DesignSystemColors.D1)
+                return OWColor(lightThemeColor: OWDesignColors.L1,
+                               darkThemeColor: OWDesignColors.D1)
             case .borderColor2:
-                return OWColor(lightThemeColor: DesignSystemColors.L2,
-                               darkThemeColor: DesignSystemColors.D1)
+                return OWColor(lightThemeColor: OWDesignColors.L2,
+                               darkThemeColor: OWDesignColors.D1)
             case .brandColor:
                 return OWColor(lightThemeColor: .black, darkThemeColor: .white)
             }
@@ -125,7 +125,7 @@ extension OWColor {
 }
 
 // TODO: New file ?
-struct DesignSystemColors {
+struct OWDesignColors {
     static let G1: UIColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
     static let G2: UIColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
     static let G3: UIColor = UIColor(red: 53/255, green: 185/255, blue: 64/255, alpha: 1)
