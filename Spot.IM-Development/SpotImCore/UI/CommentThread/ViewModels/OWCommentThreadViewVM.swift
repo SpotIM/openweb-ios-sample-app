@@ -8,11 +8,13 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 typealias CommentThreadDataSourceModel = OWAnimatableSectionModel<String, OWCommentThreadCellOption>
 
 protocol OWCommentThreadViewViewModelingInputs {
     var viewInitialized: PublishSubject<Void> { get }
+    var willDisplayCell: PublishSubject<WillDisplayCellEvent> { get }
 }
 
 protocol OWCommentThreadViewViewModelingOutputs {
@@ -62,6 +64,10 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     }
 
     var viewInitialized = PublishSubject<Void>()
+    var willDisplayCell = PublishSubject<WillDisplayCellEvent>()
+    fileprivate var _loadMoreComments = PublishSubject<Int>()
+
+    var offset = 0
 
     fileprivate var _changeSizeAtIndex = PublishSubject<Int>()
     var updateCellSizeAtIndex: Observable<Int> {
@@ -81,22 +87,23 @@ fileprivate extension OWCommentThreadViewViewModel {
     // swiftlint:disable function_body_length
     func setupObservers() {
         // Observable for the conversation network API
-        let conversationThreadReadObservable = _commentThreadData.unwrap().flatMap { [weak self] _ -> Observable<SPConversationReadRM> in
+        let conversationThreadReadObservable = Observable.merge([_commentThreadData.unwrap().flatMap { _ in
+            return Observable.just(0)
+        }, _loadMoreComments.distinctUntilChanged()]).flatMap { [weak self] offset -> Observable<SPConversationReadRM> in
             guard let self = self else { return .empty() }
             return self.servicesProvider
             .netwokAPI()
             .conversation
-            .conversationRead(mode: .best, page: OWPaginationPage.first)
+            .conversationRead(mode: .best, page: OWPaginationPage.first, parentId: "", offset: offset)
             .response
         }
 
         let commentThreadFetchedObservable = viewInitialized
             .flatMap { _ -> Observable<SPConversationReadRM> in
                 return conversationThreadReadObservable
-                    .take(1)
             }
-            .share()
 
+        // update comments presentation data
         commentThreadFetchedObservable
             .subscribe(onNext: { [weak self] response in
                 guard let self = self, let responseComments = response.conversation?.comments else { return }
@@ -105,6 +112,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 var commentsPresentationData = [OWCommentPresentationData]()
                 var repliesPresentationData = [OWCommentPresentationData]()
+
+                self.offset = response.conversation?.offset ?? 0
 
                 for comment in comments {
                     guard let commentId = comment.id else { return }
@@ -149,6 +158,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             })
             .disposed(by: disposeBag)
 
+        // prepare cells view models
         _commentsPresentationData
             .unwrap()
             .subscribe(onNext: { commentsPresentationData in
@@ -176,6 +186,8 @@ fileprivate extension OWCommentThreadViewViewModel {
 
                 // TODO - Check why using replaceAll causing issues when click on "reply" - upen comment creation screen twice
 //                self._cellsViewModels.replaceAll(with: viewModels)
+                
+                // TODO - We should update and not remove it. how can we know what items were updated in _commentsPresentationData?
                 self._cellsViewModels.removeAll()
                 self._cellsViewModels.append(contentsOf: viewModels)
             })
@@ -199,6 +211,26 @@ fileprivate extension OWCommentThreadViewViewModel {
             }
             .subscribe(onNext: { [weak self] commentIndex in
                 self?._changeSizeAtIndex.onNext(commentIndex)
+            })
+            .disposed(by: disposeBag)
+
+        // Observe tableview will display cell to load more comments
+        willDisplayCell
+            .map { willDisplayCellEvent -> Int in
+                return willDisplayCellEvent.indexPath.row
+            }
+            .withLatestFrom(_commentsPresentationData) { rowIndex, presentationData -> Int? in
+                guard presentationData != nil else { return nil }
+                return rowIndex
+            }
+            .unwrap()
+            .withLatestFrom(cellsViewModels) { rowIndex, cellsVMs in
+                return (rowIndex, cellsVMs.count)
+            }.subscribe(onNext: { [weak self] rowIndex, cellsCount in
+                guard let self = self else { return }
+                if (rowIndex > cellsCount - 5) {
+                    self._loadMoreComments.onNext(self.offset)
+                }
             })
             .disposed(by: disposeBag)
 
