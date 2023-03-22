@@ -9,11 +9,15 @@
 import Foundation
 import RxSwift
 
-class OWUILayer: OWUI, OWUIFlows, OWUIViews {
+class OWUILayer: OWUI, OWUIFlows, OWUIViews, OWRouteringCompatible {
     var flows: OWUIFlows { return self }
     var views: OWUIViews { return self }
     var customizations: OWCustomizations { return self._customizations }
     var authenticationUI: OWUIAuthentication { return self._authenticationUI }
+
+    var routering: OWRoutering {
+        return sdkCoordinator.routering
+    }
 
     fileprivate let sdkCoordinator: OWSDKCoordinator
     fileprivate let _customizations: OWCustomizations
@@ -28,7 +32,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         self._authenticationUI = authenticationUI
     }
 
-    func preConversation(postId: String, article: OWArticleProtocol,
+    func preConversation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWPreConversationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -55,13 +59,13 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         .subscribe(onNext: { result in
             completion(.success(result.toShowable()))
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            let error: OWError = err as? OWError ?? OWError.preConversationFlow
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
     }
 
-    func conversation(postId: String, article: OWArticleProtocol,
+    func conversation(postId: OWPostId, article: OWArticleProtocol,
                       presentationalMode: OWPresentationalMode,
                       additionalSettings: OWConversationSettingsProtocol? = nil,
                       callbacks: OWViewActionsCallbacks? = nil,
@@ -99,7 +103,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
         .disposed(by: flowDisposeBag)
     }
 
-    func commentCreation(postId: String, article: OWArticleProtocol,
+    func commentCreation(postId: OWPostId, article: OWArticleProtocol,
                          presentationalMode: OWPresentationalMode,
                          additionalSettings: OWCommentCreationSettingsProtocol? = nil,
                          callbacks: OWViewActionsCallbacks? = nil,
@@ -133,7 +137,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                 break
             }
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            let error: OWError = err as? OWError ?? OWError.commentCreationFlow
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
@@ -175,7 +179,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
                 break
             }
         }, onError: { err in
-            let error: OWError = err as? OWError ?? OWError.conversationFlow
+            let error: OWError = err as? OWError ?? OWError.commentThreadFlow
             completion(.failure(error))
         })
         .disposed(by: flowDisposeBag)
@@ -183,7 +187,7 @@ class OWUILayer: OWUI, OWUIFlows, OWUIViews {
 }
 
 fileprivate extension OWUILayer {
-    func setPostId(postId: String, completion: @escaping OWDefaultCompletion) {
+    func setPostId(postId: OWPostId, completion: @escaping OWDefaultCompletion) {
         guard let manager = OpenWeb.manager as? OWManagerInternalProtocol else {
             let error = OWError.castingError(description: "OpenWeb.manager casting to OWManagerInternalProtocol failed")
             completion(.failure(error))
