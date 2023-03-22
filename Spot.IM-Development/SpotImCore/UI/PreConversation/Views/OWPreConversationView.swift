@@ -49,10 +49,6 @@ class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
         return view
     }()
     fileprivate var commentCreationZeroHeightConstraint: OWConstraint? = nil
-    fileprivate lazy var tableTopDevider: UIView = {
-        return UIView()
-            .backgroundColor(OWColorPalette.shared.color(type: .separatorColor2, themeStyle: .light))
-    }()
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView()
             .enforceSemanticAttribute()
@@ -184,18 +180,10 @@ fileprivate extension OWPreConversationView {
             make.trailing.equalToSuperview()
             commentCreationZeroHeightConstraint = make.height.equalTo(0).constraint
         }
-        
-        self.addSubviews(tableTopDevider)
-        tableTopDevider.OWSnp.makeConstraints { make in
-            make.height.equalTo(Metrics.separatorHeight)
-            make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
-            make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
-            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationBottomPadding)
-        }
 
         self.addSubview(tableView)
         tableView.OWSnp.makeConstraints { make in
-            make.top.equalTo(tableTopDevider.OWSnp.bottom)
+            make.top.equalTo(commentCreationEntryView.OWSnp.bottom).offset(Metrics.commentCreationBottomPadding)
             make.leading.equalToSuperview().offset(Metrics.horizontalOffset)
             make.trailing.equalToSuperview().offset(-Metrics.horizontalOffset)
             make.height.equalTo(0)
@@ -244,7 +232,6 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
                 self.backgroundColor = OWColorPalette.shared.color(type: self.viewModel.outputs.isCompactBackground ? .backgroundColor3 : .backgroundColor2, themeStyle: currentStyle)
-                self.tableTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.tableBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.footerTopDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
@@ -312,11 +299,6 @@ fileprivate extension OWPreConversationView {
                 }
             })
             .disposed(by: disposeBag)
-        
-        viewModel.outputs.shouldShowComments
-            .map { !$0 }
-            .bind(to: tableTopDevider.rx.isHidden)
-            .disposed(by: disposeBag)
 
         viewModel.outputs.shouldShowComments
             .map { !$0 }
@@ -333,13 +315,10 @@ fileprivate extension OWPreConversationView {
             .subscribe(onNext: { [weak self] isVisible in
                 guard let self = self else { return }
                 self.tableView.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.tableTopDevider.OWSnp.bottom)
+                    make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationBottomPadding : 0)
                 }
                 self.tableBottomDevider.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.tableView.OWSnp.bottom).offset(isVisible ? Metrics.tableDeviderTopPadding : 0)
-                }
-                self.tableTopDevider.OWSnp.updateConstraints { make in
-                    make.top.equalTo(self.commentCreationEntryView.OWSnp.bottom).offset(isVisible ? Metrics.commentCreationBottomPadding : 0)
                 }
             })
             .disposed(by: disposeBag)
