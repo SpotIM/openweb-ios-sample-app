@@ -10,11 +10,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OWPreConversationHeaderView: UIView {
+class OWPreConversationSummeryView: UIView {
     fileprivate struct Metrics {
-        static let counterLeading: CGFloat = 5
-        static let titleFontSize: CGFloat = 25
-        static let counterFontSize: CGFloat = 16
+        static let counterLeading: CGFloat = 8
+        static let nextArrowLeading: CGFloat = 10
         static let margins: UIEdgeInsets = .init(top: 16, left: 16, bottom: 16, right: 16)
         static let identifier = "pre_conversation_header_view_id"
     }
@@ -22,19 +21,19 @@ class OWPreConversationHeaderView: UIView {
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
             .enforceSemanticAttribute()
-        lbl.font = UIFont.preferred(style: .bold, of: Metrics.titleFontSize)
-        lbl.textColor = OWColorPalette.shared.color(type: .foreground0Color,
-                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
-        lbl.text = OWLocalizationManager.shared.localizedString(key: "Conversation")
+            .font(OWFontBook.shared.font(style: .bold, size: viewModel.outputs.titleFontSize))
+            .textColor(OWColorPalette.shared.color(type: .foreground0Color,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
+            .text(OWLocalizationManager.shared.localizedString(key: "Conversation"))
         return lbl
     }()
 
     private lazy var counterLabel: UILabel = {
         let lbl = UILabel()
             .enforceSemanticAttribute()
-        lbl.font = UIFont.preferred(style: .regular, of: Metrics.counterFontSize)
-        lbl.textColor = OWColorPalette.shared.color(type: .foreground1Color,
-                                                    themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle)
+            .font(OWFontBook.shared.font(style: .regular, size: viewModel.outputs.counterFontSize))
+            .textColor(OWColorPalette.shared.color(type: .foreground1Color,
+                                                   themeStyle: OWSharedServicesProvider.shared.themeStyleService().currentStyle))
         return lbl
     }()
 
@@ -42,10 +41,16 @@ class OWPreConversationHeaderView: UIView {
         return OWOnlineViewingUsersCounterView(viewModel: viewModel.outputs.onlineViewingUsersVM)
     }()
 
-    fileprivate var viewModel: OWPreConversationHeaderViewModeling
+    fileprivate lazy var nextArrow: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
+        return imageView
+    }()
+
+    fileprivate var viewModel: OWPreConversationSummaryViewModeling
     fileprivate let disposeBag = DisposeBag()
 
-    init(viewModel: OWPreConversationHeaderViewModeling) {
+    init(viewModel: OWPreConversationSummaryViewModeling) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         self.accessibilityIdentifier = Metrics.identifier
@@ -63,7 +68,7 @@ class OWPreConversationHeaderView: UIView {
     }
 }
 
-fileprivate extension OWPreConversationHeaderView {
+fileprivate extension OWPreConversationSummeryView {
     func setupUI() {
         self.enforceSemanticAttribute()
 
@@ -83,7 +88,19 @@ fileprivate extension OWPreConversationHeaderView {
         self.addSubview(onlineViewingUsersView)
         onlineViewingUsersView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
-            make.trailing.equalToSuperview().offset(-Metrics.margins.right)
+        }
+
+        if viewModel.outputs.showNextArrow {
+            self.addSubview(nextArrow)
+            nextArrow.OWSnp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
+                make.leading.equalTo(onlineViewingUsersView.OWSnp.trailing).offset(Metrics.nextArrowLeading)
+                make.trailing.equalToSuperview().offset(-Metrics.margins.right)
+            }
+        } else {
+            onlineViewingUsersView.OWSnp.makeConstraints { make in
+                make.trailing.equalToSuperview().offset(-Metrics.margins.right)
+            }
         }
     }
 
@@ -102,6 +119,7 @@ fileprivate extension OWPreConversationHeaderView {
                                                                         themeStyle: currentStyle)
                 self.counterLabel.textColor = OWColorPalette.shared.color(type: .foreground1Color,
                                                                           themeStyle: currentStyle)
+                self.nextArrow.image = UIImage(spNamed: "nextArrow", supportDarkMode: true)
                 self.updateCustomUI()
             }).disposed(by: disposeBag)
     }
