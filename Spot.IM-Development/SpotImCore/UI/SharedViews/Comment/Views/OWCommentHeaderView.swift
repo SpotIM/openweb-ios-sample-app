@@ -18,7 +18,7 @@ class OWCommentHeaderView: UIView {
         static let subtitleFontSize: CGFloat = 12.0
         static let usernameFontSize: CGFloat = 13.0
         static let badgeLabelFontSize: CGFloat = 10.0
-        static let badgeLeadingPadding: CGFloat = 7
+        static let subscriberVerticalPadding: CGFloat = 7
         static let optionButtonSize: CGFloat = 28
         static let badgeHorizontalInset: CGFloat = 4
 
@@ -142,7 +142,7 @@ fileprivate extension OWCommentHeaderView {
         addSubview(subscriberBadgeView)
         subscriberBadgeView.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.badgeLeadingPadding)
+            make.leading.equalTo(userNameLabel.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
         }
 
         addSubview(optionButton)
@@ -155,7 +155,7 @@ fileprivate extension OWCommentHeaderView {
         addSubview(badgeTagContainer)
         badgeTagContainer.OWSnp.makeConstraints { make in
             make.centerY.equalTo(userNameLabel.OWSnp.centerY)
-            make.leading.equalTo(subscriberBadgeView.OWSnp.trailing).offset(5.0)
+            make.leading.equalTo(subscriberBadgeView.OWSnp.trailing).offset(Metrics.subscriberVerticalPadding)
             make.trailing.lessThanOrEqualTo(optionButton.OWSnp.leading)
         }
 
@@ -235,6 +235,17 @@ fileprivate extension OWCommentHeaderView {
 
                 self.hiddenCommentReasonLabel.isHidden = !isHiddenMessage
             }).disposed(by: disposeBag)
+        
+        viewModel.outputs.subscriberBadgeVM
+            .outputs.isSubscriber
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isVisible in
+                guard let self = self else { return }
+                self.subscriberBadgeView.OWSnp.updateConstraints { make in
+                    make.leading.equalTo(self.userNameLabel.OWSnp.trailing).offset(isVisible ? Metrics.subscriberVerticalPadding : 0)
+                }
+            })
+            .disposed(by: disposeBag)
 
         OWSharedServicesProvider.shared.themeStyleService()
             .style
