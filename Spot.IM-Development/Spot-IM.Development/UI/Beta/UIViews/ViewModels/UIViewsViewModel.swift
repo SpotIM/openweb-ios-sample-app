@@ -21,6 +21,7 @@ protocol UIViewsViewModelingInputs {
 
 protocol UIViewsViewModelingOutputs {
     var title: String { get }
+    var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> { get }
 }
 
 protocol UIViewsViewModeling {
@@ -42,6 +43,13 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
     let commentThreadTapped = PublishSubject<Void>()
     let independentAdUnitTapped = PublishSubject<Void>()
 
+    fileprivate let _openMockArticleScreen = BehaviorSubject<SDKUIIndependentViewsActionSettings?>(value: nil)
+    var openMockArticleScreen: Observable<SDKUIIndependentViewsActionSettings> {
+        return _openMockArticleScreen
+            .unwrap()
+            .asObservable()
+    }
+
     lazy var title: String = {
         return NSLocalizedString("UIViews", comment: "")
     }()
@@ -53,8 +61,49 @@ class UIViewsViewModel: UIViewsViewModeling, UIViewsViewModelingOutputs, UIViews
 }
 
 fileprivate extension UIViewsViewModel {
+    func setupObservers() {
+        let postId = dataModel.postId
 
-    func setupObservers() { }
+        let fullConversationTappedModel = fullConversationTapped
+            .map {
+                let action = SDKUIIndependentViewActionType.fullConversation
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                return model
+            }
+
+        let commentCreationTappedModel = commentCreationTapped
+            .map { _ -> SDKUIIndependentViewsActionSettings in
+                let action = SDKUIIndependentViewActionType.commentCreation
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                return model
+            }
+
+        let commentThreadTappedModel = commentThreadTapped
+            .map { _ -> SDKUIIndependentViewsActionSettings in
+                let action = SDKUIIndependentViewActionType.commentThread
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                return model
+            }
+
+        let preConversationTappedModel = preConversationTapped
+            .map { _ -> SDKUIIndependentViewsActionSettings in
+                let action = SDKUIIndependentViewActionType.preConversation
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                return model
+            }
+
+        let independentAdUnitTappedModel = independentAdUnitTapped
+            .map { _ -> SDKUIIndependentViewsActionSettings in
+                let action = SDKUIIndependentViewActionType.independentAdUnit
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                return model
+            }
+
+        Observable.merge(fullConversationTappedModel, commentCreationTappedModel, commentThreadTappedModel, preConversationTappedModel, independentAdUnitTappedModel)
+            .map { return $0 }
+            .bind(to: _openMockArticleScreen)
+            .disposed(by: disposeBag)
+    }
 }
 
 #endif
