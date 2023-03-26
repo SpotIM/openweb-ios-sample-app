@@ -390,6 +390,7 @@
 		3DC7BD9829A4E80400DF72E4 /* OWConversationCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */; };
 		3DC7BD9A29A4EA4100DF72E4 /* OWLoggerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */; };
 		3DC7BD9D29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7BD9C29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift */; };
+		3DCAE3EB29D07A6B005B9189 /* GeneralErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCAE3EA29D07A6B005B9189 /* GeneralErrors.swift */; };
 		3DCD1F05276F2DD800FCF087 /* Array+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */; };
 		3DCD1F07276F2E0100FCF087 /* RxSwift+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */; };
 		3DCF5AB127E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */; };
@@ -669,7 +670,7 @@
 		9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */; };
 		9E73DAD129C85E3A0098EEC1 /* UILoggerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */; };
 		9E73DAD529C85E640098EEC1 /* UILoggerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */; };
-		9E73DADF29C8BD120098EEC1 /* SDKUIIndependentViewActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewActionType.swift */; };
+		9E73DADF29C8BD120098EEC1 /* SDKUIIndependentViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewType.swift */; };
 		9E73DAE029C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DADE29C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift */; };
 		9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE129C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift */; };
 		9E73DAE429C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E73DAE329C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift */; };
@@ -1124,6 +1125,7 @@
 		3DC7BD9729A4E80400DF72E4 /* OWConversationCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWConversationCounter.swift; sourceTree = "<group>"; };
 		3DC7BD9929A4EA4100DF72E4 /* OWLoggerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoggerConfiguration.swift; sourceTree = "<group>"; };
 		3DC7BD9C29A4ED7B00DF72E4 /* OWLoggerConfigurationLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWLoggerConfigurationLayer.swift; sourceTree = "<group>"; };
+		3DCAE3EA29D07A6B005B9189 /* GeneralErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralErrors.swift; sourceTree = "<group>"; };
 		3DCD1F04276F2DD800FCF087 /* Array+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Unwrap.swift"; sourceTree = "<group>"; };
 		3DCD1F06276F2E0100FCF087 /* RxSwift+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Helpers.swift"; sourceTree = "<group>"; };
 		3DCF5AB027E0E50B0074606B /* SpotImReadOnlyMode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SpotImReadOnlyMode+Extensions.swift"; sourceTree = "<group>"; };
@@ -1433,7 +1435,7 @@
 		9E5375B229784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationPlaygroundNewAPIViewModel.swift; sourceTree = "<group>"; };
 		9E73DAD029C85E3A0098EEC1 /* UILoggerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerView.swift; sourceTree = "<group>"; };
 		9E73DAD429C85E640098EEC1 /* UILoggerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILoggerViewModel.swift; sourceTree = "<group>"; };
-		9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewActionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKUIIndependentViewActionType.swift; sourceTree = "<group>"; };
+		9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKUIIndependentViewType.swift; sourceTree = "<group>"; };
 		9E73DADE29C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKUIIndependentViewsActionSettings.swift; sourceTree = "<group>"; };
 		9E73DAE129C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockArticleIndependentViewsVC.swift; sourceTree = "<group>"; };
 		9E73DAE329C9A3560098EEC1 /* MockArticleIndependentViewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockArticleIndependentViewsViewModel.swift; sourceTree = "<group>"; };
@@ -2459,11 +2461,12 @@
 		3D611B7F28C4D85C003960CE /* Beta */ = {
 			isa = PBXGroup;
 			children = (
-				9E73DAD929C8B7360098EEC1 /* MockArticleIndependentViews */,
+				3DCAE3E929D07A58005B9189 /* Errors */,
 				9E73DACF29C85E270098EEC1 /* Logger */,
 				9E53759529784D9100C85983 /* AuthenticationPlaygroundNew */,
 				3D611B7528BFA8B1003960CE /* BetaNewAPI */,
 				3D611B8028C4D88F003960CE /* MockArticleFlows */,
+				9E73DAD929C8B7360098EEC1 /* MockArticleIndependentViews */,
 				8DCBE879294F470F00C8677C /* Settings */,
 				8DCBE85A293CEF7D00C8677C /* UIFlows */,
 				8DCBE86C2940D93300C8677C /* UIViews */,
@@ -2753,6 +2756,14 @@
 				3D0AFC9429C73441002670D1 /* OWSSOProviderModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		3DCAE3E929D07A58005B9189 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				3DCAE3EA29D07A6B005B9189 /* GeneralErrors.swift */,
+			);
+			path = Errors;
 			sourceTree = "<group>";
 		};
 		3DD72C63280EF03E00117946 /* New Network API - After the refactor */ = {
@@ -4001,7 +4012,7 @@
 			isa = PBXGroup;
 			children = (
 				9E73DADE29C8BD120098EEC1 /* SDKUIIndependentViewsActionSettings.swift */,
-				9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewActionType.swift */,
+				9E73DADD29C8BD120098EEC1 /* SDKUIIndependentViewType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -5008,7 +5019,7 @@
 				3D611B7B28BFA91A003960CE /* BetaNewAPIViewModel.swift in Sources */,
 				9EA0F83629A79786008FD7A6 /* OWInitialSortStrategy+Extensions.swift in Sources */,
 				0E7ADC13232D8C4F0019D4BB /* FoxAuthenticationViewController.swift in Sources */,
-				9E73DADF29C8BD120098EEC1 /* SDKUIIndependentViewActionType.swift in Sources */,
+				9E73DADF29C8BD120098EEC1 /* SDKUIIndependentViewType.swift in Sources */,
 				9E73DAE229C9A3480098EEC1 /* MockArticleIndependentViewsVC.swift in Sources */,
 				8DCBE883295069B400C8677C /* SwitchSetting.swift in Sources */,
 				168F4CFF2700960300D22889 /* GoogleAdsProvider.swift in Sources */,
@@ -5060,6 +5071,7 @@
 				9EA0F83B29ABED06008FD7A6 /* GeneralSettingsView.swift in Sources */,
 				9E9F772829814E5E00E48BCA /* OWReadOnlyMode+Extensions.swift in Sources */,
 				3D611BC028C8B851003960CE /* OWArticle+Stub.swift in Sources */,
+				3DCAE3EB29D07A6B005B9189 /* GeneralErrors.swift in Sources */,
 				9E5375B429784DD100C85983 /* AuthenticationPlaygroundNewAPIViewModel.swift in Sources */,
 				8DCBE87F2950597100C8677C /* SettingsViewModel.swift in Sources */,
 				9EA0F83F29ACBA9C008FD7A6 /* PreConversationSettingsView.swift in Sources */,
