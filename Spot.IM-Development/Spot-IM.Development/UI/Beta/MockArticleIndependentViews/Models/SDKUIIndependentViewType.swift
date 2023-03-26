@@ -1,5 +1,5 @@
 //
-//  SDKUIIndependentViewActionType.swift
+//  SDKUIIndependentViewType.swift
 //  Spot-IM.Development
 //
 //  Created by Refael Sommer on 20/03/23.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum SDKUIIndependentViewActionType {
+enum SDKUIIndependentViewType {
     case preConversation
     case fullConversation
     case commentCreation
