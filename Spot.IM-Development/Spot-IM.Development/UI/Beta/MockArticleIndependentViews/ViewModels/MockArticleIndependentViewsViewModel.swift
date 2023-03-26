@@ -129,8 +129,8 @@ class MockArticleIndependentViewsViewModel: MockArticleIndependentViewsViewModel
         switch actionSettings.viewType {
         case .preConversation:
             loggerViewTitle = "Pre conversation logger"
-        case .fullConversation:
-            loggerViewTitle = "Full conversation logger"
+        case .conversation:
+            loggerViewTitle = "Conversation logger"
         case .commentCreation:
             loggerViewTitle = "Comment creation logger"
         case .commentThread:

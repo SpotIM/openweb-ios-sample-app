@@ -66,7 +66,7 @@ fileprivate extension UIViewsViewModel {
 
         let fullConversationTappedModel = fullConversationTapped
             .map {
-                let viewType = SDKUIIndependentViewType.fullConversation
+                let viewType = SDKUIIndependentViewType.conversation
                 let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
