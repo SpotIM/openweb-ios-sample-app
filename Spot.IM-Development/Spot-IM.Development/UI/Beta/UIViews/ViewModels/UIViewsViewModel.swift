@@ -66,36 +66,36 @@ fileprivate extension UIViewsViewModel {
 
         let fullConversationTappedModel = fullConversationTapped
             .map {
-                let action = SDKUIIndependentViewActionType.fullConversation
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                let viewType = SDKUIIndependentViewType.fullConversation
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
 
         let commentCreationTappedModel = commentCreationTapped
             .map { _ -> SDKUIIndependentViewsActionSettings in
-                let action = SDKUIIndependentViewActionType.commentCreation
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                let viewType = SDKUIIndependentViewType.commentCreation
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
 
         let commentThreadTappedModel = commentThreadTapped
             .map { _ -> SDKUIIndependentViewsActionSettings in
-                let action = SDKUIIndependentViewActionType.commentThread
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                let viewType = SDKUIIndependentViewType.commentThread
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
 
         let preConversationTappedModel = preConversationTapped
             .map { _ -> SDKUIIndependentViewsActionSettings in
-                let action = SDKUIIndependentViewActionType.preConversation
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                let viewType = SDKUIIndependentViewType.preConversation
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
 
         let independentAdUnitTappedModel = independentAdUnitTapped
             .map { _ -> SDKUIIndependentViewsActionSettings in
-                let action = SDKUIIndependentViewActionType.independentAdUnit
-                let model = SDKUIIndependentViewsActionSettings(postId: postId, actionType: action)
+                let viewType = SDKUIIndependentViewType.independentAdUnit
+                let model = SDKUIIndependentViewsActionSettings(postId: postId, viewType: viewType)
                 return model
             }
 
