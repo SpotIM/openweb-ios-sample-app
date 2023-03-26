@@ -10,7 +10,7 @@ import Foundation
 
 enum SDKUIIndependentViewType {
     case preConversation
-    case fullConversation
+    case conversation
     case commentCreation
     case commentThread
     case independentAdUnit
