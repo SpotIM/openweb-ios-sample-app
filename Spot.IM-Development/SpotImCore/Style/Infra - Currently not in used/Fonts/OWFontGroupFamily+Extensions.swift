@@ -11,7 +11,7 @@ import Foundation
 extension OWFontGroupFamily {
     var fontFamilyName: String {
         switch self {
-        case .default:
+        case .`default`:
             return "OpenSans"
         case .custom(let fontFamily):
             return fontFamily

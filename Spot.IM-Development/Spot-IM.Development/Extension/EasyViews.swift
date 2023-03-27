@@ -69,6 +69,11 @@ extension UITextField {
         self.autocapitalizationType = autocapitalizationType
         return self
     }
+
+    @discardableResult func placeholder(_ placeholder: String) -> Self {
+        self.placeholder = placeholder
+        return self
+    }
 }
 
 extension UILabel {
@@ -242,5 +247,42 @@ extension String {
 
     var url: URL? {
         return URL(string: self)
+    }
+}
+
+extension UITextView {
+    @discardableResult func delegate(_ delegate: UITextViewDelegate) -> Self {
+        self.delegate = delegate
+        return self
+    }
+
+    @discardableResult func isEditable(_ editable: Bool) -> Self {
+        self.isEditable = editable
+        return self
+    }
+
+    @discardableResult func isSelectable(_ selectable: Bool) -> Self {
+        self.isSelectable = selectable
+        return self
+    }
+
+    @discardableResult func isScrollEnabled(_ scrollEnabled: Bool) -> Self {
+        self.isScrollEnabled = scrollEnabled
+        return self
+    }
+
+    @discardableResult func dataDetectorTypes(_ dataDetectorTypes: UIDataDetectorTypes) -> Self {
+        self.dataDetectorTypes = dataDetectorTypes
+        return self
+    }
+
+    @discardableResult func font(_ font: UIFont) -> Self {
+        self.font = font
+        return self
+    }
+
+    @discardableResult func textColor(_ textColor: UIColor) -> Self {
+        self.textColor = textColor
+        return self
     }
 }

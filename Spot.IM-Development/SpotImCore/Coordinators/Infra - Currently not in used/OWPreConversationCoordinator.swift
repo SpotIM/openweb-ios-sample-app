@@ -22,11 +22,16 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
     fileprivate let router: OWRoutering
     fileprivate let preConversationData: OWPreConversationRequiredData
     fileprivate let actionsCallbacks: OWViewActionsCallbacks?
+    fileprivate let authenticationManager: OWAuthenticationManagerProtocol
 
-    init(router: OWRoutering, preConversationData: OWPreConversationRequiredData, actionsCallbacks: OWViewActionsCallbacks?) {
+    init(router: OWRoutering,
+         preConversationData: OWPreConversationRequiredData,
+         actionsCallbacks: OWViewActionsCallbacks?,
+         authenticationManager: OWAuthenticationManagerProtocol = OWSharedServicesProvider.shared.authenticationManager()) {
         self.router = router
         self.preConversationData = preConversationData
         self.actionsCallbacks = actionsCallbacks
+        self.authenticationManager = authenticationManager
     }
 
     override func start(deepLinkOptions: OWDeepLinkOptions? = nil) -> Observable<OWPreConversationCoordinatorResult> {
@@ -36,31 +41,18 @@ class OWPreConversationCoordinator: OWBaseCoordinator<OWPreConversationCoordinat
         return .empty()
     }
 
-    override func showableComponentDynamicSize() -> Observable<OWViewDynamicSizeOption> {
+    override func showableComponent() -> Observable<OWShowable> {
         let preConversationViewVM: OWPreConversationViewViewModeling = OWPreConversationViewViewModel(preConversationData: preConversationData)
         let preConversationView = OWPreConversationView(viewModel: preConversationViewVM)
 
         setupObservers(forViewModel: preConversationViewVM)
         setupViewActionsCallbacks(forViewModel: preConversationViewVM)
 
-        let viewDynamicSizeObservable: Observable<(UIView, CGSize)> = Observable.just(preConversationView)
-            .flatMap { [weak preConversationViewVM] view -> Observable<(UIView, CGSize)> in
-                guard let viewModel = preConversationViewVM else { return .never() }
-                return viewModel.outputs.preConversationPreferredSize
-                    .map { (view, $0) }
-            }
-            .share(replay: 1)
+        let viewObservable: Observable<OWShowable> = Observable.just(preConversationView)
+            .map { $0 as OWShowable}
             .asObservable()
 
-        let initial = viewDynamicSizeObservable
-            .take(1)
-            .map { OWViewDynamicSizeOption.viewInitialSize(view: $0.0, initialSize: $0.1) }
-
-        let updateSize = viewDynamicSizeObservable
-            .skip(1)
-            .map { OWViewDynamicSizeOption.updateSize(view: $0.0, newSize: $0.1) }
-
-        return Observable.merge(initial, updateSize)
+        return viewObservable
     }
 }
 
@@ -73,7 +65,22 @@ fileprivate extension OWPreConversationCoordinator {
             }
 
         let openCommentConversationObservable: Observable<OWDeepLinkOptions?> = viewModel.outputs.openCommentConversation
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 1. Triggering authentication UI if needed
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.ifNeededTriggerAuthenticationUI(for: .commenting)
+                    .map { _ in type }
+            }
+            .flatMapLatest { [weak self] type -> Observable<OWCommentCreationType> in
+                // 2. Waiting for authentication required for commenting
+                // Can be immediately if anyone can comment in the active spotId, or the user already connected
+                guard let self = self else { return .empty() }
+                return self.authenticationManager.waitForAuthentication(for: .commenting)
+                    .map { _ in type }
+            }
+            .observe(on: MainScheduler.instance)
             .map { [weak self] type -> OWDeepLinkOptions? in
+                // 3. Perform deeplink to comment creation screen
                 guard let self = self else { return nil }
                 let commentCreationData = OWCommentCreationRequiredData(article: self.preConversationData.article, commentCreationType: type)
                 return OWDeepLinkOptions.commentCreation(commentCreationData: commentCreationData)
