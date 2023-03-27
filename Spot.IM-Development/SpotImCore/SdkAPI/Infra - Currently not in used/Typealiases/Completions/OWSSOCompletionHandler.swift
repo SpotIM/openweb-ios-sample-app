@@ -16,7 +16,7 @@ import Foundation
  */
 
 #if NEW_API
-public typealias OWSSOCompletionHandler = (Result<Void, OWError>) -> Void
+public typealias OWSSOCompletionHandler = (Result<OWSSOCompletionModel, OWError>) -> Void
 #else
-typealias OWSSOCompletionHandler = (Result<Void, OWError>) -> Void
+typealias OWSSOCompletionHandler = (Result<OWSSOCompletionModel, OWError>) -> Void
 #endif

@@ -10,12 +10,22 @@ import Foundation
 
 #if NEW_API
 public enum OWError: Error {
+    case missingSpotId
     case castingError(description: String)
     case conversationFlow
     case preConversationFlow
     case commentCreationFlow
+    case commentThreadFlow
+    case logout
+    case userStatus
+    case ssoStart
+    case ssoComplete
+    case alreadyLoggedIn
+
     public var description: String {
         switch self {
+        case .missingSpotId:
+            return "Error - spotId must be set first under `OpenWeb.manager`"
         case .castingError(let des):
             return des
         case .conversationFlow:
@@ -24,17 +34,39 @@ public enum OWError: Error {
             return "Error in the process of starting pre conversation flow"
         case .commentCreationFlow:
             return "Error in the process of starting comment creation flow"
+        case .commentThreadFlow:
+            return "Error in the process of starting comment thread flow"
+        case .logout:
+            return "Error in the process of logout"
+        case .userStatus:
+            return "Error in the process of getting userStatus"
+        case .ssoStart:
+            return "Error in the process of SSO start"
+        case .ssoComplete:
+            return "Error in the process of SSO complete"
+        case .alreadyLoggedIn:
+            return "Error - a user is already logged in"
         }
     }
 }
 #else
 enum OWError: Error {
+    case missingSpotId
     case castingError(description: String)
     case conversationFlow
     case preConversationFlow
     case commentCreationFlow
+    case commentThreadFlow
+    case logout
+    case userStatus
+    case ssoStart
+    case ssoComplete
+    case alreadyLoggedIn
+
     var description: String {
         switch self {
+        case .missingSpotId:
+            return "Error - spotId must be set first under `OpenWeb.manager`"
         case .castingError(let des):
             return des
         case .conversationFlow:
@@ -43,6 +75,18 @@ enum OWError: Error {
             return "Error in the process of starting pre conversation flow"
         case .commentCreationFlow:
             return "Error in the process of starting comment creation flow"
+        case .commentThreadFlow:
+            return "Error in the process of starting comment thread flow"
+        case .logout:
+            return "Error in the process of logout"
+        case .userStatus:
+            return "Error in the process of getting userStatus"
+        case .ssoStart:
+            return "Error in the process of SSO start"
+        case .ssoComplete:
+            return "Error in the process of SSO complete"
+        case .alreadyLoggedIn:
+            return "Error - a user is already logged in"
         }
     }
 }

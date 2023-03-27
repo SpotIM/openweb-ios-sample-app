@@ -38,7 +38,6 @@ extension OWCommentThreadCellOption {
     }
 
     var cellClass: UITableViewCell.Type {
-        // TODO: Return the actual cell type once developed
         switch self {
         case .comment:
             return OWCommentCell.self
@@ -54,9 +53,6 @@ extension OWCommentThreadCellOption {
 
 extension OWCommentThreadCellOption: Equatable {
     var identifier: String {
-        // TODO: Once developed, return id of the comment/reply/ad for each.
-        // Spacer will also have a specific id which will be generated with "UUID" as the VM created.
-        // This is necessary so we won't have UI animations/flickering when loading the same data.
         switch self {
         case .comment(let viewModel):
             return viewModel.outputs.id

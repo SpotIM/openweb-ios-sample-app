@@ -17,11 +17,15 @@ struct ConversationPreset {
 extension ConversationPreset {
     static let mockModels = Self.createMockModels()
 
+    static func demoSpot() -> ConversationPreset {
+        return ConversationPreset(displayName: "Demo Spot",
+                                  conversationDataModel: SDKConversationDataModel(spotId: "sp_eCIlROSD",
+                                                                                  postId: "sdk1"))
+    }
+
     static func createMockModels() -> [ConversationPreset] {
 
-        let demoConversationPreset = [ConversationPreset(displayName: "Demo Spot",
-                                                     conversationDataModel: SDKConversationDataModel(spotId: "sp_eCIlROSD",
-                                                                                                     postId: "sdk1"))]
+        let demoConversationPreset = [demoSpot()]
 
     #if PUBLIC_DEMO_APP
         return demoConversationPreset

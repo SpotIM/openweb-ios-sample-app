@@ -998,10 +998,9 @@ extension SPBaseConversationViewController: CommentsActionDelegate {
         let cancelAction = UIAlertAction(title: LocalizationManager.localizedString(key: "Cancel"),
                                      style: .default)
 
-        let message = "Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings"
         showAlert(
             title: LocalizationManager.localizedString(key: "Mute User"),
-            message: LocalizationManager.localizedString(key: message),
+            message: LocalizationManager.localizedString(key: "MuteUserMessage"),
             actions: [muteAction, cancelAction])
     }
 

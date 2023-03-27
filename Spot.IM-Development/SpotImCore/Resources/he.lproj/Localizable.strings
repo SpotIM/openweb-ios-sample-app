@@ -76,6 +76,7 @@
 "Terms" = "תנאים";
 "Privacy" = "פרטיות";
 "Powered by OpenWeb" = "מנוהל ע״י OpenWeb";
+"Powered by" = "מנוהל ע״י";
 "Type your reply…" = "כתוב/י את תגובתך";
 "Replying to " = "תגובה ל";
 "Comments" = "תגובות";
@@ -104,4 +105,4 @@
 "Your comment is waiting for approval due to the site’s policy." = "התגובה שלך ממתינה לאישור, בכפוף למדיניות האתר.";
 "Mute" = "השתק";
 "Mute User" = "השתק משתמש";
-"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "לאחר השתקת משתמש לא תוכלו לראות את הפעילות שלו\/ה. לביצוע שינויים או ניהול המשתמשים שהושתקו היכנסו להגדרות הפרופיל";
+"MuteUserMessage" = "לאחר השתקת משתמש זה, לא תראו יותר את הפעילות שלו. כדי לנהל את המשתמשים המושתקים שלכם, עברו אל הפרופיל שלכם > הגדרות פרטיות";
