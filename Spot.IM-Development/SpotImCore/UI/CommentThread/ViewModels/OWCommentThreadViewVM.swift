@@ -129,7 +129,7 @@ fileprivate extension OWCommentThreadViewViewModel {
             return self.servicesProvider
             .netwokAPI()
             .conversation
-            .conversationRead(mode: .best, page: OWPaginationPage.first)
+            .conversationRead(mode: .best, page: OWPaginationPage.first, parentId: "", offset: offset)
 //            .conversationRead(mode: .newest, page: OWPaginationPage.first, messageId: data.commentId)
             .response
         }
