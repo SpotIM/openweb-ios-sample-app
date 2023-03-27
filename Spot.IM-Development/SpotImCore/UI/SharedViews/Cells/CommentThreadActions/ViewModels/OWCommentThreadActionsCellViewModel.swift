@@ -9,6 +9,11 @@
 import Foundation
 import RxSwift
 
+enum OWCommentThreadActionType {
+    case collapseThread
+    case viewReplies(repliesCount: Int, totalRepliesCount: Int)
+}
+
 protocol OWCommentThreadActionsCellViewModelingInputs {
 
 }
