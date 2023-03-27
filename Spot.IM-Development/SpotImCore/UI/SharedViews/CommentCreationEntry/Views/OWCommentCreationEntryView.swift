@@ -37,9 +37,8 @@ class OWCommentCreationEntryView: UIView {
         return UIView()
             .border(
                 width: 1.0,
-                color: OWColorPalette.shared.color(type: .borderColor, themeStyle: .light))
+                color: OWColorPalette.shared.color(type: .borderColor2, themeStyle: .light))
             .corner(radius: 6.0)
-            .backgroundColor(OWColorPalette.shared.color(type: .background1Color, themeStyle: .light))
             .userInteractionEnabled(true)
     }()
 
@@ -47,7 +46,7 @@ class OWCommentCreationEntryView: UIView {
         return UILabel()
             .font(UIFont.preferred(style: .regular, of: Metrics.fontSize))
             .text(LocalizationManager.localizedString(key: "What do you think?"))
-            .textColor(OWColorPalette.shared.color(type: .foreground2Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
 
     fileprivate lazy var tapGesture: UITapGestureRecognizer = {
@@ -145,9 +144,8 @@ fileprivate extension OWCommentCreationEntryView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor, themeStyle: currentStyle).cgColor
-                self.labelContainer.backgroundColor = OWColorPalette.shared.color(type: .background1Color, themeStyle: currentStyle)
-                self.label.textColor = OWColorPalette.shared.color(type: .foreground2Color, themeStyle: currentStyle)
+                self.labelContainer.layer.borderColor = OWColorPalette.shared.color(type: .borderColor2, themeStyle: currentStyle).cgColor
+                self.label.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
                 // TODO: custon UI
             }).disposed(by: disposeBag)
     }

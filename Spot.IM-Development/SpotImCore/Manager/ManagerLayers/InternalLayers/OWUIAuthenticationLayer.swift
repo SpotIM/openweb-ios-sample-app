@@ -9,27 +9,36 @@
 import UIKit
 
 protocol OWUIAuthenticationInternalProtocol {
-    func triggerPublisherDisplayLoginFlow(navController: UINavigationController)
+    func triggerPublisherDisplayAuthenticationFlow(routeringMode: OWRouteringMode, completion: @escaping OWBasicCompletion)
 }
 
-class OWUIAuthenticationLayer: OWUIAuthentication {
-    var displayLoginFlow: OWLoginFlowCallback? {
+class OWUIAuthenticationLayer: OWUIAuthentication, OWUIAuthenticationInternalProtocol {
+
+    fileprivate let servicesProvider: OWSharedServicesProviding
+
+    init (servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
+        self.servicesProvider = servicesProvider
+    }
+
+    var displayAuthenticationFlow: OWAuthenticationFlowCallback? {
         get {
-            return self._displayLoginFlow
+            return self._displayAuthenticationFlow
         }
         set(newValue) {
-            self._displayLoginFlow = newValue
+            self._displayAuthenticationFlow = newValue
         }
     }
 
-    fileprivate var _displayLoginFlow: OWLoginFlowCallback? = nil
+    fileprivate var _displayAuthenticationFlow: OWAuthenticationFlowCallback? = nil
 
-    func triggerPublisherDisplayLoginFlow(navController: UINavigationController) {
-        guard let callback = _displayLoginFlow else {
-            let logger = OWSharedServicesProvider.shared.logger()
-            logger.log(level: .error, "`displayLoginFlow` callback should be provided to `manager.ui.authentication` in order to display login flow.\nPlease provide this callback.")
+    func triggerPublisherDisplayAuthenticationFlow(routeringMode: OWRouteringMode, completion: @escaping OWBasicCompletion) {
+        guard let callback = _displayAuthenticationFlow else {
+            let logger = servicesProvider.logger()
+            logger.log(level: .error, "`displayAuthenticationFlow` callback should be provided to `manager.ui.authentication` in order to display login flow.\nPlease provide this callback.")
             return
         }
-        callback(navController)
+        DispatchQueue.main.async {
+            callback(routeringMode, completion)
+        }
     }
 }

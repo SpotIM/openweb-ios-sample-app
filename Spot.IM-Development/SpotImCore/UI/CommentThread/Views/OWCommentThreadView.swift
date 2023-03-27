@@ -71,8 +71,6 @@ fileprivate extension OWCommentThreadView {
     }
 
     func setupViews() {
-        self.useAsThemeStyleInjector()
-
         self.backgroundColor = .cyan
 
         self.useAsThemeStyleInjector()

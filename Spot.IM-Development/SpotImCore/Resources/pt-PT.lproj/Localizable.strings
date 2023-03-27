@@ -75,6 +75,7 @@
 "Terms" = "Termos";
 "Privacy" = "Privacidade";
 "Powered by OpenWeb" = "Powered by OpenWeb";
+"Powered by" = "Powered by";
 "Type your reply…" = "Escreva a sua resposta";
 "Replying to " = "A responder a ";
 "Comments" = "Comentários";
@@ -103,4 +104,4 @@
 "Your comment is waiting for approval due to the site’s policy." = "O seu comentário aguarda aprovação devido à política do Website.";
 "Mute" = "Mudo";
 "Mute User" = "Ativar mudo para usuário";
-"Muting this user will not allow you to see any action done by them. To reverse or manage your muted users, enter your profile settings" = "Cancelar mudo para este usuário não permitirá ver nenhuma ação que ele realizar. Para reverter ou gerenciar seus usuários com mudo ativado, insira as configurações do seu perfil";
+"MuteUserMessage" = "Após silenciar este utilizador, não irá voltar a ver a sua atividade. Para gerir os utilizadores silenciados vá ao ser perfil > Definições de privacidade";
