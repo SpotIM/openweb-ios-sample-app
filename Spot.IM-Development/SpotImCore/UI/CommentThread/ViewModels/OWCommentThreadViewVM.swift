@@ -63,6 +63,17 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
             })
             .flatMapLatest({ commentCellsVms -> Observable<[OWCommentThreadCellOption]> in
                 var cellOptions = [OWCommentThreadCellOption]()
+
+                // Skeleton
+                if (commentCellsVms.isEmpty) {
+                    let numberOfComments = Metrics.numberOfCommentsInSkeleton
+                    let skeletonCellVMs = (0 ..< numberOfComments).map { index in
+                        OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
+                    }
+                    let skeletonCells = skeletonCellVMs.map { OWCommentThreadCellOption.commentSkeletonShimmering(viewModel: $0) }
+                    cellOptions.append(contentsOf: skeletonCells)
+                }
+
                 for (idx, commentCellVM) in commentCellsVms.enumerated() {
                     let isReply = commentCellVM.outputs.commentVM.outputs.comment.isReply
 
@@ -112,7 +123,6 @@ class OWCommentThreadViewViewModel: OWCommentThreadViewViewModeling, OWCommentTh
     init (commentThreadData: OWCommentThreadRequiredData, servicesProvider: OWSharedServicesProviding = OWSharedServicesProvider.shared) {
         self.servicesProvider = servicesProvider
         self._commentThreadData.onNext(commentThreadData)
-        self.populateInitialUI()
         self.setupObservers()
     }
 }
@@ -271,14 +281,5 @@ fileprivate extension OWCommentThreadViewViewModel {
                 self?.commentCreationTap.onNext(.replyToComment(originComment: comment))
             })
             .disposed(by: disposeBag)
-    }
-
-    func populateInitialUI() {
-        let numberOfComments = Metrics.numberOfCommentsInSkeleton
-        let skeletonCellVMs = (0 ..< numberOfComments).map { index in
-            OWCommentSkeletonShimmeringCellViewModel(depth: index > 0 ? 1 : 0)
-        }
-        let skeletonCells = skeletonCellVMs.map { OWCommentThreadCellOption.commentSkeletonShimmering(viewModel: $0) }
-//        _cellsViewModels.append(contentsOf: skeletonCells)
     }
 }
