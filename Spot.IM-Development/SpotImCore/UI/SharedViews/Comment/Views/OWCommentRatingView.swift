@@ -13,9 +13,9 @@ import RxCocoa
 class OWCommentRatingView: UIView {
 
     fileprivate struct Metrics {
-        static let voteButtonSize: CGFloat = 32.0
-        static let voteButtonInset: CGFloat = 4.0
-        static let fontSize: CGFloat = 16.0
+        static let voteButtonSize: CGFloat = 24.0
+        static let fontSize: CGFloat = 12.0
+        static let stackviewHeight: CGFloat = 24.0
         static let identifier = "comment_voting_view_id"
         static let rankUpButtonIdentifier = "comment_voting_view_rank_up_button_id"
         static let rankDownButtonIdentifier = "comment_voting_view_rank_down_button_id"
@@ -34,31 +34,19 @@ class OWCommentRatingView: UIView {
     }()
 
     fileprivate lazy var rankUpButton: SPAnimatedButton = {
-        let insets = UIEdgeInsets(
-            top: Metrics.voteButtonInset,
-            left: Metrics.voteButtonInset,
-            bottom: Metrics.voteButtonInset,
-            right: Metrics.voteButtonInset
-        )
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
-        let button = SPAnimatedButton(frame: frame, buttonInset: insets)
+        let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
-        button.imageColorOff = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light)
+        button.imageColorOff = OWColorPalette.shared.color(type: .textColor2, themeStyle: .light)
         button.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)
         return button
     }()
 
     fileprivate lazy var rankDownButton: SPAnimatedButton = {
-        let insets = UIEdgeInsets(
-            top: Metrics.voteButtonInset,
-            left: Metrics.voteButtonInset,
-            bottom: Metrics.voteButtonInset,
-            right: Metrics.voteButtonInset
-        )
         let frame = CGRect(x: 0, y: 0, width: Metrics.voteButtonSize, height: Metrics.voteButtonSize)
-        let button = SPAnimatedButton(frame: frame, buttonInset: insets)
+        let button = SPAnimatedButton(frame: frame)
             .hugContent(axis: .horizontal)
-        button.imageColorOff = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light)
+        button.imageColorOff = OWColorPalette.shared.color(type: .textColor2, themeStyle: .light)
         button.brandColor = OWColorPalette.shared.color(type: .brandColor, themeStyle: .light)
         return button
     }()
@@ -68,7 +56,7 @@ class OWCommentRatingView: UIView {
             .textAlignment(.center)
             .font(.preferred(style: .regular, of: Metrics.fontSize))
             .hugContent(axis: .horizontal)
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
 
     fileprivate lazy var rankDownLabel: UILabel = {
@@ -76,7 +64,7 @@ class OWCommentRatingView: UIView {
             .textAlignment(.center)
             .font(.preferred(style: .regular, of: Metrics.fontSize))
             .hugContent(axis: .horizontal)
-            .textColor(OWColorPalette.shared.color(type: .foreground3Color, themeStyle: .light))
+            .textColor(OWColorPalette.shared.color(type: .textColor2, themeStyle: .light))
     }()
 
     fileprivate lazy var seperetorView: UIView = {
@@ -113,7 +101,8 @@ fileprivate extension OWCommentRatingView {
 
         // stackView
         stackView.OWSnp.makeConstraints { make in
-            make.top.bottom.leading.equalToSuperview()
+            make.edges.equalToSuperview()
+            make.height.equalTo(Metrics.stackviewHeight)
         }
     }
 
@@ -215,10 +204,10 @@ fileprivate extension OWCommentRatingView {
             .style
             .subscribe(onNext: { [weak self] currentStyle in
                 guard let self = self else { return }
-                self.rankUpButton.imageColorOff = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.rankDownButton.imageColorOff = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.rankUpLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
-                self.rankDownLabel.textColor = OWColorPalette.shared.color(type: .foreground3Color, themeStyle: currentStyle)
+                self.rankUpButton.imageColorOff = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.rankDownButton.imageColorOff = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.rankUpLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
+                self.rankDownLabel.textColor = OWColorPalette.shared.color(type: .textColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
 

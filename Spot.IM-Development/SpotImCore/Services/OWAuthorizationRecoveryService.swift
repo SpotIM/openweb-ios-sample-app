@@ -2,18 +2,19 @@
 //  OWAuthorizationRecoveryService.swift
 //  SpotImCore
 //
-//  Created by Alon Haiut on 21/12/2022.
-//  Copyright © 2022 Spot.IM. All rights reserved.
+//  Created by Alon Haiut on 16/03/2023.
+//  Copyright © 2023 Spot.IM. All rights reserved.
 //
 
 import Foundation
 import RxSwift
 
 protocol OWAuthorizationRecoveryServicing {
-    func recoverFromAuthorizationError(userId: String) -> Observable<Void>
+    func recoverAuthorization() -> Observable<Void>
 }
 class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
     fileprivate unowned let servicesProvider: OWSharedServicesProviding
+    fileprivate let scheduler: SchedulerType
     // Cache if we just recovered for a minute (key is the userId)
     fileprivate let didJustRecoveredCache = OWCacheService<String, Bool>(expirationStrategy: .time(lifetime: 60))
     fileprivate var disposeBag: DisposeBag? = DisposeBag()
@@ -25,65 +26,102 @@ class OWAuthorizationRecoveryService: OWAuthorizationRecoveryServicing {
             .share(replay: 0) // New subscribers will get only elements which emits after their subscription
     }
 
-    init (servicesProvider: OWSharedServicesProviding) {
+    init (servicesProvider: OWSharedServicesProviding,
+          scheduler: SchedulerType = SerialDispatchQueueScheduler(qos: .userInteractive, internalSerialQueueName: "OpenWebSDKAuthorizationRecoveryServiceQueue")) {
         self.servicesProvider = servicesProvider
+        self.scheduler = scheduler
     }
 
-    func recoverFromAuthorizationError(userId: String) -> Observable<Void> {
-        if let didJustRecovered = didJustRecoveredCache[userId], didJustRecovered {
-            // Return cache configuration
-            return .just(())
-        } else {
-            return isCurrentlyRecovering
-                .take(1)
-                .flatMap { [weak self] isRecovering -> Observable<Void> in
-                    guard let self = self else { return .empty() }
-                    if !isRecovering {
-                        self.startRecovering(userId: userId)
-                    }
+    func recoverAuthorization() -> Observable<Void> {
 
-                    // This way if other calls to this functions are being done before the network request finish, we won't send new requests
-                    return self.recoverJustFinished
-                        .take(1)
+        let authenticationManager = servicesProvider.authenticationManager()
+        return authenticationManager.activeUserAvailability
+            .take(1)
+            .observe(on: scheduler)
+            .flatMap { [weak self] userAvailability -> Observable<Void> in
+                guard let self = self else { return .empty() }
+
+                if case OWUserAvailability.user(let user) = userAvailability,
+                   let userId = user.userId,
+                   let didJustRecovered = self.didJustRecoveredCache[userId],
+                   didJustRecovered {
+                    // Skip recovery, we just recovered recently
+                    return .just(())
+                } else {
+                    return self.isCurrentlyRecovering
+                       .take(1)
+                       .flatMap { [weak self] isRecovering -> Observable<Void> in
+                           guard let self = self else { return .empty() }
+                           if !isRecovering {
+                               self.isCurrentlyRecovering.onNext(true)
+                               self.startRecovering(userAvailability: userAvailability)
+                           }
+
+                           // This way if other calls to this functions are being done before the network request finish, we won't send new requests
+                           return self.recoverJustFinished
+                               .take(1)
+                       }
                 }
-        }
+            }
     }
 }
 
 fileprivate extension OWAuthorizationRecoveryService {
-    func startRecovering(userId: String) {
+    func startRecovering(userAvailability: OWUserAvailability) {
         let disposeBag = DisposeBag()
         self.disposeBag = disposeBag
+        let configurationService = servicesProvider.spotConfigurationService()
 
-        // Due to bad architecture it is not possible to dependency injection the authProvider in the class initializer
-        _ = Observable.just(())
-            .flatMap { [weak self] _ -> Observable<Bool> in
-                self?.isCurrentlyRecovering.onNext(true)
+        _ = configurationService.config(spotId: OpenWeb.manager.spotId)
+            .observe(on: scheduler)
+            .take(1)
+            .flatMap { [weak self] config -> Observable<Bool> in
+                guard let self = self else { return .empty() }
 
-                // Due to bad architecture it is not possible to dependency injection those classes
                 // Get new user session and reset the old one
                 // Also check if we should renew SSO after the process
-                let isUserRegistered = SPUserSessionHolder.isRegister()
-                let isSSO = SPConfigsDataSource.appConfig?.initialization?.ssoEnabled ?? false
-                let shouldRenewSSO = isUserRegistered && isSSO
-                SPUserSessionHolder.resetUserSession()
+                var shouldRenewSSO = false
+                if case OWUserAvailability.user(let user) = userAvailability,
+                   user.registered,
+                   let isSSO = config.initialization?.ssoEnabled, isSSO {
+                    shouldRenewSSO = true
+                }
+
+                // Reset authorization
+                let authenticationManager = self.servicesProvider.authenticationManager()
+                authenticationManager.enterAuthenticationRecoveryState()
                 return .just(shouldRenewSSO)
             }
-            .flatMap { shouldRenewSSO -> Observable<SPUser> in
-                return SpotIm.authProvider
-                    .getUser()
+            .flatMap { [weak self] shouldRenewSSO -> Observable<SPUser> in
+                guard let self = self else { return .empty() }
+                let authentication = self.servicesProvider.netwokAPI().authentication
+                return authentication
+                    .user()
+                    .response
+                    .observe(on: self.scheduler)
                     .take(1) // No need to dispose
-                    .do(onNext: { [weak self] _ in
-                        guard let self = self else { return  }
+                    .do(onNext: { [weak self] newUser in
+                        guard let self = self else { return }
                         self.isCurrentlyRecovering.onNext(false)
                         self._recoverJustFinished.onNext(())
-                        self.didJustRecoveredCache[userId] = true
 
-                        if shouldRenewSSO {
-                            // Will renew SSO with publishers API if a user was logged in before
-                            self.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
-                            SpotIm.authProvider.renewSSOPublish.onNext(userId)
+                        let authenticationRecoveryResult: OWAuthenticationRecoveryResult
+                        if case OWUserAvailability.user(let user) = userAvailability,
+                           let userId = user.userId {
+                            self.didJustRecoveredCache[userId] = true
+                            if shouldRenewSSO {
+                                // Will renew SSO with publishers API if a user was logged in before
+                                self.servicesProvider.logger().log(level: .verbose, "Renew SSO triggered after network 403 error code")
+                                authenticationRecoveryResult = .authenticationShouldRenew(user: user)
+                            } else {
+                                authenticationRecoveryResult = .newAuthentication(user: newUser)
+                            }
+                        } else {
+                            authenticationRecoveryResult = .newAuthentication(user: newUser)
                         }
+
+                        let authenticationManager = self.servicesProvider.authenticationManager()
+                        authenticationManager.finishAuthenticationRecovery(with: authenticationRecoveryResult)
                     }, onError: {[weak self] error in
                         guard let self = self else { return  }
                         self.isCurrentlyRecovering.onNext(false)

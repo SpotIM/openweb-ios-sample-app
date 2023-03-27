@@ -88,6 +88,12 @@ extension Reactive where Base: SwitchSetting {
         return value
     }
 
+    var isHidden: Binder<Bool> {
+        return Binder(self.base) { _, value in
+            base.isHidden = value
+        }
+    }
+
     fileprivate var value: ControlProperty<Bool> {
         return base.switchSetting.rx.controlProperty(editingEvents: .valueChanged) { switchSetting in
             switchSetting.isOn
