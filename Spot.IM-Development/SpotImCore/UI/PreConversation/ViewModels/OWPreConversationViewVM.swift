@@ -31,7 +31,6 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
-    var shouldShowSeparatorView: Observable<Bool> { get }
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTA: Observable<Bool> { get }
@@ -104,6 +103,14 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
             return true
         }
         return false
+    }()
+
+    fileprivate lazy var _preConversationStyle: BehaviorSubject<OWPreConversationStyle> = {
+        return BehaviorSubject<OWPreConversationStyle>(value: preConversationStyle)
+    }()
+    fileprivate lazy var preConversationStyleObservable: Observable<OWPreConversationStyle> = {
+        return _preConversationStyle
+            .share(replay: 1)
     }()
 
     fileprivate lazy var _isRegularStyle: BehaviorSubject<Bool> = {
@@ -194,17 +201,20 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
 
     var viewInitialized = PublishSubject<Void>()
 
-    var shouldShowSeparatorView: Observable<Bool> {
-        isRegularStyle
-    }
-
     var shouldShowCommentCreationEntryView: Observable<Bool> {
         isRegularStyle
     }
 
     var shouldShowComments: Observable<Bool> {
-        isCompactStyle
-            .map { !$0 }
+        preConversationStyleObservable
+            .map { style in
+                switch(style) {
+                case .regular:
+                    return true
+                case .compact, .ctaWithSummary, .ctaButtonOnly:
+                    return false
+                }
+            }
     }
 
     var shouldShowComapactView: Bool {
