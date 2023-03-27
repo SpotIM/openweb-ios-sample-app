@@ -31,6 +31,7 @@ protocol OWPreConversationViewViewModelingOutputs {
     var openCommentConversation: Observable<OWCommentCreationType> { get }
     var updateCellSizeAtIndex: Observable<Int> { get }
     var urlClickedOutput: Observable<URL> { get }
+    var summaryTopPadding: Observable<CGFloat> { get }
     var shouldShowCommentCreationEntryView: Observable<Bool> { get }
     var shouldShowComments: Observable<Bool> { get }
     var shouldShowCTA: Observable<Bool> { get }
@@ -200,6 +201,20 @@ class OWPreConversationViewViewModel: OWPreConversationViewViewModeling, OWPreCo
     }
 
     var viewInitialized = PublishSubject<Void>()
+    
+    var summaryTopPadding: Observable<CGFloat> {
+       preConversationStyleObservable
+            .map { style in
+                switch(style) {
+                case .ctaButtonOnly:
+                    return 0
+                case .compact:
+                    return OWPreConversationView.Metrics.compactSummaryTopPadding
+                case .ctaWithSummary, .regular:
+                    return OWPreConversationView.Metrics.summaryTopPadding
+                }
+            }
+    }
 
     var shouldShowCommentCreationEntryView: Observable<Bool> {
         isRegularStyle

@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class OWPreConversationView: UIView, OWThemeStyleInjectorProtocol {
-    fileprivate struct Metrics {
+    internal struct Metrics {
         static let commentCreationTopPadding: CGFloat = 28
         static let commentCreationBottomPadding: CGFloat = 24
         static let horizontalOffset: CGFloat = 16.0
@@ -133,7 +133,7 @@ fileprivate extension OWPreConversationView {
 
         self.addSubviews(preConversationSummary)
         preConversationSummary.OWSnp.makeConstraints { make in
-            make.top.equalToSuperview().offset(viewModel.outputs.shouldShowComapactView ? Metrics.compactSummaryTopPadding : Metrics.summaryTopPadding)
+            make.top.equalToSuperview().offset(Metrics.compactSummaryTopPadding)
             make.leading.trailing.equalToSuperview()
         }
 
@@ -237,6 +237,17 @@ fileprivate extension OWPreConversationView {
                 self.communityQuestionBottomDevider.backgroundColor = OWColorPalette.shared.color(type: .separatorColor2, themeStyle: currentStyle)
             })
             .disposed(by: disposeBag)
+        
+        viewModel.outputs
+            .summaryTopPadding
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] padding in
+                guard let self = self else { return }
+                self.preConversationSummary.OWSnp.updateConstraints { make in
+                    make.top.equalToSuperview().offset(padding)
+                }
+            })
+            .disposed(by: disposeBag)
 
         guard !viewModel.outputs.shouldShowComapactView else { return }
 
@@ -252,6 +263,26 @@ fileprivate extension OWPreConversationView {
                 self.communityQuestionBottomDevider.OWSnp.updateConstraints { make in
                     make.top.equalTo(self.communityQuestionView.OWSnp.bottom).offset(isVisible ? Metrics.communityQuestionDeviderPadding : 0)
                     make.height.equalTo(isVisible ? Metrics.separatorHeight : 0)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.outputs
+            .communityQuestionViewModel.outputs
+            .shouldShowView
+            .map { !$0 }
+            .bind(to: communityQuestionBottomDevider.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        viewModel.outputs
+            .communityGuidelinesViewModel
+            .outputs
+            .shouldBeHidden
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isHidden in
+                guard let self = self else { return }
+                self.communityGuidelinesView.OWSnp.updateConstraints { make in
+                    make.top.equalTo(self.communityQuestionBottomDevider.OWSnp.bottom).offset(isHidden ? 0 : Metrics.communityQuestionDeviderPadding)
                 }
             })
             .disposed(by: disposeBag)
