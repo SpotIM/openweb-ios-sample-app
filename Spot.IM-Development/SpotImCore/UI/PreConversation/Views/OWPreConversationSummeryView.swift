@@ -102,6 +102,8 @@ fileprivate extension OWPreConversationSummeryView {
                 make.trailing.equalToSuperview().offset(-Metrics.margins.right)
             }
         }
+
+        self.isHidden = !viewModel.outputs.isVisible
     }
 
     func setupObservers() {
